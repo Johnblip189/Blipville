@@ -1,0 +1,48 @@
+name: 🐾 Suggest an animal
+description: Ask for a new animal (or a new color for an existing one) to join the zoo.
+title: "[Animal] "
+labels: ["animal request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping the zoo grow! Fill in what you can. Only the animal's name is required.
+  - type: input
+    id: animal
+    attributes:
+      label: Animal
+      description: What animal should be added? (Or which existing one gets a new color.)
+      placeholder: e.g. Red panda, Corgi, Narwhal
+    validations:
+      required: true
+  - type: textarea
+    id: colors
+    attributes:
+      label: Colors
+      description: Which colors or real-life variants should it come in?
+      placeholder: e.g. Orange & white, all black, "galaxy" purple
+  - type: dropdown
+    id: movement
+    attributes:
+      label: How should it move?
+      options:
+        - Walks
+        - Hops
+        - Flutters / flies
+        - Floats
+        - Super slow
+        - Super fast
+        - Surprise me
+  - type: textarea
+    id: lines
+    attributes:
+      label: Things it could say
+      description: A few short lines for its speech bubbles.
+      placeholder: |
+        "honk!"
+        "i'm a very good bird"
+  - type: textarea
+    id: art
+    attributes:
+      label: Pixel art (optional)
+      description: Drew it yourself? Paste a 16 × 12 text drawing or attach an image.

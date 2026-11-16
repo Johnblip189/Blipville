@@ -1185,8 +1185,28 @@
   const say_ = say;
   $("nightBtn").onclick = () => NS.open();
 
+  // ------------------------------------------------------------------ maintenance mode
+  // Turned on/off with the "Maintenance mode" button on GitHub (it edits go/status.json).
+  // We read it straight from GitHub (fresh within a few minutes), then from this site as a backup.
+  const STATUS_URLS = ["https://raw.githubusercontent.com/Johnblip189/Blipville/main/go/status.json", "status.json"];
+  async function checkStatus() {
+    for (const url of STATUS_URLS) {
+      try {
+        const res = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
+        if (!res.ok) continue;
+        const st = await res.json();
+        $("maint").hidden = !st.maintenance;
+        if (st.maintenance) $("maintMsg").textContent = st.message || "We're fixing things up. Back soon!";
+        return st;
+      } catch (e) { /* offline or blocked: try the next one */ }
+    }
+    return null;                                    // can't tell: let them keep playing
+  }
+  $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
+  checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
+
   window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
-                         nightShift: NS, sighting: () => sighting, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
+                         nightShift: NS, checkStatus, sighting: () => sighting, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;
                            plays.push(type === "ball" ? { type, pets: [a, b], from: a, to: b, t0: t, throws: 0, n: 4 }

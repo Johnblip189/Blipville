@@ -38,6 +38,17 @@
 
 <div id="toast" role="status" aria-live="polite"></div>
 
+<!-- maintenance screen (turned on with the "Maintenance mode" button on GitHub) -->
+<div id="maint" hidden>
+  <div class="maintCard">
+    <img src="icons/maintenance.png" alt="Blips putting traffic cones around the Blipville server">
+    <h2>Blipville is under maintenance 🔧</h2>
+    <p id="maintMsg">We're fixing things up. Back soon!</p>
+    <p class="gold">Your pets are safe. They're saved on this phone.</p>
+    <button id="maintRetry">Check again</button>
+  </div>
+</div>
+
 <!-- pet sheet (press and hold a pet) -->
 <div class="sheet" id="petSheet" hidden>
   <div class="card">

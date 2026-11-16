@@ -135,3 +135,14 @@ html, body {
 .nsRow button:disabled { opacity: .4; }
 .nsRow.cams button { white-space: pre-line; font-size: 11px; min-height: 50px; line-height: 1.25; }
 .nsCard .close { margin-top: 8px; min-height: 40px; }
+
+/* maintenance screen */
+#maint { position: fixed; inset: 0; z-index: 50; background: var(--bg); overflow: auto; display: flex; justify-content: center; }
+#maint[hidden] { display: none; }
+.maintCard { max-width: 640px; padding: calc(env(safe-area-inset-top) + 24px) 16px 32px; text-align: center; }
+.maintCard img { width: 100%; height: auto; border-radius: 18px; image-rendering: pixelated; display: block; }
+.maintCard h2 { font-size: 24px; margin: 22px 0 8px; }
+.maintCard p { color: var(--muted); font-size: 16px; line-height: 1.5; margin: 6px 0; }
+.maintCard .gold { color: #ffd666; font-weight: 700; }
+.maintCard button { margin-top: 20px; min-height: 48px; padding: 0 28px; border: 0; border-radius: 14px; background: var(--accent);
+  color: #fff; font: 800 16px var(--font); }

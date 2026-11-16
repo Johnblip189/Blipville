@@ -10,6 +10,10 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 **120 kinds of pets · 360+ colors · hats, hearts, eggs, cryptids & a minigame** — one Python file, nothing to install.
 
+## ✨ New in v0.3.1 (beta)
+
+- 👣 **New rarity: Cryptids!** 12 Blips based on legendary creatures (Bigfoot, Mothman, Nessie and more). Spot one in its own little scene, like Mothman on a lamp post, and click it before it gets away. Or set out a 🔦 Cryptid Lure.
+
 ## ✨ New in v0.3.0 (beta)
 
 - 🏠 **Your pets are remembered.** Close Blipville and your whole town comes back next time, names, colors and hats included.
@@ -24,7 +28,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.3.0-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.3.1-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.

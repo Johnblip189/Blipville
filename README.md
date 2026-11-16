@@ -1,6 +1,6 @@
 # 🏘️ Blipville
 
-> 🧪 **Beta demo.** Blipville is still being built. Expect new animals, changes and the odd bug. [Tell me what you think!](https://github.com/connormroczka-prog/blipville/issues/new/choose)
+> 🧪 **Beta demo.** Blipville is still being built. Expect new animals, changes and the odd bug. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
 
@@ -12,7 +12,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville.exe (beta)](https://github.com/connormroczka-prog/blipville/releases/download/v0.1.0-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.1.0-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.
@@ -80,9 +80,9 @@ Copy an animal in the `ANIMALS` section, change the drawing and colors, and give
 
 ## Want a new animal?
 
-**[🐾 Suggest an animal](https://github.com/connormroczka-prog/blipville/issues/new?template=new-animal.yml)** — or right-click any pet → **Suggest an animal…**
+**[🐾 Suggest an animal](https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml)** — or right-click any pet → **Suggest an animal…**
 
-Found a bug? **[Report it here](https://github.com/connormroczka-prog/blipville/issues/new?template=bug.yml)**.
+Found a bug? **[Report it here](https://github.com/Johnblip189/blipville/issues/new?template=bug.yml)**.
 
 ## License
 

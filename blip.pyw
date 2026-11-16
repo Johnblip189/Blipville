@@ -869,7 +869,7 @@ def kind_colors(kind):
 def default_color(kind):
     v = VARIANTS[kind]
     return PALETTE_INDEX[v["palette"]] if "palette" in v and not v.get("colors") else 0
-SUGGEST_URL = "https://github.com/connormroczka-prog/blipville/issues/new?template=new-animal.yml"
+SUGGEST_URL = "https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml"
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",
          "Noodle", "Pebble", "Waffle", "Button", "Dot", "Jellybean", "Muffin", "Ziggy", "Clover", "Taco"]
 ART_W, ART_H = 16, 13          # body + 1 row of feet

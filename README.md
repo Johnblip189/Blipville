@@ -14,7 +14,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.1.0-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.2.0-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.

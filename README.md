@@ -6,8 +6,6 @@
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
 
-### 🌐 [Play Blipville in your browser](https://johnblip189.github.io/Blipville/): phones, laptops, Chromebooks, no install
-
 ![Blipville demo](docs/demo.gif)
 
 **108 kinds of pets · 328+ colors · hearts, eggs & a minigame** — one Python file, nothing to install.
@@ -21,14 +19,14 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.
 
-### 📱💻 Phone, laptop & Chromebook: Blipville: On the Go
+### 📱 Phone: Blipville: On the Go
 
 **[Play Blipville: On the Go](https://johnblip189.github.io/Blipville/go/)** in your phone's browser, then add it to your home screen so it opens like an app (and works offline):
 
 - **iPhone:** Safari → Share → **Add to Home Screen**
 - **Android:** Chrome → ⋮ → **Install app** / **Add to Home screen**
 
-Your Blips live in a little town: tap to pet, drag to toss, press and hold (or right-click) for their menu. On a laptop there are keyboard shortcuts (**F** feed, **N** friend, **E** egg, **Z** zoo), and in Chrome you can **📌 Pop out** the town into a small window that stays on top while you work. Hearts, Mystery Eggs and the whole collection are there too. (On the Go saves on your phone, separately from the desktop app.)
+Your Blips live in a little town: tap to pet, drag to toss, press and hold for their menu. Hearts, Mystery Eggs and the whole collection are there too. (On the Go saves on your phone, separately from the desktop app.)
 
 ### Any computer with Python
 

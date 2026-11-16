@@ -7,6 +7,7 @@
   const RARE = new Set(D.groups.rare);
   const NIGHT = new Set(D.groups.nightShift);
   const CRYPT = new Set(D.groups.cryptids);
+  const KAIJU = new Set(D.groups.kaiju || []), HITS = D.kaijuHits || 3;
   const EGG_COST = D.eggCost;
   let view = window;                                   // the window the town is in (main page or the pop-out)
   const doc = () => view.document;
@@ -21,10 +22,12 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [] };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
+  let frozen = false;                                   // set while a loaded save code is taking over
   function persist(now = false) {
+    if (frozen) return;
     const write = () => {
       save.pets = pets.map((p) => ({ kind: p.kind, color: p.color, name: p.name, hat: p.hat || null, hunger: Math.round(p.hunger), energy: Math.round(p.energy) }));
       save.lastSeen = Date.now();
@@ -94,7 +97,7 @@
     if (on && !quiet) sfx("boop");
   }
 
-  const isUnlocked = (k) => CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const isUnlocked = (k) => KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -579,6 +582,7 @@
   // Every few minutes a cryptid shows up in town, each its own way (Mothman lands on a lamp post, Nessie
   // pops out of the water…). Tap it before it gets away to befriend it! Scenes come from blip.pyw.
   let sighting = null, nextSighting = now() + rnd(2, 5) * 60;
+  let nextKaiju = now() + rnd(15, 30) * 60;            // kaiju: much rarer, bigger, and they take 3 taps
   const QMARK = [".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."];
   const [SW, SH] = D.sceneSize, SHADOW = "#16121f", GLOW = "#ffe66a";
   function scenePos(keys, t) {
@@ -607,17 +611,22 @@
   }
   function startSighting(kind) {
     const sc = D.scenes[kind], flip = Math.random() < 0.5;
-    sighting = { kind, sc, t0: now(), flip, facing: flip ? -1 : 1, clip: sc.clip ?? -99,
+    sighting = { kind, sc, t0: now(), flip, facing: flip ? -1 : 1, clip: sc.clip ?? -99, s: sc.scale || 1, hits: 0, flash: 0,
                  keys: sc.keys.map(([t, x, y]) => [t, flip ? SW - x : x, y]),
                  props: sc.props.map(([n, x, y, layer]) => [n, flip ? SW - x : x, y, layer]) };
     sighting.pos = sighting.keys[0].slice(1);
     const witness = pets.find((p) => !["sleep", "held"].includes(p.state));
     if (witness) say(witness, sc.hint, 4);
-    sfx("whoosh");
+    sfx(KAIJU.has(kind) ? "thud" : "whoosh"); if (KAIJU.has(kind)) vibrate([60, 60, 60]);
   }
-  const sightingVisible = () => sighting && sighting.pos[1] + 12 >= sighting.clip;
+  const sightingVisible = () => sighting && sighting.pos[1] + 12 * sighting.s >= sighting.clip;
   function sightingStep(t) {
     if (!sighting) {
+      if (t >= nextKaiju) {
+        nextKaiju = t + rnd(30, 60) * 60;
+        const leftK = (D.groups.kaiju || []).filter((k) => !isUnlocked(k));
+        if (leftK.length && $("nsSheet").hidden) { startSighting(pick(leftK)); return; }
+      }
       if (t < nextSighting) return;
       const wait = rnd(4, 9) * 60; nextSighting = t + (isNight() ? wait / 2 : wait);
       const left = D.groups.cryptids.filter((k) => !isUnlocked(k));
@@ -627,7 +636,8 @@
     const sg = sighting, st = t - sg.t0, k = KINDS[sg.kind];
     if (st > sg.keys[sg.keys.length - 1][0]) {
       const witness = pets.find((p) => !["sleep", "held"].includes(p.state));
-      if (witness) say(witness, pick(["did you see that?!", "w-what was THAT?", "i think i saw something…", "*rubs eyes* huh?", "it got away!"]), 3);
+      if (witness && KAIJU.has(sg.kind)) say(witness, pick(["it stomped away!!", "THAT WAS HUGE", "the whole town shook!", "next time we'll get it!"]), 3);
+      else if (witness) say(witness, pick(["did you see that?!", "w-what was THAT?", "i think i saw something…", "*rubs eyes* huh?", "it got away!"]), 3);
       sighting = null; return;
     }
     let [x, y] = scenePos(sg.keys, st);
@@ -644,12 +654,13 @@
     if (sg.sc.mound && y < sg.clip - 10) { const P = D.sceneProps.mound; sceneMask(P.rows, P.colors, x + Math.sin(st * 9) * 0.6, 0, st, false); }
     const g = grid(sg.kind, 0, { t: 0, silhouette: true, state: "walk" });
     const glow = Math.floor(t * 2.5) % 10 !== 0;
+    const s = sg.s, flash = t < sg.flash;
     g.forEach((row, r) => {
-      if (y + 12 - r < sg.clip) return;
-      const cells = row.map((c, i) => (c ? (glow && r === k.eyes && [4, 5, 10, 11].includes(i) ? GLOW : SHADOW) : null));
+      if (y + (12 - r) * s < sg.clip) return;
+      const cells = row.map((c, i) => (c ? (flash ? "#ffffff" : glow && r === k.eyes && [4, 5, 10, 11].includes(i) ? GLOW : SHADOW) : null));
       if (sg.facing === -1) cells.reverse();
-      const top = GROUND - (y + 13 - r) * u;
-      cells.forEach((c, i) => { if (c) { ctx.fillStyle = c; ctx.fillRect(L + (x - 8 + i) * u, top, u + 0.5, u + 0.5); } });
+      const top = GROUND - (y + (13 - r) * s) * u;
+      cells.forEach((c, i) => { if (c) { ctx.fillStyle = c; ctx.fillRect(L + (x + (i - 8) * s) * u, top, s * u + 0.5, s * u + 0.5); } });
     });
     if (sg.sc.sparkle && !moving) {
       ctx.fillStyle = "#fff27a";
@@ -659,16 +670,30 @@
       }
     }
     props("front");
-    if (sightingVisible()) drawMask(QMARK, L + x * u - 7, GROUND - (y + 22) * u, 3, "#ffffff");
+    if (sightingVisible() && KAIJU.has(sg.kind)) {             // little bars: how many taps it still needs
+      for (let i = 0; i < HITS; i++) {
+        const bx = L + (x - 5 + i * 4) * u, by = GROUND - (y + 13 * s + 4) * u;
+        ctx.fillStyle = "#16121f"; ctx.fillRect(bx - 1, by - 1, 3 * u + 2, 2 * u + 2);
+        ctx.fillStyle = i < sg.hits ? "#ff5a7a" : "#ffffff"; ctx.fillRect(bx, by, 3 * u, 2 * u);
+      }
+    } else if (sightingVisible()) drawMask(QMARK, L + x * u - 7, GROUND - (y + 22) * u, 3, "#ffffff");
   }
   function sightingAt(px, py) {
     if (!sightingVisible()) return false;
     const u = sceneU(), ux = (px - sceneLeft()) / u, uy = (GROUND - py) / u, [x, y] = sighting.pos;
-    return Math.abs(ux - x) <= 11 && uy >= Math.max(y, sighting.clip) - 3 && uy <= y + 17;
+    const s = sighting.s;
+    return Math.abs(ux - x) <= 10 * s + 1 && uy >= Math.max(y, sighting.clip) - 3 && uy <= y + 16 * s + 1;
   }
   function befriend() {
-    const kind = sighting.kind, x = sceneLeft() + sighting.pos[0] * sceneU(); sighting = null;
-    save.cryptids.push(kind); persist(true); sfx("fanfare"); vibrate([30, 40, 30]);
+    const kind = sighting.kind, x = sceneLeft() + sighting.pos[0] * sceneU();
+    if (KAIJU.has(kind) && ++sighting.hits < HITS) {          // not yet! it flinches and keeps going
+      sighting.flash = now() + 0.15; sfx("thud"); vibrate(25);
+      const w = pets.find((p) => !["sleep", "held"].includes(p.state));
+      if (w) say(w, pick(["again! tap it again!", "it's working!", "keep going!!", "almost!"]), 2);
+      return;
+    }
+    sighting = null;
+    (KAIJU.has(kind) ? save.kaiju : save.cryptids).push(kind); persist(true); sfx("fanfare"); vibrate([30, 40, 30]);
     const p = addPet(kind, { x: clamp(x, 10 * S, W - 10 * S), quiet: true });
     if (p) { say(p, `you spotted me! 📸 i'm a ${kind}!`, 5); setFace(p, "happy", 2); burst(p, "heart", 6); }
     else toast(`You befriended a ${kind}! 📸 It's waiting in your 📖 Zoo.`, 4);
@@ -816,9 +841,10 @@
   function openZoo(swapPet = null) {
     const grid_ = $("zooGrid"); grid_.innerHTML = "";
     const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ["Rare ✨ (hatch from eggs)", D.groups.rare],
-                    ["Night Shift 🌙 (survive the nights)", D.groups.nightShift], ["Cryptids 👣 (spot them in town)", D.groups.cryptids]];
+                    ["Night Shift 🌙 (survive the nights)", D.groups.nightShift], ["Cryptids 👣 (spot them in town)", D.groups.cryptids],
+                    [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (RARE.has(k) ? "🥚 hatch from an egg" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const cells = document.createElement("div"); cells.className = "zooCells";
@@ -859,6 +885,14 @@
       nextSighting = Math.min(nextSighting, now() + rnd(8, 20)); closeSheets();
       toast("🔦 Lure set! Watch your town: when a shadow with glowing eyes sneaks by, tap it!", 4.5);
     };
+    const beacon = $("beaconBtn"), kLeft = (D.groups.kaiju || []).filter((k) => !isUnlocked(k)).length;
+    beacon.hidden = !kLeft; beacon.textContent = `📡 Switch on a Kaiju Beacon · ${D.beaconCost} 💖`;
+    beacon.onclick = () => {
+      if (save.hearts < D.beaconCost) { toast(`A Kaiju Beacon costs ${D.beaconCost} 💖. You have ${save.hearts}. Kaiju also stomp by on their own… once in a long while.`, 4); return; }
+      save.hearts -= D.beaconCost; persist(true); updateHearts(true); sfx("coin");
+      nextKaiju = Math.min(nextKaiju, now() + rnd(10, 25)); closeSheets();
+      toast(`📡 Beacon on! Something HUGE is coming. Tap it ${HITS} times before it leaves!`, 4.5);
+    };
     const all = $("peekAll"), hidden = groups.flatMap(([, ks]) => ks).filter((k) => !isUnlocked(k) && !save.peeked.includes(k));
     all.hidden = !hidden.length; all.textContent = "👀 Peek at all locked Blips"; all.classList.remove("armed");
     all.onclick = () => {
@@ -868,6 +902,36 @@
     $("zooHint").textContent = swapPet ? `Pick a new kind for ${swapPet.name}.` : "Tap a Blip to bring it to town.";
     openSheet("zooSheet");
   }
+
+  // save codes: back up your town, or move it to another phone / browser
+  const CODE_PREFIX = "BLIPVILLE1:";
+  function saveCode() {
+    persist(true);
+    return CODE_PREFIX + btoa(unescape(encodeURIComponent(JSON.stringify(save))));
+  }
+  function readCode(text) {
+    text = (text || "").trim().replace(/\s+/g, "");
+    if (!text.startsWith(CODE_PREFIX)) return null;
+    try { const d = JSON.parse(decodeURIComponent(escape(atob(text.slice(CODE_PREFIX.length))))); return d && typeof d === "object" && Array.isArray(d.pets) ? d : null; }
+    catch (e) { return null; }
+  }
+  $("copySave").onclick = async () => {
+    const code = saveCode();
+    $("saveCode").value = code;
+    try { await navigator.clipboard.writeText(code); toast("💾 Save code copied! Paste it somewhere safe (like a note or a message to yourself).", 4.5); }
+    catch (e) { $("saveCode").select(); toast("💾 Here's your save code. Copy it and keep it somewhere safe.", 4); }
+    sfx("coin");
+  };
+  $("loadSave").onclick = () => {
+    const d = readCode($("saveCode").value);
+    if (!d) { toast("That doesn't look like a Blipville save code. Paste the whole thing, starting with BLIPVILLE1:", 4.5); return; }
+    const sure = $("loadSave");
+    if (!sure.classList.contains("armed")) { sure.classList.add("armed"); sure.textContent = "This replaces your town here. Tap again to load"; return; }
+    frozen = true;
+    try { localStorage.setItem(SAVE_KEY, JSON.stringify(d)); } catch (e) { frozen = false; toast("Couldn't save on this browser (private mode?)."); return; }
+    location.reload();
+  };
+  window.blipvilleSaveCode = { saveCode, readCode };
 
   // eggs
   const EGG = ["....oooo....", "...oeeeeo...", "..oeesseeo..", ".oeeeeeeseo.", ".oeseeeeeeo.", "oeeeeeeeeseo",

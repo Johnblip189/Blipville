@@ -183,3 +183,12 @@ body.mini #bar button span { font-size: 15px; }
 body.mini #shareBtn { display: none; }
 body.mini .sheet { padding: 6px; }
 body.mini .card { padding: 10px; border-radius: 14px; }
+
+/* save codes (in the help sheet) */
+.saveBox { margin: 12px 0; padding: 12px; border-radius: 14px; background: #1d1a2e; }
+.saveBox .sheetTitle.small { font-size: 15px; margin-bottom: 4px; }
+#saveCode { width: 100%; box-sizing: border-box; margin-top: 8px; border: 0; border-radius: 10px; padding: 8px; background: #2b2547;
+  color: var(--text); font: 12px ui-monospace, monospace; resize: none; word-break: break-all; }
+.saveRow { display: flex; gap: 8px; margin-top: 8px; }
+.saveRow button { flex: 1; min-height: 42px; border: 0; border-radius: 12px; background: #3a3260; color: var(--text); font: 800 13px var(--font); }
+.saveRow button.armed { background: #a83a5a; }

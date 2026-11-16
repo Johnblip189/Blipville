@@ -15,8 +15,6 @@ spec.loader.exec_module(bl)
 
 kinds = {}
 for k in bl.KINDS:
-    if k in bl.KAIJU_KINDS:        # kaiju are desktop-only for now
-        continue
     v = bl.VARIANTS[k]
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
@@ -27,13 +25,15 @@ for k in bl.KINDS:
     }
 data = {
     "kinds": kinds,
-    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS},
+    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,
     "eggCost": bl.EGG_COST,
     "lureCost": bl.LURE_COST,
-    "scenes": bl.CRYPTID_SCENES,
+    "beaconCost": bl.BEACON_COST,
+    "kaijuHits": bl.KAIJU_HITS,
+    "scenes": bl.SCENES,
     "sceneProps": bl.SCENE_PROPS,
     "sceneSize": [bl.SCENE_W, bl.SCENE_H],
     "unlocks": bl.UNLOCKS,

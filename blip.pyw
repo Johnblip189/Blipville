@@ -822,6 +822,40 @@ for _name, _a in ANIMALS.items():
                        "feet": FEET_FLAMINGO if _a.get("feet") == "flamingo" else (FEET_STD if _a.get("feet", True) else None),
                        "dx": _a.get("dx", 0), "move": _move,
                        "colors": _a["colors"], "lines": _lines, "speed": SPEED.get(_name, 1.0)}
+# Blip can also dress up as a dog: these "colors" bring their own markings (art)
+BLIP_DOGS = [
+    {"name": "Husky", "o": "#1c2028", "b": "#7d8796", "l": "#f4f6f9", "p": "#ffb0c0", "n": "#14161b", "e": "#4aa3ff",
+     "art": [
+        "..oo........oo..",
+        ".olbo......oblo.",
+        ".obbbooooooobbo.",
+        ".obbbbbbbbbbbbo.",
+        "obbbllbbbbllbbbo",
+        "obbbbbbbbbbbbbbo",
+        "ollbbbbbbbbbbllo",
+        "olplllbbbblllplo",
+        "ollllllnnllllllo",
+        "ollllllllllllllo",
+        ".ollllllllllllo.",
+        "..ollllllllllo..",
+     ]},
+    {"name": "German Shepherd", "o": "#1a0e04", "b": "#c8843a", "s": "#1e1a18", "p": "#e88a6a", "n": "#0a0808", "e": "#2a1404",
+     "art": [
+        "..oo........oo..",
+        ".osso......osso.",
+        ".osssooooooosso.",
+        ".obssssssssssbo.",
+        "obbbbssssssbbbbo",
+        "obbbbbbssbbbbbbo",
+        "obbbbbbssbbbbbbo",
+        "obpbbbbssbbbbpbo",
+        "obbbbssnnssbbbbo",
+        "obbbbssssssbbbbo",
+        ".obbbbbbbbbbbbo.",
+        "..obbbbbbbbbbo..",
+     ]},
+]
+VARIANTS["Blip"]["colors"] = PALETTES + BLIP_DOGS
 CRITTERS = list(KINDS)            # the original made-up critters
 ANIMAL_KINDS = sorted(ANIMALS)
 KINDS = CRITTERS + ANIMAL_KINDS
@@ -1261,7 +1295,7 @@ class Blip:
         colors = kind_colors(self.kind)
         pal = {**colors[self.palette % len(colors)], **v.get("extra", {})}
         g = [[None] * ART_W for _ in range(ART_H)]
-        body = v["body"]
+        body = pal.get("art") or v["body"]          # some colors come with their own markings
         if v.get("alt") and self.state in ("walk", "fall", "held") and int(now * 10) % 2:
             body = v["alt"]                        # wing flap
         squash = now < self.squash_until

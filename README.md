@@ -49,6 +49,8 @@ The pets don't show up on the taskbar, so use **right-click → Goodbye everyone
 
 **Critters:** Blip, Bun *(hops)*, Sprout, Boo *(floats)*, Fuzz *(flutters)*, Spike
 
+Blip can even dress up as a **Husky** or a **German Shepherd** (right-click Blip → Change color).
+
 **Animals:** Axolotl, Bat, Bear, Beaver, Bee, Capybara, Cat, Chick, Cow, Deer, Dog, Dragon, Duck, Elephant, Flamingo, Fox, Frog, Giraffe, Hamster, Hedgehog, Hippo, Horse, Jellyfish, Kangaroo, Koala, Ladybug, Lion, Llama, Monkey, Mouse, Octopus, Otter, Owl, Panda, Parrot, Penguin, Pig, Raccoon, Seal, Shark, Sheep, Skunk, Sloth, Squirrel, Tiger, Unicorn, Whale, Wolf, Zebra
 
 Each animal has its own lines and its own way of moving: frogs and kangaroos hop, bats and bees flutter, whales and jellyfish float, sloths are *very* slow, and flamingos stand on one leg.

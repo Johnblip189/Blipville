@@ -8,13 +8,23 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**108 kinds of pets · 328+ colors · hearts, eggs & a minigame** — one Python file, nothing to install.
+**108 kinds of pets · 328+ colors · hats, hearts, eggs & a minigame** — one Python file, nothing to install.
+
+## ✨ New in v0.3.0 (beta)
+
+- 🏠 **Your pets are remembered.** Close Blipville and your whole town comes back next time, names, colors and hats included.
+- 🎩 **Hats & outfits shop.** Spend hearts on 12 hats and outfits, plus seasonal ones that only show up at the right time of year.
+- 🍂 **Seasons & weather.** Snow in winter, petals in spring, fireflies on summer nights, falling leaves in autumn, and bats around Halloween. Pets have seasonal things to say too.
+- ⚽ **Pets play together.** They play catch, chase each other in games of tag, and pile up for naps.
+- 🔊 **Cute sound effects** (off by default). Boops, munches, a coin ding for new hats, and an egg-hatching fanfare. All made with code.
+- 👀 **Peek at locked Blips.** Don't want to wait? Peek at the rare and Night Shift Blips in the Collection (with a spoiler warning first).
+- 📱 **Night Shift on phones.** Blipville: On the Go now has the full Night Shift minigame with touch controls.
 
 ## Get it
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.2.0-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.3.0-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.
@@ -26,7 +36,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - **iPhone:** Safari → Share → **Add to Home Screen**
 - **Android:** Chrome → ⋮ → **Install app** / **Add to Home screen**
 
-Your Blips live in a little town: tap to pet, drag to toss, press and hold for their menu. Hearts, Mystery Eggs and the whole collection are there too. (On the Go saves on your phone, separately from the desktop app.)
+Your Blips live in a little town: tap to pet, drag to toss, press and hold for their menu. Hearts, Mystery Eggs, hats, the whole collection and the Night Shift minigame are there too. (On the Go saves on your phone, separately from the desktop app.)
 
 ### Any computer with Python
 
@@ -54,7 +64,10 @@ Your Blips live in a little town: tap to pet, drag to toss, press and hold for t
 - **Rename…**: give it any name
 - **Add a friend**: another random pet joins (up to 12). Pets that meet say hi to each other by name
 - **Play Night Shift 🌙…**: the minigame that unlocks the robo crew
+- **🎩 Hats & outfits…**: buy, wear and swap hats with your hearts
 - **🥚 Hatch a Mystery Egg…**: spend hearts to hatch a rare Blip (your heart count is shown in the menu)
+- **📖 Collection…**: every rare and Night Shift Blip. Locked ones are shadows, but you can peek
+- **Sound effects** / **Weather effects**: turn sounds on (they start off) and seasonal weather off
 - **Suggest an animal…**: opens the request form in your browser
 - **Support Blipville ♥**: ways to support the project
 - **Show name tags**, **Goodbye [name]**, **Goodbye everyone (quit)**
@@ -100,13 +113,15 @@ Taking care of your Blips earns **hearts**:
 
 Spend **30 hearts** on a **🥚 Mystery Egg** (right-click any pet). It wobbles, cracks, and hatches one of the 20 rare Blips, which then joins you on the desktop. Collect them all!
 
+You can also spend hearts in the **🎩 Hats & outfits** shop: party hats, bows, crowns, wizard hats and more, from 💖 15 to 💖 50. Some only appear in their season, like the Santa Hat in winter or the Witch Hat around Halloween.
+
 ## 🌙 Night Shift (minigame)
 
-Right-click any pet → **Play Night Shift 🌙…**
+Right-click any pet → **Play Night Shift 🌙…** (on phones, tap **🌙 Night**)
 
 Survive from **12 AM to 6 AM** (about 2 minutes) while the Night Shift crew wanders toward your office.
 
-- **Glowing eyes in a doorway?** Hit **FLASH** on that side (◀ ▶ or **A** / **D**) to send the robo back to the stage.
+- **Glowing eyes in a doorway?** Hit **FLASH** on that side (◀ ▶ or **A** / **D**, or tap the doorway on a phone) to send the robo back to the stage.
 - **Check the cameras** (**1**–**5**): a robo you're watching **can't move**. But cameras and flashes use battery 🔋
 - Get caught and you just try again. No real jump scares, promise. (It just wanted a hug.)
 

@@ -8,7 +8,9 @@
   const NIGHT = new Set(D.groups.nightShift);
   const CRYPT = new Set(D.groups.cryptids);
   const EGG_COST = D.eggCost;
-  const MAX_PETS = 8;
+  let view = window;                                   // the window the town is in (main page or the pop-out)
+  const doc = () => view.document;
+  const maxPets = () => (W >= 900 ? 12 : 8);           // bigger screens fit a bigger town
   const SAVE_KEY = "blipville-go-v1";
   const HEART = [".x.x.", "xxxxx", "xxxxx", ".xxx.", "..x.."];
   const ZED = ["xxxx", "..x.", ".x..", "xxxx"];
@@ -16,7 +18,7 @@
   const rnd = (a, b) => a + Math.random() * (b - a);
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const $ = (id) => document.getElementById(id);
+  const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
   let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [] };
@@ -99,11 +101,11 @@
   let W = 0, H = 0, S = 5, GROUND = 0, DPR = 1;
   function layout() {
     DPR = Math.min(window.devicePixelRatio || 1, 3);
-    W = window.innerWidth; H = window.innerHeight;
+    W = view.innerWidth; H = view.innerHeight;
     cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
-    S = clamp(Math.round(Math.min(W, 700) / 78), 4, 7);
+    S = clamp(Math.round(Math.min(W / 78, H / 60)), 3, 8);   // phones ≈5, laptops ≈8, the pop-out window ≈5
     const bar = $("bar").getBoundingClientRect();
-    GROUND = Math.round(H - bar.height - 18);
+    GROUND = Math.round(H - (bar.height || 70) - 18);
     for (const p of pets) p.x = clamp(p.x, 8 * S, W - 8 * S);
   }
   window.addEventListener("resize", layout);
@@ -114,6 +116,7 @@
   let pointer = { x: 0, y: 0 };
   let greeted = {};
   const now = () => performance.now() / 1000;
+  const FONT = getComputedStyle(document.body).fontFamily;
 
   function makePet(kind, color, name, x) {
     const k = KINDS[kind];
@@ -127,7 +130,7 @@
     return p;
   }
   function addPet(kind, opts = {}) {
-    if (pets.length >= MAX_PETS) { toast(`Town's full! (${MAX_PETS} Blips max) Send one away first.`); return null; }
+    if (pets.length >= maxPets()) { toast(`Town's full! (${maxPets()} Blips max) Send one away first.`); return null; }
     const used = new Set(pets.map((p) => p.name));
     const name = opts.name || pick(D.names.filter((n) => !used.has(n))) || pick(D.names);
     const p = makePet(kind, opts.color, name, opts.x);
@@ -506,7 +509,7 @@
   function pixCloud(x, y) { for (const [dx, dy, w] of [[0, 8, 70], [12, 0, 40], [20, 14, 60]]) ctx.fillRect(Math.round(x + dx), Math.round(y + dy), w, 12); }
 
   function bubble(text, cx, bottom) {
-    ctx.font = "700 14px " + getComputedStyle(document.body).fontFamily;
+    ctx.font = "700 14px " + FONT;
     const maxW = Math.min(220, W - 24), words = text.split(" "), lines = [];
     let line = "";
     for (const w of words) { const test = line ? line + " " + w : w; if (ctx.measureText(test).width > maxW - 20 && line) { lines.push(line); line = w; } else line = test; }
@@ -521,7 +524,7 @@
     lines.forEach((l, i) => ctx.fillText(l, x + bw / 2, y + 7 + i * 18));
   }
   function nameTag(text, cx, bottom) {
-    ctx.font = "700 11px " + getComputedStyle(document.body).fontFamily;
+    ctx.font = "700 11px " + FONT;
     const w = ctx.measureText(text).width + 10;
     ctx.fillStyle = "rgba(20,16,36,.85)"; ctx.beginPath(); ctx.roundRect(cx - w / 2, bottom - 16, w, 16, 6); ctx.fill();
     ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(text, cx, bottom - 8);
@@ -544,7 +547,7 @@
       else if (q.kind === "z") drawMask(ZED, qx, qy, 2 + Math.floor(a), "#bcd2ff");
       else if (q.kind === "crumb") { ctx.fillStyle = "#c98a4b"; ctx.fillRect(qx, qy, 3, 3); }
       else if (q.kind === "plus") {
-        ctx.font = "800 12px " + getComputedStyle(document.body).fontFamily;
+        ctx.font = "800 12px " + FONT;
         const w = ctx.measureText(q.text).width + 10;
         ctx.fillStyle = "#e8457a"; ctx.beginPath(); ctx.roundRect(qx - w / 2, qy - 9, w, 18, 8); ctx.fill();
         ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(q.text, qx, qy);
@@ -570,7 +573,8 @@
   }
 
   // ------------------------------------------------------------------ main loop
-  let last = now();
+  let last = now(), loopId = 0;
+  function startLoop() { const id = ++loopId; view.requestAnimationFrame(() => frame(id)); }
   // ------------------------------------------------------------------ cryptid sightings
   // Every few minutes a cryptid shows up in town, each its own way (Mothman lands on a lamp post, Nessie
   // pops out of the water…). Tap it before it gets away to befriend it! Scenes come from blip.pyw.
@@ -670,7 +674,8 @@
     else toast(`You befriended a ${kind}! 📸 It's waiting in your 📖 Zoo.`, 4);
   }
 
-  function frame() {
+  function frame(id) {
+    if (id !== loopId) return;
     const t = now(), dt = Math.min(0.05, t - last); last = t;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     ctx.imageSmoothingEnabled = false;
@@ -682,7 +687,7 @@
     for (const p of [...pets].sort((a, b) => (a === held ? 1 : 0) - (b === held ? 1 : 0))) drawPet(p, t);
     drawBalls();
     sightingStep(t);
-    requestAnimationFrame(frame);
+    view.requestAnimationFrame(() => frame(id));
   }
 
   // ------------------------------------------------------------------ touch: tap = pet, drag = toss, hold = menu
@@ -732,6 +737,13 @@
     press = null;
   };
   cv.addEventListener("pointerup", endPress);
+  cv.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    const p = petAt(e.clientX, e.clientY);
+    clearTimeout(holdTimer); press = null;
+    if (p) openPetSheet(p);
+  });
+  cv.addEventListener("pointermove", (e) => { if (!press) cv.style.cursor = petAt(e.clientX, e.clientY) ? "pointer" : "default"; });
   cv.addEventListener("pointercancel", endPress);
 
   // ------------------------------------------------------------------ UI: hearts, toast, sheets
@@ -745,8 +757,8 @@
     clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), secs * 1000);
   }
   const vibrate = (ms) => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* not supported */ } };
-  function openSheet(id) { document.querySelectorAll(".sheet").forEach((s) => (s.hidden = s.id !== id)); }
-  function closeSheets() { document.querySelectorAll(".sheet").forEach((s) => (s.hidden = true)); persist(); }
+  function openSheet(id) { doc().querySelectorAll(".sheet").forEach((s) => (s.hidden = s.id !== id)); }
+  function closeSheets() { doc().querySelectorAll(".sheet").forEach((s) => (s.hidden = true)); persist(); }
   document.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closeSheets));
   document.querySelectorAll(".sheet").forEach((s) => s.addEventListener("pointerdown", (e) => { if (e.target === s) closeSheets(); }));
 
@@ -905,12 +917,12 @@
           $("eggSub").textContent = `Rare Blips found: ${save.hatched.length}/${D.groups.rare.length}`;
           done.onclick = () => {
             closeSheets();
-            if (pets.length >= MAX_PETS) { toast(`${kind} is waiting in your 📖 Zoo (town is full).`); return; }
+            if (pets.length >= maxPets()) { toast(`${kind} is waiting in your 📖 Zoo (town is full).`); return; }
             const p = addPet(kind, { quiet: true }); if (p) say(p, "i'm new here! hi!! ✨", 4);
           };
         }
       }
-      requestAnimationFrame(anim);
+      view.requestAnimationFrame(anim);
     })();
   }
 
@@ -925,7 +937,8 @@
     try {
       if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "My Blipville" }); return; }
     } catch (e) { if (e && e.name === "AbortError") return; }
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "my-blipville.png"; a.click();
+    const a = doc().createElement("a"); a.href = URL.createObjectURL(blob); a.download = "my-blipville.png";
+    doc().body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
     toast("📸 Saved a picture of your town!");
   }
@@ -948,6 +961,57 @@
   setSound(!!save.sound, true);
   $("helpEggCost").textContent = EGG_COST;
 
+  function onKey(e) {
+    if (e.target && (e.target.tagName === "INPUT" || e.target.isContentEditable) || e.ctrlKey || e.metaKey || e.altKey) return;
+    const open = [...doc().querySelectorAll(".sheet")].some((s) => !s.hidden);
+    if (e.key === "Escape") { closeSheets(); return; }
+    if (open) return;
+    const k = e.key.toLowerCase();
+    const act = { f: "feedBtn", n: "friendBtn", e: "eggBtn", z: "collectionBtn", s: "shareBtn", "?": "helpBtn", p: "popBtn" }[k];
+    if (act && $(act) && !$(act).hidden) { e.preventDefault(); $(act).click(); }
+    else if (k === " ") {                                   // space pets the Blip under the mouse
+      const p = petAt(pointer.x, pointer.y); if (p) { e.preventDefault(); petIt(p); }
+    }
+  }
+  document.addEventListener("keydown", onKey);
+
+  // 📌 Pop out: put the town in a small always-on-top window (Chrome / Chromebook "Document Picture-in-Picture")
+  const canPop = "documentPictureInPicture" in window && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (canPop) $("popBtn").hidden = false;
+  $("popBtn").onclick = async () => {
+    if (view !== window) { view.close(); return; }
+    let pip;
+    try { pip = await window.documentPictureInPicture.requestWindow({ width: 560, height: 300 }); }
+    catch (e) { toast("Couldn't pop out here. Try Chrome on a laptop or Chromebook."); return; }
+    for (const sheet of document.styleSheets) {
+      try {
+        const st = pip.document.createElement("style");
+        st.textContent = [...sheet.cssRules].map((r) => r.cssText).join("\n"); pip.document.head.appendChild(st);
+      } catch (e) {
+        const l = pip.document.createElement("link"); l.rel = "stylesheet"; l.href = sheet.href; pip.document.head.appendChild(l);
+      }
+    }
+    pip.document.title = "Blipville";
+    pip.document.body.classList.add("mini");
+    const moved = [...document.body.children].filter((el) => el.tagName !== "SCRIPT" && el.id !== "popped");
+    moved.forEach((el) => pip.document.body.appendChild(el));
+    view = pip;                                        // switch first, so lookups find the moved elements
+    $("popped").hidden = false;
+    $("popBtn").innerHTML = "<span>⤢</span>Back";
+    pip.addEventListener("resize", layout);
+    pip.document.addEventListener("keydown", onKey);
+    pip.addEventListener("pagehide", () => {
+      const home = document.getElementById("popped");
+      moved.forEach((el) => document.body.insertBefore(el, home));
+      view = window;
+      home.hidden = true;
+      $("popBtn").innerHTML = "<span>📌</span>Pop out";
+      layout(); startLoop(); persist(true);
+    }, { once: true });
+    layout(); startLoop();
+  };
+  $("popBack").onclick = () => { if (view !== window) view.close(); };
+
   // ------------------------------------------------------------------ start
   layout();
   if (save.pets && save.pets.length) {
@@ -969,7 +1033,7 @@
   persist();
   document.addEventListener("visibilitychange", () => { if (document.hidden) persist(true); });
   window.addEventListener("pagehide", () => persist(true));
-  requestAnimationFrame(frame);
+  startLoop();
   if ("serviceWorker" in navigator && (location.protocol === "https:" || ["localhost", "127.0.0.1"].includes(location.hostname))) navigator.serviceWorker.register("sw.js").catch(() => {});
   // ------------------------------------------------------------------ Night Shift minigame
   // Survive 12 AM → 6 AM. Tap a doorway with glowing eyes to FLASH it and send that robo back to the stage.

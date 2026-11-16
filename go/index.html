@@ -28,12 +28,13 @@
 </header>
 
 <nav id="bar">
-  <button id="feedBtn"><span>🍪</span>Feed</button>
-  <button id="friendBtn"><span>➕</span>Friend</button>
-  <button id="eggBtn"><span>🥚</span>Egg</button>
-  <button id="collectionBtn"><span>📖</span>Zoo</button>
-  <button id="nightBtn"><span>🌙</span>Night</button>
-  <button id="shareBtn"><span>📸</span>Share</button>
+  <button id="feedBtn" title="Feed the hungriest Blip (F)"><span>🍪</span>Feed</button>
+  <button id="friendBtn" title="Invite a new friend (N)"><span>➕</span>Friend</button>
+  <button id="eggBtn" title="Hatch a Mystery Egg (E)"><span>🥚</span>Egg</button>
+  <button id="collectionBtn" title="Your collection (Z)"><span>📖</span>Zoo</button>
+  <button id="nightBtn" title="Play Night Shift"><span>🌙</span>Night</button>
+  <button id="shareBtn" title="Save a picture of your town (S)"><span>📸</span>Share</button>
+  <button id="popBtn" title="Pop the town out into a small window that stays on top (P)" hidden><span>📌</span>Pop out</button>
 </nav>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -120,10 +121,22 @@
       <li>👣 Keep watching: every few minutes a <b>cryptid</b> sneaks through town. Tap the shadow with glowing eyes before it gets away to befriend it!</li>
       <li>Brave enough? Tap <b>🌙 Night</b> to play <b>Night Shift</b>. Survive until 6 AM to unlock the robo crew!</li>
       <li>Buy <b>hats &amp; outfits</b> from a Blip's menu. Tap <b>🔇</b> at the top to turn on sound effects.</li>
+      <li class="laptop">On a laptop: <b>right-click</b> a Blip for its menu, <b>Space</b> pets the Blip under your mouse, and
+        <b>F</b> feed · <b>N</b> friend · <b>E</b> egg · <b>Z</b> zoo · <b>S</b> share · <b>Esc</b> close.
+        <span class="popTip">Press <b>📌 Pop out</b> to keep your Blips in a little window on top of everything while you work!</span></li>
       <li>Add Blipville to your <b>home screen</b> to play offline: Share → <i>Add to Home Screen</i> (iPhone) or ⋮ → <i>Install app</i> (Android).</li>
     </ul>
     <div class="muted small">Blipville is free and open source. The desktop version lets your Blips walk around your computer screen: <a href="https://github.com/Johnblip189/blipville" target="_blank" rel="noopener">github.com/Johnblip189/blipville</a></div>
     <button class="close" data-close>Got it!</button>
+  </div>
+</div>
+
+<div id="popped" hidden>
+  <div>
+    <div class="big">📌</div>
+    <div class="sheetTitle">Your Blips popped out!</div>
+    <div class="muted">They're hanging out in the little window. Close it (or press Back there) to bring them home.</div>
+    <button class="close primary" id="popBack">Bring them back</button>
   </div>
 </div>
 

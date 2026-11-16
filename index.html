@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blipville — pixel pets for your screen</title>
+<meta name="description" content="Tiny pixel pets that wander, nap, eat cookies and hatch from Mystery Eggs. Play free in your browser on any phone, laptop or Chromebook, or download for Windows.">
+<meta property="og:title" content="Blipville">
+<meta property="og:description" content="Tiny pixel pets you can play with anywhere. 108 kinds, hearts, Mystery Eggs.">
+<meta property="og:image" content="docs/banner.png">
+<meta name="theme-color" content="#211c38">
+<link rel="icon" href="go/icons/icon-192.png">
+<style>
+  :root { --bg: #1b1730; --card: #2b2547; --text: #f1edff; --muted: #b8b2d8; --accent: #7a5cff; --gold: #ffd23a;
+          --font: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); line-height: 1.5; }
+  a { color: #9ad8ff; }
+  main { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+  .hero { text-align: center; padding: 28px 0 8px; }
+  .hero img.banner { width: 100%; max-width: 960px; border-radius: 18px; image-rendering: pixelated; display: block; margin: 0 auto; }
+  h1 { font-size: clamp(30px, 6vw, 48px); margin: 22px 0 4px; letter-spacing: .01em; }
+  h1 span { color: var(--gold); }
+  .tag { color: var(--muted); font-size: 18px; margin: 0 0 22px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 16px; font-weight: 800; font-size: 18px;
+         text-decoration: none; color: var(--text); background: var(--card); box-shadow: 0 4px 0 rgba(0,0,0,.35); transition: transform .12s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.play { background: var(--accent); font-size: 20px; padding: 16px 28px; }
+  .small { font-size: 13px; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 34px 0; }
+  .card { background: var(--card); border-radius: 18px; padding: 16px 18px; }
+  .card h3 { margin: 0 0 6px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .demo { width: 100%; border-radius: 16px; image-rendering: pixelated; display: block; }
+  h2 { margin: 40px 0 12px; font-size: 26px; }
+  .where { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .where .card a.btn { margin-top: 12px; font-size: 16px; padding: 10px 16px; }
+  footer { text-align: center; color: var(--muted); font-size: 14px; margin-top: 46px; }
+  details.chart { margin-top: 12px; }
+  details.chart summary { cursor: pointer; font-weight: 700; }
+  details.chart img { width: 100%; margin-top: 12px; border-radius: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <img class="banner" src="docs/banner.png" alt="Blipville: Husky Blip, Blip and a dragon on a starry night">
+    <h1>🏘️ Blipville</h1>
+    <p class="tag">Tiny pixel pets that wander, nap, eat cookies, and say hi to each other.</p>
+    <div class="cta">
+      <a class="btn play" href="go/">▶ Play in your browser</a>
+      <a class="btn" href="https://github.com/Johnblip189/Blipville/releases/download/v0.2.0-beta/Blipville.exe">⬇ Download for Windows</a>
+    </div>
+    <p class="small">Free · no account · works on phones, laptops and Chromebooks · 🧪 beta</p>
+  </section>
+
+  <div class="grid">
+    <div class="card"><h3>🐾 108 kinds of pets</h3><p>Cats, capybaras, axolotls, dragons, sharks, a very slow sloth… each with its own colors, moves and lines.</p></div>
+    <div class="card"><h3>💖 Take care of them</h3><p>Pet them, feed them cookies, let them nap. Caring earns hearts, plus a daily treat.</p></div>
+    <div class="card"><h3>🥚 Mystery Eggs</h3><p>Spend hearts on eggs that hatch 20 rare Blips. One of them is <i>very</i> shiny. ✨</p></div>
+    <div class="card"><h3>🌙 Night Shift</h3><p>A spooky-cute minigame (Windows app) that unlocks the robo crew.</p></div>
+  </div>
+
+  <img class="demo" src="docs/demo.gif" alt="Blips dropping onto a taskbar, eating a cookie, getting petted and saying hi">
+
+  <h2>Play anywhere</h2>
+  <div class="where">
+    <div class="card">
+      <h3>💻 Laptop &amp; Chromebook</h3>
+      <p>Play right in Chrome, nothing to install. Use <b>📌 Pop out</b> to keep your Blips in a little window on top while you work.</p>
+      <a class="btn" href="go/">▶ Play</a>
+    </div>
+    <div class="card">
+      <h3>📱 Phone</h3>
+      <p>Open it in your phone's browser, then <b>Add to Home Screen</b> so it works like an app, even offline.</p>
+      <a class="btn" href="go/">▶ Play</a>
+    </div>
+    <div class="card">
+      <h3>🪟 Windows</h3>
+      <p>The full desktop-pet version: Blips walk along your real taskbar, plus the Night Shift minigame.</p>
+      <a class="btn" href="https://github.com/Johnblip189/Blipville/releases/download/v0.2.0-beta/Blipville.exe">⬇ Download</a>
+      <p class="small" style="margin-top:8px">Windows may say "protected your PC" the first time. Click <b>More info → Run anyway</b>.</p>
+    </div>
+  </div>
+
+  <details class="chart">
+    <summary>See every Blip 👀</summary>
+    <img src="docs/animals.png" alt="Chart of every Blip in every color" loading="lazy">
+  </details>
+
+  <footer>
+    Want a new animal? <a href="https://github.com/Johnblip189/Blipville/issues/new?template=new-animal.yml">Suggest one!</a>
+    · <a href="https://github.com/Johnblip189/Blipville">GitHub</a>
+    · <a href="https://github.com/Johnblip189/Blipville#support-blipville">Support Blipville ♥</a><br>
+    Made with 💜 · open source (MIT)
+  </footer>
+</main>
+</body>
+</html>

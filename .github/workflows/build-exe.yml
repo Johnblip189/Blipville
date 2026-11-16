@@ -1,18 +1,22 @@
 name: Build Windows app
 
-# Publish a new version: Actions tab → "Build Windows app" → Run workflow → type a version.
-#   Beta / demo builds: v0.2.0-beta   → shown on GitHub as a "Pre-release"
-#   Full release:       v1.0.0        → shown as the latest release
-# (Pushing a tag like v0.2.0-beta also works.)
+# Three ways to publish a new version:
+#   1. Edit the VERSION file on main (e.g. v0.3.0-beta) and commit it.  ← easiest
+#   2. Actions tab → "Build Windows app" → Run workflow → type a version.
+#   3. Push a tag like v0.3.0-beta.
+# Versions starting with v0 or containing "-" (like -beta) are shown on GitHub as a "Pre-release";
+# v1.0.0 and up are full releases.
 on:
   push:
+    branches: [main]
+    paths: ["VERSION"]
     tags: ["v*"]
   workflow_dispatch:
     inputs:
       version:
         description: "Version to publish (beta: v0.2.0-beta, full release: v1.0.0)"
         required: true
-        default: "v0.1.0-beta"
+        default: "v0.2.0-beta"
 
 permissions:
   contents: write
@@ -25,6 +29,19 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4.2.2
+
+      - name: Work out the version
+        id: ver
+        shell: pwsh
+        run: |
+          $v = "${{ github.event.inputs.version }}"
+          if (-not $v -and "${{ github.ref_type }}" -eq "tag") { $v = "${{ github.ref_name }}" }
+          if (-not $v) { $v = (Get-Content VERSION -Raw).Trim() }
+          if ($v -notmatch '^v\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$') { throw "Not a version: '$v' (use something like v0.2.0-beta)" }
+          $pre = ($v.StartsWith("v0") -or $v.Contains("-")).ToString().ToLower()
+          "version=$v" >> $env:GITHUB_OUTPUT
+          "prerelease=$pre" >> $env:GITHUB_OUTPUT
+          Write-Host "Publishing $v (pre-release: $pre)"
 
       - uses: actions/setup-python@v5.3.0
         with:
@@ -52,9 +69,9 @@ jobs:
       - name: Attach to the release
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: ${{ github.event.inputs.version || github.ref_name }}
-          name: Blipville ${{ github.event.inputs.version || github.ref_name }}
+          tag_name: ${{ steps.ver.outputs.version }}
+          name: Blipville ${{ steps.ver.outputs.version }}
           target_commitish: ${{ github.sha }}
-          prerelease: ${{ contains(github.event.inputs.version || github.ref_name, '-') || startsWith(github.event.inputs.version || github.ref_name, 'v0') }}
+          prerelease: ${{ steps.ver.outputs.prerelease == 'true' }}
           files: dist/*.exe
           generate_release_notes: true

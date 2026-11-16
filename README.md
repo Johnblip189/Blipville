@@ -44,6 +44,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - **Change color**: every animal has its own real-life colors (tabby cat, husky, red panda, orca…)
 - **Rename…**: give it any name
 - **Add a friend**: another random pet joins (up to 12). Pets that meet say hi to each other by name
+- **Play Night Shift 🌙…**: the minigame that unlocks the robo crew
 - **Suggest an animal…**: opens the request form in your browser
 - **Support Blipville ♥**: ways to support the project
 - **Show name tags**, **Goodbye [name]**, **Goodbye everyone (quit)**
@@ -56,13 +57,31 @@ The pets don't show up on the taskbar, so use **right-click → Goodbye everyone
 
 Blip can even dress up as a **Husky** or a **German Shepherd** (right-click Blip → Change color).
 
-**Night Shift 🌙:** Robo Bear, Robo Bunny *(hops)*, Robo Hen. Creaky little animatronics with bolts and hinged jaws. Between 10 PM and 6 AM their eyes glow and they get… chatty.
+**Night Shift 🌙:** Robo Bear, Robo Bunny *(hops)*, Robo Hen. Creaky little animatronics with bolts and hinged jaws. Between 10 PM and 6 AM their eyes glow and they get… chatty. 🔒 You have to **earn** them in the Night Shift minigame ⬇️
 
 **Animals:** Axolotl, Bat, Bear, Beaver, Bee, Capybara, Cat, Chick, Cow, Deer, Dog, Dragon, Duck, Elephant, Flamingo, Fox, Frog, Giraffe, Hamster, Hedgehog, Hippo, Horse, Jellyfish, Kangaroo, Koala, Ladybug, Lion, Llama, Monkey, Mouse, Octopus, Otter, Owl, Panda, Parrot, Penguin, Pig, Raccoon, Seal, Shark, Sheep, Skunk, Sloth, Squirrel, Tiger, Unicorn, Whale, Wolf, Zebra
 
 Each animal has its own lines and its own way of moving: frogs and kangaroos hop, bats and bees flutter, whales and jellyfish float, sloths are *very* slow, and flamingos stand on one leg.
 
 ![Every animal in every color](docs/animals.png)
+
+## 🌙 Night Shift (minigame)
+
+Right-click any pet → **Play Night Shift 🌙…**
+
+Survive from **12 AM to 6 AM** (about 2 minutes) while the Night Shift crew wanders toward your office.
+
+- **Glowing eyes in a doorway?** Hit **FLASH** on that side (◀ ▶ or **A** / **D**) to send the robo back to the stage.
+- **Check the cameras** (**1**–**5**): a robo you're watching **can't move**. But cameras and flashes use battery 🔋
+- Get caught and you just try again. No real jump scares, promise. (It just wanted a hug.)
+
+| Survive | Unlocks |
+|---|---|
+| Night 1 | 🤖 Robo Bear |
+| Night 2 | 🤖 Robo Bunny |
+| Night 3 | 🤖 Robo Hen |
+
+Your progress is saved, and each robo you unlock drops straight onto your desktop.
 
 ## Start pets automatically with Windows
 

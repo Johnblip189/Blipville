@@ -17,7 +17,9 @@ Animals:  Cat, Dog, Fox, Bear, Panda, Pig, Frog (hops), Penguin, Chick, Owl, Mou
 Only uses Python's built-in tkinter, nothing to install. Made for Windows; works on
 macOS too.
 """
+import json
 import math
+import os
 import random
 import sys
 import time
@@ -1052,8 +1054,11 @@ class Blip:
                   + [("Night Shift 🌙", NIGHT_SHIFT)])
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
-            for k in members:
-                sub.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            if members is NIGHT_SHIFT:
+                self.night_menu = sub              # filled in on_menu, since locks can change
+            else:
+                for k in members:
+                    sub.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
             kinds.add_cascade(label=group, menu=sub)
         self.menu.add_cascade(label="Change kind", menu=kinds)
         self.color_var = tk.IntVar(master=root, value=self.palette)
@@ -1062,6 +1067,7 @@ class Blip:
         self.menu.add_command(label="Rename…", command=self.rename)
         self.menu.add_separator()
         self.menu.add_command(label="Add a friend", command=lambda: app.add_pet(x=self.wx))
+        self.menu.add_command(label="Play Night Shift 🌙…", command=app.open_night_shift)
         self.menu.add_checkbutton(label="Show name tags", variable=app.name_tags)
         self.menu.add_command(label="Suggest an animal…", command=self.suggest)
         self.menu.add_command(label="Support Blipville ♥", command=self.support)
@@ -1222,6 +1228,14 @@ class Blip:
         self.burst("heart", 2)
 
     def on_menu(self, e):
+        self.night_menu.delete(0, "end")
+        for k in NIGHT_SHIFT:
+            if self.app.is_unlocked(k):
+                self.night_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            else:
+                self.night_menu.add_command(label=f"🔒 {k}  (survive Night {UNLOCKS[k]})", state="disabled")
+        self.night_menu.add_separator()
+        self.night_menu.add_command(label="Play Night Shift 🌙…", command=self.app.open_night_shift)
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
             self.color_menu.add_radiobutton(label=col["name"], value=i, variable=self.color_var, command=self.pick_color)
@@ -1553,6 +1567,403 @@ class Blip:
         self.draw(now)
 
 
+# ----------------------------------------------------------------------------- save file
+UNLOCKS = {"Robo Bear": 1, "Robo Bunny": 2, "Robo Hen": 3}   # kind -> Night Shift night you must survive
+
+
+def save_path():
+    base = os.environ.get("APPDATA") or os.path.join(os.path.expanduser("~"), ".config")
+    return os.path.join(base, "Blipville", "save.json")
+
+
+def load_save():
+    try:
+        with open(save_path(), encoding="utf-8") as f:
+            data = json.load(f)
+        return data if isinstance(data, dict) else {}
+    except Exception:  # noqa: BLE001  (no save yet, or unreadable: start fresh)
+        return {}
+
+
+def write_save(data):
+    try:
+        os.makedirs(os.path.dirname(save_path()), exist_ok=True)
+        tmp = save_path() + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        os.replace(tmp, save_path())
+    except Exception:  # noqa: BLE001  (read-only disk etc.: the game still works, it just won't remember)
+        pass
+
+
+def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=()):
+    """Draw a pet's pixel art on any canvas (top-left at x, y). Used by the minigame."""
+    v = VARIANTS[kind]
+    colors = kind_colors(kind)
+    pal = {**colors[color_idx % len(colors)], **v.get("extra", {})}
+    body = pal.get("art") or v["body"]
+    g = [[None] * ART_W for _ in range(ART_H)]
+    for yy, row in enumerate(body):
+        for xx, ch in enumerate(row):
+            if ch != ".":
+                g[yy][xx] = pal.get(ch, pal["o"])
+    if v["feet"]:
+        for xx, ch in enumerate(v["feet"]["stand"]):
+            if ch != "." and 0 <= xx + v.get("dx", 0) < ART_W:
+                g[12][xx + v.get("dx", 0)] = pal.get("f", pal["o"])
+    er, dx, e = v["eyes"], v.get("dx", 0), pal["e"]
+    for ex in (4 + dx, 10 + dx):
+        if face == "happy":
+            g[er + 1][ex] = g[er][ex + 1] = e
+            if ex + 2 < ART_W:
+                g[er + 1][ex + 2] = e
+        else:
+            for a in range(2):
+                for b in range(2):
+                    g[er + b][ex + a] = e
+            if not glow:
+                g[er][ex] = "#ffffff"
+    for yy, row in enumerate(g):
+        xx = 0
+        while xx < ART_W:
+            col = row[xx]
+            if col is None:
+                xx += 1
+                continue
+            x2 = xx
+            while x2 + 1 < ART_W and row[x2 + 1] == col:
+                x2 += 1
+            canvas.create_rectangle(x + xx * scale, y + yy * scale, x + (x2 + 1) * scale, y + (yy + 1) * scale,
+                                    fill=col, outline="", tags=tags)
+            xx = x2 + 1
+
+
+# ----------------------------------------------------------------------------- Night Shift minigame
+class NightShiftGame:
+    """Survive 12 AM → 6 AM while the Night Shift crew wanders toward your office.
+
+    FLASH a doorway to send a robo back to the stage. A robo you're watching on camera can't move,
+    but cameras and flashes use battery. Each night you survive unlocks a new robo pet.
+    """
+    HOUR = 20.0                                   # seconds per in-game hour (6 hours ≈ 2 minutes)
+    CW, CH = 720, 380
+    ROOMS = ["Stage", "Arcade", "Kitchen", "West Hall", "East Hall"]
+    NEXT = {"Stage": ("Arcade", "Kitchen"), "Arcade": ("West Hall",), "Kitchen": ("East Hall",),
+            "West Hall": ("door_L",), "East Hall": ("door_R",)}
+    NIGHTS = {
+        1: dict(robots=["Robo Bear"], interval=6.0, chance=0.55, grace=3.4),
+        2: dict(robots=["Robo Bear", "Robo Bunny"], interval=4.4, chance=0.66, grace=2.2),
+        3: dict(robots=["Robo Bear", "Robo Bunny", "Robo Hen"], interval=3.9, chance=0.75, grace=1.9),
+    }
+    MIDNIGHT = 3                                  # color index of the spooky glowing-eye look
+    FLASH_COST, DRAIN, CAM_DRAIN = 5.0, 0.2, 0.5  # battery % per flash, per second, extra per second on camera
+    BG, PANEL, TEXT, DIM = "#0c0b14", "#1d1a2e", "#e8e4ff", "#7a7598"
+
+    def __init__(self, app, speed=1.0):
+        self.app, self.speed = app, speed
+        self.win = top = tk.Toplevel(app.root)
+        top.title("Night Shift — Blipville")
+        top.resizable(False, False)
+        top.configure(bg=self.BG)
+        top.attributes("-topmost", True)
+        top.protocol("WM_DELETE_WINDOW", self.close)
+        self.canvas = tk.Canvas(top, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0)
+        self.canvas.pack(padx=10, pady=(10, 6))
+        bar = tk.Frame(top, bg=self.BG)
+        bar.pack(fill="x", padx=10, pady=(0, 10))
+        st = dict(bg=self.PANEL, fg=self.TEXT, activebackground="#3a3360", activeforeground="#ffffff",
+                  relief="flat", bd=0, font=("Segoe UI", 10, "bold"), padx=10, pady=6, cursor="hand2")
+        self.buttons = [tk.Button(bar, text="◀ FLASH", command=lambda: self.flash("L"), **st)]
+        self.buttons[0].pack(side="left")
+        mid = tk.Frame(bar, bg=self.BG)
+        mid.pack(side="left", expand=True)
+        self.buttons.append(tk.Button(mid, text="OFFICE", command=self.office, **st))
+        self.buttons[-1].pack(side="left", padx=2)
+        for i, room in enumerate(self.ROOMS, 1):
+            self.buttons.append(tk.Button(mid, text=f"{i} {room}", command=lambda r=room: self.open_cam(r), **st))
+            self.buttons[-1].pack(side="left", padx=2)
+        self.buttons.append(tk.Button(bar, text="FLASH ▶", command=lambda: self.flash("R"), **st))
+        self.buttons[-1].pack(side="right")
+        for keys, fn in ((("<Left>", "a", "A"), lambda e: self.flash("L")), (("<Right>", "d", "D"), lambda e: self.flash("R")),
+                         (("<space>", "<Escape>"), lambda e: self.office())):
+            for k in keys:
+                top.bind(k, fn)
+        for i, room in enumerate(self.ROOMS, 1):
+            top.bind(str(i), lambda e, r=room: self.open_cam(r))
+        self.canvas.tag_bind("click", "<Button-1>", self.on_click)
+        self.state, self.clicks = "menu", {}
+        self.night = min(self.app.nights_won() + 1, 3)
+        self.after_id = None
+        self.last = time.monotonic()
+        self.loop()
+
+    # ------------------------------------------------------------------ flow
+    def close(self):
+        if self.after_id:
+            self.win.after_cancel(self.after_id)
+        self.win.destroy()
+        self.app.game = None
+
+    def start(self, night):
+        cfg = self.NIGHTS[night]
+        self.night, self.cfg = night, cfg
+        self.t, self.battery, self.cam = 0.0, 100.0, None
+        self.flash_until, self.flash_side, self.flashed = -1.0, None, None
+        self.msg, self.msg_until = "Night " + str(night) + " — good luck! 🔦", 3.0
+        self.robots = [{"kind": k, "room": "Stage", "next": random.uniform(4, 9) + i * 2.5, "door_since": None}
+                       for i, k in enumerate(cfg["robots"])]
+        self.state = "play"
+
+    def say(self, text, secs=2.5):
+        self.msg, self.msg_until = text, self.t + secs
+
+    def flash(self, side):
+        if self.state != "play":
+            return
+        if self.battery < self.FLASH_COST:
+            self.say("not enough battery to flash!")
+            return
+        self.battery -= self.FLASH_COST
+        self.cam = None
+        self.flash_until, self.flash_side = self.t + 0.4, side
+        door = "door_" + side
+        hit = [r for r in self.robots if r["room"] == door]
+        self.flashed = hit[0]["kind"] if hit else None
+        for r in hit:
+            r["room"], r["door_since"] = "Stage", None
+            r["next"] = self.t + self.cfg["interval"] * 1.3
+        self.say(f"*clank clank* {hit[0]['kind']} ran back to the stage!" if hit else "nothing there… this time.")
+
+    def open_cam(self, room):
+        if self.state == "play" and self.battery > 0:
+            self.cam = room
+
+    def office(self):
+        if self.state == "play":
+            self.cam = None
+
+    def caught(self, robot):
+        self.state, self.caught_by = "caught", robot["kind"]
+
+    def won(self):
+        self.state = "won"
+        self.app.record_night(self.night)
+        unlock = next((k for k, n in UNLOCKS.items() if n == self.night), None)
+        self.new_unlock = unlock if unlock and not self.app.is_unlocked(unlock) else None
+        if self.new_unlock:
+            self.app.unlock(self.new_unlock)
+            pet = self.app.add_pet(self.new_unlock)
+            if pet:
+                pet.palette = self.MIDNIGHT
+                pet.say("*whirr* ...i'm free! hi!!", 4)
+
+    def on_click(self, e):
+        for tag, fn in self.clicks.items():
+            if tag in self.canvas.gettags("current"):
+                fn()
+                return
+
+    # ------------------------------------------------------------------ simulation
+    def update(self, dt):
+        self.t += dt
+        cfg = self.cfg
+        self.battery = max(0.0, self.battery - (self.DRAIN + (self.CAM_DRAIN if self.cam else 0)) * dt)
+        if self.battery <= 0 and self.cam:
+            self.cam = None
+            self.say("the battery died… 🔋 lights out!", 4)
+        for r in self.robots:
+            if r["room"].startswith("door"):
+                if self.t - r["door_since"] > cfg["grace"]:
+                    self.caught(r)
+                    return
+                continue
+            if self.t < r["next"]:
+                continue
+            r["next"] = self.t + cfg["interval"] * random.uniform(0.7, 1.3)
+            if self.cam == r["room"]:
+                continue                          # being watched: frozen
+            if random.random() < cfg["chance"]:
+                r["room"] = random.choice(self.NEXT[r["room"]])
+                if r["room"].startswith("door"):
+                    r["door_since"] = self.t
+                elif r["room"] in ("West Hall", "East Hall"):
+                    self.say("you hear clanking on the " + ("left…" if r["room"] == "West Hall" else "right…"))
+        if self.t >= 6 * self.HOUR:
+            self.won()
+
+    def loop(self):
+        now = time.monotonic()
+        dt = min(0.25, now - self.last) * self.speed
+        self.last = now
+        try:
+            if self.state == "play":
+                self.update(dt)
+            self.draw()
+        except tk.TclError:
+            return
+        self.after_id = self.win.after(50, self.loop)
+
+    # ------------------------------------------------------------------ drawing
+    def button(self, x, y, text, fn, primary=False, enabled=True):
+        tag = f"btn{len(self.clicks)}"
+        c = self.canvas
+        tw = len(text) * 8 + 34
+        fill = ("#6a4cff" if primary else self.PANEL) if enabled else "#15131f"
+        c.create_rectangle(x - tw / 2, y - 18, x + tw / 2, y + 18, fill=fill, outline="#3a3360", width=2,
+                           tags=(tag, "click") if enabled else ())
+        c.create_text(x, y, text=text, fill=self.TEXT if enabled else self.DIM, font=("Segoe UI", 11, "bold"),
+                      tags=(tag, "click") if enabled else ())
+        if enabled:
+            self.clicks[tag] = fn
+
+    def draw(self):
+        c = self.canvas
+        c.delete("all")
+        self.clicks = {}
+        for b in self.buttons:
+            b.configure(state="normal" if self.state == "play" else "disabled")
+        getattr(self, "draw_" + self.state)()
+
+    def draw_menu(self):
+        c, W_, H_ = self.canvas, self.CW, self.CH
+        c.create_text(W_ / 2, 46, text="NIGHT SHIFT 🌙", fill=self.TEXT, font=("Segoe UI", 26, "bold"))
+        c.create_text(W_ / 2, 108, width=600, justify="center", fill="#b8b2d8", font=("Segoe UI", 10),
+                      text="Survive from 12 AM to 6 AM. The Night Shift crew wanders toward your office.\n"
+                           "Glowing eyes in a doorway? FLASH that side (◀ ▶ or A / D) to send them back to the stage.\n"
+                           "Check rooms with the cameras (1–5): a robo you're watching can't move. "
+                           "But cameras and flashes use battery!")
+        for i, k in enumerate(NIGHT_SHIFT):
+            x = W_ / 2 - 150 + i * 150
+            unlocked = self.app.is_unlocked(k)
+            draw_sprite(c, k, self.MIDNIGHT if unlocked else 3, x - 32, 165, 4, glow=not unlocked)
+            c.create_text(x, 236, text=(k if unlocked else "🔒 " + k), fill=self.TEXT if unlocked else self.DIM,
+                          font=("Segoe UI", 9, "bold"))
+            c.create_text(x, 252, text=f"Night {UNLOCKS[k]}", fill=self.DIM, font=("Segoe UI", 8))
+        best = self.app.nights_won()
+        for n in (1, 2, 3):
+            self.button(W_ / 2 - 170 + (n - 1) * 170, 300, f"Night {n}" + (" ✓" if n <= best else ""),
+                        lambda n=n: self.start(n), primary=(n == self.night), enabled=n <= best + 1)
+        c.create_text(W_ / 2, 346, text="Close this window anytime. Your progress is saved.", fill=self.DIM,
+                      font=("Segoe UI", 8))
+
+    def draw_play(self):
+        c, W_, H_ = self.canvas, self.CW, self.CH
+        if self.cam:
+            self.draw_camera()
+        else:
+            self.draw_office()
+        # top bar
+        c.create_rectangle(0, 0, W_, 34, fill="#08070e", outline="")
+        hour = int(self.t // self.HOUR)
+        c.create_text(14, 17, anchor="w", text=f"NIGHT {self.night}", fill=self.TEXT, font=("Segoe UI", 11, "bold"))
+        c.create_text(W_ / 2, 17, text=("12 AM" if hour == 0 else f"{hour} AM"), fill="#ffd23a",
+                      font=("Segoe UI", 13, "bold"))
+        b = self.battery
+        col = "#5ad87a" if b > 50 else ("#ffd23a" if b > 20 else "#ff4a5a")
+        c.create_text(W_ - 160, 17, anchor="e", text="🔋", fill=self.TEXT, font=("Segoe UI", 11))
+        c.create_rectangle(W_ - 152, 9, W_ - 52, 25, outline="#3a3360", width=2)
+        c.create_rectangle(W_ - 150, 11, W_ - 150 + 96 * b / 100, 23, fill=col, outline="")
+        c.create_text(W_ - 8, 17, anchor="e", text=f"{int(b)}%", fill=self.TEXT, font=("Segoe UI", 9, "bold"))
+        if self.t < self.msg_until:
+            c.create_rectangle(W_ / 2 - 230, H_ - 30, W_ / 2 + 230, H_ - 6, fill="#08070e", outline="#3a3360")
+            c.create_text(W_ / 2, H_ - 18, text=self.msg, fill=self.TEXT, font=("Segoe UI", 10, "bold"))
+
+    def draw_office(self):
+        c, W_, H_ = self.canvas, self.CW, self.CH
+        dark = self.battery <= 0
+        c.create_rectangle(0, 34, W_, H_, fill="#0e0c18" if dark else "#1b1830", outline="")
+        c.create_rectangle(0, 280, W_, H_, fill="#0a0912" if dark else "#14121f", outline="")
+        if not dark:   # cozy desk, lamp and a Blip plush
+            c.create_rectangle(250, 236, 470, 252, fill="#3a2e4a", outline="")
+            c.create_rectangle(262, 252, 274, 300, fill="#2a2238", outline="")
+            c.create_rectangle(446, 252, 458, 300, fill="#2a2238", outline="")
+            c.create_polygon(410, 196, 440, 196, 450, 214, 400, 214, fill="#ffd27a", outline="")
+            c.create_rectangle(423, 214, 427, 236, fill="#8a7a9a", outline="")
+            draw_sprite(c, "Blip", 0, 300, 184, 3, face="happy")
+            c.create_rectangle(330, 120, 390, 170, fill="#2a3a5a", outline="#3a3360", width=3)   # window
+            c.create_rectangle(340, 130, 343, 133, fill="#ffffff", outline="")
+            c.create_rectangle(372, 146, 375, 149, fill="#ffffff", outline="")
+        for side, x0 in (("L", 30), ("R", 560)):
+            x1 = x0 + 130
+            flashing = self.t < self.flash_until and self.flash_side == side
+            c.create_rectangle(x0, 70, x1, 300, fill="#f6eec0" if flashing else "#040308", outline="#3a3360", width=4)
+            if flashing and self.flashed:
+                draw_sprite(c, self.flashed, self.MIDNIGHT, x0 + 1, 140, 8)
+            robot = next((r for r in self.robots if r["room"] == "door_" + side), None)
+            if robot and not flashing:
+                pal = kind_colors(robot["kind"])[self.MIDNIGHT]
+                blink = int(self.t * 3 + (1 if side == "R" else 0)) % 7 == 0
+                if not blink:
+                    for ex in (x0 + 38, x0 + 76):
+                        c.create_rectangle(ex, 170, ex + 16, 186, fill=pal["e"], outline="")
+            c.create_text((x0 + x1) / 2, 316, text=("◀ A" if side == "L" else "D ▶"), fill=self.DIM,
+                          font=("Segoe UI", 9, "bold"))
+
+    def draw_camera(self):
+        c, W_, H_ = self.canvas, self.CW, self.CH
+        room = self.cam
+        c.create_rectangle(0, 34, W_, H_, fill="#101a14", outline="")
+        c.create_rectangle(0, 250, W_, H_, fill="#0b130e", outline="")
+        if room == "Stage":
+            for i in range(12):
+                c.create_rectangle(60 + i * 50, 60, 60 + i * 50 + 22, 250, fill="#3a1420", outline="")
+            c.create_rectangle(40, 240, W_ - 40, 262, fill="#2a2010", outline="")
+        elif room == "Arcade":
+            for i in range(5):
+                x = 70 + i * 130
+                c.create_rectangle(x, 120, x + 60, 250, fill="#1a1a3a", outline="#3a3a7a", width=2)
+                c.create_rectangle(x + 10, 135, x + 50, 170, fill="#2a6a5a", outline="")
+        elif room == "Kitchen":
+            c.create_rectangle(40, 190, W_ - 40, 250, fill="#2a2a2a", outline="")
+            for i in range(8):
+                c.create_rectangle(60 + i * 80, 120, 110 + i * 80, 160, fill="#3a3a3a", outline="")
+        else:
+            c.create_polygon(0, 60, W_ / 2 - 60, 140, W_ / 2 - 60, 230, 0, 330, fill="#162016", outline="")
+            c.create_polygon(W_, 60, W_ / 2 + 60, 140, W_ / 2 + 60, 230, W_, 330, fill="#162016", outline="")
+        here = [r for r in self.robots if r["room"] == room]
+        for i, r in enumerate(here):
+            x = W_ / 2 - len(here) * 70 + i * 140 + 6
+            draw_sprite(c, r["kind"], self.MIDNIGHT, x, 150, 8)
+        for _ in range(28):   # camera static
+            y = random.randrange(34, H_)
+            c.create_line(0, y, W_, y, fill=random.choice(["#1e2a22", "#26332a", "#18221b"]))
+        c.create_text(16, 52, anchor="w", text=f"● CAM {self.ROOMS.index(room) + 1} · {room.upper()}",
+                      fill="#ff4a5a", font=("Segoe UI", 11, "bold"))
+        c.create_text(W_ - 16, 52, anchor="e", text=("watching — it can't move" if here else "empty"),
+                      fill="#9ad8a8", font=("Segoe UI", 9, "bold"))
+
+    def draw_caught(self):
+        c, W_, H_ = self.canvas, self.CW, self.CH
+        c.create_rectangle(0, 0, W_, H_, fill="#14081a", outline="")
+        draw_sprite(c, self.caught_by, self.MIDNIGHT, W_ / 2 - 80, 40, 10, glow=True)
+        c.create_text(W_ / 2, 200, text="GOTCHA! 🤖", fill="#ff4a6a", font=("Segoe UI", 26, "bold"))
+        c.create_text(W_ / 2, 236, text=f"{self.caught_by} got into the office. (it just wanted a hug)",
+                      fill="#d8c8f0", font=("Segoe UI", 11))
+        self.button(W_ / 2 - 100, 300, f"Try Night {self.night} again", lambda: self.start(self.night), primary=True)
+        self.button(W_ / 2 + 120, 300, "Menu", lambda: setattr(self, "state", "menu"))
+
+    def draw_won(self):
+        c, W_, H_ = self.canvas, self.CW, self.CH
+        c.create_rectangle(0, 0, W_, H_, fill="#2a1a3a", outline="")
+        c.create_rectangle(0, H_ - 120, W_, H_, fill="#ffb86a", outline="")
+        c.create_text(W_ / 2, 56, text="6 AM 🌅", fill="#ffd23a", font=("Segoe UI", 28, "bold"))
+        c.create_text(W_ / 2, 100, text=f"You survived Night {self.night}!", fill=self.TEXT, font=("Segoe UI", 15, "bold"))
+        if self.new_unlock:
+            draw_sprite(c, self.new_unlock, self.MIDNIGHT, W_ / 2 - 48, 130, 6, face="happy")
+            c.create_text(W_ / 2, 222, text=f"UNLOCKED: {self.new_unlock}! It's on your desktop now.",
+                          fill="#ffffff", font=("Segoe UI", 12, "bold"))
+        else:
+            draw_sprite(c, "Blip", 0, W_ / 2 - 48, 130, 6, face="happy")
+            c.create_text(W_ / 2, 222, text="Blip is proud of you.", fill="#ffffff", font=("Segoe UI", 12, "bold"))
+        if self.night < 3:
+            self.button(W_ / 2 - 100, 300, f"Night {self.night + 1} ▶", lambda: self.start(self.night + 1), primary=True)
+            self.button(W_ / 2 + 100, 300, "Menu", lambda: setattr(self, "state", "menu"))
+        else:
+            c.create_text(W_ / 2, 258, text="You beat every night. The whole crew is yours! 🏆", fill="#3a1a14",
+                          font=("Segoe UI", 11, "bold"))
+            self.button(W_ / 2, 310, "Menu", lambda: setattr(self, "state", "menu"))
+
+
 class App:
     """Runs every pet on screen."""
     MAX_PETS = 12
@@ -1562,6 +1973,8 @@ class App:
         self.root.title("Blipville")
         self.root.withdraw()                       # pets live in their own little windows
         self.name_tags = tk.BooleanVar(master=self.root, value=True)
+        self.save = load_save()
+        self.game = None
         self.pets = []
         self.add_pet("Blip", "Blip")
         self.last_topmost = time.monotonic()
@@ -1572,7 +1985,7 @@ class App:
             if self.pets:
                 self.pets[0].say("that's enough friends for now!", 2.5)
             return None
-        kind = kind or random.choice(KINDS)
+        kind = kind or random.choice([k for k in KINDS if self.is_unlocked(k)])
         used = {p.name for p in self.pets}
         name = name or random.choice([n for n in NAMES if n not in used] or NAMES)
         if x is not None:
@@ -1581,6 +1994,31 @@ class App:
         self.pets.append(pet)
         pet.say(f"hi! i'm {name}", 2.5)
         return pet
+
+    # ----- unlocks & Night Shift
+    def is_unlocked(self, kind):
+        return kind not in UNLOCKS or kind in self.save.get("unlocked", [])
+
+    def unlock(self, kind):
+        got = self.save.setdefault("unlocked", [])
+        if kind not in got:
+            got.append(kind)
+            write_save(self.save)
+
+    def nights_won(self):
+        return int(self.save.get("nights_won", 0))
+
+    def record_night(self, night):
+        if night > self.nights_won():
+            self.save["nights_won"] = night
+            write_save(self.save)
+
+    def open_night_shift(self):
+        if self.game:
+            self.game.win.lift()
+            self.game.win.focus_force()
+        else:
+            self.game = NightShiftGame(self)
 
     def remove(self, pet):
         if pet in self.pets:

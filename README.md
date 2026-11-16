@@ -75,6 +75,15 @@ Each animal has its own lines and its own way of moving: frogs and kangaroos hop
 
 **Rare 🥚:** 20 secret Blips you can only hatch from Mystery Eggs. No spoilers, but one of them is *very* shiny. ✨
 
+<details>
+<summary>⚠️ <b>Spoilers:</b> don't want to hatch them? Click to see every rare Blip</summary>
+
+<br>
+
+![Every rare Blip in every color](docs/rare-blips.png)
+
+</details>
+
 ![Every animal in every color](docs/animals.png)
 
 ## 💖 Hearts & Mystery Eggs

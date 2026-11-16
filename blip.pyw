@@ -2941,6 +2941,7 @@ class Blip:
         self.after_land = None
         self.last_hungry_whine = 0.0
         self.last_pet_reward = -99.0
+        self.hat = None                            # what it's wearing (from the hat shop)
         self.next_shift = time.monotonic() + random.uniform(6, 12)   # chameleons change color now and then
 
         self.press = None
@@ -4052,12 +4053,45 @@ class App:
         load_custom_blips()
         self.game = None
         self.pets = []
-        self.add_pet("Blip", "Blip")
+        if not self.restore_town():
+            self.add_pet("Blip", "Blip")
         self.daily_treat()
-        self.last_topmost = time.monotonic()
+        self.last_topmost = self.last_town_save = time.monotonic()
         self.tick()
 
-    def add_pet(self, kind=None, name=None, x=None):
+    # ----- remembering your town between launches
+    def town_snapshot(self):
+        return [{"kind": p.kind, "color": p.palette, "name": p.name, "hat": getattr(p, "hat", None),
+                 "hunger": round(p.hunger), "energy": round(p.energy)} for p in self.pets]
+
+    def save_town(self):
+        town = self.town_snapshot()
+        if town != self.save.get("town"):
+            self.save["town"] = town
+            self.save["town_saved_at"] = time.time()
+            write_save(self.save)
+
+    def restore_town(self):
+        town = self.save.get("town") or []
+        hours_away = max(0.0, (time.time() - float(self.save.get("town_saved_at", time.time()))) / 3600)
+        back = 0
+        for t in town[:self.MAX_PETS]:
+            kind = t.get("kind")
+            if kind not in VARIANTS or not self.is_unlocked(kind):
+                continue
+            pet = self.add_pet(kind, str(t.get("name") or kind)[:16], greet=False)
+            if not pet:
+                break
+            pet.palette = int(t.get("color", 0)) % len(kind_colors(kind))
+            pet.color_var.set(pet.palette)
+            pet.hat = t.get("hat")
+            pet.hunger = min(100.0, float(t.get("hunger", 10)) + hours_away * 8)    # they got peckish while you were away
+            pet.energy = float(t.get("energy", 100))
+            pet.say(random.choice(["i'm back!", "missed you!", "*stretches* hi again!", "good to see you!"]), 3)
+            back += 1
+        return back
+
+    def add_pet(self, kind=None, name=None, x=None, greet=True):
         if len(self.pets) >= self.MAX_PETS:
             if self.pets:
                 self.pets[0].say("that's enough friends for now!", 2.5)
@@ -4069,7 +4103,8 @@ class App:
             x += random.choice([-1, 1]) * random.uniform(80, 160)
         pet = Blip(self, kind, name, x)
         self.pets.append(pet)
-        pet.say(f"hi! i'm {name}", 2.5)
+        if greet:
+            pet.say(f"hi! i'm {name}", 2.5)
         return pet
 
     # ----- unlocks & Night Shift
@@ -4141,10 +4176,12 @@ class App:
         if pet in self.pets:
             self.pets.remove(pet)
             pet.root.destroy()
+        self.save_town()
         if not self.pets:
             self.root.destroy()
 
     def quit_all(self):
+        self.save_town()
         self.root.destroy()
 
     def socialize(self, now):
@@ -4170,6 +4207,9 @@ class App:
             for pet in list(self.pets):
                 pet.step(now)
             self.socialize(now)
+            if now - self.last_town_save > 15:     # remember the town every so often
+                self.save_town()
+                self.last_town_save = now
             if now - self.last_topmost > 5:        # stay above other windows
                 for pet in self.pets:
                     pet.root.attributes("-topmost", True)

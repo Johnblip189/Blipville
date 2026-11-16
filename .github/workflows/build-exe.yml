@@ -1,10 +1,16 @@
 name: Build Windows app
 
-# Runs when a version tag like v1.0.0 is pushed (or by hand from the Actions tab).
+# Publish a new version: Actions tab → "Build Windows app" → Run workflow → type a version (e.g. v1.1.0).
+# (Pushing a tag like v1.1.0 also works.)
 on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish, e.g. v1.1.0"
+        required: true
+        default: "v1.0.0"
 
 permissions:
   contents: write
@@ -42,8 +48,10 @@ jobs:
           path: dist/*.exe
 
       - name: Attach to the release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2.2.1
         with:
+          tag_name: ${{ github.event.inputs.version || github.ref_name }}
+          name: ${{ github.event.inputs.version || github.ref_name }}
+          target_commitish: ${{ github.sha }}
           files: dist/*.exe
           generate_release_notes: true

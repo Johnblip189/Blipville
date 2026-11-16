@@ -8,7 +8,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**55 kinds of pets · 49 animals · 154 colors** — one Python file, nothing to install.
+**58 kinds of pets · 49 animals + 3 animatronics · 166 colors** — one Python file, nothing to install.
 
 ## Get it
 
@@ -40,7 +40,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - **Feed a cookie**: a cookie drops in, and the pet walks over and munches it
 - **Pet** / **Nap time** / **Say something**
 - **Follow my mouse**: the pet chases your cursor along the taskbar
-- **Change kind**: switch between all 55 kinds
+- **Change kind**: switch between all 58 kinds
 - **Change color**: every animal has its own real-life colors (tabby cat, husky, red panda, orca…)
 - **Rename…**: give it any name
 - **Add a friend**: another random pet joins (up to 12). Pets that meet say hi to each other by name
@@ -55,6 +55,8 @@ The pets don't show up on the taskbar, so use **right-click → Goodbye everyone
 **Critters:** Blip, Bun *(hops)*, Sprout, Boo *(floats)*, Fuzz *(flutters)*, Spike
 
 Blip can even dress up as a **Husky** or a **German Shepherd** (right-click Blip → Change color).
+
+**Night Shift 🌙:** Robo Bear, Robo Bunny *(hops)*, Robo Hen. Creaky little animatronics with bolts and hinged jaws. Between 10 PM and 6 AM their eyes glow and they get… chatty.
 
 **Animals:** Axolotl, Bat, Bear, Beaver, Bee, Capybara, Cat, Chick, Cow, Deer, Dog, Dragon, Duck, Elephant, Flamingo, Fox, Frog, Giraffe, Hamster, Hedgehog, Hippo, Horse, Jellyfish, Kangaroo, Koala, Ladybug, Lion, Llama, Monkey, Mouse, Octopus, Otter, Owl, Panda, Parrot, Penguin, Pig, Raccoon, Seal, Shark, Sheep, Skunk, Sloth, Squirrel, Tiger, Unicorn, Whale, Wolf, Zebra
 

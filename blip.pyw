@@ -762,6 +762,66 @@ ANIMALS.update({
  ]),
 })
 
+# ----------------------------------------------------------------------------- Night Shift crew
+# Night Shift crew: original animatronic pets. r = rivet, s = metal seam, k = teeth, d = dark hinge line
+ROBOTS = {
+ "Robo Bear": dict(eyes=5, mouth=False, body=[
+    ".ooo........ooo.",
+    "oaaao......oaaao",
+    "oaaboooooooobaao",
+    ".obrbbbbbbbbrbo.",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obpbbllllllbbpbo",
+    "obbblllnnlllbbbo",
+    "osssskkkkkksssso",
+    ".obbbllllllbbbo.",
+    "..obrbbbbbbrbo.."], colors=[
+    dict(name="Arcade",   o="#0e2a3a", b="#3ab8c8", l="#c8f4f8", a="#1e7a8a", r="#d8dde6", s="#5a6170", k="#ffffff", n="#0e2a3a", p="#ff9fb0", e="#ffd23a"),
+    dict(name="Rusty",    o="#2a1206", b="#b8643a", l="#e8c0a0", a="#7a3a1a", r="#c8a070", s="#4a3424", k="#f2e6c8", n="#1a0a04", p="#e87a6a", e="#ff8a1f"),
+    dict(name="Bubblegum", o="#5a1a3a", b="#ff9fcf", l="#fff0f8", a="#e85a9a", r="#ffffff", s="#a8708a", k="#ffffff", n="#5a1a3a", p="#ff5f9f", e="#5af0ff"),
+    dict(name="Midnight", o="#06060c", b="#2a2a3a", l="#4a4a62", a="#16161f", r="#7a7a8a", s="#12121a", k="#d8d8e0", n="#06060c", p="#5a2a3a", e="#ff3b3b"),
+ ]),
+ "Robo Bunny": dict(eyes=6, mouth=False, body=[
+    "...oo......oo...",
+    "..obao....oabo..",
+    "..obao....oabo..",
+    "..obro....orbo..",
+    ".obbbooooooobbo.",
+    ".obbbbbbbbbbbbo.",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obpbbllnnllbbpbo",
+    "obbbbllllllbbbbo",
+    "osssskkkkkksssso",
+    "..obrbbbbbbrbo.."], colors=[
+    dict(name="Mint",     o="#0e2a1a", b="#7adcaa", l="#e0f8ec", a="#ff9fb8", r="#ffffff", s="#4a7a62", k="#ffffff", n="#ff7a9a", p="#ff9fb8", e="#ff4a6a"),
+    dict(name="Rusty",    o="#2a1206", b="#c87a4a", l="#f0d0b0", a="#7a3a1a", r="#d8b080", s="#4a3424", k="#f2e6c8", n="#1a0a04", p="#e87a6a", e="#ffd23a"),
+    dict(name="Sunset",   o="#3a1406", b="#ff9a4a", l="#fff0dc", a="#ffd06a", r="#ffffff", s="#a85a2a", k="#ffffff", n="#a82a2a", p="#ff6a5a", e="#3a1406"),
+    dict(name="Midnight", o="#06060c", b="#2a2a3a", l="#4a4a62", a="#16161f", r="#7a7a8a", s="#12121a", k="#d8d8e0", n="#06060c", p="#5a2a3a", e="#ff3b3b"),
+ ]),
+ "Robo Hen": dict(eyes=5, mouth=False, body=[
+    "......o..o......",
+    ".......oo.......",
+    "....oooooooo....",
+    "..oobrbbbbrboo..",
+    ".obbbbbbbbbbbbo.",
+    ".obbbbbbbbbbbbo.",
+    "obpbbbbbbbbbbpbo",
+    "obbbbbnnnnbbbbbo",
+    "osssssddddssssso",
+    "obbbbbnnnnbbbbbo",
+    ".obbbbbbbbbbbbo.",
+    "..oobrbbbbrboo.."], colors=[
+    dict(name="Classic",  o="#3a3a44", b="#f6f6f8", r="#a8aeb8", s="#8a909c", n="#ff8a1f", d="#3a1a04", p="#ff7a7a", e="#1a1a20", f="#ff8a1f"),
+    dict(name="Rusty",    o="#2a1206", b="#b8643a", r="#d8b080", s="#4a3424", n="#e8c03a", d="#1a0a04", p="#e87a6a", e="#ffd23a", f="#e8c03a"),
+    dict(name="Arcade",   o="#3a0a14", b="#e8303a", r="#ffffff", s="#8a1a24", n="#ffd23a", d="#3a0a14", p="#ff9f9f", e="#5af0ff", f="#ffd23a"),
+    dict(name="Midnight", o="#06060c", b="#2a2a3a", r="#7a7a8a", s="#12121a", n="#5a4a2a", d="#06060c", p="#5a2a3a", e="#ff3b3b", f="#3a3a4a"),
+ ]),
+}
+ANIMALS.update(ROBOTS)
+
 ANIMAL_TRAITS = {   # how each animal moves + what it says
     "Cat":     ("walk", ["meow", "*purrs*", "i knocked something off your desk", "feed me, human", "mrrp?"]),
     "Dog":     ("walk", ["woof!", "who's a good pet? me!", "ball? BALL?", "*wags tail*", "walk time??"]),
@@ -812,6 +872,9 @@ ANIMAL_TRAITS = {   # how each animal moves + what it says
     "Whale":   ("float", ["*whale song*", "*sprays water*", "biggest pet ever", "ooooOOOooo~"]),
     "Jellyfish": ("float", ["*floats*", "no brain, no problem", "bloop", "*glows*"]),
     "Dragon":  ("flutter", ["*breathes tiny flame*", "rawr! (fire)", "guarding my treasure", "i hoard cookies"]),
+    "Robo Bear":  ("walk", ["*servo whirr*", "beep boop... i mean, hi", "my joints need oiling", "i'm totally not watching you"]),
+    "Robo Bunny": ("hop",  ["*boing* *clank*", "battery at 12%...", "who turned off the lights?", "*ears twitch mechanically*"]),
+    "Robo Hen":   ("walk", ["*mechanical clucking*", "bawk. boop.", "my jaw squeaks", "still on the night shift"]),
 }
 SPEED = {"Sloth": 0.35, "Seal": 0.7, "Hedgehog": 1.3, "Mouse": 1.4, "Hamster": 1.2, "Cow": 0.8, "Koala": 0.6,
          "Capybara": 0.6, "Elephant": 0.7, "Hippo": 0.7, "Ladybug": 0.5, "Squirrel": 1.4, "Horse": 1.4, "Zebra": 1.4,
@@ -857,8 +920,16 @@ BLIP_DOGS = [
 ]
 VARIANTS["Blip"]["colors"] = PALETTES + BLIP_DOGS
 CRITTERS = list(KINDS)            # the original made-up critters
-ANIMAL_KINDS = sorted(ANIMALS)
-KINDS = CRITTERS + ANIMAL_KINDS
+NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
+ANIMAL_KINDS = sorted(k for k in ANIMALS if k not in ROBOTS)
+KINDS = CRITTERS + ANIMAL_KINDS + NIGHT_SHIFT
+NIGHT_LINES = ["*eyes glow in the dark*", "the night shift starts now", "is anyone still awake?",
+               "*whirr... click*", "we're more active at night", "don't mind me. just wandering."]
+
+
+def is_night():
+    h = time.localtime().tm_hour
+    return h >= 22 or h < 6
 
 
 def kind_colors(kind):
@@ -977,7 +1048,8 @@ class Blip:
         n_groups = 3
         size = -(-len(ANIMAL_KINDS) // n_groups)
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
-        groups = [("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
+        groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
+                  + [("Night Shift 🌙", NIGHT_SHIFT)])
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
             for k in members:
@@ -1070,6 +1142,8 @@ class Blip:
         self.burst("heart", 2)
 
     def lines(self):
+        if self.kind in ROBOTS and is_night():
+            return NIGHT_LINES * 2 + VARIANTS[self.kind]["lines"]
         return LINES_IDLE + VARIANTS[self.kind]["lines"] * 2
 
     def change_kind(self):
@@ -1345,6 +1419,8 @@ class Blip:
         r_, g_, b_ = (int(e[i:i + 2], 16) for i in (1, 3, 5))
         if 0.299 * r_ + 0.587 * g_ + 0.114 * b_ > 150:   # light eyes: dark pupil dot instead of a shine
             white = pal["o"]
+        if self.kind in ROBOTS and is_night():          # animatronics' eyes glow solid at night
+            white = e
         blinking = now < self.blink_until
         if face == "sleep" or (blinking and face == "normal"):
             for x in (4, 5, 10, 11):

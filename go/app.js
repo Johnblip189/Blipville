@@ -1,4 +1,4 @@
-/* Blipville Pocket: the phone version of Blipville.
+/* Blipville: On the Go, the phone version of Blipville.
    Pixel art, colors and lines come from data.js (exported from blip.pyw), so both versions match. */
 (() => {
   "use strict";
@@ -8,7 +8,7 @@
   const NIGHT = new Set(D.groups.nightShift);
   const EGG_COST = D.eggCost;
   const MAX_PETS = 8;
-  const SAVE_KEY = "blipville-pocket-v1";
+  const SAVE_KEY = "blipville-go-v1";
   const HEART = [".x.x.", "xxxxx", "xxxxx", ".xxx.", "..x.."];
   const ZED = ["xxxx", "..x.", ".x..", "xxxx"];
   const COOKIE = [".cccc.", "cdcccc", "cccdcc", "ccccdc", "cdcccc", ".cccc."];
@@ -450,7 +450,7 @@
   function openZoo(swapPet = null) {
     const grid_ = $("zooGrid"); grid_.innerHTML = "";
     const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ["Rare ✨ (hatch from eggs)", D.groups.rare],
-                    ["Night Shift 🌙 (coming to Pocket soon)", D.groups.nightShift]];
+                    ["Night Shift 🌙 (coming to On the Go soon)", D.groups.nightShift]];
     let found = 0, total = 0;
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
@@ -463,7 +463,7 @@
         b.appendChild(thumb(k, KINDS[k].default || 0, !open, 4));
         b.append(open ? k : "???");
         b.onclick = () => {
-          if (!open) { toast(RARE.has(k) ? "🥚 Hatch it from a Mystery Egg!" : "🌙 Coming to Pocket soon!"); return; }
+          if (!open) { toast(RARE.has(k) ? "🥚 Hatch it from a Mystery Egg!" : "🌙 Coming to On the Go soon!"); return; }
           if (swapPet) {
             swapPet.kind = k; swapPet.color = KINDS[k].default || 0; say(swapPet, `i'm a ${k} now!`, 2); setFace(swapPet, "happy", 1.2);
             burst(swapPet, "heart", 3); closeSheets();
@@ -589,5 +589,5 @@
   window.addEventListener("pagehide", () => persist(true));
   requestAnimationFrame(frame);
   if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
-  window.blipvillePocket = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet };   // handy for testing
+  window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet };   // handy for testing
 })();

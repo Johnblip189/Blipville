@@ -1,5 +1,5 @@
-// Offline support: keep the app files cached so Blipville Pocket works without internet.
-const CACHE = "blipville-pocket-v1";
+// Offline support: keep the app files cached so Blipville: On the Go works without internet.
+const CACHE = "blipville-go-v1";
 const FILES = ["./", "index.html", "style.css", "app.js", "data.js", "manifest.webmanifest",
                "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 self.addEventListener("install", (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())));

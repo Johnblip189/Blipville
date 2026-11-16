@@ -1,7 +1,7 @@
 {
-  "name": "Blipville Pocket",
+  "name": "Blipville: On the Go",
   "short_name": "Blipville",
-  "description": "Tiny pixel pets that live in your pocket. Pet them, feed them, hatch rare Blips.",
+  "description": "Tiny pixel pets you can take anywhere. Pet them, feed them, hatch rare Blips.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

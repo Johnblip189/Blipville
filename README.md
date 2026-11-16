@@ -6,8 +6,6 @@
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
 
-### 🌐 [Play Blipville in your browser](https://johnblip189.github.io/Blipville/): phones, laptops, Chromebooks, no install
-
 ![Blipville demo](docs/demo.gif)
 
 **120 kinds of pets · 360+ colors · hats, hearts, eggs, cryptids & a minigame** — one Python file, nothing to install.
@@ -24,7 +22,6 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - ⚽ **Pets play together.** They play catch, chase each other in games of tag, and pile up for naps.
 - 🔊 **Cute sound effects** (off by default). Boops, munches, a coin ding for new hats, and an egg-hatching fanfare. All made with code.
 - 👀 **Peek at locked Blips.** Don't want to wait? Peek at the rare and Night Shift Blips in the Collection (with a spoiler warning first).
-- 📱 **Night Shift on phones.** Blipville: On the Go now has the full Night Shift minigame with touch controls.
 
 ## Get it
 
@@ -34,15 +31,6 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.
-
-### 📱💻 Phone, laptop & Chromebook: Blipville: On the Go
-
-**[Play Blipville: On the Go](https://johnblip189.github.io/Blipville/go/)** in your phone's browser, then add it to your home screen so it opens like an app (and works offline):
-
-- **iPhone:** Safari → Share → **Add to Home Screen**
-- **Android:** Chrome → ⋮ → **Install app** / **Add to Home screen**
-
-Your Blips live in a little town: tap to pet, drag to toss, press and hold (or right-click) for their menu. On a laptop there are keyboard shortcuts (**F** feed, **N** friend, **E** egg, **Z** zoo), and in Chrome you can **📌 Pop out** the town into a small window that stays on top while you work. Hearts, Mystery Eggs, hats, the whole collection and the Night Shift minigame are there too. (On the Go saves on your phone, separately from the desktop app.)
 
 ### Any computer with Python
 
@@ -129,16 +117,15 @@ You can also spend hearts in the **🎩 Hats & outfits** shop: party hats, bows,
 Every so often (more often at night), a cryptid shows up near the bottom of your screen as a **shadow with glowing eyes**, and each one appears its own way, just like in the stories: Mothman lands on a flickering **lamp post**, Nessie pops out of the **water**, Bigfoot walks behind the **pine trees**, the Fresno Nightcrawler strolls past on **security camera** footage… Your pets will drop a hint when something's out there. **Click it before it gets away** and the cryptid becomes your Blip! If you miss it, your pets will definitely have seen *something*.
 
 - Can't wait? Right-click any pet → **🔦 Set out a Cryptid Lure** (20 💖) and one shows up within a minute.
-- On phones, cryptids sneak through your town. Tap the shadow to befriend it, or set a lure from the **📖 Zoo**.
 - See which ones you've spotted in **📖 Collection** (right-click a pet), or under **Change kind → Cryptids 👣**.
 
 ## 🌙 Night Shift (minigame)
 
-Right-click any pet → **Play Night Shift 🌙…** (on phones, tap **🌙 Night**)
+Right-click any pet → **Play Night Shift 🌙…**
 
 Survive from **12 AM to 6 AM** (about 2 minutes) while the Night Shift crew wanders toward your office.
 
-- **Glowing eyes in a doorway?** Hit **FLASH** on that side (◀ ▶ or **A** / **D**, or tap the doorway on a phone) to send the robo back to the stage.
+- **Glowing eyes in a doorway?** Hit **FLASH** on that side (◀ ▶ or **A** / **D**) to send the robo back to the stage.
 - **Check the cameras** (**1**–**5**): a robo you're watching **can't move**. But cameras and flashes use battery 🔋
 - Get caught and you just try again. No real jump scares, promise. (It just wanted a hug.)
 
@@ -188,8 +175,6 @@ Every pet is 16 × 12 pixel art written as text, right inside `blip.pyw`. For ex
 ```
 
 Copy an animal in the `ANIMALS` section, change the drawing and colors, and give it some lines in `ANIMAL_TRAITS`. The face (eyes, blinking, mouth) is drawn on top automatically.
-
-Then run `python tools/export_go_data.py` so the phone version gets the new animal too.
 
 ## Want a new animal?
 

@@ -1,16 +1,18 @@
 name: Build Windows app
 
-# Publish a new version: Actions tab → "Build Windows app" → Run workflow → type a version (e.g. v1.1.0).
-# (Pushing a tag like v1.1.0 also works.)
+# Publish a new version: Actions tab → "Build Windows app" → Run workflow → type a version.
+#   Beta / demo builds: v0.2.0-beta   → shown on GitHub as a "Pre-release"
+#   Full release:       v1.0.0        → shown as the latest release
+# (Pushing a tag like v0.2.0-beta also works.)
 on:
   push:
     tags: ["v*"]
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to publish, e.g. v1.1.0"
+        description: "Version to publish (beta: v0.2.0-beta, full release: v1.0.0)"
         required: true
-        default: "v1.0.0"
+        default: "v0.1.0-beta"
 
 permissions:
   contents: write
@@ -51,7 +53,8 @@ jobs:
         uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: ${{ github.event.inputs.version || github.ref_name }}
-          name: ${{ github.event.inputs.version || github.ref_name }}
+          name: Blipville ${{ github.event.inputs.version || github.ref_name }}
           target_commitish: ${{ github.sha }}
+          prerelease: ${{ contains(github.event.inputs.version || github.ref_name, '-') || startsWith(github.event.inputs.version || github.ref_name, 'v0') }}
           files: dist/*.exe
           generate_release_notes: true

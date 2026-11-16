@@ -19,6 +19,15 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.
 
+### 📱 Phone: Blipville Pocket
+
+**[Play Blipville Pocket](https://johnblip189.github.io/Blipville/pocket/)** in your phone's browser, then add it to your home screen so it opens like an app (and works offline):
+
+- **iPhone:** Safari → Share → **Add to Home Screen**
+- **Android:** Chrome → ⋮ → **Install app** / **Add to Home screen**
+
+Your Blips live in a little town: tap to pet, drag to toss, press and hold for their menu. Hearts, Mystery Eggs and the whole collection are there too. (Pocket saves on your phone, separately from the desktop app.)
+
 ### Any computer with Python
 
 1. Install [Python](https://www.python.org/downloads/) (on Windows, tick **"Add python.exe to PATH"** during setup).
@@ -138,6 +147,8 @@ Every pet is 16 × 12 pixel art written as text, right inside `blip.pyw`. For ex
 ```
 
 Copy an animal in the `ANIMALS` section, change the drawing and colors, and give it some lines in `ANIMAL_TRAITS`. The face (eyes, blinking, mouth) is drawn on top automatically.
+
+Then run `python tools/export_pocket_data.py` so the phone version gets the new animal too.
 
 ## Want a new animal?
 

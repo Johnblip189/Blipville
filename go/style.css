@@ -104,3 +104,41 @@ html, body {
 #eggCanvas { width: 280px; height: 220px; image-rendering: pixelated; max-width: 100%; }
 .help { padding-left: 18px; line-height: 1.55; font-size: 14.5px; }
 .help li { margin-bottom: 6px; }
+
+#bar button[hidden], #popped[hidden] { display: none; }
+#popped { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px;
+  background: var(--bg); z-index: 20; }
+#popped > div { max-width: 360px; }
+#popped .big { font-size: 56px; }
+.help .laptop { display: none; }
+
+/* ---------- laptops & Chromebooks: mouse + keyboard, bigger screen ---------- */
+@media (min-width: 900px) and (hover: hover) {
+  .help .laptop { display: list-item; }
+  #top { padding: 14px 22px; }
+  .title { font-size: 22px; }
+  #bar {
+    left: 50%; right: auto; transform: translateX(-50%); bottom: 14px; padding: 8px; gap: 8px; border-radius: 22px;
+    background: rgba(20, 16, 36, .72); backdrop-filter: blur(8px); border: 2px solid rgba(255,255,255,.1);
+  }
+  #bar button { width: 84px; flex: none; min-height: 56px; cursor: pointer; transition: transform .12s, background .12s; }
+  #bar button:hover { transform: translateY(-3px); background: var(--card2); }
+  .sheet { align-items: center; }
+  .card { max-width: 520px; }
+  .card.tall { height: min(80vh, 760px); }
+  .zooCells { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); }
+  .zooCells button, .chips button, .row button, .close { cursor: pointer; }
+  .zooCells button:hover, .chips button:hover, .row button:hover { filter: brightness(1.15); }
+}
+
+/* ---------- the little pop-out window ---------- */
+body.mini #top { padding: 6px 8px; }
+body.mini .title, body.mini #helpBtn { display: none; }
+body.mini .pill { min-height: 28px; font-size: 13px; padding: 3px 10px; }
+body.mini #bar { left: auto; right: 6px; bottom: 6px; transform: none; padding: 4px; gap: 4px; border-radius: 14px;
+  background: rgba(20, 16, 36, .6); }
+body.mini #bar button { width: 46px; min-height: 40px; font-size: 9px; border-radius: 10px; }
+body.mini #bar button span { font-size: 15px; }
+body.mini #shareBtn { display: none; }
+body.mini .sheet { padding: 6px; }
+body.mini .card { padding: 10px; border-radius: 14px; }

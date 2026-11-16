@@ -119,3 +119,18 @@ html, body {
 #hatChips small.price { color: #ff9fc0; }
 #hatChips small.owned { color: #9ad8a8; }
 .label .season { color: #ffd23a; text-transform: none; letter-spacing: 0; margin-left: 6px; }
+
+/* Night Shift minigame */
+.nsCard { background: #0c0b14; padding: 10px; }
+#nsCanvas { width: 100%; aspect-ratio: 360 / 300; display: block; border-radius: 14px; image-rendering: pixelated; touch-action: manipulation; }
+.nsRow { display: flex; gap: 6px; margin-top: 8px; }
+.nsRow button {
+  flex: 1; min-height: 46px; border: 0; border-radius: 12px; background: #1d1a2e; color: var(--text); font: 800 13px var(--font);
+  touch-action: manipulation;
+}
+.nsRow button.primary { background: var(--accent); }
+.nsRow button.flash { background: #4a3a10; color: #ffe08a; }
+.nsRow button.on { outline: 2px solid #ffd23a; }
+.nsRow button:disabled { opacity: .4; }
+.nsRow.cams button { white-space: pre-line; font-size: 11px; min-height: 50px; line-height: 1.25; }
+.nsCard .close { margin-top: 8px; min-height: 40px; }

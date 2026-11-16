@@ -102,6 +102,12 @@ html, body {
 }
 .zooCells button.locked { opacity: .75; color: var(--muted); }
 .zooCells canvas { width: 56px; height: 46px; image-rendering: pixelated; }
+.zooCells small { font-size: 9px; font-weight: 700; color: #ff9fc0; line-height: 1.15; }
+.zooCells button.peeked { opacity: .9; }
+.zooCells button.armed { outline: 2px solid #ff9fc0; background: #3d2a4a; }
+.zooCells button.armed span { color: #ff9fc0; }
+.peekAll { border: 0; background: none; color: #ff9fc0; font: 700 13px var(--font); text-decoration: underline; margin-top: 8px; padding: 6px; }
+.peekAll.armed { background: #3d2a4a; border-radius: 12px; text-decoration: none; }
 
 #eggCanvas { width: 280px; height: 220px; image-rendering: pixelated; max-width: 100%; }
 .help { padding-left: 18px; line-height: 1.55; font-size: 14.5px; }

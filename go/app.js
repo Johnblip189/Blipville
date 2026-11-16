@@ -18,7 +18,7 @@
   const $ = (id) => document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   function persist(now = false) {
@@ -703,19 +703,30 @@
     const grid_ = $("zooGrid"); grid_.innerHTML = "";
     const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ["Rare ✨ (hatch from eggs)", D.groups.rare],
                     ["Night Shift 🌙 (coming to On the Go soon)", D.groups.nightShift]];
-    let found = 0, total = 0;
+    let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
+    const how = (k) => (RARE.has(k) ? "🥚 hatch from an egg" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const cells = document.createElement("div"); cells.className = "zooCells";
       for (const k of kinds) {
         total++;
-        const open = isUnlocked(k); if (open) found++;
+        const open = isUnlocked(k), peek = !open && save.peeked.includes(k); if (open) found++;
         const b = document.createElement("button");
-        b.className = open ? "" : "locked";
-        b.appendChild(thumb(k, KINDS[k].default || 0, !open, 4));
-        b.append(open ? k : "???");
+        b.className = open ? "" : peek ? "locked peeked" : "locked";
+        b.appendChild(thumb(k, KINDS[k].default || 0, !open && !peek, 4));
+        const label = document.createElement("span"); label.textContent = open || peek ? k : "???"; b.appendChild(label);
+        if (!open) { const tag = document.createElement("small"); tag.textContent = peek ? `🔒 ${how(k)}` : "tap to peek 👀"; b.appendChild(tag); }
         b.onclick = () => {
-          if (!open) { toast(RARE.has(k) ? "🥚 Hatch it from a Mystery Egg!" : "🌙 Coming to On the Go soon!"); return; }
+          if (!open && peek) { toast(`${k}: ${how(k)} to unlock it!`); return; }
+          if (!open) {
+            if (armed !== b) {                       // first tap: spoiler warning
+              if (armed) armed.reset();
+              armed = b; b.classList.add("armed"); label.textContent = "spoiler!"; b.lastChild.textContent = "tap again to peek";
+              b.reset = () => { b.classList.remove("armed"); label.textContent = "???"; b.lastChild.textContent = "tap to peek 👀"; };
+              return;
+            }
+            save.peeked.push(k); persist(true); sfx("pop"); openZoo(swapPet); return;
+          }
           if (swapPet) {
             swapPet.kind = k; swapPet.color = KINDS[k].default || 0; say(swapPet, `i'm a ${k} now!`, 2); setFace(swapPet, "happy", 1.2);
             burst(swapPet, "heart", 3); closeSheets();
@@ -726,6 +737,12 @@
       grid_.appendChild(cells);
     }
     $("zooCount").textContent = `${found}/${total}`;
+    const all = $("peekAll"), hidden = groups.flatMap(([, ks]) => ks).filter((k) => !isUnlocked(k) && !save.peeked.includes(k));
+    all.hidden = !hidden.length; all.textContent = "👀 Peek at all locked Blips"; all.classList.remove("armed");
+    all.onclick = () => {
+      if (!all.classList.contains("armed")) { all.classList.add("armed"); all.textContent = "Spoilers! Tap again to show them all"; return; }
+      save.peeked.push(...hidden); persist(true); sfx("pop"); openZoo(swapPet);
+    };
     $("zooHint").textContent = swapPet ? `Pick a new kind for ${swapPet.name}.` : "Tap a Blip to bring it to town.";
     openSheet("zooSheet");
   }

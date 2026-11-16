@@ -3140,6 +3140,7 @@ class Blip:
         self.menu.add_command(label="Play Night Shift 🌙…", command=app.open_night_shift)
         self.menu.add_command(label="🎩 Hats & outfits…", command=lambda: HatShop(app, self))
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
+        self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
         self.menu.add_command(label="💖 0 hearts", state="disabled")
         self.hearts_entry = self.menu.index("end")
         self.menu.add_checkbutton(label="Show name tags", variable=app.name_tags)
@@ -3336,6 +3337,7 @@ class Blip:
         self.rare_menu.add_separator()
         self.rare_menu.add_command(label=f"🥚 Hatch a Mystery Egg… ({hatched}/{len(RARE_KINDS)} found)",
                                    command=lambda: self.app.open_egg(self.root))
+        self.rare_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
         self.menu.entryconfigure(self.hearts_entry, label=f"💖 {self.app.hearts()} hearts")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
@@ -3806,7 +3808,7 @@ def write_save(data):
         pass
 
 
-def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=(), hat=None):
+def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=(), hat=None, silhouette=None):
     """Draw a pet's pixel art on any canvas (top-left at x, y). Used by the minigame."""
     v = VARIANTS[kind]
     colors = kind_colors(kind)
@@ -3833,6 +3835,8 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
                     g[er + b][ex + a] = e
             if not glow:
                 g[er][ex] = "#ffffff"
+    if silhouette:
+        g = [[silhouette if col else None for col in row] for row in g]
     for yy, row in enumerate(g):
         xx = 0
         while xx < ART_W:
@@ -3850,6 +3854,87 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
         for row, col, color in hat_cells(v, HATS[hat]):
             canvas.create_rectangle(x + col * scale, y + row * scale, x + (col + 1) * scale, y + (row + 1) * scale,
                                     fill=color, outline="", tags=tags)
+
+
+# ----------------------------------------------------------------------------- collection (peek at locked Blips)
+class Collection:
+    """Every rare and Night Shift Blip. Locked ones are shadows, but you can peek (spoilers!)."""
+    COLS, CELL_W, CELL_H = 6, 112, 118
+
+    def __init__(self, app):
+        self.app = app
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville collection")
+        self.win.resizable(False, False)
+        self.win.configure(bg="#1d1a2e")
+        self.win.attributes("-topmost", True)
+        self.groups = [("Rare ✨  hatch them from Mystery Eggs", RARE_KINDS), ("Night Shift 🌙  survive the nights", NIGHT_SHIFT)]
+        h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
+        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=h, bg="#1d1a2e", highlightthickness=0)
+        self.canvas.pack(padx=6, pady=6)
+        self.canvas.tag_bind("cell", "<Button-1>", self.on_click)
+        self.canvas.tag_bind("peekall", "<Button-1>", lambda e: self.peek_all())
+        self.draw()
+
+    def peeked(self):
+        return self.app.save.setdefault("peeked", [])
+
+    def how(self, k):
+        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "hatch from an egg"
+
+    def draw(self):
+        c = self.canvas
+        c.delete("all")
+        every = [k for _, kinds in self.groups for k in kinds]
+        found = sum(1 for k in every if self.app.is_unlocked(k))
+        c.create_text(16, 24, anchor="w", text=f"📖 Collection  {found}/{len(every)}", fill="#ffffff", font=("Segoe UI", 14, "bold"))
+        if any(not self.app.is_unlocked(k) and k not in self.peeked() for k in every):
+            c.create_text(self.COLS * self.CELL_W + 4, 24, anchor="e", text="👀 peek at all (spoilers!)", fill="#ff9fc0",
+                          font=("Segoe UI", 10, "bold underline"), tags=("peekall",))
+        self.cells, y = {}, 50
+        for title, kinds in self.groups:
+            c.create_text(16, y + 12, anchor="w", text=title, fill="#ffd23a", font=("Segoe UI", 10, "bold"))
+            y += 30
+            for i, k in enumerate(kinds):
+                x0, y0 = 10 + (i % self.COLS) * self.CELL_W, y + (i // self.COLS) * self.CELL_H
+                tag = f"cell{len(self.cells)}"
+                self.cells[tag] = k
+                open_, peek = self.app.is_unlocked(k), k in self.peeked()
+                c.create_rectangle(x0, y0, x0 + self.CELL_W - 8, y0 + self.CELL_H - 8, fill="#2b2547",
+                                   outline="#3a3360" if open_ else "#2b2547", width=2, tags=("cell", tag))
+                draw_sprite(c, k, default_color(k), x0 + 20, y0 + 8, 4, tags=("cell", tag),
+                            silhouette=None if open_ or peek else "#0f0d1a")
+                mid = x0 + (self.CELL_W - 8) / 2
+                c.create_text(mid, y0 + 70, text=k if open_ or peek else "???", fill="#ffffff" if open_ else "#b8b0d8",
+                              font=("Segoe UI", 9, "bold"), width=self.CELL_W - 14, tags=("cell", tag))
+                sub = "✓ yours!" if open_ else (f"🔒 {self.how(k)}" if peek else "click to peek 👀")
+                c.create_text(mid, y0 + 92, text=sub, fill="#9ad8a8" if open_ else "#ff9fc0", font=("Segoe UI", 7, "bold"),
+                              width=self.CELL_W - 14, justify="center", tags=("cell", tag))
+            y += -(-len(kinds) // self.COLS) * self.CELL_H + 4
+
+    def spoiler_ok(self, what):
+        from tkinter import messagebox
+        return messagebox.askyesno("Spoiler warning 👀", f"Peek at {what}?\n\nYou'll see what it looks like before you unlock it.",
+                                   parent=self.win)
+
+    def on_click(self, e):
+        tag = next((t for t in self.canvas.gettags("current") if t in self.cells), None)
+        if not tag:
+            return
+        k = self.cells[tag]
+        if self.app.is_unlocked(k) or k in self.peeked():
+            return
+        if self.spoiler_ok("this locked Blip"):
+            self.peeked().append(k)
+            write_save(self.app.save)
+            self.app.sound.play("pop")
+            self.draw()
+
+    def peek_all(self):
+        if self.spoiler_ok("every locked Blip"):
+            self.peeked().extend(k for _, kinds in self.groups for k in kinds if k not in self.peeked())
+            write_save(self.app.save)
+            self.draw()
 
 
 # ----------------------------------------------------------------------------- sound effects

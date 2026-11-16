@@ -30,6 +30,7 @@ data = {
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,
     "eggCost": bl.EGG_COST,
+    "unlocks": bl.UNLOCKS,
     "hats": bl.HATS,
     "seasonLines": bl.SEASON_LINES,
 }

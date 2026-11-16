@@ -6,17 +6,19 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 **55 kinds of pets · 49 animals · 154 colors** — one Python file, nothing to install.
 
-## Run it
+## Get it
+
+### Windows: just download and run
+
+**[⬇️ Download Blip.exe](https://github.com/connormroczka-prog/i-ll-make-a-name-later./releases/latest/download/Blip.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+
+> Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
+> Click **More info → Run anyway**. You only need to do this once.
+
+### Any computer with Python
 
 1. Install [Python](https://www.python.org/downloads/) (on Windows, tick **"Add python.exe to PATH"** during setup).
-2. Download [`blip.pyw`](blip.pyw).
-3. Double-click it. A little pet drops onto your taskbar. 🎉
-
-Or from a terminal:
-
-```bash
-python blip.pyw
-```
+2. Download [`blip.pyw`](blip.pyw) and double-click it, or run `python blip.pyw`.
 
 > Made for **Windows**. Should also work on **macOS**. (On Linux the pet shows up in a pink box, because most Linux desktops don't support see-through windows from Python.)
 
@@ -56,7 +58,7 @@ Each animal has its own lines and its own way of moving: frogs and kangaroos hop
 ## Start pets automatically with Windows
 
 1. Press **Win + R**, type `shell:startup`, and press Enter.
-2. Right-click `blip.pyw` → **Create shortcut**, then move the shortcut into that folder.
+2. Right-click `Blip.exe` (or `blip.pyw`) → **Create shortcut**, then move the shortcut into that folder.
 
 ## Adding your own animal
 

@@ -1,0 +1,49 @@
+name: Build Windows app
+
+# Runs when a version tag like v1.0.0 is pushed (or by hand from the Actions tab).
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  APP_NAME: Blip
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: actions/setup-python@v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller==6.11.1
+
+      - name: Build the .exe
+        run: pyinstaller --onefile --noconsole --name ${{ env.APP_NAME }} --icon assets/icon.ico blip.pyw
+
+      - name: Smoke test (the app starts and keeps running)
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "dist/$env:APP_NAME.exe" -PassThru
+          Start-Sleep -Seconds 10
+          if ($p.HasExited) { throw "The app closed right away (exit code $($p.ExitCode))" }
+          Stop-Process -Id $p.Id -Force
+
+      - uses: actions/upload-artifact@v4.4.3
+        with:
+          name: windows-app
+          path: dist/*.exe
+
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          files: dist/*.exe
+          generate_release_notes: true

@@ -10,6 +10,11 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 **138 kinds of pets · 400+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
 
+## ✨ New in v0.3.4 (beta)
+
+- 💬 **Suggestions & help** in every pet's right-click menu: suggest an animal or an idea, or get help if you're stuck.
+- 💖 **Donate / support Blipville** button.
+
 ## ✨ New in v0.3.3 (beta)
 
 - 🎨 **More redraws:** Ladybug, Hippo, Nessie and Goldfish got makeovers.
@@ -37,7 +42,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.3.3-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.3.4-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.

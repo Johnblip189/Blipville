@@ -65,7 +65,7 @@ html, body {
 .card.center { text-align: center; }
 @keyframes up { from { transform: translateY(30px); opacity: 0; } }
 .sheetHead { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
-#petPortrait { width: 96px; height: 78px; image-rendering: pixelated; background: var(--card2); border-radius: 14px; }
+#petPortrait { width: 96px; height: 100px; image-rendering: pixelated; background: var(--card2); border-radius: 14px; }
 #petName {
   width: 100%; font: 800 20px var(--font); color: var(--text); background: transparent; border: 0; border-bottom: 2px dashed var(--card2);
   padding: 4px 0; outline: none; user-select: text; -webkit-user-select: text;
@@ -104,3 +104,10 @@ html, body {
 #eggCanvas { width: 280px; height: 220px; image-rendering: pixelated; max-width: 100%; }
 .help { padding-left: 18px; line-height: 1.55; font-size: 14.5px; }
 .help li { margin-bottom: 6px; }
+
+#hatChips button { width: 74px; }
+#hatChips canvas { width: 48px; height: 63px; }
+#hatChips small { font-size: 10px; font-weight: 800; }
+#hatChips small.price { color: #ff9fc0; }
+#hatChips small.owned { color: #9ad8a8; }
+.label .season { color: #ffd23a; text-transform: none; letter-spacing: 0; margin-left: 6px; }

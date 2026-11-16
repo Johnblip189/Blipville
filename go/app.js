@@ -18,12 +18,12 @@
   const $ = (id) => document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   function persist(now = false) {
     const write = () => {
-      save.pets = pets.map((p) => ({ kind: p.kind, color: p.color, name: p.name, hunger: Math.round(p.hunger), energy: Math.round(p.energy) }));
+      save.pets = pets.map((p) => ({ kind: p.kind, color: p.color, name: p.name, hat: p.hat || null, hunger: Math.round(p.hunger), energy: Math.round(p.energy) }));
       save.lastSeen = Date.now();
       try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* private mode: still playable */ }
     };
@@ -235,6 +235,44 @@
     }
     return g;
   }
+  // ------------------------------------------------------------------ hats & outfits (same rules as blip.pyw)
+  const HATS = D.hats;
+  function currentSeason(d = new Date()) {
+    const md = (d.getMonth() + 1) * 100 + d.getDate();
+    if (md >= 1015 && md <= 1102) return "spooky";
+    if (md >= 1201 || md <= 229) return "winter";
+    if (md >= 320 && md <= 531) return "spring";
+    if (md >= 922 && md <= 1130) return "autumn";
+    return "summer";
+  }
+  const hatInShop = (n) => !HATS[n].season || HATS[n].season === currentSeason();
+  function hatCells(kind, name, shift = 0) {
+    const k = KINDS[kind], hat = HATS[name], rows = hat.rows, w = rows[0].length;
+    const half = 8 - w / 2, f = Math.floor(half);       // round half to even, exactly like Python's round()
+    const left = (half - f !== 0.5 ? Math.round(half) : (f % 2 === 0 ? f : f + 1)) + (k.dx || 0) + (hat.x || 0);
+    let top;
+    if (hat.slot === "head") {
+      let headTop = k.body.findIndex((r) => r.length - r.split(".").length + 1 >= 8);
+      if (headTop < 0) headTop = k.body.findIndex((r) => r.replace(/\./g, ""));
+      top = headTop + shift + (hat.overlap ?? 1) - rows.length;
+    } else if (hat.slot === "face") top = k.eyes + shift + (hat.y || 0);
+    else top = Math.min(k.eyes + 5, 11) + shift + (hat.y || 0);
+    const out = [];
+    rows.forEach((row, r) => [...row].forEach((ch, c) => { if (ch !== ".") out.push([top + r, left + c, hat.colors[ch]]); }));
+    return out;
+  }
+  function drawHat(c, kind, name, x, y, s, shift = 0) {
+    let topRow = 0;
+    if (!name || !HATS[name]) return 0;
+    for (const [r, col, color] of hatCells(kind, name, shift)) { c.fillStyle = color; c.fillRect(x + col * s, y + r * s, s, s); topRow = Math.min(topRow, r); }
+    return topRow * s;
+  }
+  function dressedThumb(kind, color, hat, scale = 3) {
+    const pad = 8, c = document.createElement("canvas"); c.width = 16 * scale; c.height = (13 + pad) * scale;
+    const cx = c.getContext("2d"); drawGrid(cx, grid(kind, color, { t: 0 }), 0, pad * scale, scale); drawHat(cx, kind, hat, 0, pad * scale, scale);
+    return c;
+  }
+
   function drawGrid(c, g, x, y, s) {
     for (let r = 0; r < g.length; r++) {
       let col = 0;
@@ -310,6 +348,7 @@
     const look = Math.hypot(dx, dy) < 30 ? [0, 0] : [dx < -40 ? -1 : dx > 40 ? 1 : 0, dy < -80 ? -1 : dy > 40 ? 1 : 0];
     const face = t < p.faceUntil ? p.face : "normal";
     drawGrid(ctx, grid(p.kind, p.color, { t, state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S);
+    const hatTop = drawHat(ctx, p.kind, p.hat, left, top, S, (p.state === "sleep" || t < p.squashUntil) ? 1 : 0);
     // particles
     p.particles = p.particles.filter((q) => t - q.born < q.life);
     for (const q of p.particles) {
@@ -324,7 +363,7 @@
         ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(q.text, qx, qy);
       }
     }
-    let above = top - 4;
+    let above = top + hatTop - 4;
     above -= nameTag(p.name, p.x, above);
     if (p.bubble && t < p.bubble.until) bubble(p.bubble.text, p.x, above);
   }
@@ -424,8 +463,8 @@
     sheetPet = p;
     $("petName").value = p.name;
     $("petKind").textContent = p.kind + (RARE.has(p.kind) ? " · rare ✨" : "");
-    const pc = $("petPortrait").getContext("2d"); pc.clearRect(0, 0, 96, 78);
-    drawGrid(pc, grid(p.kind, p.color, { t: 0, face: "happy" }), 8, 6, 5);
+    const pc = $("petPortrait").getContext("2d"); pc.clearRect(0, 0, 96, 100);
+    drawGrid(pc, grid(p.kind, p.color, { t: 0, face: "happy" }), 8, 31, 5); drawHat(pc, p.kind, p.hat, 8, 31, 5);
     const chips = $("colorChips"); chips.innerHTML = "";
     KINDS[p.kind].colors.forEach((col, i) => {
       const b = document.createElement("button"); b.className = i === p.color ? "on" : "";
@@ -434,6 +473,29 @@
       chips.appendChild(b);
     });
     $("sheetNap").textContent = p.state === "sleep" ? "☀️ Wake" : "💤 Nap";
+    const hc = $("hatChips"); hc.innerHTML = "";
+    for (const name of Object.keys(HATS).filter(hatInShop)) {
+      const owned = save.hatsOwned.includes(name), wearing = p.hat === name;
+      const b = document.createElement("button"); b.className = wearing ? "on" : "";
+      b.appendChild(dressedThumb(p.kind, p.color, name));
+      b.append(name);
+      const tag = document.createElement("small");
+      tag.textContent = wearing ? "✓ on" : owned ? "owned" : `💖 ${HATS[name].price}`;
+      tag.className = owned || wearing ? "owned" : "price"; b.appendChild(tag);
+      b.onclick = () => {
+        if (wearing) { p.hat = null; say(p, "back to basics!", 2); }
+        else if (owned) { p.hat = name; say(p, pick(["how do i look?", "so stylish!", "*strikes a pose*"]), 2.5); setFace(p, "happy", 1.5); }
+        else {
+          const price = HATS[name].price;
+          if (save.hearts < price) { toast(`${name} costs ${price} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 3.5); return; }
+          save.hearts -= price; save.hatsOwned.push(name); updateHearts(true);
+          p.hat = name; say(p, `a new ${name.toLowerCase()}! thank you!!`, 3); setFace(p, "happy", 2); burst(p, "heart", 5);
+        }
+        persist(true); openPetSheet(p);
+      };
+      hc.appendChild(b);
+    }
+    $("hatSeason").textContent = Object.values(HATS).some((h) => h.season === currentSeason()) ? `✨ ${currentSeason()} items are in!` : "";
     openSheet("petSheet");
   }
   $("petName").addEventListener("input", (e) => { if (sheetPet) { sheetPet.name = e.target.value.trim().slice(0, 16) || sheetPet.name; persist(); } });
@@ -573,7 +635,7 @@
     for (const s of save.pets) {
       if (!KINDS[s.kind] || !isUnlocked(s.kind)) continue;
       const p = makePet(s.kind, s.color, s.name);
-      p.hunger = Math.min(100, (s.hunger ?? 10) + away * 8); p.energy = s.energy ?? 100;
+      p.hunger = Math.min(100, (s.hunger ?? 10) + away * 8); p.energy = s.energy ?? 100; p.hat = s.hat || null;
       pets.push(p);
     }
   }
@@ -589,5 +651,5 @@
   window.addEventListener("pagehide", () => persist(true));
   requestAnimationFrame(frame);
   if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
-  window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet };   // handy for testing
+  window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason };   // handy for testing
 })();

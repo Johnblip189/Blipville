@@ -2837,6 +2837,144 @@ RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 KINDS = CRITTERS + ANIMAL_KINDS + NIGHT_SHIFT + RARE_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
+
+# ----------------------------------------------------------------------------- hats & outfits
+# slot: head (sits on the head), face (over the eyes), neck (under the chin). Bought with hearts.
+HATS = {'Party Hat': {'slot': 'head',
+               'price': 15,
+               'overlap': 1,
+               'colors': {'p': '#ff5f95', 'y': '#ffd23a', 'w': '#ffffff'},
+               'rows': ['....w....', '...pyp...', '...ypy...', '..pypyp..', '..ypypy..']},
+ 'Bow': {'slot': 'head',
+         'price': 15,
+         'overlap': 1,
+         'x': 3,
+         'colors': {'p': '#ff5f95', 'r': '#c8306a'},
+         'rows': ['pp.pp', 'ppppp', 'pprpp', 'pp.pp']},
+ 'Flower': {'slot': 'head',
+            'price': 15,
+            'overlap': 1,
+            'x': -3,
+            'colors': {'p': '#ffb0d8', 'y': '#ffd23a', 'g': '#5ac86a'},
+            'rows': ['.p.', 'pyp', '.p.', '.g.']},
+ 'Beanie': {'slot': 'head',
+            'price': 20,
+            'overlap': 2,
+            'colors': {'w': '#ffffff', 'b': '#3a8aff', 'c': '#8ac0ff'},
+            'rows': ['....w....', '...www...', '..bbbbb..', '.bbbbbbb.', '.ccccccc.']},
+ 'Sunglasses': {'slot': 'face',
+                'price': 20,
+                'colors': {'k': '#14141a', 'w': '#7ad8ff'},
+                'rows': ['kkkkkkkkkk', 'kwkk..kwkk', '.kk....kk.']},
+ 'Scarf': {'slot': 'neck',
+           'price': 20,
+           'colors': {'r': '#e8303a', 'w': '#ffffff'},
+           'rows': ['rrwrrwrrwr', '........rr', '........wr']},
+ 'Bow Tie': {'slot': 'neck',
+             'price': 15,
+             'colors': {'r': '#e8303a', 'k': '#8a1a24'},
+             'rows': ['rr.rr', 'rrkrr', 'rr.rr']},
+ 'Top Hat': {'slot': 'head',
+             'price': 30,
+             'overlap': 1,
+             'colors': {'k': '#1a1a22', 'r': '#c8303a', 'g': '#3a3a48'},
+             'rows': ['..kkkkk..', '..kgkkk..', '..kgkkk..', '..rrrrr..', 'kkkkkkkkk']},
+ 'Cowboy Hat': {'slot': 'head',
+                'price': 30,
+                'overlap': 1,
+                'colors': {'b': '#a8703a', 'd': '#6a4220', 'r': '#c8303a'},
+                'rows': ['...bbbbb...', '..bbbbbbb..', '..ddrrrdd..', 'bbbbbbbbbbb', '.b.......b.']},
+ 'Crown': {'slot': 'head',
+           'price': 40,
+           'overlap': 1,
+           'colors': {'y': '#ffcf3a', 'o': '#c8901a', 'r': '#e8303a', 'b': '#3a8aff'},
+           'rows': ['.y..y..y.', '.yy.y.yy.', '.yyyyyyy.', '.yryyyby.', '.ooooooo.']},
+ 'Halo': {'slot': 'head',
+          'price': 40,
+          'overlap': -2,
+          'colors': {'y': '#fff08a', 'o': '#ffd23a'},
+          'rows': ['.yyyyyyy.', 'yo.....oy', '.yyyyyyy.']},
+ 'Wizard Hat': {'slot': 'head',
+                'price': 50,
+                'overlap': 1,
+                'colors': {'p': '#6a4aff', 'y': '#ffd23a', 'd': '#4a2ab8'},
+                'rows': ['.....p...',
+                         '....pp...',
+                         '...pyp...',
+                         '...ppp...',
+                         '..ppppy..',
+                         '..ypppp..',
+                         '.ddddddd.',
+                         'ppppppppp']},
+ 'Santa Hat': {'slot': 'head',
+               'price': 25,
+               'overlap': 1,
+               'season': 'winter',
+               'colors': {'r': '#e8303a', 'w': '#ffffff'},
+               'rows': ['......w..', '.....rr..', '....rrr..', '...rrrr..', '.wwwwwww.']},
+ 'Witch Hat': {'slot': 'head',
+               'price': 25,
+               'overlap': 1,
+               'season': 'spooky',
+               'colors': {'k': '#2a1a3a', 'o': '#ff8a1f', 'p': '#7a3ab8'},
+               'rows': ['....k....', '...kk....', '...kkk...', '..kkkkk..', '..ooooo..', 'kkkkkkkkk']},
+ 'Pumpkin Hat': {'slot': 'head',
+                 'price': 25,
+                 'overlap': 2,
+                 'season': 'spooky',
+                 'colors': {'o': '#ff8a1f', 'd': '#c85a0a', 'g': '#3a8a3a'},
+                 'rows': ['....g....', '..ododo..', '.ododood.', '.ooooooo.']},
+ 'Flower Crown': {'slot': 'head',
+                  'price': 25,
+                  'overlap': 1,
+                  'season': 'spring',
+                  'colors': {'p': '#ff9fd0', 'y': '#ffd23a', 'w': '#ffffff', 'g': '#5ac86a'},
+                  'rows': ['.p.y.w.p.y.', 'gpgygwgpgyg']},
+ 'Leaf Cap': {'slot': 'head',
+              'price': 25,
+              'overlap': 1,
+              'season': 'autumn',
+              'colors': {'o': '#e8702a', 'r': '#c8402a', 'y': '#ffb83a', 's': '#6a3a14'},
+              'rows': ['....s....', '..ooroy..', '.oyrooro.']}}
+
+
+def current_season(day=None):
+    """spooky (Halloween time), winter, spring, autumn or summer, from today's date."""
+    import datetime
+    d = day or datetime.date.today()
+    md = (d.month, d.day)
+    if (10, 15) <= md <= (11, 2):
+        return "spooky"
+    if md >= (12, 1) or md <= (2, 29):
+        return "winter"
+    if (3, 20) <= md <= (5, 31):
+        return "spring"
+    if (9, 22) <= md <= (11, 30):
+        return "autumn"
+    return "summer"
+
+
+def hat_in_shop(name):
+    season = HATS[name].get("season")
+    return season is None or season == current_season()
+
+
+def hat_cells(v, hat, shift=0, body=None):
+    """Where an item's pixels go on a pet: list of (row, col, color). Rows can be negative (above the art)."""
+    body = body or v["body"]
+    rows, w = hat["rows"], len(hat["rows"][0])
+    left = round(8 - w / 2) + v.get("dx", 0) + hat.get("x", 0)
+    if hat["slot"] == "head":
+        # the top of the head itself (the first wide row), so hats sit between ears instead of on ear tips
+        head_top = next((i for i, r in enumerate(body) if len(r) - r.count(".") >= 8),
+                        next(i for i, r in enumerate(body) if r.strip(".")))
+        top = head_top + shift + hat.get("overlap", 1) - len(rows)
+    elif hat["slot"] == "face":
+        top = v["eyes"] + shift + hat.get("y", 0)
+    else:
+        top = min(v["eyes"] + 5, 11) + shift + hat.get("y", 0)
+    return [(top + r, left + c, hat["colors"][ch]) for r, row in enumerate(rows) for c, ch in enumerate(row) if ch != "."]
+
 NIGHT_LINES = ["*eyes glow in the dark*", "the night shift starts now", "is anyone still awake?",
                "*whirr... click*", "we're more active at night", "don't mind me. just wandering."]
 
@@ -2986,6 +3124,7 @@ class Blip:
         self.menu.add_separator()
         self.menu.add_command(label="Add a friend", command=lambda: app.add_pet(x=self.wx))
         self.menu.add_command(label="Play Night Shift 🌙…", command=app.open_night_shift)
+        self.menu.add_command(label="🎩 Hats & outfits…", command=lambda: HatShop(app, self))
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
         self.menu.add_command(label="💖 0 hearts", state="disabled")
         self.hearts_entry = self.menu.index("end")
@@ -3437,6 +3576,15 @@ class Blip:
                                    fill=color, outline="")
                 x = x2 + 1
 
+        # hat / glasses / scarf
+        hat_top = 0
+        if self.hat in HATS:
+            shift = 1 if (self.state == "sleep" or now < self.squash_until) else 0
+            for row, col, color in hat_cells(VARIANTS[self.kind], HATS[self.hat], shift):
+                c.create_rectangle(ox + col * SCALE, oy + row * SCALE, ox + (col + 1) * SCALE, oy + (row + 1) * SCALE,
+                                   fill=color, outline="")
+                hat_top = min(hat_top, row * SCALE)
+
         # cookie
         ck = self.cookie
         if ck:
@@ -3488,7 +3636,7 @@ class Blip:
         # name tag
         tag_h = 0
         if self.app.name_tags.get():
-            t = c.create_text(W / 2, oy - 6, text=self.name, font=("Segoe UI", 8, "bold"), fill="#ffffff", anchor="s")
+            t = c.create_text(W / 2, oy + hat_top - 6, text=self.name, font=("Segoe UI", 8, "bold"), fill="#ffffff", anchor="s")
             x1, y1, x2, y2 = c.bbox(t)
             c.create_rectangle(x1 - 4, y1 - 1, x2 + 4, y2 + 1, fill="#1d1b26", outline="#1d1b26")
             c.tag_raise(t)
@@ -3499,7 +3647,7 @@ class Blip:
             t = c.create_text(W / 2, 0, text=self.bubble[0], font=("Segoe UI", 10, "bold"),
                               fill="#222222", width=W - 30, justify="center", anchor="s")
             x1, y1, x2, y2 = c.bbox(t)
-            top_of_pet = oy - (6 if self.state != "sleep" else 2) - tag_h
+            top_of_pet = oy + hat_top - (6 if self.state != "sleep" else 2) - tag_h
             h = y2 - y1
             c.move(t, 0, top_of_pet - 12)
             x1, y1, x2, y2 = x1 - 8, top_of_pet - 12 - h - 5, x2 + 8, top_of_pet - 7
@@ -3581,7 +3729,7 @@ def write_save(data):
         pass
 
 
-def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=()):
+def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=(), hat=None):
     """Draw a pet's pixel art on any canvas (top-left at x, y). Used by the minigame."""
     v = VARIANTS[kind]
     colors = kind_colors(kind)
@@ -3621,6 +3769,91 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
             canvas.create_rectangle(x + xx * scale, y + yy * scale, x + (x2 + 1) * scale, y + (yy + 1) * scale,
                                     fill=col, outline="", tags=tags)
             xx = x2 + 1
+    if hat in HATS:
+        for row, col, color in hat_cells(v, HATS[hat]):
+            canvas.create_rectangle(x + col * scale, y + row * scale, x + (col + 1) * scale, y + (row + 1) * scale,
+                                    fill=color, outline="", tags=tags)
+
+
+# ----------------------------------------------------------------------------- hat shop
+class HatShop:
+    """Try on, buy and wear hats & outfits for one pet."""
+    COLS, CELL_W, CELL_H = 4, 132, 150
+
+    def __init__(self, app, pet):
+        self.app, self.pet = app, pet
+        self.win = tk.Toplevel(app.root)
+        self.win.title(f"Hats & outfits — {pet.name}")
+        self.win.resizable(False, False)
+        self.win.configure(bg="#1d1a2e")
+        self.win.attributes("-topmost", True)
+        names = [n for n in HATS if hat_in_shop(n)]
+        rows = -(-len(names) // self.COLS)
+        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=rows * self.CELL_H + 70,
+                                bg="#1d1a2e", highlightthickness=0)
+        self.canvas.pack(padx=6, pady=6)
+        self.canvas.tag_bind("cell", "<Button-1>", self.on_click)
+        self.names = names
+        self.draw()
+
+    def owned(self):
+        return self.app.save.setdefault("hats_owned", [])
+
+    def draw(self):
+        c, pet = self.canvas, self.pet
+        c.delete("all")
+        c.create_text(16, 22, anchor="w", text=f"🎩 Dress up {pet.name}", fill="#ffffff", font=("Segoe UI", 14, "bold"))
+        c.create_text(self.COLS * self.CELL_W + 4, 22, anchor="e", text=f"💖 {self.app.hearts()}", fill="#ff9fc0",
+                      font=("Segoe UI", 13, "bold"))
+        season = current_season()
+        if any(HATS[n].get("season") == season for n in self.names):
+            c.create_text(16, 46, anchor="w", text=f"✨ Seasonal items are here for {season}!", fill="#ffd23a",
+                          font=("Segoe UI", 9, "bold"))
+        for i, name in enumerate(self.names):
+            hat = HATS[name]
+            x0 = 10 + (i % self.COLS) * self.CELL_W
+            y0 = 60 + (i // self.COLS) * self.CELL_H
+            wearing, owned = pet.hat == name, name in self.owned()
+            tag = f"cell{i}"
+            c.create_rectangle(x0, y0, x0 + self.CELL_W - 10, y0 + self.CELL_H - 10, outline="#ffd23a" if wearing else "#3a3360",
+                               width=3 if wearing else 2, fill="#2b2547", tags=("cell", tag))
+            draw_sprite(c, pet.kind, pet.palette, x0 + 27, y0 + 34, 4, tags=("cell", tag), hat=name)
+            c.create_text(x0 + (self.CELL_W - 10) / 2, y0 + 104, text=name, fill="#ffffff", font=("Segoe UI", 10, "bold"),
+                          tags=("cell", tag))
+            label = "✓ wearing · click to remove" if wearing else ("owned · click to wear" if owned else f"💖 {hat['price']}")
+            color = "#ffd23a" if wearing else ("#9ad8a8" if owned else "#ff9fc0")
+            c.create_text(x0 + (self.CELL_W - 10) / 2, y0 + 122, text=label, fill=color, font=("Segoe UI", 7, "bold"),
+                          width=self.CELL_W - 18, justify="center", tags=("cell", tag))
+        self.cells = {f"cell{i}": n for i, n in enumerate(self.names)}
+
+    def on_click(self, e):
+        tag = next((t for t in self.canvas.gettags("current") if t in getattr(self, "cells", {})), None)
+        if not tag:
+            return
+        name, pet = self.cells[tag], self.pet
+        if pet.hat == name:
+            pet.hat = None
+            pet.say("back to basics!", 2)
+        elif name in self.owned():
+            pet.hat = name
+            pet.say(random.choice(["how do i look?", "so stylish!", "*strikes a pose*"]), 2.5)
+            pet.set_face("happy", 1.5)
+        else:
+            price = HATS[name]["price"]
+            if self.app.hearts() < price:
+                from tkinter import messagebox
+                messagebox.showinfo("Hats & outfits", f"{name} costs {price} 💖. You have {self.app.hearts()}.\n\n"
+                                    "Pet, feed and nap your Blips to earn more hearts!", parent=self.win)
+                return
+            self.app.save["hearts"] = self.app.hearts() - price
+            self.owned().append(name)
+            write_save(self.app.save)
+            pet.hat = name
+            pet.say(f"a new {name.lower()}! thank you!!", 3)
+            pet.set_face("happy", 2)
+            pet.burst("heart", 5)
+        self.app.save_town()
+        self.draw()
 
 
 # ----------------------------------------------------------------------------- Mystery Egg

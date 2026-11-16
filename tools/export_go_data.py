@@ -30,6 +30,7 @@ data = {
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,
     "eggCost": bl.EGG_COST,
+    "hats": bl.HATS,
 }
 out = os.path.join(ROOT, "go", "data.js")
 with open(out, "w", encoding="utf-8") as f:

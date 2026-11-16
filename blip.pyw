@@ -2981,7 +2981,78 @@ CRYPTIDS = {
              {"name": "Twilight", "o": "#0a1428", "b": "#2a4a8a", "l": "#8aa8d8", "w": "#141e3a", "p": "#ff9ac0", "e": "#ffe08a"}]},
 }
 
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS}.items():
+CRYPTIDS.update({
+ "Thunderbird": {"eyes": 4, "move": "flutter", "feet": False,
+  "lines": ["*flap… FLAP*", "my wings make the thunder", "big bird. bigger legend", "caw? CAW.", "storm's coming, friend"],
+  "body": ["......oooo......", ".....obbbbo.....", "o...obbbbbbo...o", "wo.obbbbbbbbo.ow", "wwoobbbbbbbbooww", "wwwobbbbbbbbowww",
+           "wwwobpbbbbpbowww", ".wwobbbkkbbboww.", "..wobbbkkbbbow..", "...obbbbbbbbo...", "....oobbbboo....", ".....oo..oo....."],
+  "colors": [{"name": "Storm", "o": "#1a1420", "b": "#6a4a3a", "w": "#3a2a2a", "k": "#ffc83a", "p": "#ff9a7a", "e": "#ffe66a"},
+             {"name": "Lightning", "o": "#0e1a3a", "b": "#3a5aa8", "w": "#1e2e6a", "k": "#ffe03a", "p": "#ff9ac8", "e": "#fff27a"},
+             {"name": "Totem", "o": "#2a0e06", "b": "#c8582a", "w": "#2a8a8a", "k": "#ffd23a", "p": "#ffa07a", "e": "#1a0a04"}]},
+ "Hodag": {"eyes": 5, "move": "walk", "speed": 1.1, "mouth": False,
+  "lines": ["*grins with way too many teeth*", "from the wisconsin woods", "i smell like buzzard and skunk. sorry", "horns: 2. spikes: lots", "grrr (friendly)"],
+  "body": ["..o..........o..", "..oo.o.oo.o.oo..", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbwwwwwwwwwwbbo", "obbbowowowowbbbo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."],
+  "colors": [{"name": "Forest", "o": "#0e1a0e", "b": "#3a5a3a", "w": "#ffffff", "p": "#c86a5a", "e": "#ff3a2a"},
+             {"name": "Bark", "o": "#1a0e06", "b": "#5a3a24", "w": "#fff4dc", "p": "#d8806a", "e": "#ffd23a"},
+             {"name": "Moss", "o": "#14200a", "b": "#7a9a3a", "w": "#ffffff", "p": "#ff9a7a", "e": "#1a0a04"}]},
+ "Mokele-mbembe": {"eyes": 3, "move": "walk", "speed": 0.6, "feet": False,
+  "lines": ["*slow, gentle stomp*", "the river is my home", "long neck, big heart", "i've been here since forever", "shh, the fish are sleeping"],
+  "body": ["....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "..obpbbbbbbpbo..", "...obbbbbbbbo...",
+           "....obbbbbbo....", "....obbbbbbo....", ".ooobbbbbbbbooo.", "obbbbbbbbbbbbbbo", "obllllllllllllbo", ".oooooooooooooo."],
+  "colors": [{"name": "River", "o": "#14201a", "b": "#5a7a5a", "l": "#a8c8a0", "p": "#e8a08a", "e": "#0a140e"},
+             {"name": "Mud", "o": "#1a1006", "b": "#8a6a4a", "l": "#d8c0a0", "p": "#ff9a7a", "e": "#140a04"},
+             {"name": "Jungle", "o": "#0a1a10", "b": "#2a7a4a", "l": "#9ae0a0", "p": "#ffa0a0", "e": "#ffe66a"}]},
+ "Lizard Man": {"eyes": 4, "move": "walk", "speed": 1.3, "feet": False,
+  "lines": ["*splish splash*", "scape ore swamp represent", "i have three fingers. it's plenty", "i'm cold-blooded, not cold-hearted", "hiss-tory was made in 1988"],
+  "body": ["....oooooooo....", "...obbbbbbbbo...", "..obbsbbbbsbbo..", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "..obpbbbbbbpbo..",
+           "...obbbbbbbbo...", "..oobbllllbboo..", ".obobllllllbobo.", ".obobllllllbobo.", "..o.obbbbbbo.o..", "....obbo.obbo..."],
+  "colors": [{"name": "Swamp", "o": "#0a1a0a", "b": "#3a8a3a", "s": "#2a6a2a", "l": "#b8e0a0", "p": "#ff9a8a", "e": "#ff3a2a"},
+             {"name": "Bayou", "o": "#0a1a1a", "b": "#2a7a7a", "s": "#1a5a5a", "l": "#a0e0d0", "p": "#ff9ac0", "e": "#ffd23a"},
+             {"name": "Mudskipper", "o": "#1a140a", "b": "#7a6a3a", "s": "#5a4a24", "l": "#e0d0a0", "p": "#ff9a7a", "e": "#1a0e04"}]},
+})
+
+# Kaiju 🦖: giant monsters. Same way to get them as cryptids, but WAY harder: they show up rarely,
+# move fast, and you have to click one 3 times before it stomps off.
+KAIJU = {
+ "Tidal Titan": {"eyes": 4, "move": "walk", "speed": 0.7, "feet": False,
+  "lines": ["*ROOOAR* (hello)", "i came up for a snack", "the ocean is my bathtub", "sorry about the wave", "i'm big but i'm gentle. mostly"],
+  "body": ["..o...o..o...o..", "..oo.oo..oo.oo..", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obgbbbbbbbbbbgbo", "obgbllllllllbgbo", "obbbllllllllbbbo", "obbbllllllllbbbo", ".obbbbbbbbbbbbo.", ".obbo......obbo."],
+  "colors": [{"name": "Deep Sea", "o": "#06142a", "b": "#2a6a9a", "g": "#1a4a6a", "l": "#9ad8e8", "p": "#ff9ac0", "e": "#ffe66a"},
+             {"name": "Kelp", "o": "#0a1a10", "b": "#3a7a5a", "g": "#2a5a3a", "l": "#b8e8b0", "p": "#ffa08a", "e": "#ff5a3a"},
+             {"name": "Abyss", "o": "#06060e", "b": "#2a2a4a", "g": "#4a3a8a", "l": "#6ae0ff", "p": "#c86ac8", "e": "#6ae0ff"}]},
+ "Magmaw": {"eyes": 4, "move": "walk", "speed": 0.6, "feet": False, "mouth": False,
+  "lines": ["*rumble rumble*", "is it hot in here or is it me", "i ate a volcano once", "careful, i'm toasty", "lava you!"],
+  "body": ["..o..........o..", ".obo........obo.", ".obboooooooobbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obrbbbbbbbbbbrbo",
+           "obbbrbbbbbbrbbbo", "obbbbbbbbbbbbbbo", "obrrrrrrrrrrrrbo", "obbwbwbwbwbwbbbo", ".obbbbbbbbbbbbo.", ".obbo......obbo."],
+  "colors": [{"name": "Lava", "o": "#140a0a", "b": "#4a3a3a", "r": "#ff6a1a", "w": "#fff0c0", "p": "#ff6a1a", "e": "#ffd23a"},
+             {"name": "Obsidian", "o": "#06060a", "b": "#1e1a2a", "r": "#a83aff", "w": "#e8d8ff", "p": "#a83aff", "e": "#d8a0ff"},
+             {"name": "Ember", "o": "#2a0a04", "b": "#8a2a1a", "r": "#ffd23a", "w": "#ffffff", "p": "#ffd23a", "e": "#fff27a"}]},
+ "Gigabot": {"eyes": 4, "move": "walk", "speed": 0.8, "feet": False, "mouth": False,
+  "lines": ["BEEP. BOOP. STOMP.", "SYSTEMS: FRIENDLY", "i was built to protect the city", "my battery is the size of a house", "LOADING HUG.EXE"],
+  "body": [".......o........", "......ooo.......", "...oooooooooo...", "..ommmmmmmmmmo..", "..ommmmmmmmmmo..", "..ommmmmmmmmmo..",
+           "...oooooooooo...", "oooobbbbbbbboooo", "ommobbbbbbbbommo", "ommobbbllbbbommo", "oo.obbbbbbbbo.oo", "...obbo..obbo..."],
+  "colors": [{"name": "Steel", "o": "#14141e", "m": "#a8b0c0", "b": "#6a7488", "l": "#3affd8", "e": "#ff3a3a"},
+             {"name": "Hero", "o": "#140a0a", "m": "#e8e8f0", "b": "#d83a3a", "l": "#ffd23a", "e": "#3ac8ff"},
+             {"name": "Rusty", "o": "#1a0e06", "m": "#c8885a", "b": "#8a5a3a", "l": "#9aff5a", "e": "#9aff5a"}]},
+ "Skyray": {"eyes": 5, "move": "float", "feet": False,
+  "lines": ["*swooosh*", "i fly over cities like clouds", "the sky is my ocean", "look up! hi!", "my shadow covers a whole park"],
+  "body": ["................", "................", "......oooo......", "....oobbbboo....", "..oobbbbbbbboo..", "oobbbbbbbbbbbboo",
+           "obbbbbbbbbbbbbbo", ".obbllllllllbbo.", "..oolllllllloo..", "....obbbbbbo....", ".......oo.......", "........oo......"],
+  "colors": [{"name": "Twilight", "o": "#0e0a2a", "b": "#4a3a9a", "l": "#c8b8ff", "p": "#ff9ac0", "e": "#fff27a"},
+             {"name": "Coral", "o": "#2a0a14", "b": "#e85a7a", "l": "#ffd0d8", "p": "#ffffff", "e": "#2a0a14"},
+             {"name": "Aurora", "o": "#06201a", "b": "#2aa88a", "l": "#b8fff0", "p": "#ff9ac0", "e": "#ffffff"}]},
+ "Frostback": {"eyes": 5, "move": "walk", "speed": 0.7, "feet": False,
+  "lines": ["*crackle crackle*", "brrr-illiant to meet you", "i sneezed and made a glacier", "chill. very chill.", "snow day? snow day."],
+  "body": ["..c...c..c...c..", "..cc.ccc.ccc.cc.", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbllllllllbbbo", "obbbllllllllbbbo", ".obbbbbbbbbbbbo.", ".obbo......obbo."],
+  "colors": [{"name": "Glacier", "o": "#0a1a2a", "b": "#8ac8e8", "c": "#e8f8ff", "l": "#ffffff", "p": "#ff9ac0", "e": "#0a1a2a"},
+             {"name": "Blizzard", "o": "#1a1a2a", "b": "#e0e8f4", "c": "#8ad8ff", "l": "#ffffff", "p": "#ffb0c8", "e": "#3a6aa8"},
+             {"name": "Permafrost", "o": "#06101a", "b": "#3a5a8a", "c": "#b8f0ff", "l": "#a8c8e8", "p": "#ff9ac0", "e": "#b8f0ff"}]},
+}
+
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
@@ -2990,10 +3061,13 @@ for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS}.items():
 NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
+KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
-KINDS = CRITTERS + ANIMAL_KINDS + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
+BEACON_COST = 100                 # hearts per Kaiju Beacon
+KAIJU_HITS = 3                    # clicks it takes to befriend a kaiju
 
 # ----------------------------------------------------------------------------- hats & outfits
 # slot: head (sits on the head), face (over the eyes), neck (under the chin). Bought with hearts.
@@ -3274,7 +3348,7 @@ class Blip:
         size = -(-len(ANIMAL_KINDS) // n_groups)
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
         groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
-                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS)]
+                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS)]
                   + ([("My Blips ⭐", CUSTOM_KINDS)] if CUSTOM_KINDS else []))
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
@@ -3284,6 +3358,8 @@ class Blip:
                 self.rare_menu = sub
             elif members is CRYPTID_KINDS:
                 self.cryptid_menu = sub
+            elif members is KAIJU_KINDS:
+                self.kaiju_menu = sub
             else:
                 for k in members:
                     sub.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
@@ -3299,6 +3375,7 @@ class Blip:
         self.menu.add_command(label="🎩 Hats & outfits…", command=lambda: HatShop(app, self))
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
         self.menu.add_command(label=f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", command=lambda: app.set_lure(self.root))
+        self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
         self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
         self.menu.add_command(label="💖 0 hearts", state="disabled")
         self.hearts_entry = self.menu.index("end")
@@ -3508,6 +3585,17 @@ class Blip:
         self.cryptid_menu.add_command(label=f"🔦 Set out a Cryptid Lure… ({LURE_COST} 💖, {spotted}/{len(CRYPTID_KINDS)} spotted)",
                                       command=lambda: self.app.set_lure(self.root))
         self.cryptid_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
+        self.kaiju_menu.delete(0, "end")
+        for k in KAIJU_KINDS:
+            if self.app.is_unlocked(k):
+                self.kaiju_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            else:
+                self.kaiju_menu.add_command(label="🔒 ???", state="disabled")
+        caught = sum(1 for k in KAIJU_KINDS if self.app.is_unlocked(k))
+        self.kaiju_menu.add_separator()
+        self.kaiju_menu.add_command(label=f"📡 Switch on a Kaiju Beacon… ({BEACON_COST} 💖, {caught}/{len(KAIJU_KINDS)} caught)",
+                                    command=lambda: self.app.set_beacon(self.root))
+        self.kaiju_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
         self.menu.entryconfigure(self.hearts_entry, label=f"💖 {self.app.hearts()} hearts")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
@@ -4054,6 +4142,25 @@ def _viewfinder():
     return rows
 
 
+def _city():
+    """A little city skyline for kaiju to stomp through. Windows flicker on and off."""
+    tops = [9, 9, 9, 9, 9, 9, 0, 14, 14, 14, 14, 14, 14, 14, 0, 6, 6, 6, 6, 6, 0, 0, 18, 18, 18, 18, 18, 18, 0, 11, 11, 11,
+            11, 11, 11, 11, 11, 0, 7, 7, 7, 7, 7, 0, 15, 15, 15, 15, 15, 15, 15, 0, 0, 10, 10, 10, 10, 10, 10, 0, 17, 17, 17,
+            17, 17, 17, 0, 8, 8, 8, 8, 8, 8, 8, 0, 13, 13, 13, 13, 13, 0, 0, 16, 16, 16, 16, 16, 16, 0, 9, 9, 9, 9, 9, 9, 0,
+            12, 12, 12, 12, 12]
+    tops = (tops + [8] * 100)[:100]
+    rows = []
+    for r in range(18):
+        h = 18 - r                                        # height of this row above the ground
+        def cell(i):
+            if tops[i] < h:
+                return "."
+            edge = i == 0 or tops[i - 1] < h or i == 99 or tops[i + 1] < h
+            return "w" if not edge and h < tops[i] - 1 and r % 3 == 1 and i % 2 == 0 else "b"
+        rows.append(_row(100, cell))
+    return rows
+
+
 def _volcano():
     rows = []
     for r in range(22):
@@ -4101,6 +4208,11 @@ SCENE_PROPS = {
               "rows": ["..ll.ll..", ".lkkllkl.", "kkllkkllk", ".kkkkkkk."]},
     "viewfinder": {"colors": {"w": "#ffffff"}, "rows": _viewfinder()},
     "rec": {"colors": {"w": "#ffffff", "*": ["#ff3a3a", "#5a1010"]}, "rows": _rec_mask()},
+    "city": {"colors": {"b": "#241f38", "w": ["#ffe08a", "#3a3456"]}, "rows": _city()},
+    "reeds": {"colors": {"g": "#4a7a3a", "d": "#2f5a2a", "t": "#7a5a2a"},
+              "rows": [_row(100, lambda i: "t" if i % 9 == 2 else "."), _row(100, lambda i: "t" if i % 9 == 2 else "g" if i % 9 == 6 else "."),
+                       _row(100, lambda i: "g" if i % 9 in (2, 5, 6) else "."), _row(100, lambda i: "g" if i % 3 else "d"),
+                       _row(100, lambda i: "d" if i % 4 == 1 else "g"), _row(100, lambda i: "d")]},
 }
 
 # props: [prop, center x, bottom y, layer]   keys: [seconds, center x, y]   clip: hidden below this height
@@ -4134,10 +4246,37 @@ CRYPTID_SCENES = {
                             "keys": [[0, -12, 0], [17, 112, 0]]},
     "Frogman": {"hint": "who's that standing on the bridge?", "props": [["bridge", 56, 0, "back"]], "sparkle": True,
                 "keys": [[0, -12, 0], [3.5, 20, 0], [4.5, 32, 5], [13, 34, 5], [15, 70, 5], [16, 84, 0], [19, 112, 0]]},
+    "Thunderbird": {"hint": "was that thunder? the sky is so dark…",
+                    "props": [["pine", 16, 0, "back"], ["pine", 84, 0, "back"]],
+                    "keys": [[0, -12, 46], [4, 30, 38], [7, 50, 30], [10, 70, 38], [14, 115, 48]]},
+    "Hodag": {"hint": "something is grinning in the bushes…",
+              "props": [["pine", 82, 0, "back"], ["bush", 24, 0, "front"], ["bush", 60, 0, "front"]],
+              "keys": [[0, -12, 0], [2.5, 23, 0], [5.5, 25, 0], [7.5, 59, 0], [10.5, 61, 0], [13, 112, 0]]},
+    "Mokele-mbembe": {"hint": "the river is moving… by itself?", "props": [["water", 50, 0, "front"]], "clip": 3,
+                      "keys": [[0, 26, -14], [2, 30, -2], [8, 52, -2], [10, 56, -14], [12, 70, -14], [13.5, 74, -2],
+                               [17, 84, -2], [18.5, 88, -14]]},
+    "Lizard Man": {"hint": "something splashed in the swamp reeds!", "props": [["reeds", 50, 0, "front"]], "clip": 2,
+                   "keys": [[0, 30, -14], [1.5, 32, 0], [5, 36, 0], [10, 72, 0], [12.5, 74, 0], [14, 76, -14]]},
     "Batsquatch": {"hint": "something huge is flying past the mountain!",
                    "props": [["volcano", 62, 0, "back"], ["smoke", 62, 22, "back"]],
                    "keys": [[0, -12, 26], [5, 34, 42], [8, 54, 30], [12, 78, 44], [16, 115, 34]]},
 }
+
+
+# Kaiju scenes: the kaiju is drawn 3x as big. Click it KAIJU_HITS times before it leaves!
+KAIJU_SCENES = {
+    "Tidal Titan": {"hint": "the ground is shaking… is that a tidal wave?!", "props": [["city", 50, 0, "back"], ["water", 50, 0, "front"]],
+                    "clip": 3, "scale": 3, "keys": [[0, 24, -40], [2.5, 30, -6], [8, 56, -6], [10.5, 62, -42]]},
+    "Magmaw": {"hint": "the volcano is rumbling…!", "props": [["volcano", 70, 0, "back"], ["city", 50, 0, "front"]],
+               "scale": 3, "keys": [[0, -30, 0], [5, 40, 0], [6.5, 40, 0], [11.5, 130, 0]]},
+    "Gigabot": {"hint": "STOMP… STOMP… something metal is coming!", "props": [["city", 50, 0, "front"]],
+                "scale": 3, "keys": [[0, 130, 0], [5, 60, 0], [7, 60, 0], [12, -30, 0]]},
+    "Skyray": {"hint": "a huge shadow is passing over the city…", "props": [["city", 50, 0, "back"]],
+               "scale": 3, "keys": [[0, -30, 10], [4, 30, 5], [7, 64, 11], [10, 130, 7]]},
+    "Frostback": {"hint": "it's suddenly freezing… is it snowing?!", "props": [["pine", 12, 0, "back"], ["city", 50, 0, "front"]],
+                  "scale": 3, "keys": [[0, -30, 0], [6, 50, 0], [7.5, 50, 0], [12, 130, 0]]},
+}
+SCENES = {**CRYPTID_SCENES, **KAIJU_SCENES}
 
 
 def scene_pos(keys, t):
@@ -4157,8 +4296,10 @@ class Sighting:
 
     def __init__(self, app, kind):
         self.app, self.kind = app, kind
-        scene = CRYPTID_SCENES[kind]
+        scene = SCENES[kind]
         self.scene = scene
+        self.sc = scene.get("scale", 1)                 # kaiju are drawn 3x as big
+        self.hits, self.flash_until = 0, 0.0
         flip = random.random() < 0.5                 # mirror the scene sometimes, for variety
         self.keys = [(t, SCENE_W - x if flip else x, y) for t, x, y in scene["keys"]]
         self.props = [(n, SCENE_W - x if flip else x, y, layer, flip) for n, x, y, layer in scene["props"]]
@@ -4255,15 +4396,16 @@ class Sighting:
             p = SCENE_PROPS["mound"]
             self.mask(p["rows"], p["colors"], x + math.sin(t * 9) * 0.6, 0, t)
         g = self.art(now)
+        sc, flash = self.sc, now < self.flash_until
         for r, row in enumerate(g):
-            if y + 12 - r < self.clip:
+            if y + (12 - r) * sc < self.clip:
                 continue
             row = row if self.facing == 1 else row[::-1]
-            top = (SCENE_H - (y + 13 - r)) * P
+            top = (SCENE_H - (y + (13 - r) * sc)) * P
             for i, col in enumerate(row):
                 if col:
-                    left = (x - 8 + i) * P
-                    c.create_rectangle(left, top, left + P, top + P, fill=col, outline="")
+                    left = (x + (i - 8) * sc) * P
+                    c.create_rectangle(left, top, left + P * sc, top + P * sc, fill="#ffffff" if flash else col, outline="")
         if self.scene.get("sparkle") and not moving:        # Frogman's sparkly wand
             for k in range(3):
                 if int(t * 6 + k * 2) % 3:
@@ -4271,7 +4413,12 @@ class Sighting:
                     c.create_rectangle(sx * P, (SCENE_H - sy) * P, sx * P + P, (SCENE_H - sy) * P + P,
                                        fill="#fff27a", outline="")
         self.draw_props("front", t)
-        if self.visible():
+        if self.visible() and self.kind in KAIJU:          # how many more clicks it needs
+            for k in range(KAIJU_HITS):
+                bx, by = (x - 5 + k * 4) * P, (SCENE_H - (y + 13 * self.sc + 4)) * P
+                if by >= 0:
+                    c.create_rectangle(bx, by, bx + 3 * P, by + 2 * P, fill="#ff5a7a" if k < self.hits else "#ffffff", outline="#16121f")
+        elif self.visible():
             qx, qy = x * P - 8, (SCENE_H - (y + 22)) * P
             for r, row in enumerate([".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."]):   # a pixel "?"
                 for i, ch in enumerate(row):
@@ -4279,18 +4426,27 @@ class Sighting:
                         c.create_rectangle(qx + i * 3, qy + r * 3, qx + i * 3 + 3, qy + r * 3 + 3, fill="#ffffff", outline="")
 
     def visible(self):
-        return self.pos[1] + 12 >= self.clip
+        return self.pos[1] + 12 * self.sc >= self.clip
 
     def on_click(self, e):
         if self.caught or not self.visible():
             return
         ux, uy = e.x / SCENE_PX, SCENE_H - e.y / SCENE_PX
         x, y = self.pos
-        if abs(ux - x) > 10 or not (max(y, self.clip) - 2 <= uy <= y + 16):
+        if abs(ux - x) > 10 * self.sc or not (max(y, self.clip) - 2 <= uy <= y + 16 * self.sc):
             return
-        self.caught = True
         app, kind = self.app, self.kind
-        app.save.setdefault("cryptids", []).append(kind)
+        if kind in KAIJU:
+            self.hits += 1
+            if self.hits < KAIJU_HITS:                       # not yet! it flinches and keeps going
+                self.flash_until = time.monotonic() + 0.15
+                app.sound.play("thud")
+                witness = next((p for p in app.pets if p.state not in ("sleep", "held")), None)
+                if witness:
+                    witness.say(random.choice(["again! click it again!", "it's working!", "keep going!!", "almost!"]), 2)
+                return
+        self.caught = True
+        app.save.setdefault("kaiju" if kind in KAIJU else "cryptids", []).append(kind)
         write_save(app.save)
         app.sound.play("fanfare")
         screen_x = self.wx + x * SCENE_PX - W / 2
@@ -4313,7 +4469,9 @@ class Sighting:
             pass
         if escaped:
             witness = next((p for p in self.app.pets if p.state not in ("sleep", "held")), None)
-            if witness:
+            if witness and self.kind in KAIJU:
+                witness.say(random.choice(["it stomped away!!", "THAT WAS HUGE", "the whole town shook!", "next time we'll get it!"]), 3)
+            elif witness:
                 witness.say(random.choice(["did you see that?!", "w-what was THAT?", "i think i saw something…",
                                            "*rubs eyes* huh?", "it got away!"]), 3)
 
@@ -4321,7 +4479,7 @@ class Sighting:
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)
 class Collection:
     """Every rare and Night Shift Blip. Locked ones are shadows, but you can peek (spoilers!)."""
-    COLS, CELL_W, CELL_H = 8, 96, 92
+    COLS, CELL_W, CELL_H = 10, 96, 92
 
     def __init__(self, app):
         self.app = app
@@ -4331,7 +4489,8 @@ class Collection:
         self.win.configure(bg="#1d1a2e")
         self.win.attributes("-topmost", True)
         self.groups = [("Rare ✨  hatch them from Mystery Eggs", RARE_KINDS), ("Night Shift 🌙  survive the nights", NIGHT_SHIFT),
-                       ("Cryptids 👣  spot them wandering by, then click them!", CRYPTID_KINDS)]
+                       ("Cryptids 👣  spot them wandering by, then click them!", CRYPTID_KINDS),
+                       (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=h, bg="#1d1a2e", highlightthickness=0)
         self.canvas.pack(padx=6, pady=6)
@@ -4343,7 +4502,7 @@ class Collection:
         return self.app.save.setdefault("peeked", [])
 
     def how(self, k):
-        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "hatch from an egg"
+        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "hatch from an egg"
 
     def draw(self):
         c = self.canvas
@@ -5045,6 +5204,7 @@ class App:
         self.plays = []                            # games of catch / tag going on right now
         self.sightings = []                        # a cryptid sneaking past right now
         self.next_sighting = time.monotonic() + random.uniform(6, 14) * 60
+        self.next_kaiju = time.monotonic() + random.uniform(30, 60) * 60     # kaiju are much rarer
         self.pets = []
         if not self.restore_town():
             self.add_pet("Blip", "Blip")
@@ -5104,7 +5264,16 @@ class App:
     def cryptid_step(self, now):
         for s in list(self.sightings):
             s.step(now)
-        if now < self.next_sighting or self.sightings:
+        if self.sightings:
+            return
+        if now >= self.next_kaiju:
+            self.next_kaiju = now + random.uniform(45, 90) * 60
+            left = [k for k in KAIJU_KINDS if not self.is_unlocked(k)]
+            if left and self.pets:
+                self.sightings.append(Sighting(self, random.choice(left)))
+                self.sound.play("thud")
+                return
+        if now < self.next_sighting:
             return
         wait = random.uniform(8, 20) * 60          # the next one shows up in 8-20 minutes (sooner at night)
         self.next_sighting = now + (wait / 2 if is_night() else wait)
@@ -5129,7 +5298,25 @@ class App:
         messagebox.showinfo("Cryptid Lure 🔦", "You set out a Cryptid Lure…\n\nWatch the bottom of your screen. "
                             "When a shadow with glowing eyes sneaks by, click it before it gets away!", parent=parent)
 
+    def set_beacon(self, parent):
+        from tkinter import messagebox
+        if all(self.is_unlocked(k) for k in KAIJU_KINDS):
+            messagebox.showinfo("Kaiju Beacon", "You've befriended every kaiju! 🏆🦖", parent=parent)
+            return
+        if self.hearts() < BEACON_COST:
+            messagebox.showinfo("Kaiju Beacon", f"A Kaiju Beacon costs {BEACON_COST} 💖 hearts. You have {self.hearts()}.\n\n"
+                                "Kaiju also stomp by on their own… but only once in a long while.", parent=parent)
+            return
+        self.save["hearts"] = self.hearts() - BEACON_COST
+        write_save(self.save)
+        self.next_kaiju = min(self.next_kaiju, time.monotonic() + random.uniform(20, 60))
+        messagebox.showinfo("Kaiju Beacon 📡", "You switched on a Kaiju Beacon…\n\nSomething HUGE is coming. When it stomps "
+                            f"through the city at the bottom of your screen, click it {KAIJU_HITS} times before it leaves!",
+                            parent=parent)
+
     def is_unlocked(self, kind):
+        if kind in KAIJU:
+            return kind in self.save.get("kaiju", [])
         if kind in CRYPTIDS:
             return kind in self.save.get("cryptids", [])
         if kind in RARE:

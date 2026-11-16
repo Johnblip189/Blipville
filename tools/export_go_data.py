@@ -15,6 +15,8 @@ spec.loader.exec_module(bl)
 
 kinds = {}
 for k in bl.KINDS:
+    if k in bl.KAIJU_KINDS:        # kaiju are desktop-only for now
+        continue
     v = bl.VARIANTS[k]
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),

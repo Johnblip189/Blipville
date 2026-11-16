@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+# personal custom Blips (not shared)
+my_blips.json

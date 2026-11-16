@@ -59,6 +59,7 @@
       kind, color: color ?? k.default ?? 0, name: name || pick(D.names), x: x ?? rnd(60, W - 60), y: rnd(140, 260), vx: 0, vy: 0,
       state: "fall", until: 0, target: null, facing: 1, energy: 100, hunger: 10, face: "normal", faceUntil: 0,
       bubble: null, blinkUntil: 0, nextBlink: now() + rnd(1, 4), lastPetReward: -99, nextShift: now() + rnd(6, 12),
+      playing: false, napBuddy: false, lastPlay: -99,
       squashUntil: 0, particles: [],
     };
     return p;
@@ -128,6 +129,7 @@
     if (t > p.nextBlink) { p.blinkUntil = t + 0.15; p.nextBlink = t + rnd(2, 6); }
     if (p.state !== "sleep") p.energy = Math.max(0, p.energy - dt * 0.12);
     p.hunger = Math.min(100, p.hunger + dt * 0.08);
+    if (p.playing) return;                           // a game of catch / tag is moving it
     if (k.shifty && t > p.nextShift && p.state !== "sleep" && p.state !== "held") {
       p.nextShift = t + rnd(8, 15); p.color = (p.color + 1) % k.colors.length;
       if (Math.random() < 0.4) say(p, "*changes color*", 1.8);
@@ -179,9 +181,84 @@
     } else if (p.state === "idle" && t > p.until) decide(p, t);
   }
 
+  // ------------------------------------------------------------------ playing together: catch, tag, nap piles
+  let plays = [];
+  const BALL = [".ooo.", "owwro", "owrro", "orrwo", ".ooo."];
+  const headPos = (p) => [p.x, GROUND - p.y - 13 * S + 6];
+  function endPlay(play, t, happy = true) {
+    for (const p of play.pets) {
+      p.playing = false; p.lastPlay = t;
+      if (happy && !["held", "fall", "sleep"].includes(p.state)) { setState(p, "idle", rnd(1.5, 3)); setFace(p, "happy", 1.5); burst(p, "heart", 2); }
+    }
+    plays = plays.filter((x) => x !== play);
+  }
+  function playStep(t, dt) {
+    const free = pets.filter((p) => !p.playing && p.state === "idle" && t - p.lastPlay > 40);
+    outer: for (let i = 0; i < free.length; i++) for (let j = i + 1; j < free.length; j++) {
+      const a = free[i], b = free[j], d = Math.abs(a.x - b.x);
+      if (d > 12 * S && d < 40 * S && Math.random() < dt * 0.04) {
+        a.playing = b.playing = true;
+        plays.push({ type: "ball", pets: [a, b], from: a, to: b, t0: t, throws: 0, n: 4 + Math.floor(Math.random() * 4) });
+        say(a, pick(["catch!", `heads up, ${b.name}!`, "wanna play?"]), 2); break outer;
+      }
+      if (d < 64 * S && Math.random() < dt * 0.015) {
+        a.playing = b.playing = true;
+        plays.push({ type: "chase", pets: [a, b], runner: a, chaser: b, until: t + 7, swapped: false });
+        say(a, pick(["can't catch me!", "tag, you're it!"]), 2); say(b, "hey! get back here!", 2); break outer;
+      }
+    }
+    for (const sl of pets.filter((p) => p.state === "sleep")) for (const p of pets) {
+      if (p !== sl && !p.playing && !p.napBuddy && p.state === "idle" && p.energy < 60 && Math.random() < dt * 0.15) {
+        p.napBuddy = true; p.target = clamp(sl.x + pick([-1, 1]) * 14 * S, 8 * S, W - 8 * S); setState(p, "walk", 10); say(p, "*yawn* me too...", 2);
+      }
+    }
+    for (const p of pets) if (p.napBuddy && p.state === "idle") { p.napBuddy = false; setState(p, "sleep", 20); say(p, "*snuggles*", 2); }
+    for (const play of [...plays]) {
+      const [a, b] = play.pets;
+      if ([a, b].some((p) => !pets.includes(p) || ["held", "fall", "sleep"].includes(p.state) || !p.playing)) { endPlay(play, t, false); continue; }
+      if (play.type === "ball") {
+        for (const p of [a, b]) { p.state = "idle"; p.facing = (p === a ? b : a).x > p.x ? 1 : -1; }
+        const u = Math.min(1, (t - play.t0) / 0.9), [x0, y0] = headPos(play.from), [x1, y1] = headPos(play.to);
+        play.ball = [x0 + (x1 - x0) * u, y0 + (y1 - y0) * u - Math.sin(Math.PI * u) * 14 * S];
+        if (u >= 1) {
+          play.throws++;
+          if (Math.random() < 0.5) say(play.to, pick(["got it!", "nice!", "catch!", "woo!"]), 1.2);
+          setFace(play.to, "happy", 0.6);
+          [play.from, play.to, play.t0] = [play.to, play.from, t];
+          if (play.throws >= play.n) { say(play.from, pick(["that was fun!", "good game!", "again later!"]), 2.5); endPlay(play, t); }
+        }
+      } else {
+        const r = play.runner, c = play.chaser, sp = (p) => Math.sqrt(KINDS[p.kind].speed || 1);
+        let away = r.x >= c.x ? 1 : -1;
+        if ((away > 0 && r.x >= W - 9 * S) || (away < 0 && r.x <= 9 * S)) away = -away;   // cornered: dodge past
+        r.x = clamp(r.x + 66 * (S / 4) * away * sp(r) * dt, 8 * S, W - 8 * S);
+        const toward = r.x > c.x ? 1 : -1;
+        c.x = clamp(c.x + 132 * (S / 4) * toward * sp(c) * dt, 8 * S, W - 8 * S);
+        r.facing = away; c.facing = toward; r.state = c.state = "walk";
+        if (Math.abs(r.x - c.x) < 6 * S) {
+          say(c, "tag! you're it!", 1.8);
+          if (!play.swapped) { [play.runner, play.chaser, play.swapped, play.until] = [c, r, true, t + 6]; c.x = clamp(c.x + (c.x > r.x ? 1 : -1) * 8 * S, 8 * S, W - 8 * S); }
+          else endPlay(play, t);
+        } else if (t > play.until) { say(r, "*pant pant* ok you win", 2); endPlay(play, t); }
+      }
+    }
+  }
+  function drawBalls() {
+    const s = Math.max(2, Math.round(S * 0.7));
+    for (const play of plays) {
+      if (play.type !== "ball" || !play.ball) continue;
+      const [bx, by] = play.ball;
+      BALL.forEach((row, r) => [...row].forEach((ch, c) => {
+        if (ch === ".") return; ctx.fillStyle = { w: "#ffffff", r: "#e8303a", o: "#3a2a3a" }[ch];
+        ctx.fillRect(bx - 2.5 * s + c * s, by - 2.5 * s + r * s, s, s);
+      }));
+    }
+  }
+
   function socialize(t) {
-    for (let i = 0; i < pets.length; i++) for (let j = i + 1; j < pets.length; j++) {
-      const a = pets[i], b = pets[j];
+    const idle = pets.filter((p) => !p.playing);
+    for (let i = 0; i < idle.length; i++) for (let j = i + 1; j < idle.length; j++) {
+      const a = idle[i], b = idle[j];
       if (!["idle", "walk"].includes(a.state) || !["idle", "walk"].includes(b.state) || Math.abs(a.x - b.x) > 18 * S) continue;
       const key = a.name + "|" + b.name;
       if (t - (greeted[key] || -999) < 60) continue;
@@ -438,8 +515,10 @@
     sky(t);
     for (const p of pets) update(p, t, dt);
     socialize(t);
+    playStep(t, dt);
     drawCookies(t);
     for (const p of [...pets].sort((a, b) => (a === held ? 1 : 0) - (b === held ? 1 : 0))) drawPet(p, t);
+    drawBalls();
     requestAnimationFrame(frame);
   }
 
@@ -467,7 +546,7 @@
     if (!press) return;
     if (!press.moved && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 9) {
       press.moved = true; clearTimeout(holdTimer);
-      held = press.p; setState(held, "held"); say(held, pick(D.lines.held), 2.5); setFace(held, "surprised", 999);
+      held = press.p; held.playing = false; held.napBuddy = false; setState(held, "held"); say(held, pick(D.lines.held), 2.5); setFace(held, "surprised", 999);
     }
     if (held) {
       held.x = clamp(e.clientX, 8 * S, W - 8 * S);
@@ -699,5 +778,8 @@
   requestAnimationFrame(frame);
   if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
   window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
-                         setSeason: (s) => { seasonOverride = s; weather = []; } };   // handy for testing
+                         setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
+                         startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;
+                           plays.push(type === "ball" ? { type, pets: [a, b], from: a, to: b, t0: t, throws: 0, n: 4 }
+                                                      : { type, pets: [a, b], runner: a, chaser: b, until: t + 7, swapped: false }); } };   // handy for testing
 })();

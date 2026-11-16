@@ -3021,6 +3021,7 @@ SEASON_LINES = {
     "spooky": ["boo! did i scare you?", "happy spooky season!", "*spooky noises*", "trick or treat?"],
 }
 BAT = ["x...x", "xx.xx", ".xxx."]
+BALL = [".ooo.", "owwro", "owrro", "orrwo", ".ooo."]
 BAT_FLAP = [".x.x.", "xxxxx", ".x.x."]
 
 
@@ -3089,6 +3090,9 @@ class Blip:
         self.last_hungry_whine = 0.0
         self.last_pet_reward = -99.0
         self.hat = None                            # what it's wearing (from the hat shop)
+        self.playing = False                       # busy with a game of catch / tag (the App moves it)
+        self.nap_buddy = False                     # walking over to nap next to a sleeping friend
+        self.last_play = -99.0
         self.next_shift = time.monotonic() + random.uniform(6, 12)   # chameleons change color now and then
 
         self.press = None
@@ -3361,6 +3365,8 @@ class Blip:
             self.set_state("idle", random.uniform(2, 5))
 
     def update(self, now):
+        if self.playing:
+            return
         dt = 1 / FPS
         if self.state != "sleep":
             self.energy = max(0, self.energy - dt * 0.12)     # ~14 min from full to sleepy
@@ -3586,6 +3592,17 @@ class Blip:
                 c.create_rectangle(ox + x * SCALE, oy + y * SCALE, ox + (x2 + 1) * SCALE, oy + (y + 1) * SCALE,
                                    fill=color, outline="")
                 x = x2 + 1
+
+        # a ball in flight (games of catch are drawn in every pet window the ball passes through)
+        for play in self.app.plays:
+            if play["type"] == "ball" and "ball" in play:
+                bx, by = play["ball"][0] - self.wx, play["ball"][1] - self.wy
+                if -10 < bx < W + 10 and -10 < by < H + 10:
+                    for yy, row in enumerate(BALL):
+                        for xx, ch in enumerate(row):
+                            if ch != ".":
+                                c.create_rectangle(bx - 8 + xx * 3, by - 8 + yy * 3, bx - 5 + xx * 3, by - 5 + yy * 3,
+                                                   fill={"w": "#ffffff", "r": "#e8303a", "o": "#3a2a3a"}[ch], outline="")
 
         # hat / glasses / scarf
         hat_top = 0
@@ -4338,6 +4355,7 @@ class App:
         self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))
         load_custom_blips()
         self.game = None
+        self.plays = []                            # games of catch / tag going on right now
         self.pets = []
         if not self.restore_town():
             self.add_pet("Blip", "Blip")
@@ -4470,11 +4488,111 @@ class App:
         self.save_town()
         self.root.destroy()
 
+    # ----- pets playing together
+    def head_pos(self, pet):
+        return pet.wx + W / 2, pet.wy + H - ART_H * SCALE + 6
+
+    def end_play(self, play, now, happy=True):
+        for pet in play["pets"]:
+            pet.playing = False
+            pet.last_play = now
+            if happy and pet.state not in ("held", "fall", "sleep"):
+                pet.set_state("idle", random.uniform(1.5, 3))
+                pet.set_face("happy", 1.5)
+                pet.burst("heart", 2)
+        if play in self.plays:
+            self.plays.remove(play)
+
+    def play_step(self, now):
+        dt = 1 / FPS
+        free = [p for p in self.pets if not p.playing and p.state == "idle" and now - p.last_play > 40
+                and not getattr(p, "visitor", None)]
+        # start a game now and then
+        for i, a in enumerate(free):
+            for b in free[i + 1:]:
+                d = abs(a.wx - b.wx)
+                if 60 < d < 190 and random.random() < dt * 0.04:
+                    a.playing = b.playing = True
+                    self.plays.append({"type": "ball", "pets": [a, b], "from": a, "to": b, "t0": now, "throws": 0,
+                                       "n": random.randint(4, 7)})
+                    a.say(random.choice(["catch!", f"heads up, {b.name}!", "wanna play?"]), 2)
+                    break
+                if d < 320 and random.random() < dt * 0.015:
+                    a.playing = b.playing = True
+                    self.plays.append({"type": "chase", "pets": [a, b], "runner": a, "chaser": b, "until": now + 7,
+                                       "swapped": False})
+                    a.say(random.choice(["can't catch me!", "tag, you're it!"]), 2)
+                    b.say("hey! get back here!", 2)
+                    break
+        # a sleepy pet sometimes joins a napping friend
+        for sleeper in [p for p in self.pets if p.state == "sleep"]:
+            for p in self.pets:
+                if (p is not sleeper and not p.playing and not p.nap_buddy and p.state == "idle" and p.energy < 60
+                        and abs(p.wx - sleeper.wx) < 600 and random.random() < dt * 0.15):
+                    p.nap_buddy = True
+                    p.target_x = min(max(sleeper.wx + random.choice([-1, 1]) * 70, self.pets[0].left), self.pets[0].right - W)
+                    p.set_state("walk", 10)
+                    p.say("*yawn* me too...", 2)
+        for p in self.pets:
+            if p.nap_buddy and p.state == "idle":
+                p.nap_buddy = False
+                p.set_state("sleep", 20)
+                p.say("*snuggles*", 2)
+        # run the games
+        for play in list(self.plays):
+            a, b = play["pets"]
+            if any(p not in self.pets or p.state in ("held", "fall", "sleep") or not p.playing for p in (a, b)):
+                self.end_play(play, now, happy=False)
+                continue
+            if play["type"] == "ball":
+                src, dst = play["from"], play["to"]
+                for p in (a, b):
+                    p.state = "idle"
+                    other = b if p is a else a
+                    p.facing = 1 if other.wx > p.wx else -1
+                u = (now - play["t0"]) / 0.9
+                (x0, y0), (x1, y1) = self.head_pos(src), self.head_pos(dst)
+                play["ball"] = (x0 + (x1 - x0) * min(u, 1), y0 + (y1 - y0) * min(u, 1) - math.sin(math.pi * min(u, 1)) * 60)
+                if u >= 1:
+                    play["throws"] += 1
+                    if random.random() < 0.5:
+                        dst.say(random.choice(["got it!", "nice!", "catch!", "woo!"]), 1.2)
+                    dst.set_face("happy", 0.6)
+                    play["from"], play["to"], play["t0"] = dst, src, now
+                    if play["throws"] >= play["n"]:
+                        dst.say(random.choice(["that was fun!", "good game!", "again later!"]), 2.5)
+                        self.end_play(play, now)
+            else:   # tag
+                runner, chaser = play["runner"], play["chaser"]
+                left, right = runner.left, runner.right - W
+                away = 1 if runner.wx >= chaser.wx else -1
+                if (away > 0 and runner.wx >= right - 2) or (away < 0 and runner.wx <= left + 2):
+                    away = -away                    # cornered: dodge past
+                runner.wx = min(max(runner.wx + 2.2 * away * VARIANTS[runner.kind].get("speed", 1.0) ** 0.5, left), right)
+                toward = 1 if runner.wx > chaser.wx else -1
+                chaser.wx += 4.4 * toward * VARIANTS[chaser.kind].get("speed", 1.0) ** 0.5
+                runner.facing, chaser.facing = away, toward
+                runner.state = chaser.state = "walk"
+                runner.place()
+                chaser.place()
+                if abs(runner.wx - chaser.wx) < 26:
+                    chaser.say("tag! you're it!", 1.8)
+                    if not play["swapped"]:
+                        play["runner"], play["chaser"], play["swapped"] = chaser, runner, True
+                        play["until"] = now + 6
+                        runner.wx += 30 * (1 if runner.wx > chaser.wx else -1)
+                    else:
+                        self.end_play(play, now)
+                elif now > play["until"]:
+                    runner.say("*pant pant* ok you win", 2)
+                    self.end_play(play, now)
+
     def socialize(self, now):
         """Pets that bump into each other say hi (at most once a minute per pair)."""
         calm = ("idle", "walk")
-        for i, a in enumerate(self.pets):
-            for b in self.pets[i + 1:]:
+        idle_pets = [p for p in self.pets if not p.playing]
+        for i, a in enumerate(idle_pets):
+            for b in idle_pets[i + 1:]:
                 if a.state not in calm or b.state not in calm or abs(a.wx - b.wx) > 90:
                     continue
                 if now - a.greeted.get(b.name, -999) < 60:
@@ -4493,6 +4611,7 @@ class App:
             for pet in list(self.pets):
                 pet.step(now)
             self.socialize(now)
+            self.play_step(now)
             if now - self.last_town_save > 15:     # remember the town every so often
                 self.save_town()
                 self.last_town_save = now

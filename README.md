@@ -8,12 +8,12 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**129 kinds of pets · 380+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
+**138 kinds of pets · 400+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
 
 ## ✨ Coming next
 
 - 🦖 **New rarity: Kaiju!** 5 giant monsters (Tidal Titan, Magmaw, Gigabot, Skyray and Frostback) that stomp through a little city at the bottom of your screen. They're **way** harder to get than cryptids: they show up rarely, move fast, and you have to click one **3 times** before it leaves. Or switch on a 📡 Kaiju Beacon.
-- 👣 **4 more cryptids:** Thunderbird, Hodag, Mokele-mbembe and Lizard Man, each with its own scene.
+- 👣 **13 more cryptids:** Thunderbird, Hodag, Mokele-mbembe, Lizard Man, Kappa, Tsuchinoko, Owlman, Beast of Bodmin, Pope Lick Monster, Bunyip, Skunk Ape, Wendigo and Snallygaster, each with its own scene.
 - 🎨 **Redrawn Blips:** Mothman, Flamingo, Snake, Capybara, Butterfly, Death Worm, Dover Demon and Fresno Nightcrawler got makeovers.
 
 ## ✨ New in v0.3.1 (beta)
@@ -90,7 +90,7 @@ Each animal has its own lines and its own way of moving: frogs and kangaroos hop
 
 **Rare 🥚:** 20 secret Blips you can only hatch from Mystery Eggs. No spoilers, but one of them is *very* shiny. ✨
 
-**Cryptids 👣:** 16 legendary creatures from folklore and blurry photos. You can't hatch or buy them: you have to **spot** them ⬇️
+**Cryptids 👣:** 25 legendary creatures from folklore and blurry photos. You can't hatch or buy them: you have to **spot** them ⬇️
 
 <details>
 <summary>⚠️ <b>Spoilers:</b> don't want to hunt for them? Click to see every rare Blip and cryptid</summary>

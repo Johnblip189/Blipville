@@ -3012,6 +3012,63 @@ CRYPTIDS.update({
              {"name": "Mudskipper", "o": "#1a140a", "b": "#7a6a3a", "s": "#5a4a24", "l": "#e0d0a0", "p": "#ff9a7a", "e": "#1a0e04"}]},
 })
 
+CRYPTIDS.update({
+ "Kappa": {"eyes": 4, "move": "walk", "speed": 0.9, "feet": False,
+  "lines": ["*splish*", "careful, don't spill my head water!", "cucumbers are my favorite", "i bow, you bow. that's the rule", "from the rivers of japan"],
+  "body": ["....oooooooo....", "...okkkkkkkko...", "..oohhhhhhhhoo..", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obpbbbbbbbbpbo.", "..obbbyyyybbbo..", "..obbbbyybbbbo..", ".osssobbbbossso.", ".osssobbbbossso.", "..ooo.oooo.ooo.."],
+  "colors": [{"name": "River", "o": "#0a2a14", "b": "#5ab85a", "k": "#9ad8ff", "h": "#1a3a2a", "y": "#ffd23a", "s": "#6a5a2a", "p": "#ff9a9a", "e": "#0a140a"},
+             {"name": "Pond", "o": "#0a1a2a", "b": "#5aa8b8", "k": "#d8f4ff", "h": "#1a2a4a", "y": "#ffb03a", "s": "#3a5a3a", "p": "#ff9ac0", "e": "#0a0a1a"},
+             {"name": "Moss", "o": "#1a1a0a", "b": "#8a9a3a", "k": "#a8e0ff", "h": "#3a2a1a", "y": "#ffd23a", "s": "#5a3a1a", "p": "#ff9a7a", "e": "#1a1004"}]},
+ "Tsuchinoko": {"eyes": 4, "move": "hop", "speed": 1.0, "feet": False,
+  "lines": ["*boing*", "i'm a snake, but chonky", "i hop. snakes don't hop. i'm special", "i love sake", "there's a reward for finding me!"],
+  "body": ["................", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbllllllllbbbo", "obbbllllllllbbbo", ".obbbbbbbbbbbboo", "..oooooooooobbbo", "............ooo."],
+  "colors": [{"name": "Field", "o": "#2a1a0a", "b": "#8a6a3a", "l": "#e8d0a0", "p": "#ff9a7a", "e": "#1a0e04"},
+             {"name": "Viper", "o": "#0a1a0a", "b": "#4a7a3a", "l": "#d8e8a0", "p": "#ff9a8a", "e": "#ffd23a"},
+             {"name": "Golden", "o": "#3a2404", "b": "#e8b83a", "l": "#fff0b0", "p": "#ff8a5a", "e": "#2a1404"}]},
+ "Owlman": {"eyes": 4, "move": "flutter", "feet": False,
+  "lines": ["*hoo… HOO*", "seen near a church in cornwall", "half owl, half man, all mystery", "i see you", "i only come out in the summer"],
+  "body": [".oo..........oo.", ".obo........obo.", ".obboooooooobbo.", "obbbbbbbbbbbbbbo", "obbllllbbllllbbo", "obbllllbbllllbbo", "wobbbbbkkbbbbbow", "wwobbbbkkbbbboww", "wwobbbbbbbbbboww", ".wobbbbbbbbbbow.", "..oobbbbbbbboo..", "....oo....oo...."],
+  "colors": [{"name": "Gray", "o": "#14141e", "b": "#6a6a7a", "l": "#b8b8c8", "w": "#3a3a4a", "k": "#1a1a1a", "e": "#ff3a2a"},
+             {"name": "Barn", "o": "#1a1006", "b": "#a8804a", "l": "#f4e8d0", "w": "#6a4a2a", "k": "#3a2a1a", "e": "#1a0a04"},
+             {"name": "Midnight", "o": "#06060e", "b": "#2a2a4a", "l": "#5a5a8a", "w": "#14142a", "k": "#ffd23a", "e": "#ffd23a"}]},
+ "Beast of Bodmin": {"eyes": 5, "move": "walk", "speed": 1.6,
+  "lines": ["*low purr*", "i'm just a big cat, ok", "bodmin moor is my backyard", "the farmers keep talking about me", "mrrrow."],
+  "body": [".o............o.", ".oo..........oo.", ".obo........obo.", ".obboooooooobbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbllllbbbbbo", ".obbbbbllbbbbbo.", "..obbbbbbbbbbo..", "...oooooooooo..."],
+  "colors": [{"name": "Panther", "o": "#06060a", "b": "#1e1e2a", "l": "#3a3a4a", "p": "#8a3a5a", "e": "#9aff5a"},
+             {"name": "Puma", "o": "#2a1a0a", "b": "#b8884a", "l": "#f0d8b0", "p": "#ff9a7a", "e": "#1a0e04"},
+             {"name": "Smoke", "o": "#141420", "b": "#4a4a5a", "l": "#8a8a9a", "p": "#c87a9a", "e": "#ffd23a"}]},
+ "Pope Lick Monster": {"eyes": 5, "move": "walk", "speed": 1.0,
+  "lines": ["*maaa*", "half goat, half… guy?", "i live under the train bridge", "stay off the tracks, ok?", "baa-d to the bone"],
+  "body": ["h..............h", "hh............hh", ".hh.oooooooo.hh.", "..oobbbbbbbboo..", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obpbbbbbbbbpbo.", "..obbbbbbbbbbo..", "..obbbllllbbbo..", "...obbllllbbo...", "....obllllbo....", ".....ollllo....."],
+  "colors": [{"name": "Kentucky", "o": "#1a140a", "b": "#d8c8a8", "l": "#ffffff", "h": "#5a4a3a", "p": "#ff9a9a", "e": "#1a0e04"},
+             {"name": "Shadow", "o": "#0a0a0a", "b": "#3a3a3a", "l": "#8a8a8a", "h": "#c8c8c8", "p": "#c86a6a", "e": "#ff3a2a"},
+             {"name": "Brown", "o": "#1a0e06", "b": "#8a5a3a", "l": "#e8d8c0", "h": "#2a1a0a", "p": "#ff9a7a", "e": "#ffd23a"}]},
+ "Bunyip": {"eyes": 4, "move": "walk", "speed": 0.8, "feet": False,
+  "lines": ["*bellows from the billabong*", "g'day!", "i live in the swamp, it's cozy", "my tusks are just for show", "splash!"],
+  "body": ["................", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbnnnnbbbbbo", "obbwbbbbbbbbwbbo", ".obwbbbbbbbbwbo.", "oobbbbbbbbbbbboo", "oo.oooooooooo.oo"],
+  "colors": [{"name": "Billabong", "o": "#14100a", "b": "#5a4a3a", "n": "#2a1a14", "w": "#fff4dc", "p": "#d88a7a", "e": "#ffd23a"},
+             {"name": "Swamp", "o": "#0a140a", "b": "#3a5a3a", "n": "#14200e", "w": "#ffffff", "p": "#c88a7a", "e": "#ff5a3a"},
+             {"name": "Outback", "o": "#2a1004", "b": "#c86a3a", "n": "#5a2a14", "w": "#fff4dc", "p": "#ffa08a", "e": "#1a0a04"}]},
+ "Skunk Ape": {"eyes": 5, "move": "walk", "speed": 0.8,
+  "lines": ["*sniff sniff* is that me?", "florida's finest", "bigfoot's stinky cousin", "i'm a swamp guy", "don't hold your nose, it's rude"],
+  "body": ["....oooooooo....", "...obbssssbbo...", "..obbbssssbbbo..", ".obbllllllllbbo.", ".obbllllllllbbo.", "obbllllllllllbbo", "obbllllllllllbbo", "obbpllllllllpbbo", "obbbllllllllbbbo", "obbbbllllllbbbbo", "obbobbbbbbbbobbo", ".oo.obbbbbbo.oo."],
+  "colors": [{"name": "Swamp", "o": "#14140a", "b": "#5a5a3a", "s": "#e8e8d8", "l": "#a8a07a", "p": "#d8906a", "e": "#14140a"},
+             {"name": "Mangrove", "o": "#140a06", "b": "#4a3a24", "s": "#ffffff", "l": "#9a8a6a", "p": "#e8806a", "e": "#ff5a2a"},
+             {"name": "Everglade", "o": "#0a1a10", "b": "#3a6a4a", "s": "#f4fff0", "l": "#a8c8a0", "p": "#ff9a8a", "e": "#ffe66a"}]},
+ "Wendigo": {"eyes": 4, "move": "walk", "speed": 0.7, "feet": False,
+  "lines": ["*the wind howls*", "it's always winter where i walk", "my antlers keep getting stuck in trees", "shhh… listen to the snow", "i'm spooky, but i'll be your friend"],
+  "body": ["h.h..........h.h", ".hh.h......h.hh.", "..hhh......hhh..", "...oooooooooo...", "..ollllllllllo..", "..ollllllllllo..", "..ollllllllllo..", "...ollllllllo...", "...obbbbbbbbo...", "..obbbbbbbbbbo..", "..obobbbbbbobo..", "....ob....bo...."],
+  "colors": [{"name": "Frost", "o": "#0a0e1a", "h": "#e8e0d0", "l": "#f4f0e8", "b": "#2a2a3a", "e": "#6ae0ff"},
+             {"name": "Bone", "o": "#1a140a", "h": "#c8b090", "l": "#fff4dc", "b": "#4a3a2a", "e": "#ff3a2a"},
+             {"name": "Blizzard", "o": "#141a2a", "h": "#ffffff", "l": "#d8e8f4", "b": "#5a6a8a", "e": "#1a2a4a"}]},
+ "Snallygaster": {"eyes": 4, "move": "flutter", "feet": False,
+  "lines": ["*SCREEEECH*", "half dragon, half bird, all drama", "maryland is MY state", "i have tentacles. don't ask", "skrrrrt!"],
+  "body": ["......o..o......", "...oooooooooo...", "..obbbbbbbbbbo..", "w.obbbbbbbbbbo.w", "wwobbbbbbbbbboww", "wwwobbbbbbbbowww", "wwwobpbbbbpbowww", ".wwobbkkkkbboww.", "..wobbbkkbbbow..", "...obbbbbbbbo...", "...oo.oooo.oo...", "....o..oo..o...."],
+  "colors": [{"name": "Silver", "o": "#14141e", "b": "#a8b0c0", "w": "#5a6478", "k": "#ffd23a", "p": "#ff9ac0", "e": "#ff3a2a"},
+             {"name": "Scarlet", "o": "#1a0606", "b": "#c83a3a", "w": "#6a1414", "k": "#ffd23a", "p": "#ffa08a", "e": "#ffe66a"},
+             {"name": "Swamp", "o": "#0a140a", "b": "#5a8a5a", "w": "#2a4a2a", "k": "#e8c83a", "p": "#ff9a8a", "e": "#0a140a"}]},
+})
+
 # Kaiju 🦖: giant monsters. Same way to get them as cryptids, but WAY harder: they show up rarely,
 # move fast, and you have to click one 3 times before it stomps off.
 KAIJU = {
@@ -4257,6 +4314,16 @@ CRYPTID_SCENES = {
                                [17, 84, -2], [18.5, 88, -14]]},
     "Lizard Man": {"hint": "something splashed in the swamp reeds!", "props": [["reeds", 50, 0, "front"]], "clip": 2,
                    "keys": [[0, 30, -14], [1.5, 32, 0], [5, 36, 0], [10, 72, 0], [12.5, 74, 0], [14, 76, -14]]},
+    "Kappa": {"hint": "something is bowing in the river\u2026", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 30, -14], [2, 34, -1], [7, 48, -1], [9, 52, -14], [11, 68, -14], [12.5, 72, -1], [16, 80, -1], [17.5, 84, -14]]},
+    "Tsuchinoko": {"hint": "the grass is\u2026 boinging?", "props": [["grass", 50, 0, "front"]], "keys": [[0, -12, 0], [4, 30, 0], [7, 30, 0], [10, 62, 0], [12.5, 62, 0], [16, 112, 0]]},
+    "Owlman": {"hint": "hoo's that on top of the tree?!", "props": [["pine", 20, 0, "back"], ["pine", 50, 0, "back"], ["pine", 80, 0, "back"]], "keys": [[0, -12, 44], [4, 50, 14], [11, 50, 14], [15, 115, 46]]},
+    "Beast of Bodmin": {"hint": "big paw prints\u2026 where do they go?", "props": [["bush", 27, 0, "front"], ["bush", 63, 0, "front"]], "keys": [[0, -12, 0], [2.5, 26, 0], [6, 28, 0], [8, 62, 0], [11.5, 64, 0], [13.5, 112, 0]]},
+    "Pope Lick Monster": {"hint": "someone's walking on the train bridge\u2026", "props": [["bridge", 56, 0, "back"]], "keys": [[0, -12, 0], [3.5, 20, 0], [4.5, 32, 5], [7, 50, 5], [11, 52, 5], [13, 70, 5], [14, 84, 0], [17, 112, 0]]},
+    "Bunyip": {"hint": "a big bellow from the swamp!", "props": [["reeds", 50, 0, "front"]], "clip": 2, "keys": [[0, 24, -14], [1.5, 26, 0], [6, 40, 0], [7.5, 42, -14], [10, 66, -14], [11.5, 68, 0], [15, 74, 0], [16.5, 76, -14]]},
+    "Skunk Ape": {"hint": "ew, what's that smell?!", "props": [["pine", 30, 0, "back"], ["pine", 72, 0, "back"], ["reeds", 50, 0, "front"]], "keys": [[0, -12, 0], [7, 47, 0], [10, 47, 0], [18, 112, 0]]},
+    "Wendigo": {"hint": "it's suddenly so cold… and so quiet…", "props": [["pine", 18, 0, "back"], ["pine", 50, 0, "front"], ["pine", 82, 0, "back"]],
+                "keys": [[0, -12, 0], [6, 34, 0], [9.5, 34, 0], [12, 66, 0], [15, 66, 0], [20, 112, 0]]},
+    "Snallygaster": {"hint": "SCREEEECH! up in the sky!", "props": [["pine", 14, 0, "back"], ["pine", 86, 0, "back"]], "keys": [[0, -12, 30], [3, 26, 40], [6, 46, 22], [9, 64, 38], [12, 82, 26], [15, 115, 40]]},
     "Batsquatch": {"hint": "something huge is flying past the mountain!",
                    "props": [["volcano", 62, 0, "back"], ["smoke", 62, 22, "back"]],
                    "keys": [[0, -12, 26], [5, 34, 42], [8, 54, 30], [12, 78, 44], [16, 115, 34]]},
@@ -4479,7 +4546,7 @@ class Sighting:
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)
 class Collection:
     """Every rare and Night Shift Blip. Locked ones are shadows, but you can peek (spoilers!)."""
-    COLS, CELL_W, CELL_H = 10, 96, 92
+    COLS, CELL_W, CELL_H = 13, 84, 92
 
     def __init__(self, app):
         self.app = app
@@ -4529,7 +4596,7 @@ class Collection:
                 mid = x0 + (self.CELL_W - 8) / 2
                 c.create_text(mid, y0 + 54, text=k if open_ or peek else "???", fill="#ffffff" if open_ else "#b8b0d8",
                               font=("Segoe UI", 9, "bold"), width=self.CELL_W - 14, tags=("cell", tag))
-                sub = "✓ yours!" if open_ else (f"🔒 {self.how(k)}" if peek else "click to peek 👀")
+                sub = "✓ yours!" if open_ else (f"🔒 {self.how(k)}" if peek else "peek 👀")
                 c.create_text(mid, y0 + 72, text=sub, fill="#9ad8a8" if open_ else "#ff9fc0", font=("Segoe UI", 7, "bold"),
                               width=self.CELL_W - 14, justify="center", tags=("cell", tag))
             y += -(-len(kinds) // self.COLS) * self.CELL_H + 4

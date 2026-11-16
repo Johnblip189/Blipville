@@ -45,6 +45,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - **Rename…**: give it any name
 - **Add a friend**: another random pet joins (up to 12). Pets that meet say hi to each other by name
 - **Suggest an animal…**: opens the request form in your browser
+- **Support Blipville ♥**: ways to support the project
 - **Show name tags**, **Goodbye [name]**, **Goodbye everyone (quit)**
 
 The pets don't show up on the taskbar, so use **right-click → Goodbye everyone** to close them.
@@ -85,6 +86,17 @@ Copy an animal in the `ANIMALS` section, change the drawing and colors, and give
 **[🐾 Suggest an animal](https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml)** — or right-click any pet → **Suggest an animal…**
 
 Found a bug? **[Report it here](https://github.com/Johnblip189/blipville/issues/new?template=bug.yml)**.
+
+## Support Blipville
+
+Blipville is free, and the main game always will be. If you'd like to help it grow:
+
+- 💜 **Pay what you want on itch.io** — *coming soon*
+- ☕ **Leave a tip** — *coming soon*
+- 🐶 **Get your own pet turned into a Blip** (custom pet, from a photo) — *coming soon*
+- ⭐ **Free ways that help a lot:** star this repo, share the GIF with a friend, or [suggest an animal](https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml)
+
+You can also right-click any pet → **Support Blipville ♥**.
 
 ## License
 

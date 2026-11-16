@@ -870,6 +870,7 @@ def default_color(kind):
     v = VARIANTS[kind]
     return PALETTE_INDEX[v["palette"]] if "palette" in v and not v.get("colors") else 0
 SUGGEST_URL = "https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml"
+SUPPORT_URL = "https://github.com/Johnblip189/blipville#support-blipville"   # links live in the README, so they can change anytime
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",
          "Noodle", "Pebble", "Waffle", "Button", "Dot", "Jellybean", "Muffin", "Ziggy", "Clover", "Taco"]
 ART_W, ART_H = 16, 13          # body + 1 row of feet
@@ -991,6 +992,7 @@ class Blip:
         self.menu.add_command(label="Add a friend", command=lambda: app.add_pet(x=self.wx))
         self.menu.add_checkbutton(label="Show name tags", variable=app.name_tags)
         self.menu.add_command(label="Suggest an animal…", command=self.suggest)
+        self.menu.add_command(label="Support Blipville ♥", command=self.support)
         self.menu.add_separator()
         self.menu.add_command(label=f"Goodbye, {name}", command=self.quit)
         self.menu.add_command(label="Goodbye everyone (quit)", command=app.quit_all)
@@ -1087,6 +1089,15 @@ class Blip:
             self.menu.entryconfigure(self.menu.index("end") - 1, label=f"Goodbye, {self.name}")
             self.say(f"call me {self.name}!", 2)
             self.set_face("happy", 1.2)
+
+    def support(self):
+        self.say(random.choice(["you're the best!! <3", "thank you for keeping blipville alive!", "*happy wiggle*"]), 2.5)
+        self.set_face("happy", 1.5)
+        self.burst("heart", 5)
+        try:
+            webbrowser.open(SUPPORT_URL)
+        except Exception:  # noqa: BLE001
+            self.say("couldn't open the browser :(", 2.5)
 
     def suggest(self):
         self.say("ooh, a new friend? tell me!", 2.5)

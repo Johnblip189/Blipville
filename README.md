@@ -10,7 +10,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 **138 kinds of pets · 400+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
 
-## ✨ Coming next
+## ✨ New in v0.3.2 (beta)
 
 - 🦖 **New rarity: Kaiju!** 5 giant monsters (Tidal Titan, Magmaw, Gigabot, Skyray and Frostback) that stomp through a little city at the bottom of your screen. They're **way** harder to get than cryptids: they show up rarely, move fast, and you have to click one **3 times** before it leaves. Or switch on a 📡 Kaiju Beacon.
 - 👣 **13 more cryptids:** Thunderbird, Hodag, Mokele-mbembe, Lizard Man, Kappa, Tsuchinoko, Owlman, Beast of Bodmin, Pope Lick Monster, Bunyip, Skunk Ape, Wendigo and Snallygaster, each with its own scene.
@@ -33,7 +33,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.3.1-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.3.2-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.

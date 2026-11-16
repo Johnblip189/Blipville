@@ -74,7 +74,8 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - **📡 Switch on a Kaiju Beacon…**: spend 100 hearts to call a kaiju
 - **📖 Collection…**: every rare, Night Shift, cryptid and kaiju Blip. Locked ones are shadows, but you can peek
 - **Sound effects** / **Weather effects**: turn sounds on (they start off) and seasonal weather off
-- **Suggest an animal…**: opens the request form in your browser
+- **💬 Suggestions & help**: suggest an animal or an idea, or get help if something's wrong
+- **💖 Donate / support Blipville…**: ways to support the game
 - **Support Blipville ♥**: ways to support the project
 - **Show name tags**, **Goodbye [name]**, **Goodbye everyone (quit)**
 
@@ -197,9 +198,11 @@ Copy an animal in the `ANIMALS` section, change the drawing and colors, and give
 
 ## Want a new animal?
 
-**[🐾 Suggest an animal](https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml)** — or right-click any pet → **Suggest an animal…**
+**[🐾 Suggest an animal](https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml)** — or right-click any pet → **💬 Suggestions & help → 🐾 Suggest an animal…**
 
-Found a bug? **[Report it here](https://github.com/Johnblip189/blipville/issues/new?template=bug.yml)**.
+Got any other idea? **[💡 Suggest it here](https://github.com/Johnblip189/blipville/issues/new?template=idea.yml)**.
+
+Stuck or confused? **[🆘 Get help](https://github.com/Johnblip189/blipville/issues/new?template=help.yml)**. Found a bug? **[Report it here](https://github.com/Johnblip189/blipville/issues/new?template=bug.yml)**.
 
 ## Support Blipville
 
@@ -210,7 +213,7 @@ Blipville is free, and the main game always will be. If you'd like to help it gr
 - 🐶 **Get your own pet turned into a Blip** (custom pet, from a photo) — *coming soon*
 - ⭐ **Free ways that help a lot:** star this repo, share the GIF with a friend, or [suggest an animal](https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml)
 
-You can also right-click any pet → **Support Blipville ♥**.
+You can also right-click any pet → **💖 Donate / support Blipville…**.
 
 ## License
 

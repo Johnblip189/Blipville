@@ -3253,7 +3253,9 @@ def default_color(kind):
     v = VARIANTS[kind]
     return PALETTE_INDEX[v["palette"]] if "palette" in v and not v.get("colors") else 0
 SUGGEST_URL = "https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml"
-SUPPORT_URL = "https://github.com/Johnblip189/blipville#support-blipville"   # links live in the README, so they can change anytime
+SUPPORT_URL = "https://github.com/Johnblip189/blipville#support-blipville"
+IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
+HELP_URL = "https://github.com/Johnblip189/blipville/issues/new?template=help.yml"   # links live in the README, so they can change anytime
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",
          "Noodle", "Pebble", "Waffle", "Button", "Dot", "Jellybean", "Muffin", "Ziggy", "Clover", "Taco"]
 ART_W, ART_H = 16, 13          # body + 1 row of feet
@@ -3414,8 +3416,12 @@ class Blip:
                                                    app.sound.play("boop")))
         self.menu.add_checkbutton(label="Weather effects", variable=app.weather,
                                   command=lambda: app.save.update(weather=app.weather.get()) or write_save(app.save))
-        self.menu.add_command(label="Suggest an animal…", command=self.suggest)
-        self.menu.add_command(label="Support Blipville ♥", command=self.support)
+        talk = tk.Menu(self.menu, tearoff=0)
+        talk.add_command(label="🐾 Suggest an animal…", command=self.suggest)
+        talk.add_command(label="💡 Suggest an idea…", command=lambda: self.open_link(IDEA_URL, "ooh, what's your idea?"))
+        talk.add_command(label="🆘 Get help / report a problem…", command=lambda: self.open_link(HELP_URL, "let's get you some help!"))
+        self.menu.add_cascade(label="💬 Suggestions & help", menu=talk)
+        self.menu.add_command(label="💖 Donate / support Blipville…", command=self.support)
         self.menu.add_separator()
         self.menu.add_command(label=f"Goodbye, {name}", command=self.quit)
         self.menu.add_command(label="Goodbye everyone (quit)", command=app.quit_all)
@@ -3530,6 +3536,14 @@ class Blip:
         self.burst("heart", 5)
         try:
             webbrowser.open(SUPPORT_URL)
+        except Exception:  # noqa: BLE001
+            self.say("couldn't open the browser :(", 2.5)
+
+    def open_link(self, url, line):
+        self.say(line, 2.5)
+        self.set_face("happy", 1.5)
+        try:
+            webbrowser.open(url)
         except Exception:  # noqa: BLE001
             self.say("couldn't open the browser :(", 2.5)
 

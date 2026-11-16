@@ -192,3 +192,9 @@ body.mini .card { padding: 10px; border-radius: 14px; }
 .saveRow { display: flex; gap: 8px; margin-top: 8px; }
 .saveRow button { flex: 1; min-height: 42px; border: 0; border-radius: 12px; background: #3a3260; color: var(--text); font: 800 13px var(--font); }
 .saveRow button.armed { background: #a83a5a; }
+
+/* suggest / help / donate links (help sheet) */
+.linkRow { display: flex; gap: 8px; margin: 10px 0 12px; }
+.linkBtn { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 12px;
+  background: #3a3260; color: var(--text); font: 800 13px var(--font); text-decoration: none; }
+.linkBtn.donate { background: #a83a6a; }

@@ -2190,7 +2190,7 @@ RARE = {'Phoenix': {'eyes': 5,
                       'p': '#ffb0c8',
                       'd': '#3a4a6a',
                       'e': '#1a2a4a'},
-                     {'name': 'Bigfoot',
+                     {'name': 'Mountain',
                       'o': '#1e1006',
                       'b': '#7a5030',
                       'l': '#d8b890',
@@ -2827,7 +2827,216 @@ RARE = {'Phoenix': {'eyes': 5,
                              'p': '#ffc0e0',
                              'e': '#2a4a6a'}]}}
 
-for _name, _a in {**NEW_ANIMALS, **RARE}.items():
+# Cryptids 👣: Blips based on legendary creatures. You can't buy or hatch them: you have to SPOT one
+# wandering past (or set out a Cryptid Lure) and click it before it gets away.
+CRYPTIDS = {
+ "Bigfoot": {"eyes": 5, "move": "walk", "speed": 0.8,
+  "lines": ["*blurry photo noises*", "you didn't see me", "size 22 feet, thank you", "i just like long walks in the woods", "no photos please"],
+  "body": ["....oooooooo....",
+           "...obbbbbbbbo...",
+           "..obbbbbbbbbbo..",
+           ".obbllllllllbbo.",
+           ".obllllllllllbo.",
+           "obbllllllllllbbo",
+           "obbllllllllllbbo",
+           "obbpllllllllpbbo",
+           "obbbllllllllbbbo",
+           "obbbbllllllbbbbo",
+           "obbobbbbbbbbobbo",
+           ".oo.obbbbbbo.oo."],
+  "colors": [{"name": "Forest", "o": "#2a1a0e", "b": "#7a4a2a", "l": "#c8a07a", "p": "#e8806a", "e": "#1a0e06"},
+             {"name": "Auburn", "o": "#2a1006", "b": "#b0582a", "l": "#e8b890", "p": "#ff8a6a", "e": "#1a0a04"},
+             {"name": "Swamp", "o": "#1a2010", "b": "#4a5a32", "l": "#a8a878", "p": "#d8906a", "e": "#10140a"}]},
+ "Death Worm": {"eyes": 5, "move": "walk", "speed": 0.7, "feet": False,
+  "lines": ["*wiggles out of the sand*", "from the gobi desert", "i'm a worm. a big one", "wiggle wiggle", "they say i'm scary. i say i'm squishy"],
+  "body": ["....oooooooo....",
+           "...obbbbbbbbo...",
+           "..obbbbbbbbbbo..",
+           "..obbbbbbbbbbo..",
+           "..oddddddddddo..",
+           "..obbbbbbbbbbo..",
+           "..obbbbbbbbbbo..",
+           "..obpbbbbbbpbo..",
+           "..oddddddddddo..",
+           "..obbbbbbbbbbo..",
+           "ssssobbbbbbossss",
+           "ssssssssssssssss"],
+  "colors": [{"name": "Gobi Red", "o": "#4a1a1a", "b": "#e86a6a", "d": "#b83a4a", "p": "#ffb0a0", "s": "#e8c87a", "e": "#1a0a0a"},
+             {"name": "Sandy", "o": "#4a3a0a", "b": "#e8c84a", "d": "#b8902a", "p": "#ffa070", "s": "#d8b070", "e": "#1a1404"},
+             {"name": "Ghost", "o": "#3a3a4a", "b": "#e8e0f0", "d": "#b0a8c8", "p": "#ffb0d0", "s": "#c8b890", "e": "#2a2440"}]},
+ "Mothman": {"eyes": 5, "move": "flutter", "mouth": False,
+  "lines": ["*stares with big red eyes*", "i come in peace (and moth)", "is that a porch light?!", "bzzz... i mean hello", "they made a statue of me"],
+  "body": ["...a........a...",
+           "....a......a....",
+           "....oooooooo....",
+           "w..obbbbbbbbo..w",
+           "ww.obbbbbbbbo.ww",
+           "wwwobbbbbbbbowww",
+           "wwwobbbbbbbbowww",
+           "wwwobbbbbbbbowww",
+           "wwoobbbbbbbbooww",
+           "w..obbbbbbbbo..w",
+           "...obbbbbbbbo...",
+           "....oooooooo...."],
+  "colors": [{"name": "Classic", "o": "#0e0e14", "b": "#3a3a4a", "w": "#5a4a5a", "a": "#2a2a3a", "e": "#ff2a2a"},
+             {"name": "Luna", "o": "#14281a", "b": "#7ac88a", "w": "#c8f0a8", "a": "#3a6a4a", "e": "#ff5a8a"},
+             {"name": "Dusty", "o": "#2a2014", "b": "#8a7a5a", "w": "#c8b088", "a": "#5a4a2a", "e": "#ff6a2a"}]},
+ "Nessie": {"eyes": 2, "move": "float", "mouth": False, "feet": False,
+  "lines": ["*splash*", "i'm from a loch far away", "the photo was real, i promise", "glub glub", "come on in, the water's fine"],
+  "body": ["....oooooooo....",
+           "...obbbbbbbbo...",
+           "...obbbbbbbbo...",
+           "...obbbbbbbbo...",
+           "...obpbbbbpbo...",
+           "....obbbbbbo....",
+           ".....obbbbo.....",
+           ".....obbbbo.....",
+           "..ooo.obbo.ooo..",
+           ".obbbobbbbobbbo.",
+           "wwwwwwwwwwwwwwww",
+           "w.ww..ww..ww.ww."],
+  "colors": [{"name": "Loch Green", "o": "#0e2a1a", "b": "#4aa86a", "p": "#8ad89a", "w": "#3a6ab8", "e": "#0a1a10"},
+             {"name": "Deep Blue", "o": "#0a1a3a", "b": "#3a7ac8", "p": "#8ac0ff", "w": "#1a3a7a", "e": "#06101a"},
+             {"name": "Mossy", "o": "#1a2a0e", "b": "#7a9a3a", "p": "#c8d87a", "w": "#2a5a6a", "e": "#10180a"}]},
+ "Chupacabra": {"eyes": 5, "move": "walk", "speed": 1.3, "shifty": True,
+  "lines": ["*sneaky sneaky*", "i only drink juice boxes now", "rawr (politely)", "have you seen any goats? asking for a friend", "*spikes go up*"],
+  "body": ["..a.a.a..a.a.a..",
+           ".oaoaoaooaoaoao.",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           "obpbbbllllbbbpbo",
+           "obbbbllllllbbbbo",
+           "..obblwllwlbbo..",
+           "...obbbbbbbbo...",
+           "....oooooooo...."],
+  "colors": [{"name": "Desert", "o": "#1a1a10", "b": "#6a7a5a", "a": "#3a5a3a", "l": "#a8b090", "p": "#c87a6a", "w": "#ffffff", "e": "#e83a2a"},
+             {"name": "Midnight", "o": "#0a0a14", "b": "#3a3a5a", "a": "#7a3aa8", "l": "#6a6a8a", "p": "#a85a8a", "w": "#ffffff", "e": "#ffd23a"},
+             {"name": "Sandy", "o": "#2a1a0a", "b": "#b8986a", "a": "#7a4a2a", "l": "#e0c8a0", "p": "#e8806a", "w": "#ffffff", "e": "#c82a2a"}]},
+ "Jersey Devil": {"eyes": 5, "move": "flutter", "mouth": False,
+  "lines": ["*screeches from the pine trees*", "i'm the 13th kid. long story", "boo! ...did it work?", "flap flap flap", "the hockey team is named after me"],
+  "body": [".a............a.",
+           ".aa..........aa.",
+           "..aaooooooooaa..",
+           "w..obbbbbbbbo..w",
+           "ww.obbbbbbbbo.ww",
+           "wwobbbbbbbbbboww",
+           "wwobbbbbbbbbboww",
+           "wwobpbbbbbbpboww",
+           "w.obbbllllbbbo.w",
+           "..obllllllllbo..",
+           "...obbllllbbo...",
+           "....oooooooo...."],
+  "colors": [{"name": "Pine Barrens", "o": "#2a0a0e", "b": "#a82a2a", "a": "#f0e0c0", "w": "#5a1a2a", "l": "#d86a5a", "p": "#ff8a7a", "e": "#ffd23a"},
+             {"name": "Smoke", "o": "#14101a", "b": "#5a5060", "a": "#d8d0c0", "w": "#2a2430", "l": "#8a8090", "p": "#c87a8a", "e": "#ff5a3a"},
+             {"name": "Hockey", "o": "#0a1a10", "b": "#c82a3a", "a": "#ffffff", "w": "#1a5a2a", "l": "#e87a6a", "p": "#ff9a8a", "e": "#1a0a0a"}]},
+ "Jackalope": {"eyes": 5, "move": "hop",
+  "lines": ["half bunny, half antelope", "*hops majestically*", "yes the antlers are real", "i can sing like a cowboy", "catch me if you can!"],
+  "body": ["a.a..........a.a",
+           ".aa..........aa.",
+           "..a.ob....bo.a..",
+           "...obbo..obbo...",
+           "...obboooobbo...",
+           "..obbbbbbbbbbo..",
+           ".obbbbbbbbbbbbo.",
+           ".obpbbbbbbbbpbo.",
+           ".obbbbbllbbbbbo.",
+           "..obbbllllbbbo..",
+           "..obbbbbbbbbbo..",
+           "...oooooooooo..."],
+  "colors": [{"name": "Prairie", "o": "#2a1a0e", "b": "#c8a07a", "a": "#7a4a2a", "l": "#f4e8d8", "p": "#ff9aa8", "e": "#1a0e06"},
+             {"name": "Snowshoe", "o": "#3a3a4a", "b": "#f4f4f8", "a": "#8a6a4a", "l": "#ffffff", "p": "#ffb0c8", "e": "#1a1a2a"},
+             {"name": "Dusk", "o": "#1a1428", "b": "#8a7aa8", "a": "#4a3a2a", "l": "#d8d0e8", "p": "#ff9ac8", "e": "#100a1a"}]},
+ "Flatwoods Monster": {"eyes": 6, "move": "float", "mouth": False, "feet": False,
+  "lines": ["*hovers ominously*", "greetings from west virginia", "this hood is my whole look", "i smell like metal. sorry", "*hissssss*"],
+  "body": [".......oo.......",
+           "......oaao......",
+           ".....oaaaao.....",
+           "...ooaaaaaaoo...",
+           "..oaaaaaaaaaao..",
+           ".oaallllllllaao.",
+           ".oaallllllllaao.",
+           "..oallllllllao..",
+           "...oolllllloo...",
+           "....obbbbbbo....",
+           "...obbbbbbbbo...",
+           "..obbbbbbbbbbo.."],
+  "colors": [{"name": "Classic", "o": "#1a0a0e", "a": "#c8303a", "l": "#3a2a3a", "b": "#2a6a4a", "e": "#ff8a1a"},
+             {"name": "Toxic", "o": "#0a1a0a", "a": "#5ac83a", "l": "#1a2a1a", "b": "#5a3a8a", "e": "#e8ff5a"},
+             {"name": "Royal", "o": "#0a0a2a", "a": "#3a4ac8", "l": "#1a1a3a", "b": "#ffd23a", "e": "#5af0ff"}]},
+ "Dover Demon": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": False,
+  "lines": ["*blinks slowly*", "my head is mostly brain", "i'm not a demon, i'm just shy", "seen in 1977, still got it", "hi. i am small and spooky"],
+  "body": ["...oooooooooo...",
+           "..obbbbbbbbbbo..",
+           ".obbbbbbbbbbbbo.",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           ".obbbbbbbbbbbbo.",
+           "..obbbbbbbbbbo..",
+           "...oobbbbbboo...",
+           "......obbo......",
+           ".....obbbbo....."],
+  "colors": [{"name": "Peach", "o": "#4a2a1a", "b": "#e8c8a0", "e": "#ff8a2a"},
+             {"name": "Moonlight", "o": "#1a3a2a", "b": "#c8e8c8", "e": "#2a8a5a"},
+             {"name": "Ghost", "o": "#3a3a4a", "b": "#d8d8e8", "e": "#5a3aa8"}]},
+ "Fresno Nightcrawler": {"eyes": 3, "move": "walk", "speed": 1.2, "feet": False, "mouth": False,
+  "lines": ["*walks by on two long legs*", "caught on a security camera", "i'm basically just pants", "strolling... strolling...", "from fresno with love"],
+  "body": ["...oooooooooo...",
+           "..obbbbbbbbbbo..",
+           "..obbbbbbbbbbo..",
+           "..obbbbbbbbbbo..",
+           "..obbbbbbbbbbo..",
+           "..obbbbbbbbbbo..",
+           "..obbbbbbbbbbo..",
+           "..obbboooobbbo..",
+           "..obbbo..obbbo..",
+           "..obbbo..obbbo..",
+           "..obbbo..obbbo..",
+           "..obbbo..obbbo.."],
+  "colors": [{"name": "White", "o": "#4a4a6a", "b": "#f4f4ff", "e": "#1a1a2a"},
+             {"name": "Glow", "o": "#2a5a3a", "b": "#d8ffe0", "e": "#1a3a2a"},
+             {"name": "Shadow", "o": "#0a0a14", "b": "#3a3a5a", "e": "#c8f0ff"}]},
+ "Frogman": {"eyes": 5, "move": "hop",
+  "lines": ["ribbit (but taller)", "from loveland, ohio", "*waves a sparkly wand*", "i stand on two legs, thank you", "hop to it!"],
+  "body": ["..ooo......ooo..",
+           ".obbbo....obbbo.",
+           ".obbboooooobbbo.",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo",
+           "obpbbbbbbbbbbpbo",
+           ".obbbbbbbbbbbbo.",
+           ".obbbllllllbbbo.",
+           "..obllllllllbo..",
+           "...oooooooooo..."],
+  "colors": [{"name": "Leathery", "o": "#14200e", "b": "#5a7a3a", "l": "#c8c890", "p": "#8aa85a", "e": "#1a1a0a"},
+             {"name": "River", "o": "#0a1a2a", "b": "#3a8a8a", "l": "#b8e0d8", "p": "#7ac8b8", "e": "#06121a"},
+             {"name": "Bog", "o": "#1a140a", "b": "#6a5a3a", "l": "#c8b890", "p": "#a88a5a", "e": "#140e06"}]},
+ "Batsquatch": {"eyes": 5, "move": "flutter",
+  "lines": ["bigfoot... but with wings", "*flaps loudly*", "spotted near a volcano", "i'm purple and proud", "skreee-hoo!"],
+  "body": ["..o..........o..",
+           "..oo.oooooo.oo..",
+           "..obobbbbbbobo..",
+           "w.obbbllllbbbo.w",
+           "wwobllllllllboww",
+           "wwobllllllllboww",
+           "wwobllllllllboww",
+           "wwobpllllllpboww",
+           "w.obbllllllbbo.w",
+           "..obbbllllbbbo..",
+           "..obbbbbbbbbbo..",
+           "...oooooooooo..."],
+  "colors": [{"name": "Purple", "o": "#1a0a2a", "b": "#6a3aa8", "l": "#b89ad8", "w": "#3a1a5a", "p": "#ff8ac8", "e": "#ffd23a"},
+             {"name": "Volcanic", "o": "#1a0a0a", "b": "#4a3a3a", "l": "#a88a7a", "w": "#a82a1a", "p": "#ff7a5a", "e": "#ff5a1a"},
+             {"name": "Twilight", "o": "#0a1428", "b": "#2a4a8a", "l": "#8aa8d8", "w": "#141e3a", "p": "#ff9ac0", "e": "#ffe08a"}]},
+}
+
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
@@ -2835,9 +3044,11 @@ for _name, _a in {**NEW_ANIMALS, **RARE}.items():
 
 NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
+CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
-KINDS = CRITTERS + ANIMAL_KINDS + NIGHT_SHIFT + RARE_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
+LURE_COST = 20                    # hearts per Cryptid Lure
 
 # ----------------------------------------------------------------------------- hats & outfits
 # slot: head (sits on the head), face (over the eyes), neck (under the chin). Bought with hearts.
@@ -3118,7 +3329,7 @@ class Blip:
         size = -(-len(ANIMAL_KINDS) // n_groups)
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
         groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
-                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS)]
+                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS)]
                   + ([("My Blips ⭐", CUSTOM_KINDS)] if CUSTOM_KINDS else []))
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
@@ -3126,6 +3337,8 @@ class Blip:
                 self.night_menu = sub              # filled in on_menu, since locks can change
             elif members is RARE_KINDS:
                 self.rare_menu = sub
+            elif members is CRYPTID_KINDS:
+                self.cryptid_menu = sub
             else:
                 for k in members:
                     sub.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
@@ -3140,6 +3353,7 @@ class Blip:
         self.menu.add_command(label="Play Night Shift 🌙…", command=app.open_night_shift)
         self.menu.add_command(label="🎩 Hats & outfits…", command=lambda: HatShop(app, self))
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
+        self.menu.add_command(label=f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", command=lambda: app.set_lure(self.root))
         self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
         self.menu.add_command(label="💖 0 hearts", state="disabled")
         self.hearts_entry = self.menu.index("end")
@@ -3338,6 +3552,17 @@ class Blip:
         self.rare_menu.add_command(label=f"🥚 Hatch a Mystery Egg… ({hatched}/{len(RARE_KINDS)} found)",
                                    command=lambda: self.app.open_egg(self.root))
         self.rare_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
+        self.cryptid_menu.delete(0, "end")
+        for k in CRYPTID_KINDS:
+            if self.app.is_unlocked(k):
+                self.cryptid_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            else:
+                self.cryptid_menu.add_command(label="🔒 ???", state="disabled")
+        spotted = sum(1 for k in CRYPTID_KINDS if self.app.is_unlocked(k))
+        self.cryptid_menu.add_separator()
+        self.cryptid_menu.add_command(label=f"🔦 Set out a Cryptid Lure… ({LURE_COST} 💖, {spotted}/{len(CRYPTID_KINDS)} spotted)",
+                                      command=lambda: self.app.set_lure(self.root))
+        self.cryptid_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
         self.menu.entryconfigure(self.hearts_entry, label=f"💖 {self.app.hearts()} hearts")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
@@ -3856,10 +4081,117 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
                                     fill=color, outline="", tags=tags)
 
 
+# ----------------------------------------------------------------------------- cryptid sightings
+class Sighting:
+    """A shadowy cryptid sneaks across the bottom of the screen. Click it before it gets away to befriend it!"""
+    SHADOW, GLOW = "#16121f", "#ffe66a"
+
+    def __init__(self, app, kind):
+        self.app, self.kind = app, kind
+        self.root = root = tk.Toplevel(app.root)
+        root.overrideredirect(True)
+        root.attributes("-topmost", True)
+        bg = KEY
+        if sys.platform == "win32":
+            root.attributes("-transparentcolor", KEY)
+        elif sys.platform == "darwin":
+            try:
+                root.attributes("-transparent", True)
+                bg = "systemTransparent"
+            except tk.TclError:
+                pass
+        root.config(bg=bg)
+        self.canvas = tk.Canvas(root, width=W, height=H, bg=bg, highlightthickness=0, bd=0, cursor="hand2")
+        self.canvas.pack()
+        self.canvas.bind("<ButtonPress-1>", self.on_click)
+        left, top, right, bottom = work_area(root)
+        self.left, self.right, self.wy = left, right, bottom - H
+        self.dir = random.choice([-1, 1])
+        self.wx = left - W + 30 if self.dir == 1 else right - 30
+        speed = VARIANTS[kind].get("speed", 1.0)
+        self.speed = 70 * max(0.7, speed)           # pixels per second: quick, but catchable
+        self.born = self.last = time.monotonic()
+        self.caught = False
+        self.place()
+
+    def place(self):
+        self.root.geometry(f"{W}x{H}+{int(self.wx)}+{int(self.wy)}")
+
+    def art(self, now):
+        v = VARIANTS[self.kind]
+        g = [[self.SHADOW if ch != "." else None for ch in row] + [None] * (ART_W - len(row)) for row in v["body"]]
+        g.append([None] * ART_W)
+        if v.get("feet"):
+            step = v["feet"]["walk1"] if int(now * 6) % 2 else v["feet"]["walk2"]
+            for x, ch in enumerate(step):
+                if ch != "." and 0 <= x < ART_W:
+                    g[12][x] = self.SHADOW
+        if int(now * 2.5) % 10:                    # glowing eyes, with the odd blink
+            for ex in (4, 10):
+                g[v["eyes"]][ex] = g[v["eyes"]][ex + 1] = self.GLOW
+        return g
+
+    def step(self, now):
+        dt, self.last = min(0.1, now - self.last), now
+        self.wx += self.dir * self.speed * dt
+        if (self.dir == 1 and self.wx > self.right) or (self.dir == -1 and self.wx < self.left - W):
+            self.leave(escaped=True)
+            return
+        self.place()
+        c = self.canvas
+        c.delete("all")
+        ox = (W - ART_W * SCALE) // 2
+        bob = abs(math.sin(now * 8)) * 3 if VARIANTS[self.kind]["move"] in ("hop", "flutter", "float") else 0
+        oy = H - ART_H * SCALE - bob
+        g = self.art(now)
+        for y, row in enumerate(g):
+            for x, col in enumerate(row if self.dir == 1 else row[::-1]):
+                if col:
+                    c.create_rectangle(ox + x * SCALE, oy + y * SCALE, ox + (x + 1) * SCALE, oy + (y + 1) * SCALE,
+                                       fill=col, outline="")
+        for y, row in enumerate([".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."]):   # a pixel "?"
+            for x, ch in enumerate(row):
+                if ch == "x":
+                    c.create_rectangle(W // 2 - 8 + x * 3, oy - 26 + y * 3, W // 2 - 5 + x * 3, oy - 23 + y * 3,
+                                       fill="#ffffff", outline="")
+
+    def on_click(self, e):
+        if self.caught:
+            return
+        self.caught = True
+        app, kind = self.app, self.kind
+        app.save.setdefault("cryptids", []).append(kind)
+        write_save(app.save)
+        app.sound.play("fanfare")
+        x = self.wx
+        self.leave()
+        pet = app.add_pet(kind, x=x, greet=False)
+        if not pet and app.pets:
+            app.pets[0].say(f"you befriended a {kind}! 📸 (it's in your Collection)", 5)
+        if pet:
+            pet.wy = pet.ground
+            pet.say(f"you spotted me! 📸 i'm a {kind}!", 5)
+            pet.set_face("happy", 2)
+            pet.burst("heart", 6)
+
+    def leave(self, escaped=False):
+        if self in self.app.sightings:
+            self.app.sightings.remove(self)
+        try:
+            self.root.destroy()
+        except tk.TclError:
+            pass
+        if escaped:
+            witness = next((p for p in self.app.pets if p.state not in ("sleep", "held")), None)
+            if witness:
+                witness.say(random.choice(["did you see that?!", "w-what was THAT?", "i think i saw something…",
+                                           "*rubs eyes* huh?", "it went that way!"]), 3)
+
+
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)
 class Collection:
     """Every rare and Night Shift Blip. Locked ones are shadows, but you can peek (spoilers!)."""
-    COLS, CELL_W, CELL_H = 6, 112, 118
+    COLS, CELL_W, CELL_H = 8, 96, 92
 
     def __init__(self, app):
         self.app = app
@@ -3868,7 +4200,8 @@ class Collection:
         self.win.resizable(False, False)
         self.win.configure(bg="#1d1a2e")
         self.win.attributes("-topmost", True)
-        self.groups = [("Rare ✨  hatch them from Mystery Eggs", RARE_KINDS), ("Night Shift 🌙  survive the nights", NIGHT_SHIFT)]
+        self.groups = [("Rare ✨  hatch them from Mystery Eggs", RARE_KINDS), ("Night Shift 🌙  survive the nights", NIGHT_SHIFT),
+                       ("Cryptids 👣  spot them wandering by, then click them!", CRYPTID_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=h, bg="#1d1a2e", highlightthickness=0)
         self.canvas.pack(padx=6, pady=6)
@@ -3880,7 +4213,7 @@ class Collection:
         return self.app.save.setdefault("peeked", [])
 
     def how(self, k):
-        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "hatch from an egg"
+        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "hatch from an egg"
 
     def draw(self):
         c = self.canvas
@@ -3902,13 +4235,13 @@ class Collection:
                 open_, peek = self.app.is_unlocked(k), k in self.peeked()
                 c.create_rectangle(x0, y0, x0 + self.CELL_W - 8, y0 + self.CELL_H - 8, fill="#2b2547",
                                    outline="#3a3360" if open_ else "#2b2547", width=2, tags=("cell", tag))
-                draw_sprite(c, k, default_color(k), x0 + 20, y0 + 8, 4, tags=("cell", tag),
+                draw_sprite(c, k, default_color(k), x0 + 20, y0 + 6, 3, tags=("cell", tag),
                             silhouette=None if open_ or peek else "#0f0d1a")
                 mid = x0 + (self.CELL_W - 8) / 2
-                c.create_text(mid, y0 + 70, text=k if open_ or peek else "???", fill="#ffffff" if open_ else "#b8b0d8",
+                c.create_text(mid, y0 + 54, text=k if open_ or peek else "???", fill="#ffffff" if open_ else "#b8b0d8",
                               font=("Segoe UI", 9, "bold"), width=self.CELL_W - 14, tags=("cell", tag))
                 sub = "✓ yours!" if open_ else (f"🔒 {self.how(k)}" if peek else "click to peek 👀")
-                c.create_text(mid, y0 + 92, text=sub, fill="#9ad8a8" if open_ else "#ff9fc0", font=("Segoe UI", 7, "bold"),
+                c.create_text(mid, y0 + 72, text=sub, fill="#9ad8a8" if open_ else "#ff9fc0", font=("Segoe UI", 7, "bold"),
                               width=self.CELL_W - 14, justify="center", tags=("cell", tag))
             y += -(-len(kinds) // self.COLS) * self.CELL_H + 4
 
@@ -4580,6 +4913,8 @@ class App:
         load_custom_blips()
         self.game = None
         self.plays = []                            # games of catch / tag going on right now
+        self.sightings = []                        # a cryptid sneaking past right now
+        self.next_sighting = time.monotonic() + random.uniform(6, 14) * 60
         self.pets = []
         if not self.restore_town():
             self.add_pet("Blip", "Blip")
@@ -4636,7 +4971,37 @@ class App:
         return pet
 
     # ----- unlocks & Night Shift
+    def cryptid_step(self, now):
+        for s in list(self.sightings):
+            s.step(now)
+        if now < self.next_sighting or self.sightings:
+            return
+        wait = random.uniform(8, 20) * 60          # the next one shows up in 8-20 minutes (sooner at night)
+        self.next_sighting = now + (wait / 2 if is_night() else wait)
+        left = [k for k in CRYPTID_KINDS if not self.is_unlocked(k)]
+        if left and self.pets:
+            self.sightings.append(Sighting(self, random.choice(left)))
+            self.sound.play("whoosh")
+
+    def set_lure(self, parent):
+        from tkinter import messagebox
+        if all(self.is_unlocked(k) for k in CRYPTID_KINDS):
+            messagebox.showinfo("Cryptid Lure", "You've spotted every cryptid! 🏆", parent=parent)
+            return
+        if self.hearts() < LURE_COST:
+            messagebox.showinfo("Cryptid Lure", f"A Cryptid Lure costs {LURE_COST} 💖 hearts. You have {self.hearts()}.\n\n"
+                                "Cryptids also wander by on their own every so often (more at night). Keep an eye out!",
+                                parent=parent)
+            return
+        self.save["hearts"] = self.hearts() - LURE_COST
+        write_save(self.save)
+        self.next_sighting = min(self.next_sighting, time.monotonic() + random.uniform(15, 45))
+        messagebox.showinfo("Cryptid Lure 🔦", "You set out a Cryptid Lure…\n\nWatch the bottom of your screen. "
+                            "When a shadow with glowing eyes sneaks by, click it before it gets away!", parent=parent)
+
     def is_unlocked(self, kind):
+        if kind in CRYPTIDS:
+            return kind in self.save.get("cryptids", [])
         if kind in RARE:
             return kind in self.save.get("hatched", [])
         return kind not in UNLOCKS or kind in self.save.get("unlocked", [])
@@ -4837,6 +5202,7 @@ class App:
                 pet.step(now)
             self.socialize(now)
             self.play_step(now)
+            self.cryptid_step(now)
             if now - self.last_town_save > 15:     # remember the town every so often
                 self.save_town()
                 self.last_town_save = now

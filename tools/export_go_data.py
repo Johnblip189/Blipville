@@ -25,11 +25,12 @@ for k in bl.KINDS:
     }
 data = {
     "kinds": kinds,
-    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS},
+    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,
     "eggCost": bl.EGG_COST,
+    "lureCost": bl.LURE_COST,
     "unlocks": bl.UNLOCKS,
     "hats": bl.HATS,
     "seasonLines": bl.SEASON_LINES,

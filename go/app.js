@@ -6,6 +6,7 @@
   const KINDS = D.kinds;
   const RARE = new Set(D.groups.rare);
   const NIGHT = new Set(D.groups.nightShift);
+  const CRYPT = new Set(D.groups.cryptids);
   const EGG_COST = D.eggCost;
   const MAX_PETS = 8;
   const SAVE_KEY = "blipville-go-v1";
@@ -18,7 +19,7 @@
   const $ = (id) => document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0 };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   function persist(now = false) {
@@ -91,7 +92,7 @@
     if (on && !quiet) sfx("boop");
   }
 
-  const isUnlocked = (k) => (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const isUnlocked = (k) => CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -570,6 +571,48 @@
 
   // ------------------------------------------------------------------ main loop
   let last = now();
+  // ------------------------------------------------------------------ cryptid sightings
+  // Every few minutes a shadowy cryptid sneaks across town. Tap it before it gets away to befriend it!
+  let sighting = null, nextSighting = now() + rnd(2, 5) * 60;
+  const QMARK = [".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."];
+  function sightingStep(t, dt) {
+    if (!sighting) {
+      if (t < nextSighting) return;
+      const wait = rnd(4, 9) * 60; nextSighting = t + (isNight() ? wait / 2 : wait);
+      const left = D.groups.cryptids.filter((k) => !isUnlocked(k));
+      if (!left.length || !$("nsSheet").hidden) return;
+      const dir = pick([-1, 1]);
+      sighting = { kind: pick(left), dir, x: dir === 1 ? -8 * S : W + 8 * S, t0: t };
+      sfx("whoosh"); return;
+    }
+    const k = KINDS[sighting.kind];
+    sighting.x += sighting.dir * Math.max(0.7, k.speed || 1) * 16 * S * dt * 0.55;
+    if (sighting.x < -10 * S || sighting.x > W + 10 * S) {
+      const witness = pets.find((p) => !["sleep", "held"].includes(p.state));
+      if (witness) say(witness, pick(["did you see that?!", "w-what was THAT?", "i think i saw something…", "*rubs eyes* huh?", "it went that way!"]), 3);
+      sighting = null; return;
+    }
+    const bob = ["hop", "flutter", "float"].includes(k.move) ? Math.abs(Math.sin(t * 8)) * S * 0.8 : 0;
+    const left = Math.round(sighting.x - 8 * S), top = Math.round(GROUND - 13 * S - bob);
+    const g = grid(sighting.kind, 0, { t: 0, silhouette: true, state: "walk" });
+    const glow = Math.floor(t * 2.5) % 10 !== 0;
+    if (glow) for (const ex of [4, 10]) g[k.eyes][ex] = g[k.eyes][ex + 1] = "#ffe66a";
+    if (sighting.dir === -1) g.forEach((row) => row.reverse());
+    drawGrid(ctx, g.map((row) => row.map((c) => (c && c !== "#ffe66a" ? "#16121f" : c))), left, top, S);
+    drawMask(QMARK, sighting.x - 7, top - 30, 3, "#ffffff");
+  }
+  function sightingAt(x, y) {
+    if (!sighting) return false;
+    return Math.abs(x - sighting.x) < 8 * S + 14 && y > GROUND - 13 * S - 40 && y < GROUND + 10;
+  }
+  function befriend() {
+    const kind = sighting.kind, x = sighting.x; sighting = null;
+    save.cryptids.push(kind); persist(true); sfx("fanfare"); vibrate([30, 40, 30]);
+    const p = addPet(kind, { x: clamp(x, 10 * S, W - 10 * S), quiet: true });
+    if (p) { say(p, `you spotted me! 📸 i'm a ${kind}!`, 5); setFace(p, "happy", 2); burst(p, "heart", 6); }
+    else toast(`You befriended a ${kind}! 📸 It's waiting in your 📖 Zoo.`, 4);
+  }
+
   function frame() {
     const t = now(), dt = Math.min(0.05, t - last); last = t;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -581,6 +624,7 @@
     drawCookies(t);
     for (const p of [...pets].sort((a, b) => (a === held ? 1 : 0) - (b === held ? 1 : 0))) drawPet(p, t);
     drawBalls();
+    sightingStep(t, dt);
     requestAnimationFrame(frame);
   }
 
@@ -595,6 +639,7 @@
   }
   cv.addEventListener("pointerdown", (e) => {
     pointer = { x: e.clientX, y: e.clientY };
+    if (sightingAt(e.clientX, e.clientY)) { befriend(); return; }
     const p = petAt(e.clientX, e.clientY);
     if (!p) return;
     cv.setPointerCapture(e.pointerId);
@@ -702,9 +747,9 @@
   function openZoo(swapPet = null) {
     const grid_ = $("zooGrid"); grid_.innerHTML = "";
     const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ["Rare ✨ (hatch from eggs)", D.groups.rare],
-                    ["Night Shift 🌙 (survive the nights)", D.groups.nightShift]];
+                    ["Night Shift 🌙 (survive the nights)", D.groups.nightShift], ["Cryptids 👣 (spot them in town)", D.groups.cryptids]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (RARE.has(k) ? "🥚 hatch from an egg" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (RARE.has(k) ? "🥚 hatch from an egg" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const cells = document.createElement("div"); cells.className = "zooCells";
@@ -737,6 +782,14 @@
       grid_.appendChild(cells);
     }
     $("zooCount").textContent = `${found}/${total}`;
+    const lure = $("lureBtn"), crLeft = D.groups.cryptids.filter((k) => !isUnlocked(k)).length;
+    lure.hidden = !crLeft; lure.textContent = `🔦 Set out a Cryptid Lure · ${D.lureCost} 💖`;
+    lure.onclick = () => {
+      if (save.hearts < D.lureCost) { toast(`A Cryptid Lure costs ${D.lureCost} 💖. You have ${save.hearts}. Cryptids also wander by on their own, so keep watching!`, 4); return; }
+      save.hearts -= D.lureCost; persist(true); updateHearts(true); sfx("coin");
+      nextSighting = Math.min(nextSighting, now() + rnd(8, 20)); closeSheets();
+      toast("🔦 Lure set! Watch your town: when a shadow with glowing eyes sneaks by, tap it!", 4.5);
+    };
     const all = $("peekAll"), hidden = groups.flatMap(([, ks]) => ks).filter((k) => !isUnlocked(k) && !save.peeked.includes(k));
     all.hidden = !hidden.length; all.textContent = "👀 Peek at all locked Blips"; all.classList.remove("armed");
     all.onclick = () => {
@@ -1076,7 +1129,8 @@
   $("nightBtn").onclick = () => NS.open();
 
   window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
-                         nightShift: NS, setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
+                         nightShift: NS, sighting: () => sighting, spawnSighting: () => { nextSighting = 0; },
+                         setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;
                            plays.push(type === "ball" ? { type, pets: [a, b], from: a, to: b, t0: t, throws: 0, n: 4 }
                                                       : { type, pets: [a, b], runner: a, chaser: b, until: t + 7, swapped: false }); } };   // handy for testing

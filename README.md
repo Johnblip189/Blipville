@@ -8,7 +8,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**108 kinds of pets · 328+ colors · hats, hearts, eggs & a minigame** — one Python file, nothing to install.
+**120 kinds of pets · 360+ colors · hats, hearts, eggs, cryptids & a minigame** — one Python file, nothing to install.
 
 ## ✨ New in v0.3.0 (beta)
 
@@ -66,7 +66,8 @@ Your Blips live in a little town: tap to pet, drag to toss, press and hold for t
 - **Play Night Shift 🌙…**: the minigame that unlocks the robo crew
 - **🎩 Hats & outfits…**: buy, wear and swap hats with your hearts
 - **🥚 Hatch a Mystery Egg…**: spend hearts to hatch a rare Blip (your heart count is shown in the menu)
-- **📖 Collection…**: every rare and Night Shift Blip. Locked ones are shadows, but you can peek
+- **🔦 Set out a Cryptid Lure…**: spend hearts to make a cryptid sneak by soon
+- **📖 Collection…**: every rare, Night Shift and cryptid Blip. Locked ones are shadows, but you can peek
 - **Sound effects** / **Weather effects**: turn sounds on (they start off) and seasonal weather off
 - **Suggest an animal…**: opens the request form in your browser
 - **Support Blipville ♥**: ways to support the project
@@ -88,12 +89,14 @@ Each animal has its own lines and its own way of moving: frogs and kangaroos hop
 
 **Rare 🥚:** 20 secret Blips you can only hatch from Mystery Eggs. No spoilers, but one of them is *very* shiny. ✨
 
+**Cryptids 👣:** 12 legendary creatures from folklore and blurry photos. You can't hatch or buy them: you have to **spot** them ⬇️
+
 <details>
-<summary>⚠️ <b>Spoilers:</b> don't want to hatch them? Click to see every rare Blip</summary>
+<summary>⚠️ <b>Spoilers:</b> don't want to hunt for them? Click to see every rare Blip and cryptid</summary>
 
 <br>
 
-![Every rare Blip in every color](docs/rare-blips.png)
+![Every rare Blip and cryptid in every color](docs/rare-blips.png)
 
 </details>
 
@@ -114,6 +117,14 @@ Taking care of your Blips earns **hearts**:
 Spend **30 hearts** on a **🥚 Mystery Egg** (right-click any pet). It wobbles, cracks, and hatches one of the 20 rare Blips, which then joins you on the desktop. Collect them all!
 
 You can also spend hearts in the **🎩 Hats & outfits** shop: party hats, bows, crowns, wizard hats and more, from 💖 15 to 💖 50. Some only appear in their season, like the Santa Hat in winter or the Witch Hat around Halloween.
+
+## 👣 Cryptid sightings
+
+Every so often (more often at night), a **shadow with glowing eyes** sneaks across the bottom of your screen. **Click it before it gets away** and the cryptid becomes your Blip! If you miss it, your pets will definitely have seen *something*.
+
+- Can't wait? Right-click any pet → **🔦 Set out a Cryptid Lure** (20 💖) and one shows up within a minute.
+- On phones, cryptids sneak through your town. Tap the shadow to befriend it, or set a lure from the **📖 Zoo**.
+- See which ones you've spotted in **📖 Collection** (right-click a pet), or under **Change kind → Cryptids 👣**.
 
 ## 🌙 Night Shift (minigame)
 

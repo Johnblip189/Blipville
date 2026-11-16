@@ -1,5 +1,7 @@
 # 🏘️ Blipville
 
+![Blipville: pixel pets that live on your taskbar](docs/banner.png)
+
 > 🧪 **Beta demo.** Blipville is still being built. Expect new animals, changes and the odd bug. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.

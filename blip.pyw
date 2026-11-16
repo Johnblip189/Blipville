@@ -21,6 +21,7 @@ import json
 import math
 import os
 import random
+import subprocess
 import sys
 import time
 import tkinter as tk
@@ -3142,6 +3143,9 @@ class Blip:
         self.menu.add_command(label="💖 0 hearts", state="disabled")
         self.hearts_entry = self.menu.index("end")
         self.menu.add_checkbutton(label="Show name tags", variable=app.name_tags)
+        self.menu.add_checkbutton(label="Sound effects", variable=app.sound_on,
+                                  command=lambda: (app.save.update(sound=app.sound_on.get()), write_save(app.save),
+                                                   app.sound.play("boop")))
         self.menu.add_checkbutton(label="Weather effects", variable=app.weather,
                                   command=lambda: app.save.update(weather=app.weather.get()) or write_save(app.save))
         self.menu.add_command(label="Suggest an animal…", command=self.suggest)
@@ -3186,6 +3190,7 @@ class Blip:
         if self.state == "sleep":
             self.wake()
             return
+        self.app.sound.play("boop")
         now = time.monotonic()
         if now - self.last_pet_reward > 6:          # petting earns a heart (not by spam-clicking)
             self.last_pet_reward = now
@@ -3301,6 +3306,8 @@ class Blip:
             self.vy = max(-40, min(40, (e.y_root - y0) / dt / FPS))
             self.set_face("surprised", 0.6)
             self.set_state("fall")
+            if abs(self.vx) + abs(self.vy) > 12:
+                self.app.sound.play("whoosh")
         else:
             self.pet()
         self.press = None
@@ -3412,6 +3419,7 @@ class Blip:
                     self.squash_until = now + 0.15
                     if hard:
                         self.say(random.choice(LINES_LAND), 2)
+                        self.app.sound.play("thud")
                 else:
                     self.vy = self.vx = 0
                     self.squash_until = now + 0.2
@@ -3461,6 +3469,7 @@ class Blip:
                 self.target_x = None
                 if self.cookie and self.cookie["landed"] and abs(self.cookie["x"] - (self.wx + W / 2)) < 30:
                     self.set_state("eat", 1.8)
+                    self.app.sound.play("munch")
                     self.set_face("munch", 1.8)
                 else:
                     self.set_state("idle", random.uniform(1, 3))
@@ -3843,6 +3852,123 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
                                     fill=color, outline="", tags=tags)
 
 
+# ----------------------------------------------------------------------------- sound effects
+# Every sound is made with code (no audio files to download). Off by default: right-click → Sound effects.
+def _synth(name):
+    rate = 22050
+    out = []
+
+    def tone(f0, f1, dur, vol=0.35, shape="sine", decay=True):
+        n = int(rate * dur)
+        phase = 0.0
+        for i in range(n):
+            t = i / n
+            f = f0 + (f1 - f0) * t
+            phase += 2 * math.pi * f / rate
+            v = math.sin(phase)
+            if shape == "square":
+                v = 0.6 if v >= 0 else -0.6
+            elif shape == "tri":
+                v = 2 / math.pi * math.asin(math.sin(phase))
+            env = min(1.0, i / (rate * 0.005)) * ((1 - t) ** 2 if decay else 1)
+            out.append(v * vol * env)
+
+    def noise(dur, vol=0.3, swell=False):
+        n, last = int(rate * dur), 0.0
+        for i in range(n):
+            t = i / n
+            last = last * 0.6 + random.uniform(-1, 1) * 0.4          # a softer, "chunky" noise
+            env = math.sin(math.pi * t) if swell else (1 - t) ** 3
+            out.append(last * vol * env)
+
+    def rest(dur):
+        out.extend([0.0] * int(rate * dur))
+
+    random.seed(name)                                                   # same sound every time
+    if name == "boop":
+        tone(520, 820, 0.12)
+    elif name == "pop":
+        tone(900, 1400, 0.06, 0.3)
+    elif name == "munch":
+        for _ in range(3):
+            noise(0.05, 0.45)
+            rest(0.06)
+    elif name == "whoosh":
+        noise(0.28, 0.35, swell=True)
+    elif name == "thud":
+        tone(150, 60, 0.14, 0.5)
+    elif name == "coin":
+        tone(988, 988, 0.07, 0.25, "square", decay=False)
+        tone(1319, 1319, 0.2, 0.25, "square")
+    elif name == "crack":
+        noise(0.03, 0.6)
+        rest(0.05)
+        noise(0.04, 0.6)
+    elif name == "fanfare":
+        for f in (523, 659, 784):
+            tone(f, f, 0.09, 0.3, "tri", decay=False)
+        tone(1047, 1047, 0.3, 0.3, "tri")
+    elif name == "zap":
+        tone(1600, 400, 0.15, 0.25, "square")
+    elif name == "boing":
+        n = int(rate * 0.4)
+        phase = 0.0
+        for i in range(n):
+            t = i / n
+            phase += 2 * math.pi * (260 + 200 * t + 60 * math.sin(t * 40)) / rate
+            out.append(math.sin(phase) * 0.4 * (1 - t))
+    random.seed()
+    import struct
+    frames = b"".join(struct.pack("<h", int(max(-1.0, min(1.0, v)) * 32000)) for v in out)
+    header = b"RIFF" + struct.pack("<I", 36 + len(frames)) + b"WAVEfmt " + struct.pack("<IHHIIHH", 16, 1, 1, rate, rate * 2, 2, 16)
+    return header + b"data" + struct.pack("<I", len(frames)) + frames
+
+
+SOUNDS = ("boop", "pop", "munch", "whoosh", "thud", "coin", "crack", "fanfare", "zap", "boing")
+
+
+class Sound:
+    def __init__(self, app):
+        self.app = app
+        self.dir = os.path.join(os.path.dirname(save_path()), "sounds-v1")
+        self.last = {}
+
+    def path(self, name):
+        p = os.path.join(self.dir, name + ".wav")
+        if not os.path.isfile(p):
+            try:
+                os.makedirs(self.dir, exist_ok=True)
+                with open(p, "wb") as f:
+                    f.write(_synth(name))
+            except OSError:
+                return None
+        return p
+
+    def play(self, name):
+        if not self.app.sound_on.get():
+            return
+        now = time.monotonic()
+        if now - self.last.get(name, 0) < {"thud": 0.8, "munch": 0.5}.get(name, 0.08):   # one thud per bouncy landing
+            return
+        self.last[name] = now
+        p = self.path(name)
+        if not p:
+            return
+        try:
+            if sys.platform == "win32":
+                import winsound
+                winsound.PlaySound(p, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_NODEFAULT)
+            elif sys.platform == "darwin":
+                subprocess.Popen(["afplay", p], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            else:
+                import shutil
+                player = shutil.which("paplay") or shutil.which("aplay")
+                if player:
+                    subprocess.Popen([player, p], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:  # noqa: BLE001  (no audio device: just stay quiet)
+            pass
+
+
 # ----------------------------------------------------------------------------- hat shop
 class HatShop:
     """Try on, buy and wear hats & outfits for one pet."""
@@ -3918,6 +4044,7 @@ class HatShop:
             write_save(self.app.save)
             pet.hat = name
             pet.say(f"a new {name.lower()}! thank you!!", 3)
+            self.app.sound.play("coin")
             pet.set_face("happy", 2)
             pet.burst("heart", 5)
         self.app.save_town()
@@ -3959,6 +4086,7 @@ class EggHatch:
         self.btn.pack(pady=(0, 10))
         self.win.protocol("WM_DELETE_WINDOW", self.done)
         self.hatched = False
+        self.cracked = self.revealed = False
         self.loop()
 
     def done(self):
@@ -3986,6 +4114,9 @@ class EggHatch:
                             col = {"o": "#3a2a4a", "e": "#fff4dc", "s": "#ff9fd0"}[ch]
                             X, Y = cx - 48 + wob + x * 8, cy - 56 + y * 8
                             c.create_rectangle(X, Y, X + 8, Y + 8, fill=col, outline="")
+                if t > 1.2 and not self.cracked:
+                    self.cracked = True
+                    self.app.sound.play("crack")
                 if t > 1.2:   # cracks
                     pts = [(cx - 30 + wob, cy - 8), (cx - 14 + wob, cy - 18), (cx + wob, cy - 6), (cx + 16 + wob, cy - 20),
                            (cx + 30 + wob, cy - 8)]
@@ -3993,6 +4124,9 @@ class EggHatch:
                     c.create_line(*[v for p in pts[:n] for v in p], fill="#3a2a4a", width=3)
                 c.create_text(cx, 262, text="✨ something is hatching… ✨", fill="#d8d0ff", font=("Segoe UI", 11, "bold"))
             else:
+                if not self.revealed:
+                    self.revealed = True
+                    self.app.sound.play("fanfare")
                 if t < 2.9:
                     c.create_rectangle(0, 0, self.CW, self.CH, fill="#ffffff", outline="")
                 for i in range(12):   # sparkle burst
@@ -4108,6 +4242,7 @@ class NightShiftGame:
             r["room"], r["door_since"] = "Stage", None
             r["next"] = self.t + self.cfg["interval"] * 1.3
         self.say(f"*clank clank* {hit[0]['kind']} ran back to the stage!" if hit else "nothing there… this time.")
+        self.app.sound.play("zap")
 
     def open_cam(self, room):
         if self.state == "play" and self.battery > 0:
@@ -4119,9 +4254,11 @@ class NightShiftGame:
 
     def caught(self, robot):
         self.state, self.caught_by = "caught", robot["kind"]
+        self.app.sound.play("boing")
 
     def won(self):
         self.state = "won"
+        self.app.sound.play("fanfare")
         first_time = self.night > self.app.nights_won()
         self.app.record_night(self.night)
         self.app.add_hearts(25 if first_time else 10)
@@ -4353,6 +4490,8 @@ class App:
         self.season = current_season()
         self.save = load_save()
         self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))
+        self.sound_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("sound", False)))
+        self.sound = Sound(self)
         load_custom_blips()
         self.game = None
         self.plays = []                            # games of catch / tag going on right now
@@ -4555,6 +4694,7 @@ class App:
                 play["ball"] = (x0 + (x1 - x0) * min(u, 1), y0 + (y1 - y0) * min(u, 1) - math.sin(math.pi * min(u, 1)) * 60)
                 if u >= 1:
                     play["throws"] += 1
+                    self.sound.play("pop")
                     if random.random() < 0.5:
                         dst.say(random.choice(["got it!", "nice!", "catch!", "woo!"]), 1.2)
                     dst.set_face("happy", 0.6)

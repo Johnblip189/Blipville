@@ -18,7 +18,7 @@
   const $ = (id) => document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [] };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   function persist(now = false) {
@@ -30,6 +30,67 @@
     clearTimeout(saveTimer);
     if (now) write(); else saveTimer = setTimeout(write, 400);
   }
+  // ------------------------------------------------------------------ sound effects (made with code, off by default)
+  let actx = null, noiseBuf = null;
+  const lastSfx = {};
+  function audio() {
+    if (!actx) {
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
+      actx = new AC();
+      noiseBuf = actx.createBuffer(1, actx.sampleRate, actx.sampleRate);
+      const d = noiseBuf.getChannelData(0); let last = 0;
+      for (let i = 0; i < d.length; i++) { last = last * 0.6 + (Math.random() * 2 - 1) * 0.4; d[i] = last; }
+    }
+    if (actx.state === "suspended") actx.resume();
+    return actx;
+  }
+  function sfx(name) {
+    if (!save.sound) return;
+    const a = audio(); if (!a) return;
+    const nowT = performance.now() / 1000;
+    if (nowT - (lastSfx[name] || 0) < ({ thud: 0.8, munch: 0.5 }[name] || 0.08)) return;
+    lastSfx[name] = nowT;
+    const out = a.createGain(); out.gain.value = 0.5; out.connect(a.destination);
+    let at = a.currentTime + 0.01;
+    const tone = (f0, f1, dur, vol = 0.35, type = "sine", decay = true) => {
+      const o = a.createOscillator(), g = a.createGain();
+      o.type = type === "tri" ? "triangle" : type; o.frequency.setValueAtTime(f0, at); o.frequency.linearRampToValueAtTime(f1, at + dur);
+      g.gain.setValueAtTime(0.0001, at); g.gain.linearRampToValueAtTime(type === "square" ? vol * 0.5 : vol, at + 0.005);
+      if (decay) g.gain.exponentialRampToValueAtTime(0.0001, at + dur); else g.gain.setValueAtTime(0.0001, at + dur);
+      o.connect(g).connect(out); o.start(at); o.stop(at + dur + 0.02); at += dur;
+    };
+    const noise = (dur, vol = 0.3, swell = false) => {
+      const n = a.createBufferSource(), g = a.createGain(); n.buffer = noiseBuf;
+      if (swell) { g.gain.setValueAtTime(0.0001, at); g.gain.linearRampToValueAtTime(vol, at + dur / 2); g.gain.linearRampToValueAtTime(0.0001, at + dur); }
+      else { g.gain.setValueAtTime(vol, at); g.gain.exponentialRampToValueAtTime(0.0001, at + dur); }
+      n.connect(g).connect(out); n.start(at, Math.random() * 0.5); n.stop(at + dur + 0.02); at += dur;
+    };
+    const rest = (dur) => { at += dur; };
+    switch (name) {
+      case "boop": tone(520, 820, 0.12); break;
+      case "pop": tone(900, 1400, 0.06, 0.3); break;
+      case "munch": for (let i = 0; i < 3; i++) { noise(0.05, 0.45); rest(0.06); } break;
+      case "whoosh": noise(0.28, 0.35, true); break;
+      case "thud": tone(150, 60, 0.14, 0.5); break;
+      case "coin": tone(988, 988, 0.07, 0.25, "square", false); tone(1319, 1319, 0.2, 0.25, "square"); break;
+      case "crack": noise(0.03, 0.6); rest(0.05); noise(0.04, 0.6); break;
+      case "fanfare": for (const f of [523, 659, 784]) tone(f, f, 0.09, 0.3, "tri", false); tone(1047, 1047, 0.3, 0.3, "tri"); break;
+      case "zap": tone(1600, 400, 0.15, 0.25, "square"); break;
+      case "boing": {
+        const o = a.createOscillator(), g = a.createGain(), lfo = a.createOscillator(), lg = a.createGain();
+        o.frequency.setValueAtTime(260, at); o.frequency.linearRampToValueAtTime(460, at + 0.4);
+        lfo.frequency.value = 6.4; lg.gain.value = 60; lfo.connect(lg).connect(o.frequency);
+        g.gain.setValueAtTime(0.4, at); g.gain.linearRampToValueAtTime(0.0001, at + 0.4);
+        o.connect(g).connect(out); o.start(at); lfo.start(at); o.stop(at + 0.42); lfo.stop(at + 0.42); break;
+      }
+    }
+  }
+  function setSound(on, quiet = false) {
+    save.sound = on; if (!quiet) persist(true);
+    const b = $("soundBtn"); b.textContent = on ? "🔊" : "🔇"; b.setAttribute("aria-label", on ? "Sound on" : "Sound off");
+    if (on && !quiet) sfx("boop");
+  }
+
   const isUnlocked = (k) => (RARE.has(k) ? save.hatched.includes(k) : !NIGHT.has(k));
 
   // ------------------------------------------------------------------ canvas & layout
@@ -88,6 +149,7 @@
 
   function petIt(p) {
     if (p.state === "sleep") { wake(p); return; }
+    sfx("boop");
     const t = now();
     if (t - p.lastPetReward > 6) { p.lastPetReward = t; reward(p, 1); }
     say(p, pick(D.lines.pet), 2); setFace(p, "happy", 1.5); burst(p, "heart", 4);
@@ -144,7 +206,7 @@
         if (p.y <= 0) {
           p.y = 0;
           if (p.vy < -320) {
-            if (p.vy < -900) say(p, pick(D.lines.land), 2);
+            if (p.vy < -900) { say(p, pick(D.lines.land), 2); sfx("thud"); }
             p.vy = -p.vy * 0.35; p.vx *= 0.7; p.squashUntil = t + 0.15;
           } else { p.vy = 0; p.vx = 0; p.squashUntil = t + 0.2; setState(p, "idle", rnd(0.6, 1.5)); }
         }
@@ -175,7 +237,7 @@
       if (Math.abs(d) <= speed * dt || t > p.until) {
         if (Math.abs(d) <= speed * dt) p.x = p.target;
         p.target = null;
-        if (ck && Math.abs(ck.x - p.x) < 30) { p.eating = ck; setState(p, "eat", 1.8); setFace(p, "munch", 1.8); }
+        if (ck && Math.abs(ck.x - p.x) < 30) { p.eating = ck; setState(p, "eat", 1.8); setFace(p, "munch", 1.8); sfx("munch"); }
         else setState(p, "idle", rnd(1, 3));
       } else p.x += speed * dt * p.facing;
     } else if (p.state === "idle" && t > p.until) decide(p, t);
@@ -221,7 +283,7 @@
         const u = Math.min(1, (t - play.t0) / 0.9), [x0, y0] = headPos(play.from), [x1, y1] = headPos(play.to);
         play.ball = [x0 + (x1 - x0) * u, y0 + (y1 - y0) * u - Math.sin(Math.PI * u) * 14 * S];
         if (u >= 1) {
-          play.throws++;
+          play.throws++; sfx("pop");
           if (Math.random() < 0.5) say(play.to, pick(["got it!", "nice!", "catch!", "woo!"]), 1.2);
           setFace(play.to, "happy", 0.6);
           [play.from, play.to, play.t0] = [play.to, play.from, t];
@@ -561,7 +623,9 @@
       const [t0, x0, y0] = trail[0], dt = Math.max(now() - t0, 1 / 60);
       held.vx = clamp((e.clientX - x0) / dt, -1600, 1600) * 0.6;
       held.vy = clamp(-(e.clientY - y0) / dt, -1600, 1600) * 0.6;
-      setFace(held, "surprised", 0.6); setState(held, "fall"); held = null;
+      setFace(held, "surprised", 0.6); setState(held, "fall");
+      if (Math.abs(held.vx) + Math.abs(held.vy) > 700) sfx("whoosh");
+      held = null;
     } else if (!press.opened) petIt(press.p);
     press = null;
   };
@@ -614,7 +678,7 @@
         else {
           const price = HATS[name].price;
           if (save.hearts < price) { toast(`${name} costs ${price} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 3.5); return; }
-          save.hearts -= price; save.hatsOwned.push(name); updateHearts(true);
+          save.hearts -= price; save.hatsOwned.push(name); updateHearts(true); sfx("coin");
           p.hat = name; say(p, `a new ${name.toLowerCase()}! thank you!!`, 3); setFace(p, "happy", 2); burst(p, "heart", 5);
         }
         persist(true); openPetSheet(p);
@@ -680,7 +744,7 @@
     let r = Math.random() * weights.reduce((a, b) => a + b, 0), kind = left[0];
     for (let i = 0; i < left.length; i++) { r -= weights[i]; if (r <= 0) { kind = left[i]; break; } }
     save.hearts -= EGG_COST; save.hatched.push(kind); persist(true); updateHearts(true);
-    const ec = $("eggCanvas"), c = ec.getContext("2d"), t0 = now();
+    const ec = $("eggCanvas"), c = ec.getContext("2d"), t0 = now(); let cracked = false;
     $("eggText").textContent = "✨ something is hatching… ✨"; $("eggSub").textContent = "";
     const done = $("eggDone"); done.disabled = true; done.textContent = "Hatching…";
     openSheet("eggSheet");
@@ -694,6 +758,7 @@
           if (ch === ".") return; c.fillStyle = { o: "#3a2a4a", e: "#fff4dc", s: "#ff9fd0" }[ch];
           c.fillRect(140 - 48 + wob + x * 8, 110 - 56 + y * 8, 8, 8);
         }));
+        if (t > 1.2 && !cracked) { cracked = true; sfx("crack"); }
         if (t > 1.2) {
           const pts = [[-30, -8], [-14, -18], [0, -6], [16, -20], [30, -8]].slice(0, Math.min(5, 2 + Math.floor((t - 1.2) * 3)));
           c.strokeStyle = "#3a2a4a"; c.lineWidth = 3; c.beginPath();
@@ -708,7 +773,7 @@
         }
         drawGrid(c, grid(kind, 0, { t: 0, face: "happy" }), 140 - 48, 104 - 39, 6);
         if (done.disabled) {
-          done.disabled = false; done.textContent = "Yay! Bring it to town 🐾"; vibrate([30, 40, 30]);
+          done.disabled = false; done.textContent = "Yay! Bring it to town 🐾"; vibrate([30, 40, 30]); sfx("fanfare");
           $("eggText").textContent = `You hatched a ${kind}!`;
           $("eggSub").textContent = `Rare Blips found: ${save.hatched.length}/${D.groups.rare.length}`;
           done.onclick = () => {
@@ -752,6 +817,8 @@
   $("collectionBtn").onclick = () => openZoo(null);
   $("shareBtn").onclick = share;
   $("helpBtn").onclick = () => openSheet("helpSheet");
+  $("soundBtn").onclick = () => setSound(!save.sound);
+  setSound(!!save.sound, true);
   $("helpEggCost").textContent = EGG_COST;
 
   // ------------------------------------------------------------------ start

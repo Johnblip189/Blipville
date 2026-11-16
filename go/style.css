@@ -24,12 +24,14 @@ html, body {
 #top > * { pointer-events: auto; }
 .title { font-weight: 800; font-size: 18px; letter-spacing: .02em; text-shadow: 0 2px 0 rgba(0,0,0,.35); }
 .title span { color: #ffd23a; }
+@media (max-width: 374px) { .title { font-size: 15px; } #top { padding-left: 10px; padding-right: 10px; } }
 .pill {
   background: rgba(20, 16, 36, .72); border: 2px solid rgba(255,255,255,.12); color: var(--text);
   border-radius: 999px; padding: 6px 12px; font: 700 15px var(--font); min-width: 44px; min-height: 36px;
   display: inline-flex; align-items: center; gap: 6px; backdrop-filter: blur(6px);
 }
 .pill.icon { justify-content: center; padding: 0; width: 36px; }
+#top .right { display: flex; gap: 6px; }
 #hearts.bump { animation: bump .35s ease; }
 @keyframes bump { 40% { transform: scale(1.18); } }
 

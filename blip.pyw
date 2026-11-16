@@ -4082,12 +4082,142 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
 
 
 # ----------------------------------------------------------------------------- cryptid sightings
+# Each cryptid shows up its own way, in a little scene that matches its legend: Mothman lands on a
+# flickering lamp post, Nessie pops out of the water, Bigfoot walks behind the pine trees, and so on.
+# Scenes are 100 x 58 "units" (1 unit = 1 art pixel). y is measured up from the ground.
+SCENE_W, SCENE_H, SCENE_PX = 100, 58, 4
+
+
+def _row(width, fn):
+    return "".join(fn(i) for i in range(width))
+
+
+def _rec_mask():
+    letters = {"R": ["xx.", "x.x", "xx.", "x.x", "x.x"], "E": ["xxx", "x..", "xx.", "x..", "xxx"],
+               "C": [".xx", "x..", "x..", "x..", ".xx"]}
+    dot = [".*.", "***", ".*.", "...", "..."]
+    return ["".join([dot[r], "."] + [letters[c][r].replace("x", "w") + "." for c in "REC"])[:-1] for r in range(5)]
+
+
+def _viewfinder():
+    w, h, arm = 96, 52, 7
+    rows = []
+    for r in range(h):
+        edge_r = r in (0, h - 1)
+        near_r = r < arm or r >= h - arm
+        rows.append(_row(w, lambda i: "w" if (edge_r and (i < arm or i >= w - arm)) or (near_r and i in (0, w - 1)) else "."))
+    return rows
+
+
+def _volcano():
+    rows = []
+    for r in range(22):
+        half = 5 + r * 1.25
+        rows.append(_row(60, lambda i: ("s" if r < 4 else "m") if abs(i - 29.5) <= half else "."))
+    return rows
+
+
+SCENE_PROPS = {
+    "lamp": {"colors": {"o": "#2a2a3a", "*": ["#ffe08a", "#6a5a3a"], "p": "#3a3a4a"},
+             "rows": ["..ooooo..", ".o*****o.", ".o*****o.", "..ooooo.."] + ["....p...."] * 29
+                     + ["...ppp...", "..ppppp..", "..ppppp.."]},
+    "pine": {"colors": {"g": "#2a6a3e", "d": "#1d4f2e", "t": "#5a3a24"},
+             "rows": [".....g.....", "....ggg....", "...gdggg...", "....ggg....", "...ggdgg...", "..gggggdg..",
+                      "...ggggg...", "..ggdgggg..", ".gggggggdg.", "..ggggggg..", ".ggdggggggg"[:11], "gggggggdggg",
+                      ".....t.....", ".....t....."]},
+    "bush": {"colors": {"g": "#4a8a4a", "d": "#2f6a35"},
+             "rows": ["..ggggg..", ".ggdgggg.", "ggggggdgg", "gdggggggg", ".ggggggg."]},
+    "cactus": {"colors": {"g": "#3a8a4a", "d": "#2a6a38"},
+               "rows": ["...g...", "..ggg..", "..gdg.g", "g.ggg.g", "g.ggggg", "ggggd..", "..ggg..",
+                        "..gdg..", "..ggg..", "..ggg..", "..ggg..", "..ggg.."]},
+    "water": {"colors": {"w": "#3a7ac8", "l": "#9ad0ff", "d": "#1f4f94"},
+              "rows": [_row(100, lambda i: "l" if i % 9 in (0, 1, 2) else "."),
+                       _row(100, lambda i: "l" if i % 9 == 4 else "w"),
+                       _row(100, lambda i: "w"), _row(100, lambda i: "d")]},
+    "sand": {"colors": {"s": "#e8c87a", "d": "#c8a050"},
+             "rows": [_row(100, lambda i: "s" if i % 7 not in (0,) else "."), _row(100, lambda i: "d" if i % 11 == 3 else "s"),
+                      _row(100, lambda i: "d")]},
+    "mound": {"colors": {"s": "#e8c87a", "d": "#c8a050"}, "rows": ["..sss..", ".ssdss.", "sssssss"]},
+    "grass": {"colors": {"g": "#5a9a3a", "d": "#3a7a2a"},
+              "rows": [_row(100, lambda i: "g" if i % 4 in (0, 2) and i % 12 < 9 else "."),
+                       _row(100, lambda i: "g" if i % 3 else "d"), _row(100, lambda i: "d" if i % 5 == 1 else "g"),
+                       _row(100, lambda i: "d")]},
+    "wall": {"colors": {"s": "#8a8a9a", "m": "#5a5a6a", "c": "#a8a8b8"},
+             "rows": [_row(100, lambda i: "c")] + [_row(100, lambda i, r=r: "m" if r % 3 == 2 or (i + (3 if (r // 3) % 2 else 0)) % 8 == 0 else "s")
+                                                   for r in range(7)]},
+    "orb": {"colors": {"*": ["#ff8a3a", "#ffe066"], "o": "#ff5a2a"},
+            "rows": ["..***..", ".*****.", "*******", "***o***", "*******", ".*****.", "..***.."]},
+    "bridge": {"colors": {"r": "#8a5a3a", "o": "#5a3a20", "p": "#a8784a", "d": "#6a4a2a"},
+               "rows": [_row(56, lambda i: "r"), _row(56, lambda i: "o" if i % 8 == 0 else "."),
+                        _row(56, lambda i: "o" if i % 8 == 0 else "."), _row(56, lambda i: "p"), _row(56, lambda i: "d")]
+                       + [_row(56, lambda i: "o" if i in (3, 4, 51, 52) else ".")] * 3},
+    "volcano": {"colors": {"m": "#4a3a5a", "s": "#d8d0e8"}, "rows": _volcano()},
+    "smoke": {"colors": {"k": "#9a94a8", "l": "#c8c4d4"},
+              "rows": ["..ll.ll..", ".lkkllkl.", "kkllkkllk", ".kkkkkkk."]},
+    "viewfinder": {"colors": {"w": "#ffffff"}, "rows": _viewfinder()},
+    "rec": {"colors": {"w": "#ffffff", "*": ["#ff3a3a", "#5a1010"]}, "rows": _rec_mask()},
+}
+
+# props: [prop, center x, bottom y, layer]   keys: [seconds, center x, y]   clip: hidden below this height
+CRYPTID_SCENES = {
+    "Mothman": {"hint": "is the street light flickering…?", "props": [["lamp", 50, 0, "back"]],
+                "keys": [[0, -12, 44], [3.5, 50, 36], [14, 50, 36], [15, 52, 40], [18, 115, 54]]},
+    "Bigfoot": {"hint": "something big is moving in the trees…",
+                "props": [["pine", 86, 0, "back"], ["pine", 30, 0, "front"], ["pine", 64, 0, "front"]],
+                "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]},
+    "Nessie": {"hint": "did the water just ripple?", "props": [["water", 50, 0, "front"]], "clip": 3,
+               "keys": [[0, 18, -14], [1.5, 20, -1], [5.5, 36, -1], [7, 40, -14], [9.5, 62, -14], [11, 66, 0],
+                        [15.5, 82, 0], [17, 86, -14]]},
+    "Death Worm": {"hint": "the ground is… wiggling?", "props": [["sand", 50, 0, "front"]], "clip": 2, "mound": True,
+                   "keys": [[0, 6, -13], [4, 38, -13], [5, 40, -3], [8.5, 40, -3], [9.5, 43, -13], [13.5, 74, -13],
+                            [14.5, 76, -2], [18, 76, -2], [19, 79, -13], [22, 104, -13]]},
+    "Chupacabra": {"hint": "i heard rustling in the bushes…",
+                   "props": [["cactus", 86, 0, "back"], ["bush", 28, 0, "front"], ["cactus", 62, 0, "front"]],
+                   "keys": [[0, -12, 0], [1.6, 27, 0], [5, 29, 0], [6.4, 61, 0], [10, 63, 0], [11.6, 112, 0]]},
+    "Jersey Devil": {"hint": "what was that screech?!",
+                     "props": [["pine", 18, 0, "back"], ["pine", 50, 0, "back"], ["pine", 82, 0, "back"]],
+                     "keys": [[0, -12, 34], [4, 30, 12], [6, 44, 16], [9, 58, 34], [12.5, 78, 18], [16, 115, 38]]},
+    "Jackalope": {"hint": "the grass is… hopping?", "props": [["grass", 50, 0, "front"]],
+                  "keys": [[0, -12, 0], [3, 26, 0], [6, 26, 0], [9, 56, 0], [12, 56, 0], [15.5, 112, 0]]},
+    "Flatwoods Monster": {"hint": "a fireball just landed over there!",
+                          "props": [["pine", 14, 0, "back"], ["orb", 74, 0, "back"]],
+                          "keys": [[0, 42, 62], [3.5, 42, 5], [13, 44, 7], [16.5, 42, 64]]},
+    "Dover Demon": {"hint": "someone's walking on the stone wall…", "props": [["wall", 50, 0, "back"]],
+                    "keys": [[0, -12, 8], [7, 45, 8], [10.5, 45, 8], [18, 112, 8]]},
+    "Fresno Nightcrawler": {"hint": "the security camera caught something…",
+                            "props": [["viewfinder", 50, 3, "front"], ["rec", 12, 48, "front"]],
+                            "keys": [[0, -12, 0], [17, 112, 0]]},
+    "Frogman": {"hint": "who's that standing on the bridge?", "props": [["bridge", 56, 0, "back"]], "sparkle": True,
+                "keys": [[0, -12, 0], [3.5, 20, 0], [4.5, 32, 5], [13, 34, 5], [15, 70, 5], [16, 84, 0], [19, 112, 0]]},
+    "Batsquatch": {"hint": "something huge is flying past the mountain!",
+                   "props": [["volcano", 62, 0, "back"], ["smoke", 62, 22, "back"]],
+                   "keys": [[0, -12, 26], [5, 34, 42], [8, 54, 30], [12, 78, 44], [16, 115, 34]]},
+}
+
+
+def scene_pos(keys, t):
+    """Where a cryptid is t seconds into its scene (straight lines between keyframes)."""
+    if t <= keys[0][0]:
+        return keys[0][1], keys[0][2]
+    for (t0, x0, y0), (t1, x1, y1) in zip(keys, keys[1:]):
+        if t <= t1:
+            f = (t - t0) / (t1 - t0) if t1 > t0 else 1.0
+            return x0 + (x1 - x0) * f, y0 + (y1 - y0) * f
+    return keys[-1][1], keys[-1][2]
+
+
 class Sighting:
-    """A shadowy cryptid sneaks across the bottom of the screen. Click it before it gets away to befriend it!"""
+    """A cryptid appears in its own little scene near the bottom of the screen. Click it before it gets away!"""
     SHADOW, GLOW = "#16121f", "#ffe66a"
 
     def __init__(self, app, kind):
         self.app, self.kind = app, kind
+        scene = CRYPTID_SCENES[kind]
+        self.scene = scene
+        flip = random.random() < 0.5                 # mirror the scene sometimes, for variety
+        self.keys = [(t, SCENE_W - x if flip else x, y) for t, x, y in scene["keys"]]
+        self.props = [(n, SCENE_W - x if flip else x, y, layer, flip) for n, x, y, layer in scene["props"]]
+        self.clip = scene.get("clip", -99)
         self.root = root = tk.Toplevel(app.root)
         root.overrideredirect(True)
         root.attributes("-topmost", True)
@@ -4101,21 +4231,47 @@ class Sighting:
             except tk.TclError:
                 pass
         root.config(bg=bg)
-        self.canvas = tk.Canvas(root, width=W, height=H, bg=bg, highlightthickness=0, bd=0, cursor="hand2")
+        self.cw, self.ch = SCENE_W * SCENE_PX, SCENE_H * SCENE_PX
+        self.canvas = tk.Canvas(root, width=self.cw, height=self.ch, bg=bg, highlightthickness=0, bd=0)
         self.canvas.pack()
         self.canvas.bind("<ButtonPress-1>", self.on_click)
         left, top, right, bottom = work_area(root)
-        self.left, self.right, self.wy = left, right, bottom - H
-        self.dir = random.choice([-1, 1])
-        self.wx = left - W + 30 if self.dir == 1 else right - 30
-        speed = VARIANTS[kind].get("speed", 1.0)
-        self.speed = 70 * max(0.7, speed)           # pixels per second: quick, but catchable
-        self.born = self.last = time.monotonic()
-        self.caught = False
-        self.place()
+        self.wx = random.uniform(left, max(left, right - self.cw))
+        root.geometry(f"{self.cw}x{self.ch}+{int(self.wx)}+{int(bottom - self.ch)}")
+        self.born = time.monotonic()
+        self.facing, self.pos, self.caught = (-1 if flip else 1), self.keys[0][1:], False
+        witness = next((p for p in app.pets if p.state not in ("sleep", "held")), None)
+        if witness:
+            witness.say(scene["hint"], 4)
 
-    def place(self):
-        self.root.geometry(f"{W}x{H}+{int(self.wx)}+{int(self.wy)}")
+    # ---- drawing helpers (u = scene units, y up from the ground)
+    def mask(self, rows, colors, cx, by, t, mirror=False):
+        c, P = self.canvas, SCENE_PX
+        w, h = len(rows[0]), len(rows)
+        x0 = round(cx - w / 2)
+        for r, row in enumerate(rows):
+            row = row[::-1] if mirror else row
+            y = (SCENE_H - (by + h - r)) * P
+            x = 0
+            while x < w:
+                ch = row[x]
+                if ch == ".":
+                    x += 1
+                    continue
+                x2 = x
+                while x2 + 1 < w and row[x2 + 1] == ch:
+                    x2 += 1
+                col = colors[ch]
+                if isinstance(col, list):                     # flickering light
+                    col = col[1] if int(t * 7) % 5 == 0 else col[0]
+                c.create_rectangle((x0 + x) * P, y, (x0 + x2 + 1) * P, y + P, fill=col, outline="")
+                x = x2 + 1
+
+    def draw_props(self, layer, t):
+        for name, x, y, lay, flip in self.props:
+            if lay == layer:
+                p = SCENE_PROPS[name]
+                self.mask(p["rows"], p["colors"], x, y, t, mirror=flip and name != "rec")
 
     def art(self, now):
         v = VARIANTS[self.kind]
@@ -4132,40 +4288,69 @@ class Sighting:
         return g
 
     def step(self, now):
-        dt, self.last = min(0.1, now - self.last), now
-        self.wx += self.dir * self.speed * dt
-        if (self.dir == 1 and self.wx > self.right) or (self.dir == -1 and self.wx < self.left - W):
+        t = now - self.born
+        if t > self.keys[-1][0]:
             self.leave(escaped=True)
             return
-        self.place()
-        c = self.canvas
+        x, y = scene_pos(self.keys, t)
+        nx, _ = scene_pos(self.keys, t + 0.1)
+        moving = abs(nx - x) > 0.05
+        if moving:
+            self.facing = 1 if nx > x else -1
+        move = VARIANTS[self.kind]["move"]
+        if move == "float":
+            y += math.sin(t * 2.5) * 1.2
+        elif move in ("hop", "flutter") and moving:
+            y += abs(math.sin(t * 8)) * 2
+        self.pos = (x, y)
+        c, P = self.canvas, SCENE_PX
         c.delete("all")
-        ox = (W - ART_W * SCALE) // 2
-        bob = abs(math.sin(now * 8)) * 3 if VARIANTS[self.kind]["move"] in ("hop", "flutter", "float") else 0
-        oy = H - ART_H * SCALE - bob
+        self.draw_props("back", t)
+        if self.scene.get("mound") and y < self.clip - 10:
+            p = SCENE_PROPS["mound"]
+            self.mask(p["rows"], p["colors"], x + math.sin(t * 9) * 0.6, 0, t)
         g = self.art(now)
-        for y, row in enumerate(g):
-            for x, col in enumerate(row if self.dir == 1 else row[::-1]):
+        for r, row in enumerate(g):
+            if y + 12 - r < self.clip:
+                continue
+            row = row if self.facing == 1 else row[::-1]
+            top = (SCENE_H - (y + 13 - r)) * P
+            for i, col in enumerate(row):
                 if col:
-                    c.create_rectangle(ox + x * SCALE, oy + y * SCALE, ox + (x + 1) * SCALE, oy + (y + 1) * SCALE,
-                                       fill=col, outline="")
-        for y, row in enumerate([".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."]):   # a pixel "?"
-            for x, ch in enumerate(row):
-                if ch == "x":
-                    c.create_rectangle(W // 2 - 8 + x * 3, oy - 26 + y * 3, W // 2 - 5 + x * 3, oy - 23 + y * 3,
-                                       fill="#ffffff", outline="")
+                    left = (x - 8 + i) * P
+                    c.create_rectangle(left, top, left + P, top + P, fill=col, outline="")
+        if self.scene.get("sparkle") and not moving:        # Frogman's sparkly wand
+            for k in range(3):
+                if int(t * 6 + k * 2) % 3:
+                    sx, sy = x + self.facing * (8 + k * 2), y + 5 + (k * 3 + int(t * 4)) % 6
+                    c.create_rectangle(sx * P, (SCENE_H - sy) * P, sx * P + P, (SCENE_H - sy) * P + P,
+                                       fill="#fff27a", outline="")
+        self.draw_props("front", t)
+        if self.visible():
+            qx, qy = x * P - 8, (SCENE_H - (y + 22)) * P
+            for r, row in enumerate([".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."]):   # a pixel "?"
+                for i, ch in enumerate(row):
+                    if ch == "x" and qy >= 0:
+                        c.create_rectangle(qx + i * 3, qy + r * 3, qx + i * 3 + 3, qy + r * 3 + 3, fill="#ffffff", outline="")
+
+    def visible(self):
+        return self.pos[1] + 12 >= self.clip
 
     def on_click(self, e):
-        if self.caught:
+        if self.caught or not self.visible():
+            return
+        ux, uy = e.x / SCENE_PX, SCENE_H - e.y / SCENE_PX
+        x, y = self.pos
+        if abs(ux - x) > 10 or not (max(y, self.clip) - 2 <= uy <= y + 16):
             return
         self.caught = True
         app, kind = self.app, self.kind
         app.save.setdefault("cryptids", []).append(kind)
         write_save(app.save)
         app.sound.play("fanfare")
-        x = self.wx
+        screen_x = self.wx + x * SCENE_PX - W / 2
         self.leave()
-        pet = app.add_pet(kind, x=x, greet=False)
+        pet = app.add_pet(kind, x=screen_x, greet=False)
         if not pet and app.pets:
             app.pets[0].say(f"you befriended a {kind}! 📸 (it's in your Collection)", 5)
         if pet:
@@ -4185,7 +4370,7 @@ class Sighting:
             witness = next((p for p in self.app.pets if p.state not in ("sleep", "held")), None)
             if witness:
                 witness.say(random.choice(["did you see that?!", "w-what was THAT?", "i think i saw something…",
-                                           "*rubs eyes* huh?", "it went that way!"]), 3)
+                                           "*rubs eyes* huh?", "it got away!"]), 3)
 
 
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)

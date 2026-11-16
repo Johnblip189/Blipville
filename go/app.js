@@ -572,41 +572,98 @@
   // ------------------------------------------------------------------ main loop
   let last = now();
   // ------------------------------------------------------------------ cryptid sightings
-  // Every few minutes a shadowy cryptid sneaks across town. Tap it before it gets away to befriend it!
+  // Every few minutes a cryptid shows up in town, each its own way (Mothman lands on a lamp post, Nessie
+  // pops out of the water…). Tap it before it gets away to befriend it! Scenes come from blip.pyw.
   let sighting = null, nextSighting = now() + rnd(2, 5) * 60;
   const QMARK = [".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."];
-  function sightingStep(t, dt) {
+  const [SW, SH] = D.sceneSize, SHADOW = "#16121f", GLOW = "#ffe66a";
+  function scenePos(keys, t) {
+    if (t <= keys[0][0]) return [keys[0][1], keys[0][2]];
+    for (let i = 0; i + 1 < keys.length; i++) {
+      const [t0, x0, y0] = keys[i], [t1, x1, y1] = keys[i + 1];
+      if (t <= t1) { const f = t1 > t0 ? (t - t0) / (t1 - t0) : 1; return [x0 + (x1 - x0) * f, y0 + (y1 - y0) * f]; }
+    }
+    const k = keys[keys.length - 1]; return [k[1], k[2]];
+  }
+  const sceneU = () => Math.min(S, W / SW);
+  const sceneLeft = () => (W - SW * sceneU()) / 2;
+  function sceneMask(rows, colors, cx, by, t, mirror) {
+    const u = sceneU(), L = sceneLeft(), w = rows[0].length, h = rows.length, x0 = Math.round(cx - w / 2);
+    rows.forEach((row, r) => {
+      if (mirror) row = [...row].reverse().join("");
+      const y = GROUND - (by + h - r) * u;
+      for (let x = 0; x < w; x++) {
+        const ch = row[x]; if (ch === ".") continue;
+        let x2 = x; while (x2 + 1 < w && row[x2 + 1] === ch) x2++;
+        let col = colors[ch]; if (Array.isArray(col)) col = Math.floor(t * 7) % 5 === 0 ? col[1] : col[0];
+        ctx.fillStyle = col; ctx.fillRect(L + (x0 + x) * u, y, (x2 - x + 1) * u + 0.5, u + 0.5);
+        x = x2;
+      }
+    });
+  }
+  function startSighting(kind) {
+    const sc = D.scenes[kind], flip = Math.random() < 0.5;
+    sighting = { kind, sc, t0: now(), flip, facing: flip ? -1 : 1, clip: sc.clip ?? -99,
+                 keys: sc.keys.map(([t, x, y]) => [t, flip ? SW - x : x, y]),
+                 props: sc.props.map(([n, x, y, layer]) => [n, flip ? SW - x : x, y, layer]) };
+    sighting.pos = sighting.keys[0].slice(1);
+    const witness = pets.find((p) => !["sleep", "held"].includes(p.state));
+    if (witness) say(witness, sc.hint, 4);
+    sfx("whoosh");
+  }
+  const sightingVisible = () => sighting && sighting.pos[1] + 12 >= sighting.clip;
+  function sightingStep(t) {
     if (!sighting) {
       if (t < nextSighting) return;
       const wait = rnd(4, 9) * 60; nextSighting = t + (isNight() ? wait / 2 : wait);
       const left = D.groups.cryptids.filter((k) => !isUnlocked(k));
-      if (!left.length || !$("nsSheet").hidden) return;
-      const dir = pick([-1, 1]);
-      sighting = { kind: pick(left), dir, x: dir === 1 ? -8 * S : W + 8 * S, t0: t };
-      sfx("whoosh"); return;
+      if (left.length && $("nsSheet").hidden) startSighting(pick(left));
+      return;
     }
-    const k = KINDS[sighting.kind];
-    sighting.x += sighting.dir * Math.max(0.7, k.speed || 1) * 16 * S * dt * 0.55;
-    if (sighting.x < -10 * S || sighting.x > W + 10 * S) {
+    const sg = sighting, st = t - sg.t0, k = KINDS[sg.kind];
+    if (st > sg.keys[sg.keys.length - 1][0]) {
       const witness = pets.find((p) => !["sleep", "held"].includes(p.state));
-      if (witness) say(witness, pick(["did you see that?!", "w-what was THAT?", "i think i saw something…", "*rubs eyes* huh?", "it went that way!"]), 3);
+      if (witness) say(witness, pick(["did you see that?!", "w-what was THAT?", "i think i saw something…", "*rubs eyes* huh?", "it got away!"]), 3);
       sighting = null; return;
     }
-    const bob = ["hop", "flutter", "float"].includes(k.move) ? Math.abs(Math.sin(t * 8)) * S * 0.8 : 0;
-    const left = Math.round(sighting.x - 8 * S), top = Math.round(GROUND - 13 * S - bob);
-    const g = grid(sighting.kind, 0, { t: 0, silhouette: true, state: "walk" });
+    let [x, y] = scenePos(sg.keys, st);
+    const [nx] = scenePos(sg.keys, st + 0.1), moving = Math.abs(nx - x) > 0.05;
+    if (moving) sg.facing = nx > x ? 1 : -1;
+    if (k.move === "float") y += Math.sin(st * 2.5) * 1.2;
+    else if ((k.move === "hop" || k.move === "flutter") && moving) y += Math.abs(Math.sin(st * 8)) * 2;
+    sg.pos = [x, y];
+    const u = sceneU(), L = sceneLeft();
+    const props = (layer) => sg.props.forEach(([n, px, py, lay]) => {
+      if (lay === layer) { const P = D.sceneProps[n]; sceneMask(P.rows, P.colors, px, py, st, sg.flip && n !== "rec"); }
+    });
+    props("back");
+    if (sg.sc.mound && y < sg.clip - 10) { const P = D.sceneProps.mound; sceneMask(P.rows, P.colors, x + Math.sin(st * 9) * 0.6, 0, st, false); }
+    const g = grid(sg.kind, 0, { t: 0, silhouette: true, state: "walk" });
     const glow = Math.floor(t * 2.5) % 10 !== 0;
-    if (glow) for (const ex of [4, 10]) g[k.eyes][ex] = g[k.eyes][ex + 1] = "#ffe66a";
-    if (sighting.dir === -1) g.forEach((row) => row.reverse());
-    drawGrid(ctx, g.map((row) => row.map((c) => (c && c !== "#ffe66a" ? "#16121f" : c))), left, top, S);
-    drawMask(QMARK, sighting.x - 7, top - 30, 3, "#ffffff");
+    g.forEach((row, r) => {
+      if (y + 12 - r < sg.clip) return;
+      const cells = row.map((c, i) => (c ? (glow && r === k.eyes && [4, 5, 10, 11].includes(i) ? GLOW : SHADOW) : null));
+      if (sg.facing === -1) cells.reverse();
+      const top = GROUND - (y + 13 - r) * u;
+      cells.forEach((c, i) => { if (c) { ctx.fillStyle = c; ctx.fillRect(L + (x - 8 + i) * u, top, u + 0.5, u + 0.5); } });
+    });
+    if (sg.sc.sparkle && !moving) {
+      ctx.fillStyle = "#fff27a";
+      for (let i = 0; i < 3; i++) if (Math.floor(st * 6 + i * 2) % 3) {
+        const sx = x + sg.facing * (8 + i * 2), sy = y + 5 + ((i * 3 + Math.floor(st * 4)) % 6);
+        ctx.fillRect(L + sx * u, GROUND - sy * u, u, u);
+      }
+    }
+    props("front");
+    if (sightingVisible()) drawMask(QMARK, L + x * u - 7, GROUND - (y + 22) * u, 3, "#ffffff");
   }
-  function sightingAt(x, y) {
-    if (!sighting) return false;
-    return Math.abs(x - sighting.x) < 8 * S + 14 && y > GROUND - 13 * S - 40 && y < GROUND + 10;
+  function sightingAt(px, py) {
+    if (!sightingVisible()) return false;
+    const u = sceneU(), ux = (px - sceneLeft()) / u, uy = (GROUND - py) / u, [x, y] = sighting.pos;
+    return Math.abs(ux - x) <= 11 && uy >= Math.max(y, sighting.clip) - 3 && uy <= y + 17;
   }
   function befriend() {
-    const kind = sighting.kind, x = sighting.x; sighting = null;
+    const kind = sighting.kind, x = sceneLeft() + sighting.pos[0] * sceneU(); sighting = null;
     save.cryptids.push(kind); persist(true); sfx("fanfare"); vibrate([30, 40, 30]);
     const p = addPet(kind, { x: clamp(x, 10 * S, W - 10 * S), quiet: true });
     if (p) { say(p, `you spotted me! 📸 i'm a ${kind}!`, 5); setFace(p, "happy", 2); burst(p, "heart", 6); }
@@ -624,7 +681,7 @@
     drawCookies(t);
     for (const p of [...pets].sort((a, b) => (a === held ? 1 : 0) - (b === held ? 1 : 0))) drawPet(p, t);
     drawBalls();
-    sightingStep(t, dt);
+    sightingStep(t);
     requestAnimationFrame(frame);
   }
 
@@ -1129,7 +1186,7 @@
   $("nightBtn").onclick = () => NS.open();
 
   window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
-                         nightShift: NS, sighting: () => sighting, spawnSighting: () => { nextSighting = 0; },
+                         nightShift: NS, sighting: () => sighting, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;
                            plays.push(type === "ball" ? { type, pets: [a, b], from: a, to: b, t0: t, throws: 0, n: 4 }

@@ -120,7 +120,7 @@ You can also spend hearts in the **🎩 Hats & outfits** shop: party hats, bows,
 
 ## 👣 Cryptid sightings
 
-Every so often (more often at night), a **shadow with glowing eyes** sneaks across the bottom of your screen. **Click it before it gets away** and the cryptid becomes your Blip! If you miss it, your pets will definitely have seen *something*.
+Every so often (more often at night), a cryptid shows up near the bottom of your screen as a **shadow with glowing eyes**, and each one appears its own way, just like in the stories: Mothman lands on a flickering **lamp post**, Nessie pops out of the **water**, Bigfoot walks behind the **pine trees**, the Fresno Nightcrawler strolls past on **security camera** footage… Your pets will drop a hint when something's out there. **Click it before it gets away** and the cryptid becomes your Blip! If you miss it, your pets will definitely have seen *something*.
 
 - Can't wait? Right-click any pet → **🔦 Set out a Cryptid Lure** (20 💖) and one shows up within a minute.
 - On phones, cryptids sneak through your town. Tap the shadow to befriend it, or set a lure from the **📖 Zoo**.

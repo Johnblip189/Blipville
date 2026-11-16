@@ -970,7 +970,7 @@
   document.addEventListener("visibilitychange", () => { if (document.hidden) persist(true); });
   window.addEventListener("pagehide", () => persist(true));
   requestAnimationFrame(frame);
-  if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || ["localhost", "127.0.0.1"].includes(location.hostname))) navigator.serviceWorker.register("sw.js").catch(() => {});
   // ------------------------------------------------------------------ Night Shift minigame
   // Survive 12 AM → 6 AM. Tap a doorway with glowing eyes to FLASH it and send that robo back to the stage.
   // A robo you're watching on camera can't move, but cameras and flashes use battery. Each night won unlocks a robo.

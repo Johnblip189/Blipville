@@ -16,7 +16,7 @@ permissions:
   contents: write
 
 env:
-  APP_NAME: Blip
+  APP_NAME: Blipville
 
 jobs:
   build:

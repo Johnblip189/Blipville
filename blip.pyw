@@ -1,6 +1,6 @@
-"""Blip — a little desktop pet.
+"""Blipville — tiny pixel pets that live on your taskbar (starring Blip).
 
-Run it:   double-click blip.pyw   (or:  python blip.pyw)
+Run it:   double-click Blipville.exe, or blip.pyw   (or:  python blip.pyw)
 
   • Blip wanders along the bottom of your screen, naps, and watches your mouse.
   • Click Blip to pet it. Drag it to pick it up — let go to throw it.
@@ -835,7 +835,7 @@ def kind_colors(kind):
 def default_color(kind):
     v = VARIANTS[kind]
     return PALETTE_INDEX[v["palette"]] if "palette" in v and not v.get("colors") else 0
-SUGGEST_URL = "https://github.com/connormroczka-prog/i-ll-make-a-name-later./issues/new?template=new-animal.yml"
+SUGGEST_URL = "https://github.com/connormroczka-prog/blipville/issues/new?template=new-animal.yml"
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",
          "Noodle", "Pebble", "Waffle", "Button", "Dot", "Jellybean", "Muffin", "Ziggy", "Clover", "Taco"]
 ART_W, ART_H = 16, 13          # body + 1 row of feet
@@ -1438,6 +1438,7 @@ class App:
 
     def __init__(self):
         self.root = tk.Tk()
+        self.root.title("Blipville")
         self.root.withdraw()                       # pets live in their own little windows
         self.name_tags = tk.BooleanVar(master=self.root, value=True)
         self.pets = []

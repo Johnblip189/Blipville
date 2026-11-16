@@ -1,8 +1,8 @@
-# 🐾 Desktop Zoo
+# 🏘️ Blipville
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
 
-![Desktop Zoo demo](docs/demo.gif)
+![Blipville demo](docs/demo.gif)
 
 **55 kinds of pets · 49 animals · 154 colors** — one Python file, nothing to install.
 
@@ -10,7 +10,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ### Windows: just download and run
 
-**[⬇️ Download Blip.exe](https://github.com/connormroczka-prog/i-ll-make-a-name-later./releases/latest/download/Blip.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe](https://github.com/connormroczka-prog/blipville/releases/latest/download/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.
@@ -58,7 +58,7 @@ Each animal has its own lines and its own way of moving: frogs and kangaroos hop
 ## Start pets automatically with Windows
 
 1. Press **Win + R**, type `shell:startup`, and press Enter.
-2. Right-click `Blip.exe` (or `blip.pyw`) → **Create shortcut**, then move the shortcut into that folder.
+2. Right-click `Blipville.exe` (or `blip.pyw`) → **Create shortcut**, then move the shortcut into that folder.
 
 ## Adding your own animal
 
@@ -76,9 +76,9 @@ Copy an animal in the `ANIMALS` section, change the drawing and colors, and give
 
 ## Want a new animal?
 
-**[🐾 Suggest an animal](https://github.com/connormroczka-prog/i-ll-make-a-name-later./issues/new?template=new-animal.yml)** — or right-click any pet → **Suggest an animal…**
+**[🐾 Suggest an animal](https://github.com/connormroczka-prog/blipville/issues/new?template=new-animal.yml)** — or right-click any pet → **Suggest an animal…**
 
-Found a bug? **[Report it here](https://github.com/connormroczka-prog/i-ll-make-a-name-later./issues/new?template=bug.yml)**.
+Found a bug? **[Report it here](https://github.com/connormroczka-prog/blipville/issues/new?template=bug.yml)**.
 
 ## License
 

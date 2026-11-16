@@ -76,7 +76,7 @@
   const say = (p, text, secs = 3) => { p.bubble = { text, until: now() + secs }; };
   const setFace = (p, face, secs) => { p.face = face; p.faceUntil = now() + secs; };
   const setState = (p, st, secs = 0) => { p.state = st; p.until = now() + secs; };
-  const linesFor = (p) => D.lines.idle.concat(KINDS[p.kind].lines, KINDS[p.kind].lines);
+  const linesFor = (p) => D.lines.idle.concat(KINDS[p.kind].lines, KINDS[p.kind].lines, (D.seasonLines || {})[season()] || []);
   function burst(p, kind, n) {
     for (let i = 0; i < n; i++) p.particles.push({ kind, x: rnd(-26, 26) * S / 4, y: 13 * S + rnd(-6, 6), vx: rnd(-20, 20), vy: rnd(-70, -40), life: rnd(1, 1.6), born: now() });
   }
@@ -294,6 +294,41 @@
 
   // ------------------------------------------------------------------ drawing the town
   const stars = Array.from({ length: 60 }, () => [Math.random(), Math.random() * 0.6, Math.random()]);
+  // ------------------------------------------------------------------ seasons & weather
+  let seasonOverride = null;                       // for testing: blipvilleGo.setSeason("winter")
+  const season = () => seasonOverride || currentSeason();
+  let weather = [], lastWeather = 0;
+  const BAT = ["x...x", "xx.xx", ".xxx."], BAT_FLAP = [".x.x.", "xxxxx", ".x.x."];
+  function weatherStep(t, night) {
+    const dt = Math.min(0.05, t - (lastWeather || t)); lastWeather = t;
+    const sz = Math.max(2, Math.round(S * 0.6)), scaleW = W / 400;
+    const rates = { winter: [["snow", 10]], spring: [["petal", 4]], autumn: [["leaf", 3.5]],
+                    spooky: [["leaf", 2], ["bat", 0.25]], summer: night ? [["firefly", 2.5]] : [] }[season()] || [];
+    for (const [kind, rate] of rates) {
+      if (Math.random() > rate * scaleW * dt) continue;
+      if (kind === "bat") { const d = Math.random() < 0.5 ? 1 : -1; weather.push({ kind, x: d > 0 ? -20 : W + 20, y: rnd(30, GROUND * 0.5), vx: 70 * d, vy: 0, born: t, life: (W + 40) / 70 }); }
+      else if (kind === "firefly") weather.push({ kind, x: rnd(0, W), y: rnd(GROUND * 0.35, GROUND - 10), vx: rnd(-12, 12), vy: rnd(-10, 4), born: t, life: 4 });
+      else weather.push({ kind, x: rnd(0, W), y: -6, vx: rnd(-10, 10), vy: rnd(28, 60), born: t, life: (GROUND + 10) / 28, ph: rnd(0, 6.3),
+                          color: pick(["#e8702a", "#c8402a", "#ffb83a"]) });
+    }
+    weather = weather.filter((w) => t - w.born < w.life && w.y < GROUND + 4);
+    for (const w of weather) {
+      w.x += w.vx * dt; w.y += w.vy * dt; const a = t - w.born;
+      if (w.kind === "snow") { ctx.fillStyle = "#f4f8ff"; ctx.fillRect(w.x, w.y, sz, sz); }
+      else if (w.kind === "leaf" || w.kind === "petal") {
+        const x = w.x + Math.sin(a * 3 + w.ph) * 8;
+        ctx.fillStyle = w.kind === "leaf" ? w.color : "#ffb0d8";
+        ctx.fillRect(x, w.y, w.kind === "leaf" ? sz * 2 : sz * 1.5, w.kind === "leaf" ? sz * 1.4 : sz);
+      } else if (w.kind === "firefly") {
+        ctx.globalAlpha = 0.4 + 0.6 * Math.max(0, Math.sin(a * 5)); ctx.fillStyle = "#fff08a"; ctx.fillRect(w.x, w.y, sz, sz); ctx.globalAlpha = 1;
+      } else if (w.kind === "bat") {
+        const shape = Math.floor(a * 8) % 2 ? BAT : BAT_FLAP, bs = Math.max(3, Math.round(S * 0.7));
+        ctx.fillStyle = night ? "#8a6ac8" : "#3a2a5a";
+        shape.forEach((row, r) => [...row].forEach((ch, c) => { if (ch === "x") ctx.fillRect(w.x + c * bs, w.y + r * bs + Math.sin(a * 6) * 6, bs, bs); }));
+      }
+    }
+  }
+
   function sky(t) {
     const h = new Date().getHours() + new Date().getMinutes() / 60;
     const night = h >= 20 || h < 6, dusk = (h >= 17 && h < 20) || (h >= 6 && h < 8);
@@ -311,10 +346,22 @@
       for (let i = 0; i < 3; i++) { const cx = ((t * (8 + i * 4) + i * 260) % (W + 200)) - 100, cy = GROUND * (0.15 + i * 0.12); pixCloud(cx, cy); }
     }
     // little pixel hills + ground
-    ctx.fillStyle = night ? "#23304a" : "#7fcf7a";
+    const sea = season();
+    const LAND = {   // [hills, ground, ground edge] by day / by night
+      summer: [["#7fcf7a", "#5aa85a", "#4a8a4a"], ["#23304a", "#1b2238", "#141a2c"]],
+      spring: [["#8ae07a", "#62b85a", "#4f9a4a"], ["#23304a", "#1b2238", "#141a2c"]],
+      autumn: [["#d8904a", "#a8703a", "#8a5a2a"], ["#3a2a2a", "#2a1e1e", "#1e1414"]],
+      spooky: [["#6a4a8a", "#3a2a4a", "#2a1e36"], ["#2a1a3a", "#1a1028", "#120a1e"]],
+      winter: [["#eef4ff", "#dfe8f8", "#c8d4ea"], ["#8a9ab8", "#6a7a98", "#5a6a88"]],
+    }[sea][night ? 1 : 0];
+    ctx.fillStyle = LAND[0];
     for (let x = 0; x < W; x += 6) { const hh = 26 + 14 * Math.sin(x / 70) + 8 * Math.sin(x / 23); ctx.fillRect(x, GROUND - hh, 6, hh); }
-    ctx.fillStyle = night ? "#1b2238" : "#5aa85a"; ctx.fillRect(0, GROUND, W, H - GROUND);
-    ctx.fillStyle = night ? "#141a2c" : "#4a8a4a"; ctx.fillRect(0, GROUND, W, 6);
+    ctx.fillStyle = LAND[1]; ctx.fillRect(0, GROUND, W, H - GROUND);
+    ctx.fillStyle = LAND[2]; ctx.fillRect(0, GROUND, W, 6);
+    if (sea === "spring" && !night) {                // little flowers in the grass
+      for (let x = 13; x < W; x += 47) { ctx.fillStyle = ["#ffb0d8", "#ffd23a", "#ffffff"][x % 3]; ctx.fillRect(x, GROUND + 14 + (x % 17), 4, 4); }
+    }
+    weatherStep(t, night);
   }
   function pixCloud(x, y) { for (const [dx, dy, w] of [[0, 8, 70], [12, 0, 40], [20, 14, 60]]) ctx.fillRect(Math.round(x + dx), Math.round(y + dy), w, 12); }
 
@@ -651,5 +698,6 @@
   window.addEventListener("pagehide", () => persist(true));
   requestAnimationFrame(frame);
   if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
-  window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason };   // handy for testing
+  window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+                         setSeason: (s) => { seasonOverride = s; weather = []; } };   // handy for testing
 })();

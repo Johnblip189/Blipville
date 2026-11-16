@@ -3013,6 +3013,15 @@ LINES_LAND = ["ow.", "oof!", "i'm okay!", "10/10 landing"]
 LINES_EAT = ["nom nom nom", "thank you!!", "delicious!"]
 LINES_WAKE = ["huh? i'm awake!", "five more minutes...", "*yawn*"]
 LINES_HUNGRY = ["...hungry", "my tummy is rumbling", "snack? please?"]
+SEASON_LINES = {
+    "winter": ["brrr! it's snowy!", "*catches a snowflake*", "hot cocoa weather", "i'm a snow-Blip now"],
+    "spring": ["the flowers are back!", "*sniffs a petal*", "spring is in the air", "achoo! (pollen)"],
+    "summer": ["it's so sunny!", "beach day?", "*sweats in pixels*", "ice cream please"],
+    "autumn": ["*crunch crunch* leaves!", "cozy sweater season", "the leaves are falling!", "pumpkin spice everything"],
+    "spooky": ["boo! did i scare you?", "happy spooky season!", "*spooky noises*", "trick or treat?"],
+}
+BAT = ["x...x", "xx.xx", ".xxx."]
+BAT_FLAP = [".x.x.", "xxxxx", ".x.x."]
 
 
 def work_area(root):
@@ -3129,6 +3138,8 @@ class Blip:
         self.menu.add_command(label="💖 0 hearts", state="disabled")
         self.hearts_entry = self.menu.index("end")
         self.menu.add_checkbutton(label="Show name tags", variable=app.name_tags)
+        self.menu.add_checkbutton(label="Weather effects", variable=app.weather,
+                                  command=lambda: app.save.update(weather=app.weather.get()) or write_save(app.save))
         self.menu.add_command(label="Suggest an animal…", command=self.suggest)
         self.menu.add_command(label="Support Blipville ♥", command=self.support)
         self.menu.add_separator()
@@ -3218,7 +3229,7 @@ class Blip:
     def lines(self):
         if self.kind in ROBOTS and is_night():
             return NIGHT_LINES * 2 + VARIANTS[self.kind]["lines"]
-        return LINES_IDLE + VARIANTS[self.kind]["lines"] * 2
+        return LINES_IDLE + VARIANTS[self.kind]["lines"] * 2 + SEASON_LINES.get(self.app.season, [])
 
     def change_kind(self):
         self.kind = self.kind_var.get()
@@ -3626,6 +3637,23 @@ class Blip:
                             c.create_rectangle(X, Y, X + s, Y + s, fill="#bcd2ff", outline="")
             elif p["kind"] == "crumb":
                 c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#c98a4b", outline="")
+            elif p["kind"] == "snow":
+                s_ = 3 if p["phase"] > 2 else 2
+                c.create_rectangle(p["x"], p["y"], p["x"] + s_, p["y"] + s_, fill="#f4f8ff", outline="")
+            elif p["kind"] in ("leaf", "petal"):
+                X = p["x"] + math.sin(age * 3 + p["phase"]) * 4
+                w_, h_, col = (4, 3, p["color"]) if p["kind"] == "leaf" else (3, 2, "#ffb0d8")
+                c.create_rectangle(X, p["y"], X + w_, p["y"] + h_, fill=col, outline="")
+            elif p["kind"] == "firefly":
+                if math.sin(age * 5) > -0.3:
+                    c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#fff08a", outline="")
+            elif p["kind"] == "bat":
+                shape = BAT if int(age * 8) % 2 else BAT_FLAP
+                for y, row in enumerate(shape):
+                    for x, ch in enumerate(row):
+                        if ch == "x":
+                            X, Y = p["x"] + x * 2, p["y"] + y * 2 + math.sin(age * 6) * 3
+                            c.create_rectangle(X, Y, X + 2, Y + 2, fill="#6a4a9a", outline="")
             elif p["kind"] == "plus":
                 t = c.create_text(p["x"], p["y"], text=p["text"], font=("Segoe UI", 9, "bold"), fill="#ffffff")
                 x1, y1, x2, y2 = c.bbox(t)
@@ -3664,8 +3692,31 @@ class Blip:
         if now > self.next_blink:
             self.blink_until = now + 0.15
             self.next_blink = now + random.uniform(2, 6)
+        if self.app.weather.get():
+            self.weather(now)
         self.update(now)
         self.draw(now)
+
+    def weather(self, now):
+        """A light sprinkle of seasonal weather around this pet."""
+        season, dt = self.app.season, 1 / FPS
+        rates = {"winter": [("snow", 4.0)], "spring": [("petal", 2.0)], "autumn": [("leaf", 1.8)],
+                 "spooky": [("leaf", 1.0), ("bat", 0.12)], "summer": [("firefly", 1.4)] if is_night() else []}
+        for kind, rate in rates.get(season, []):
+            if random.random() > rate * dt:
+                continue
+            if kind == "bat":
+                d = random.choice([-1, 1])
+                self.particles.append({"kind": "bat", "x": -10 if d > 0 else W + 10, "y": random.uniform(15, 80),
+                                       "vx": 1.6 * d, "vy": 0, "life": (W + 20) / 1.6 / FPS, "born": now})
+            elif kind == "firefly":
+                self.particles.append({"kind": "firefly", "x": random.uniform(10, W - 10), "y": random.uniform(40, H - 20),
+                                       "vx": random.uniform(-0.3, 0.3), "vy": random.uniform(-0.3, 0.1), "life": 3.0, "born": now})
+            else:
+                vy = random.uniform(0.5, 1.1)
+                self.particles.append({"kind": kind, "x": random.uniform(0, W), "y": -4, "vx": random.uniform(-0.3, 0.3),
+                                       "vy": vy, "life": H / vy / FPS, "born": now, "phase": random.uniform(0, 6.3),
+                                       "color": random.choice(["#e8702a", "#c8402a", "#ffb83a"])})
 
 
 # ----------------------------------------------------------------------------- save file
@@ -4282,7 +4333,9 @@ class App:
         self.root.title("Blipville")
         self.root.withdraw()                       # pets live in their own little windows
         self.name_tags = tk.BooleanVar(master=self.root, value=True)
+        self.season = current_season()
         self.save = load_save()
+        self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))
         load_custom_blips()
         self.game = None
         self.pets = []

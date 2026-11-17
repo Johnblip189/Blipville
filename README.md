@@ -2,6 +2,8 @@
 
 ![Blipville: pixel pets that live on your taskbar](docs/banner.png)
 
+> 💬 **[Join the Blipville Discord!](https://discord.gg/Q3zmYakNZT)** Chat, share your town, report bugs and suggest Blips.
+
 > 🔜 **Blipville 1.0 drops Sunday, November 22!** No more black flashes, a new engine, and a thank-you for everyone who played the betas.
 
 > 💜 **Thanks for playing the Blipville beta!** This is **Release Candidate 2**, the last step before Blipville 1.0. Spot a bug? Now's the time to tell me. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
@@ -233,6 +235,10 @@ Every pet is 16 × 12 pixel art written as text, right inside `blip.pyw`. For ex
 ```
 
 Copy an animal in the `ANIMALS` section, change the drawing and colors, and give it some lines in `ANIMAL_TRAITS`. The face (eyes, blinking, mouth) is drawn on top automatically.
+
+## Discord 💬
+
+Come hang out in the **[Blipville Discord](https://discord.gg/Q3zmYakNZT)**: show off your town, get help, report bugs and vote on new Blips.
 
 ## Want a new animal?
 

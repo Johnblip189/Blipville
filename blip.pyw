@@ -3202,6 +3202,8 @@ GIFTS = {
              {"name": "Holo", "o": "#4a2a5a", "b": "#e8c8ff", "h": "#5ad8c8", "s": "#ffffff", "y": "#ff8ac8", "p": "#ff8ab0", "e": "#2a0a3a"}]},
 }
 GIFT_NOW = "Beta Buddy"     # the gift new players get right now. Set to None to end the giveaway.
+GIFT_UNTIL = "2026-11-22"   # last day of the giveaway (your computer's date); after that it stays locked
+GIFT_UNTIL_TEXT = "Sunday, November 22"
 
 for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
@@ -5496,6 +5498,8 @@ class App:
         """Hand out the current thank-you Blip, once, to everyone who opens this version."""
         if not GIFT_NOW or GIFT_NOW in self.save.get("gifts", []):
             return False
+        if time.strftime("%Y-%m-%d") > GIFT_UNTIL:          # the giveaway is over
+            return False
         self.save.setdefault("gifts", []).append(GIFT_NOW)
         write_save(self.save)
         pet = self.add_pet(GIFT_NOW, greet=False)
@@ -5511,14 +5515,14 @@ class App:
         if self.save.get("notice_seen") == NOTICE_ID:
             if self.give_gift():
                 from tkinter import messagebox
-                messagebox.showinfo("A gift for you! 🎁", f"Thanks for playing Blipville! Here's {GIFT_NOW}, a limited-edition Blip.\n\n"
+                messagebox.showinfo("A gift for you! 🎁", f"Thanks for playing Blipville! Here's {GIFT_NOW}, a limited-edition Blip, only given out until {GIFT_UNTIL_TEXT}.\n\n"
                                     "Find it any time under Change kind → Gifts 🎁.", parent=self.root)
             return
         self.save["notice_seen"] = NOTICE_ID
         write_save(self.save)
         from tkinter import messagebox
         gift = self.give_gift()
-        text = NOTICE_TEXT + (f"\n\n🎁 As a thank-you, here's {GIFT_NOW}: a limited-edition Blip, only given out during RC1. "
+        text = NOTICE_TEXT + (f"\n\n🎁 As a thank-you, here's {GIFT_NOW}: a limited-edition Blip, only given out until {GIFT_UNTIL_TEXT}. "
                               "Find it any time under Change kind → Gifts 🎁." if gift else "")
         messagebox.showinfo("Blipville 0.4 RC1: almost 1.0! 💜", text, parent=self.root)
 

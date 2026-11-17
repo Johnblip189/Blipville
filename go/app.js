@@ -1095,7 +1095,8 @@
     save.noticeSeen = "rc1-0.4";
     if (!fresh) setTimeout(() => { toast("💜 Thanks for playing the Blipville beta! This is Release Candidate 1, the last step before 1.0, with 100 new Blips and 5 new tabs.", 7); say(pets[0], "thank you for playing!! <3", 4); }, 1200);
   }
-  if (D.giftNow && !save.gifts.includes(D.giftNow)) {        // limited-time thank-you Blip
+  const localDay = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  if (D.giftNow && !save.gifts.includes(D.giftNow) && (!D.giftUntil || localDay() <= D.giftUntil)) {        // limited-time thank-you Blip
     save.gifts.push(D.giftNow);
     setTimeout(() => {
       const g = addPet(D.giftNow, { quiet: true });

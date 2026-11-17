@@ -34,6 +34,7 @@ data = {
     "beaconCost": bl.BEACON_COST,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,
+    "giftUntil": bl.GIFT_UNTIL,
     "scenes": bl.SCENES,
     "sceneProps": bl.SCENE_PROPS,
     "sceneSize": [bl.SCENE_W, bl.SCENE_H],

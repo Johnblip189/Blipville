@@ -1,0 +1,69 @@
+name: Deploy the website
+# The website (johnblip189.github.io/Blipville) is published by this workflow: Settings → Pages → Source is
+# "GitHub Actions". It runs on every push to main, and "Update the site" also starts it on the site branch.
+# The files are published as they are (no Jekyll). The result is saved to the ci-logs branch.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gather the site's files
+        run: |
+          mkdir _site
+          for f in index.html status.json .nojekyll go docs assets; do [ -e "$f" ] && cp -r "$f" _site/; done
+          ls -la _site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  report:
+    needs: deploy
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Save the result to the ci-logs branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          dest="site-deploy-$(date -u +%Y%m%d-%H%M%S)"
+          mkdir -p /tmp/r
+          {
+            echo "ref: ${{ github.ref }}  event: ${{ github.event_name }}  commit: ${{ github.sha }}"
+            echo "deploy job result: ${{ needs.deploy.result }}"
+            echo "== environment github-pages"
+            curl -sS -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/${{ github.repository }}/environments/github-pages"
+            echo "== branch policies"
+            curl -sS -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/${{ github.repository }}/environments/github-pages/deployment-branch-policies"
+            echo "== pages"
+            curl -sS -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/${{ github.repository }}/pages"
+          } > /tmp/r/log.txt 2>&1
+          cat /tmp/r/log.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin ci-logs && git checkout -f -B ci-logs-tmp FETCH_HEAD
+          mkdir -p "$dest" && cp /tmp/r/log.txt "$dest/"
+          git add "$dest" && git commit -qm "Site deploy logs: $dest (${{ needs.deploy.result }})"
+          for i in 1 2 3; do git push origin HEAD:ci-logs && break; git pull --rebase origin ci-logs; sleep 3; done

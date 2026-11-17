@@ -3228,6 +3228,52 @@ GHOSTS = {
              {"name": "Phantom", "o": "#14142a", "b": "#a8b8e8", "h": "#0a0a14", "w": "#e8303a", "p": "#c8a0e0", "e": "#ffe66a"}]},
 }
 
+# Awakened forms ✨: a powered-up form for some Blips. Buy an Awakening Crystal once for that kind, then switch any time.
+# (In the Arena, an Awakened Blip hits harder.) The forms are their own hidden kinds, named below.
+AWAKENED = {
+ "Blip": {"name": "Astral Blip", "eyes": 5, "move": "float", "speed": 1.1, "feet": True, "mouth": True,
+  "lines": ["i've seen the stars up close ✨", "astral mode: ON", "i feel… infinite", "*hums in starlight*", "still me! just shinier"],
+  "body": [".y.oo......oo.y.", "..yobo....oboy..", ".obbbooooooobbo.", ".obbbbbsbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obsbbbbbbbbbbsbo", "obbbbbllllbbbbbo", "obbbblllllllbbbo", ".obbbllllllbbbo.", "..obbbbbbbbbbo.."],
+  "colors": [{"name": "Nebula", "o": "#1a1040", "b": "#5a4ae0", "l": "#b8d8ff", "s": "#fff27a", "y": "#ffe66a", "p": "#ff8ad8", "e": "#fff6c0"},
+             {"name": "Supernova", "o": "#3a0a2a", "b": "#ff5aa8", "l": "#ffe0f0", "s": "#ffffff", "y": "#ffd23a", "p": "#ffd23a", "e": "#2a0a1a"}]},
+ "Kitsune": {"name": "Nine-Tail Kitsune", "eyes": 5, "move": "walk", "speed": 1.3, "feet": True, "mouth": True,
+  "lines": ["nine tails, nine times the magic 🦊", "*foxfire flickers*", "i've awakened", "my tails tell old stories", "bow before the fox! (jk, pet me)"],
+  "body": ["tt.o........o.tt", "taoao......oaoat", "ttoaboooooobaott", "t.obbbbbssbbbbo.t"[:16], "ttbsbbbssbbbsbtt", "tobbbbbbbbbbbbot",
+           "tobbbbbbbbbbbbot", "tsllbbbbbbbbllst", "tllllllnnllllllt", ".ollllllllllllo.", "..ollllllllllo..", "...oooooooooo..."],
+  "colors": [{"name": "Foxfire", "o": "#5a1a06", "b": "#fff0d0", "a": "#ff9a3a", "t": "#ff5a1a", "l": "#ffffff", "s": "#3a8aff", "n": "#5a1a06", "e": "#3a8aff"},
+             {"name": "Moonfox", "o": "#2a2a5a", "b": "#ffffff", "a": "#b8c8ff", "t": "#8a9aff", "l": "#f4f6ff", "s": "#ff4a8a", "n": "#2a2a5a", "e": "#ff4a8a"}]},
+ "Dragon": {"name": "Elder Dragon", "eyes": 5, "move": "flutter", "speed": 1.1, "feet": True, "mouth": True,
+  "lines": ["*ancient roar* (it's a hello)", "i've been asleep for a thousand years", "my scales are older than mountains", "behold. (pet me)", "elder and wiser"],
+  "body": [".hh..........hh.", "..hh.c.cc.c.hh..", "w..hooooooooh..w", "ww.obbbbbbbbbo.ww"[:16], "wwwobbbbbbbbbbwww"[:16], "wwobbbbbbbbbbbow",
+           "wobbbbbbbbbbbbow", "obpbbllllllbbpbo", "obbbldlllldlbbbo", "obbbbllllllbbbbo", ".obcbbbbbbbbcbo.", "..obbbbbbbbbbo.."],
+  "colors": [{"name": "Ancient Jade", "o": "#06200e", "b": "#1a8a4a", "l": "#c8f0b0", "h": "#ffd23a", "c": "#ff5a3a", "w": "#0e5a2e", "d": "#06200e", "p": "#ffb05a", "e": "#ff5a3a"},
+             {"name": "Obsidian", "o": "#06060e", "b": "#2a2a3e", "l": "#8a8ab0", "h": "#c8a0ff", "c": "#ff3a6a", "w": "#16162a", "d": "#06060e", "p": "#a86aff", "e": "#ff3a6a"}]},
+ "Phoenix": {"name": "Solar Phoenix", "eyes": 5, "move": "flutter", "speed": 1.4, "feet": True, "mouth": False,
+  "lines": ["*blazes brighter than the sun* ☀️", "reborn and ready", "too hot to handle", "i rise. every time.", "warm hugs only"],
+  "body": [".a...a.aa.a...a.", "..a.aaaaaaaa.a..", "w...oaaaaaao...w", "ww.oobbbbbboo.ww", "wwwobbbbbbbbowww", "wwobbbbbbbbbbbow",
+           "wwobbbbbbbbbbbow", "wobpbbbbbbbbpbow", ".obbbbbkkbbbbbo.", ".obbbbbbbbbbbbo.", "..obbbbbbbbbbo..", "..aoaaooooaaoa.."],
+  "colors": [{"name": "Solar", "o": "#5a1a02", "b": "#ffb03a", "a": "#fff27a", "w": "#ff5a1a", "k": "#ffffff", "p": "#ff5a1a", "e": "#3a0a02"},
+             {"name": "Bluefire", "o": "#06204a", "b": "#3a9aff", "a": "#c8f4ff", "w": "#1a5ae0", "k": "#ffffff", "p": "#8ae0ff", "e": "#06104a"}]},
+ "Wolf": {"name": "Moon Wolf", "eyes": 5, "move": "walk", "speed": 1.5, "feet": True, "mouth": True,
+  "lines": ["*howls at the full moon* 🌕", "the pack follows the moon", "i run with the night", "awoooooo!", "loyal under every moon"],
+  "body": [".o............o.", ".oao...yy...oao.", ".oabooyyoooobao.", "mobbbbbbybbbbbom", "mobbbbbbbbbbbbom", "mmbbbbbbbbbbbbmm",
+           "mobbbbbbbbbbbbom", "mobbbllllllbbbom", "mobllllnnllllbom", ".mbllllllllllbm.", "..mbllllllllbm..", "...oooooooooo..."],
+  "colors": [{"name": "Moonlit", "o": "#0e1028", "b": "#4a5a9a", "l": "#e0e8ff", "a": "#2a3060", "m": "#c8d4ff", "y": "#fff6b0", "n": "#0e1028", "e": "#fff27a"},
+             {"name": "Blood Moon", "o": "#1a0606", "b": "#5a2a2a", "l": "#f0d8d0", "a": "#3a1414", "m": "#e86a5a", "y": "#ff8a5a", "n": "#1a0606", "e": "#ff5a3a"}]},
+ "Unicorn": {"name": "Starlight Unicorn", "eyes": 5, "move": "flutter", "speed": 1.2, "feet": True, "mouth": True,
+  "lines": ["*wings sparkle* ✨🦄", "i grew wings!!", "starlight flows through me", "make a wish", "magic levels: maximum"],
+  "body": ["........h.......", "s......hh.....s.", "w.oo.oohhoo.oo.w", "wwoaoobbbbbbooaow"[:16], "wwmobbbbbbbbbbmw", "wmmobbbbbbbbbomm",
+           ".omobbbbbbbbbomo", ".oobpbbbbbbpboo.", "..obllllllllbo..", "..oblldlldllbo..", "..obllllllllbo..", "...oooooooooo..."],
+  "colors": [{"name": "Starlight", "o": "#2a2a6a", "b": "#ffffff", "m": "#8ac8ff", "l": "#eef4ff", "a": "#c8b0ff", "h": "#fff27a", "w": "#d8c8ff",
+              "s": "#fff27a", "p": "#ffb0d8", "d": "#9a8ac0", "e": "#2a2a6a", "f": "#fff27a"},
+             {"name": "Twilight", "o": "#1a0a3a", "b": "#3a2a6a", "m": "#ff7ac8", "l": "#5a4a8a", "a": "#ff9ad8", "h": "#ffd23a", "w": "#8a5ad8",
+              "s": "#ffd23a", "p": "#ff7ac8", "d": "#1a0a3a", "e": "#fff27a", "f": "#ffd23a"}]},
+}
+AWAKEN_FORM = {base: a["name"] for base, a in AWAKENED.items()}
+AWAKEN_BASE = {a["name"]: base for base, a in AWAKENED.items()}
+CRYSTAL_COST = 75
+
 # Gifts 🎁: thank-you Blips handed out for a limited time. Once you have one, it's yours forever.
 GIFTS = {
  "Beta Buddy": {"eyes": 5, "move": "hop", "speed": 1.1,
@@ -3284,6 +3330,11 @@ NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
+for _base, _a in AWAKENED.items():
+    VARIANTS[_a["name"]] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
+                            "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
+                            "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0), "shifty": False,
+                            "ghost": False, "awakened": _base}
 GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
 GHOST_KINDS = list(GHOSTS)        # met at night
 LEGEND_KINDS = list(LEGENDS)      # found only while visiting their world
@@ -4062,6 +4113,8 @@ class Blip:
         self.menu.add_command(label="Add a friend", command=lambda: app.add_pet(x=self.wx))
         self.menu.add_command(label="Play Night Shift 🌙…", command=app.open_night_shift)
         self.menu.add_command(label="🎩 Hats & outfits…", command=lambda: HatShop(app, self))
+        self.menu.add_command(label="✨ Awaken…", command=self.toggle_awaken)
+        self.awaken_entry = self.menu.index("end")
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
         self.menu.add_command(label=f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", command=lambda: app.set_lure(self.root))
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
@@ -4218,6 +4271,47 @@ class Blip:
         if self.kind in ROBOTS and is_night():
             return NIGHT_LINES * 2 + VARIANTS[self.kind]["lines"]
         return LINES_IDLE + VARIANTS[self.kind]["lines"] * 2 + SEASON_LINES.get(self.app.season, [])
+
+    def toggle_awaken(self):
+        """Awaken into the powered-up form (the first time needs an Awakening Crystal), or go back to normal."""
+        from tkinter import messagebox
+        app, base = self.app, AWAKEN_BASE.get(self.kind, self.kind)
+        if base not in AWAKEN_FORM:
+            return
+        if self.kind in AWAKEN_BASE:                     # back to normal
+            self.kind = base
+            self.palette %= len(kind_colors(base))
+            self.say("phew, back to normal", 2)
+            self._drawn = None
+            app.save_town()
+            return
+        form = AWAKEN_FORM[base]
+        if base not in app.save.get("awakened", []):
+            if app.hearts() < CRYSTAL_COST:
+                messagebox.showinfo("Awakening Crystal ✨", f"Awakening {base} into {form} takes an Awakening Crystal ({CRYSTAL_COST} 💖). "
+                                    f"You have {app.hearts()}.", parent=self.root)
+                return
+            if not messagebox.askyesno("Awakening Crystal ✨", f"Use an Awakening Crystal ({CRYSTAL_COST} 💖) to awaken {base} into {form}?\n\n"
+                                       "It works for every " + base + " you have, forever, and you can switch back any time. "
+                                       "In the Arena, Awakened Blips hit harder!", parent=self.root):
+                return
+            app.save["hearts"] = app.hearts() - CRYSTAL_COST
+            app.save.setdefault("awakened", []).append(base)
+            write_save(app.save)
+        self.kind = form
+        self.palette %= len(kind_colors(form))
+        self._drawn = None
+        app.sound.play("fanfare")
+        self.say(random.choice(AWAKENED[base]["lines"]), 3.5)
+        self.set_face("happy", 2)
+        for _ in range(10):
+            self.add_sparkle(time.monotonic())
+        app.save_town()
+
+    def add_sparkle(self, now):
+        self.particles.append({"kind": "star", "x": W / 2 + random.uniform(-36, 36), "y": H - random.uniform(10, ART_H * SCALE + 6),
+                               "vx": 0, "vy": -0.3, "life": random.uniform(0.8, 1.6), "born": now, "phase": random.uniform(0, 6.3),
+                               "color": random.choice(["#ffffff", "#fff27a", "#ffd23a", "#a8d8ff"])})
 
     def change_kind(self):
         self.kind = self.kind_var.get()
@@ -4409,6 +4503,14 @@ class Blip:
             else:
                 self.gift_menu.add_command(label="🔒 ???  (a limited-time gift)", state="disabled")
         self.menu.entryconfigure(self.hearts_entry, label=f"💖 {self.app.hearts()} hearts")
+        base = AWAKEN_BASE.get(self.kind, self.kind)
+        if base in AWAKEN_FORM:
+            label = ("💤 Back to normal form" if self.kind in AWAKEN_BASE else
+                     f"✨ Awaken into {AWAKEN_FORM[base]}!" if base in self.app.save.get("awakened", []) else
+                     f"✨ Awaken… (Awakening Crystal, {CRYSTAL_COST} 💖)")
+            self.menu.entryconfigure(self.awaken_entry, label=label, state="normal")
+        else:
+            self.menu.entryconfigure(self.awaken_entry, label=f"✨ Awaken (only {', '.join(AWAKEN_FORM)})", state="disabled")
         self.menu.entryconfigure(self.trophy_entry, label=f"🏆 Trophies ({len(self.app.save.get('trophies', []))}/{len(TROPHIES)})…")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
@@ -4842,6 +4944,8 @@ class Blip:
             self.next_blink = now + random.uniform(2, 6)
         if self.app.weather.get() or self.app.world():
             self.weather(now)
+        if self.kind in AWAKEN_BASE and random.random() < 0.06:     # awakened Blips sparkle a little
+            self.add_sparkle(now)
         self.update(now)
         self.draw(now)
 
@@ -7085,6 +7189,8 @@ class App:
                             parent=parent)
 
     def is_unlocked(self, kind):
+        if kind in AWAKEN_BASE:
+            return AWAKEN_BASE[kind] in self.save.get("awakened", []) and self.is_unlocked(AWAKEN_BASE[kind])
         if kind in LEGENDS:
             return kind in self.save.get("legends", [])
         if kind in WORLD_OF:

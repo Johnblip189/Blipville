@@ -1,0 +1,10 @@
+{
+  "_how": "Maintenance switch. Set an app to true to close it: players' pets hide and they see the message below until it's false again. Apps check about every 5 minutes (every minute while closed). Updates still work while closed. classic = Blipville.exe, recode = Blipville-Recode.exe. link and link_text add a button (leave link empty for none).",
+  "maintenance": {
+    "classic": true,
+    "recode": false
+  },
+  "message": "We're fixing the black flashes and rebuilding the desktop app from the ground up as Blipville Recode. Hang tight, it's almost ready!",
+  "link": "",
+  "link_text": ""
+}

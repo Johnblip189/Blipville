@@ -1598,6 +1598,7 @@ class App:
         self.next_legend = now + random.uniform(1, 3) * 60
         self._logged = {}
         self.updater = Updater(self)
+        self.maintenance = Maintenance(self)
         log(f"started {APP_NAME} on {sys.platform}, Python {sys.version.split()[0]}")
         if not self.restore_town():
             self.add_pet("Blip", "Blip")
@@ -1608,6 +1609,7 @@ class App:
         self.timer.timeout.connect(self.tick)
         self.timer.start(int(1000 / FPS))
         self.updater.start()
+        QTimer.singleShot(500, self.maintenance.start)
 
     # ---- hearts, unlocks, worlds
     def hearts(self):
@@ -1694,6 +1696,9 @@ class App:
         return True
 
     def show_notice(self):
+        if self.maintenance.closed:                 # wait until Blipville opens again
+            QTimer.singleShot(30000, self.show_notice)
+            return
         gift = self.give_gift()
         g = GIFT.get("now")
         if self.save.get("notice_seen") != NOTICE["id"]:
@@ -1803,6 +1808,9 @@ class App:
         name = name or random.choice(DATA["names"])
         pet = Pet(self, kind, name, x)
         self.pets.append(pet)
+        if self.maintenance.closed:
+            pet.hide()
+            self.maintenance.hidden.append(pet)
         if greet:
             pet.say(f"hi! i'm {name}", 2.5)
         return pet
@@ -1978,6 +1986,8 @@ class App:
             return None
 
     def tick(self):
+        if self.maintenance.closed:                 # closed for maintenance: everything waits
+            return
         now = time.monotonic()
         for pet in list(self.pets):
             self.safely(pet.step, now, what=pet.kind)
@@ -2365,6 +2375,141 @@ class Updater:
         flags = getattr(subprocess, "CREATE_NO_WINDOW", 0) | getattr(subprocess, "DETACHED_PROCESS", 0)
         subprocess.Popen(["cmd", "/c", bat], creationflags=flags, close_fds=True, env=env, cwd=os.path.dirname(exe))
         self.app.quit_all()
+
+
+# ----------------------------------------------------------------------------- maintenance switch (same as the classic app)
+# status.json in the repo can close the app for a while. It's checked every few minutes; while closed the pets hide and a
+# small window says why. Updates still work, and it opens back up by itself. If GitHub can't be reached, nothing changes.
+STATUS_URL = "https://raw.githubusercontent.com/Johnblip189/blipville/main/status.json"
+STATUS_EVERY = 5 * 60
+MAINTENANCE_TEXT = "Blipville is closed for a little while so we can fix things up. Check back soon!"
+
+
+def fetch_status(app_key):
+    """(closed, message, link, link_text) for this app from status.json. Raises if it can't be read."""
+    raw = json.loads(http_get(f"{STATUS_URL}?t={int(time.time() // 60)}", timeout=10).decode("utf-8"))
+    return (bool((raw.get("maintenance") or {}).get(app_key)), str(raw.get("message") or ""),
+            str(raw.get("link") or ""), str(raw.get("link_text") or ""))
+
+
+class MaintenanceWindow(QWidget):
+    def __init__(self, app, message, link, link_text):
+        super().__init__(None, Qt.Window | Qt.WindowStaysOnTopHint)
+        from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+        self.app = app
+        self.setWindowTitle(f"{APP_NAME} — closed for maintenance")
+        self.setStyleSheet("QWidget { background: #2a1a3a; color: #ffffff; font-family: 'Segoe UI'; }"
+                           "QPushButton { background: #4a3366; border: none; border-radius: 6px; padding: 6px 14px; font-weight: bold; }"
+                           "QPushButton:hover { background: #5d4280; }"
+                           "QPushButton#main { background: #ffd23a; color: #2a1a3a; }")
+        box = QVBoxLayout(self)
+        box.setContentsMargins(26, 18, 26, 18)
+
+        def label(text, size, color="#ffffff", bold=False):
+            w = QLabel(text)
+            w.setAlignment(Qt.AlignCenter)
+            w.setWordWrap(True)
+            w.setStyleSheet(f"font-size: {size}pt; color: {color}; font-weight: {'bold' if bold else 'normal'};")
+            box.addWidget(w)
+            return w
+        label("🔧", 30)
+        label("Blipville is closed for maintenance", 15, "#ffd23a", True)
+        self.message = label(message or MAINTENANCE_TEXT, 11)
+        label("Your pets, hearts and unlocks are safe. Blipville opens again by itself when we're done.", 9, "#c9b8e8")
+        row = QHBoxLayout()
+        box.addSpacing(8)
+        box.addLayout(row)
+
+        def button(text, fn, main=False):
+            b = QPushButton(text)
+            if main:
+                b.setObjectName("main")
+            b.setCursor(Qt.PointingHandCursor)
+            b.clicked.connect(fn)
+            row.addWidget(b)
+        if link:
+            button(link_text or "More info", lambda: webbrowser.open(link), main=True)
+        button("Check for updates", lambda: app.updater.check(quiet=False))
+        button("Check again", lambda: app.maintenance.check(again=False))
+        button("Quit", app.quit_all)
+        self.setFixedWidth(470)
+        self.adjustSize()
+        area = app.area
+        self.move(area.x() + (area.width() - self.width()) // 2, area.y() + (area.height() - self.height()) // 3)
+
+    def closeEvent(self, e):
+        if self.app.maintenance.closed:
+            self.app.quit_all()
+        e.accept()
+
+
+class Maintenance:
+    def __init__(self, app):
+        self.app, self.closed, self.busy, self.win, self.hidden = app, False, False, None, []
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.check)
+
+    def start(self):
+        if APP_VERSION == "dev" or os.environ.get("BLIPVILLE_NO_MAINTENANCE"):
+            return
+        self.check()
+
+    def check(self, again=True):
+        if not self.busy:
+            self.busy = True
+            import threading
+
+            def work():
+                try:
+                    result = fetch_status("recode")
+                except Exception as e:  # noqa: BLE001
+                    log(f"maintenance check failed: {_why(e)}")
+                    result = None
+                self.app.updater.inbox.put(lambda: self.got(result))
+            threading.Thread(target=work, daemon=True).start()
+        if again:
+            self.timer.start((60 if self.closed else STATUS_EVERY) * 1000)
+
+    def got(self, result):
+        self.busy = False
+        if result is None:
+            return
+        closed, message, link, link_text = result
+        if closed and not self.closed:
+            self.close(message, link, link_text)
+        elif closed and self.win is not None:
+            self.win.message.setText(message or MAINTENANCE_TEXT)
+        elif not closed and self.closed:
+            self.reopen()
+        self.timer.start((60 if self.closed else STATUS_EVERY) * 1000)
+
+    def close(self, message, link, link_text):
+        app = self.app
+        log("closed for maintenance")
+        app.safely(app.save_town, what="saving")
+        self.closed = True
+        self.hidden = [w for w in QApplication.topLevelWidgets() if w.isVisible()]
+        for w in self.hidden:
+            w.hide()
+        self.win = MaintenanceWindow(app, message, link, link_text)
+        self.win.show()
+        app.updater.check(quiet=True)          # a fix might already be out
+
+    def reopen(self):
+        log("open again after maintenance")
+        self.closed = False
+        if self.win is not None:
+            self.win.hide()
+            self.win.deleteLater()
+            self.win = None
+        for w in self.hidden:
+            try:
+                w.show()
+            except RuntimeError:                # that window was closed meanwhile
+                pass
+        self.hidden = []
+        if self.app.pets:
+            self.app.pets[0].say("we're open again! 🎉", 4)
 
 
 def main():

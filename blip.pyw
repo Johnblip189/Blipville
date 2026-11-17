@@ -5142,6 +5142,130 @@ class Updater:
         self.app.quit_all()
 
 
+# ----------------------------------------------------------------------------- maintenance switch
+# status.json in the repo can close Blipville for a while (for example while a big bug gets fixed). The app looks
+# every few minutes. While it's closed the pets hide and a small window says why; updates still work, and it
+# opens back up by itself. If GitHub can't be reached, nothing changes (an offline town keeps playing).
+STATUS_URL = "https://raw.githubusercontent.com/Johnblip189/blipville/main/status.json"
+STATUS_EVERY = 5 * 60
+
+
+def fetch_status(app_key):
+    """(closed, message, link, link_text) for this app from status.json. Raises if it can't be read."""
+    raw = json.loads(http_get(f"{STATUS_URL}?t={int(time.time() // 60)}", timeout=10).decode("utf-8"))
+    return (bool((raw.get("maintenance") or {}).get(app_key)), str(raw.get("message") or ""),
+            str(raw.get("link") or ""), str(raw.get("link_text") or ""))
+
+
+def maintenance_skipped():
+    return APP_VERSION == "dev" or bool(os.environ.get("BLIPVILLE_NO_MAINTENANCE"))
+
+
+class Maintenance:
+    BG, FG, DIM = "#2a1a3a", "#ffffff", "#c9b8e8"
+
+    def __init__(self, app):
+        self.app, self.closed, self.busy, self.win, self.hidden = app, False, False, None, []
+
+    def start(self):
+        if not maintenance_skipped():
+            self.check()
+
+    def check(self, again=True):
+        if not self.busy:
+            self.busy = True
+            import threading
+
+            def work():
+                try:
+                    result = fetch_status("classic")
+                except Exception as e:  # noqa: BLE001
+                    log(f"maintenance check failed: {_why(e)}")
+                    result = None
+                self.app.updater.inbox.put(lambda: self.got(result))
+            threading.Thread(target=work, daemon=True).start()
+        if again:
+            self.app.root.after((60 if self.closed else STATUS_EVERY) * 1000, self.check)
+
+    def got(self, result):
+        self.busy = False
+        if result is None:
+            return
+        closed, message, link, link_text = result
+        if closed and not self.closed:
+            self.close(message, link, link_text)
+        elif closed:
+            self.message.config(text=message or self.DEFAULT)
+        elif self.closed:
+            self.reopen()
+
+    DEFAULT = "Blipville is closed for a little while so we can fix things up. Check back soon!"
+
+    def close(self, message, link, link_text):
+        app = self.app
+        log("closed for maintenance")
+        app.safely(app.save_town, what="saving")
+        self.closed = True
+        self.hidden = []
+        for w in app.root.winfo_children():
+            try:
+                if isinstance(w, tk.Toplevel) and w.state() != "withdrawn":
+                    w.withdraw()
+                    self.hidden.append(w)
+            except tk.TclError:
+                pass
+        self.win = win = tk.Toplevel(app.root)
+        win.title("Blipville — closed for maintenance")
+        win.configure(bg=self.BG)
+        win.resizable(False, False)
+        win.attributes("-topmost", True)
+        win.protocol("WM_DELETE_WINDOW", app.quit_all)
+        tk.Label(win, text="🔧", bg=self.BG, fg=self.FG, font=("Segoe UI Emoji", 34)).pack(pady=(18, 0))
+        tk.Label(win, text="Blipville is closed for maintenance", bg=self.BG, fg="#ffd23a",
+                 font=("Segoe UI", 15, "bold")).pack(padx=24)
+        self.message = tk.Label(win, text=message or self.DEFAULT, bg=self.BG, fg=self.FG, font=("Segoe UI", 11),
+                                wraplength=380, justify="center")
+        self.message.pack(padx=24, pady=(10, 4))
+        tk.Label(win, text="Your pets, hearts and unlocks are safe. Blipville opens again by itself when we're done.",
+                 bg=self.BG, fg=self.DIM, font=("Segoe UI", 9), wraplength=380, justify="center").pack(padx=24, pady=(0, 12))
+        row = tk.Frame(win, bg=self.BG)
+        row.pack(pady=(0, 18))
+
+        def button(text, fn, primary=False):
+            tk.Button(row, text=text, command=fn, bg="#ffd23a" if primary else "#4a3366", fg="#2a1a3a" if primary else self.FG,
+                      activebackground="#ffe680", relief="flat", font=("Segoe UI", 10, "bold"), padx=12, pady=4,
+                      cursor="hand2").pack(side="left", padx=5)
+        if link:
+            button(link_text or "More info", lambda: webbrowser.open(link), primary=True)
+        button("Check for updates", lambda: app.updater.check(quiet=False))
+        button("Check again", lambda: self.check(again=False))
+        button("Quit", app.quit_all)
+        win.update_idletasks()
+        sw, sh = win.winfo_screenwidth(), win.winfo_screenheight()
+        win.geometry(f"+{(sw - win.winfo_width()) // 2}+{(sh - win.winfo_height()) // 3}")
+        app.updater.check(quiet=True)          # a fix might already be out
+
+    def reopen(self):
+        app = self.app
+        log("open again after maintenance")
+        self.closed = False
+        if self.win is not None:
+            try:
+                self.win.destroy()
+            except tk.TclError:
+                pass
+            self.win = None
+        for w in self.hidden:
+            try:
+                w.deiconify()
+            except tk.TclError:
+                pass
+        self.hidden = []
+        app.repaint_now()
+        if app.pets:
+            app.pets[0].say("we're open again! 🎉", 4)
+
+
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)
 class Collection:
     """Every rare and Night Shift Blip. Locked ones are shadows, but you can peek (spoilers!)."""
@@ -5877,6 +6001,7 @@ class App:
         self.sound_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("sound", False)))
         self.sound = Sound(self)
         self.updater = Updater(self)
+        self.maintenance = Maintenance(self)
         self.root.report_callback_exception = lambda *exc: log("error in a click or timer:\n" + "".join(__import__("traceback").format_exception(*exc)))
         log(f"started on {sys.platform}, Python {sys.version.split()[0]}")
         load_custom_blips()
@@ -5889,6 +6014,7 @@ class App:
         self.root.after(2500, self.show_notice)
         self.updater.start()
         self.pets = []
+        self.root.after(500, self.maintenance.start)
         if not self.restore_town():
             self.add_pet("Blip", "Blip")
         self.daily_treat()
@@ -6009,6 +6135,9 @@ class App:
 
     def show_notice(self):
         """A one-time message for a new phase of Blipville."""
+        if self.maintenance.closed:                 # wait until Blipville opens again
+            self.root.after(30000, self.show_notice)
+            return
         if self.save.get("notice_seen") == NOTICE_ID:
             if self.give_gift():
                 from tkinter import messagebox
@@ -6293,6 +6422,9 @@ class App:
                 return
         except tk.TclError:
             return                                  # the app is closing
+        if self.maintenance.closed:                 # closed for maintenance: everything waits
+            self.root.after(250, self.tick)
+            return
         start = time.perf_counter()
         for pet in list(self.pets):
             self.safely(pet.step, now, what=f"{pet.kind}")

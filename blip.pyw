@@ -3501,7 +3501,7 @@ NOTICE_TEXT = ("Thank you so much for playing Blipville! 💜\n\n"
                "This is version 1.0: the real thing.\n\n"
                "It's built on the Redux engine: every pet window is a real see-through picture now, so no more black flashes "
                "when you click your pets or open a menu.\n\n"
-               "249 Blips, 5 worlds, cryptids, kaiju, Night Shift and more. Your pets, hearts and unlocks all come with you. Have fun!")
+               "260 Blips, 5 worlds, 👻 ghosts, 🏆 trophies, cryptids, kaiju, Night Shift and more. Your pets, hearts and unlocks all come with you. Have fun!")
 IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
 HELP_URL = "https://github.com/Johnblip189/blipville/issues/new?template=help.yml"   # links live in the README, so they can change anytime
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",

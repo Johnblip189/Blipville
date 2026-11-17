@@ -1070,8 +1070,31 @@
     return { base, kind: base, color: +color, lvl, stage: 0, canAw: lvl > 0, hp: st.hp, max: st.hp, aw: false };
   }
   const fst = (f) => AR.stats[f.kind];
+  // backgrounds: little scenes 120 x 40 units, the same as the desktop app's (from blip.pyw)
+  const fnv = (t) => { let h = 2166136261; for (const b of new TextEncoder().encode(t)) h = Math.imul(h ^ b, 16777619) >>> 0; return h; };
+  const arenaBgFor = (foe) => (D.rivalBgs || {})[foe] || (D.friendBgs || ["meadow"])[fnv(foe) % (D.friendBgs || ["meadow"]).length];
+  function drawArenaBg(c, name, w, h) {
+    const bg = (D.arenaBgs || {})[name]; if (!bg) return;
+    const s = 4, x0 = (w - 120 * s) / 2, y0 = h - 40 * s;
+    const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, bg.sky[0]); gr.addColorStop(1, bg.sky[1]);
+    c.fillStyle = gr; c.fillRect(0, 0, w, h);
+    const Y = (v) => (v ? y0 + v * s : 0);                 // shapes touching the top reach the top of the canvas
+    for (const sh of bg.shapes) {
+      const [kind, ...r] = sh;
+      if (kind === "rect") { c.fillStyle = r[0]; const ya = Y(r[2]); c.fillRect(x0 + r[1] * s, ya, r[3] * s, y0 + (r[2] + r[4]) * s - ya); }
+      else if (kind === "poly") { c.fillStyle = r[0]; c.beginPath(); for (let i = 0; i < r[1].length; i += 2) c.lineTo(x0 + r[1][i] * s, Y(r[1][i + 1])); c.closePath(); c.fill(); }
+      else if (kind === "circ") { c.fillStyle = r[0]; c.beginPath(); c.arc(x0 + r[1] * s, y0 + r[2] * s, r[3] * s, 0, Math.PI * 2); c.fill(); }
+      else if (kind === "pix") {
+        const px = D.arenaPix[r[0]], pal = px[r[4] || "pal"], u = r[3];
+        px.rows.forEach((row, ry) => [...row].forEach((ch, rx) => {
+          if (ch !== ".") { c.fillStyle = pal[ch]; c.fillRect(x0 + (r[1] + rx * u) * s, y0 + (r[2] + ry * u) * s, Math.ceil(u * s), Math.ceil(u * s)); }
+        }));
+      }
+    }
+  }
   function newBattle(mine, theirs, foe, reward) {
-    return { sides: [mine.map(fighter), theirs.map(fighter)], idx: [0, 0], awLeft: [1, 1], turn: 0, winner: null, last: null, foe, reward, log: [`⚔️ ${foe} wants to battle!`] };
+    return { sides: [mine.map(fighter), theirs.map(fighter)], idx: [0, 0], awLeft: [1, 1], turn: 0, winner: null, last: null, foe, reward,
+             bg: arenaBgFor(foe), log: [`⚔️ ${foe} wants to battle!`] };
   }
   const active = (b, s) => b.sides[s][b.idx[s]] || null;
   // one Awaken per battle, but a Blip that can awaken more than once may keep going (the Lurker!)
@@ -1081,6 +1104,10 @@
     b.awLeft[s] = 0; const f = active(b, s), frac = f.hp / f.max, was = f.kind;
     f.stage += 1; f.kind = AWAKEN_CHAIN[f.base][f.stage - 1]; f.aw = true; f.color %= KINDS[f.kind].colors.length;
     f.max = fst(f).hp; f.hp = Math.min(f.max, Math.round(f.max * frac + f.max * 0.25));
+    if (f.kind === "Lurker Eternal" && b.bg !== "dam") {
+      b.bg = "dam";
+      return `✨ ${was} awakens into ${f.kind}! The ground shakes… a wall of Lurkers rises, holding up a giant dam! 🌊`;
+    }
     return `✨ ${was} awakens into ${f.kind}!`;
   }
   function stepBattle(b) {
@@ -1158,6 +1185,7 @@
   function drawBattle() {
     const b = arenaBattle, cv = $("arenaCanvas"), c = cv.getContext("2d");
     c.clearRect(0, 0, cv.width, cv.height); c.imageSmoothingEnabled = false;
+    drawArenaBg(c, b.bg, cv.width, cv.height);
     [0, 1].forEach((side) => {
       const f = active(b, side), x0 = side === 0 ? 20 : 200;
       b.sides[side].forEach((g, j) => drawGrid(c, grid(g.kind, g.color, { t: 0, silhouette: g.hp === 0 }), (side === 0 ? 8 : 268) + j * 30, 8, 2));
@@ -1165,6 +1193,7 @@
       drawGrid(c, grid(f.kind, f.color, { t: now(), face: f.hp > f.max / 2 ? "happy" : "normal" }), x0 + 12, 52, 7);
       c.fillStyle = "#fff"; c.font = "700 11px " + FONT; c.textAlign = "center";
       const label = `${f.kind}${f.aw ? " ✨" : ""}`, lw = c.measureText(label).width;
+      c.strokeStyle = "rgba(10, 8, 20, .85)"; c.lineWidth = 3; c.lineJoin = "round"; c.strokeText(label, x0 + 68 + 9, 48);
       c.fillText(label, x0 + 68 + 9, 48);
       const ic = pxIcon(fst(f).type); if (ic.complete) c.drawImage(ic, x0 + 68 - lw / 2 - 10, 37, 14, 14);
       c.fillStyle = "#2b2547"; c.fillRect(x0, 150, 136, 12);

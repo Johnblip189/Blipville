@@ -6668,6 +6668,99 @@ def _arena_stats(kind):
 
 
 ARENA_STATS = {k: _arena_stats(k) for k in VARIANTS}
+
+# Arena backgrounds: little scenes 120 x 40 "units" (y down), drawn behind the battle. Shapes: ["rect", color, x, y, w, h],
+# ["poly", color, [x, y, x, y, ...]], ["circ", color, cx, cy, r], ["pix", sprite, x, y, unit] (a sprite from ARENA_PIX).
+ARENA_PIX = {
+ "lurker_hold": {"rows": ["ow........wo", "ao........oa", "ao..oooo..oa", "aoobbbbbbooa", ".abbybbybba.", ".obbbbbbbbo.", ".obmwmwmwbo.",
+                          ".obbbccbbbo.", ".obbccccbbo.", ".obbbccbbbo.", "..obbbbbbo..", "..obbbbbbo..", ".dddddddddd."],
+                 "pal": {"o": "#000000", "b": "#0c0816", "a": "#1c1430", "y": "#c8b84a", "w": "#6a6088", "m": "#2a0a20", "c": "#5a1a80", "d": "#1a1030"},
+                 "dim": {"o": "#05040a", "b": "#0a0812", "a": "#100c1c", "y": "#6a6030", "w": "#2a2638", "m": "#0e0610", "c": "#2a0e3a", "d": "#0e0a18"}},
+}
+ARENA_BGS = {
+ "meadow": {"name": "Sunny Meadow", "sky": ["#8ad0ff", "#d8f4ff"], "shapes": [
+    ["circ", "#fff6c0", 100, 8, 5], ["rect", "#ffffff", 12, 6, 12, 3], ["rect", "#ffffff", 15, 4, 6, 2], ["rect", "#ffffff", 60, 9, 14, 3],
+    ["rect", "#ffffff", 64, 7, 7, 2], ["poly", "#7ac87a", [0, 30, 20, 22, 45, 27, 70, 20, 95, 26, 120, 21, 120, 40, 0, 40]],
+    ["rect", "#4aa84a", 0, 32, 120, 8], ["rect", "#ff7ab0", 8, 33, 1, 1], ["rect", "#ff7ab0", 30, 35, 1, 1], ["rect", "#ff7ab0", 52, 34, 1, 1],
+    ["rect", "#ff7ab0", 88, 36, 1, 1], ["rect", "#ff7ab0", 110, 33, 1, 1], ["rect", "#ffe66a", 18, 36, 1, 1], ["rect", "#ffe66a", 70, 33, 1, 1],
+    ["rect", "#ffe66a", 100, 37, 1, 1]]},
+ "beach": {"name": "Sunset Beach", "sky": ["#ff8a5a", "#ffd08a"], "shapes": [
+    ["circ", "#fff0a0", 60, 24, 8], ["rect", "#3a7ad8", 0, 24, 120, 8], ["rect", "#8ad0ff", 10, 26, 14, 1], ["rect", "#8ad0ff", 50, 28, 20, 1],
+    ["rect", "#8ad0ff", 90, 26, 16, 1], ["poly", "#f0d090", [0, 32, 120, 30, 120, 40, 0, 40]], ["rect", "#8a5a2a", 8, 16, 2, 16],
+    ["poly", "#3a9a4a", [9, 16, 1, 20, 9, 14, 17, 20]], ["poly", "#2a8a3a", [9, 15, 4, 12, 9, 14, 14, 12]],
+    ["rect", "#8a5a2a", 108, 18, 2, 13], ["poly", "#3a9a4a", [109, 18, 102, 22, 109, 16, 116, 22]]]},
+ "volcano": {"name": "Volcano Rim", "sky": ["#2a0a0a", "#8a2a1a"], "shapes": [
+    ["poly", "#3a2020", [30, 32, 55, 8, 65, 8, 90, 32]], ["poly", "#ff6a1a", [55, 8, 65, 8, 62, 12, 58, 12]],
+    ["poly", "#ff8a3a", [58, 12, 62, 12, 66, 32, 60, 32]], ["rect", "#1a0a0a", 0, 32, 120, 8], ["rect", "#ff5a1a", 10, 35, 14, 2],
+    ["rect", "#ff5a1a", 96, 36, 16, 2], ["rect", "#ffd23a", 50, 4, 1, 1], ["rect", "#ffd23a", 68, 2, 1, 1], ["rect", "#ffd23a", 61, 1, 1, 1],
+    ["rect", "#ffd23a", 20, 30, 1, 1], ["rect", "#ffd23a", 104, 33, 1, 1]]},
+ "graveyard": {"name": "Moonlit Graveyard", "sky": ["#0a0a24", "#2a2a50"], "shapes": [
+    ["circ", "#f0f0d0", 98, 9, 6], ["rect", "#ffffff", 10, 4, 1, 1], ["rect", "#ffffff", 40, 8, 1, 1], ["rect", "#ffffff", 70, 3, 1, 1],
+    ["rect", "#ffffff", 84, 14, 1, 1], ["rect", "#ffffff", 26, 12, 1, 1], ["rect", "#2a2030", 24, 14, 2, 18],
+    ["poly", "#2a2030", [25, 18, 18, 12, 19, 11, 25, 16]], ["poly", "#2a2030", [25, 20, 32, 14, 33, 15, 25, 22]],
+    ["rect", "#1a1a2a", 0, 31, 120, 9], ["rect", "#5a5a6a", 12, 24, 6, 8], ["rect", "#5a5a6a", 34, 26, 5, 6], ["rect", "#5a5a6a", 84, 25, 6, 7],
+    ["rect", "#5a5a6a", 104, 27, 5, 5], ["rect", "#6a6a7a", 62, 22, 2, 10], ["rect", "#6a6a7a", 59, 25, 8, 2]]},
+ "city": {"name": "Kaiju City", "sky": ["#14082a", "#4a1a5a"], "shapes": [
+    ["rect", "#1a1030", 0, 14, 14, 26], ["rect", "#20143a", 16, 8, 12, 32], ["rect", "#1a1030", 30, 18, 10, 22], ["rect", "#20143a", 44, 12, 14, 28],
+    ["rect", "#1a1030", 62, 20, 10, 20], ["rect", "#20143a", 76, 6, 12, 34], ["rect", "#1a1030", 90, 16, 12, 24], ["rect", "#20143a", 104, 10, 16, 30],
+    ["rect", "#ffd23a", 3, 17, 2, 2], ["rect", "#ffd23a", 19, 12, 2, 2], ["rect", "#3affd8", 23, 20, 2, 2], ["rect", "#ffd23a", 48, 16, 2, 2],
+    ["rect", "#3affd8", 52, 24, 2, 2], ["rect", "#ff5aa8", 79, 10, 2, 2], ["rect", "#ffd23a", 83, 22, 2, 2], ["rect", "#3affd8", 94, 20, 2, 2],
+    ["rect", "#ffd23a", 108, 14, 2, 2], ["rect", "#ff5aa8", 113, 26, 2, 2], ["rect", "#0a0a14", 0, 34, 120, 6],
+    ["rect", "#ffd23a", 10, 37, 8, 1], ["rect", "#ffd23a", 40, 37, 8, 1], ["rect", "#ffd23a", 70, 37, 8, 1], ["rect", "#ffd23a", 100, 37, 8, 1]]},
+ "cave": {"name": "Crystal Cave", "sky": ["#0a0a14", "#1e1a34"], "shapes": [
+    ["poly", "#14141e", [0, 0, 120, 0, 120, 6, 110, 10, 100, 5, 88, 12, 76, 4, 60, 9, 48, 3, 34, 11, 22, 5, 10, 9, 0, 4]],
+    ["rect", "#1e1a2e", 0, 32, 120, 8], ["poly", "#7a5aff", [10, 32, 13, 22, 16, 32]], ["poly", "#b8a0ff", [13, 32, 13, 22, 16, 32]],
+    ["poly", "#3affd8", [100, 32, 104, 20, 108, 32]], ["poly", "#aafff0", [104, 32, 104, 20, 108, 32]],
+    ["poly", "#ff7ac8", [56, 32, 58, 26, 60, 32]], ["poly", "#7a5aff", [30, 32, 32, 28, 34, 32]], ["poly", "#3affd8", [80, 32, 82, 27, 84, 32]]]},
+ # When a Lurker reaches its last form, the battle moves here: a huge dam, held up by a whole row of Lurkers.
+ "dam": {"name": "The Dam", "sky": ["#04040a", "#16162a"], "shapes": [
+    ["rect", "#4a4a58", 0, 0, 120, 14], ["rect", "#5a5a68", 0, 6, 120, 1], ["rect", "#6a6a78", 0, 12, 120, 2],
+    ["rect", "#34343e", 12, 7, 1, 5], ["rect", "#34343e", 36, 7, 1, 5], ["rect", "#34343e", 60, 7, 1, 5], ["rect", "#34343e", 84, 7, 1, 5],
+    ["rect", "#34343e", 108, 7, 1, 5], ["poly", "#2a2a34", [40, 7, 44, 9, 42, 10, 46, 12, 45, 12, 41, 10, 43, 9, 39, 7]],
+    ["poly", "#2a2a34", [88, 7, 91, 9, 89, 11, 92, 12, 91, 12, 88, 11, 90, 9, 87, 7]],
+    ["rect", "#3a8aff", 31, 14, 1, 8], ["rect", "#3a8aff", 55, 14, 1, 12], ["rect", "#3a8aff", 75, 14, 1, 7],
+    ["pix", "lurker_hold", 14, 14, 1.3, "dim"], ["pix", "lurker_hold", 32, 14, 1.3, "dim"], ["pix", "lurker_hold", 50, 14, 1.3, "dim"],
+    ["pix", "lurker_hold", 68, 14, 1.3, "dim"], ["pix", "lurker_hold", 86, 14, 1.3, "dim"], ["rect", "#101020", 0, 31, 120, 2],
+    ["pix", "lurker_hold", -9, 14, 2], ["pix", "lurker_hold", 105, 14, 2],
+    ["rect", "#14284a", 0, 37, 120, 3], ["rect", "#3a6aa8", 20, 38, 10, 1], ["rect", "#3a6aa8", 50, 38, 14, 1], ["rect", "#3a6aa8", 86, 38, 12, 1]]},
+}
+RIVAL_BGS = {"Rival Rae": "meadow", "Rival Rex": "volcano", "Champion Coco": "beach", "Nyx the Night Queen": "graveyard", "Kaiju King Kai": "city"}
+FRIEND_BGS = ["meadow", "beach", "volcano", "graveyard", "city", "cave"]
+
+
+def arena_bg_for(foe):
+    return RIVAL_BGS.get(foe) or FRIEND_BGS[_fnv(foe) % len(FRIEND_BGS)]
+
+
+def draw_arena_bg(c, name, width, y0, s, height):
+    """Draw an Arena background on a tk Canvas: sky over 0..height, the scene scaled by s with its top at y0."""
+    bg = ARENA_BGS.get(name) or ARENA_BGS["meadow"]
+    (r0, g0, b0), (r1, g1, b1) = [tuple(int(h[i:i + 2], 16) for i in (1, 3, 5)) for h in bg["sky"]]
+    bands = 16
+    for i in range(bands):
+        t = i / (bands - 1)
+        col = "#%02x%02x%02x" % (round(r0 + (r1 - r0) * t), round(g0 + (g1 - g0) * t), round(b0 + (b1 - b0) * t))
+        c.create_rectangle(0, height * i / bands, width, height * (i + 1) / bands + 1, fill=col, outline="")
+    for sh in bg["shapes"]:
+        kind, rest = sh[0], sh[1:]
+        if kind == "rect":
+            col, x, y, w, h = rest
+            c.create_rectangle(x * s, y0 + y * s if y else 0, (x + w) * s, y0 + (y + h) * s, fill=col, outline="")   # touching the top: reach the top
+        elif kind == "poly":
+            col, pts = rest
+            c.create_polygon(*[(v * s + y0 if v else 0) if i % 2 else v * s for i, v in enumerate(pts)], fill=col, outline="")
+        elif kind == "circ":
+            col, cx, cy, r = rest
+            c.create_oval((cx - r) * s, y0 + (cy - r) * s, (cx + r) * s, y0 + (cy + r) * s, fill=col, outline="")
+        elif kind == "pix":
+            spr, x, y, u = rest[:4]
+            px = ARENA_PIX[spr]
+            pal = px[rest[4]] if len(rest) > 4 else px["pal"]
+            for ry, row in enumerate(px["rows"]):
+                for rx, ch in enumerate(row):
+                    if ch != ".":
+                        c.create_rectangle((x + rx * u) * s, y0 + (y + ry * u) * s, (x + (rx + 1) * u) * s, y0 + (y + (ry + 1) * u) * s,
+                                           fill=pal[ch], outline="")
 ARENA_RIVALS = [("Rival Rae", 5, [["Cat", 0, 0], ["Frog", 0, 0], ["Fox", 0, 0]]),
                 ("Rival Rex", 10, [["Bigfoot", 0, 0], ["Shark", 0, 0], ["Phoenix", 0, 1]]),
                 ("Champion Coco", 20, [["Tidal Titan", 0, 0], ["Kitsune", 0, 1], ["Dragon", 0, 1]]),
@@ -6732,6 +6825,7 @@ class Battle:
         self.sides = [[Fighter(*f) for f in mine], [Fighter(*f) for f in theirs]]
         self.idx = [0, 0]
         self.awaken_left = [1, 1]
+        self.bg = "meadow"
         self.rng = random.Random(seed)
         self.turn = 0
         self.winner = None
@@ -6752,7 +6846,11 @@ class Battle:
         f = self.active(side)
         was = f.kind
         f.awaken()
-        return f"✨ {was} awakens into {f.kind}!"
+        line = f"✨ {was} awakens into {f.kind}!"
+        if f.kind == "Lurker Eternal" and self.bg != "dam":
+            self.bg = "dam"
+            line += " The ground shakes… a wall of Lurkers rises, holding up a giant dam! 🌊"
+        return line
 
     def step(self):
         if self.winner is not None:
@@ -6909,6 +7007,7 @@ class Arena:
             messagebox.showinfo("Arena", "Pick at least one Blip for your team first!", parent=self.win)
             return
         self.battle, self.foe, self.reward, self.log, self.done = Battle(mine, theirs), name, reward, [], False
+        self.battle.bg = arena_bg_for(name)
         self.log.append(f"⚔️ {name} wants to battle!")
         self.app.sound.play("whoosh")
         self.draw_battle()
@@ -6968,7 +7067,10 @@ class Arena:
         c, b = self.c, self.battle
         c.delete("all")
         self.buttons = []
-        c.create_text(16, 24, anchor="w", text=f"⚔️ You vs {self.foe}", fill="#ffffff", font=("Segoe UI", 15, "bold"))
+        draw_arena_bg(c, b.bg, self.CW, 2, self.CW / 120, 262)
+        c.create_rectangle(0, 0, self.CW, 40, fill="#14121e", outline="")
+        c.create_text(16, 22, anchor="w", text=f"⚔️ You vs {self.foe}  ·  {ARENA_BGS[b.bg]['name']}", fill="#ffffff",
+                      font=("Segoe UI", 15, "bold"))
         c.create_rectangle(0, 262, self.CW, 266, fill="#3a3360", outline="")
         for side, x in ((0, 70), (1, 470)):
             f = b.active(side)
@@ -6990,7 +7092,7 @@ class Arena:
             self.button(self.CW - 136, 410, 120, 44, "🏳️ Give up", self.give_up, "#3a3360")
         else:
             self.button(16, 410, 200, 44, "↩ Back to the Arena", self.lobby, "#5a4ae0")
-            self.button(226, 410, 160, 44, "🔁 Rematch", lambda: self.start([[f.base, f.color, int(f.can_awaken)] for f in b.sides[1]],
+            self.button(226, 410, 160, 44, "🔁 Rematch", lambda: self.start([[f.base, f.color, f.level] for f in b.sides[1]],
                                                                         self.foe, self.reward), "#e8457a")
 
     def give_up(self):

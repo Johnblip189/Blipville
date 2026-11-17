@@ -11,7 +11,8 @@ make Blipville what it is. This is the real thing.
   it catches it and "steals" it for a second. Right-click → 🖱️ Play with my mouse to turn it off.
 - ⚔️ **The Arena:** pick a team of 3 and battle! Every Blip has a type (🔥 Spark beats 🌿 Sprout beats 💧 Splash beats 🔥 Spark),
   stats and a move. Copy your **battle code** and send it to a friend (or post it on the Discord) so they can battle your
-  team, or take on five practice rivals, up to Nyx the Night Queen and Kaiju King Kai. Battle codes work between Windows and the browser version.
+  team, or take on five practice rivals, up to Nyx the Night Queen and Kaiju King Kai. Every battle has a **background**: Sunny Meadow, Sunset Beach, Volcano Rim, Moonlit
+  Graveyard, Kaiju City or Crystal Cave. Battle codes work between Windows and the browser version.
 - ✨ **20 Awakened forms:** Blip, Kitsune, Dragon, Phoenix, Wolf and Unicorn, plus **all 5 kaiju** (Abyssal Titan, Inferno
   Magmaw, Omega Gigabot, Storm Skyray, Blizzard Frostback), **ghosts** (King Sheetie, Soulfire Wisp, Howling Banshee,
   Eclipse Cat, Phantom Admiral), **cryptids** (Titan Bigfoot, Lunar Mothman, Ancient Nessie) and the Night Shift's
@@ -19,7 +20,8 @@ make Blipville what it is. This is the real thing.
 - 🎨 **Accessory colors** (free, 9 of them) and a **2nd accessory slot** (50 💖) to wear a hat with glasses or a scarf.
 - 👁️ **The Lurker:** a new ghost made of shadow and *lots* of eyes. It loves tag (it's always "it"), and it's the
   only Blip that **Awakens 3 times**: Wide-Eyed Lurker → Shadow Lurker → **Lurker Eternal**. Each Awakening needs a
-  bigger crystal (75, 150, 250 💖), and in the Arena it can awaken all three times in one battle.
+  bigger crystal (75, 150, 250 💖), and in the Arena it can awaken all three times in one battle. When it reaches Lurker Eternal, the battle
+  moves to **The Dam**: a giant cracked dam held up by a whole wall of Lurkers.
 - 👻 **Ghosts, a brand-new tier:** 11 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
   🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.

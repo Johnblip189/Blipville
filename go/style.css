@@ -227,3 +227,10 @@ body.mini .card { padding: 10px; border-radius: 14px; }
   #bar #popBtn { display: none; }                  /* pop-out is a laptop thing */
   #bar button span { font-size: 20px; }
 }
+
+/* ⬇ Install app (shows when Edge / Chrome says Blipville can be installed) */
+#installBtn[hidden] { display: none; }
+#installBtn { color: #ffd23a; border-color: rgba(255, 210, 58, .45); cursor: pointer; }
+#installBtn.nudge { animation: nudge 1.2s ease-in-out 4; }
+@keyframes nudge { 50% { transform: scale(1.12); box-shadow: 0 0 0 4px rgba(255, 210, 58, .25); } }
+@media (max-width: 520px) { #installBtn span { display: none; } }

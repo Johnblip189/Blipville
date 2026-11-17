@@ -225,3 +225,14 @@ body.mini .card { padding: 10px; border-radius: 14px; }
 .trophy.earned { border-color: #ffd23a55; }
 .trophy.earned b { color: #ffd23a; }
 .trophy.earned small { color: #9ad8a8; }
+
+/* ghosts sheet */
+.ghostStatus { margin: 8px 0 6px; padding: 10px 12px; border-radius: 12px; background: #2a2450; font-weight: 800; font-size: 14px; }
+#ghostGrid { margin: 10px 0 4px; }
+/* nine buttons on a phone: a little tighter */
+@media (max-width: 520px) {
+  #bar { gap: 4px; padding-left: 6px; padding-right: 6px; }
+  #bar button { font-size: 10px; border-radius: 14px; min-height: 54px; min-width: 0; overflow: hidden; }
+  #bar #popBtn { display: none; }                  /* pop-out is a laptop thing */
+  #bar button span { font-size: 20px; }
+}

@@ -50,6 +50,9 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller==6.11.1
 
+      - name: Stamp the version (so the app can update itself)
+        run: python tools/stamp_version.py ${{ steps.ver.outputs.version }}
+
       - name: Build the .exe
         run: pyinstaller --onefile --noconsole --name ${{ env.APP_NAME }} --icon assets/icon.ico blip.pyw
 

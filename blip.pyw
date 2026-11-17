@@ -32,6 +32,9 @@ SCALE = 4                     # screen pixels per art pixel
 W, H = 220, 180               # window size (room for speech bubbles / hearts above Blip)
 KEY = "#ff00fe"               # "invisible" color (made transparent on Windows)
 FPS = 30
+# Filled in by the GitHub build (see .github/workflows/build-exe.yml). "dev" means "running from source".
+APP_VERSION = "dev"
+APP_BUILT = ""                      # UTC time the .exe was built, e.g. 2026-11-17T01:20:00Z
 
 PALETTES = [  # outline, body, belly, cheeks, eyes
     {"name": "Lavender", "o": "#2b1d3a", "b": "#9b7bd8", "l": "#ddd0ff", "p": "#ff8fb3", "e": "#1a1024"},
@@ -3551,6 +3554,11 @@ class Blip:
                                                    app.sound.play("boop")))
         self.menu.add_checkbutton(label="Weather effects", variable=app.weather,
                                   command=lambda: app.save.update(weather=app.weather.get()) or write_save(app.save))
+        upd = tk.Menu(self.menu, tearoff=0)
+        upd.add_command(label="🔄 Check for updates now", command=lambda: app.updater.check(quiet=False))
+        upd.add_checkbutton(label="Update automatically (asks first)", variable=app.updater.auto, command=app.updater.set_auto)
+        upd.add_command(label=f"You have {APP_VERSION if APP_VERSION != 'dev' else 'the source version'}", state="disabled")
+        self.menu.add_cascade(label="🔄 Updates", menu=upd)
         talk = tk.Menu(self.menu, tearoff=0)
         talk.add_command(label="🐾 Suggest an animal…", command=self.suggest)
         talk.add_command(label="💡 Suggest an idea…", command=lambda: self.open_link(IDEA_URL, "ooh, what's your idea?"))
@@ -4706,6 +4714,181 @@ class Sighting:
                                            "*rubs eyes* huh?", "it got away!"]), 3)
 
 
+# ----------------------------------------------------------------------------- self-updating (Windows .exe)
+# The app checks GitHub now and then. If there's a newer Blipville.exe it asks first, then downloads it,
+# saves the town, swaps the file and starts again. Running from source (blip.pyw), it just links to the download.
+RELEASES_API = "https://api.github.com/repos/Johnblip189/blipville/releases?per_page=10"
+RELEASES_PAGE = "https://github.com/Johnblip189/blipville/releases"
+UPDATE_EVERY = 6 * 3600
+
+
+def _iso(t):
+    """GitHub-style UTC timestamp -> seconds."""
+    import calendar
+    try:
+        return float(calendar.timegm(time.strptime(t[:19], "%Y-%m-%dT%H:%M:%S")))
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def newest_release(releases):
+    """The newest published release that has a Blipville.exe attached: (tag, asset) or None."""
+    for r in releases:
+        if r.get("draft"):
+            continue
+        for a in r.get("assets", []):
+            if a.get("name", "").lower() == "blipville.exe" and a.get("browser_download_url"):
+                return r.get("tag_name", ""), a
+    return None
+
+
+def is_newer(tag, asset, my_version=None, my_built=None):
+    """True when the release on GitHub is different from (and newer than) the running build.
+    A rebuild of the same version counts too: its file was uploaded well after this copy was built."""
+    my_version = APP_VERSION if my_version is None else my_version
+    my_built = APP_BUILT if my_built is None else my_built
+    if my_version == "dev":
+        return False
+    if tag != my_version:
+        return True
+    uploaded, built = _iso(asset.get("updated_at", "")), _iso(my_built)
+    return bool(uploaded and built and uploaded - built > 30 * 60)
+
+
+class Updater:
+    def __init__(self, app):
+        self.app = app
+        self.busy = False
+        self.offered = None          # don't nag twice about the same file in one run
+        self.auto = tk.BooleanVar(master=app.root, value=bool(app.save.get("auto_update", True)))
+        import queue
+        self.inbox = queue.Queue()   # background threads leave results here; tkinter must only be touched on the main thread
+
+    def poll(self):
+        while not self.inbox.empty():
+            self.inbox.get_nowait()()
+        self.app.root.after(250, self.poll)
+
+    def start(self):
+        self.poll()
+        if self.auto.get():
+            self.app.root.after(15000, lambda: self.check(quiet=True))
+        self.app.root.after(UPDATE_EVERY * 1000, self.tick)
+
+    def tick(self):
+        if self.auto.get():
+            self.check(quiet=True)
+        self.app.root.after(UPDATE_EVERY * 1000, self.tick)
+
+    def set_auto(self):
+        self.app.save["auto_update"] = self.auto.get()
+        write_save(self.app.save)
+
+    def check(self, quiet=False):
+        if self.busy:
+            return
+        self.busy = True
+        import threading
+
+        def work():
+            result = None
+            try:
+                import urllib.request
+                req = urllib.request.Request(RELEASES_API, headers={"User-Agent": "Blipville-updater", "Accept": "application/vnd.github+json"})
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    result = newest_release(json.loads(resp.read().decode("utf-8")))
+            except Exception:  # noqa: BLE001  (offline, rate limited, GitHub down: just try again later)
+                result = "error"
+            self.inbox.put(lambda: self.found(result, quiet))
+        threading.Thread(target=work, daemon=True).start()
+
+    def found(self, result, quiet):
+        from tkinter import messagebox
+        self.busy = False
+        if result == "error" or result is None:
+            if not quiet:
+                messagebox.showinfo("Blipville updates", "Couldn't reach GitHub to check for updates. Try again later!", parent=self.app.root)
+            return
+        tag, asset = result
+        if not is_newer(tag, asset):
+            if not quiet:
+                msg = ("You're on the newest Blipville! 🎉" if APP_VERSION != "dev" else
+                       "You're running Blipville from source (blip.pyw), so it can't update itself.\n\nGet the newest version from the releases page.")
+                messagebox.showinfo("Blipville updates", msg, parent=self.app.root)
+            return
+        if quiet and self.offered == asset.get("updated_at"):
+            return
+        self.offered = asset.get("updated_at")
+        if self.app.pets:
+            self.app.pets[0].say("ooh, a Blipville update is ready! ✨", 5)
+        same = tag == APP_VERSION
+        text = (f"A fresh build of Blipville {tag} is ready!" if same else f"Blipville {tag} is out! (You have {APP_VERSION}.)")
+        if not getattr(sys, "frozen", False):
+            if messagebox.askyesno("Update Blipville", text + "\n\nOpen the download page?", parent=self.app.root):
+                webbrowser.open(RELEASES_PAGE)
+            return
+        if messagebox.askyesno("Update Blipville", text + "\n\nUpdate now? Blipville will close for a few seconds and come right "
+                               "back. Your pets, hearts and unlocks are kept.", parent=self.app.root):
+            self.download(asset)
+
+    def download(self, asset):
+        import threading
+        exe = os.path.abspath(sys.executable)
+        new = exe + ".new"
+        if self.app.pets:
+            self.app.pets[0].say("downloading the update… ⏳", 30)
+
+        def work():
+            ok = False
+            try:
+                import urllib.request
+                req = urllib.request.Request(asset["browser_download_url"], headers={"User-Agent": "Blipville-updater"})
+                with urllib.request.urlopen(req, timeout=120) as resp, open(new, "wb") as f:
+                    while True:
+                        chunk = resp.read(1 << 16)
+                        if not chunk:
+                            break
+                        f.write(chunk)
+                size = os.path.getsize(new)
+                with open(new, "rb") as f:
+                    ok = f.read(2) == b"MZ" and size > 1_000_000 and (not asset.get("size") or size == asset["size"])
+            except Exception:  # noqa: BLE001
+                ok = False
+            self.inbox.put(lambda: self.install(exe, new, ok))
+        threading.Thread(target=work, daemon=True).start()
+
+    def install(self, exe, new, ok):
+        from tkinter import messagebox
+        if not ok:
+            try:
+                os.remove(new)
+            except OSError:
+                pass
+            if self.app.pets:
+                self.app.pets[0].say("the update didn't download :( try later!", 4)
+            messagebox.showinfo("Update Blipville", "The download didn't finish. Check your internet and try again "
+                                "(right-click a pet → Check for updates), or grab it from the releases page.", parent=self.app.root)
+            return
+        # A tiny helper script waits for Blipville to close, swaps in the new file and starts it again.
+        bat = os.path.join(os.path.dirname(exe), "blipville-update.bat")
+        with open(bat, "w", encoding="utf-8") as f:
+            f.write("@echo off\r\n"
+                    "chcp 65001 >nul\r\n"
+                    "set tries=0\r\n"
+                    ":wait\r\n"
+                    f'move /y "{new}" "{exe}" >nul 2>&1 && goto done\r\n'
+                    "set /a tries+=1\r\n"
+                    "if %tries% geq 60 goto done\r\n"
+                    "ping -n 2 127.0.0.1 >nul\r\n"          # waits ~1 second (timeout.exe needs a console window)
+                    "goto wait\r\n"
+                    ":done\r\n"
+                    f'start "" "{exe}"\r\n'
+                    'del "%~f0"\r\n')
+        flags = getattr(subprocess, "CREATE_NO_WINDOW", 0) | getattr(subprocess, "DETACHED_PROCESS", 0)
+        subprocess.Popen(["cmd", "/c", bat], creationflags=flags, close_fds=True)
+        self.app.quit_all()
+
+
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)
 class Collection:
     """Every rare and Night Shift Blip. Locked ones are shadows, but you can peek (spoilers!)."""
@@ -5439,6 +5622,7 @@ class App:
         self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))
         self.sound_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("sound", False)))
         self.sound = Sound(self)
+        self.updater = Updater(self)
         load_custom_blips()
         self.game = None
         self.plays = []                            # games of catch / tag going on right now
@@ -5446,6 +5630,7 @@ class App:
         self.next_sighting = time.monotonic() + random.uniform(6, 14) * 60
         self.next_kaiju = time.monotonic() + random.uniform(30, 60) * 60     # kaiju are much rarer
         self.root.after(2500, self.show_notice)
+        self.updater.start()
         self.pets = []
         if not self.restore_town():
             self.add_pet("Blip", "Blip")

@@ -3620,6 +3620,77 @@ def work_area(root):
     return 0, 0, sw, sh - (70 if sys.platform == "darwin" else 40)
 
 
+PX_ICONS = {  # Blipville's pixel icons (14x14 PNGs, made from the masks in go/icons/px), used in menus
+    "arena": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAUklEQVR4nGNgoARIiaj9J1mdlIja/xMnbvwnpBmrOkKa8crjkiTKReiKiPUGhmaiNZHkPKrYKCWi9r8rSgvFj8h8ojQREicsSYxmQt7AJ080AACfI22CN3OUNQAAAABJRU5ErkJggg==",
+    "awaken": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAh0lEQVR4nK1SsQ2AMAxzuSFTWVGPYOQsDuAsjmCjYoWF/mAGBIJSKFR4ipJYtpwAf0OLYRKJXckncpbqSIVsja3sdV65E2FyVgGA0mJ4XNxRNMBQX9p55TA5q5IVg/DD0WJI8hRWNBwthuPcr07mPnymY9OvfUW8GuLmITbShk9fE1OMkt/uLpgmWiF1FlBMAAAAAElFTkSuQmCC",
+    "beacon": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAZ0lEQVR4nGNgoBRIiaj9J1leSkTtf9SK//9xacYrjy6JTOMzFEPziRM3/hOlCVnziRM34JgoTeia8WliIto0Ym0j5FQmdE3rtmxCUbBuyyascciETxM+zYzoNuLywrM3txhxydEHAADyflqr8rKaNQAAAABJRU5ErkJggg==",
+    "candle": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAXUlEQVR4nGNgoDaQElH7j0+eCZemp2UieDVjaIRpYvBgYMCnGauNxABGXE6FsZ+9uYVVDVZN/7+cgGOqO5U6GnE5C5s4I7Lkui2bcNoQ5OOHElAoIYYvwokOXZoBAN+5Kr42oJ/QAAAAAElFTkSuQmCC",
+    "cookie": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAhElEQVR4nGNgIBMwogtIiaj9x6bw2ZtbKGpZ0DWtL1PFakNgF8N/ZM1M2DRNXHUWQ+P6MlUU1zBhsyk/zBjORjYEWTPcRlw2IRuCDJhwKUI3BJ2PohGfTeh8DI2EbIIBePDiiwoYCOy6DY9PuI3P3txiDOy6TZQmFBuRbcamET3l0B8AAHqDPIS4s8JFAAAAAElFTkSuQmCC",
+    "crystal": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAi0lEQVR4nGNgIBMwYhOUElH7j8x/9uYWhjoMASkRtf8JR26iiC2wUcfQzIRNU6s6QuzBBQaGhCM3MVzBhE1TNZKFCgbYNaPYyMCAqgldM1Ybn725xbjARp0BG3hwgYHhQA6qPzFsxKYJG0DRiG4rTBO6bTiBlIja/6ob//9Hrfj/Hz00idJMsqbBCQBENkILQUCJ1gAAAABJRU5ErkJggg==",
+    "discord": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAbklEQVR4nGNgGFAgJaL2X0pE7T8x4ozIknaBZxgYGBgYDq03QdGILP7szS1GuEZkTYQATDMTKV5BBhgal8/iZVg+ixcnH6dGYgELukBk2me8fBQbn725xYgektgAcqhi2IjLALyhji3yiZGjDwAA308tRaZ+VZYAAAAASUVORK5CYII=",
+    "download": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAVUlEQVR4nGNgoDaQElH7LyWi9p9kTTCASzMTuS5iQbcJlwsYGBgYnr25xUjQebjYWK1HVoQOCAYUNs1Ehy4xzmNEVkyMoSgBhM9vuJxNdjxS5lRyAABjAJoWWmz/zgAAAABJRU5ErkJggg==",
+    "egg": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAW0lEQVR4nGNgoDaQElH7LyWi9p9kTTBAtGZkTURrxqYJl2YmXIZsrCbKgbht21BFwMkwjRuqUBUT9Cs+/2HTiNOPMH8S5VdSQpUozdg0MeLSjMx/9uYWVnVkAQAe/dQsi127UQAAAABJRU5ErkJggg==",
+    "friend": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAZElEQVR4nGNgoDaQElH7LyWi9h+XPAsuTQ5bXBgYGBgYDvgw/H/25hYjuhomcl2EYiMup8HEkW1mRJaEOQ8XOOCzB66ZbKeieBrZqYjA2QOXR3Yqih9hEuh+pWqo4gSEEsAQAgB33iak6o84nQAAAABJRU5ErkJggg==",
+    "ghost": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAb0lEQVR4nGNgIBMwYhOUElH7j8x/9uYWVnUYmtABukFEaSKoGZ8mbJqZ0A2QFlXHMBSbGIZGYgGGxqevb2IowiaG00ZpUXWsToQBFlwS2GwhykZCAG+oorOfvr6JkaoYGBgQSU1KRO0/Lja5LoQDAHAeagZP/muxAAAAAElFTkSuQmCC",
+    "gift": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAdklEQVR4nGNgoBaQElH7j48PA0zoip5ah8IVo/ORASM2k59ahzJIH10Np2Hg2ZtbjCgapUTU/j/dJ4JqZK0jA0PzfhQhaac3cM1MDGQCFKdOS7sJl5DY5s/wwmsjnJ81Sx3FqWTbOIQ0MiJzcKUSBgbUOBwYAACjuSvtjRRK5wAAAABJRU5ErkJggg==",
+    "hat": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAY0lEQVR4nGNgoDdgRBeQElH7j03hsze3UNSicKRE1P4npGVhtWHBrGkompnIcueAaGRBF2i9+hqrwgW4NMJCs1pbFLsVRyFqYAHECNOEKzQxbIaGLtl+hMcLrohHB+gJgX4AAL23H83bbthrAAAAAElFTkSuQmCC",
+    "heart": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAhklEQVR4nGNgoAaQElH7LyWi9p8YcSZkyafWoQxPrUMZkBXhEmdClmTY0MLAwMAAVwQXhwJkzSy4nI2sARtgQuEF1OBVjFsjHnDy4WVMjc/e3GKUProaryZzeV0G6aOrGZ69ucWIYiMuzdg0YTgVXTMuTQwMDAwoHBhAjgZsmvACXKlo4AAAnKtNiJ6f5lUAAAAASUVORK5CYII=",
+    "help": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAU0lEQVR4nGNgIBMwYhOUElH7j8x/9uYWVnUYmtABukF4NUmJqP1H5yOrZSLsG+yABZnz7M0tRmlR9f8wNkEnEuNsqmki2494bSXZj2T5jyIbaQoACC1ZBe7VxMoAAAAASUVORK5CYII=",
+    "lure": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAc0lEQVR4nGNgoAaQElH7T5am/5es/uPSjNdQXJqlRNT+nzhxA6ehWDXDNMEwTJwFXeOzN7cYpZ0Y/j/dJ8Ig7cTwf92WTXC5IB8/OJsRn83YND17c4uRgYGBgYkcTVg1EqMJp42ENDEw4PAjcrBj0zTEAACe8k1g9erB3gAAAABJRU5ErkJggg==",
+    "mute": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAcklEQVR4nGNgoDaQElH7T5am/////8enmQldg5SI2v+nr29itRmrQTBbkIGUiNr///7V/2EGwtgMDAwMLIScLX10NcNT61A4+9mbW4wYTiUFENT41DqUQfroarjNOP2J7FcYH1kery3ERAdezSRrGpwAACfjUSvgiZOHAAAAAElFTkSuQmCC",
+    "night": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAYklEQVR4nGNgIBMw4pKQElH7D2M/e3MLQx0LLg1P94nAxaSdGP6ja2ZE14SsAaLpDVYbmcjRhKIRHeDThFcjIUB9jU/3iaBECU6Nz97cYpR2ekO0ZgzPY49HzIAiO+XQHwAAabMyKHLW1mkAAAAASUVORK5CYII=",
+    "pin": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAd0lEQVR4nGNgoAWQElH7LyWi9h+bHBM+TU+tQxmeWocyYNOMVSNMEwxg04yhEV0TLs0YGp+9ucUofXQ1hkbpo6sZnr25xYjXxnUyGihiJx9exjCIBZcmbIqRASO6AK7gR3Ymho3EaIABFD+i24ZLE1aAL7UMLAAALYIys5QYkf8AAAAASUVORK5CYII=",
+    "play": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAUElEQVR4nGNgoBaQElH7LyWi9p9kTTBASDMTLomnr28y4NOMUyMhzXg14tNMUCMuzURplBZVZ3j25hYjSRqxaSKoEZcmvBrxacIKyEo5dAEAVV0r+6+GmYEAAAAASUVORK5CYII=",
+    "share": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAg0lEQVR4nGNgIBMwogtIiaj9h7GfvbmFIY+hEaYhIS0LLrlg1jQMDTDDGGGakDXgAwtmTWN49uYWIwuyoJ+fB7Ga/7Pgkty0aQdeA7Fq3LRpB8MDvXwk/kQMzUz4nLQ0HLccXo3RK3HLYXWqn58Hw6ZNE1H46IDs6MBIAIQAvtREWwAACPwv/LKKKI0AAAAASUVORK5CYII=",
+    "sound": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAXUlEQVR4nGNgoDaQElH7T5am/////0fWjNcgKRG1/zBNMI0wHLUC1SAMW5ABsgZ0zUyEnH0gR53BYcpNDHGCGnEBghodptxkOJCjjl8RWYGDbgBJ0YGumSiFgx8AAHnkWvomA0d/AAAAAElFTkSuQmCC",
+    "spark": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAeUlEQVR4nGNgoDaQElH7j0+eCZemp9aheDVjaIRpIuQCrDYyMDAwMFjvZ4DZis0FKBrhtlnvR9GM16kYmjxQbcapEQV4oNEwwwhqxGYIQY1HHRkYdiDxd0DF0AAjMgdXVDAwMDBIH13N8OzNLbh6RnQFuCIdWdPAAACcAi5x7pSejwAAAABJRU5ErkJggg==",
+    "splash": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAbklEQVR4nGNgoDaQElH7T5amqBX//+PTzESuizA0Somo/XeYcpOBgYGBwWHKTZxOpo6NyLYpGDDgtZUJmyZ0gE0zTqc+uICwlaBTsWkmqPHZm1uMB3LUsSo6kKPO8OzNLUZkMUZ0RdgCAl3TwAAA/j8pC2cfiQYAAAAASUVORK5CYII=",
+    "sprout": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAApUlEQVR4nMWRuw3CMBBAX6yMYJoM4IYCaioXLi3GYAhGYYzIZQqPkCZNBkiDdzCVLYd8hJAQr7vPuzvL8EsaqWIjVSxz9SeSdgYAb4lTGCsAsTe5lAC0M6R6vdbkLTE1Joa253g951hsTS5Jkrcdq6cObT+Tve1WpXzqFMbKW6J2JsvlWe8SwCxIDz/cZM49H2EhbdJIFU/3y+LvSsRW4Wv2tv2HF91DTM0AjyLbAAAAAElFTkSuQmCC",
+    "trophy": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAvElEQVR4nGNgIBMwwhhSImr/idHw7M0tRgYGBgYWmKan+0SIsknaieH/sze3GJmkRNT+n5vyBSr4Bo8GiNy5KV8YpETU/jMhS+Cz9ek+ERSDGWFOPTflC4O4lgJeZ7689oDBKIeH4dmbW4wYgYPLVphtsMBhRFeALaCknd7ANeAFUiJq//9fsvr//5LVf1zRxIRNEzFijOgKCtxYsLpiwq4/KM5lIkYTAwMDQ4EbC4rNGDbi1MnAQFwAEQIAVHRNhJrnjGYAAAAASUVORK5CYII=",
+    "worlds": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAfElEQVR4nGNgIBMwYhOUElH7j8x/9uYWhjoUAZgGhyk3URQdyFHHMIARWRNcg0I2hH4wFcMAmGYmnJrQ2VCXwFzFhM2PcACzUSEbwxBMjTDFaM5EB9htxKYJTQxTIxZnYTOIiYEBEsywIEcxAA0ghyrl8YjNABjAlnLoDwDvZzmd2TTfWwAAAABJRU5ErkJggg==",
+    "zoo": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAdElEQVR4nGNgIBMwwhhSImr/0SWfvbnFiEucBaZJwG0SprG78nCKsyDzry51R5GXFsUU047eycDAwMDAhG6YtKg6g7SoOkExFBsZGBgYnr6+ieEybGLDxUZYVGCzEUUjLKgJiTEwEEg5uMCzN7cYCauiNgAAmw0v8y0PAn0AAAAASUVORK5CYII=",
+}
+_PX_CACHE = {}
+MENU_ICONS = [("💬 Join", "discord"), ("💖", "heart"), ("🎩", "hat"), ("🥚", "egg"), ("🔦", "lure"), ("📡", "beacon"), ("🕯️", "candle"),
+              ("📖", "zoo"), ("⚔️", "arena"), ("🏆", "trophy"), ("🌍", "worlds"), ("🔄", "download"), ("💬", "help"), ("🐾", "friend"),
+              ("💡", "awaken"), ("🆘", "help"), ("📋", "share"), ("✨", "awaken"), ("💤", "night"), ("👀", "zoo"), ("👻", "ghost"),
+              ("🎁", "gift"), ("Feed a cookie", "cookie"), ("Add a friend", "friend"), ("Play Night Shift", "night"), ("Pet", "heart")]
+
+
+def px_icon(name, master):
+    """A pixel icon as a tk image (kept, so tk doesn't lose it)."""
+    if name not in _PX_CACHE:
+        _PX_CACHE[name] = tk.PhotoImage(master=master, data=PX_ICONS[name])
+    return _PX_CACHE[name]
+
+
+def iconize_menu(menu):
+    """Swap the emoji at the start of menu labels for pixel icons (and do the same in every submenu)."""
+    try:
+        end = menu.index("end")
+    except tk.TclError:
+        return
+    if end is None:
+        return
+    for i in range(end + 1):
+        try:
+            kind = menu.type(i)
+            if kind not in ("command", "cascade", "checkbutton", "radiobutton"):
+                continue
+            label = menu.entrycget(i, "label")
+            for prefix, name in MENU_ICONS:
+                if label == prefix or label.startswith(prefix + " ") or (prefix[0].isalpha() and label.startswith(prefix)):
+                    text = label[len(prefix):].lstrip() if not prefix[0].isalpha() else label
+                    if prefix == "💬 Join":
+                        text = "Join" + label[len(prefix):]
+                    menu.entryconfigure(i, label=text, image=px_icon(name, menu), compound="left")
+                    break
+            if kind == "cascade":
+                iconize_menu(menu.nametowidget(menu.entrycget(i, "menu")))
+        except tk.TclError:
+            continue
+
+
 # ----------------------------------------------------------------------------- see-through windows (the Redux engine)
 # Before 1.0, pet windows were made see-through with a "magic pink" color key, and Windows had to repaint them whenever
 # anything happened (a click, a menu, a window passing over). Sometimes it showed black for a moment before the repaint.
@@ -4525,6 +4596,7 @@ class Blip:
         if self.state == "walk":
             self.set_state("idle", 3)
         try:
+            iconize_menu(self.menu)
             self.menu.tk_popup(e.x_root, e.y_root)
         finally:
             self.menu.grab_release()

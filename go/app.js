@@ -106,7 +106,7 @@
   }
   function setSound(on, quiet = false) {
     save.sound = on; if (!quiet) persist(true);
-    const b = $("soundBtn"); b.textContent = on ? "🔊" : "🔇"; b.setAttribute("aria-label", on ? "Sound on" : "Sound off");
+    const b = $("soundBtn"); b.innerHTML = `<img class="px" src="icons/px/${on ? "sound" : "mute"}.png" alt="">`; b.setAttribute("aria-label", on ? "Sound on" : "Sound off");
     if (on && !quiet) sfx("boop");
   }
 
@@ -1029,6 +1029,10 @@
 
   // ------------------------------------------------------------------ the Arena ⚔️ (same rules and battle codes as the desktop app)
   const AR = D.arena || { stats: {}, types: {}, beats: {}, rivals: [] };
+  const PXI = {};                                         // pixel icons for drawing on canvases
+  const pxIcon = (n) => { if (!PXI[n]) { PXI[n] = new Image(); PXI[n].src = `icons/px/${n}.png`; } return PXI[n]; };
+  const pxImg = (n) => { const i = doc().createElement("img"); i.className = "px"; i.src = `icons/px/${n}.png`; i.alt = ""; return i; };
+  ["spark", "splash", "sprout", "awaken"].forEach(pxIcon);
   let arenaTeam = [], arenaBattle = null, arenaTimer = null;
   const arenaEntry = (p) => { const b = AWAKEN_BASE[p.kind] || p.kind; return [b, p.color % KINDS[b].colors.length, AWAKEN_FORM[b] && save.awakened.includes(b) ? 1 : 0]; };
   function battleCodeFor(name, team) {
@@ -1088,7 +1092,8 @@
     for (const p of pets) {
       const e = arenaEntry(p), st = AR.stats[e[0]];
       const b = doc().createElement("button"); b.className = arenaTeam.includes(p) ? "on" : "";
-      b.appendChild(thumb(e[0], e[1], false, 3)); b.append(`${AR.types[st.type][0]} ${e[0]}`);
+      b.appendChild(thumb(e[0], e[1], false, 3));
+      const nm = doc().createElement("span"); nm.className = "typed"; nm.append(pxImg(st.type), ` ${e[0]}`); b.appendChild(nm);
       const sm = doc().createElement("small"); sm.textContent = `❤${st.hp} ⚔${st.atk} 💨${st.spd}${e[2] ? " ✨" : ""}`; b.appendChild(sm);
       b.onclick = () => { if (arenaTeam.includes(p)) arenaTeam = arenaTeam.filter((q) => q !== p); else { arenaTeam.push(p); if (arenaTeam.length > 3) arenaTeam.shift(); } openArena(); };
       box.appendChild(b);
@@ -1145,7 +1150,9 @@
       if (!f) return;
       drawGrid(c, grid(f.kind, f.color, { t: now(), face: f.hp > f.max / 2 ? "happy" : "normal" }), x0 + 12, 52, 7);
       c.fillStyle = "#fff"; c.font = "700 11px " + FONT; c.textAlign = "center";
-      c.fillText(`${AR.types[fst(f).type][0]} ${f.kind}${f.aw ? " ✨" : ""}`, x0 + 68, 48);
+      const label = `${f.kind}${f.aw ? " ✨" : ""}`, lw = c.measureText(label).width;
+      c.fillText(label, x0 + 68 + 9, 48);
+      const ic = pxIcon(fst(f).type); if (ic.complete) c.drawImage(ic, x0 + 68 - lw / 2 - 10, 37, 14, 14);
       c.fillStyle = "#2b2547"; c.fillRect(x0, 150, 136, 12);
       const fr = f.hp / f.max; c.fillStyle = fr > 0.5 ? "#9ad8a8" : fr > 0.2 ? "#ffd23a" : "#ff5a7a"; c.fillRect(x0, 150, 136 * fr, 12);
       c.fillStyle = "#ffffff"; c.font = "800 10px " + FONT; c.fillText(`${f.hp} / ${f.max}`, x0 + 68, 160);

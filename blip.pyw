@@ -3365,6 +3365,12 @@ def default_color(kind):
     return PALETTE_INDEX[v["palette"]] if "palette" in v and not v.get("colors") else 0
 SUGGEST_URL = "https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml"
 SUPPORT_URL = "https://github.com/Johnblip189/blipville#support-blipville"
+NOTICE_ID = "alpha-0.4"
+NOTICE_TEXT = ("Thank you so much for playing the Blipville beta! 💜\n\n"
+               "Every pet you hatched, cryptid you spotted and idea you sent helped make Blipville what it is.\n\n"
+               "Blipville is now going into ALPHA, starting with 100 new Blips and 5 new tabs: "
+               "Dinos, Ocean, Sweets, Space and Plants. Expect lots of new stuff (and the odd bug).\n\n"
+               "Your pets, hearts and unlocks all come with you. Have fun!")
 IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
 HELP_URL = "https://github.com/Johnblip189/blipville/issues/new?template=help.yml"   # links live in the README, so they can change anytime
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",
@@ -5370,6 +5376,7 @@ class App:
         self.sightings = []                        # a cryptid sneaking past right now
         self.next_sighting = time.monotonic() + random.uniform(6, 14) * 60
         self.next_kaiju = time.monotonic() + random.uniform(30, 60) * 60     # kaiju are much rarer
+        self.root.after(2500, self.show_notice)
         self.pets = []
         if not self.restore_town():
             self.add_pet("Blip", "Blip")
@@ -5462,6 +5469,19 @@ class App:
         self.next_sighting = min(self.next_sighting, time.monotonic() + random.uniform(15, 45))
         messagebox.showinfo("Cryptid Lure 🔦", "You set out a Cryptid Lure…\n\nWatch the bottom of your screen. "
                             "When a shadow with glowing eyes sneaks by, click it before it gets away!", parent=parent)
+
+    def show_notice(self):
+        """A one-time message for a new phase of Blipville."""
+        if self.save.get("notice_seen") == NOTICE_ID:
+            return
+        self.save["notice_seen"] = NOTICE_ID
+        write_save(self.save)
+        from tkinter import messagebox
+        messagebox.showinfo("Blipville is going into alpha! 💜", NOTICE_TEXT, parent=self.root)
+        if self.pets:
+            self.pets[0].say("thank you for playing!! <3", 4)
+            self.pets[0].set_face("happy", 2)
+            self.pets[0].burst("heart", 8)
 
     def set_beacon(self, parent):
         from tkinter import messagebox

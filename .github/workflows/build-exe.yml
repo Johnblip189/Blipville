@@ -74,4 +74,5 @@ jobs:
           target_commitish: ${{ github.sha }}
           prerelease: ${{ steps.ver.outputs.prerelease == 'true' }}
           files: dist/*.exe
+          body_path: RELEASE_NOTES.md
           generate_release_notes: true

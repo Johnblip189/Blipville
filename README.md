@@ -2,7 +2,7 @@
 
 ![Blipville: pixel pets that live on your taskbar](docs/banner.png)
 
-> 🧪 **Beta demo.** Blipville is still being built. Expect new animals, changes and the odd bug. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
+> 💜 **Thanks for playing the Blipville beta! We're going into alpha.** Blipville is still being built. Expect lots of new stuff, changes and the odd bug. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
 
@@ -10,7 +10,10 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 **238 kinds of pets · 750+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
 
-## ✨ Coming next
+## ✨ New in v0.4.0 (alpha)
+
+**Thank you for playing our beta!** 💜 Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipville. Now we're going into **alpha**, starting with:
+
 
 - 🐾 **100 new Blips!** 50 new animals (Badger, Cheetah, Moose, Platypus, Peacock, Poodle, Koi and lots more), plus 5 brand-new tabs:
   - 🦕 **Dinos:** Triceratops, Stegosaurus, Brachiosaurus, Pterodactyl, Raptor and more
@@ -51,7 +54,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville.exe (beta)](https://github.com/Johnblip189/blipville/releases/download/v0.3.4-beta/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe (alpha)](https://github.com/Johnblip189/blipville/releases/download/v0.4.0-alpha/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.

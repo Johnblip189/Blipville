@@ -1088,6 +1088,11 @@
     }
   }
   if (!pets.length) { addPet("Blip", { name: "Blip", quiet: true }); setTimeout(() => openSheet("helpSheet"), 900); }
+  if (save.noticeSeen !== "alpha-0.4") {                // one-time thank-you for beta players
+    const fresh = !save.hatched.length && !save.cryptids.length && save.hearts < 20;
+    save.noticeSeen = "alpha-0.4";
+    if (!fresh) setTimeout(() => { toast("💜 Thanks for playing the Blipville beta! We're going into alpha, starting with 100 new Blips and 5 new tabs.", 7); say(pets[0], "thank you for playing!! <3", 4); }, 1200);
+  }
   const today = new Date().toISOString().slice(0, 10);
   if (save.lastDay !== today) {
     save.lastDay = today;

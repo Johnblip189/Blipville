@@ -8,7 +8,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**238 kinds of pets · 750+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
+**249 kinds of pets · 750+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
 
 ## ✨ New in v0.4.0 (release candidate 2)
 
@@ -23,6 +23,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
   - 🌱 **Plants:** Sunflower, Tulip, Flytrap, Pumpkin, Lotus and more
 - 🔄 **Auto-updates:** the desktop app now checks for new versions and updates itself (it always asks first). Right-click a pet → **🔄 Updates**.
 - 🌍 **Worlds:** the Dinos, Ocean, Sweets, Space and Plants tabs are now worlds. Unlock one with hearts (50–150 💖) to pick its Blips, then visit it any time: right-click a pet → **🌍 Worlds** (on phones and laptops, tap **🌍 Worlds**). Each world has its own sky and ground on the phone version. Blips you already had stay yours.
+- 🌟 **World Legends:** each world hides 2 legendary Blips (10 in all: Mossling, Bloomkin, Gumdrop Golem, Cotton Candy Cloud, Pearlfin, Abyss Wisp, Fossilbones, Amber Raptor, Nebula Cat, Cosmo Pup). They only stroll by while you're visiting their world, sparkling in full color. Click one before it leaves!
 - 🎁 **A free gift:** everyone who plays this week gets **Beta Buddy**, a limited-edition party Blip, in the new Gifts tab. **This week only** (until Sunday, November 22)!
 
 ## ✨ New in v0.3.4 (beta)

@@ -4,6 +4,7 @@
 - 🌍 **Worlds** on desktop *and* phones/laptops: unlock Plant, Sweets, Ocean, Dino and Space World with hearts, then visit them
 - 🔄 **Updates that actually reach you:** a backup way to check, a fallback for blocked connections, the build time in the Updates menu, and a fix for the "Failed to load Python DLL" error after updating
 - ⚡ **Smoother and no black flashes:** steady 30 FPS, pets only redraw when they change, fewer window repaints
+- 🌟 **World Legends:** 10 legendary Blips, 2 per world, that only stroll by while you're visiting their world. Click them to befriend them!
 - 🦊 Kitsune's Spirit colors redrawn
 
 **Updating from RC1?** If your copy can't find this update, download it once by hand from this page. After that it updates itself.

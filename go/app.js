@@ -9,6 +9,7 @@
   const CRYPT = new Set(D.groups.cryptids);
   const KAIJU = new Set(D.groups.kaiju || []), HITS = D.kaijuHits || 3;
   const GIFTS = new Set(D.groups.gifts || []);
+  const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const WORLD_LOOK = {
     "Plant World":  { sky: ["#8fd8a8", "#e8ffd8"], land: ["#4ab85a", "#3a9a4a", "#2f7a3a"], fx: [["leaf", 3], ["petal", 3]], sun: "#fff2a8" },
     "Sweets World": { sky: ["#ffb0d8", "#fff0c8"], land: ["#ff8ab8", "#c8885a", "#a86a3a"], fx: [["sprinkle", 7]], sun: "#fff0f8" },
@@ -32,7 +33,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
@@ -107,7 +108,7 @@
     if (on && !quiet) sfx("boop");
   }
 
-  const isUnlocked = (k) => WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const isUnlocked = (k) => LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -630,7 +631,8 @@
   // Every few minutes a cryptid shows up in town, each its own way (Mothman lands on a lamp post, Nessie
   // pops out of the water…). Tap it before it gets away to befriend it! Scenes come from blip.pyw.
   let sighting = null, nextSighting = now() + rnd(2, 5) * 60;
-  let nextKaiju = now() + rnd(15, 30) * 60;            // kaiju: much rarer, bigger, and they take 3 taps
+  let nextKaiju = now() + rnd(15, 30) * 60;
+  let nextLegend = now() + rnd(1, 2) * 60;              // legends: only while you're visiting their world            // kaiju: much rarer, bigger, and they take 3 taps
   const QMARK = [".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."];
   const [SW, SH] = D.sceneSize, SHADOW = "#16121f", GLOW = "#ffe66a";
   function scenePos(keys, t) {
@@ -670,6 +672,11 @@
   const sightingVisible = () => sighting && sighting.pos[1] + 12 * sighting.s >= sighting.clip;
   function sightingStep(t) {
     if (!sighting) {
+      if (hereWorld() && t >= nextLegend) {
+        nextLegend = t + rnd(2, 5) * 60;
+        const leftL = (D.groups.legends || []).filter((k) => LEGEND_WORLD[k] === hereWorld() && !isUnlocked(k));
+        if (leftL.length && $("nsSheet").hidden) { startSighting(pick(leftL)); return; }
+      }
       if (t >= nextKaiju) {
         nextKaiju = t + rnd(30, 60) * 60;
         const leftK = (D.groups.kaiju || []).filter((k) => !isUnlocked(k));
@@ -684,7 +691,8 @@
     const sg = sighting, st = t - sg.t0, k = KINDS[sg.kind];
     if (st > sg.keys[sg.keys.length - 1][0]) {
       const witness = pets.find((p) => !["sleep", "held"].includes(p.state));
-      if (witness && KAIJU.has(sg.kind)) say(witness, pick(["it stomped away!!", "THAT WAS HUGE", "the whole town shook!", "next time we'll get it!"]), 3);
+      if (witness && LEG.has(sg.kind)) say(witness, pick(["aww, it sparkled away…", "it went back into the world!", "so pretty! next time!"]), 3);
+      else if (witness && KAIJU.has(sg.kind)) say(witness, pick(["it stomped away!!", "THAT WAS HUGE", "the whole town shook!", "next time we'll get it!"]), 3);
       else if (witness) say(witness, pick(["did you see that?!", "w-what was THAT?", "i think i saw something…", "*rubs eyes* huh?", "it got away!"]), 3);
       sighting = null; return;
     }
@@ -700,17 +708,18 @@
     });
     props("back");
     if (sg.sc.mound && y < sg.clip - 10) { const P = D.sceneProps.mound; sceneMask(P.rows, P.colors, x + Math.sin(st * 9) * 0.6, 0, st, false); }
-    const g = grid(sg.kind, 0, { t: 0, silhouette: true, state: "walk" });
+    const legend = LEG.has(sg.kind);                     // legends stroll by in full color
+    const g = grid(sg.kind, 0, { t: legend ? t : 0, silhouette: !legend, state: "walk" });
     const glow = Math.floor(t * 2.5) % 10 !== 0;
     const s = sg.s, flash = t < sg.flash;
     g.forEach((row, r) => {
       if (y + (12 - r) * s < sg.clip) return;
-      const cells = row.map((c, i) => (c ? (flash ? "#ffffff" : glow && r === k.eyes && [4, 5, 10, 11].includes(i) ? GLOW : SHADOW) : null));
+      const cells = row.map((c, i) => (c ? (flash ? "#ffffff" : legend ? c : glow && r === k.eyes && [4, 5, 10, 11].includes(i) ? GLOW : SHADOW) : null));
       if (sg.facing === -1) cells.reverse();
       const top = GROUND - (y + (13 - r) * s) * u;
       cells.forEach((c, i) => { if (c) { ctx.fillStyle = c; ctx.fillRect(L + (x + (i - 8) * s) * u, top, s * u + 0.5, s * u + 0.5); } });
     });
-    if (sg.sc.sparkle && !moving) {
+    if (sg.sc.sparkle && (!moving || legend)) {
       ctx.fillStyle = "#fff27a";
       for (let i = 0; i < 3; i++) if (Math.floor(st * 6 + i * 2) % 3) {
         const sx = x + sg.facing * (8 + i * 2), sy = y + 5 + ((i * 3 + Math.floor(st * 4)) % 6);
@@ -724,7 +733,7 @@
         ctx.fillStyle = "#16121f"; ctx.fillRect(bx - 1, by - 1, 3 * u + 2, 2 * u + 2);
         ctx.fillStyle = i < sg.hits ? "#ff5a7a" : "#ffffff"; ctx.fillRect(bx, by, 3 * u, 2 * u);
       }
-    } else if (sightingVisible()) drawMask(QMARK, L + x * u - 7, GROUND - (y + 22) * u, 3, "#ffffff");
+    } else if (sightingVisible() && !legend) drawMask(QMARK, L + x * u - 7, GROUND - (y + 22) * u, 3, "#ffffff");
   }
   function sightingAt(px, py) {
     if (!sightingVisible()) return false;
@@ -741,7 +750,7 @@
       return;
     }
     sighting = null;
-    (KAIJU.has(kind) ? save.kaiju : save.cryptids).push(kind); persist(true); sfx("fanfare"); vibrate([30, 40, 30]);
+    (KAIJU.has(kind) ? save.kaiju : LEG.has(kind) ? save.legends : save.cryptids).push(kind); persist(true); sfx("fanfare"); vibrate([30, 40, 30]);
     const p = addPet(kind, { x: clamp(x, 10 * S, W - 10 * S), quiet: true });
     if (p) { say(p, `you spotted me! 📸 i'm a ${kind}!`, 5); setFace(p, "happy", 2); burst(p, "heart", 6); }
     else toast(`You befriended a ${kind}! 📸 It's waiting in your 📖 Zoo.`, 4);
@@ -891,9 +900,10 @@
     const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ...(D.groups.tabs || []), ["Rare ✨ (hatch from eggs)", D.groups.rare],
                     ["Night Shift 🌙 (survive the nights)", D.groups.nightShift], ["Cryptids 👣 (spot them in town)", D.groups.cryptids],
                     [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []],
+                    ["Legends ✨ (visit a world, tap them when they stroll by)", D.groups.legends || []],
                     ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const world = WORLDS.find((w) => w.tab === title);
@@ -1003,6 +1013,7 @@
   }
   function visitWorld(name) {
     save.world = name; weather = []; persist(true); closeSheets();
+    if (name) nextLegend = Math.min(nextLegend, now() + rnd(45, 90));
     const w = WORLDS.find((x) => x.name === name), p = pets.find((q) => q.state !== "sleep");
     if (p) say(p, w ? `welcome to ${w.name}! ${w.icon}` : "home sweet home!", 3);
   }

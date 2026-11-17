@@ -3207,11 +3207,27 @@ GIFTS = {
              {"name": "Silver", "o": "#3a3a4a", "b": "#d8dce8", "h": "#7a5ad8", "s": "#ffffff", "y": "#ffd23a", "p": "#ffb0c8", "e": "#1a1a2a"},
              {"name": "Holo", "o": "#4a2a5a", "b": "#e8c8ff", "h": "#5ad8c8", "s": "#ffffff", "y": "#ff8ac8", "p": "#ff8ab0", "e": "#2a0a3a"}]},
 }
+# World Legends ✨: two legendary Blips per world. They only show up while you're visiting that world: they stroll
+# past in full color with sparkles, and you click them before they leave.
+LEGENDS = {
+ 'Mossling': {'eyes': 5, 'move': 'walk', 'feet': True, 'mouth': True, 'speed': 0.8, 'lines': ['*soft rustle*', 'i grow wherever i nap', 'moss is just cozy grass', 'you found me!'], 'body': ['...g........g...', '..gg.g....g.gg..', '...oooooooooo...', '..obdbbbbbbdbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbdbbdbbbpbo', 'obbbbbbbbbbbbbbo', 'odbbbbbbbbbbbbdo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Moss', 'o': '#1a3a14', 'b': '#6aa83a', 'e': '#0a1a06', 'g': '#a8e05a', 'd': '#4a7a2a', 'p': '#ff9a8a'}, {'name': 'Autumn', 'o': '#3a1a06', 'b': '#c8883a', 'e': '#1a0a04', 'g': '#ff6a2a', 'd': '#8a5a1a', 'p': '#ff9a7a'}]},
+ 'Bloomkin': {'eyes': 5, 'move': 'flutter', 'feet': False, 'mouth': True, 'speed': 1.0, 'lines': ['*petals glitter*', "i'm the garden's secret", 'flowers tell me everything', 'sniff me! i smell like spring'], 'body': ['..rr..rrrr..rr..', '.rrrrrrrrrrrrrr.', '.rrrryyyyyyrrrr.', '..oooooooooooo..', '.obbbbbbbbbbbbo.', 'wobbbbbbbbbbbbow', 'wobbbbbbbbbbbbow', 'wobpbbbbbbbbpbow', '.obbbbbbbbbbbbo.', '.obbbbbbbbbbbbo.', '..obbbbbbbbbbo..', '...oooooooooo...'], 'colors': [{'name': 'Rose', 'o': '#3a1a2a', 'b': '#d8f4c8', 'e': '#1a0a14', 'r': '#ff6a9a', 'y': '#ffd23a', 'w': '#e8f8ff', 'p': '#ff8ab0'}, {'name': 'Violet', 'o': '#1a1a3a', 'b': '#e0f0d8', 'e': '#1a0a2a', 'r': '#a87aff', 'y': '#fff27a', 'w': '#f0e8ff', 'p': '#ff9ac8'}]},
+ 'Gumdrop Golem': {'eyes': 6, 'move': 'walk', 'feet': True, 'mouth': True, 'speed': 0.6, 'lines': ['*wobble wobble*', "i'm sweet and sturdy", 'sugar-coated and strong', "don't eat me, i'm a friend"], 'body': ['......oooo......', '.....obbbbo.....', '....obbbbbbo....', '...obsbbbbsbo...', '..obbbbbbbbbbo..', '.obbbbsbbsbbbbo.', '.obbbbbbbbbbbbo.', 'obsbbbbbbbbbbsbo', 'obpbbbbbbbbbbpbo', 'obbbbsbbbbsbbbbo', 'obbbbbbbbbbbbbbo', '.oooooooooooooo.'], 'colors': [{'name': 'Cherry', 'o': '#5a0a1a', 'b': '#ff4a6a', 'e': '#2a0410', 's': '#ffffff', 'p': '#ffd0d8'}, {'name': 'Lime', 'o': '#1a4a0a', 'b': '#7ae04a', 'e': '#0a2a04', 's': '#ffffff', 'p': '#e8ffd0'}]},
+ 'Cotton Candy Cloud': {'eyes': 5, 'move': 'float', 'feet': False, 'mouth': True, 'speed': 1.0, 'lines': ['*floats sweetly*', 'i melt in the rain', 'fluffy and fair-ground fresh', "i'm 100% sugar cloud"], 'body': ['..oo..oooo..oo..', '.obboobbbboobbo.', 'obbbbbbbbbbbbbbo', 'obcbbbbbbbbbbcbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', '.obbcbbbbbbcbbo.', '..oooooooooooo..', '.......kk.......'], 'colors': [{'name': 'Pink', 'o': '#6a3a5a', 'b': '#ffc0e0', 'e': '#3a1a2a', 'c': '#ffffff', 'k': '#e8d0a0', 'p': '#ff7ab0'}, {'name': 'Blue', 'o': '#3a4a6a', 'b': '#b8dcff', 'e': '#1a2a4a', 'c': '#ffffff', 'k': '#e8d0a0', 'p': '#ff9ac8'}]},
+ 'Pearlfin': {'eyes': 5, 'move': 'float', 'feet': False, 'mouth': True, 'speed': 1.0, 'lines': ['*splashes gracefully*', 'i guard the ocean pearl', 'the tides sing to me', 'bubble hello!'], 'body': ['......wwww......', '.....owwwwo.....', '...oooooooooo...', '..obbbbbbbbbbo..', '.obbbbbbbbbbbbo.', 'fobbbbbbbbbbbbof', 'ffobbbbbbbbbboff', 'fobpbbbbbbbbpbof', '.obbbbllllbbbbo.', '..obbbllllbbbo..', '...obbbbbbbbo...', '....oooooooo....'], 'colors': [{'name': 'Lagoon', 'o': '#0a2a3a', 'b': '#3ab8c8', 'e': '#06141a', 'w': '#fff8f0', 'f': '#8ae0e8', 'l': '#c8f4f8', 'p': '#ff9ac0'}, {'name': 'Royal', 'o': '#1a0a3a', 'b': '#7a5ad8', 'e': '#0a0614', 'w': '#fff8f0', 'f': '#c8a8ff', 'l': '#e8dcff', 'p': '#ff9ac8'}]},
+ 'Abyss Wisp': {'eyes': 5, 'move': 'float', 'feet': False, 'mouth': True, 'speed': 1.0, 'lines': ['*glows softly in the dark*', 'the deep sea is quiet', 'follow my light~', 'boo! (friendly)'], 'body': ['.......ll.......', '...oooooooooo...', '..obbbbbbbbbbo..', '.obbbbbbbbbbbbo.', '.obbbbbbbbbbbbo.', '.obbbbbbbbbbbbo.', '.obbbbbbbbbbbbo.', '.obpbbbbbbbbpbo.', '.obbbbbbbbbbbbo.', '.obbbbbbbbbbbbo.', '.oboboboobobobo.', '..o.o.o..o.o.o..'], 'colors': [{'name': 'Glow', 'o': '#6ae0ff', 'b': '#14284a', 'e': '#c8ffff', 'l': '#ffe66a', 'p': '#3a6aa8'}, {'name': 'Violet', 'o': '#d08aff', 'b': '#24143a', 'e': '#ffe0ff', 'l': '#a8ff7a', 'p': '#6a3a8a'}]},
+ 'Fossilbones': {'eyes': 5, 'move': 'walk', 'feet': True, 'mouth': False, 'speed': 0.7, 'lines': ['*rattle rattle*', "i'm 65 million years young", 'dig me up anytime', 'bone-jour!'], 'body': ['................', '...oooooooooo...', '..obbbbbbbbbbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbkbbbbbbbbkbbo', 'owbwbwbwwbwbwbwo', '.okkkkkkkkkkkko.', '..obobobbobobo..', '...oooooooooo...'], 'colors': [{'name': 'Bone', 'o': '#3a3028', 'b': '#f0e8d8', 'e': '#1a1008', 'w': '#ffffff', 'k': '#5a4a3a'}, {'name': 'Ancient', 'o': '#1a1a1a', 'b': '#c8b898', 'e': '#ff6a2a', 'w': '#fff4dc', 'k': '#3a3028'}]},
+ 'Amber Raptor': {'eyes': 5, 'move': 'walk', 'feet': True, 'mouth': False, 'speed': 1.5, 'lines': ['*chirp chirp*', 'preserved in amber, freed by you', "i'm quick AND shiny", 'rawr (cute)'], 'body': ['......f..f......', '.....ff..ff.....', '..oooooooooooo..', '.obbbbbbbbbbbbo.', 'obbsbsbbbbsbsbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'owwwwwwwwwwwwwwo', '.obbbbbbbbbbbbo.', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Amber', 'o': '#3a1a04', 'b': '#ffa83a', 'e': '#2a1004', 'f': '#ff5a2a', 's': '#ffe08a', 'w': '#ffffff', 'p': '#ff7a5a'}, {'name': 'Jade', 'o': '#0a2a1a', 'b': '#3ab88a', 'e': '#0a1a10', 'f': '#ffd23a', 's': '#b8ffe0', 'w': '#ffffff', 'p': '#ff9a8a'}]},
+ 'Nebula Cat': {'eyes': 5, 'move': 'walk', 'feet': True, 'mouth': True, 'speed': 1.1, 'lines': ['*purrs in zero g*', "i'm made of stardust", 'meow… in space no one hears you meow', 'the galaxy is my litter box'], 'body': ['................', '.o............o.', '.oo..........oo.', '.oboooooooooobo.', 'obbbsbbbbbbsbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbsbbsbbbpbo', 'obbbbbbbbbbbbbbo', 'osbbbbbbbbbbbbso', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Nebula', 'o': '#1a0a3a', 'b': '#5a3aa8', 'e': '#fff27a', 's': '#ffffff', 'p': '#ff8ad8'}, {'name': 'Aurora', 'o': '#062a2a', 'b': '#2a8a8a', 'e': '#ffffff', 's': '#b8fff0', 'p': '#ff9ac8'}]},
+ 'Cosmo Pup': {'eyes': 5, 'move': 'walk', 'feet': True, 'mouth': True, 'speed': 1.2, 'lines': ['*boop* (helmet)', 'first pup on the moon!', 'fetch a comet for me?', 'woof! (over radio)'], 'body': ['...hhhhhhhhhh...', '..h..........h..', '.h..oooooooo..h.', 'h.oaobbbbbboao.h', 'h.oaobbbbbboao.h', 'h.obbbbbbbbbbo.h', 'h.obbbbbbbbbbo.h', 'h.obpbbbbbbpbo.h', 'h.obbbbbbbbbbo.h', '.hobbbllllbbboh.', '.hhoooooooooohh.', '...rrrrrrrrrr...'], 'colors': [{'name': 'Astro', 'o': '#2a1a0a', 'b': '#e8b878', 'e': '#1a0a04', 'h': '#c8ecff', 'a': '#8a5a2a', 'l': '#fff4e0', 'r': '#e83a3a', 'p': '#ff9a8a'}, {'name': 'Moon', 'o': '#2a2a3a', 'b': '#e8e8f0', 'e': '#1a1a2a', 'h': '#e0d8ff', 'a': '#9a9ab0', 'l': '#ffffff', 'r': '#5a8af0', 'p': '#ffb0c8'}]},
+}
+LEGEND_WORLD = {'Mossling': 'Plant World', 'Bloomkin': 'Plant World', 'Gumdrop Golem': 'Sweets World', 'Cotton Candy Cloud': 'Sweets World', 'Pearlfin': 'Ocean World', 'Abyss Wisp': 'Ocean World', 'Fossilbones': 'Dino World', 'Amber Raptor': 'Dino World', 'Nebula Cat': 'Space World', 'Cosmo Pup': 'Space World'}
+
 GIFT_NOW = "Beta Buddy"     # the gift new players get right now. Set to None to end the giveaway.
 GIFT_UNTIL = "2026-11-22"   # last day of the giveaway (your computer's date); after that it stays locked
 GIFT_UNTIL_TEXT = "Sunday, November 22"
 
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS}.items():
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
@@ -3222,6 +3238,7 @@ RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
 GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
+LEGEND_KINDS = list(LEGENDS)      # found only while visiting their world
 # Worlds 🌍: each new tab's Blips are locked until you unlock its world with hearts. Blips you already have stay yours.
 WORLDS = [  # name, the tab it unlocks, cost in hearts, the air while you're visiting
     {"name": "Plant World", "icon": "🌱", "tab": "Plants 🌱", "cost": 50, "fx": [("leaf", 1.6), ("petal", 1.2)]},
@@ -3234,7 +3251,7 @@ WORLD_OF = {k: w["name"] for w in WORLDS for t, ks in TAB_GROUPS if t == w["tab"
 WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
-KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + GIFT_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GIFT_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 BEACON_COST = 100                 # hearts per Kaiju Beacon
@@ -3529,7 +3546,7 @@ class Blip:
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
         groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
                   + list(TAB_GROUPS)
-                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Gifts 🎁", GIFT_KINDS)]
+                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Gifts 🎁", GIFT_KINDS)]
                   + ([("My Blips ⭐", CUSTOM_KINDS)] if CUSTOM_KINDS else []))
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
@@ -3543,6 +3560,8 @@ class Blip:
                 self.kaiju_menu = sub
             elif members is GIFT_KINDS:
                 self.gift_menu = sub
+            elif members is LEGEND_KINDS:
+                self.legend_menu = sub
             elif any(members is ks for _, ks in TAB_GROUPS):
                 self.tab_menus = getattr(self, "tab_menus", {})
                 self.tab_menus[group] = (sub, members)
@@ -3832,6 +3851,12 @@ class Blip:
             else:
                 wm.add_command(label=f"🔒 {w['icon']} Unlock {w['name']} ({w['cost']} 💖)…",
                                command=lambda n=w["name"]: self.app.unlock_world(n, self.root))
+        self.legend_menu.delete(0, "end")
+        for k in LEGEND_KINDS:
+            if self.app.is_unlocked(k):
+                self.legend_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            else:
+                self.legend_menu.add_command(label=f"🔒 ???  (visit {LEGEND_WORLD[k]})", state="disabled")
         self.gift_menu.delete(0, "end")
         for k in GIFT_KINDS:
             if self.app.is_unlocked(k):
@@ -4586,7 +4611,12 @@ KAIJU_SCENES = {
     "Frostback": {"hint": "it's suddenly freezing… is it snowing?!", "props": [["pine", 12, 0, "back"], ["city", 50, 0, "front"]],
                   "scale": 3, "keys": [[0, -30, 0], [6, 50, 0], [7.5, 50, 0], [12, 130, 0]]},
 }
-SCENES = {**CRYPTID_SCENES, **KAIJU_SCENES}
+LEGEND_SCENES = {k: {"hint": "something sparkly is coming this way… ✨", "legend": True, "sparkle": True,
+                     "props": {w: p for w, p in {'Plant World': [['grass', 50, 0, 'front'], ['bush', 20, 0, 'back']], 'Sweets World': [], 'Ocean World': [['water', 50, 0, 'front']], 'Dino World': [['volcano', 70, 0, 'back'], ['smoke', 70, 22, 'back']], 'Space World': []}.items()}[w],
+                     "keys": [[0, -12, 0], [6, 46, 0], [10, 48, 0], [17, 112, 0]] if LEGENDS[k]["move"] == "walk" else
+                             [[0, -12, 14], [6, 46, 10], [10, 50, 14], [16, 112, 18]]}
+                 for k, w in LEGEND_WORLD.items()}
+SCENES = {**CRYPTID_SCENES, **KAIJU_SCENES, **LEGEND_SCENES}
 
 
 def scene_pos(keys, t):
@@ -4678,6 +4708,23 @@ class Sighting:
 
     def art(self, now):
         v = VARIANTS[self.kind]
+        if self.kind in LEGENDS:                    # legends stroll by in full color
+            pal = {**kind_colors(self.kind)[0], **v.get("extra", {})}
+            g = [[pal.get(ch, pal["o"]) if ch != "." else None for ch in row] + [None] * (ART_W - len(row)) for row in v["body"]]
+            g.append([None] * ART_W)
+            if v.get("feet"):
+                step = v["feet"]["walk1"] if int(now * 6) % 2 else v["feet"]["walk2"]
+                for x, ch in enumerate(step):
+                    if ch != "." and 0 <= x < ART_W:
+                        g[12][x] = pal.get("f", pal["o"])
+            er = v["eyes"]
+            if int(now * 2.5) % 10:
+                for ex in (4, 10):
+                    g[er][ex] = g[er][ex + 1] = g[er + 1][ex] = g[er + 1][ex + 1] = pal["e"]
+                    g[er][ex] = "#ffffff" if sum(int(pal["e"][i:i + 2], 16) for i in (1, 3, 5)) < 450 else pal["o"]
+            if v.get("mouth", True):
+                g[er + 4][7] = g[er + 4][8] = pal["e"]
+            return g
         g = [[self.SHADOW if ch != "." else None for ch in row] + [None] * (ART_W - len(row)) for row in v["body"]]
         g.append([None] * ART_W)
         if v.get("feet"):
@@ -4732,7 +4779,7 @@ class Sighting:
                 if col:
                     left = (x + (i - 8) * sc) * P
                     c.create_rectangle(left, top, left + P * sc, top + P * sc, fill="#ffffff" if flash else col, outline="", tags=("mover",))
-        if self.scene.get("sparkle") and not moving:        # Frogman's sparkly wand
+        if self.scene.get("sparkle") and (not moving or self.scene.get("legend")):        # Frogman's sparkly wand
             for k in range(3):
                 if int(t * 6 + k * 2) % 3:
                     sx, sy = x + self.facing * (8 + k * 2), y + 5 + (k * 3 + int(t * 4)) % 6
@@ -4744,7 +4791,7 @@ class Sighting:
                 bx, by = (x - 5 + k * 4) * P, (SCENE_H - (y + 13 * self.sc + 4)) * P
                 if by >= 0:
                     c.create_rectangle(bx, by, bx + 3 * P, by + 2 * P, fill="#ff5a7a" if k < self.hits else "#ffffff", outline="#16121f", tags=("mover",))
-        elif self.visible():
+        elif self.visible() and not self.scene.get("legend"):
             qx, qy = x * P - 8, (SCENE_H - (y + 22)) * P
             for r, row in enumerate([".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."]):   # a pixel "?"
                 for i, ch in enumerate(row):
@@ -4772,7 +4819,7 @@ class Sighting:
                     witness.say(random.choice(["again! click it again!", "it's working!", "keep going!!", "almost!"]), 2)
                 return
         self.caught = True
-        app.save.setdefault("kaiju" if kind in KAIJU else "cryptids", []).append(kind)
+        app.save.setdefault("kaiju" if kind in KAIJU else "legends" if kind in LEGENDS else "cryptids", []).append(kind)
         write_save(app.save)
         app.sound.play("fanfare")
         screen_x = self.wx + x * SCENE_PX - W / 2
@@ -4795,7 +4842,9 @@ class Sighting:
             pass
         if escaped:
             witness = next((p for p in self.app.pets if p.state not in ("sleep", "held")), None)
-            if witness and self.kind in KAIJU:
+            if witness and self.kind in LEGENDS:
+                witness.say(random.choice(["aww, it sparkled away…", "it went back into the world!", "so pretty! next time!"]), 3)
+            elif witness and self.kind in KAIJU:
                 witness.say(random.choice(["it stomped away!!", "THAT WAS HUGE", "the whole town shook!", "next time we'll get it!"]), 3)
             elif witness:
                 witness.say(random.choice(["did you see that?!", "w-what was THAT?", "i think i saw something…",
@@ -5107,6 +5156,7 @@ class Collection:
         self.groups = [("Rare ✨  hatch them from Mystery Eggs", RARE_KINDS), ("Night Shift 🌙  survive the nights", NIGHT_SHIFT),
                        ("Cryptids 👣  spot them wandering by, then click them!", CRYPTID_KINDS),
                        (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS),
+                       ("Legends ✨  visit a world and click them when they stroll by", LEGEND_KINDS),
                        ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         view_h = min(h, self.win.winfo_screenheight() - 140)        # scroll when the screen is too short to fit it all
@@ -5128,7 +5178,7 @@ class Collection:
         return self.app.save.setdefault("peeked", [])
 
     def how(self, k):
-        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "a limited-time gift" if k in GIFTS else "hatch from an egg"
+        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "a limited-time gift" if k in GIFTS else f"find it in {LEGEND_WORLD[k]}" if k in LEGENDS else "hatch from an egg"
 
     def draw(self):
         c = self.canvas
@@ -5832,6 +5882,7 @@ class App:
         self.sightings = []                        # a cryptid sneaking past right now
         self.next_sighting = time.monotonic() + random.uniform(6, 14) * 60
         self.next_kaiju = time.monotonic() + random.uniform(30, 60) * 60     # kaiju are much rarer
+        self.next_legend = time.monotonic() + random.uniform(1, 3) * 60      # world legends, while visiting a world
         self.root.after(2500, self.show_notice)
         self.updater.start()
         self.pets = []
@@ -5897,6 +5948,14 @@ class App:
             s.step(now)
         if self.sightings:
             return
+        world = self.world()
+        if world and now >= self.next_legend:
+            self.next_legend = now + random.uniform(3, 7) * 60
+            left = [k for k, w in LEGEND_WORLD.items() if w == world["name"] and not self.is_unlocked(k)]
+            if left and self.pets:
+                self.sightings.append(Sighting(self, random.choice(left)))
+                self.sound.play("boing")
+                return
         if now >= self.next_kaiju:
             self.next_kaiju = now + random.uniform(45, 90) * 60
             left = [k for k in KAIJU_KINDS if not self.is_unlocked(k)]
@@ -5969,6 +6028,7 @@ class App:
     def visit_world(self, name):
         self.save["world"] = name
         write_save(self.save)
+        self.next_legend = min(getattr(self, "next_legend", 0) or 1e18, time.monotonic() + random.uniform(45, 120))
         w = WORLD_BY_NAME.get(name)
         for p in self.pets:
             p.particles = [q for q in p.particles if q["kind"] in ("heart", "z", "crumb", "plus")]
@@ -6018,6 +6078,8 @@ class App:
                             parent=parent)
 
     def is_unlocked(self, kind):
+        if kind in LEGENDS:
+            return kind in self.save.get("legends", [])
         if kind in WORLD_OF:
             return WORLD_OF[kind] in self.save.get("worlds", [])
         if kind in GIFTS:

@@ -1,0 +1,7 @@
+still running after 11 s: True (exit code )
+clicking a pet at 692,694
+screenshot 4b-after-click failed: Exception calling "CopyFromScreen" with "4" argument(s): "The value of argument 'copyPixelOperation' (1087111200) is invalid for Enum type 'CopyPixelOperation'. (Parameter 'copyPixelOperation')"
+screenshot 4c-menu-open failed: Exception calling "CopyFromScreen" with "4" argument(s): "The value of argument 'copyPixelOperation' (1087111200) is invalid for Enum type 'CopyPixelOperation'. (Parameter 'copyPixelOperation')"
+screenshot 4d-menu-closed failed: Exception calling "CopyFromScreen" with "4" argument(s): "The value of argument 'copyPixelOperation' (1087111200) is invalid for Enum type 'CopyPixelOperation'. (Parameter 'copyPixelOperation')"
+still running after the clicks: True
+size: 15173908

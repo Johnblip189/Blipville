@@ -1,0 +1,1 @@
+stamped v0.5.1-redux, built 2026-11-17T17:20:26Z, edition redux

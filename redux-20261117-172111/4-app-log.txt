@@ -1,0 +1,6 @@
+[2026-11-17 17:20:47] v0.5.1-redux 2026-11-17T17:20:26Z | started on win32, Python 3.12.10
+[2026-11-17 17:20:49] v0.5.1-redux 2026-11-17T17:20:26Z | slow frame: 444 ms with 1 pets, 0 sightings
+[2026-11-17 17:20:57] v0.5.1-redux 2026-11-17T17:20:26Z | selftest: pet Blip state=idle click_at=175,694 layered=True frames_shown=225 failed=False
+[2026-11-17 17:20:57] v0.5.1-redux 2026-11-17T17:20:26Z | selftest: 1 pets, LAYERED=True, edition=redux
+[2026-11-17 17:21:01] v0.5.1-redux 2026-11-17T17:20:26Z | selftest: pressed Blip at 110,154
+[2026-11-17 17:21:01] v0.5.1-redux 2026-11-17T17:20:26Z | selftest: menu for Blip

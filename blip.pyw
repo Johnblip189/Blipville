@@ -3399,7 +3399,7 @@ SUPPORT_URL = "https://github.com/Johnblip189/blipville#support-blipville"
 NOTICE_ID = "rc1-0.4"
 NOTICE_TEXT = ("Thank you so much for playing the Blipville beta! 💜\n\n"
                "Every pet you hatched, cryptid you spotted and idea you sent helped make Blipville what it is.\n\n"
-               "This is Release Candidate 1, the last step before Blipville 1.0! It comes with 100 new Blips and 5 new tabs: "
+               "This is Release Candidate 2, the last step before Blipville 1.0! It comes with 100 new Blips and 5 new tabs: "
                "Dinos, Ocean, Sweets, Space and Plants. Expect lots of new stuff (and the odd bug).\n\n"
                "Your pets, hearts and unlocks all come with you. Have fun!")
 IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
@@ -5959,7 +5959,7 @@ class App:
         gift = self.give_gift()
         text = NOTICE_TEXT + (f"\n\n🎁 As a thank-you, here's {GIFT_NOW}: a limited-edition Blip, only given out until {GIFT_UNTIL_TEXT}. "
                               "Find it any time under Change kind → Gifts 🎁." if gift else "")
-        messagebox.showinfo("Blipville 0.4 RC1: almost 1.0! 💜", text, parent=self.root)
+        messagebox.showinfo("Blipville 0.4 RC2: almost 1.0! 💜", text, parent=self.root)
 
     def world(self):
         """The world your town is visiting right now (or None for home)."""

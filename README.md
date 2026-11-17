@@ -2,7 +2,7 @@
 
 ![Blipville: pixel pets that live on your taskbar](docs/banner.png)
 
-> 💜 **Thanks for playing the Blipville beta!** This is **Release Candidate 1**, the last step before Blipville 1.0. Spot a bug? Now's the time to tell me. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
+> 💜 **Thanks for playing the Blipville beta!** This is **Release Candidate 2**, the last step before Blipville 1.0. Spot a bug? Now's the time to tell me. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
 
@@ -10,9 +10,9 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 **238 kinds of pets · 750+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
 
-## ✨ New in v0.4.0 (release candidate 1)
+## ✨ New in v0.4.0 (release candidate 2)
 
-**Thank you for playing our beta!** 💜 Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipville. This is **Release Candidate 1**, the last step before **1.0**, and it comes with:
+**Thank you for playing our beta!** 💜 Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipville. This is **Release Candidate 2**, the last step before **1.0**, and it comes with:
 
 
 - 🐾 **100 new Blips!** 50 new animals (Badger, Cheetah, Moose, Platypus, Peacock, Poodle, Koi and lots more), plus 5 brand-new tabs:
@@ -23,7 +23,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
   - 🌱 **Plants:** Sunflower, Tulip, Flytrap, Pumpkin, Lotus and more
 - 🔄 **Auto-updates:** the desktop app now checks for new versions and updates itself (it always asks first). Right-click a pet → **🔄 Updates**.
 - 🌍 **Worlds:** the Dinos, Ocean, Sweets, Space and Plants tabs are now worlds. Unlock one with hearts (50–150 💖) to pick its Blips, then visit it any time: right-click a pet → **🌍 Worlds** (on phones and laptops, tap **🌍 Worlds**). Each world has its own sky and ground on the phone version. Blips you already had stay yours.
-- 🎁 **A free gift:** everyone who plays RC1 gets **Beta Buddy**, a limited-edition party Blip, in the new Gifts tab. **This week only** (until Sunday, November 22)!
+- 🎁 **A free gift:** everyone who plays this week gets **Beta Buddy**, a limited-edition party Blip, in the new Gifts tab. **This week only** (until Sunday, November 22)!
 
 ## ✨ New in v0.3.4 (beta)
 
@@ -57,7 +57,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville.exe (RC1)](https://github.com/Johnblip189/blipville/releases/download/v0.4.0-rc1/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe (RC2)](https://github.com/Johnblip189/blipville/releases/download/v0.4.0-rc2/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.

@@ -108,6 +108,7 @@ html, body {
 .zooCells button.armed span { color: #ff9fc0; }
 .peekAll { border: 0; background: none; color: #ff9fc0; font: 700 13px var(--font); text-decoration: underline; margin-top: 8px; padding: 6px; }
 .peekAll.lure { color: #ffe66a; display: block; width: 100%; }
+.peekAll[hidden] { display: none; }
 .peekAll.armed { background: #3d2a4a; border-radius: 12px; text-decoration: none; }
 
 #eggCanvas { width: 280px; height: 220px; image-rendering: pixelated; max-width: 100%; }

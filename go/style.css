@@ -201,3 +201,13 @@ body.mini .card { padding: 10px; border-radius: 14px; }
 
 .worldBtn { margin: 4px 0 8px; }
 .worldBtn.armed { background: #a83a6a; color: #fff; }
+
+/* worlds */
+#worldList { display: grid; gap: 8px; margin: 12px 0; }
+.worldRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #1d1a2e; border-radius: 14px; padding: 10px 12px; }
+.worldRow b { display: block; font-size: 15px; }
+.worldRow small { color: var(--muted); font-size: 12px; }
+.worldRow button { flex: none; min-height: 40px; padding: 0 14px; border: 0; border-radius: 12px; background: var(--accent); color: #fff; font: 800 13px var(--font); }
+.worldRow button.here { background: #3a3260; color: var(--muted); }
+.worldRow button.locked { background: #4a3a10; color: #ffe08a; }
+.worldRow button.armed { background: #a83a6a; color: #fff; }

@@ -22,7 +22,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
   - 🚀 **Space:** Astronaut, UFO, Star, Moon, Rocket, Black Hole and more
   - 🌱 **Plants:** Sunflower, Tulip, Flytrap, Pumpkin, Lotus and more
 - 🔄 **Auto-updates:** the desktop app now checks for new versions and updates itself (it always asks first). Right-click a pet → **🔄 Updates**.
-- 🌍 **Worlds:** the Dinos, Ocean, Sweets, Space and Plants tabs are now worlds. Unlock one with hearts (50–150 💖) to pick its Blips, then visit it any time: right-click a pet → **🌍 Worlds**. Blips you already had stay yours.
+- 🌍 **Worlds:** the Dinos, Ocean, Sweets, Space and Plants tabs are now worlds. Unlock one with hearts (50–150 💖) to pick its Blips, then visit it any time: right-click a pet → **🌍 Worlds** (on phones and laptops, tap **🌍 Worlds**). Each world has its own sky and ground on the phone version. Blips you already had stay yours.
 - 🎁 **A free gift:** everyone who plays RC1 gets **Beta Buddy**, a limited-edition party Blip, in the new Gifts tab. **This week only** (until Sunday, November 22)!
 
 ## ✨ New in v0.3.4 (beta)

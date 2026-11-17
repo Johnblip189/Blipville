@@ -9,6 +9,13 @@
   const CRYPT = new Set(D.groups.cryptids);
   const KAIJU = new Set(D.groups.kaiju || []), HITS = D.kaijuHits || 3;
   const GIFTS = new Set(D.groups.gifts || []);
+  const WORLD_LOOK = {
+    "Plant World":  { sky: ["#8fd8a8", "#e8ffd8"], land: ["#4ab85a", "#3a9a4a", "#2f7a3a"], fx: [["leaf", 3], ["petal", 3]], sun: "#fff2a8" },
+    "Sweets World": { sky: ["#ffb0d8", "#fff0c8"], land: ["#ff8ab8", "#c8885a", "#a86a3a"], fx: [["sprinkle", 7]], sun: "#fff0f8" },
+    "Ocean World":  { sky: ["#0e4a8a", "#3ab0d8"], land: ["#2a7aa8", "#e8d8a0", "#c8b880"], fx: [["bubble", 6]], sun: null },
+    "Dino World":   { sky: ["#c8582a", "#ffc87a"], land: ["#5a7a3a", "#6a4a2a", "#4a3418"], fx: [["ash", 5], ["leaf", 1]], sun: "#ffe08a", volcano: true },
+    "Space World":  { sky: ["#06061a", "#2a1a5a"], land: ["#5a5a7a", "#8a8aa8", "#6a6a88"], fx: [["star", 5]], sun: null, planet: true },
+  };
   const WORLDS = D.worlds || [], WORLD_OF = {};          // world Blips are locked until you unlock their world
   for (const w of WORLDS) for (const [t, ks] of D.groups.tabs || []) if (t === w.tab) for (const k of ks) WORLD_OF[k] = w.name;
   const EGG_COST = D.eggCost;
@@ -25,7 +32,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [] };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
@@ -448,22 +455,32 @@
   const season = () => seasonOverride || currentSeason();
   let weather = [], lastWeather = 0;
   const BAT = ["x...x", "xx.xx", ".xxx."], BAT_FLAP = [".x.x.", "xxxxx", ".x.x."];
+  const hereWorld = () => (save.world && save.worlds.includes(save.world) ? save.world : null);
   function weatherStep(t, night) {
     const dt = Math.min(0.05, t - (lastWeather || t)); lastWeather = t;
     const sz = Math.max(2, Math.round(S * 0.6)), scaleW = W / 400;
-    const rates = { winter: [["snow", 10]], spring: [["petal", 4]], autumn: [["leaf", 3.5]],
-                    spooky: [["leaf", 2], ["bat", 0.25]], summer: night ? [["firefly", 2.5]] : [] }[season()] || [];
+    const rates = hereWorld() ? WORLD_LOOK[hereWorld()].fx : ({ winter: [["snow", 10]], spring: [["petal", 4]], autumn: [["leaf", 3.5]],
+                    spooky: [["leaf", 2], ["bat", 0.25]], summer: night ? [["firefly", 2.5]] : [] }[season()] || []);
     for (const [kind, rate] of rates) {
       if (Math.random() > rate * scaleW * dt) continue;
       if (kind === "bat") { const d = Math.random() < 0.5 ? 1 : -1; weather.push({ kind, x: d > 0 ? -20 : W + 20, y: rnd(30, GROUND * 0.5), vx: 70 * d, vy: 0, born: t, life: (W + 40) / 70 }); }
+      else if (kind === "bubble") weather.push({ kind, x: rnd(0, W), y: GROUND + 4, vx: 0, vy: -rnd(25, 50), born: t, life: GROUND / 25, ph: rnd(0, 6.3), size: pick([1, 1.5, 2.5]) });
+      else if (kind === "star") weather.push({ kind, x: rnd(0, W), y: rnd(10, GROUND - 30), vx: 0, vy: 0, born: t, life: rnd(1.5, 3), ph: rnd(0, 6.3), color: pick(["#ffffff", "#fff27a", "#a8d8ff"]) });
+      else if (kind === "sprinkle") weather.push({ kind, x: rnd(0, W), y: -6, vx: 0, vy: rnd(30, 60), born: t, life: (GROUND + 10) / 30, ph: rnd(0, 6.3), tall: Math.random() < 0.5,
+                                                  color: pick(["#ff5a8a", "#5ad8ff", "#ffd23a", "#8af05a", "#b88aff", "#ffffff"]) });
+      else if (kind === "ash") weather.push({ kind, x: rnd(0, W), y: -6, vx: rnd(-6, 14), vy: rnd(15, 35), born: t, life: (GROUND + 10) / 15, ph: rnd(0, 6.3), color: pick(["#8a8090", "#5a5060", "#ff8a3a"]) });
       else if (kind === "firefly") weather.push({ kind, x: rnd(0, W), y: rnd(GROUND * 0.35, GROUND - 10), vx: rnd(-12, 12), vy: rnd(-10, 4), born: t, life: 4 });
       else weather.push({ kind, x: rnd(0, W), y: -6, vx: rnd(-10, 10), vy: rnd(28, 60), born: t, life: (GROUND + 10) / 28, ph: rnd(0, 6.3),
                           color: pick(["#e8702a", "#c8402a", "#ffb83a"]) });
     }
-    weather = weather.filter((w) => t - w.born < w.life && w.y < GROUND + 4);
+    weather = weather.filter((w) => t - w.born < w.life && w.y < GROUND + 6);
     for (const w of weather) {
       w.x += w.vx * dt; w.y += w.vy * dt; const a = t - w.born;
       if (w.kind === "snow") { ctx.fillStyle = "#f4f8ff"; ctx.fillRect(w.x, w.y, sz, sz); }
+      else if (w.kind === "bubble") { const x = w.x + Math.sin(a * 3 + w.ph) * 5, b = sz * w.size; ctx.strokeStyle = "#cdefff"; ctx.lineWidth = 1.5; ctx.strokeRect(x, w.y, b, b); ctx.fillStyle = "#ffffff"; ctx.fillRect(x + 1.5, w.y + 1.5, 1.5, 1.5); }
+      else if (w.kind === "star") { if (Math.sin(a * 6 + w.ph) > -0.2) { ctx.fillStyle = w.color; ctx.fillRect(w.x, w.y - sz, sz, sz * 3); ctx.fillRect(w.x - sz, w.y, sz * 3, sz); } }
+      else if (w.kind === "sprinkle") { ctx.fillStyle = w.color; const x = w.x + Math.sin(a * 2 + w.ph) * 3; ctx.fillRect(x, w.y, w.tall ? sz : sz * 2, w.tall ? sz * 2 : sz); }
+      else if (w.kind === "ash") { ctx.fillStyle = w.color; ctx.fillRect(w.x + Math.sin(a * 2 + w.ph) * 5, w.y, sz, sz); }
       else if (w.kind === "leaf" || w.kind === "petal") {
         const x = w.x + Math.sin(a * 3 + w.ph) * 8;
         ctx.fillStyle = w.kind === "leaf" ? w.color : "#ffb0d8";
@@ -481,6 +498,8 @@
   function sky(t) {
     const h = new Date().getHours() + new Date().getMinutes() / 60;
     const night = h >= 20 || h < 6, dusk = (h >= 17 && h < 20) || (h >= 6 && h < 8);
+    const wl = hereWorld() && WORLD_LOOK[hereWorld()];
+    if (wl) { worldSky(t, wl); return; }
     const [top, bottom] = night ? ["#151233", "#3a2f63"] : dusk ? ["#5a3a8a", "#ffa98a"] : ["#6fb8ff", "#c8e8ff"];
     const gr = ctx.createLinearGradient(0, 0, 0, GROUND);
     gr.addColorStop(0, top); gr.addColorStop(1, bottom);
@@ -511,6 +530,32 @@
       for (let x = 13; x < W; x += 47) { ctx.fillStyle = ["#ffb0d8", "#ffd23a", "#ffffff"][x % 3]; ctx.fillRect(x, GROUND + 14 + (x % 17), 4, 4); }
     }
     weatherStep(t, night);
+  }
+  function worldSky(t, wl) {
+    const gr = ctx.createLinearGradient(0, 0, 0, GROUND);
+    gr.addColorStop(0, wl.sky[0]); gr.addColorStop(1, wl.sky[1]);
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+    if (wl.planet) {                                         // space: a ringed planet and a little moon
+      ctx.fillStyle = "#b88aff"; ctx.beginPath(); ctx.arc(W * 0.78, GROUND * 0.24, 30, 0, 7); ctx.fill();
+      ctx.fillStyle = "#ffd8f0"; ctx.fillRect(W * 0.78 - 48, GROUND * 0.24 - 3, 96, 6);
+      ctx.fillStyle = "#e8e8f0"; ctx.beginPath(); ctx.arc(W * 0.2, GROUND * 0.16, 12, 0, 7); ctx.fill();
+      for (const [sx, sy, tw] of stars) { ctx.globalAlpha = 0.5 + 0.5 * Math.sin(t * 2 + tw * 9); ctx.fillStyle = "#fff6d8"; ctx.fillRect(sx * W, sy * GROUND, 3, 3); }
+      ctx.globalAlpha = 1;
+    } else if (wl.sun) { ctx.fillStyle = wl.sun; ctx.beginPath(); ctx.arc(W * 0.8, GROUND * 0.18, 26, 0, 7); ctx.fill(); }
+    if (!wl.sun && !wl.planet) {                             // ocean: light rays from the surface
+      ctx.fillStyle = "rgba(255,255,255,.08)";
+      for (let i = 0; i < 4; i++) { const x = ((i * 0.27 + t * 0.01) % 1) * W; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 40, 0); ctx.lineTo(x + 120, GROUND); ctx.lineTo(x + 60, GROUND); ctx.fill(); }
+    }
+    if (wl.volcano) {                                        // dino: a smoking volcano
+      ctx.fillStyle = "#5a3a2a"; ctx.beginPath(); ctx.moveTo(W * 0.62, GROUND); ctx.lineTo(W * 0.74, GROUND * 0.45); ctx.lineTo(W * 0.8, GROUND * 0.45); ctx.lineTo(W * 0.94, GROUND); ctx.fill();
+      ctx.fillStyle = "#ff6a2a"; ctx.fillRect(W * 0.74, GROUND * 0.45, W * 0.06, 6);
+      ctx.fillStyle = "rgba(90,80,90,.6)"; for (let i = 0; i < 3; i++) { const yy = GROUND * 0.4 - ((t * 12 + i * 30) % 90); ctx.fillRect(W * 0.75 + Math.sin(t + i) * 10, yy, 24, 12); }
+    }
+    ctx.fillStyle = wl.land[0];
+    for (let x = 0; x < W; x += 6) { const hh = 26 + 14 * Math.sin(x / 70) + 8 * Math.sin(x / 23); ctx.fillRect(x, GROUND - hh, 6, hh); }
+    ctx.fillStyle = wl.land[1]; ctx.fillRect(0, GROUND, W, H - GROUND);
+    ctx.fillStyle = wl.land[2]; ctx.fillRect(0, GROUND, W, 6);
+    weatherStep(t, false);
   }
   function pixCloud(x, y) { for (const [dx, dy, w] of [[0, 8, 70], [12, 0, 40], [20, 14, 60]]) ctx.fillRect(Math.round(x + dx), Math.round(y + dy), w, 12); }
 
@@ -855,15 +900,7 @@
       if (world && !save.worlds.includes(world.name)) {           // a locked world: one button to unlock its whole tab
         const u = document.createElement("button"); u.className = "peekAll lure worldBtn";
         u.textContent = `🔓 Unlock ${world.name} ${world.icon} · ${world.cost} 💖`;
-        u.onclick = () => {
-          if (save.hearts < world.cost) { toast(`${world.name} costs ${world.cost} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 4); return; }
-          if (!u.classList.contains("armed")) { u.classList.add("armed"); u.textContent = `Unlock ${world.name} for ${world.cost} 💖? Tap again`; return; }
-          save.hearts -= world.cost; save.worlds.push(world.name); persist(true); updateHearts(true); sfx("fanfare");
-          const kinds = Object.keys(WORLD_OF).filter((k) => WORLD_OF[k] === world.name);
-          closeSheets(); const p = addPet(pick(kinds), { quiet: true });
-          if (p) { say(p, `hi! i'm from ${world.name} ${world.icon}`, 4); burst(p, "heart", 6); }
-          toast(`${world.icon} ${world.name} unlocked! Every Blip in ${world.tab} is yours to pick.`, 4.5);
-        };
+        u.onclick = () => unlockWorld(world, u);
         grid_.appendChild(u);
       }
       const cells = document.createElement("div"); cells.className = "zooCells";
@@ -951,6 +988,42 @@
     location.reload();
   };
   window.blipvilleSaveCode = { saveCode, readCode };
+
+  // worlds: unlock with hearts, then visit any time
+  function unlockWorld(w, btn) {
+    if (save.hearts < w.cost) { toast(`${w.name} costs ${w.cost} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 4); return false; }
+    if (!btn.classList.contains("armed")) { btn.classList.add("armed"); btn.textContent = `Unlock for ${w.cost} 💖? Tap again`; return false; }
+    save.hearts -= w.cost; save.worlds.push(w.name); updateHearts(true); sfx("fanfare");
+    visitWorld(w.name);
+    const kinds = Object.keys(WORLD_OF).filter((k) => WORLD_OF[k] === w.name);
+    const p = addPet(pick(kinds), { quiet: true });
+    if (p) { say(p, `hi! i'm from ${w.name} ${w.icon}`, 4); burst(p, "heart", 6); }
+    toast(`${w.icon} ${w.name} unlocked! Every Blip in ${w.tab} is yours to pick.`, 4.5);
+    return true;
+  }
+  function visitWorld(name) {
+    save.world = name; weather = []; persist(true); closeSheets();
+    const w = WORLDS.find((x) => x.name === name), p = pets.find((q) => q.state !== "sleep");
+    if (p) say(p, w ? `welcome to ${w.name}! ${w.icon}` : "home sweet home!", 3);
+  }
+  function openWorlds() {
+    const list = $("worldList"); list.innerHTML = "";
+    const row = (icon, name, sub, label, cls, onclick) => {
+      const d = document.createElement("div"); d.className = "worldRow";
+      const t = document.createElement("div"); t.innerHTML = `<b>${icon} ${name}</b><small>${sub}</small>`;
+      const b = document.createElement("button"); b.textContent = label; b.className = cls; b.onclick = () => onclick(b);
+      d.append(t, b); list.appendChild(d);
+    };
+    const here = hereWorld();
+    row("🏠", "Home", "your town, with the seasons", here ? "Go home" : "You're here", here ? "" : "here", () => here && visitWorld(null));
+    for (const w of WORLDS) {
+      const n = Object.keys(WORLD_OF).filter((k) => WORLD_OF[k] === w.name).length;
+      if (save.worlds.includes(w.name)) row(w.icon, w.name, `${n} Blips unlocked`, here === w.name ? "You're here" : "Visit", here === w.name ? "here" : "", () => here !== w.name && visitWorld(w.name));
+      else row(w.icon, w.name, `unlocks ${n} Blips in ${w.tab}`, `🔒 ${w.cost} 💖`, "locked", (b) => unlockWorld(w, b));
+    }
+    openSheet("worldSheet");
+  }
+  $("worldBtn").onclick = openWorlds;
 
   // eggs
   const EGG = ["....oooo....", "...oeeeeo...", "..oeesseeo..", ".oeeeeeeseo.", ".oeseeeeeeo.", "oeeeeeeeeseo",

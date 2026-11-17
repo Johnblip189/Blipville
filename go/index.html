@@ -32,6 +32,7 @@
   <button id="friendBtn" title="Invite a new friend (N)"><span>➕</span>Friend</button>
   <button id="eggBtn" title="Hatch a Mystery Egg (E)"><span>🥚</span>Egg</button>
   <button id="collectionBtn" title="Your collection (Z)"><span>📖</span>Zoo</button>
+  <button id="worldBtn" title="Visit other worlds"><span>🌍</span>Worlds</button>
   <button id="nightBtn" title="Play Night Shift"><span>🌙</span>Night</button>
   <button id="shareBtn" title="Save a picture of your town (S)"><span>📸</span>Share</button>
   <button id="popBtn" title="Pop the town out into a small window that stays on top (P)" hidden><span>📌</span>Pop out</button>
@@ -90,6 +91,15 @@
   </div>
 </div>
 
+<div class="sheet" id="worldSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle">🌍 Worlds</div>
+    <div class="muted small">Unlock a world with hearts to pick its Blips. Then visit it any time!</div>
+    <div id="worldList"></div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
 <!-- Night Shift minigame -->
 <div class="sheet" id="nsSheet" hidden>
   <div class="card nsCard">
@@ -120,6 +130,7 @@
       <li>Caring earns <b>hearts</b>: pet <b>+1</b> · feed <b>+3</b> (<b>+5</b> if hungry) · full nap <b>+2</b> · daily treat <b>+10</b></li>
       <li>Spend <b id="helpEggCost">30</b> hearts on a <b>🥚 Mystery Egg</b> to hatch one of the rare Blips.</li>
       <li>👣 Keep watching: every few minutes a <b>cryptid</b> sneaks through town. Tap the shadow with glowing eyes before it gets away to befriend it!</li>
+      <li>🌍 Tap <b>Worlds</b> to unlock new places (Plant, Sweets, Ocean, Dino, Space) with hearts and pick their Blips.</li>
       <li>🦖 Once in a long while a giant <b>kaiju</b> stomps through. Tap it <b>3 times</b> before it leaves!</li>
       <li>Brave enough? Tap <b>🌙 Night</b> to play <b>Night Shift</b>. Survive until 6 AM to unlock the robo crew!</li>
       <li>Buy <b>hats &amp; outfits</b> from a Blip's menu. Tap <b>🔇</b> at the top to turn on sound effects.</li>

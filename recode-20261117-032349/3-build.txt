@@ -1,0 +1,73 @@
+319 INFO: PyInstaller: 6.11.1, contrib hooks: 2026.10
+319 INFO: Python: 3.12.10
+344 INFO: Platform: Windows-2025Server-10.0.26100-SP0
+344 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+346 INFO: wrote D:\a\Blipville\Blipville\Blipville-Recode.spec
+353 INFO: Module search paths (PYTHONPATH):
+['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Scripts\\pyinstaller.exe',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+ 'D:\\a\\Blipville\\Blipville\\recode']
+611 INFO: Appending 'datas' from .spec
+613 INFO: checking Analysis
+613 INFO: Building Analysis because Analysis-00.toc is non existent
+613 INFO: Running Analysis Analysis-00.toc
+613 INFO: Target bytecode optimization level: 0
+613 INFO: Initializing module dependency graph...
+625 INFO: Initializing module graph hook caches...
+641 INFO: Analyzing base_library.zip ...
+1394 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+1894 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+3548 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5100 INFO: Caching module dependency graph...
+5205 INFO: Looking for Python shared library...
+5240 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+5240 INFO: Analyzing D:\a\Blipville\Blipville\recode\blipville_recode.py
+5440 INFO: Processing standard module hook 'hook-PySide6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5601 INFO: Processing standard module hook 'hook-shiboken6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+5603 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6505 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6716 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+7152 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+7637 INFO: Processing module hooks (post-graph stage)...
+7645 INFO: Performing binary vs. data reclassification (118 entries)
+7669 INFO: Looking for ctypes DLLs
+7675 INFO: Analyzing run-time hooks ...
+7676 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+7678 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+7680 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+7681 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+7689 INFO: Looking for dynamic libraries
+7858 INFO: Extra DLL search directories (AddDllDirectory): ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\shiboken6']
+7858 INFO: Extra DLL search directories (PATH): ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6']
+9120 WARNING: Library not found: could not resolve 'api-ms-win-core-path-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.dll'.
+9120 WARNING: Library not found: could not resolve 'api-ms-win-shcore-scaling-l1-1-1.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll'.
+9122 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll'.
+9122 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-string-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qdirect2d.dll'.
+9122 WARNING: Library not found: could not resolve 'api-ms-win-shcore-scaling-l1-1-1.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll'.
+9122 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll'.
+9122 WARNING: Library not found: could not resolve 'api-ms-win-core-winrt-string-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6\\plugins\\platforms\\qwindows.dll'.
+9132 INFO: Warnings written to D:\a\Blipville\Blipville\build\Blipville-Recode\warn-Blipville-Recode.txt
+9150 INFO: Graph cross-reference written to D:\a\Blipville\Blipville\build\Blipville-Recode\xref-Blipville-Recode.html
+9167 INFO: checking PYZ
+9167 INFO: Building PYZ because PYZ-00.toc is non existent
+9167 INFO: Building PYZ (ZlibArchive) D:\a\Blipville\Blipville\build\Blipville-Recode\PYZ-00.pyz
+9486 INFO: Building PYZ (ZlibArchive) D:\a\Blipville\Blipville\build\Blipville-Recode\PYZ-00.pyz completed successfully.
+9507 INFO: checking PKG
+9507 INFO: Building PKG because PKG-00.toc is non existent
+9507 INFO: Building PKG (CArchive) Blipville-Recode.pkg
+22584 INFO: Building PKG (CArchive) Blipville-Recode.pkg completed successfully.
+22589 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+22589 INFO: checking EXE
+22590 INFO: Building EXE because EXE-00.toc is non existent
+22590 INFO: Building EXE from EXE-00.toc
+22590 INFO: Copying bootloader EXE to D:\a\Blipville\Blipville\dist\Blipville-Recode.exe
+22593 INFO: Copying icon to EXE
+22595 INFO: Copying 0 resources to EXE
+22595 INFO: Embedding manifest in EXE
+22597 INFO: Appending PKG archive to EXE
+22619 INFO: Fixing EXE headers
+22830 INFO: Building EXE from EXE-00.toc completed successfully.

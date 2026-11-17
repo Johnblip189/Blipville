@@ -4954,10 +4954,16 @@ class Updater:
                     "ping -n 2 127.0.0.1 >nul\r\n"          # waits ~1 second (timeout.exe needs a console window)
                     "goto wait\r\n"
                     ":done\r\n"
+                    "ping -n 2 127.0.0.1 >nul\r\n"          # give the old copy a moment to finish cleaning up
                     f'start "" "{exe}"\r\n'
                     'del "%~f0"\r\n')
         flags = getattr(subprocess, "CREATE_NO_WINDOW", 0) | getattr(subprocess, "DETACHED_PROCESS", 0)
-        subprocess.Popen(["cmd", "/c", bat], creationflags=flags, close_fds=True)
+        # The .exe unpacks itself into a temp folder and leaves notes about it in the environment. If the new copy
+        # inherited those notes it would look for the old copy's (deleted) folder and fail with "Failed to load
+        # Python DLL". So the helper, and the new Blipville it starts, get a clean environment.
+        env = {k: v for k, v in os.environ.items() if not k.upper().startswith(("_MEI", "_PYI"))}
+        env["PYINSTALLER_RESET_ENVIRONMENT"] = "1"
+        subprocess.Popen(["cmd", "/c", bat], creationflags=flags, close_fds=True, env=env, cwd=os.path.dirname(exe))
         self.app.quit_all()
 
 

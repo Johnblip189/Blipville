@@ -81,8 +81,7 @@ jobs:
             $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
             $g = [System.Drawing.Graphics]::FromImage($bmp)
             $g.Clear([System.Drawing.Color]::FromArgb(40, 120, 80))
-            $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size,
-              [System.Drawing.CopyPixelOperation]::SourceCopy -bor [System.Drawing.CopyPixelOperation]::CaptureBlt)
+            $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size, [System.Drawing.CopyPixelOperation]::SourceCopy)
             $bmp.Save("$logs\$name.png"); $g.Dispose(); $bmp.Dispose()
           } catch { "screenshot $name failed: $_" | Tee-Object -FilePath logs/4-test.txt -Append } }
           $log = "$env:APPDATA\Blipville\blipville.log"

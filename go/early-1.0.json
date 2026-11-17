@@ -1,0 +1,2523 @@
+{
+ "kinds": {
+  "Solar Phoenix": {
+   "body": [
+    ".a...a.aa.a...a.",
+    "..a.aaaaaaaa.a..",
+    "w...oaaaaaao...w",
+    "ww.oobbbbbboo.ww",
+    "wwwobbbbbbbbowww",
+    "wwobbbbbbbbbbbow",
+    "wwobbbbbbbbbbbow",
+    "wobpbbbbbbbbpbow",
+    ".obbbbbkkbbbbbo.",
+    ".obbbbbbbbbbbbo.",
+    "..obbbbbbbbbbo..",
+    "..aoaaooooaaoa.."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": false,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "flutter",
+   "speed": 1.4,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*blazes brighter than the sun* ☀️",
+    "reborn and ready",
+    "too hot to handle",
+    "i rise. every time.",
+    "warm hugs only"
+   ],
+   "colors": [
+    {
+     "name": "Solar",
+     "o": "#5a1a02",
+     "b": "#ffb03a",
+     "a": "#fff27a",
+     "w": "#ff5a1a",
+     "k": "#ffffff",
+     "p": "#ff5a1a",
+     "e": "#3a0a02"
+    },
+    {
+     "name": "Bluefire",
+     "o": "#06204a",
+     "b": "#3a9aff",
+     "a": "#c8f4ff",
+     "w": "#1a5ae0",
+     "k": "#ffffff",
+     "p": "#8ae0ff",
+     "e": "#06104a"
+    }
+   ],
+   "default": 0
+  },
+  "Starlight Unicorn": {
+   "body": [
+    "........h.......",
+    "s......hh.....s.",
+    "w.oo.oohhoo.oo.w",
+    "wwoaoobbbbbbooao",
+    "wwmobbbbbbbbbbmw",
+    "wmmobbbbbbbbbomm",
+    ".omobbbbbbbbbomo",
+    ".oobpbbbbbbpboo.",
+    "..obllllllllbo..",
+    "..oblldlldllbo..",
+    "..obllllllllbo..",
+    "...oooooooooo..."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "flutter",
+   "speed": 1.2,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*wings sparkle* ✨🦄",
+    "i grew wings!!",
+    "starlight flows through me",
+    "make a wish",
+    "magic levels: maximum"
+   ],
+   "colors": [
+    {
+     "name": "Starlight",
+     "o": "#2a2a6a",
+     "b": "#ffffff",
+     "m": "#8ac8ff",
+     "l": "#eef4ff",
+     "a": "#c8b0ff",
+     "h": "#fff27a",
+     "w": "#d8c8ff",
+     "s": "#fff27a",
+     "p": "#ffb0d8",
+     "d": "#9a8ac0",
+     "e": "#2a2a6a",
+     "f": "#fff27a"
+    },
+    {
+     "name": "Twilight",
+     "o": "#1a0a3a",
+     "b": "#3a2a6a",
+     "m": "#ff7ac8",
+     "l": "#5a4a8a",
+     "a": "#ff9ad8",
+     "h": "#ffd23a",
+     "w": "#8a5ad8",
+     "s": "#ffd23a",
+     "p": "#ff7ac8",
+     "d": "#1a0a3a",
+     "e": "#fff27a",
+     "f": "#ffd23a"
+    }
+   ],
+   "default": 0
+  },
+  "Astral Blip": {
+   "body": [
+    ".y.oo......oo.y.",
+    "..yobo....oboy..",
+    ".obbbooooooobbo.",
+    ".obbbbbsbbbbbbo.",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obsbbbbbbbbbbsbo",
+    "obbbbbllllbbbbbo",
+    "obbbblllllllbbbo",
+    ".obbbllllllbbbo.",
+    "..obbbbbbbbbbo.."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "float",
+   "speed": 1.1,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "i've seen the stars up close ✨",
+    "astral mode: ON",
+    "i feel… infinite",
+    "*hums in starlight*",
+    "still me! just shinier"
+   ],
+   "colors": [
+    {
+     "name": "Nebula",
+     "o": "#1a1040",
+     "b": "#5a4ae0",
+     "l": "#b8d8ff",
+     "s": "#fff27a",
+     "y": "#ffe66a",
+     "p": "#ff8ad8",
+     "e": "#fff6c0"
+    },
+    {
+     "name": "Supernova",
+     "o": "#3a0a2a",
+     "b": "#ff5aa8",
+     "l": "#ffe0f0",
+     "s": "#ffffff",
+     "y": "#ffd23a",
+     "p": "#ffd23a",
+     "e": "#2a0a1a"
+    }
+   ],
+   "default": 0
+  },
+  "Nine-Tail Kitsune": {
+   "body": [
+    "tt.o........o.tt",
+    "taoao......oaoat",
+    "ttoaboooooobaott",
+    "t.obbbbbssbbbbo.",
+    "ttbsbbbssbbbsbtt",
+    "tobbbbbbbbbbbbot",
+    "tobbbbbbbbbbbbot",
+    "tsllbbbbbbbbllst",
+    "tllllllnnllllllt",
+    ".ollllllllllllo.",
+    "..ollllllllllo..",
+    "...oooooooooo..."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "walk",
+   "speed": 1.3,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "nine tails, nine times the magic 🦊",
+    "*foxfire flickers*",
+    "i've awakened",
+    "my tails tell old stories",
+    "bow before the fox! (jk, pet me)"
+   ],
+   "colors": [
+    {
+     "name": "Foxfire",
+     "o": "#5a1a06",
+     "b": "#fff0d0",
+     "a": "#ff9a3a",
+     "t": "#ff5a1a",
+     "l": "#ffffff",
+     "s": "#3a8aff",
+     "n": "#5a1a06",
+     "e": "#3a8aff"
+    },
+    {
+     "name": "Moonfox",
+     "o": "#2a2a5a",
+     "b": "#ffffff",
+     "a": "#b8c8ff",
+     "t": "#8a9aff",
+     "l": "#f4f6ff",
+     "s": "#ff4a8a",
+     "n": "#2a2a5a",
+     "e": "#ff4a8a"
+    }
+   ],
+   "default": 0
+  },
+  "Moon Wolf": {
+   "body": [
+    ".o............o.",
+    ".oao...yy...oao.",
+    ".oabooyyoooobao.",
+    "mobbbbbbybbbbbom",
+    "mobbbbbbbbbbbbom",
+    "mmbbbbbbbbbbbbmm",
+    "mobbbbbbbbbbbbom",
+    "mobbbllllllbbbom",
+    "mobllllnnllllbom",
+    ".mbllllllllllbm.",
+    "..mbllllllllbm..",
+    "...oooooooooo..."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "walk",
+   "speed": 1.5,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*howls at the full moon* 🌕",
+    "the pack follows the moon",
+    "i run with the night",
+    "awoooooo!",
+    "loyal under every moon"
+   ],
+   "colors": [
+    {
+     "name": "Moonlit",
+     "o": "#0e1028",
+     "b": "#4a5a9a",
+     "l": "#e0e8ff",
+     "a": "#2a3060",
+     "m": "#c8d4ff",
+     "y": "#fff6b0",
+     "n": "#0e1028",
+     "e": "#fff27a"
+    },
+    {
+     "name": "Blood Moon",
+     "o": "#1a0606",
+     "b": "#5a2a2a",
+     "l": "#f0d8d0",
+     "a": "#3a1414",
+     "m": "#e86a5a",
+     "y": "#ff8a5a",
+     "n": "#1a0606",
+     "e": "#ff5a3a"
+    }
+   ],
+   "default": 0
+  },
+  "Elder Dragon": {
+   "body": [
+    ".hh..........hh.",
+    "..hh.c.cc.c.hh..",
+    "w..hooooooooh..w",
+    "ww.obbbbbbbbbo.w",
+    "wwwobbbbbbbbbbww",
+    "wwobbbbbbbbbbbow",
+    "wobbbbbbbbbbbbow",
+    "obpbbllllllbbpbo",
+    "obbbldlllldlbbbo",
+    "obbbbllllllbbbbo",
+    ".obcbbbbbbbbcbo.",
+    "..obbbbbbbbbbo.."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "flutter",
+   "speed": 1.1,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*ancient roar* (it's a hello)",
+    "i've been asleep for a thousand years",
+    "my scales are older than mountains",
+    "behold. (pet me)",
+    "elder and wiser"
+   ],
+   "colors": [
+    {
+     "name": "Ancient Jade",
+     "o": "#06200e",
+     "b": "#1a8a4a",
+     "l": "#c8f0b0",
+     "h": "#ffd23a",
+     "c": "#ff5a3a",
+     "w": "#0e5a2e",
+     "d": "#06200e",
+     "p": "#ffb05a",
+     "e": "#ff5a3a"
+    },
+    {
+     "name": "Obsidian",
+     "o": "#06060e",
+     "b": "#2a2a3e",
+     "l": "#8a8ab0",
+     "h": "#c8a0ff",
+     "c": "#ff3a6a",
+     "w": "#16162a",
+     "d": "#06060e",
+     "p": "#a86aff",
+     "e": "#ff3a6a"
+    }
+   ],
+   "default": 0
+  }
+ },
+ "trophies": [
+  {
+   "id": "first-pet",
+   "icon": "🐾",
+   "name": "First Friend",
+   "how": "Pet a Blip",
+   "bonus": 5
+  },
+  {
+   "id": "pets-100",
+   "icon": "💖",
+   "name": "Best Friends",
+   "how": "Pet your Blips 100 times",
+   "bonus": 20
+  },
+  {
+   "id": "cookies-25",
+   "icon": "🍪",
+   "name": "Snack Time",
+   "how": "Feed your Blips 25 cookies",
+   "bonus": 10
+  },
+  {
+   "id": "days-7",
+   "icon": "📅",
+   "name": "Regular",
+   "how": "Play on 7 different days",
+   "bonus": 20
+  },
+  {
+   "id": "full-town",
+   "icon": "🏘️",
+   "name": "Full House",
+   "how": "Have a full town of Blips",
+   "bonus": 15
+  },
+  {
+   "id": "hats-5",
+   "icon": "🎩",
+   "name": "Fashionista",
+   "how": "Own 5 hats or outfits",
+   "bonus": 15
+  },
+  {
+   "id": "egg-1",
+   "icon": "🥚",
+   "name": "Egg-cellent",
+   "how": "Hatch a Mystery Egg",
+   "bonus": 10
+  },
+  {
+   "id": "egg-all",
+   "icon": "🪺",
+   "name": "Full Nest",
+   "how": "Hatch all 20 rare Blips",
+   "bonus": 50
+  },
+  {
+   "id": "cryptid-1",
+   "icon": "👣",
+   "name": "Cryptid Spotter",
+   "how": "Spot a cryptid",
+   "bonus": 10
+  },
+  {
+   "id": "cryptid-all",
+   "icon": "📸",
+   "name": "Believer",
+   "how": "Spot all 25 cryptids",
+   "bonus": 50
+  },
+  {
+   "id": "kaiju-1",
+   "icon": "🦖",
+   "name": "Monster Friend",
+   "how": "Befriend a kaiju",
+   "bonus": 20
+  },
+  {
+   "id": "kaiju-all",
+   "icon": "🏙️",
+   "name": "Kaiju Keeper",
+   "how": "Befriend all 5 kaiju",
+   "bonus": 50
+  },
+  {
+   "id": "ghost-1",
+   "icon": "👻",
+   "name": "Ghost Whisperer",
+   "how": "Befriend a ghost",
+   "bonus": 10
+  },
+  {
+   "id": "ghost-all",
+   "icon": "🕯️",
+   "name": "Spirit Squad",
+   "how": "Befriend all 10 ghosts",
+   "bonus": 50
+  },
+  {
+   "id": "world-1",
+   "icon": "🌍",
+   "name": "Explorer",
+   "how": "Unlock a world",
+   "bonus": 10
+  },
+  {
+   "id": "world-all",
+   "icon": "🧭",
+   "name": "World Traveler",
+   "how": "Unlock all 5 worlds",
+   "bonus": 50
+  },
+  {
+   "id": "legend-1",
+   "icon": "✨",
+   "name": "Legend Hunter",
+   "how": "Find a World Legend",
+   "bonus": 15
+  },
+  {
+   "id": "legend-all",
+   "icon": "🌟",
+   "name": "Living Legend",
+   "how": "Find all 10 World Legends",
+   "bonus": 50
+  },
+  {
+   "id": "night-1",
+   "icon": "🌙",
+   "name": "Night Owl",
+   "how": "Survive Night 1 of Night Shift",
+   "bonus": 10
+  },
+  {
+   "id": "night-3",
+   "icon": "🏆",
+   "name": "Survivor",
+   "how": "Survive all 3 nights of Night Shift",
+   "bonus": 30
+  },
+  {
+   "id": "awaken-1",
+   "icon": "✨",
+   "name": "Awakened",
+   "how": "Awaken a Blip with an Awakening Crystal",
+   "bonus": 15
+  },
+  {
+   "id": "arena-1",
+   "icon": "⚔️",
+   "name": "Arena Rookie",
+   "how": "Win a battle in the Arena",
+   "bonus": 10
+  },
+  {
+   "id": "arena-champ",
+   "icon": "🥇",
+   "name": "Arena Champion",
+   "how": "Beat Champion Coco",
+   "bonus": 40
+  }
+ ],
+ "trophyCup": [
+  "..cccccccc..",
+  "hhcccccccchh",
+  "h.cccccccc.h",
+  "h.cccccccc.h",
+  ".hcccccccch.",
+  "..cccccccc..",
+  "...cccccc...",
+  ".....cc.....",
+  ".....cc.....",
+  "...bbbbbb...",
+  "..bbbbbbbb.."
+ ],
+ "awakenForm": {
+  "Blip": "Astral Blip",
+  "Kitsune": "Nine-Tail Kitsune",
+  "Dragon": "Elder Dragon",
+  "Phoenix": "Solar Phoenix",
+  "Wolf": "Moon Wolf",
+  "Unicorn": "Starlight Unicorn"
+ },
+ "crystalCost": 75,
+ "arena": {
+  "stats": {
+   "Blip": {
+    "type": "splash",
+    "hp": 96,
+    "atk": 20,
+    "spd": 11,
+    "move": "Tidal Hug"
+   },
+   "Bun": {
+    "type": "sprout",
+    "hp": 98,
+    "atk": 18,
+    "spd": 12,
+    "move": "Vine Bop"
+   },
+   "Sprout": {
+    "type": "sprout",
+    "hp": 84,
+    "atk": 23,
+    "spd": 9,
+    "move": "Petal Storm"
+   },
+   "Boo": {
+    "type": "spark",
+    "hp": 91,
+    "atk": 19,
+    "spd": 13,
+    "move": "Ember Pounce"
+   },
+   "Fuzz": {
+    "type": "sprout",
+    "hp": 86,
+    "atk": 17,
+    "spd": 9,
+    "move": "Petal Storm"
+   },
+   "Spike": {
+    "type": "sprout",
+    "hp": 109,
+    "atk": 19,
+    "spd": 8,
+    "move": "Leaf Whirl"
+   },
+   "Cat": {
+    "type": "spark",
+    "hp": 88,
+    "atk": 22,
+    "spd": 14,
+    "move": "Flare Boop"
+   },
+   "Dog": {
+    "type": "sprout",
+    "hp": 84,
+    "atk": 22,
+    "spd": 15,
+    "move": "Petal Storm"
+   },
+   "Fox": {
+    "type": "spark",
+    "hp": 75,
+    "atk": 16,
+    "spd": 12,
+    "move": "Ember Pounce"
+   },
+   "Bear": {
+    "type": "sprout",
+    "hp": 100,
+    "atk": 19,
+    "spd": 11,
+    "move": "Petal Storm"
+   },
+   "Panda": {
+    "type": "sprout",
+    "hp": 88,
+    "atk": 17,
+    "spd": 11,
+    "move": "Leaf Whirl"
+   },
+   "Pig": {
+    "type": "splash",
+    "hp": 78,
+    "atk": 23,
+    "spd": 7,
+    "move": "Splash Slam"
+   },
+   "Frog": {
+    "type": "splash",
+    "hp": 77,
+    "atk": 23,
+    "spd": 12,
+    "move": "Tidal Hug"
+   },
+   "Penguin": {
+    "type": "splash",
+    "hp": 89,
+    "atk": 16,
+    "spd": 6,
+    "move": "Tidal Hug"
+   },
+   "Chick": {
+    "type": "spark",
+    "hp": 85,
+    "atk": 22,
+    "spd": 11,
+    "move": "Sizzle Swipe"
+   },
+   "Owl": {
+    "type": "splash",
+    "hp": 72,
+    "atk": 18,
+    "spd": 10,
+    "move": "Tidal Hug"
+   },
+   "Mouse": {
+    "type": "spark",
+    "hp": 101,
+    "atk": 20,
+    "spd": 18,
+    "move": "Flare Boop"
+   },
+   "Raccoon": {
+    "type": "spark",
+    "hp": 89,
+    "atk": 22,
+    "spd": 7,
+    "move": "Flare Boop"
+   },
+   "Koala": {
+    "type": "sprout",
+    "hp": 85,
+    "atk": 19,
+    "spd": 5,
+    "move": "Leaf Whirl"
+   },
+   "Cow": {
+    "type": "splash",
+    "hp": 93,
+    "atk": 19,
+    "spd": 8,
+    "move": "Splash Slam"
+   },
+   "Axolotl": {
+    "type": "splash",
+    "hp": 107,
+    "atk": 22,
+    "spd": 9,
+    "move": "Bubble Burst"
+   },
+   "Hamster": {
+    "type": "sprout",
+    "hp": 97,
+    "atk": 22,
+    "spd": 12,
+    "move": "Vine Bop"
+   },
+   "Sheep": {
+    "type": "sprout",
+    "hp": 77,
+    "atk": 22,
+    "spd": 14,
+    "move": "Vine Bop"
+   },
+   "Monkey": {
+    "type": "sprout",
+    "hp": 98,
+    "atk": 19,
+    "spd": 11,
+    "move": "Leaf Whirl"
+   },
+   "Lion": {
+    "type": "spark",
+    "hp": 106,
+    "atk": 20,
+    "spd": 6,
+    "move": "Flare Boop"
+   },
+   "Tiger": {
+    "type": "spark",
+    "hp": 103,
+    "atk": 17,
+    "spd": 15,
+    "move": "Sizzle Swipe"
+   },
+   "Bat": {
+    "type": "splash",
+    "hp": 99,
+    "atk": 16,
+    "spd": 12,
+    "move": "Tidal Hug"
+   },
+   "Hedgehog": {
+    "type": "sprout",
+    "hp": 85,
+    "atk": 22,
+    "spd": 20,
+    "move": "Leaf Whirl"
+   },
+   "Duck": {
+    "type": "splash",
+    "hp": 97,
+    "atk": 23,
+    "spd": 12,
+    "move": "Tidal Hug"
+   },
+   "Seal": {
+    "type": "splash",
+    "hp": 108,
+    "atk": 16,
+    "spd": 4,
+    "move": "Splash Slam"
+   },
+   "Sloth": {
+    "type": "sprout",
+    "hp": 108,
+    "atk": 19,
+    "spd": 2,
+    "move": "Vine Bop"
+   },
+   "Deer": {
+    "type": "sprout",
+    "hp": 99,
+    "atk": 16,
+    "spd": 9,
+    "move": "Leaf Whirl"
+   },
+   "Octopus": {
+    "type": "splash",
+    "hp": 105,
+    "atk": 15,
+    "spd": 14,
+    "move": "Splash Slam"
+   },
+   "Unicorn": {
+    "type": "splash",
+    "hp": 104,
+    "atk": 20,
+    "spd": 6,
+    "move": "Bubble Burst"
+   },
+   "Shark": {
+    "type": "splash",
+    "hp": 96,
+    "atk": 22,
+    "spd": 11,
+    "move": "Bubble Burst"
+   },
+   "Wolf": {
+    "type": "sprout",
+    "hp": 107,
+    "atk": 17,
+    "spd": 20,
+    "move": "Petal Storm"
+   },
+   "Squirrel": {
+    "type": "spark",
+    "hp": 81,
+    "atk": 15,
+    "spd": 13,
+    "move": "Sizzle Swipe"
+   },
+   "Otter": {
+    "type": "splash",
+    "hp": 105,
+    "atk": 19,
+    "spd": 10,
+    "move": "Splash Slam"
+   },
+   "Skunk": {
+    "type": "sprout",
+    "hp": 93,
+    "atk": 17,
+    "spd": 6,
+    "move": "Leaf Whirl"
+   },
+   "Beaver": {
+    "type": "splash",
+    "hp": 76,
+    "atk": 17,
+    "spd": 9,
+    "move": "Bubble Burst"
+   },
+   "Capybara": {
+    "type": "spark",
+    "hp": 99,
+    "atk": 20,
+    "spd": 5,
+    "move": "Flare Boop"
+   },
+   "Llama": {
+    "type": "spark",
+    "hp": 105,
+    "atk": 21,
+    "spd": 13,
+    "move": "Ember Pounce"
+   },
+   "Horse": {
+    "type": "spark",
+    "hp": 102,
+    "atk": 17,
+    "spd": 8,
+    "move": "Ember Pounce"
+   },
+   "Zebra": {
+    "type": "spark",
+    "hp": 85,
+    "atk": 19,
+    "spd": 11,
+    "move": "Ember Pounce"
+   },
+   "Elephant": {
+    "type": "sprout",
+    "hp": 90,
+    "atk": 17,
+    "spd": 5,
+    "move": "Vine Bop"
+   },
+   "Giraffe": {
+    "type": "sprout",
+    "hp": 110,
+    "atk": 20,
+    "spd": 10,
+    "move": "Petal Storm"
+   },
+   "Hippo": {
+    "type": "splash",
+    "hp": 96,
+    "atk": 16,
+    "spd": 5,
+    "move": "Tidal Hug"
+   },
+   "Kangaroo": {
+    "type": "splash",
+    "hp": 108,
+    "atk": 23,
+    "spd": 7,
+    "move": "Tidal Hug"
+   },
+   "Parrot": {
+    "type": "sprout",
+    "hp": 83,
+    "atk": 20,
+    "spd": 15,
+    "move": "Leaf Whirl"
+   },
+   "Flamingo": {
+    "type": "splash",
+    "hp": 86,
+    "atk": 20,
+    "spd": 10,
+    "move": "Splash Slam"
+   },
+   "Bee": {
+    "type": "spark",
+    "hp": 77,
+    "atk": 17,
+    "spd": 7,
+    "move": "Ember Pounce"
+   },
+   "Ladybug": {
+    "type": "sprout",
+    "hp": 86,
+    "atk": 22,
+    "spd": 5,
+    "move": "Petal Storm"
+   },
+   "Whale": {
+    "type": "splash",
+    "hp": 75,
+    "atk": 15,
+    "spd": 8,
+    "move": "Bubble Burst"
+   },
+   "Jellyfish": {
+    "type": "splash",
+    "hp": 71,
+    "atk": 23,
+    "spd": 8,
+    "move": "Splash Slam"
+   },
+   "Dragon": {
+    "type": "spark",
+    "hp": 96,
+    "atk": 16,
+    "spd": 10,
+    "move": "Sizzle Swipe"
+   },
+   "Robo Bear": {
+    "type": "spark",
+    "hp": 81,
+    "atk": 20,
+    "spd": 14,
+    "move": "Ember Pounce"
+   },
+   "Robo Bunny": {
+    "type": "spark",
+    "hp": 86,
+    "atk": 24,
+    "spd": 15,
+    "move": "Flare Boop"
+   },
+   "Robo Hen": {
+    "type": "spark",
+    "hp": 105,
+    "atk": 16,
+    "spd": 8,
+    "move": "Sizzle Swipe"
+   },
+   "Rabbit": {
+    "type": "sprout",
+    "hp": 100,
+    "atk": 22,
+    "spd": 15,
+    "move": "Vine Bop"
+   },
+   "Goat": {
+    "type": "splash",
+    "hp": 86,
+    "atk": 23,
+    "spd": 13,
+    "move": "Tidal Hug"
+   },
+   "Donkey": {
+    "type": "splash",
+    "hp": 81,
+    "atk": 21,
+    "spd": 9,
+    "move": "Tidal Hug"
+   },
+   "Rhino": {
+    "type": "splash",
+    "hp": 105,
+    "atk": 22,
+    "spd": 6,
+    "move": "Splash Slam"
+   },
+   "Lemur": {
+    "type": "sprout",
+    "hp": 70,
+    "atk": 21,
+    "spd": 7,
+    "move": "Petal Storm"
+   },
+   "Meerkat": {
+    "type": "spark",
+    "hp": 110,
+    "atk": 16,
+    "spd": 11,
+    "move": "Sizzle Swipe"
+   },
+   "Ferret": {
+    "type": "spark",
+    "hp": 87,
+    "atk": 23,
+    "spd": 8,
+    "move": "Flare Boop"
+   },
+   "Chinchilla": {
+    "type": "spark",
+    "hp": 72,
+    "atk": 21,
+    "spd": 7,
+    "move": "Sizzle Swipe"
+   },
+   "Guinea Pig": {
+    "type": "splash",
+    "hp": 79,
+    "atk": 21,
+    "spd": 9,
+    "move": "Splash Slam"
+   },
+   "Mole": {
+    "type": "sprout",
+    "hp": 77,
+    "atk": 21,
+    "spd": 8,
+    "move": "Vine Bop"
+   },
+   "Armadillo": {
+    "type": "spark",
+    "hp": 105,
+    "atk": 23,
+    "spd": 8,
+    "move": "Flare Boop"
+   },
+   "Fennec": {
+    "type": "spark",
+    "hp": 107,
+    "atk": 18,
+    "spd": 6,
+    "move": "Sizzle Swipe"
+   },
+   "Corgi": {
+    "type": "spark",
+    "hp": 93,
+    "atk": 18,
+    "spd": 14,
+    "move": "Ember Pounce"
+   },
+   "Shiba": {
+    "type": "spark",
+    "hp": 76,
+    "atk": 18,
+    "spd": 6,
+    "move": "Ember Pounce"
+   },
+   "Pug": {
+    "type": "spark",
+    "hp": 79,
+    "atk": 22,
+    "spd": 9,
+    "move": "Sizzle Swipe"
+   },
+   "Dalmatian": {
+    "type": "splash",
+    "hp": 90,
+    "atk": 21,
+    "spd": 10,
+    "move": "Bubble Burst"
+   },
+   "Turtle": {
+    "type": "splash",
+    "hp": 85,
+    "atk": 22,
+    "spd": 5,
+    "move": "Splash Slam"
+   },
+   "Crab": {
+    "type": "splash",
+    "hp": 96,
+    "atk": 17,
+    "spd": 20,
+    "move": "Splash Slam"
+   },
+   "Snail": {
+    "type": "sprout",
+    "hp": 100,
+    "atk": 21,
+    "spd": 4,
+    "move": "Petal Storm"
+   },
+   "Starfish": {
+    "type": "splash",
+    "hp": 105,
+    "atk": 23,
+    "spd": 7,
+    "move": "Bubble Burst"
+   },
+   "Pufferfish": {
+    "type": "splash",
+    "hp": 87,
+    "atk": 22,
+    "spd": 8,
+    "move": "Tidal Hug"
+   },
+   "Goldfish": {
+    "type": "splash",
+    "hp": 86,
+    "atk": 22,
+    "spd": 15,
+    "move": "Bubble Burst"
+   },
+   "Dolphin": {
+    "type": "splash",
+    "hp": 94,
+    "atk": 21,
+    "spd": 9,
+    "move": "Bubble Burst"
+   },
+   "Clownfish": {
+    "type": "splash",
+    "hp": 100,
+    "atk": 18,
+    "spd": 9,
+    "move": "Bubble Burst"
+   },
+   "Snake": {
+    "type": "splash",
+    "hp": 90,
+    "atk": 17,
+    "spd": 7,
+    "move": "Tidal Hug"
+   },
+   "Gecko": {
+    "type": "sprout",
+    "hp": 100,
+    "atk": 17,
+    "spd": 14,
+    "move": "Leaf Whirl"
+   },
+   "Chameleon": {
+    "type": "sprout",
+    "hp": 81,
+    "atk": 21,
+    "spd": 4,
+    "move": "Leaf Whirl"
+   },
+   "Crocodile": {
+    "type": "sprout",
+    "hp": 86,
+    "atk": 15,
+    "spd": 5,
+    "move": "Leaf Whirl"
+   },
+   "Butterfly": {
+    "type": "sprout",
+    "hp": 99,
+    "atk": 15,
+    "spd": 8,
+    "move": "Leaf Whirl"
+   },
+   "Caterpillar": {
+    "type": "sprout",
+    "hp": 106,
+    "atk": 15,
+    "spd": 4,
+    "move": "Leaf Whirl"
+   },
+   "Badger": {
+    "type": "sprout",
+    "hp": 89,
+    "atk": 23,
+    "spd": 8,
+    "move": "Leaf Whirl"
+   },
+   "Bison": {
+    "type": "sprout",
+    "hp": 100,
+    "atk": 15,
+    "spd": 14,
+    "move": "Petal Storm"
+   },
+   "Camel": {
+    "type": "sprout",
+    "hp": 102,
+    "atk": 23,
+    "spd": 13,
+    "move": "Leaf Whirl"
+   },
+   "Cheetah": {
+    "type": "spark",
+    "hp": 106,
+    "atk": 19,
+    "spd": 20,
+    "move": "Flare Boop"
+   },
+   "Chipmunk": {
+    "type": "sprout",
+    "hp": 94,
+    "atk": 23,
+    "spd": 14,
+    "move": "Vine Bop"
+   },
+   "Crow": {
+    "type": "splash",
+    "hp": 88,
+    "atk": 19,
+    "spd": 7,
+    "move": "Tidal Hug"
+   },
+   "Eagle": {
+    "type": "sprout",
+    "hp": 90,
+    "atk": 15,
+    "spd": 10,
+    "move": "Petal Storm"
+   },
+   "Emu": {
+    "type": "spark",
+    "hp": 88,
+    "atk": 20,
+    "spd": 14,
+    "move": "Ember Pounce"
+   },
+   "Hyena": {
+    "type": "spark",
+    "hp": 72,
+    "atk": 21,
+    "spd": 12,
+    "move": "Sizzle Swipe"
+   },
+   "Iguana": {
+    "type": "sprout",
+    "hp": 80,
+    "atk": 19,
+    "spd": 12,
+    "move": "Leaf Whirl"
+   },
+   "Jaguar": {
+    "type": "splash",
+    "hp": 101,
+    "atk": 17,
+    "spd": 13,
+    "move": "Bubble Burst"
+   },
+   "Kiwi": {
+    "type": "splash",
+    "hp": 81,
+    "atk": 17,
+    "spd": 18,
+    "move": "Splash Slam"
+   },
+   "Lynx": {
+    "type": "spark",
+    "hp": 77,
+    "atk": 15,
+    "spd": 14,
+    "move": "Ember Pounce"
+   },
+   "Manatee": {
+    "type": "sprout",
+    "hp": 80,
+    "atk": 21,
+    "spd": 8,
+    "move": "Leaf Whirl"
+   },
+   "Moose": {
+    "type": "sprout",
+    "hp": 82,
+    "atk": 18,
+    "spd": 10,
+    "move": "Vine Bop"
+   },
+   "Ostrich": {
+    "type": "sprout",
+    "hp": 91,
+    "atk": 17,
+    "spd": 18,
+    "move": "Leaf Whirl"
+   },
+   "Orangutan": {
+    "type": "sprout",
+    "hp": 71,
+    "atk": 19,
+    "spd": 9,
+    "move": "Leaf Whirl"
+   },
+   "Peacock": {
+    "type": "spark",
+    "hp": 83,
+    "atk": 21,
+    "spd": 10,
+    "move": "Flare Boop"
+   },
+   "Pelican": {
+    "type": "splash",
+    "hp": 110,
+    "atk": 23,
+    "spd": 12,
+    "move": "Splash Slam"
+   },
+   "Platypus": {
+    "type": "splash",
+    "hp": 70,
+    "atk": 19,
+    "spd": 15,
+    "move": "Tidal Hug"
+   },
+   "Porcupine": {
+    "type": "splash",
+    "hp": 92,
+    "atk": 23,
+    "spd": 6,
+    "move": "Splash Slam"
+   },
+   "Possum": {
+    "type": "spark",
+    "hp": 108,
+    "atk": 20,
+    "spd": 9,
+    "move": "Flare Boop"
+   },
+   "Lemming": {
+    "type": "sprout",
+    "hp": 100,
+    "atk": 17,
+    "spd": 20,
+    "move": "Petal Storm"
+   },
+   "Swan": {
+    "type": "splash",
+    "hp": 97,
+    "atk": 21,
+    "spd": 13,
+    "move": "Bubble Burst"
+   },
+   "Tapir": {
+    "type": "splash",
+    "hp": 109,
+    "atk": 16,
+    "spd": 6,
+    "move": "Splash Slam"
+   },
+   "Toucan": {
+    "type": "splash",
+    "hp": 72,
+    "atk": 23,
+    "spd": 7,
+    "move": "Bubble Burst"
+   },
+   "Walrus": {
+    "type": "splash",
+    "hp": 81,
+    "atk": 22,
+    "spd": 9,
+    "move": "Tidal Hug"
+   },
+   "Warthog": {
+    "type": "spark",
+    "hp": 110,
+    "atk": 15,
+    "spd": 7,
+    "move": "Flare Boop"
+   },
+   "Wombat": {
+    "type": "spark",
+    "hp": 83,
+    "atk": 21,
+    "spd": 8,
+    "move": "Sizzle Swipe"
+   },
+   "Yak": {
+    "type": "splash",
+    "hp": 79,
+    "atk": 17,
+    "spd": 11,
+    "move": "Splash Slam"
+   },
+   "Antelope": {
+    "type": "splash",
+    "hp": 109,
+    "atk": 21,
+    "spd": 22,
+    "move": "Splash Slam"
+   },
+   "Aardvark": {
+    "type": "sprout",
+    "hp": 77,
+    "atk": 18,
+    "spd": 14,
+    "move": "Petal Storm"
+   },
+   "Anteater": {
+    "type": "splash",
+    "hp": 105,
+    "atk": 21,
+    "spd": 10,
+    "move": "Splash Slam"
+   },
+   "Beagle": {
+    "type": "spark",
+    "hp": 102,
+    "atk": 20,
+    "spd": 11,
+    "move": "Ember Pounce"
+   },
+   "Poodle": {
+    "type": "spark",
+    "hp": 81,
+    "atk": 16,
+    "spd": 13,
+    "move": "Ember Pounce"
+   },
+   "Dachshund": {
+    "type": "spark",
+    "hp": 98,
+    "atk": 17,
+    "spd": 14,
+    "move": "Sizzle Swipe"
+   },
+   "Bulldog": {
+    "type": "splash",
+    "hp": 78,
+    "atk": 18,
+    "spd": 12,
+    "move": "Tidal Hug"
+   },
+   "Chihuahua": {
+    "type": "sprout",
+    "hp": 98,
+    "atk": 17,
+    "spd": 13,
+    "move": "Leaf Whirl"
+   },
+   "Goose": {
+    "type": "sprout",
+    "hp": 79,
+    "atk": 16,
+    "spd": 9,
+    "move": "Leaf Whirl"
+   },
+   "Turkey": {
+    "type": "sprout",
+    "hp": 93,
+    "atk": 15,
+    "spd": 10,
+    "move": "Petal Storm"
+   },
+   "Rooster": {
+    "type": "splash",
+    "hp": 85,
+    "atk": 21,
+    "spd": 15,
+    "move": "Tidal Hug"
+   },
+   "Pigeon": {
+    "type": "splash",
+    "hp": 101,
+    "atk": 19,
+    "spd": 9,
+    "move": "Bubble Burst"
+   },
+   "Robin": {
+    "type": "sprout",
+    "hp": 100,
+    "atk": 21,
+    "spd": 15,
+    "move": "Leaf Whirl"
+   },
+   "Hummingbird": {
+    "type": "spark",
+    "hp": 100,
+    "atk": 16,
+    "spd": 19,
+    "move": "Flare Boop"
+   },
+   "Mantis": {
+    "type": "sprout",
+    "hp": 82,
+    "atk": 21,
+    "spd": 11,
+    "move": "Leaf Whirl"
+   },
+   "Moth": {
+    "type": "sprout",
+    "hp": 78,
+    "atk": 23,
+    "spd": 14,
+    "move": "Petal Storm"
+   },
+   "Ant": {
+    "type": "spark",
+    "hp": 94,
+    "atk": 23,
+    "spd": 16,
+    "move": "Ember Pounce"
+   },
+   "Rat": {
+    "type": "spark",
+    "hp": 81,
+    "atk": 15,
+    "spd": 13,
+    "move": "Sizzle Swipe"
+   },
+   "Mongoose": {
+    "type": "sprout",
+    "hp": 85,
+    "atk": 18,
+    "spd": 21,
+    "move": "Petal Storm"
+   },
+   "Koi": {
+    "type": "splash",
+    "hp": 99,
+    "atk": 18,
+    "spd": 7,
+    "move": "Splash Slam"
+   },
+   "Phoenix": {
+    "type": "spark",
+    "hp": 103,
+    "atk": 24,
+    "spd": 15,
+    "move": "Flare Boop"
+   },
+   "Griffin": {
+    "type": "sprout",
+    "hp": 86,
+    "atk": 18,
+    "spd": 12,
+    "move": "Petal Storm"
+   },
+   "Kitsune": {
+    "type": "spark",
+    "hp": 123,
+    "atk": 25,
+    "spd": 14,
+    "move": "Flare Boop"
+   },
+   "Yeti": {
+    "type": "splash",
+    "hp": 115,
+    "atk": 20,
+    "spd": 5,
+    "move": "Splash Slam"
+   },
+   "Moon Bunny": {
+    "type": "splash",
+    "hp": 105,
+    "atk": 20,
+    "spd": 10,
+    "move": "Tidal Hug"
+   },
+   "Pegasus": {
+    "type": "spark",
+    "hp": 121,
+    "atk": 17,
+    "spd": 6,
+    "move": "Ember Pounce"
+   },
+   "Narwhal": {
+    "type": "splash",
+    "hp": 123,
+    "atk": 20,
+    "spd": 9,
+    "move": "Splash Slam"
+   },
+   "Snow Leopard": {
+    "type": "splash",
+    "hp": 120,
+    "atk": 25,
+    "spd": 15,
+    "move": "Bubble Burst"
+   },
+   "Pangolin": {
+    "type": "splash",
+    "hp": 92,
+    "atk": 26,
+    "spd": 9,
+    "move": "Bubble Burst"
+   },
+   "Okapi": {
+    "type": "sprout",
+    "hp": 101,
+    "atk": 17,
+    "spd": 12,
+    "move": "Leaf Whirl"
+   },
+   "Quokka": {
+    "type": "spark",
+    "hp": 86,
+    "atk": 17,
+    "spd": 9,
+    "move": "Flare Boop"
+   },
+   "Tardigrade": {
+    "type": "sprout",
+    "hp": 83,
+    "atk": 17,
+    "spd": 4,
+    "move": "Leaf Whirl"
+   },
+   "Slime": {
+    "type": "splash",
+    "hp": 92,
+    "atk": 22,
+    "spd": 12,
+    "move": "Bubble Burst"
+   },
+   "Shroomy": {
+    "type": "sprout",
+    "hp": 115,
+    "atk": 25,
+    "spd": 6,
+    "move": "Petal Storm"
+   },
+   "Cactus Pal": {
+    "type": "sprout",
+    "hp": 91,
+    "atk": 21,
+    "spd": 13,
+    "move": "Leaf Whirl"
+   },
+   "Nimbus": {
+    "type": "sprout",
+    "hp": 113,
+    "atk": 26,
+    "spd": 10,
+    "move": "Petal Storm"
+   },
+   "Zorp": {
+    "type": "sprout",
+    "hp": 90,
+    "atk": 18,
+    "spd": 7,
+    "move": "Vine Bop"
+   },
+   "T-Rex": {
+    "type": "splash",
+    "hp": 111,
+    "atk": 22,
+    "spd": 13,
+    "move": "Bubble Burst"
+   },
+   "Mammoth": {
+    "type": "splash",
+    "hp": 102,
+    "atk": 18,
+    "spd": 6,
+    "move": "Bubble Burst"
+   },
+   "Golden Blip": {
+    "type": "spark",
+    "hp": 110,
+    "atk": 20,
+    "spd": 11,
+    "move": "Sizzle Swipe"
+   },
+   "Bigfoot": {
+    "type": "sprout",
+    "hp": 94,
+    "atk": 18,
+    "spd": 8,
+    "move": "Vine Bop"
+   },
+   "Death Worm": {
+    "type": "sprout",
+    "hp": 113,
+    "atk": 22,
+    "spd": 8,
+    "move": "Petal Storm"
+   },
+   "Mothman": {
+    "type": "sprout",
+    "hp": 121,
+    "atk": 18,
+    "spd": 14,
+    "move": "Petal Storm"
+   },
+   "Nessie": {
+    "type": "splash",
+    "hp": 116,
+    "atk": 25,
+    "spd": 9,
+    "move": "Tidal Hug"
+   },
+   "Chupacabra": {
+    "type": "splash",
+    "hp": 113,
+    "atk": 25,
+    "spd": 16,
+    "move": "Bubble Burst"
+   },
+   "Jersey Devil": {
+    "type": "spark",
+    "hp": 109,
+    "atk": 24,
+    "spd": 15,
+    "move": "Sizzle Swipe"
+   },
+   "Jackalope": {
+    "type": "splash",
+    "hp": 103,
+    "atk": 26,
+    "spd": 8,
+    "move": "Bubble Burst"
+   },
+   "Flatwoods Monster": {
+    "type": "spark",
+    "hp": 99,
+    "atk": 19,
+    "spd": 8,
+    "move": "Ember Pounce"
+   },
+   "Dover Demon": {
+    "type": "splash",
+    "hp": 99,
+    "atk": 19,
+    "spd": 5,
+    "move": "Tidal Hug"
+   },
+   "Fresno Nightcrawler": {
+    "type": "splash",
+    "hp": 113,
+    "atk": 26,
+    "spd": 14,
+    "move": "Splash Slam"
+   },
+   "Frogman": {
+    "type": "splash",
+    "hp": 115,
+    "atk": 17,
+    "spd": 11,
+    "move": "Bubble Burst"
+   },
+   "Batsquatch": {
+    "type": "spark",
+    "hp": 106,
+    "atk": 26,
+    "spd": 9,
+    "move": "Ember Pounce"
+   },
+   "Thunderbird": {
+    "type": "spark",
+    "hp": 119,
+    "atk": 22,
+    "spd": 14,
+    "move": "Flare Boop"
+   },
+   "Hodag": {
+    "type": "spark",
+    "hp": 85,
+    "atk": 19,
+    "spd": 12,
+    "move": "Sizzle Swipe"
+   },
+   "Mokele-mbembe": {
+    "type": "spark",
+    "hp": 118,
+    "atk": 19,
+    "spd": 7,
+    "move": "Flare Boop"
+   },
+   "Lizard Man": {
+    "type": "spark",
+    "hp": 121,
+    "atk": 25,
+    "spd": 10,
+    "move": "Sizzle Swipe"
+   },
+   "Kappa": {
+    "type": "splash",
+    "hp": 118,
+    "atk": 21,
+    "spd": 14,
+    "move": "Tidal Hug"
+   },
+   "Tsuchinoko": {
+    "type": "spark",
+    "hp": 78,
+    "atk": 24,
+    "spd": 11,
+    "move": "Sizzle Swipe"
+   },
+   "Owlman": {
+    "type": "sprout",
+    "hp": 91,
+    "atk": 22,
+    "spd": 8,
+    "move": "Vine Bop"
+   },
+   "Beast of Bodmin": {
+    "type": "sprout",
+    "hp": 93,
+    "atk": 19,
+    "spd": 21,
+    "move": "Leaf Whirl"
+   },
+   "Pope Lick Monster": {
+    "type": "sprout",
+    "hp": 94,
+    "atk": 18,
+    "spd": 10,
+    "move": "Leaf Whirl"
+   },
+   "Bunyip": {
+    "type": "spark",
+    "hp": 90,
+    "atk": 21,
+    "spd": 11,
+    "move": "Ember Pounce"
+   },
+   "Skunk Ape": {
+    "type": "sprout",
+    "hp": 91,
+    "atk": 21,
+    "spd": 12,
+    "move": "Vine Bop"
+   },
+   "Wendigo": {
+    "type": "splash",
+    "hp": 90,
+    "atk": 24,
+    "spd": 8,
+    "move": "Splash Slam"
+   },
+   "Snallygaster": {
+    "type": "spark",
+    "hp": 115,
+    "atk": 25,
+    "spd": 6,
+    "move": "Ember Pounce"
+   },
+   "Tidal Titan": {
+    "type": "splash",
+    "hp": 122,
+    "atk": 20,
+    "spd": 8,
+    "move": "Bubble Burst"
+   },
+   "Magmaw": {
+    "type": "spark",
+    "hp": 126,
+    "atk": 23,
+    "spd": 5,
+    "move": "Flare Boop"
+   },
+   "Gigabot": {
+    "type": "spark",
+    "hp": 110,
+    "atk": 24,
+    "spd": 9,
+    "move": "Ember Pounce"
+   },
+   "Skyray": {
+    "type": "spark",
+    "hp": 88,
+    "atk": 20,
+    "spd": 13,
+    "move": "Flare Boop"
+   },
+   "Frostback": {
+    "type": "splash",
+    "hp": 94,
+    "atk": 26,
+    "spd": 8,
+    "move": "Splash Slam"
+   },
+   "Triceratops": {
+    "type": "splash",
+    "hp": 88,
+    "atk": 17,
+    "spd": 9,
+    "move": "Splash Slam"
+   },
+   "Stegosaurus": {
+    "type": "spark",
+    "hp": 91,
+    "atk": 22,
+    "spd": 7,
+    "move": "Ember Pounce"
+   },
+   "Brachiosaurus": {
+    "type": "splash",
+    "hp": 72,
+    "atk": 23,
+    "spd": 6,
+    "move": "Tidal Hug"
+   },
+   "Pterodactyl": {
+    "type": "spark",
+    "hp": 73,
+    "atk": 15,
+    "spd": 7,
+    "move": "Sizzle Swipe"
+   },
+   "Raptor": {
+    "type": "spark",
+    "hp": 86,
+    "atk": 21,
+    "spd": 13,
+    "move": "Flare Boop"
+   },
+   "Ankylosaurus": {
+    "type": "splash",
+    "hp": 89,
+    "atk": 23,
+    "spd": 7,
+    "move": "Tidal Hug"
+   },
+   "Spinosaurus": {
+    "type": "sprout",
+    "hp": 77,
+    "atk": 21,
+    "spd": 13,
+    "move": "Vine Bop"
+   },
+   "Parasaurolophus": {
+    "type": "spark",
+    "hp": 108,
+    "atk": 17,
+    "spd": 15,
+    "move": "Ember Pounce"
+   },
+   "Dimetrodon": {
+    "type": "splash",
+    "hp": 109,
+    "atk": 20,
+    "spd": 8,
+    "move": "Tidal Hug"
+   },
+   "Iguanodon": {
+    "type": "sprout",
+    "hp": 80,
+    "atk": 19,
+    "spd": 11,
+    "move": "Petal Storm"
+   },
+   "Seahorse": {
+    "type": "splash",
+    "hp": 94,
+    "atk": 17,
+    "spd": 13,
+    "move": "Tidal Hug"
+   },
+   "Stingray": {
+    "type": "splash",
+    "hp": 72,
+    "atk": 22,
+    "spd": 15,
+    "move": "Tidal Hug"
+   },
+   "Squid": {
+    "type": "splash",
+    "hp": 100,
+    "atk": 20,
+    "spd": 9,
+    "move": "Bubble Burst"
+   },
+   "Lobster": {
+    "type": "splash",
+    "hp": 71,
+    "atk": 18,
+    "spd": 7,
+    "move": "Tidal Hug"
+   },
+   "Shrimp": {
+    "type": "splash",
+    "hp": 86,
+    "atk": 22,
+    "spd": 8,
+    "move": "Splash Slam"
+   },
+   "Anglerfish": {
+    "type": "splash",
+    "hp": 106,
+    "atk": 16,
+    "spd": 10,
+    "move": "Splash Slam"
+   },
+   "Eel": {
+    "type": "splash",
+    "hp": 106,
+    "atk": 15,
+    "spd": 7,
+    "move": "Tidal Hug"
+   },
+   "Swordfish": {
+    "type": "splash",
+    "hp": 86,
+    "atk": 20,
+    "spd": 16,
+    "move": "Tidal Hug"
+   },
+   "Sea Urchin": {
+    "type": "splash",
+    "hp": 97,
+    "atk": 20,
+    "spd": 4,
+    "move": "Tidal Hug"
+   },
+   "Hermit Crab": {
+    "type": "splash",
+    "hp": 91,
+    "atk": 21,
+    "spd": 8,
+    "move": "Splash Slam"
+   },
+   "Donut": {
+    "type": "splash",
+    "hp": 101,
+    "atk": 17,
+    "spd": 12,
+    "move": "Splash Slam"
+   },
+   "Cupcake": {
+    "type": "spark",
+    "hp": 106,
+    "atk": 15,
+    "spd": 10,
+    "move": "Sizzle Swipe"
+   },
+   "Ice Cream": {
+    "type": "splash",
+    "hp": 102,
+    "atk": 15,
+    "spd": 6,
+    "move": "Tidal Hug"
+   },
+   "Macaron": {
+    "type": "sprout",
+    "hp": 92,
+    "atk": 21,
+    "spd": 7,
+    "move": "Petal Storm"
+   },
+   "Pudding": {
+    "type": "splash",
+    "hp": 86,
+    "atk": 21,
+    "spd": 8,
+    "move": "Bubble Burst"
+   },
+   "Gummy Bear": {
+    "type": "spark",
+    "hp": 72,
+    "atk": 21,
+    "spd": 15,
+    "move": "Ember Pounce"
+   },
+   "Dumpling": {
+    "type": "splash",
+    "hp": 81,
+    "atk": 22,
+    "spd": 12,
+    "move": "Splash Slam"
+   },
+   "Toast": {
+    "type": "spark",
+    "hp": 70,
+    "atk": 15,
+    "spd": 13,
+    "move": "Sizzle Swipe"
+   },
+   "Marshmallow": {
+    "type": "spark",
+    "hp": 89,
+    "atk": 20,
+    "spd": 14,
+    "move": "Ember Pounce"
+   },
+   "Taco": {
+    "type": "spark",
+    "hp": 95,
+    "atk": 21,
+    "spd": 10,
+    "move": "Ember Pounce"
+   },
+   "Space Jelly": {
+    "type": "spark",
+    "hp": 77,
+    "atk": 19,
+    "spd": 12,
+    "move": "Sizzle Swipe"
+   },
+   "Astronaut": {
+    "type": "splash",
+    "hp": 97,
+    "atk": 20,
+    "spd": 6,
+    "move": "Splash Slam"
+   },
+   "UFO": {
+    "type": "splash",
+    "hp": 100,
+    "atk": 23,
+    "spd": 6,
+    "move": "Bubble Burst"
+   },
+   "Star": {
+    "type": "spark",
+    "hp": 85,
+    "atk": 19,
+    "spd": 15,
+    "move": "Sizzle Swipe"
+   },
+   "Moon": {
+    "type": "spark",
+    "hp": 87,
+    "atk": 20,
+    "spd": 14,
+    "move": "Flare Boop"
+   },
+   "Comet": {
+    "type": "spark",
+    "hp": 105,
+    "atk": 19,
+    "spd": 22,
+    "move": "Flare Boop"
+   },
+   "Ringed Planet": {
+    "type": "sprout",
+    "hp": 107,
+    "atk": 21,
+    "spd": 7,
+    "move": "Petal Storm"
+   },
+   "Rocket": {
+    "type": "spark",
+    "hp": 93,
+    "atk": 18,
+    "spd": 13,
+    "move": "Sizzle Swipe"
+   },
+   "Space Slug": {
+    "type": "splash",
+    "hp": 105,
+    "atk": 17,
+    "spd": 5,
+    "move": "Splash Slam"
+   },
+   "Black Hole": {
+    "type": "spark",
+    "hp": 75,
+    "atk": 15,
+    "spd": 14,
+    "move": "Flare Boop"
+   },
+   "Bamboo": {
+    "type": "sprout",
+    "hp": 104,
+    "atk": 17,
+    "spd": 6,
+    "move": "Vine Bop"
+   },
+   "Daisy": {
+    "type": "sprout",
+    "hp": 81,
+    "atk": 21,
+    "spd": 6,
+    "move": "Vine Bop"
+   },
+   "Sunflower": {
+    "type": "sprout",
+    "hp": 104,
+    "atk": 21,
+    "spd": 8,
+    "move": "Leaf Whirl"
+   },
+   "Tulip": {
+    "type": "sprout",
+    "hp": 89,
+    "atk": 19,
+    "spd": 6,
+    "move": "Leaf Whirl"
+   },
+   "Flytrap": {
+    "type": "sprout",
+    "hp": 79,
+    "atk": 18,
+    "spd": 8,
+    "move": "Petal Storm"
+   },
+   "Acorn": {
+    "type": "sprout",
+    "hp": 77,
+    "atk": 16,
+    "spd": 9,
+    "move": "Vine Bop"
+   },
+   "Pumpkin": {
+    "type": "spark",
+    "hp": 83,
+    "atk": 21,
+    "spd": 4,
+    "move": "Sizzle Swipe"
+   },
+   "Pinecone": {
+    "type": "sprout",
+    "hp": 90,
+    "atk": 19,
+    "spd": 15,
+    "move": "Vine Bop"
+   },
+   "Clover": {
+    "type": "sprout",
+    "hp": 73,
+    "atk": 22,
+    "spd": 6,
+    "move": "Vine Bop"
+   },
+   "Lotus": {
+    "type": "sprout",
+    "hp": 86,
+    "atk": 21,
+    "spd": 4,
+    "move": "Petal Storm"
+   },
+   "Beta Buddy": {
+    "type": "spark",
+    "hp": 78,
+    "atk": 16,
+    "spd": 12,
+    "move": "Ember Pounce"
+   },
+   "Patch": {
+    "type": "splash",
+    "hp": 107,
+    "atk": 16,
+    "spd": 14,
+    "move": "Splash Slam"
+   },
+   "Mossling": {
+    "type": "sprout",
+    "hp": 98,
+    "atk": 23,
+    "spd": 11,
+    "move": "Petal Storm"
+   },
+   "Bloomkin": {
+    "type": "sprout",
+    "hp": 88,
+    "atk": 24,
+    "spd": 12,
+    "move": "Petal Storm"
+   },
+   "Gumdrop Golem": {
+    "type": "sprout",
+    "hp": 92,
+    "atk": 24,
+    "spd": 4,
+    "move": "Petal Storm"
+   },
+   "Cotton Candy Cloud": {
+    "type": "spark",
+    "hp": 127,
+    "atk": 23,
+    "spd": 8,
+    "move": "Flare Boop"
+   },
+   "Pearlfin": {
+    "type": "splash",
+    "hp": 106,
+    "atk": 25,
+    "spd": 9,
+    "move": "Splash Slam"
+   },
+   "Abyss Wisp": {
+    "type": "splash",
+    "hp": 121,
+    "atk": 22,
+    "spd": 11,
+    "move": "Bubble Burst"
+   },
+   "Fossilbones": {
+    "type": "splash",
+    "hp": 126,
+    "atk": 18,
+    "spd": 10,
+    "move": "Bubble Burst"
+   },
+   "Amber Raptor": {
+    "type": "spark",
+    "hp": 101,
+    "atk": 26,
+    "spd": 14,
+    "move": "Ember Pounce"
+   },
+   "Nebula Cat": {
+    "type": "sprout",
+    "hp": 100,
+    "atk": 24,
+    "spd": 16,
+    "move": "Petal Storm"
+   },
+   "Cosmo Pup": {
+    "type": "spark",
+    "hp": 102,
+    "atk": 24,
+    "spd": 10,
+    "move": "Ember Pounce"
+   },
+   "Sheetie": {
+    "type": "splash",
+    "hp": 88,
+    "atk": 24,
+    "spd": 9,
+    "move": "Tidal Hug"
+   },
+   "Will-o'-Wisp": {
+    "type": "spark",
+    "hp": 91,
+    "atk": 17,
+    "spd": 7,
+    "move": "Ember Pounce"
+   },
+   "Poltergeist": {
+    "type": "spark",
+    "hp": 85,
+    "atk": 17,
+    "spd": 18,
+    "move": "Ember Pounce"
+   },
+   "Banshee": {
+    "type": "sprout",
+    "hp": 99,
+    "atk": 19,
+    "spd": 15,
+    "move": "Petal Storm"
+   },
+   "Phantom Cat": {
+    "type": "sprout",
+    "hp": 82,
+    "atk": 20,
+    "spd": 7,
+    "move": "Vine Bop"
+   },
+   "Spectral Pup": {
+    "type": "sprout",
+    "hp": 93,
+    "atk": 18,
+    "spd": 9,
+    "move": "Vine Bop"
+   },
+   "Chochin": {
+    "type": "spark",
+    "hp": 109,
+    "atk": 17,
+    "spd": 6,
+    "move": "Flare Boop"
+   },
+   "Gloom": {
+    "type": "sprout",
+    "hp": 87,
+    "atk": 18,
+    "spd": 6,
+    "move": "Leaf Whirl"
+   },
+   "Grey Lady": {
+    "type": "spark",
+    "hp": 78,
+    "atk": 21,
+    "spd": 9,
+    "move": "Sizzle Swipe"
+   },
+   "Ghost Captain": {
+    "type": "splash",
+    "hp": 116,
+    "atk": 26,
+    "spd": 13,
+    "move": "Splash Slam"
+   },
+   "Astral Blip": {
+    "type": "splash",
+    "hp": 120,
+    "atk": 25,
+    "spd": 12,
+    "move": "Astral Nova"
+   },
+   "Nine-Tail Kitsune": {
+    "type": "spark",
+    "hp": 154,
+    "atk": 31,
+    "spd": 15,
+    "move": "Nine-Tail Nova"
+   },
+   "Elder Dragon": {
+    "type": "spark",
+    "hp": 120,
+    "atk": 20,
+    "spd": 11,
+    "move": "Elder Nova"
+   },
+   "Solar Phoenix": {
+    "type": "spark",
+    "hp": 129,
+    "atk": 29,
+    "spd": 16,
+    "move": "Solar Nova"
+   },
+   "Moon Wolf": {
+    "type": "sprout",
+    "hp": 134,
+    "atk": 21,
+    "spd": 21,
+    "move": "Moon Nova"
+   },
+   "Starlight Unicorn": {
+    "type": "splash",
+    "hp": 130,
+    "atk": 25,
+    "spd": 7,
+    "move": "Starlight Nova"
+   }
+  },
+  "types": {
+   "spark": [
+    "🔥",
+    "Spark"
+   ],
+   "splash": [
+    "💧",
+    "Splash"
+   ],
+   "sprout": [
+    "🌿",
+    "Sprout"
+   ]
+  },
+  "beats": {
+   "spark": "sprout",
+   "sprout": "splash",
+   "splash": "spark"
+  },
+  "rivals": [
+   {
+    "name": "Rival Rae",
+    "reward": 5,
+    "team": [
+     [
+      "Cat",
+      0,
+      0
+     ],
+     [
+      "Frog",
+      0,
+      0
+     ],
+     [
+      "Fox",
+      0,
+      0
+     ]
+    ]
+   },
+   {
+    "name": "Rival Rex",
+    "reward": 10,
+    "team": [
+     [
+      "Bigfoot",
+      0,
+      0
+     ],
+     [
+      "Shark",
+      0,
+      0
+     ],
+     [
+      "Phoenix",
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "name": "Champion Coco",
+    "reward": 20,
+    "team": [
+     [
+      "Tidal Titan",
+      0,
+      0
+     ],
+     [
+      "Kitsune",
+      0,
+      1
+     ],
+     [
+      "Dragon",
+      0,
+      1
+     ]
+    ]
+   }
+  ]
+ }
+}

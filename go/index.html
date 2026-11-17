@@ -13,16 +13,18 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 <canvas id="world"></canvas>
 
 <header id="top">
   <div class="pill" id="hearts" title="Hearts">💖 <b id="heartCount">0</b></div>
-  <div class="title">Blipville: <span>On the Go</span></div>
+  <div class="title">Blipville<span>: On the Go</span></div>
   <div class="right">
     <button class="pill" id="installBtn" title="Install Blipville as an app on this laptop or phone" hidden>⬇ <span>Install app</span></button>
+    <button class="pill icon" id="arenaBtn" aria-label="Arena" title="Arena">⚔️</button>
+    <button class="pill icon" id="trophyBtn" aria-label="Trophies" title="Trophies">🏆</button>
     <button class="pill icon" id="soundBtn" aria-label="Sound off">🔇</button>
     <button class="pill icon" id="helpBtn" aria-label="How to play">?</button>
   </div>
@@ -74,6 +76,7 @@
     <div class="label">Hats &amp; outfits <span id="hatSeason" class="season"></span></div>
     <div class="chips" id="hatChips"></div>
     <div class="row">
+      <button id="sheetAwaken" hidden>✨ Awaken</button>
       <button id="sheetKind">🔄 Change kind</button>
       <button id="sheetBye" class="danger">👋 Send away</button>
     </div>
@@ -95,6 +98,31 @@
   </div>
 </div>
 
+<div class="sheet" id="arenaSheet" hidden>
+  <div class="card tall">
+    <div class="sheetTitle">⚔️ Arena <span class="muted" id="arenaWins"></span></div>
+    <div id="arenaLobby">
+      <div class="muted small">🔥 Spark beats 🌿 Sprout · 🌿 Sprout beats 💧 Splash · 💧 Splash beats 🔥 Spark · ✨ one Awaken per battle</div>
+      <div class="label">Your team <span class="muted small">(tap your Blips to pick 3)</span></div>
+      <div class="chips" id="arenaTeam"></div>
+      <button class="bigBtn" id="arenaCopy">📋 Copy my battle code</button>
+      <button class="bigBtn pink" id="arenaPaste">📥 Battle a friend's code</button>
+      <div class="label">Practice rivals</div>
+      <div id="arenaRivals"></div>
+      <div class="muted small">Share your code on the Blipville Discord and see who can beat your team!</div>
+    </div>
+    <div id="arenaFight" hidden>
+      <canvas id="arenaCanvas" width="360" height="200"></canvas>
+      <div id="arenaLog"></div>
+      <div class="row">
+        <button id="arenaAwaken" hidden>✨ Awaken!</button>
+        <button id="arenaBack">🏳️ Give up</button>
+      </div>
+    </div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
 <div class="sheet" id="ghostSheet" hidden>
   <div class="card">
     <div class="sheetTitle">👻 Ghosts <span class="muted" id="ghostCount"></span></div>
@@ -102,6 +130,15 @@
     <div class="muted small">Ghosts drift by from 7 PM to 7 AM. They fade in and out: tap one while it glows to befriend it!</div>
     <div class="zooCells" id="ghostGrid"></div>
     <button class="peekAll lure" id="ghostCandle">🕯️ Light a Spirit Candle</button>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="trophySheet" hidden>
+  <div class="card tall">
+    <div class="sheetTitle">🏆 Trophies <span class="muted" id="trophyCount"></span></div>
+    <div class="muted small">Every trophy earns bonus 💖 hearts.</div>
+    <div id="trophyGrid"></div>
     <button class="close" data-close>Close</button>
   </div>
 </div>
@@ -148,6 +185,9 @@
       <li>🌍 Tap <b>Worlds</b> to unlock new places (Plant, Sweets, Ocean, Dino, Space) with hearts and pick their Blips.</li>
       <li>🦖 Once in a long while a giant <b>kaiju</b> stomps through. Tap it <b>3 times</b> before it leaves!</li>
       <li>👻 At night (7 PM to 7 AM) <b>ghosts</b> drift by. They fade in and out: tap one while it glows! A 🕯️ <b>Spirit Candle</b> (in the 📖 Zoo) calls them in the daytime.</li>
+      <li>⚔️ Tap <b>⚔️</b> at the top for the <b>Arena</b>: pick 3 Blips, share your battle code with friends (it works with the Windows app too) or beat the practice rivals.
+        Some Blips can <b>✨ Awaken</b> into a stronger form with an Awakening Crystal (in their menu).</li>
+      <li>🏆 Tap the <b>trophy</b> at the top to see your trophies. Each one earns bonus hearts.</li>
       <li>Brave enough? Tap <b>🌙 Night</b> to play <b>Night Shift</b>. Survive until 6 AM to unlock the robo crew!</li>
       <li>Buy <b>hats &amp; outfits</b> from a Blip's menu. Tap <b>🔇</b> at the top to turn on sound effects.</li>
       <li class="laptop">On a laptop: <b>right-click</b> a Blip for its menu, <b>Space</b> pets the Blip under your mouse, and
@@ -183,7 +223,7 @@
   </div>
 </div>
 
-<script src="data.js?v=17"></script>
-<script src="app.js?v=17"></script>
+<script src="data.js?v=18"></script>
+<script src="app.js?v=18"></script>
 </body>
 </html>

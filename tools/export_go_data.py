@@ -13,8 +13,15 @@ spec = importlib.util.spec_from_loader("blip", SourceFileLoader("blip", os.path.
 bl = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(bl)
 
+# Some 1.0 features (trophies, Awakened forms, the Arena) went on the website before the 1.0 desktop app.
+# Until blip.pyw has them (the release-1.0 branch), their data comes from go/early-1.0.json.
+EARLY = {}
+if not hasattr(bl, "TROPHIES"):
+    with open(os.path.join(ROOT, "go", "early-1.0.json"), encoding="utf-8") as f:
+        EARLY = json.load(f)
+
 kinds = {}
-for k in bl.KINDS:
+for k in list(bl.KINDS) + list(getattr(bl, "AWAKEN_BASE", [])):
     v = bl.VARIANTS[k]
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
@@ -23,6 +30,7 @@ for k in bl.KINDS:
         "lines": v["lines"], "colors": bl.kind_colors(k),
         "default": bl.default_color(k),
     }
+kinds.update(EARLY.get("kinds", {}))
 data = {
     "kinds": kinds,
     "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS},
@@ -33,6 +41,11 @@ data = {
     "lureCost": bl.LURE_COST,
     "beaconCost": bl.BEACON_COST,
     "candleCost": bl.CANDLE_COST,
+    **({"trophies": [{"id": t[0], "icon": t[1], "name": t[2], "how": t[3], "bonus": t[5]} for t in bl.TROPHIES],
+        "trophyCup": bl.TROPHY_CUP, "awakenForm": bl.AWAKEN_FORM, "crystalCost": bl.CRYSTAL_COST,
+        "arena": {"stats": bl.ARENA_STATS, "types": bl.ARENA_TYPES, "beats": bl.ARENA_BEATS,
+                  "rivals": [{"name": n, "reward": r, "team": t} for n, r, t in bl.ARENA_RIVALS]}}
+       if not EARLY else {k: v for k, v in EARLY.items() if k != "kinds"}),
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,
     "giftDrops": [{k: d[k] for k in ("kind", "until", "why")} for d in bl.GIFT_DROPS],

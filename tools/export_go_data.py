@@ -19,19 +19,20 @@ for k in bl.KINDS:
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
         "feet": v["feet"], "dx": v.get("dx", 0), "move": v["move"], "speed": v.get("speed", 1.0),
-        "shifty": bool(v.get("shifty")), "extra": v.get("extra", {}),
+        "shifty": bool(v.get("shifty")), "extra": v.get("extra", {}), "ghost": bool(v.get("ghost")),
         "lines": v["lines"], "colors": bl.kind_colors(k),
         "default": bl.default_color(k),
     }
 data = {
     "kinds": kinds,
-    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS},
+    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,
     "eggCost": bl.EGG_COST,
     "lureCost": bl.LURE_COST,
     "beaconCost": bl.BEACON_COST,
+    "candleCost": bl.CANDLE_COST,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,
     "giftDrops": [{k: d[k] for k in ("kind", "until", "why")} for d in bl.GIFT_DROPS],

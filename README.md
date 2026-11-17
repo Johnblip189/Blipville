@@ -21,6 +21,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
   - 🍩 **Sweets:** Donut, Cupcake, Ice Cream, Gummy Bear, Taco and more
   - 🚀 **Space:** Astronaut, UFO, Star, Moon, Rocket, Black Hole and more
   - 🌱 **Plants:** Sunflower, Tulip, Flytrap, Pumpkin, Lotus and more
+- 🎁 **A free gift:** everyone who plays RC1 gets **Beta Buddy**, a limited-edition party Blip, in the new Gifts tab.
 
 ## ✨ New in v0.3.4 (beta)
 

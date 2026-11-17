@@ -198,3 +198,6 @@ body.mini .card { padding: 10px; border-radius: 14px; }
 .linkBtn { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 12px;
   background: #3a3260; color: var(--text); font: 800 13px var(--font); text-decoration: none; }
 .linkBtn.donate { background: #a83a6a; }
+
+.worldBtn { margin: 4px 0 8px; }
+.worldBtn.armed { background: #a83a6a; color: #fff; }

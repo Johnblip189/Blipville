@@ -3219,6 +3219,16 @@ RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
 GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
+# Worlds 🌍: each new tab's Blips are locked until you unlock its world with hearts. Blips you already have stay yours.
+WORLDS = [  # name, the tab it unlocks, cost in hearts, the air while you're visiting
+    {"name": "Plant World", "icon": "🌱", "tab": "Plants 🌱", "cost": 50, "fx": [("leaf", 1.6), ("petal", 1.2)]},
+    {"name": "Sweets World", "icon": "🍩", "tab": "Sweets 🍩", "cost": 75, "fx": [("sprinkle", 3.0)]},
+    {"name": "Ocean World", "icon": "🌊", "tab": "Ocean 🌊", "cost": 100, "fx": [("bubble", 2.6)]},
+    {"name": "Dino World", "icon": "🦕", "tab": "Dinos 🦕", "cost": 125, "fx": [("ash", 2.4), ("leaf", 0.6)]},
+    {"name": "Space World", "icon": "🚀", "tab": "Space 🚀", "cost": 150, "fx": [("star", 2.2)]},
+]
+WORLD_OF = {k: w["name"] for w in WORLDS for t, ks in TAB_GROUPS if t == w["tab"] for k in ks}   # kind -> world
+WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
 KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + GIFT_KINDS
@@ -3529,6 +3539,9 @@ class Blip:
                 self.kaiju_menu = sub
             elif members is GIFT_KINDS:
                 self.gift_menu = sub
+            elif any(members is ks for _, ks in TAB_GROUPS):
+                self.tab_menus = getattr(self, "tab_menus", {})
+                self.tab_menus[group] = (sub, members)
             else:
                 for k in members:
                     sub.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
@@ -3546,6 +3559,8 @@ class Blip:
         self.menu.add_command(label=f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", command=lambda: app.set_lure(self.root))
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
         self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
+        self.world_menu = tk.Menu(self.menu, tearoff=0)
+        self.menu.add_cascade(label="🌍 Worlds", menu=self.world_menu)
         self.menu.add_command(label="💖 0 hearts", state="disabled")
         self.hearts_entry = self.menu.index("end")
         self.menu.add_checkbutton(label="Show name tags", variable=app.name_tags)
@@ -3782,6 +3797,28 @@ class Blip:
         self.kaiju_menu.add_command(label=f"📡 Switch on a Kaiju Beacon… ({BEACON_COST} 💖, {caught}/{len(KAIJU_KINDS)} caught)",
                                     command=lambda: self.app.set_beacon(self.root))
         self.kaiju_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
+        for group, (sub, members) in getattr(self, "tab_menus", {}).items():
+            sub.delete(0, "end")
+            w = WORLD_BY_NAME[WORLD_OF[members[0]]]
+            if not self.app.is_unlocked(members[0]):
+                sub.add_command(label=f"🔒 Unlock {w['name']} {w['icon']} ({w['cost']} 💖)…",
+                                command=lambda n=w["name"]: self.app.unlock_world(n, self.root))
+                sub.add_separator()
+            for k in members:
+                if self.app.is_unlocked(k):
+                    sub.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+                else:
+                    sub.add_command(label=f"🔒 {k}", state="disabled")
+        wm, here = self.world_menu, self.app.world()
+        wm.delete(0, "end")
+        wm.add_command(label=("✓ " if not here else "    ") + "🏠 Home", command=lambda: self.app.visit_world(None))
+        for w in WORLDS:
+            if w["name"] in self.app.save.get("worlds", []):
+                mark = "✓ " if here and here["name"] == w["name"] else "    "
+                wm.add_command(label=f"{mark}{w['icon']} Visit {w['name']}", command=lambda n=w["name"]: self.app.visit_world(n))
+            else:
+                wm.add_command(label=f"🔒 {w['icon']} Unlock {w['name']} ({w['cost']} 💖)…",
+                               command=lambda n=w["name"]: self.app.unlock_world(n, self.root))
         self.gift_menu.delete(0, "end")
         for k in GIFT_KINDS:
             if self.app.is_unlocked(k):
@@ -4170,6 +4207,22 @@ class Blip:
                 X = p["x"] + math.sin(age * 3 + p["phase"]) * 4
                 w_, h_, col = (4, 3, p["color"]) if p["kind"] == "leaf" else (3, 2, "#ffb0d8")
                 c.create_rectangle(X, p["y"], X + w_, p["y"] + h_, fill=col, outline="", tags=("fx",))
+            elif p["kind"] == "bubble":
+                X, s_ = p["x"] + math.sin(age * 3 + p["phase"]) * 3, p["size"]
+                c.create_rectangle(X, p["y"], X + s_, p["y"] + s_, fill="", outline="#bfe8ff", tags=("fx",))
+                c.create_rectangle(X + 1, p["y"] + 1, X + 2, p["y"] + 2, fill="#ffffff", outline="", tags=("fx",))
+            elif p["kind"] == "star":
+                if math.sin(age * 6 + p["phase"]) > -0.2:
+                    X, Y = p["x"], p["y"]
+                    c.create_rectangle(X, Y - 2, X + 2, Y + 4, fill=p["color"], outline="", tags=("fx",))
+                    c.create_rectangle(X - 2, Y, X + 4, Y + 2, fill=p["color"], outline="", tags=("fx",))
+            elif p["kind"] == "sprinkle":
+                X = p["x"] + math.sin(age * 2 + p["phase"]) * 2
+                w_, h_ = (2, 4) if p["tall"] else (4, 2)
+                c.create_rectangle(X, p["y"], X + w_, p["y"] + h_, fill=p["color"], outline="", tags=("fx",))
+            elif p["kind"] == "ash":
+                X = p["x"] + math.sin(age * 2 + p["phase"]) * 3
+                c.create_rectangle(X, p["y"], X + 2, p["y"] + 2, fill=p["color"], outline="", tags=("fx",))
             elif p["kind"] == "firefly":
                 if math.sin(age * 5) > -0.3:
                     c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#fff08a", outline="", tags=("fx",))
@@ -4193,7 +4246,7 @@ class Blip:
         if now > self.next_blink:
             self.blink_until = now + 0.15
             self.next_blink = now + random.uniform(2, 6)
-        if self.app.weather.get():
+        if self.app.weather.get() or self.app.world():
             self.weather(now)
         self.update(now)
         self.draw(now)
@@ -4203,13 +4256,32 @@ class Blip:
         season, dt = self.app.season, 1 / FPS
         rates = {"winter": [("snow", 4.0)], "spring": [("petal", 2.0)], "autumn": [("leaf", 1.8)],
                  "spooky": [("leaf", 1.0), ("bat", 0.12)], "summer": [("firefly", 1.4)] if is_night() else []}
-        for kind, rate in rates.get(season, []):
+        world = self.app.world()
+        for kind, rate in (world["fx"] if world else rates.get(season, [])):
             if random.random() > rate * dt:
                 continue
             if kind == "bat":
                 d = random.choice([-1, 1])
                 self.particles.append({"kind": "bat", "x": -10 if d > 0 else W + 10, "y": random.uniform(15, 80),
                                        "vx": 1.6 * d, "vy": 0, "life": (W + 20) / 1.6 / FPS, "born": now})
+            elif kind == "bubble":
+                vy = -random.uniform(0.5, 1.0)
+                self.particles.append({"kind": "bubble", "x": random.uniform(0, W), "y": H + 4, "vx": 0, "vy": vy,
+                                       "life": H / -vy / FPS, "born": now, "phase": random.uniform(0, 6.3), "size": random.choice([3, 4, 6])})
+            elif kind == "star":
+                self.particles.append({"kind": "star", "x": random.uniform(6, W - 6), "y": random.uniform(10, H - 30), "vx": 0, "vy": 0,
+                                       "life": random.uniform(1.5, 3.0), "born": now, "phase": random.uniform(0, 6.3),
+                                       "color": random.choice(["#ffffff", "#fff27a", "#a8d8ff"])})
+            elif kind == "sprinkle":
+                vy = random.uniform(0.6, 1.2)
+                self.particles.append({"kind": "sprinkle", "x": random.uniform(0, W), "y": -4, "vx": 0, "vy": vy, "life": H / vy / FPS,
+                                       "born": now, "phase": random.uniform(0, 6.3), "tall": random.random() < 0.5,
+                                       "color": random.choice(["#ff5a8a", "#5ad8ff", "#ffd23a", "#8af05a", "#b88aff", "#ffffff"])})
+            elif kind == "ash":
+                vy = random.uniform(0.3, 0.7)
+                self.particles.append({"kind": "ash", "x": random.uniform(0, W), "y": -4, "vx": random.uniform(-0.2, 0.4), "vy": vy,
+                                       "life": H / vy / FPS, "born": now, "phase": random.uniform(0, 6.3),
+                                       "color": random.choice(["#8a8090", "#5a5060", "#ff8a3a"])})
             elif kind == "firefly":
                 self.particles.append({"kind": "firefly", "x": random.uniform(10, W - 10), "y": random.uniform(40, H - 20),
                                        "vx": random.uniform(-0.3, 0.3), "vy": random.uniform(-0.3, 0.1), "life": 3.0, "born": now})
@@ -5656,7 +5728,7 @@ class App:
         back = 0
         for t in town[:self.MAX_PETS]:
             kind = t.get("kind")
-            if kind not in VARIANTS or not self.is_unlocked(kind):
+            if kind not in VARIANTS or not (self.is_unlocked(kind) or kind in WORLD_OF):   # world Blips you had stay yours
                 continue
             pet = self.add_pet(kind, str(t.get("name") or kind)[:16], greet=False)
             if not pet:
@@ -5675,6 +5747,8 @@ class App:
             if self.pets:
                 self.pets[0].say("that's enough friends for now!", 2.5)
             return None
+        if not kind and self.world() and random.random() < 0.5:
+            kind = random.choice([k for k, wn in WORLD_OF.items() if wn == self.world()["name"]])
         kind = kind or random.choice([k for k in KINDS if self.is_unlocked(k)])
         used = {p.name for p in self.pets}
         name = name or random.choice([n for n in NAMES if n not in used] or NAMES)
@@ -5756,6 +5830,46 @@ class App:
                               "Find it any time under Change kind → Gifts 🎁." if gift else "")
         messagebox.showinfo("Blipville 0.4 RC1: almost 1.0! 💜", text, parent=self.root)
 
+    def world(self):
+        """The world your town is visiting right now (or None for home)."""
+        w = self.save.get("world")
+        return WORLD_BY_NAME.get(w) if w in self.save.get("worlds", []) else None
+
+    def visit_world(self, name):
+        self.save["world"] = name
+        write_save(self.save)
+        w = WORLD_BY_NAME.get(name)
+        for p in self.pets:
+            p.particles = [q for q in p.particles if q["kind"] in ("heart", "z", "crumb", "plus")]
+        if self.pets:
+            self.pets[0].say(f"welcome to {name}! {w['icon']}" if w else "home sweet home!", 3)
+            self.pets[0].set_face("happy", 1.5)
+
+    def unlock_world(self, name, parent):
+        from tkinter import messagebox
+        w = WORLD_BY_NAME[name]
+        if name in self.save.get("worlds", []):
+            self.visit_world(name)
+            return
+        if self.hearts() < w["cost"]:
+            messagebox.showinfo(name, f"{name} {w['icon']} costs {w['cost']} 💖 hearts. You have {self.hearts()}.\n\n"
+                                "Pet, feed and care for your Blips to earn more!", parent=parent)
+            return
+        if not messagebox.askyesno(name, f"Unlock {name} {w['icon']} for {w['cost']} 💖?\n\n"
+                                   f"You'll be able to pick every Blip in the {w['tab']} tab, and your town can visit it any time.",
+                                   parent=parent):
+            return
+        self.save["hearts"] = self.hearts() - w["cost"]
+        self.save.setdefault("worlds", []).append(name)
+        write_save(self.save)
+        self.sound.play("fanfare")
+        self.visit_world(name)
+        kinds = [k for k, wn in WORLD_OF.items() if wn == name]
+        pet = self.add_pet(random.choice(kinds), greet=False)
+        if pet:
+            pet.say(f"hi! i'm from {name} {w['icon']}", 4)
+            pet.burst("heart", 6)
+
     def set_beacon(self, parent):
         from tkinter import messagebox
         if all(self.is_unlocked(k) for k in KAIJU_KINDS):
@@ -5773,6 +5887,8 @@ class App:
                             parent=parent)
 
     def is_unlocked(self, kind):
+        if kind in WORLD_OF:
+            return WORLD_OF[kind] in self.save.get("worlds", [])
         if kind in GIFTS:
             return kind in self.save.get("gifts", [])
         if kind in KAIJU:

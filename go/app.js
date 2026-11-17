@@ -9,6 +9,8 @@
   const CRYPT = new Set(D.groups.cryptids);
   const KAIJU = new Set(D.groups.kaiju || []), HITS = D.kaijuHits || 3;
   const GIFTS = new Set(D.groups.gifts || []);
+  const WORLDS = D.worlds || [], WORLD_OF = {};          // world Blips are locked until you unlock their world
+  for (const w of WORLDS) for (const [t, ks] of D.groups.tabs || []) if (t === w.tab) for (const k of ks) WORLD_OF[k] = w.name;
   const EGG_COST = D.eggCost;
   let view = window;                                   // the window the town is in (main page or the pop-out)
   const doc = () => view.document;
@@ -23,7 +25,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [] };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
@@ -98,7 +100,7 @@
     if (on && !quiet) sfx("boop");
   }
 
-  const isUnlocked = (k) => GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const isUnlocked = (k) => WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -846,13 +848,28 @@
                     [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []],
                     ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
+      const world = WORLDS.find((w) => w.tab === title);
+      if (world && !save.worlds.includes(world.name)) {           // a locked world: one button to unlock its whole tab
+        const u = document.createElement("button"); u.className = "peekAll lure worldBtn";
+        u.textContent = `🔓 Unlock ${world.name} ${world.icon} · ${world.cost} 💖`;
+        u.onclick = () => {
+          if (save.hearts < world.cost) { toast(`${world.name} costs ${world.cost} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 4); return; }
+          if (!u.classList.contains("armed")) { u.classList.add("armed"); u.textContent = `Unlock ${world.name} for ${world.cost} 💖? Tap again`; return; }
+          save.hearts -= world.cost; save.worlds.push(world.name); persist(true); updateHearts(true); sfx("fanfare");
+          const kinds = Object.keys(WORLD_OF).filter((k) => WORLD_OF[k] === world.name);
+          closeSheets(); const p = addPet(pick(kinds), { quiet: true });
+          if (p) { say(p, `hi! i'm from ${world.name} ${world.icon}`, 4); burst(p, "heart", 6); }
+          toast(`${world.icon} ${world.name} unlocked! Every Blip in ${world.tab} is yours to pick.`, 4.5);
+        };
+        grid_.appendChild(u);
+      }
       const cells = document.createElement("div"); cells.className = "zooCells";
       for (const k of kinds) {
         total++;
-        const open = isUnlocked(k), peek = !open && save.peeked.includes(k); if (open) found++;
+        const open = isUnlocked(k), peek = !open && (save.peeked.includes(k) || !!WORLD_OF[k]); if (open) found++;
         const b = document.createElement("button");
         b.className = open ? "" : peek ? "locked peeked" : "locked";
         b.appendChild(thumb(k, KINDS[k].default || 0, !open && !peek, 4));
@@ -1083,7 +1100,7 @@
   if (save.pets && save.pets.length) {
     const away = save.lastSeen ? (Date.now() - save.lastSeen) / 3.6e6 : 0;   // hours away
     for (const s of save.pets) {
-      if (!KINDS[s.kind] || !isUnlocked(s.kind)) continue;
+      if (!KINDS[s.kind] || !(isUnlocked(s.kind) || WORLD_OF[s.kind])) continue;   // world Blips you had stay yours
       const p = makePet(s.kind, s.color, s.name);
       p.hunger = Math.min(100, (s.hunger ?? 10) + away * 8); p.energy = s.energy ?? 100; p.hat = s.hat || null;
       pets.push(p);

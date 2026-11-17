@@ -34,6 +34,7 @@ data = {
     "beaconCost": bl.BEACON_COST,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,
+    "worlds": [{k: w[k] for k in ("name", "icon", "tab", "cost")} for w in bl.WORLDS],
     "giftUntil": bl.GIFT_UNTIL,
     "scenes": bl.SCENES,
     "sceneProps": bl.SCENE_PROPS,

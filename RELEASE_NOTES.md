@@ -8,6 +8,7 @@ Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipvi
 - 🎁 **A free gift:** open this version and you get **Beta Buddy**, a limited-edition party Blip, only given out **this week** (until Sunday, November 22)
 - 🔄 **Auto-updates:** from now on Blipville checks for new versions and updates itself (it always asks first)
 - ⚡ Smoother frame rate
+- 🌍 **Worlds:** unlock Plant, Sweets, Ocean, Dino and Space World with hearts to pick their Blips, then visit them (right-click a pet → 🌍 Worlds). Blips you already had stay yours
 - 🎨 20 of the new Blips already got a second round of polish
 
 Your pets, hearts and unlocks all carry over. Spot a bug or have an idea? Right-click any pet → **💬 Suggestions & help**. Now's the time, before 1.0!

@@ -3166,6 +3166,14 @@ GIFTS = {
   "colors": [{"name": "Gold", "o": "#4a3006", "b": "#ffd23a", "h": "#ff5a8a", "s": "#ffffff", "y": "#5ae0ff", "p": "#ff9a6a", "e": "#2a1a04"},
              {"name": "Silver", "o": "#3a3a4a", "b": "#d8dce8", "h": "#7a5ad8", "s": "#ffffff", "y": "#ffd23a", "p": "#ffb0c8", "e": "#1a1a2a"},
              {"name": "Holo", "o": "#4a2a5a", "b": "#e8c8ff", "h": "#5ad8c8", "s": "#ffffff", "y": "#ff8ac8", "p": "#ff8ab0", "e": "#2a0a3a"}]},
+ "Patch": {"eyes": 5, "move": "hop", "speed": 1.0,
+  "lines": ["all fixed up! 🔧", "thanks for waiting!", "no black flashes on my watch", "*tightens a tiny bolt*",
+            "maintenance crew, reporting in", "i fix bugs (the code kind)", "safety first!"],
+  "body": ['.....hhhhhh.....', '...hhshhhhhhh...', '..hhshhhhhhhhh..', '.kkkkkkkkkkkkkk.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo',
+           'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', '.otttttyyttttto.', '..oooooooooooo..'],
+  "colors": [{"name": "Hard Hat", "o": "#2a2a3a", "b": "#8ac8ff", "h": "#ffd23a", "s": "#ffffff", "k": "#d8a00a", "t": "#6a4a2a", "y": "#d8d8e8", "p": "#ff9ab0", "e": "#1a1a2a"},
+             {"name": "Safety Orange", "o": "#3a1a06", "b": "#ffc490", "h": "#ff7a1a", "s": "#ffffff", "k": "#c8500a", "t": "#4a3a2a", "y": "#ffe04a", "p": "#ff8a8a", "e": "#2a1004"},
+             {"name": "Night Crew", "o": "#14142a", "b": "#7a7ac0", "h": "#b8ff3a", "s": "#ffffff", "k": "#7ab80a", "t": "#2a2a3a", "y": "#ffd23a", "p": "#ff9ac8", "e": "#0a0a1a"}]},
 }
 # World Legends ✨: two legendary Blips per world. They only show up while you're visiting that world: they stroll
 # past in full color with sparkles, and you click them before they leave.
@@ -3183,9 +3191,17 @@ LEGENDS = {
 }
 LEGEND_WORLD = {'Mossling': 'Plant World', 'Bloomkin': 'Plant World', 'Gumdrop Golem': 'Sweets World', 'Cotton Candy Cloud': 'Sweets World', 'Pearlfin': 'Ocean World', 'Abyss Wisp': 'Ocean World', 'Fossilbones': 'Dino World', 'Amber Raptor': 'Dino World', 'Nebula Cat': 'Space World', 'Cosmo Pup': 'Space World'}
 
-GIFT_NOW = "Beta Buddy"     # the gift new players get right now. Set to None to end the giveaway.
-GIFT_UNTIL = "2026-11-22"   # last day of the giveaway (your computer's date); after that it stays locked
-GIFT_UNTIL_TEXT = "Sunday, November 22"
+# The gifts being handed out right now. Everyone who opens Blipville gets each one once, until its last day (your
+# computer's date); after that it stays locked for new players. Remove an entry to end it early.
+GIFT_DROPS = [
+    {"kind": "Beta Buddy", "until": "2026-11-22", "until_text": "Sunday, November 22",
+     "why": "Thanks for playing the Blipville beta!"},
+    {"kind": "Patch", "until": "2026-11-24", "until_text": "Tuesday, November 24",
+     "why": "Thanks for waiting while we fixed things up! 🔧"},
+]
+GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest one (the website version reads these)
+GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
+GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
 for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
@@ -6503,20 +6519,28 @@ class App:
                             "When a shadow with glowing eyes sneaks by, click it before it gets away!", parent=parent)
 
     def give_gift(self):
-        """Hand out the current thank-you Blip, once, to everyone who opens this version."""
-        if not GIFT_NOW or GIFT_NOW in self.save.get("gifts", []):
-            return False
-        if time.strftime("%Y-%m-%d") > GIFT_UNTIL:          # the giveaway is over
-            return False
-        self.save.setdefault("gifts", []).append(GIFT_NOW)
-        write_save(self.save)
-        pet = self.add_pet(GIFT_NOW, greet=False)
-        if pet:
-            pet.say(f"surprise!! i'm {GIFT_NOW}, a gift for you 🎁", 5)
-            pet.set_face("happy", 2)
-            pet.burst("heart", 8)
-        self.sound.play("fanfare")
-        return True
+        """Hand out every thank-you Blip that's on right now, once each. Returns the ones just given."""
+        today, given = time.strftime("%Y-%m-%d"), []
+        for drop in GIFT_DROPS:
+            kind = drop["kind"]
+            if kind in self.save.get("gifts", []) or today > drop["until"]:
+                continue
+            self.save.setdefault("gifts", []).append(kind)
+            given.append(drop)
+            pet = self.add_pet(kind, greet=False)
+            if pet:
+                pet.say(f"surprise!! i'm {kind}, a gift for you 🎁", 5)
+                pet.set_face("happy", 2)
+                pet.burst("heart", 8)
+        if given:
+            write_save(self.save)
+            self.sound.play("fanfare")
+        return given
+
+    @staticmethod
+    def gift_text(given):
+        return "\n\n".join(f"🎁 {d['why']} Here's {d['kind']}, a limited-edition Blip, only given out until {d['until_text']}."
+                            for d in given) + "\n\nFind them any time under Change kind → Gifts 🎁."
 
     def show_notice(self):
         """A one-time message for a new phase of Blipville."""
@@ -6526,17 +6550,16 @@ class App:
         if SELFTEST:                                # the build's test clicks pets; a dialog would be in the way
             return
         if self.save.get("notice_seen") == NOTICE_ID:
-            if self.give_gift():
+            given = self.give_gift()
+            if given:
                 from tkinter import messagebox
-                messagebox.showinfo("A gift for you! 🎁", f"Thanks for playing Blipville! Here's {GIFT_NOW}, a limited-edition Blip, only given out until {GIFT_UNTIL_TEXT}.\n\n"
-                                    "Find it any time under Change kind → Gifts 🎁.", parent=self.root)
+                messagebox.showinfo("A gift for you! 🎁", self.gift_text(given), parent=self.root)
             return
         self.save["notice_seen"] = NOTICE_ID
         write_save(self.save)
         from tkinter import messagebox
-        gift = self.give_gift()
-        text = NOTICE_TEXT + (f"\n\n🎁 As a thank-you, here's {GIFT_NOW}: a limited-edition Blip, only given out until {GIFT_UNTIL_TEXT}. "
-                              "Find it any time under Change kind → Gifts 🎁." if gift else "")
+        given = self.give_gift()
+        text = NOTICE_TEXT + ("\n\n" + self.gift_text(given) if given else "")
         messagebox.showinfo("Blipville Redux 💜" if REDUX else "Blipville 0.4 RC2: almost 1.0! 💜", text, parent=self.root)
 
     def world(self):

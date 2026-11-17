@@ -34,6 +34,7 @@ data = {
     "beaconCost": bl.BEACON_COST,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,
+    "giftDrops": [{k: d[k] for k in ("kind", "until", "why")} for d in bl.GIFT_DROPS],
     "legendWorld": bl.LEGEND_WORLD,
     "worlds": [{k: w[k] for k in ("name", "icon", "tab", "cost")} for w in bl.WORLDS],
     "giftUntil": bl.GIFT_UNTIL,

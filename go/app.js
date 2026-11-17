@@ -1197,14 +1197,16 @@
     if (!fresh) setTimeout(() => { toast("💜 Thanks for playing the Blipville beta! This is Release Candidate 2, the last step before 1.0, with 100 new Blips and 5 new tabs.", 7); say(pets[0], "thank you for playing!! <3", 4); }, 1200);
   }
   const localDay = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-  if (D.giftNow && !save.gifts.includes(D.giftNow) && (!D.giftUntil || localDay() <= D.giftUntil)) {        // limited-time thank-you Blip
-    save.gifts.push(D.giftNow);
+  const drops = (D.giftDrops || (D.giftNow ? [{ kind: D.giftNow, until: D.giftUntil, why: "" }] : []))   // limited-time thank-you Blips
+    .filter((d) => !save.gifts.includes(d.kind) && (!d.until || localDay() <= d.until));
+  drops.forEach((d, i) => {
+    save.gifts.push(d.kind);
     setTimeout(() => {
-      const g = addPet(D.giftNow, { quiet: true });
-      if (g) { say(g, `surprise!! i'm ${D.giftNow}, a gift for you 🎁`, 5); setFace(g, "happy", 2); burst(g, "heart", 8); }
-      toast(`🎁 A gift for you: ${D.giftNow}, a limited-edition Blip! It's in your 📖 Zoo under Gifts.`, 6);
-    }, 2600);
-  }
+      const g = addPet(d.kind, { quiet: true });
+      if (g) { say(g, `surprise!! i'm ${d.kind}, a gift for you 🎁`, 5); setFace(g, "happy", 2); burst(g, "heart", 8); }
+      toast(`🎁 ${d.why ? d.why + " " : ""}Here's ${d.kind}, a limited-edition Blip! It's in your 📖 Zoo under Gifts.`, 6);
+    }, 2600 + i * 6500);
+  });
   const today = new Date().toISOString().slice(0, 10);
   if (save.lastDay !== today) {
     save.lastDay = today;

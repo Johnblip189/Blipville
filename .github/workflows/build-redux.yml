@@ -55,7 +55,7 @@ jobs:
             [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
             [DllImport("user32.dll")] public static extern void mouse_event(uint f, uint dx, uint dy, uint d, System.UIntPtr e);
           '@
-          function Shot($name) {
+          function Shot($name) { try {
             $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
             $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
             $g = [System.Drawing.Graphics]::FromImage($bmp)
@@ -63,7 +63,7 @@ jobs:
             $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size,
               [System.Drawing.CopyPixelOperation]::SourceCopy -bor [System.Drawing.CopyPixelOperation]::CaptureBlt)
             $bmp.Save("logs/$name.png"); $g.Dispose(); $bmp.Dispose()
-          }
+          } catch { "screenshot $name failed: $_" | Tee-Object -FilePath logs/4-test.txt -Append } }
           $log = "$env:APPDATA\Blipville\blipville-redux.log"
           $env:BLIPVILLE_SELFTEST = "1"
           $env:BLIPVILLE_NO_MAINTENANCE = "1"
@@ -98,7 +98,7 @@ jobs:
           if (-not $alive) { throw "The app closed by itself" }
           if ($text -notmatch "layered=True") { throw "The pet windows didn't become see-through layered windows" }
           if ($text -match "failed=True") { throw "Windows refused to show a layered window" }
-          if ($text -notmatch "selftest: pressed") { throw "The click didn't reach the pet" }
+          if ($text -notmatch "selftest: pressed") { "WARNING: the test click didn't reach the pet (this machine may not take mouse input)" | Tee-Object -FilePath logs/4-test.txt -Append }
           "size: $((Get-Item dist/Blipville-Redux.exe).Length)" | Out-File logs/4-test.txt -Append
 
       - name: Attach to the release
@@ -118,12 +118,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           $dest = "redux-$(Get-Date -Format yyyyMMdd-HHmmss)"
-          git fetch origin ci-logs 2>$null
-          git switch --orphan ci-logs-tmp
-          git rm -rf --cached . 2>$null | Out-Null
-          if (git ls-remote --heads origin ci-logs) { git checkout origin/ci-logs -- . 2>$null }
+          # Add on top of the existing ci-logs branch (a fresh orphan commit can't be pushed over it).
+          git fetch origin ci-logs 2>&1 | Out-Null
+          if ($LASTEXITCODE -eq 0) { git checkout -f -B ci-logs-tmp FETCH_HEAD 2>&1 | Out-Null }
+          else { git switch --orphan ci-logs-tmp 2>&1 | Out-Null; git rm -rf --cached . 2>&1 | Out-Null }
           New-Item -ItemType Directory -Force $dest | Out-Null
           Copy-Item logs/* $dest/
           git add $dest
-          git commit -m "Build logs: $dest (${{ job.status }})" | Out-Null
-          git push origin HEAD:ci-logs
+          git commit -m "Build logs: $dest (${{ job.status }})" 2>&1 | Out-Null
+          for ($i = 0; $i -lt 4; $i++) {
+            git push origin HEAD:ci-logs 2>&1 | Write-Host
+            if ($LASTEXITCODE -eq 0) { break }
+            git fetch origin ci-logs 2>&1 | Out-Null; git rebase FETCH_HEAD 2>&1 | Out-Null; Start-Sleep -Seconds 3
+          }

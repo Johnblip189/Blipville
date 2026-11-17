@@ -41,7 +41,7 @@
   function persist(now = false) {
     if (frozen) return;
     const write = () => {
-      save.pets = pets.map((p) => ({ kind: p.kind, color: p.color, name: p.name, hat: p.hat || null, hunger: Math.round(p.hunger), energy: Math.round(p.energy) }));
+      save.pets = pets.map((p) => ({ kind: p.kind, color: p.color, name: p.name, hat: p.hat || null, hat2: p.hat2 || null, tints: p.tints || {}, hunger: Math.round(p.hunger), energy: Math.round(p.energy) }));
       save.lastSeen = Date.now();
       try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* private mode: still playable */ }
     };
@@ -404,8 +404,26 @@
     return "summer";
   }
   const hatInShop = (n) => !HATS[n].season || HATS[n].season === currentSeason();
-  function hatCells(kind, name, shift = 0) {
-    const k = KINDS[kind], hat = HATS[name], rows = hat.rows, w = rows[0].length;
+  // accessory colors: a tint swaps an item's main color (0 = original); a 2nd slot lets a Blip wear two things
+  const TINTS = D.accessoryTints || [["Original", null]];
+  function tintedColors(hat, tint) {
+    const col = (TINTS[tint || 0] || TINTS[0])[1];
+    if (!col) return hat.colors;
+    const main = Object.keys(hat.colors)[0];
+    return { ...hat.colors, [main]: col };
+  }
+  const worn = (p) => [p.hat, p.hat2].filter((n) => n && HATS[n]).map((n) => [n, (p.tints || {})[n] || 0]);
+  function wearItem(p, name) {
+    if (name === p.hat || name === p.hat2) return;
+    const two = !!save.slot2, same = [p.hat, p.hat2].find((n) => n && HATS[n] && HATS[n].slot === HATS[name].slot);
+    if (same) { if (p.hat === same) p.hat = name; else p.hat2 = name; }
+    else if (!two || !p.hat) { p.hat = name; if (!two) p.hat2 = null; }
+    else if (!p.hat2) p.hat2 = name;
+    else { p.hat = p.hat2; p.hat2 = name; }
+  }
+  function takeOff(p, name) { if (p.hat === name) { p.hat = p.hat2 || null; p.hat2 = null; } else if (p.hat2 === name) p.hat2 = null; }
+  function hatCells(kind, name, shift = 0, tint = 0) {
+    const k = KINDS[kind], hat = HATS[name], rows = hat.rows, w = rows[0].length, colors = tintedColors(hat, tint);
     const half = 8 - w / 2, f = Math.floor(half);       // round half to even, exactly like Python's round()
     const left = (half - f !== 0.5 ? Math.round(half) : (f % 2 === 0 ? f : f + 1)) + (k.dx || 0) + (hat.x || 0);
     let top;
@@ -416,18 +434,18 @@
     } else if (hat.slot === "face") top = k.eyes + shift + (hat.y || 0);
     else top = Math.min(k.eyes + 5, 11) + shift + (hat.y || 0);
     const out = [];
-    rows.forEach((row, r) => [...row].forEach((ch, c) => { if (ch !== ".") out.push([top + r, left + c, hat.colors[ch]]); }));
+    rows.forEach((row, r) => [...row].forEach((ch, c) => { if (ch !== ".") out.push([top + r, left + c, colors[ch]]); }));
     return out;
   }
-  function drawHat(c, kind, name, x, y, s, shift = 0) {
+  function drawHat(c, kind, name, x, y, s, shift = 0, tint = 0) {
     let topRow = 0;
     if (!name || !HATS[name]) return 0;
-    for (const [r, col, color] of hatCells(kind, name, shift)) { c.fillStyle = color; c.fillRect(x + col * s, y + r * s, s, s); topRow = Math.min(topRow, r); }
+    for (const [r, col, color] of hatCells(kind, name, shift, tint)) { c.fillStyle = color; c.fillRect(x + col * s, y + r * s, s, s); topRow = Math.min(topRow, r); }
     return topRow * s;
   }
-  function dressedThumb(kind, color, hat, scale = 3) {
+  function dressedThumb(kind, color, hat, scale = 3, tint = 0) {
     const pad = 8, c = document.createElement("canvas"); c.width = 16 * scale; c.height = (13 + pad) * scale;
-    const cx = c.getContext("2d"); drawGrid(cx, grid(kind, color, { t: 0 }), 0, pad * scale, scale); drawHat(cx, kind, hat, 0, pad * scale, scale);
+    const cx = c.getContext("2d"); drawGrid(cx, grid(kind, color, { t: 0 }), 0, pad * scale, scale); drawHat(cx, kind, hat, 0, pad * scale, scale, 0, tint);
     return c;
   }
 
@@ -593,7 +611,8 @@
     if (KINDS[p.kind].ghost) ctx.globalAlpha = 0.8;                // ghosts stay a little see-through
     drawGrid(ctx, grid(p.kind, p.color, { t, state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S);
     ctx.globalAlpha = 1;
-    const hatTop = drawHat(ctx, p.kind, p.hat, left, top, S, (p.state === "sleep" || t < p.squashUntil) ? 1 : 0);
+    const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;
+    const hatTop = Math.min(0, ...worn(p).map(([n, tint]) => drawHat(ctx, p.kind, n, left, top, S, shiftH, tint)));
     // particles
     p.particles = p.particles.filter((q) => t - q.born < q.life);
     for (const q of p.particles) {
@@ -918,7 +937,8 @@
     $("petName").value = p.name;
     $("petKind").textContent = p.kind + (RARE.has(p.kind) ? " · rare ✨" : "");
     const pc = $("petPortrait").getContext("2d"); pc.clearRect(0, 0, 96, 100);
-    drawGrid(pc, grid(p.kind, p.color, { t: 0, face: "happy" }), 8, 31, 5); drawHat(pc, p.kind, p.hat, 8, 31, 5);
+    drawGrid(pc, grid(p.kind, p.color, { t: 0, face: "happy" }), 8, 31, 5);
+    for (const [n, tint] of worn(p)) drawHat(pc, p.kind, n, 8, 31, 5, 0, tint);
     const chips = $("colorChips"); chips.innerHTML = "";
     KINDS[p.kind].colors.forEach((col, i) => {
       const b = document.createElement("button"); b.className = i === p.color ? "on" : "";
@@ -929,26 +949,47 @@
     $("sheetNap").textContent = p.state === "sleep" ? "☀️ Wake" : "💤 Nap";
     const hc = $("hatChips"); hc.innerHTML = "";
     for (const name of Object.keys(HATS).filter(hatInShop)) {
-      const owned = save.hatsOwned.includes(name), wearing = p.hat === name;
+      const owned = save.hatsOwned.includes(name), wearing = p.hat === name || p.hat2 === name;
       const b = document.createElement("button"); b.className = wearing ? "on" : "";
-      b.appendChild(dressedThumb(p.kind, p.color, name));
+      b.appendChild(dressedThumb(p.kind, p.color, name, 3, (p.tints || {})[name] || 0));
       b.append(name);
       const tag = document.createElement("small");
       tag.textContent = wearing ? "✓ on" : owned ? "owned" : `💖 ${HATS[name].price}`;
       tag.className = owned || wearing ? "owned" : "price"; b.appendChild(tag);
       b.onclick = () => {
-        if (wearing) { p.hat = null; say(p, "back to basics!", 2); }
-        else if (owned) { p.hat = name; say(p, pick(["how do i look?", "so stylish!", "*strikes a pose*"]), 2.5); setFace(p, "happy", 1.5); }
+        if (wearing) { takeOff(p, name); say(p, "back to basics!", 2); }
+        else if (owned) { wearItem(p, name); say(p, pick(["how do i look?", "so stylish!", "*strikes a pose*"]), 2.5); setFace(p, "happy", 1.5); }
         else {
           const price = HATS[name].price;
           if (save.hearts < price) { toast(`${name} costs ${price} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 3.5); return; }
           save.hearts -= price; save.hatsOwned.push(name); updateHearts(true); sfx("coin");
-          p.hat = name; say(p, `a new ${name.toLowerCase()}! thank you!!`, 3); setFace(p, "happy", 2); burst(p, "heart", 5);
+          wearItem(p, name); say(p, `a new ${name.toLowerCase()}! thank you!!`, 3); setFace(p, "happy", 2); burst(p, "heart", 5);
         }
         persist(true); openPetSheet(p);
       };
       hc.appendChild(b);
     }
+    const tintBox = $("hatTints"); tintBox.innerHTML = "";          // color swatches for what it's wearing (free)
+    for (const [n, cur] of worn(p)) {
+      const row = document.createElement("div"); row.className = "tintRow";
+      const lab = document.createElement("span"); lab.textContent = `🎨 ${n}`; row.appendChild(lab);
+      TINTS.forEach(([tname, col], i) => {
+        const sw = document.createElement("button"); sw.className = i === cur ? "on" : ""; sw.title = tname;
+        sw.style.background = col || Object.values(HATS[n].colors)[0];
+        sw.onclick = () => { p.tints = p.tints || {}; if (i) p.tints[n] = i; else delete p.tints[n];
+          say(p, i ? `ooh, ${tname.toLowerCase()}!` : "back to the classic look!", 2); setFace(p, "happy", 1.2); sfx("pop"); persist(true); openPetSheet(p); };
+        row.appendChild(sw);
+      });
+      tintBox.appendChild(row);
+    }
+    const s2 = $("slot2Btn");
+    s2.hidden = !!save.slot2; s2.textContent = `🔓 Unlock a 2nd accessory slot · ${D.slot2Cost || 50} 💖 (wear a hat + glasses or a scarf)`;
+    s2.onclick = () => {
+      const cost = D.slot2Cost || 50;
+      if (save.hearts < cost) { toast(`The 2nd accessory slot costs ${cost} 💖. You have ${save.hearts}.`, 3); return; }
+      save.hearts -= cost; save.slot2 = true; persist(true); updateHearts(true); sfx("fanfare");
+      say(p, "two accessories?! fancy!", 3); setFace(p, "happy", 2); openPetSheet(p);
+    };
     $("hatSeason").textContent = Object.values(HATS).some((h) => h.season === currentSeason()) ? `✨ ${currentSeason()} items are in!` : "";
     openSheet("petSheet");
   }
@@ -1292,7 +1333,7 @@
     for (const s of save.pets) {
       if (!KINDS[s.kind] || !(isUnlocked(s.kind) || WORLD_OF[s.kind])) continue;   // world Blips you had stay yours
       const p = makePet(s.kind, s.color, s.name);
-      p.hunger = Math.min(100, (s.hunger ?? 10) + away * 8); p.energy = s.energy ?? 100; p.hat = s.hat || null;
+      p.hunger = Math.min(100, (s.hunger ?? 10) + away * 8); p.energy = s.energy ?? 100; p.hat = s.hat || null; p.hat2 = save.slot2 ? (s.hat2 || null) : null; p.tints = s.tints || {};
       pets.push(p);
     }
   }

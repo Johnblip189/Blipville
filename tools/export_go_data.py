@@ -33,6 +33,8 @@ data = {
     "lureCost": bl.LURE_COST,
     "beaconCost": bl.BEACON_COST,
     "candleCost": bl.CANDLE_COST,
+    "accessoryTints": bl.ACCESSORY_TINTS,
+    "slot2Cost": bl.SLOT2_COST,
     "trophies": [{"id": t[0], "icon": t[1], "name": t[2], "how": t[3], "bonus": t[5]} for t in bl.TROPHIES],
     "trophyCup": bl.TROPHY_CUP,
     "kaijuHits": bl.KAIJU_HITS,

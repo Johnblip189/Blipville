@@ -3456,6 +3456,7 @@ class Blip:
         self.kind = kind
         self.name = name
         self.root = root = tk.Toplevel(app.root)
+        root.withdraw()                             # stay hidden until see-through mode is on (no black flash)
         root.title(name)
         root.overrideredirect(True)
         root.attributes("-topmost", True)
@@ -3591,7 +3592,16 @@ class Blip:
 
     # ------------------------------------------------------------------ helpers
     def place(self):
-        self.root.geometry(f"{W}x{H}+{int(self.wx)}+{int(self.wy)}")
+        pos = (int(self.wx), int(self.wy))
+        if pos == getattr(self, "_placed", None):
+            return                                  # moving a see-through window makes Windows repaint it, so only when needed
+        if getattr(self, "_placed", None) is None:  # first time: set the size too, then show the window
+            self.root.geometry(f"{W}x{H}+{pos[0]}+{pos[1]}")
+            self.root.update_idletasks()
+            self.root.deiconify()
+        else:
+            self.root.geometry(f"+{pos[0]}+{pos[1]}")
+        self._placed = pos
 
     def set_state(self, state, seconds=0.0):
         self.state = state
@@ -4605,6 +4615,7 @@ class Sighting:
         self.props = [(n, SCENE_W - x if flip else x, y, layer, flip) for n, x, y, layer in scene["props"]]
         self.clip = scene.get("clip", -99)
         self.root = root = tk.Toplevel(app.root)
+        root.withdraw()                             # stay hidden until see-through mode is on (no black flash)
         root.overrideredirect(True)
         root.attributes("-topmost", True)
         bg = KEY
@@ -4624,6 +4635,8 @@ class Sighting:
         left, top, right, bottom = work_area(root)
         self.wx = random.uniform(left, max(left, right - self.cw))
         root.geometry(f"{self.cw}x{self.ch}+{int(self.wx)}+{int(bottom - self.ch)}")
+        root.update_idletasks()
+        root.deiconify()
         self.born = time.monotonic()
         self.facing, self.pos, self.caught = (-1 if flip else 1), self.keys[0][1:], False
         witness = next((p for p in app.pets if p.state not in ("sleep", "held")), None)
@@ -6158,7 +6171,7 @@ class App:
             if now - self.last_town_save > 15:     # remember the town every so often
                 self.save_town()
                 self.last_town_save = now
-            if now - self.last_topmost > 5:        # stay above other windows
+            if now - self.last_topmost > 60:       # stay above other windows (rarely: it makes Windows repaint them)
                 for pet in self.pets:
                     pet.root.attributes("-topmost", True)
                 self.last_topmost = now

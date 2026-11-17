@@ -1,0 +1,6 @@
+[2026-11-17 18:45:21] v1.0.0-test 2026-11-17T18:44:56Z | started on win32, Python 3.12.10
+[2026-11-17 18:45:31] v1.0.0-test 2026-11-17T18:44:56Z | selftest: pet Blip state=idle click_at=379,694 layered=True frames_shown=236 failed=False
+[2026-11-17 18:45:31] v1.0.0-test 2026-11-17T18:44:56Z | selftest: 1 pets, LAYERED=True, version=v1.0.0-test
+[2026-11-17 18:45:32] v1.0.0-test 2026-11-17T18:44:56Z | selftest: pressed Blip at 110,154
+[2026-11-17 18:45:33] v1.0.0-test 2026-11-17T18:44:56Z | selftest: menu for Blip
+[2026-11-17 18:45:35] v1.0.0-test 2026-11-17T18:44:56Z | trophy: First Friend

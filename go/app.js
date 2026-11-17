@@ -896,7 +896,7 @@
     "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts),
     "world-1": () => save.worlds.length >= 1, "world-all": () => save.worlds.length >= WORLDS.length,
     "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
-    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
+    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
   };
   function checkTrophies() {
     for (const tr of D.trophies || []) {

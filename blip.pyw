@@ -3269,6 +3269,94 @@ AWAKENED = {
               "s": "#fff27a", "p": "#ffb0d8", "d": "#9a8ac0", "e": "#2a2a6a", "f": "#fff27a"},
              {"name": "Twilight", "o": "#1a0a3a", "b": "#3a2a6a", "m": "#ff7ac8", "l": "#5a4a8a", "a": "#ff9ad8", "h": "#ffd23a", "w": "#8a5ad8",
               "s": "#ffd23a", "p": "#ff7ac8", "d": "#1a0a3a", "e": "#fff27a", "f": "#ffd23a"}]},
+ # ---- kaiju 🦖
+ "Tidal Titan": {"name": "Abyssal Titan", "eyes": 4, "move": "walk", "speed": 0.8, "feet": False, "mouth": True,
+  "lines": ["*the whole ocean rumbles*", "i rose from the deepest trench", "my glow lights up the abyss", "tidal wave incoming! (a gentle one)", "i am the deep"],
+  "body": ["y.o.y.o..o.y.o.y", "..oo.oo..oo.oo..", "...oooooooooo...", "..obbsbbbbsbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obgsbbbbbbbbsgbo", "obgbllslllslbgbo", "obbbllllllllbbbo", "obsbllslllslbsbo", ".obbbbbbbbbbbbo.", ".obbo......obbo."],
+  "colors": [{"name": "Abyss", "o": "#020a1a", "b": "#14305a", "g": "#0a1e3a", "l": "#4ae0e8", "s": "#7affea", "y": "#7affea", "p": "#ff6ac0", "e": "#fff27a"},
+             {"name": "Kraken", "o": "#1a0614", "b": "#6a1a4a", "g": "#3a0a2a", "l": "#ff9ad8", "s": "#ffd23a", "y": "#ffd23a", "p": "#ffd23a", "e": "#ffffff"}]},
+ "Magmaw": {"name": "Inferno Magmaw", "eyes": 4, "move": "walk", "speed": 0.7, "feet": False, "mouth": False,
+  "lines": ["*volcano noises*", "i'm hotter than the sun's sun", "the ground melts where i nap", "ERUPTION! (of love)", "careful, i'm extra toasty"],
+  "body": ["..y..........y..", ".oyo........oyo.", ".obroooooooorbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obrybbbbbbbbyrbo",
+           "obbbrbbbbbbrbbbo", "orbbbrbbbbrbbbro", "obrrrrrrrrrrrrbo", "obbwbwbwbwbwbbbo", ".orbbbbbbbbbbro.", ".obbo......obbo."],
+  "colors": [{"name": "Inferno", "o": "#140404", "b": "#3a1a1a", "r": "#ff3a0a", "y": "#fff27a", "w": "#ffffff", "p": "#ff6a1a", "e": "#fff27a"},
+             {"name": "Blue Magma", "o": "#04081a", "b": "#1a2a4a", "r": "#3aa8ff", "y": "#e8ffff", "w": "#ffffff", "p": "#3aa8ff", "e": "#e8ffff"}]},
+ "Gigabot": {"name": "Omega Gigabot", "eyes": 4, "move": "walk", "speed": 0.9, "feet": False, "mouth": False,
+  "lines": ["OMEGA MODE: ENGAGED", "*servos whir at max power*", "upgrade complete. hugs: unlimited", "beep boop (but louder)", "scanning for friends… found you"],
+  "body": [".......y........", "......oyo.......", "...oooooooooo...", "..ommmmmmmmmmo..", "..ommmmmmmmmmo..", "..ommmmmmmmmmo..",
+           "...oooooooooo...", "ooyobbbbbbbboyoo", "ommobbbllbbbommo", "ommobbllllbbommo", "oo.obbbllbbbo.oo", "...obbo..obbo..."],
+  "colors": [{"name": "Omega", "o": "#0a0a14", "m": "#ffd23a", "b": "#3a3a5a", "l": "#ff3aa8", "y": "#3affd8", "e": "#3affd8"},
+             {"name": "Prototype", "o": "#14141e", "m": "#f0f0f8", "b": "#e83a3a", "l": "#3affd8", "y": "#ffd23a", "e": "#ff3a3a"}]},
+ "Skyray": {"name": "Storm Skyray", "eyes": 5, "move": "float", "speed": 1.2, "feet": False, "mouth": True,
+  "lines": ["*thunder crackles*", "i ride the lightning", "storm's coming… and it's me", "zap! (affectionate)", "the sky bends to my wings"],
+  "body": ["......yyyy......", ".....y.yy.y.....", "......oooo......", "....oobbbboo....", "..oobbbbbbbboo..", "oobbbbbbbbbbbboo",
+           "ysbbbbbbbbbbbbsy", ".obbllllllllbbo.", "..oolllllllloo..", "....obbbbbbo....", ".......yy.......", "........y......."],
+  "colors": [{"name": "Thunder", "o": "#0a0a1a", "b": "#2a2a5a", "l": "#8ae0ff", "s": "#fff27a", "y": "#fff27a", "p": "#8ae0ff", "e": "#fff27a"},
+             {"name": "Red Sky", "o": "#2a0a1a", "b": "#c83a6a", "l": "#ffd0a0", "s": "#ffffff", "y": "#ffd23a", "p": "#ffd23a", "e": "#ffffff"}]},
+ "Frostback": {"name": "Blizzard Frostback", "eyes": 5, "move": "walk", "speed": 0.8, "feet": False, "mouth": True,
+  "lines": ["*a blizzard swirls around me*", "winter is my forever season", "brrr-illiant, right?", "i froze a volcano once", "snow day, every day"],
+  "body": ["s.c...c..c...c.s", "..cc.ccc.ccc.cc.", "...oooooooooo...", "..obcbbbbbbcbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbllllllllbbbo", "obcbllllllllbcbo", ".obcbbbbbbbbcbo.", ".obbo......obbo."],
+  "colors": [{"name": "Blizzard", "o": "#06102a", "b": "#4a8ae8", "c": "#ffffff", "l": "#e8f8ff", "s": "#c8f0ff", "p": "#ff9ac0", "e": "#ffffff"},
+             {"name": "Aurora", "o": "#06201a", "b": "#3ac8a0", "c": "#e0fff4", "l": "#f0fff8", "s": "#ff9aff", "p": "#ff9ad8", "e": "#06201a"}]},
+ # ---- ghosts 👻 (still a little see-through)
+ "Sheetie": {"name": "King Sheetie", "eyes": 5, "move": "float", "speed": 1.0, "feet": False, "mouth": True, "ghost": True,
+  "lines": ["bow before the king of boo 👑", "*royal haunting*", "my cape is also a sheet", "i rule the night", "royal decree: more pets"],
+  "body": ["....y..yy..y....", ".....yyyyyy.....", "...oobbbbbboo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "orbbbbbbbbbbbbro", "orrbbbbbbbbbbrro", "orrorrorrorrorro", ".oo.oo.oo.oo.oo."],
+  "colors": [{"name": "Royal", "o": "#4a3a6a", "b": "#f6f6ff", "y": "#ffd23a", "r": "#a83ae8", "p": "#ffb0c8", "e": "#2a2a4a"},
+             {"name": "Midnight", "o": "#14142a", "b": "#3a3a6a", "y": "#c8d0ff", "r": "#e83a6a", "p": "#ff8ab0", "e": "#fff27a"}]},
+ "Will-o'-Wisp": {"name": "Soulfire Wisp", "eyes": 6, "move": "float", "speed": 1.4, "feet": False, "mouth": True, "ghost": True,
+  "lines": ["*flickers in every color*", "my flame never goes out", "follow me… to the snacks", "soulfire, but make it cozy", "i light the way home"],
+  "body": ["..s....oo....s..", "...s..obbo..s...", "....sobbbbos....", "...obbbllbbbo...", "..obbllllllbbo..", ".obbllllllllbbo.",
+           "obbllllllllllbbo", "obllllllllllllbo", "obpllllllllllpbo", ".obbllllllllbbo.", "..obbbbbbbbbbo..", "...oooooooooo..."],
+  "colors": [{"name": "Soulfire", "o": "#3a0a6a", "b": "#a85aff", "l": "#f0d8ff", "s": "#ff8aff", "p": "#ff9ae0", "e": "#2a0a4a"},
+             {"name": "Emerald", "o": "#0a3a1a", "b": "#3ae07a", "l": "#e0ffe8", "s": "#b8ff3a", "p": "#ff9ac8", "e": "#0a2a10"}]},
+ "Banshee": {"name": "Howling Banshee", "eyes": 5, "move": "float", "speed": 1.2, "feet": False, "mouth": False, "ghost": True,
+  "lines": ["*howls across the moors*", "my voice shakes the stars", "wooOOoooOOO", "i only wail because i care", "the night listens to me"],
+  "body": ["h...oooooooo...h", "hh.ohhhhhhhho.hh", ".hohhhhhhhhhhoh.", ".ohhhbbbbbbhhho.", ".ohhbbbbbbbbhho.", "ohhbbbbbbbbbbhho",
+           "ohhbbbbbbbbbbhho", "ohhbpbbbbbbpbhho", "ohhbbbbkkbbbbhho", "ohhhbbbkkbbbhhho", "h.ohhhbbbbbbhhho"[:16], ".h.oo.oo..oo.oo."],
+  "colors": [{"name": "Wailing", "o": "#1a1a3a", "b": "#e8f0ff", "h": "#5a3aa8", "k": "#1a0a2a", "p": "#c8a0ff", "e": "#ff3a6a"},
+             {"name": "Pale Fire", "o": "#3a1a0a", "b": "#fff4e8", "h": "#ff7a3a", "k": "#3a0a0a", "p": "#ffb08a", "e": "#3a0a0a"}]},
+ "Phantom Cat": {"name": "Eclipse Cat", "eyes": 5, "move": "float", "speed": 1.3, "feet": False, "mouth": True, "ghost": True,
+  "lines": ["*purrs during the eclipse*", "two tails, double the mischief", "the moon chose me", "meow… from beyond", "i blink and the sun goes out"],
+  "body": [".......yy.......", ".o............o.", ".oo..........oo.", ".obo........obo.", ".obboooooooobbo.", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbot", "..obbobbbbobbott", "...o..oooo..o.t."],
+  "colors": [{"name": "Eclipse", "o": "#1a0a3a", "b": "#2a1a5a", "t": "#a87aff", "y": "#ffd23a", "p": "#ff7ac8", "e": "#ffd23a"},
+             {"name": "Solar", "o": "#3a2a0a", "b": "#fff0c8", "t": "#ffb03a", "y": "#ff5a3a", "p": "#ffa8a8", "e": "#3a1a0a"}]},
+ "Ghost Captain": {"name": "Phantom Admiral", "eyes": 6, "move": "float", "speed": 1.2, "feet": False, "mouth": True, "ghost": True,
+  "lines": ["all hands on deck! (ghost hands)", "i command the phantom fleet", "*ship bell tolls*", "promoted after 300 years", "set sail for adventure!"],
+  "body": [".....hhhhhh.....", ".hh.hhhwwhhh.hh.", "hhhhhhwyywhhhhhh", ".yyyyyyyyyyyyyy.", "..oooooooooooo..", ".obbbbbbbbbbbbo.",
+           "ybbbbbbbbbbbbbby", "ybbbbbbbbbbbbbby", "obpbbbbbbbbbbpbo", "obbbbbbyybbbbbbo", "obbobbobbobbobbo", ".oo.oo.oo.oo.oo."],
+  "colors": [{"name": "Admiral", "o": "#1a3a4a", "b": "#c8f4f0", "h": "#0a1a3a", "w": "#ffffff", "y": "#ffd23a", "p": "#ffb0c0", "e": "#0a2a2a"},
+             {"name": "Cursed", "o": "#0a2a0a", "b": "#8aff9a", "h": "#1a0a1a", "w": "#e8ffe8", "y": "#c8ff3a", "p": "#3ae07a", "e": "#0a1a0a"}]},
+ # ---- cryptids 👣
+ "Bigfoot": {"name": "Titan Bigfoot", "eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": True,
+  "lines": ["*footsteps shake the forest*", "they'll never get a clear photo now", "i'm the mountain's guardian", "big foot, bigger heart", "the legends were true"],
+  "body": ["....wwwwwwww....", "...owwwwwwwwo...", "..obbwbbbbwbbo..", ".obbllllllllbbo.", ".obllllllllllbo.", "obbllllllllllbbo",
+           "obbllllllllllbbo", "obbpllllllllpbbo", "obbbllllllllbbbo", "obgbbllllllbbgbo", "obbogbbbbbbgobbo", ".oo.obbbbbbo.oo."],
+  "colors": [{"name": "Titan", "o": "#1a0e06", "b": "#5a3a1a", "w": "#ffffff", "l": "#e8c8a0", "g": "#6aa83a", "p": "#e8806a", "e": "#ffd23a"},
+             {"name": "Shadow", "o": "#06060e", "b": "#1e1e2e", "w": "#c8d0ff", "l": "#5a5a7a", "g": "#8a3aff", "p": "#8a3aff", "e": "#ff3a3a"}]},
+ "Mothman": {"name": "Lunar Mothman", "eyes": 5, "move": "flutter", "speed": 1.2, "feet": False, "mouth": False,
+  "lines": ["*wings shimmer like moonlight*", "drawn to the biggest light of all", "i've seen what's coming (it's snacks)", "lunar wings, activate", "flutter flutter… boom"],
+  "body": ["..yy........yy..", "w..y.a....a.y..w", "ww...oooooo...ww", "wwwoobbbbbboowww", "wlwobbbbbbbbowlw", "wwlobbrbbrbbolww",
+           "wwwobbrbbrbbowww", "wlwoffffffffowlw", "wwlwofbffbfowlww", ".wwwobbffbbowww.", "..wwwobbbbowww..", "......o..o......"],
+  "colors": [{"name": "Lunar", "o": "#0e0e2a", "b": "#3a3a7a", "w": "#c8d0ff", "l": "#fff27a", "f": "#e8e8ff", "a": "#8a8ad8", "r": "#8ae0ff", "y": "#fff27a", "e": "#8ae0ff"},
+             {"name": "Crimson", "o": "#1a0606", "b": "#5a0a14", "w": "#e83a3a", "l": "#ffd23a", "f": "#ff9a8a", "a": "#3a0a0a", "r": "#ffd23a", "y": "#ffd23a", "e": "#ffd23a"}]},
+ "Nessie": {"name": "Ancient Nessie", "eyes": 2, "move": "float", "speed": 1.1, "feet": False, "mouth": False,
+  "lines": ["*the loch glows*", "i was here before the castles", "queen of the loch, at your service", "splish… splash… legend", "photograph me. i dare you."],
+  "body": ["...oyooooooyo...", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "..obpbbbbbbpbo..", "...obbbbbbbbo...",
+           "....oobbbboo....", "......obbo......", "..sss.obbo.sss..", ".obbbobbbbobbbo.", "wwwwwwwwwwwwwwww", "w.ww..ww..ww.ww."],
+  "colors": [{"name": "Ancient", "o": "#0a1a2a", "b": "#2a6aa8", "p": "#8ad8ff", "w": "#1a3a8a", "y": "#ffd23a", "s": "#8ad8ff", "e": "#fff27a"},
+             {"name": "Golden", "o": "#3a2a06", "b": "#e8b83a", "p": "#fff0a0", "w": "#3a6ab8", "y": "#ffffff", "s": "#ff8a3a", "e": "#3a1a04"}]},
+ # ---- the Night Shift crew 🌙
+ "Robo Bear": {"name": "Mecha Bear", "eyes": 5, "move": "walk", "speed": 1.2, "feet": True, "mouth": False,
+  "lines": ["MECHA MODE ONLINE", "*rocket boots ignite*", "the night shift just got an upgrade", "6 AM? i don't need sleep", "armor polished, ready to hug"],
+  "body": [".oyo........oyo.", "oaaao......oaaao", "oaaboooooooobaao", ".obrbbbbbbbbrbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbllllllbbpbo", "obbblllnnlllbbbo", "ossyskkkkkksysso", ".obbbllllllbbbo.", "..obrbbbbbbrbo.."],
+  "colors": [{"name": "Mecha", "o": "#0a0a1a", "b": "#3a3a5a", "l": "#8ae0ff", "a": "#ff3a8a", "r": "#ffd23a", "s": "#2a2a3a", "k": "#8ae0ff", "n": "#0a0a1a", "y": "#ff3a8a", "p": "#ff3a8a", "e": "#ff3a3a"},
+             {"name": "Golden", "o": "#2a1a04", "b": "#e8b83a", "l": "#fff4c8", "a": "#ff8a3a", "r": "#ffffff", "s": "#8a5a1a", "k": "#fff27a", "n": "#2a1a04", "y": "#3affd8", "p": "#ff8a8a", "e": "#3affd8"}]},
 }
 AWAKEN_FORM = {base: a["name"] for base, a in AWAKENED.items()}
 AWAKEN_BASE = {a["name"]: base for base, a in AWAKENED.items()}
@@ -3334,7 +3422,7 @@ for _base, _a in AWAKENED.items():
     VARIANTS[_a["name"]] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                             "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                             "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0), "shifty": False,
-                            "ghost": False, "awakened": _base}
+                            "ghost": _a.get("ghost", False), "awakened": _base}
 GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
 GHOST_KINDS = list(GHOSTS)        # met at night
 LEGEND_KINDS = list(LEGENDS)      # found only while visiting their world
@@ -3388,6 +3476,8 @@ TROPHIES = [
     ("awaken-1", "✨", "Awakened", "Awaken a Blip with an Awakening Crystal", lambda a: len(a.save.get("awakened", [])) >= 1, 15),
     ("arena-1", "⚔️", "Arena Rookie", "Win a battle in the Arena", lambda a: a.stat("arena_wins") >= 1, 10),
     ("arena-champ", "🥇", "Arena Champion", "Beat Champion Coco", lambda a: "Champion Coco" in a.save.get("rivals_beaten", []), 40),
+    ("awaken-5", "🌠", "Fully Charged", "Awaken 5 different Blips", lambda a: len(a.save.get("awakened", [])) >= 5, 30),
+    ("arena-kaiju", "👑", "Kaiju Slayer", "Beat Kaiju King Kai", lambda a: "Kaiju King Kai" in a.save.get("rivals_beaten", []), 50),
 ]
 BEACON_COST = 100                 # hearts per Kaiju Beacon
 KAIJU_HITS = 3                    # clicks it takes to befriend a kaiju
@@ -4585,7 +4675,7 @@ class Blip:
                      f"✨ Awaken… (Awakening Crystal, {CRYSTAL_COST} 💖)")
             self.menu.entryconfigure(self.awaken_entry, label=label, state="normal")
         else:
-            self.menu.entryconfigure(self.awaken_entry, label=f"✨ Awaken (only {', '.join(AWAKEN_FORM)})", state="disabled")
+            self.menu.entryconfigure(self.awaken_entry, label="✨ Awaken (this Blip has no Awakened form)", state="disabled")
         self.menu.entryconfigure(self.trophy_entry, label=f"🏆 Trophies ({len(self.app.save.get('trophies', []))}/{len(TROPHIES)})…")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
@@ -6205,7 +6295,9 @@ def _arena_stats(kind):
 ARENA_STATS = {k: _arena_stats(k) for k in VARIANTS}
 ARENA_RIVALS = [("Rival Rae", 5, [["Cat", 0, 0], ["Frog", 0, 0], ["Fox", 0, 0]]),
                 ("Rival Rex", 10, [["Bigfoot", 0, 0], ["Shark", 0, 0], ["Phoenix", 0, 1]]),
-                ("Champion Coco", 20, [["Tidal Titan", 0, 0], ["Kitsune", 0, 1], ["Dragon", 0, 1]])]
+                ("Champion Coco", 20, [["Tidal Titan", 0, 0], ["Kitsune", 0, 1], ["Dragon", 0, 1]]),
+                ("Nyx the Night Queen", 25, [["Banshee", 0, 1], ["Phantom Cat", 0, 1], ["Ghost Captain", 0, 1]]),
+                ("Kaiju King Kai", 30, [["Magmaw", 0, 1], ["Gigabot", 0, 1], ["Tidal Titan", 0, 1]])]
 
 
 def battle_code(name, team):
@@ -6305,7 +6397,7 @@ class Battle:
 
 class Arena:
     """⚔️ Pick 3 Blips from your town, share your battle code, battle a friend's code or a practice rival."""
-    CW, CH = 780, 470
+    CW, CH = 780, 520
     BG, CARD, GOLD, PINK, GREEN = "#1d1a2e", "#2b2547", "#ffd23a", "#ff9fc0", "#9ad8a8"
 
     def __init__(self, app):
@@ -6383,11 +6475,11 @@ class Arena:
         c.create_text(16, 350, anchor="w", text="Practice rivals", fill=self.GOLD, font=("Segoe UI", 10, "bold"))
         beaten = self.app.save.get("rivals_beaten", [])
         for i, (name, reward, team) in enumerate(ARENA_RIVALS):
-            x = 16 + i * 252
+            x, y = 16 + (i % 3) * 252, 364 + (i // 3) * 48
             done = name in beaten
-            self.button(x, 364, 240, 40, f"🥊 {name}  ·  +{reward} 💖" + ("  ✓" if done else ""),
+            self.button(x, y, 240, 40, f"🥊 {name}  ·  +{reward} 💖" + ("  ✓" if done else ""),
                         lambda r=(name, reward, team): self.start(r[2], r[0], r[1]), "#3a3360")
-        c.create_text(16, 430, anchor="w", fill="#9a92c0", font=("Segoe UI", 9),
+        c.create_text(16, 478, anchor="w", fill="#9a92c0", font=("Segoe UI", 9),
                       text="Share your code on the Blipville Discord and see who can beat your team!")
 
     def toggle(self, pet):

@@ -6,10 +6,11 @@ make Blipville what it is. This is the real thing.
 **New in 1.0:**
 - ⚔️ **The Arena:** pick a team of 3 and battle! Every Blip has a type (🔥 Spark beats 🌿 Sprout beats 💧 Splash beats 🔥 Spark),
   stats and a move. Copy your **battle code** and send it to a friend (or post it on the Discord) so they can battle your
-  team, or take on three practice rivals. Battle codes work between Windows and the browser version.
-- ✨ **Awakened forms:** Blip, Kitsune, Dragon, Phoenix, Wolf and Unicorn can awaken into Astral Blip, Nine-Tail Kitsune,
-  Elder Dragon, Solar Phoenix, Moon Wolf and Starlight Unicorn. Use an Awakening Crystal once, then switch any time. In the
-  Arena you get one Awaken per battle, so time it right!
+  team, or take on five practice rivals, up to Nyx the Night Queen and Kaiju King Kai. Battle codes work between Windows and the browser version.
+- ✨ **20 Awakened forms:** Blip, Kitsune, Dragon, Phoenix, Wolf and Unicorn, plus **all 5 kaiju** (Abyssal Titan, Inferno
+  Magmaw, Omega Gigabot, Storm Skyray, Blizzard Frostback), **ghosts** (King Sheetie, Soulfire Wisp, Howling Banshee,
+  Eclipse Cat, Phantom Admiral), **cryptids** (Titan Bigfoot, Lunar Mothman, Ancient Nessie) and the Night Shift's
+  **Mecha Bear**. Use an Awakening Crystal once, then switch any time. In the Arena you get one Awaken per battle, so time it right!
 - 🎨 **Accessory colors** (free, 9 of them) and a **2nd accessory slot** (50 💖) to wear a hat with glasses or a scarf.
 - 👻 **Ghosts, a brand-new tier:** 10 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a

@@ -2,6 +2,8 @@
 
 ![Blipville: pixel pets that live on your taskbar](docs/banner.png)
 
+> 💬 **[Join the Blipville Discord!](https://discord.gg/Q3zmYakNZT)** Chat, share your town, report bugs and suggest Blips.
+
 > 💜 **Blipville 1.0 is here!** Thank you to everyone who played the betas. Spot a bug or have an idea? [Tell me!](https://github.com/Johnblip189/blipville/issues/new/choose)
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
@@ -234,6 +236,10 @@ Every pet is 16 × 12 pixel art written as text, right inside `blip.pyw`. For ex
 ```
 
 Copy an animal in the `ANIMALS` section, change the drawing and colors, and give it some lines in `ANIMAL_TRAITS`. The face (eyes, blinking, mouth) is drawn on top automatically.
+
+## Discord 💬
+
+Come hang out in the **[Blipville Discord](https://discord.gg/Q3zmYakNZT)**: show off your town, get help, report bugs and vote on new Blips.
 
 ## Want a new animal?
 

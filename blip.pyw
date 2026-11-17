@@ -3503,6 +3503,7 @@ NOTICE_TEXT = ("Thank you so much for playing Blipville! 💜\n\n"
                "when you click your pets or open a menu.\n\n"
                "260 Blips, 5 worlds, 👻 ghosts, 🏆 trophies, cryptids, kaiju, Night Shift and more. Your pets, hearts and unlocks all come with you. Have fun!")
 IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
+DISCORD_URL = "https://discord.gg/Q3zmYakNZT"
 HELP_URL = "https://github.com/Johnblip189/blipville/issues/new?template=help.yml"   # links live in the README, so they can change anytime
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",
          "Noodle", "Pebble", "Waffle", "Button", "Dot", "Jellybean", "Muffin", "Ziggy", "Clover", "Taco"]
@@ -4067,6 +4068,7 @@ class Blip:
         upd.add_command(label=f"You have {version_label()}", state="disabled")
         self.menu.add_cascade(label="🔄 Updates", menu=upd)
         talk = tk.Menu(self.menu, tearoff=0)
+        talk.add_command(label="💬 Join the Blipville Discord…", command=lambda: self.open_link(DISCORD_URL, "come say hi on discord!"))
         talk.add_command(label="🐾 Suggest an animal…", command=self.suggest)
         talk.add_command(label="💡 Suggest an idea…", command=lambda: self.open_link(IDEA_URL, "ooh, what's your idea?"))
         talk.add_command(label="🆘 Get help / report a problem…", command=lambda: self.open_link(HELP_URL, "let's get you some help!"))

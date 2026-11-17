@@ -3572,7 +3572,7 @@ class Blip:
         upd = tk.Menu(self.menu, tearoff=0)
         upd.add_command(label="🔄 Check for updates now", command=lambda: app.updater.check(quiet=False))
         upd.add_checkbutton(label="Update automatically (asks first)", variable=app.updater.auto, command=app.updater.set_auto)
-        upd.add_command(label=f"You have {APP_VERSION if APP_VERSION != 'dev' else 'the source version'}", state="disabled")
+        upd.add_command(label=f"You have {version_label()}", state="disabled")
         self.menu.add_cascade(label="🔄 Updates", menu=upd)
         talk = tk.Menu(self.menu, tearoff=0)
         talk.add_command(label="🐾 Suggest an animal…", command=self.suggest)
@@ -4814,17 +4814,37 @@ def newest_release(releases):
     return None
 
 
-def is_newer(tag, asset, my_version=None, my_built=None):
+def is_newer(tag, asset, my_version=None, my_built=None, my_size=None):
     """True when the release on GitHub is different from (and newer than) the running build.
-    A rebuild of the same version counts too: its file was uploaded well after this copy was built."""
+    A rebuild of the same version counts too: it's a different file, uploaded after this copy was built."""
     my_version = APP_VERSION if my_version is None else my_version
     my_built = APP_BUILT if my_built is None else my_built
+    if my_size is None and getattr(sys, "frozen", False):
+        try:
+            my_size = os.path.getsize(sys.executable)
+        except OSError:
+            my_size = None
     if my_version == "dev":
         return False
     if tag != my_version:
         return True
     uploaded, built = _iso(asset.get("updated_at", "")), _iso(my_built)
-    return bool(uploaded and built and uploaded - built > 30 * 60)
+    if not (uploaded and built and uploaded > built):
+        return False
+    if my_size and asset.get("size"):
+        return asset["size"] != my_size              # same version, different file: a rebuild
+    return uploaded - built > 15 * 60
+
+
+def version_label():
+    """e.g. 'v0.4.0-rc1 (built Nov 17, 2:41 AM)', in the player's own time zone."""
+    if APP_VERSION == "dev":
+        return "the source version (blip.pyw)"
+    when = _iso(APP_BUILT)
+    if not when:
+        return APP_VERSION
+    t = time.localtime(when)
+    return f"{APP_VERSION} (built {time.strftime('%b', t)} {t.tm_mday}, {(t.tm_hour % 12) or 12}:{t.tm_min:02d} {'AM' if t.tm_hour < 12 else 'PM'})"
 
 
 class Updater:
@@ -4884,7 +4904,7 @@ class Updater:
         tag, asset = result
         if not is_newer(tag, asset):
             if not quiet:
-                msg = ("You're on the newest Blipville! 🎉" if APP_VERSION != "dev" else
+                msg = (f"You're on the newest Blipville! 🎉\n\nYou have {version_label()}." if APP_VERSION != "dev" else
                        "You're running Blipville from source (blip.pyw), so it can't update itself.\n\nGet the newest version from the releases page.")
                 messagebox.showinfo("Blipville updates", msg, parent=self.app.root)
             return

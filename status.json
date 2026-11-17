@@ -1,9 +1,9 @@
 {
   "_how": "Maintenance switch for every version of Blipville. Set one to true to close it: players see the message below until it's false again. classic = Blipville.exe, redux = Blipville-Redux.exe, web = the website version (go/). Apps check about every 5 minutes (every minute while closed); the website every 2 minutes. Updates still work while closed. link and link_text add a button (leave link empty for none). Easiest way: Actions -> Maintenance mode -> Run workflow.",
   "maintenance": {
-    "classic": true,
+    "classic": false,
     "redux": false,
-    "web": true
+    "web": false
   },
   "message": "We're fixing some bugs and remaking the desktop app as Blipville Redux. Hang tight, it's almost ready!",
   "link": "",

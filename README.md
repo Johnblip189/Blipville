@@ -24,8 +24,9 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - ⚔️ **The Arena:** battle with a team of 3. Share your **battle code** so friends can battle your team (works between Windows and the browser).
 - ✨ **20 Awakened forms**, including every kaiju, ghosts like King Sheetie and cryptids like Lunar Mothman, with one Awaken per Arena battle.
 - 🎨 **Accessory colors** and a **2nd accessory slot**.
-- 👻 **Ghosts:** a new tier of 10 ghosts that drift by at night. Click one while it glows! (Or light a 🕯️ Spirit Candle.)
-- 🏆 **Trophies:** 27 of them, each worth bonus hearts. Right-click a pet → 🏆 Trophies.
+- 👁️ **The Lurker:** a many-eyed shadow ghost that Awakens **3 times**, up to Lurker Eternal.
+- 👻 **Ghosts:** a new tier of 11 ghosts that drift by at night. Click one while it glows! (Or light a 🕯️ Spirit Candle.)
+- 🏆 **Trophies:** 28 of them, each worth bonus hearts. Right-click a pet → 🏆 Trophies.
 - 🎨 **Redraws** of the 10 roughest Blips.
 - 🔧 **Patch**, a free thank-you gift for waiting out the maintenance (until Tuesday, November 24).
 - 🛠️ **Maintenance mode**, so a big fix never leaves you with a broken app.

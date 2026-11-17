@@ -11,7 +11,11 @@
   const GIFTS = new Set(D.groups.gifts || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
-  const AWAKEN_FORM = D.awakenForm || {}, AWAKEN_BASE = Object.fromEntries(Object.entries(AWAKEN_FORM).map(([b, f]) => [f, b]));                                        // ghosts: at night, tap while they glow
+  const AWAKEN_FORM = D.awakenForm || {};
+  const AWAKEN_CHAIN = D.awakenChain || Object.fromEntries(Object.entries(AWAKEN_FORM).map(([b, f]) => [b, [f]]));   // some Blips awaken up to 3 times
+  const AWAKEN_BASE = Object.fromEntries(Object.entries(AWAKEN_CHAIN).flatMap(([b, fs]) => fs.map((f) => [f, b])));
+  const STAGE_COSTS = D.stageCosts || [D.crystalCost || 75, 150, 250];
+  const awStage = (k) => AWAKEN_BASE[k] ? AWAKEN_CHAIN[AWAKEN_BASE[k]].indexOf(k) + 1 : 0;                                        // ghosts: at night, tap while they glow
   const WORLD_LOOK = {
     "Plant World":  { sky: ["#8fd8a8", "#e8ffd8"], land: ["#4ab85a", "#3a9a4a", "#2f7a3a"], fx: [["leaf", 3], ["petal", 3]], sun: "#fff2a8" },
     "Sweets World": { sky: ["#ffb0d8", "#fff0c8"], land: ["#ff8ab8", "#c8885a", "#a86a3a"], fx: [["sprinkle", 7]], sun: "#fff0f8" },
@@ -35,7 +39,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], rivalsBeaten: [] };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
@@ -110,7 +114,8 @@
     if (on && !quiet) sfx("boop");
   }
 
-  const isUnlocked = (k) => AWAKEN_BASE[k] ? save.awakened.includes(AWAKEN_BASE[k]) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const awLevel = (b) => Math.max(+((save.awakenLevel || {})[b]) || 0, save.awakened.includes(b) ? 1 : 0);
+  const isUnlocked = (k) => AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -896,7 +901,7 @@
     "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts),
     "world-1": () => save.worlds.length >= 1, "world-all": () => save.worlds.length >= WORLDS.length,
     "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
-    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
+    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
   };
   function checkTrophies() {
     for (const tr of D.trophies || []) {
@@ -955,9 +960,11 @@
       chips.appendChild(b);
     });
     $("sheetNap").textContent = p.state === "sleep" ? "☀️ Wake" : "💤 Nap";
-    const awBase = AWAKEN_BASE[p.kind] || p.kind, aw = $("sheetAwaken");
-    aw.hidden = !AWAKEN_FORM[awBase];
-    aw.textContent = AWAKEN_BASE[p.kind] ? "💤 Normal form" : save.awakened.includes(awBase) ? "✨ Awaken!" : `✨ Awaken · ${D.crystalCost || 75} 💖`;
+    const awBase = AWAKEN_BASE[p.kind] || p.kind, aw = $("sheetAwaken"), chain = AWAKEN_CHAIN[awBase], stg = awStage(p.kind);
+    aw.hidden = !chain;
+    aw.textContent = !chain ? "" : stg >= chain.length ? "💤 Normal form" :
+      `✨ Awaken${stg ? " again" : ""}${awLevel(awBase) > stg ? "!" : ` · ${STAGE_COSTS[stg]} 💖`}`;
+    $("sheetAwakenBack").hidden = !(chain && stg > 0 && stg < chain.length);
     const hc = $("hatChips"); hc.innerHTML = "";
     for (const name of Object.keys(HATS).filter(hatInShop)) {
       const owned = save.hatsOwned.includes(name), wearing = p.hat === name || p.hat2 === name;
@@ -1013,15 +1020,20 @@
     pets.splice(pets.indexOf(sheetPet), 1); toast(`👋 ${sheetPet.name} waved goodbye.`); closeSheets();
   };
   $("sheetKind").onclick = () => openZoo(sheetPet);
+  const toNormal = (p) => { const base = AWAKEN_BASE[p.kind]; if (!base) return; p.kind = base; p.color %= KINDS[base].colors.length; say(p, "phew, back to normal", 2); persist(true); openPetSheet(p); };
+  $("sheetAwakenBack").onclick = () => sheetPet && toNormal(sheetPet);
   $("sheetAwaken").onclick = () => {
     const p = sheetPet; if (!p) return;
-    const base = AWAKEN_BASE[p.kind] || p.kind, form = AWAKEN_FORM[base]; if (!form) return;
-    if (AWAKEN_BASE[p.kind]) { p.kind = base; p.color %= KINDS[base].colors.length; say(p, "phew, back to normal", 2); persist(true); openPetSheet(p); return; }
-    if (!save.awakened.includes(base)) {
-      const cost = D.crystalCost || 75;
-      if (save.hearts < cost) { toast(`Awakening ${base} into ${form} takes an Awakening Crystal (${cost} 💖). You have ${save.hearts}.`, 4); return; }
-      if (!confirm(`Use an Awakening Crystal (${cost} 💖) to awaken ${base} into ${form}?\n\nIt works for every ${base} you have, forever, and you can switch back any time. In the Arena, Awakened Blips hit harder!`)) return;
-      save.hearts -= cost; save.awakened.push(base); updateHearts(true);
+    const base = AWAKEN_BASE[p.kind] || p.kind, chain = AWAKEN_CHAIN[base]; if (!chain) return;
+    const stg = awStage(p.kind);
+    if (stg >= chain.length) { toNormal(p); return; }
+    const form = chain[stg];
+    if (awLevel(base) <= stg) {
+      const cost = STAGE_COSTS[stg], again = ["", "again ", "a third time "][stg];
+      if (save.hearts < cost) { toast(`Awakening ${p.kind} ${again}into ${form} takes an Awakening Crystal (${cost} 💖). You have ${save.hearts}.`, 4); return; }
+      if (!confirm(`Use an Awakening Crystal (${cost} 💖) to awaken ${p.kind} ${again}into ${form}?\n\nIt works for every ${base} you have, forever, and you can switch back any time. In the Arena, Awakened Blips hit harder!`)) return;
+      save.hearts -= cost; updateHearts(true);
+      if (stg === 0) save.awakened.push(base); else (save.awakenLevel = save.awakenLevel || {})[base] = stg + 1;
     }
     p.kind = form; p.color %= KINDS[form].colors.length; sfx("fanfare"); vibrate([30, 40, 30]);
     say(p, pick(KINDS[form].lines), 3.5); setFace(p, "happy", 2); sparkle(p, 12); persist(true); openPetSheet(p);
@@ -1034,7 +1046,7 @@
   const pxImg = (n) => { const i = doc().createElement("img"); i.className = "px"; i.src = `icons/px/${n}.png`; i.alt = ""; return i; };
   ["spark", "splash", "sprout", "awaken"].forEach(pxIcon);
   let arenaTeam = [], arenaBattle = null, arenaTimer = null;
-  const arenaEntry = (p) => { const b = AWAKEN_BASE[p.kind] || p.kind; return [b, p.color % KINDS[b].colors.length, AWAKEN_FORM[b] && save.awakened.includes(b) ? 1 : 0]; };
+  const arenaEntry = (p) => { const b = AWAKEN_BASE[p.kind] || p.kind; return [b, p.color % KINDS[b].colors.length, Math.min(awLevel(b), (AWAKEN_CHAIN[b] || []).length)]; };
   function battleCodeFor(name, team) {
     const raw = JSON.stringify({ n: name.slice(0, 20), t: team.slice(0, 3) });
     const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(raw)));
@@ -1054,20 +1066,22 @@
   }
   function fighter([kind, color, canAw]) {
     const base = AWAKEN_BASE[kind] || kind, st = AR.stats[base];
-    return { base, kind: base, color: +color, canAw: !!canAw && !!AWAKEN_FORM[base], hp: st.hp, max: st.hp, aw: false };
+    const lvl = Math.min(+canAw || 0, (AWAKEN_CHAIN[base] || []).length);
+    return { base, kind: base, color: +color, lvl, stage: 0, canAw: lvl > 0, hp: st.hp, max: st.hp, aw: false };
   }
   const fst = (f) => AR.stats[f.kind];
   function newBattle(mine, theirs, foe, reward) {
     return { sides: [mine.map(fighter), theirs.map(fighter)], idx: [0, 0], awLeft: [1, 1], turn: 0, winner: null, last: null, foe, reward, log: [`⚔️ ${foe} wants to battle!`] };
   }
   const active = (b, s) => b.sides[s][b.idx[s]] || null;
-  const canAwaken = (b, s) => { const f = active(b, s); return !!(f && b.awLeft[s] && f.canAw && !f.aw); };
+  // one Awaken per battle, but a Blip that can awaken more than once may keep going (the Lurker!)
+  const canAwaken = (b, s) => { const f = active(b, s); return !!(f && f.stage < f.lvl && (b.awLeft[s] || f.stage > 0)); };
   function awakenF(b, s) {
     if (!canAwaken(b, s)) return null;
-    b.awLeft[s] = 0; const f = active(b, s), frac = f.hp / f.max;
-    f.kind = AWAKEN_FORM[f.base]; f.aw = true; f.color %= KINDS[f.kind].colors.length;
+    b.awLeft[s] = 0; const f = active(b, s), frac = f.hp / f.max, was = f.kind;
+    f.stage += 1; f.kind = AWAKEN_CHAIN[f.base][f.stage - 1]; f.aw = true; f.color %= KINDS[f.kind].colors.length;
     f.max = fst(f).hp; f.hp = Math.min(f.max, Math.round(f.max * frac + f.max * 0.25));
-    return `✨ ${f.base} awakens into ${f.kind}!`;
+    return `✨ ${was} awakens into ${f.kind}!`;
   }
   function stepBattle(b) {
     if (b.winner !== null) return null;

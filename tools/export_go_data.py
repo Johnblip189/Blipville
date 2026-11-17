@@ -33,7 +33,7 @@ data = {
     "lureCost": bl.LURE_COST,
     "beaconCost": bl.BEACON_COST,
     "candleCost": bl.CANDLE_COST,
-    "awakenForm": bl.AWAKEN_FORM,
+    "awakenForm": bl.AWAKEN_FORM, "awakenChain": bl.AWAKEN_CHAIN, "stageCosts": bl.STAGE_COSTS,
     "crystalCost": bl.CRYSTAL_COST,
     "arena": {"stats": bl.ARENA_STATS, "types": bl.ARENA_TYPES, "beats": bl.ARENA_BEATS,
               "rivals": [{"name": n, "reward": r, "team": t} for n, r, t in bl.ARENA_RIVALS]},

@@ -3226,6 +3226,14 @@ GHOSTS = {
   "colors": [{"name": "Sea Spirit", "o": "#1a3a4a", "b": "#c8f4f0", "h": "#14141e", "w": "#ffffff", "p": "#ffb0c0", "e": "#0a2a2a"},
              {"name": "Old Gold", "o": "#3a2a0a", "b": "#fff0c0", "h": "#3a1a0a", "w": "#ffd23a", "p": "#ffa890", "e": "#2a1a04"},
              {"name": "Phantom", "o": "#14142a", "b": "#a8b8e8", "h": "#0a0a14", "w": "#e8303a", "p": "#c8a0e0", "e": "#ffe66a"}]},
+ "Lurker": {"eyes": 5, "move": "float", "speed": 1.2, "feet": False, "ghost": True, "mouth": False,
+  "lines": ["...", "i see you", "*blinks with every eye*", "don't look behind you (jk)", "run. (it's tag)", "i have more eyes than friends",
+            "*drip*"],
+  "body": ["................", "......oooo......", "....oobbbboo....", "...obbbbbbybo...", "..obbybbbbbbbo..", ".obbbbbbbbbbbbo.",
+           ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obybbbbbbbbbbybo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", "..obo.obbo.obo.."],
+  "colors": [{"name": "Ink", "o": "#05040a", "b": "#1a1626", "y": "#e8e0ff", "p": "#3a2a4a", "e": "#e8e0ff"},
+             {"name": "Tar", "o": "#000000", "b": "#121212", "y": "#ff3a3a", "p": "#3a0a0a", "e": "#ff3a3a"},
+             {"name": "Void", "o": "#06021a", "b": "#20104a", "y": "#7affea", "p": "#3a1a6a", "e": "#7affea"}]},
 }
 
 # Awakened forms ✨: a powered-up form for some Blips. Buy an Awakening Crystal once for that kind, then switch any time.
@@ -3358,9 +3366,44 @@ AWAKENED = {
   "colors": [{"name": "Mecha", "o": "#0a0a1a", "b": "#3a3a5a", "l": "#8ae0ff", "a": "#ff3a8a", "r": "#ffd23a", "s": "#2a2a3a", "k": "#8ae0ff", "n": "#0a0a1a", "y": "#ff3a8a", "p": "#ff3a8a", "e": "#ff3a3a"},
              {"name": "Golden", "o": "#2a1a04", "b": "#e8b83a", "l": "#fff4c8", "a": "#ff8a3a", "r": "#ffffff", "s": "#8a5a1a", "k": "#fff27a", "n": "#2a1a04", "y": "#3affd8", "p": "#ff8a8a", "e": "#3affd8"}]},
 }
+AWAKENED["Lurker"] = {"name": "Wide-Eyed Lurker", "eyes": 5, "move": "float", "speed": 1.3, "feet": False, "mouth": False, "ghost": True,
+  "lines": ["now i see EVERYTHING", "*more eyes open*", "you can't hide from me (in tag)", "the walls are watching too", "blink. blink. blink."],
+  "body": ["..y..........y..", ".oo...oooo...oo.", "..oooobbbboooo..", "...obybbbbybo...", "..obbbbybbbbbo..", ".obbbbbbbbbbbbo.",
+           ".obbbbbbbbbbbbo.", "obybbbbybbbbbybo", "obbbbbbbbbbbbbbo", "obbbybbbbbbybbbo", ".obbbbbbbbbbbbo.", "o.obo.obbo.obo.o"],
+  "colors": [{"name": "Ink", "o": "#05040a", "b": "#1a1626", "y": "#ffffff", "e": "#ffffff"},
+             {"name": "Tar", "o": "#000000", "b": "#121212", "y": "#ff5a3a", "e": "#ff5a3a"},
+             {"name": "Void", "o": "#06021a", "b": "#20104a", "y": "#aaffef", "e": "#aaffef"}]}
+# Some Blips can awaken more than once: each deeper stage needs its own (pricier) Awakening Crystal.
+AWAKEN_STAGES = {
+ "Lurker": [
+  {"name": "Shadow Lurker", "eyes": 5, "move": "float", "speed": 1.45, "feet": False, "mouth": False, "ghost": True,
+   "lines": ["the lights flicker when i'm near", "*reaches out*", "i grew. you didn't notice.", "every shadow is a door", "ready or not..."],
+   "body": ["...oooooooooo...", "..obybbbbbbybo..", ".obbbbbybbbbbbo.", ".obybbbbbbbbybo.", "oobbbbbbbbbbbboo", "bobbbbbbbbbbbbob",
+            "bobbbbbbbbbbbbob", ".obbybbbbbbybbo.", "..obbbbybbbbbo..", "..obbbbbbbbbbo..", ".obbobbbbbbobbo.", "obo.obo..obo.obo"],
+   "colors": [{"name": "Ink", "o": "#020206", "b": "#100c1a", "y": "#ffffff", "e": "#ffffff"},
+              {"name": "Tar", "o": "#000000", "b": "#0a0a0a", "y": "#ff3a1a", "e": "#ff3a1a"},
+              {"name": "Void", "o": "#04011a", "b": "#160a38", "y": "#7affea", "e": "#7affea"}]},
+  {"name": "Lurker Eternal", "eyes": 5, "move": "float", "speed": 1.6, "feet": False, "mouth": False, "ghost": True,
+   "lines": ["I AM THE DARK BETWEEN THE STARS", "*every eye opens at once*", "the final form. (still wants pets)", "the hallway never ends",
+             "found you."],
+   "body": ["y.y..y.yy.y..y.y", ".oooooooooooooo.", "obybbbbbbbbbbybo", "obbbbybbbbybbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+            "obbbbbbbbbbbbbbo", "obybbbbccbbbbybo", "obbbbbccccbbbbbo", "obbbybbccbbybbbo", ".obbbbbbbbbbbbo.", "oboobbo..obboobo"],
+   "colors": [{"name": "Eternal", "o": "#000000", "b": "#0e0a18", "y": "#fff27a", "c": "#c83aff", "e": "#fff27a"},
+              {"name": "Crimson", "o": "#000000", "b": "#140404", "y": "#ff3a3a", "c": "#ff8a3a", "e": "#ff3a3a"},
+              {"name": "Abyss", "o": "#000006", "b": "#060a1e", "y": "#7affea", "c": "#3a8aff", "e": "#7affea"}]},
+ ],
+}
 AWAKEN_FORM = {base: a["name"] for base, a in AWAKENED.items()}
-AWAKEN_BASE = {a["name"]: base for base, a in AWAKENED.items()}
+AWAKEN_CHAIN = {base: [a["name"]] + [st["name"] for st in AWAKEN_STAGES.get(base, [])] for base, a in AWAKENED.items()}
+AWAKEN_BASE = {form: base for base, chain in AWAKEN_CHAIN.items() for form in chain}
 CRYSTAL_COST = 75
+STAGE_COSTS = [CRYSTAL_COST, 150, 250]       # the Awakening Crystal for the 1st, 2nd and 3rd awakening
+
+
+def awaken_stage(kind):
+    """0 for a normal Blip, 1 for its first Awakened form, 2 and 3 for deeper ones."""
+    base = AWAKEN_BASE.get(kind)
+    return AWAKEN_CHAIN[base].index(kind) + 1 if base else 0
 
 # Gifts 🎁: thank-you Blips handed out for a limited time. Once you have one, it's yours forever.
 GIFTS = {
@@ -3418,7 +3461,7 @@ NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
-for _base, _a in AWAKENED.items():
+for _base, _a in [(b, a) for b, a in AWAKENED.items()] + [(b, st) for b, sts in AWAKEN_STAGES.items() for st in sts]:
     VARIANTS[_a["name"]] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                             "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                             "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0), "shifty": False,
@@ -3478,6 +3521,7 @@ TROPHIES = [
     ("arena-champ", "🥇", "Arena Champion", "Beat Champion Coco", lambda a: "Champion Coco" in a.save.get("rivals_beaten", []), 40),
     ("awaken-5", "🌠", "Fully Charged", "Awaken 5 different Blips", lambda a: len(a.save.get("awakened", [])) >= 5, 30),
     ("arena-kaiju", "👑", "Kaiju Slayer", "Beat Kaiju King Kai", lambda a: "Kaiju King Kai" in a.save.get("rivals_beaten", []), 50),
+    ("lurker-3", "👁️", "Lights Out", "Awaken the Lurker all 3 times", lambda a: a.awaken_level("Lurker") >= 3, 40),
     ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
     ("mouse-10", "🖱️", "Cat and Mouse", "Your Blips catch your mouse pointer 10 times", lambda a: a.stat("cursor_catches") >= 10, 15),
 ]
@@ -4433,6 +4477,8 @@ class Blip:
         self.menu.add_command(label="🎩 Hats & outfits…", command=lambda: HatShop(app, self))
         self.menu.add_command(label="✨ Awaken…", command=self.toggle_awaken)
         self.awaken_entry = self.menu.index("end")
+        self.menu.add_command(label="💤 Back to normal form", command=lambda: self.toggle_awaken(back=True))
+        self.awaken_back_entry = self.menu.index("end")
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
         self.menu.add_command(label=f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", command=lambda: app.set_lure(self.root))
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
@@ -4711,37 +4757,43 @@ class Blip:
             return NIGHT_LINES * 2 + VARIANTS[self.kind]["lines"]
         return LINES_IDLE + VARIANTS[self.kind]["lines"] * 2 + SEASON_LINES.get(self.app.season, [])
 
-    def toggle_awaken(self):
-        """Awaken into the powered-up form (the first time needs an Awakening Crystal), or go back to normal."""
+    def toggle_awaken(self, back=False):
+        """Awaken into the powered-up form (the first time needs an Awakening Crystal), awaken again (some Blips can,
+        up to 3 times), or go back to normal."""
         from tkinter import messagebox
         app, base = self.app, AWAKEN_BASE.get(self.kind, self.kind)
-        if base not in AWAKEN_FORM:
+        if base not in AWAKEN_CHAIN:
             return
-        if self.kind in AWAKEN_BASE:                     # back to normal
+        chain, stage = AWAKEN_CHAIN[base], awaken_stage(self.kind)
+        if back or stage >= len(chain):                 # back to normal
             self.kind = base
             self.palette %= len(kind_colors(base))
             self.say("phew, back to normal", 2)
             self._drawn = None
             app.save_town()
             return
-        form = AWAKEN_FORM[base]
-        if base not in app.save.get("awakened", []):
-            if app.hearts() < CRYSTAL_COST:
-                messagebox.showinfo("Awakening Crystal ✨", f"Awakening {base} into {form} takes an Awakening Crystal ({CRYSTAL_COST} 💖). "
+        form, cost = chain[stage], STAGE_COSTS[stage]
+        if app.awaken_level(base) <= stage:
+            nth = ["", "again ", "a third time "][stage]
+            if app.hearts() < cost:
+                messagebox.showinfo("Awakening Crystal ✨", f"Awakening {self.kind} {nth}into {form} takes an Awakening Crystal ({cost} 💖). "
                                     f"You have {app.hearts()}.", parent=self.root)
                 return
-            if not messagebox.askyesno("Awakening Crystal ✨", f"Use an Awakening Crystal ({CRYSTAL_COST} 💖) to awaken {base} into {form}?\n\n"
+            if not messagebox.askyesno("Awakening Crystal ✨", f"Use an Awakening Crystal ({cost} 💖) to awaken {self.kind} {nth}into {form}?\n\n"
                                        "It works for every " + base + " you have, forever, and you can switch back any time. "
                                        "In the Arena, Awakened Blips hit harder!", parent=self.root):
                 return
-            app.save["hearts"] = app.hearts() - CRYSTAL_COST
-            app.save.setdefault("awakened", []).append(base)
+            app.save["hearts"] = app.hearts() - cost
+            if stage == 0:
+                app.save.setdefault("awakened", []).append(base)
+            else:
+                app.save.setdefault("awaken_level", {})[base] = stage + 1
             write_save(app.save)
         self.kind = form
         self.palette %= len(kind_colors(form))
         self._drawn = None
         app.sound.play("fanfare")
-        self.say(random.choice(AWAKENED[base]["lines"]), 3.5)
+        self.say(random.choice(VARIANTS[form]["lines"]), 3.5)
         self.set_face("happy", 2)
         for _ in range(10):
             self.add_sparkle(time.monotonic())
@@ -4945,13 +4997,17 @@ class Blip:
                 self.gift_menu.add_command(label="🔒 ???  (a limited-time gift)", state="disabled")
         self.menu.entryconfigure(self.hearts_entry, label=f"💖 {self.app.hearts()} hearts")
         base = AWAKEN_BASE.get(self.kind, self.kind)
-        if base in AWAKEN_FORM:
-            label = ("💤 Back to normal form" if self.kind in AWAKEN_BASE else
-                     f"✨ Awaken into {AWAKEN_FORM[base]}!" if base in self.app.save.get("awakened", []) else
-                     f"✨ Awaken… (Awakening Crystal, {CRYSTAL_COST} 💖)")
+        if base in AWAKEN_CHAIN:
+            chain, stage = AWAKEN_CHAIN[base], awaken_stage(self.kind)
+            again = ["", "again ", "a third time "][min(stage, 2)]
+            label = ("💤 Back to normal form" if stage >= len(chain) else
+                     f"✨ Awaken {again}into {chain[stage]}!" if self.app.awaken_level(base) > stage else
+                     f"✨ Awaken {again}… (Awakening Crystal, {STAGE_COSTS[stage]} 💖)")
             self.menu.entryconfigure(self.awaken_entry, label=label, state="normal")
+            self.menu.entryconfigure(self.awaken_back_entry, state="normal" if 0 < stage < len(chain) else "disabled")
         else:
             self.menu.entryconfigure(self.awaken_entry, label="✨ Awaken (this Blip has no Awakened form)", state="disabled")
+            self.menu.entryconfigure(self.awaken_back_entry, state="disabled")
         self.menu.entryconfigure(self.trophy_entry, label=f"🏆 Trophies ({len(self.app.save.get('trophies', []))}/{len(TROPHIES)})…")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
@@ -5872,6 +5928,7 @@ GHOST_SCENES = {
     "Gloom": {"hint": "the shadows are moving…", "props": [["deadtree", 24, 0, "back"], ["deadtree", 82, 0, "back"], ["fence", 50, 0, "front"]]},
     "Grey Lady": {"hint": "someone is gliding past the windows…", "props": [["moon", 14, 42, "back"], ["house", 64, 0, "back"]]},
     "Ghost Captain": {"hint": "a ship's bell is ringing out on the water…", "props": [["moon", 78, 40, "back"], ["water", 50, 0, "front"]]},
+    "Lurker": {"hint": "eyes are opening in the dark… lots of eyes…", "props": [["house", 22, 0, "back"], ["deadtree", 80, 0, "back"], ["graves", 50, 0, "front"]]},
 }
 for _i, (_k, _sc) in enumerate(GHOST_SCENES.items()):
     _sc.update({"ghost": True, "keys": _FLOAT_KEYS[_i % len(_FLOAT_KEYS)]})
@@ -6603,7 +6660,7 @@ def _arena_stats(kind):
     tier = (1.2 if base in LEGENDS or base in KAIJU else 1.12 if base in RARE or base in CRYPTIDS or base in GHOSTS
             else 1.1 if base in ROBOTS else 1.05 if base in GIFTS else 1.0)
     if kind in AWAKEN_BASE:
-        tier *= 1.25
+        tier *= 1.25 * 1.18 ** (awaken_stage(kind) - 1)
     v = VARIANTS[base]
     return {"type": kind_type, "hp": round((70 + h % 41) * tier), "atk": round((15 + (h >> 8) % 9) * tier),
             "spd": round((6 + (h >> 16) % 10) * v.get("speed", 1.0) * (1.1 if kind in AWAKEN_BASE else 1)),
@@ -6646,10 +6703,15 @@ class Fighter:
     def __init__(self, kind, color, can_awaken):
         self.base = AWAKEN_BASE.get(kind, kind)
         self.kind, self.color = self.base, int(color)
-        self.can_awaken = bool(can_awaken) and self.base in AWAKEN_FORM
+        self.level = min(int(can_awaken), len(AWAKEN_CHAIN.get(self.base, [])))   # how many times it may awaken
+        self.can_awaken = self.level > 0
+        self.stage = 0
         st = ARENA_STATS[self.kind]
         self.max_hp = self.hp = st["hp"]
-        self.awakened = False
+
+    @property
+    def awakened(self):
+        return self.stage > 0
 
     @property
     def st(self):
@@ -6657,7 +6719,8 @@ class Fighter:
 
     def awaken(self):
         frac = self.hp / self.max_hp
-        self.kind, self.awakened = AWAKEN_FORM[self.base], True
+        self.stage += 1
+        self.kind = AWAKEN_CHAIN[self.base][self.stage - 1]
         self.color %= len(kind_colors(self.kind))
         self.max_hp = self.st["hp"]
         self.hp = min(self.max_hp, round(self.max_hp * frac + self.max_hp * 0.25))
@@ -6679,15 +6742,17 @@ class Battle:
 
     def can_awaken(self, side):
         f = self.active(side)
-        return bool(f and self.awaken_left[side] and f.can_awaken and not f.awakened)
+        # one Awaken per battle, but a Blip that can awaken more than once may keep going (the Lurker!)
+        return bool(f and f.stage < f.level and (self.awaken_left[side] or f.stage > 0))
 
     def awaken(self, side):
         if not self.can_awaken(side):
             return None
         self.awaken_left[side] = 0
         f = self.active(side)
+        was = f.kind
         f.awaken()
-        return f"✨ {f.base} awakens into {f.kind}!"
+        return f"✨ {was} awakens into {f.kind}!"
 
     def step(self):
         if self.winner is not None:
@@ -6747,7 +6812,7 @@ class Arena:
 
     def team_entry(self, pet):
         base = AWAKEN_BASE.get(pet.kind, pet.kind)
-        return [base, pet.palette % len(kind_colors(base)), int(base in AWAKEN_FORM and base in self.app.save.get("awakened", []))]
+        return [base, pet.palette % len(kind_colors(base)), min(self.app.awaken_level(base), len(AWAKEN_CHAIN.get(base, [])))]
 
     def my_team(self):
         return [self.team_entry(p) for p in self.team if p in self.app.pets]
@@ -6942,7 +7007,7 @@ TROPHY_CUP = ["..cccccccc..", "hhcccccccchh", "h.cccccccc.h", "h.cccccccc.h", ".
 
 class TrophyShelf:
     """Every trophy on wooden shelves: gold when you've earned it, a shadow with a hint when you haven't."""
-    COLS, CELL_W, CELL_H = 5, 150, 128
+    COLS, CELL_W, CELL_H = 6, 150, 128
 
     def __init__(self, app):
         self.app = app
@@ -8062,7 +8127,7 @@ class App:
 
     def is_unlocked(self, kind):
         if kind in AWAKEN_BASE:
-            return AWAKEN_BASE[kind] in self.save.get("awakened", []) and self.is_unlocked(AWAKEN_BASE[kind])
+            return self.awaken_level(AWAKEN_BASE[kind]) >= awaken_stage(kind) and self.is_unlocked(AWAKEN_BASE[kind])
         if kind in LEGENDS:
             return kind in self.save.get("legends", [])
         if kind in WORLD_OF:
@@ -8178,6 +8243,11 @@ class App:
         self.root.destroy()
 
     # ----- desktop-only fun: climbing windows, playing with the mouse pointer
+    def awaken_level(self, base):
+        """How many times this kind of Blip has been awakened (0-3): each needs its own Awakening Crystal."""
+        lv = self.save.get("awaken_level", {}).get(base, 0)
+        return max(int(lv), 1 if base in self.save.get("awakened", []) else 0)
+
     def set_climb(self):
         self.save["climb"] = self.climb_on.get()
         write_save(self.save)
@@ -8269,12 +8339,15 @@ class App:
                                        "n": random.randint(4, 7)})
                     a.say(random.choice(["catch!", f"heads up, {b.name}!", "wanna play?"]), 2)
                     break
-                if d < 320 and random.random() < dt * 0.015:
+                lurk = [p for p in (a, b) if AWAKEN_BASE.get(p.kind, p.kind) == "Lurker"]
+                if d < 320 and random.random() < dt * (0.05 if lurk else 0.015):
+                    if lurk and lurk[0] is a:
+                        a, b = b, a                     # the Lurker is always "it"
                     a.playing = b.playing = True
                     self.plays.append({"type": "chase", "pets": [a, b], "runner": a, "chaser": b, "until": now + 7,
                                        "swapped": False})
                     a.say(random.choice(["can't catch me!", "tag, you're it!"]), 2)
-                    b.say("hey! get back here!", 2)
+                    b.say("ready or not… 👁️" if lurk else "hey! get back here!", 2)
                     break
         # a sleepy pet sometimes joins a napping friend
         for sleeper in [p for p in self.pets if p.state == "sleep"]:

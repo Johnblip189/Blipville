@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -32,6 +32,7 @@
   <button id="friendBtn" title="Invite a new friend (N)"><span>➕</span>Friend</button>
   <button id="eggBtn" title="Hatch a Mystery Egg (E)"><span>🥚</span>Egg</button>
   <button id="collectionBtn" title="Your collection (Z)"><span>📖</span>Zoo</button>
+  <button id="ghostBtn" title="Ghosts (G)"><span>👻</span>Ghosts</button>
   <button id="worldBtn" title="Visit other worlds"><span>🌍</span>Worlds</button>
   <button id="nightBtn" title="Play Night Shift"><span>🌙</span>Night</button>
   <button id="shareBtn" title="Save a picture of your town (S)"><span>📸</span>Share</button>
@@ -89,6 +90,17 @@
     <button class="peekAll lure" id="beaconBtn" hidden>📡 Switch on a Kaiju Beacon</button>
     <button class="peekAll lure" id="candleBtn" hidden>🕯️ Light a Spirit Candle</button>
     <button class="peekAll" id="peekAll" hidden>👀 Peek at all locked Blips</button>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="ghostSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle">👻 Ghosts <span class="muted" id="ghostCount"></span></div>
+    <div class="ghostStatus" id="ghostStatus"></div>
+    <div class="muted small">Ghosts drift by from 7 PM to 7 AM. They fade in and out: tap one while it glows to befriend it!</div>
+    <div class="zooCells" id="ghostGrid"></div>
+    <button class="peekAll lure" id="ghostCandle">🕯️ Light a Spirit Candle</button>
     <button class="close" data-close>Close</button>
   </div>
 </div>
@@ -167,7 +179,7 @@
   </div>
 </div>
 
-<script src="data.js?v=15"></script>
-<script src="app.js?v=15"></script>
+<script src="data.js?v=16"></script>
+<script src="app.js?v=16"></script>
 </body>
 </html>

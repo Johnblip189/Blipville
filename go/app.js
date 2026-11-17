@@ -918,6 +918,39 @@
   };
   $("sheetKind").onclick = () => openZoo(sheetPet);
 
+  // ghosts 👻
+  function lightCandle() {
+    if (!(D.groups.ghosts || []).some((k) => !isUnlocked(k))) { toast("You've met every ghost! 👻🏆", 3); return; }
+    if (save.hearts < D.candleCost) { toast(`A Spirit Candle costs ${D.candleCost} 💖. You have ${save.hearts}. Ghosts also drift by on their own at night (7 PM to 7 AM).`, 4); return; }
+    save.hearts -= D.candleCost; persist(true); updateHearts(true); sfx("coin");
+    candleUntil = now() + 10 * 60; nextGhost = Math.min(nextGhost, now() + rnd(8, 20)); closeSheets();
+    toast("🕯️ Candle lit! For 10 minutes ghosts will drift by. They fade in and out: tap one while it glows!", 4.5);
+  }
+  function openGhosts() {
+    const ghosts = D.groups.ghosts || [], grid_ = $("ghostGrid"); grid_.innerHTML = "";
+    let met = 0;
+    for (const k of ghosts) {
+      const open = isUnlocked(k); if (open) met++;
+      const b = doc().createElement("button"); b.className = open ? "" : "locked";
+      b.appendChild(thumb(k, KINDS[k].default || 0, !open, 4));
+      const label = doc().createElement("span"); label.textContent = open ? k : "???"; b.appendChild(label);
+      b.onclick = () => { if (open) { if (addPet(k)) closeSheets(); } else toast("Meet it at night, then tap it while it glows! 👻", 3); };
+      grid_.appendChild(b);
+    }
+    $("ghostCount").textContent = `${met}/${ghosts.length}`;
+    const left = Math.ceil((candleUntil - now()) / 60);
+    $("ghostStatus").textContent = met === ghosts.length ? "🏆 You've met every ghost!"
+      : candleUntil > now() ? `🕯️ Your Spirit Candle is burning (${left} min left). Ghosts are on their way!`
+      : ghostHours() ? "🌙 Ghosts are out right now! Watch your town and tap one while it glows."
+      : "☀️ It's daytime, so the ghosts are hiding until 7 PM. Light a Spirit Candle to call them now!";
+    const c = $("ghostCandle");
+    c.hidden = met === ghosts.length;
+    c.textContent = `🕯️ Light a Spirit Candle · ${D.candleCost} 💖`;
+    c.onclick = lightCandle;
+    openSheet("ghostSheet");
+  }
+  $("ghostBtn").onclick = openGhosts;
+
   // collection
   function openZoo(swapPet = null) {
     const grid_ = $("zooGrid"); grid_.innerHTML = "";
@@ -986,12 +1019,7 @@
     };
     const candle = $("candleBtn"), gLeft = (D.groups.ghosts || []).filter((k) => !isUnlocked(k)).length;
     candle.hidden = !gLeft; candle.textContent = `🕯️ Light a Spirit Candle · ${D.candleCost} 💖`;
-    candle.onclick = () => {
-      if (save.hearts < D.candleCost) { toast(`A Spirit Candle costs ${D.candleCost} 💖. You have ${save.hearts}. Ghosts also drift by on their own at night (7 PM to 7 AM).`, 4); return; }
-      save.hearts -= D.candleCost; persist(true); updateHearts(true); sfx("coin");
-      candleUntil = now() + 10 * 60; nextGhost = Math.min(nextGhost, now() + rnd(8, 20)); closeSheets();
-      toast("🕯️ Candle lit! For 10 minutes ghosts will drift by. They fade in and out: tap one while it glows!", 4.5);
-    };
+    candle.onclick = lightCandle;
     const all = $("peekAll"), hidden = groups.flatMap(([, ks]) => ks).filter((k) => !isUnlocked(k) && !save.peeked.includes(k));
     all.hidden = !hidden.length; all.textContent = "👀 Peek at all locked Blips"; all.classList.remove("armed");
     all.onclick = () => {
@@ -1167,7 +1195,7 @@
     if (e.key === "Escape") { closeSheets(); return; }
     if (open) return;
     const k = e.key.toLowerCase();
-    const act = { f: "feedBtn", n: "friendBtn", e: "eggBtn", z: "collectionBtn", s: "shareBtn", "?": "helpBtn", p: "popBtn" }[k];
+    const act = { f: "feedBtn", n: "friendBtn", e: "eggBtn", z: "collectionBtn", g: "ghostBtn", s: "shareBtn", "?": "helpBtn", p: "popBtn" }[k];
     if (act && $(act) && !$(act).hidden) { e.preventDefault(); $(act).click(); }
     else if (k === " ") {                                   // space pets the Blip under the mouse
       const p = petAt(pointer.x, pointer.y); if (p) { e.preventDefault(); petIt(p); }

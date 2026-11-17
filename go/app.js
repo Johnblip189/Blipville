@@ -1491,6 +1491,31 @@
   };
   $("popBack").onclick = () => { if (view !== window) view.close(); };
 
+  // ⬇ Install app: Edge and Chrome (Windows laptops, Chromebooks, Android) can install Blipville as an app with its
+  // own icon and window. The button only appears when the browser says it can, and never inside the installed app.
+  const installed = () => window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const wantsInstall = /[?&#]install\b/.test(location.search + location.hash);   // the website's "Get the app" link
+  let installPrompt = null;
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault(); installPrompt = e;
+    if (installed()) return;
+    $("installBtn").hidden = false;
+    if (wantsInstall) { $("installBtn").classList.add("nudge"); toast("Press ⬇ Install app at the top to add Blipville to this computer!", 6); }
+  });
+  $("installBtn").onclick = async () => {
+    if (!installPrompt) { openSheet("helpSheet"); return; }
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice.catch(() => ({}));
+    if (outcome === "accepted") { installPrompt = null; $("installBtn").hidden = true; }
+  };
+  window.addEventListener("appinstalled", () => {
+    installPrompt = null; $("installBtn").hidden = true;
+    toast("Blipville is installed! Open it from the Start menu or your apps. 💜", 6);
+  });
+  if (wantsInstall && !installed()) setTimeout(() => {             // a browser that can't install from a button
+    if (!installPrompt) toast("To install: use the install icon in the address bar, or ⋮ menu → Install. See ? for help.", 7);
+  }, 4000);
+
   // ------------------------------------------------------------------ start
   layout();
   if (save.pets && save.pets.length) {

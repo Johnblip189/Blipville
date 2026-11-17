@@ -266,3 +266,9 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 @media (max-width: 520px) { #bar button span img.px { width: 24px; height: 24px; } }
 .typed { display: inline-flex; align-items: center; gap: 2px; } .typed img.px { width: 14px; height: 14px; }
 @media (max-width: 480px) { #top .title span { display: none; } }
+/* ⬇ Install app (shows when Edge / Chrome says Blipville can be installed) */
+#installBtn[hidden] { display: none; }
+#installBtn { color: #ffd23a; border-color: rgba(255, 210, 58, .45); cursor: pointer; }
+#installBtn.nudge { animation: nudge 1.2s ease-in-out 4; }
+@keyframes nudge { 50% { transform: scale(1.12); box-shadow: 0 0 0 4px rgba(255, 210, 58, .25); } }
+@media (max-width: 520px) { #installBtn span { display: none; } }

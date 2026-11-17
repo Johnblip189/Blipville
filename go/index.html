@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=19">
+<link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -22,6 +22,7 @@
   <div class="pill" id="hearts" title="Hearts"><img class="px" src="icons/px/heart.png" alt=""> <b id="heartCount">0</b></div>
   <div class="title">Blipville<span>: On the Go</span></div>
   <div class="right">
+    <button class="pill" id="installBtn" title="Install Blipville as an app on this laptop or phone" hidden><img class="px" src="icons/px/download.png" alt=""> <span>Install app</span></button>
     <button class="pill icon" id="arenaBtn" aria-label="Arena" title="Arena"><img class="px" src="icons/px/arena.png" alt=""></button>
     <button class="pill icon" id="trophyBtn" aria-label="Trophies" title="Trophies"><img class="px" src="icons/px/trophy.png" alt=""></button>
     <button class="pill icon" id="soundBtn" aria-label="Sound off"><img class="px" src="icons/px/mute.png" alt=""></button>
@@ -193,7 +194,9 @@
         <b>F</b> feed · <b>N</b> friend · <b>E</b> egg · <b>Z</b> zoo · <b>S</b> share · <b>Esc</b> close.
         <span class="popTip">Press <b>📌 Pop out</b> to keep your Blips in a little window on top of everything while you work!</span></li>
       <li>💬 Join the <a href="https://discord.gg/Q3zmYakNZT" target="_blank" rel="noopener"><b>Blipville Discord</b></a> to share your town, get help and suggest Blips!</li>
-      <li>Add Blipville to your <b>home screen</b> to play offline: Share → <i>Add to Home Screen</i> (iPhone) or ⋮ → <i>Install app</i> (Android).</li>
+      <li>💻 <b>Get it as an app:</b> on a Windows laptop or Chromebook, press <b>⬇ Install app</b> at the top (or the install icon at the right end of the address bar in Edge or Chrome).
+        Blipville gets its own icon in the Start menu and its own window, and plays offline.
+        On a phone: Share → <i>Add to Home Screen</i> (iPhone) or ⋮ → <i>Install app</i> (Android).</li>
     </ul>
     <div class="saveBox">
       <div class="sheetTitle small">💾 Save code</div>
@@ -220,7 +223,7 @@
   </div>
 </div>
 
-<script src="data.js?v=19"></script>
-<script src="app.js?v=19"></script>
+<script src="data.js?v=20"></script>
+<script src="app.js?v=20"></script>
 </body>
 </html>

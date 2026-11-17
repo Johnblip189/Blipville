@@ -1,7 +1,8 @@
 {
+  "id": "./",
   "name": "Blipville: On the Go",
   "short_name": "Blipville",
-  "description": "Tiny pixel pets you can take anywhere. Pet them, feed them, hatch rare Blips.",
+  "description": "Tiny pixel pets that wander, nap, eat cookies and say hi. Install it on your Windows laptop, Chromebook or phone and play offline.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,8 +10,42 @@
   "background_color": "#211c38",
   "theme_color": "#211c38",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": [
+    "games",
+    "entertainment",
+    "kids"
+  ],
+  "screenshots": [
+    {
+      "src": "icons/shots/wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Your Blips hanging out in town"
+    },
+    {
+      "src": "icons/shots/narrow.png",
+      "sizes": "540x960",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Blipville on a phone"
+    }
   ]
 }

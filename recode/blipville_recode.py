@@ -1258,6 +1258,313 @@ class CollectionView(Panel):
             self.update()
 
 
+# ----------------------------------------------------------------------------- Night Shift minigame
+class NightShift(Panel):
+    """Survive 12 AM → 6 AM while the Night Shift crew wanders toward your office. FLASH a doorway to send a robo back
+    to the stage. A robo you're watching on camera can't move, but cameras and flashes use battery."""
+    HOUR, CW, CH = 20.0, 720, 380
+    ROOMS = ["Stage", "Arcade", "Kitchen", "West Hall", "East Hall"]
+    NEXT = {"Stage": ("Arcade", "Kitchen"), "Arcade": ("West Hall",), "Kitchen": ("East Hall",), "West Hall": ("door_L",), "East Hall": ("door_R",)}
+    NIGHTS = {1: dict(robots=["Robo Bear"], interval=6.0, chance=0.55, grace=3.4),
+              2: dict(robots=["Robo Bear", "Robo Bunny"], interval=4.4, chance=0.66, grace=2.2),
+              3: dict(robots=["Robo Bear", "Robo Bunny", "Robo Hen"], interval=3.9, chance=0.75, grace=1.9)}
+    MIDNIGHT = 3
+    FLASH_COST, DRAIN, CAM_DRAIN = 5.0, 0.2, 0.5
+    BG, PANEL, TXT, DIM = "#0c0b14", "#1d1a2e", "#e8e4ff", "#7a7598"
+
+    def __init__(self, app):
+        super().__init__("Night Shift — Blipville", self.CW + 20, self.CH + 70)
+        self.app, self.state = app, "menu"
+        self.night = min(app.nights_won() + 1, 3)
+        self.last = time.monotonic()
+        self.setFocusPolicy(Qt.StrongFocus)
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.loop)
+        self.timer.start(50)
+        self.show()
+        self.activateWindow()
+
+    def closeEvent(self, e):
+        self.timer.stop()
+        self.app.game = None
+        super().closeEvent(e)
+
+    # ---- flow
+    def start(self, night):
+        cfg = self.NIGHTS[night]
+        self.night, self.cfg = night, cfg
+        self.t, self.battery, self.cam = 0.0, 100.0, None
+        self.flash_until, self.flash_side, self.flashed = -1.0, None, None
+        self.msg, self.msg_until = f"Night {night} — good luck! 🔦", 3.0
+        self.robots = [{"kind": k, "room": "Stage", "next": random.uniform(4, 9) + i * 2.5, "door_since": None} for i, k in enumerate(cfg["robots"])]
+        self.state = "play"
+
+    def say(self, text, secs=2.5):
+        self.msg, self.msg_until = text, self.t + secs
+
+    def flash(self, side):
+        if self.state != "play":
+            return
+        if self.battery < self.FLASH_COST:
+            self.say("not enough battery to flash!")
+            return
+        self.battery -= self.FLASH_COST
+        self.cam = None
+        self.flash_until, self.flash_side = self.t + 0.4, side
+        hit = [r for r in self.robots if r["room"] == "door_" + side]
+        self.flashed = hit[0]["kind"] if hit else None
+        for r in hit:
+            r["room"], r["door_since"], r["next"] = "Stage", None, self.t + self.cfg["interval"] * 1.3
+        self.say(f"*clank clank* {hit[0]['kind']} ran back to the stage!" if hit else "nothing there… this time.")
+        self.app.sound.play("zap")
+
+    def open_cam(self, room):
+        if self.state == "play" and self.battery > 0:
+            self.cam = room
+
+    def office(self):
+        if self.state == "play":
+            self.cam = None
+
+    def won(self):
+        self.state = "won"
+        self.app.sound.play("fanfare")
+        first = self.night > self.app.nights_won()
+        self.app.record_night(self.night)
+        self.app.add_hearts(25 if first else 10)
+        unlock = next((k for k, n in DATA["unlocks"].items() if n == self.night), None)
+        self.new_unlock = unlock if unlock and not self.app.is_unlocked(unlock) else None
+        if self.new_unlock:
+            self.app.unlock(self.new_unlock)
+            pet = self.app.add_pet(self.new_unlock)
+            if pet:
+                pet.palette_i = self.MIDNIGHT
+                pet.say("*whirr* ...i'm free! hi!!", 4)
+
+    def update_game(self, dt):
+        self.t += dt
+        cfg = self.cfg
+        self.battery = max(0.0, self.battery - (self.DRAIN + (self.CAM_DRAIN if self.cam else 0)) * dt)
+        if self.battery <= 0 and self.cam:
+            self.cam = None
+            self.say("the battery died… 🔋 lights out!", 4)
+        for r in self.robots:
+            if r["room"].startswith("door"):
+                if self.t - r["door_since"] > cfg["grace"]:
+                    self.state, self.caught_by = "caught", r["kind"]
+                    self.app.sound.play("boing")
+                    return
+                continue
+            if self.t < r["next"]:
+                continue
+            r["next"] = self.t + cfg["interval"] * random.uniform(0.7, 1.3)
+            if self.cam == r["room"]:
+                continue
+            if random.random() < cfg["chance"]:
+                r["room"] = random.choice(self.NEXT[r["room"]])
+                if r["room"].startswith("door"):
+                    r["door_since"] = self.t
+                elif r["room"] in ("West Hall", "East Hall"):
+                    self.say("you hear clanking on the " + ("left…" if r["room"] == "West Hall" else "right…"))
+        if self.t >= 6 * self.HOUR:
+            self.won()
+
+    def loop(self):
+        now = time.monotonic()
+        dt, self.last = min(0.25, now - self.last), now
+        if self.state == "play":
+            self.update_game(dt)
+        self.update()
+
+    def keyPressEvent(self, e):
+        k = e.key()
+        if k in (Qt.Key_Left, Qt.Key_A):
+            self.flash("L")
+        elif k in (Qt.Key_Right, Qt.Key_D):
+            self.flash("R")
+        elif k in (Qt.Key_Space, Qt.Key_Escape):
+            self.office()
+        elif Qt.Key_1 <= k <= Qt.Key_5:
+            self.open_cam(self.ROOMS[k - Qt.Key_1])
+
+    # ---- drawing helpers (game area starts at (10, 10))
+    def rect(self, p, x0, y0, x1, y1, fill, edge=None, width=2):
+        p.setPen(QPen(QColor(edge), width) if edge else Qt.NoPen)
+        p.setBrush(QColor(fill) if fill else Qt.NoBrush)
+        p.drawRect(QRect(int(10 + x0), int(10 + y0), int(x1 - x0), int(y1 - y0)))
+
+    def label(self, p, x, y, s, size=11, color=None, bold=True, anchor="c", w=600):
+        color = color or self.TXT
+        if anchor == "c":
+            self.text(p, 10 + x, 10 + y - 14, s, size, color, bold, Qt.AlignHCenter | Qt.AlignVCenter, w=w, h=28)
+        elif anchor == "w":
+            self.text(p, 10 + x, 10 + y - 14, s, size, color, bold, Qt.AlignLeft | Qt.AlignVCenter, w=w, h=28)
+        else:
+            self.text(p, 10 + x - w, 10 + y - 14, s, size, color, bold, Qt.AlignRight | Qt.AlignVCenter, w=w, h=28)
+
+    def button(self, p, x, y, text, fn, primary=False, enabled=True, in_game=True, tw=None):
+        tw = tw or len(text) * 8 + 34
+        r = QRect(int((10 if in_game else 0) + x - tw / 2), int((10 if in_game else 0) + y - 18), int(tw), 36)
+        p.setPen(QPen(QColor("#3a3360"), 2))
+        p.setBrush(QColor(("#6a4cff" if primary else self.PANEL) if enabled else "#15131f"))
+        p.drawRoundedRect(r, 8, 8)
+        self.text(p, r.center().x(), r.y(), text, 10, self.TXT if enabled else self.DIM, True, Qt.AlignHCenter | Qt.AlignVCenter, w=tw, h=36)
+        if enabled:
+            self.spot(r, fn)
+
+    def sprite(self, p, kind, ci, x, y, scale, face="normal", locked=False):
+        paint_grid(p, build_grid(kind, ci, face=face, night_eyes=True), 10 + x, 10 + y, scale, "#16121f" if locked else None)
+
+    def paintEvent(self, _e):
+        p = QPainter(self)
+        p.fillRect(self.rect_all(), QColor(self.BG))
+        self.spots = []
+        getattr(self, "draw_" + self.state)(p)
+        bar_y, playing = self.CH + 36, self.state == "play"   # the control bar under the game
+        self.button(p, 60, bar_y, "◀ FLASH", lambda: self.flash("L"), enabled=playing, in_game=False)
+        self.button(p, 168, bar_y, "OFFICE", self.office, enabled=playing, in_game=False)
+        x = 222
+        for i, (room, short) in enumerate(zip(self.ROOMS, ("Stage", "Arcade", "Kitchen", "W Hall", "E Hall")), 1):
+            label = f"{i} {short}"
+            tw = len(label) * 7 + 22
+            self.button(p, x + tw / 2, bar_y, label, lambda r=room: self.open_cam(r), enabled=playing, in_game=False, tw=tw)
+            x += tw + 4
+        self.button(p, self.width() - 60, bar_y, "FLASH ▶", lambda: self.flash("R"), enabled=playing, in_game=False)
+        p.end()
+
+    def rect_all(self):
+        return QRect(0, 0, self.width(), self.height())
+
+    def draw_menu(self, p):
+        W_ = self.CW
+        self.label(p, W_ / 2, 46, "NIGHT SHIFT 🌙", 24)
+        self.text(p, 10 + W_ / 2, 84, "Survive from 12 AM to 6 AM. The Night Shift crew wanders toward your office.\n"
+                  "Glowing eyes in a doorway? FLASH that side (◀ ▶ or A / D) to send them back to the stage.\n"
+                  "Check rooms with the cameras (1–5): a robo you're watching can't move. But cameras and flashes use battery!",
+                  9, "#b8b2d8", False, Qt.AlignHCenter | Qt.AlignTop, w=620, h=70)
+        for i, k in enumerate(G["nightShift"]):
+            x = W_ / 2 - 150 + i * 150
+            unlocked = self.app.is_unlocked(k)
+            self.sprite(p, k, self.MIDNIGHT, x - 32, 165, 4, locked=not unlocked)
+            self.label(p, x, 236, k if unlocked else "🔒 " + k, 9, self.TXT if unlocked else self.DIM)
+            self.label(p, x, 252, f"Night {DATA['unlocks'][k]}", 8, self.DIM, False)
+        best = self.app.nights_won()
+        for n in (1, 2, 3):
+            self.button(p, W_ / 2 - 170 + (n - 1) * 170, 300, f"Night {n}" + (" ✓" if n <= best else ""),
+                        lambda n=n: self.start(n), primary=(n == self.night), enabled=n <= best + 1)
+        self.label(p, W_ / 2, 346, "Close this window anytime. Your progress is saved.", 8, self.DIM, False)
+
+    def draw_play(self, p):
+        W_, H_ = self.CW, self.CH
+        (self.draw_camera if self.cam else self.draw_office)(p)
+        self.rect(p, 0, 0, W_, 34, "#08070e")
+        hour = int(self.t // self.HOUR)
+        self.label(p, 14, 17, f"NIGHT {self.night}", 11, anchor="w")
+        self.label(p, W_ / 2, 17, "12 AM" if hour == 0 else f"{hour} AM", 13, UI_GOLD)
+        b = self.battery
+        self.label(p, W_ - 160, 17, "🔋", 11, anchor="e", w=40)
+        self.rect(p, W_ - 152, 9, W_ - 52, 25, None, "#3a3360")
+        self.rect(p, W_ - 150, 11, W_ - 150 + 96 * b / 100, 23, "#5ad87a" if b > 50 else ("#ffd23a" if b > 20 else "#ff4a5a"))
+        self.label(p, W_ - 8, 17, f"{int(b)}%", 9, anchor="e", w=40)
+        if self.t < self.msg_until:
+            self.rect(p, W_ / 2 - 230, H_ - 30, W_ / 2 + 230, H_ - 6, "#08070e", "#3a3360", 1)
+            self.label(p, W_ / 2, H_ - 18, self.msg, 10, w=460)
+
+    def draw_office(self, p):
+        W_, H_ = self.CW, self.CH
+        dark = self.battery <= 0
+        self.rect(p, 0, 34, W_, H_, "#0e0c18" if dark else "#1b1830")
+        self.rect(p, 0, 280, W_, H_, "#0a0912" if dark else "#14121f")
+        if not dark:
+            self.rect(p, 250, 236, 470, 252, "#3a2e4a")
+            self.rect(p, 262, 252, 274, 300, "#2a2238")
+            self.rect(p, 446, 252, 458, 300, "#2a2238")
+            lamp = QPainterPath()
+            lamp.moveTo(420, 206); lamp.lineTo(450, 206); lamp.lineTo(460, 224); lamp.lineTo(410, 224); lamp.closeSubpath()
+            p.setPen(Qt.NoPen); p.setBrush(QColor("#ffd27a")); p.drawPath(lamp)
+            self.rect(p, 423, 214, 427, 236, "#8a7a9a")
+            paint_sprite(p, "Blip", 0, 310, 194, 3, face="happy")
+            self.rect(p, 330, 120, 390, 170, "#2a3a5a", "#3a3360", 3)
+            self.rect(p, 340, 130, 343, 133, "#ffffff")
+            self.rect(p, 372, 146, 375, 149, "#ffffff")
+        for side, x0 in (("L", 30), ("R", 560)):
+            x1 = x0 + 130
+            flashing = self.t < self.flash_until and self.flash_side == side
+            self.rect(p, x0, 70, x1, 300, "#f6eec0" if flashing else "#040308", "#3a3360", 4)
+            if flashing and self.flashed:
+                self.sprite(p, self.flashed, self.MIDNIGHT, x0 + 1, 140, 8)
+            robot = next((r for r in self.robots if r["room"] == "door_" + side), None)
+            if robot and not flashing and int(self.t * 3 + (1 if side == "R" else 0)) % 7:
+                e = kind_colors(robot["kind"])[self.MIDNIGHT]["e"]
+                for ex in (x0 + 38, x0 + 76):
+                    self.rect(p, ex, 170, ex + 16, 186, e)
+            self.label(p, (x0 + x1) / 2, 316, "◀ A" if side == "L" else "D ▶", 9, self.DIM)
+
+    def draw_camera(self, p):
+        W_, H_ = self.CW, self.CH
+        room = self.cam
+        self.rect(p, 0, 34, W_, H_, "#101a14")
+        self.rect(p, 0, 250, W_, H_, "#0b130e")
+        if room == "Stage":
+            for i in range(12):
+                self.rect(p, 60 + i * 50, 60, 82 + i * 50, 250, "#3a1420")
+            self.rect(p, 40, 240, W_ - 40, 262, "#2a2010")
+        elif room == "Arcade":
+            for i in range(5):
+                x = 70 + i * 130
+                self.rect(p, x, 120, x + 60, 250, "#1a1a3a", "#3a3a7a")
+                self.rect(p, x + 10, 135, x + 50, 170, "#2a6a5a")
+        elif room == "Kitchen":
+            self.rect(p, 40, 190, W_ - 40, 250, "#2a2a2a")
+            for i in range(8):
+                self.rect(p, 60 + i * 80, 120, 110 + i * 80, 160, "#3a3a3a")
+        else:
+            for pts in (((0, 60), (W_ / 2 - 60, 140), (W_ / 2 - 60, 230), (0, 330)), ((W_, 60), (W_ / 2 + 60, 140), (W_ / 2 + 60, 230), (W_, 330))):
+                path = QPainterPath()
+                path.moveTo(10 + pts[0][0], 10 + pts[0][1])
+                for x, y in pts[1:]:
+                    path.lineTo(10 + x, 10 + y)
+                path.closeSubpath()
+                p.setPen(Qt.NoPen); p.setBrush(QColor("#162016")); p.drawPath(path)
+        here = [r for r in self.robots if r["room"] == room]
+        for i, r in enumerate(here):
+            self.sprite(p, r["kind"], self.MIDNIGHT, W_ / 2 - len(here) * 70 + i * 140 + 6, 150, 8)
+        for _ in range(28):
+            y = random.randrange(34, H_)
+            p.setPen(QColor(random.choice(["#1e2a22", "#26332a", "#18221b"])))
+            p.drawLine(10, 10 + y, 10 + W_, 10 + y)
+        self.label(p, 16, 52, f"● CAM {self.ROOMS.index(room) + 1} · {room.upper()}", 11, "#ff4a5a", anchor="w")
+        self.label(p, W_ - 16, 52, "watching — it can't move" if here else "empty", 9, UI_GREEN, anchor="e", w=300)
+
+    def draw_caught(self, p):
+        W_, H_ = self.CW, self.CH
+        self.rect(p, 0, 0, W_, H_, "#14081a")
+        self.sprite(p, self.caught_by, self.MIDNIGHT, W_ / 2 - 80, 40, 10)
+        self.label(p, W_ / 2, 200, "GOTCHA! 🤖", 24, "#ff4a6a")
+        self.label(p, W_ / 2, 236, f"{self.caught_by} got into the office. (it just wanted a hug)", 11, "#d8c8f0", False)
+        self.button(p, W_ / 2 - 100, 300, f"Try Night {self.night} again", lambda: self.start(self.night), primary=True)
+        self.button(p, W_ / 2 + 120, 300, "Menu", lambda: setattr(self, "state", "menu"))
+
+    def draw_won(self, p):
+        W_, H_ = self.CW, self.CH
+        self.rect(p, 0, 0, W_, H_, "#2a1a3a")
+        self.rect(p, 0, H_ - 120, W_, H_, "#ffb86a")
+        self.label(p, W_ / 2, 56, "6 AM 🌅", 26, UI_GOLD)
+        self.label(p, W_ / 2, 100, f"You survived Night {self.night}!", 15)
+        if self.new_unlock:
+            self.sprite(p, self.new_unlock, self.MIDNIGHT, W_ / 2 - 48, 130, 6, face="happy")
+            self.label(p, W_ / 2, 222, f"UNLOCKED: {self.new_unlock}! It's on your desktop now.", 12, "#ffffff")
+        else:
+            paint_sprite(p, "Blip", 0, 10 + W_ / 2 - 48, 140, 6, face="happy")
+            self.label(p, W_ / 2, 222, "Blip is proud of you.", 12, "#ffffff")
+        if self.night < 3:
+            self.button(p, W_ / 2 - 100, 300, f"Night {self.night + 1} ▶", lambda: self.start(self.night + 1), primary=True)
+            self.button(p, W_ / 2 + 100, 300, "Menu", lambda: setattr(self, "state", "menu"))
+        else:
+            self.label(p, W_ / 2, 258, "You beat every night. The whole crew is yours! 🏆", 11, "#3a1a14")
+            self.button(p, W_ / 2, 310, "Menu", lambda: setattr(self, "state", "menu"))
+
+
 def open_collection(app):
     view = CollectionView(app)
     scroll = QScrollArea()
@@ -1283,6 +1590,7 @@ class App:
         self.weather_on = bool(self.save.get("weather", True))
         self.sound = Sound(self)
         self.pets, self.sightings, self.plays, self.windows = [], [], [], []
+        self.game = None
         now = time.monotonic()
         self.last_town_save = now
         self.next_sighting = now + random.uniform(6, 14) * 60
@@ -1396,6 +1704,28 @@ class App:
         elif gift:
             tell("A gift for you! 🎁", f"Here's {g}, a limited-edition Blip, only given out until {GIFT['untilText']}.\n\n"
                  "Find it any time under Change kind → Gifts 🎁.")
+
+    # ---- Night Shift
+    def nights_won(self):
+        return int(self.save.get("nights_won", 0))
+
+    def record_night(self, night):
+        if night > self.nights_won():
+            self.save["nights_won"] = night
+            write_save(self.save)
+
+    def unlock(self, kind):
+        got = self.save.setdefault("unlocked", [])
+        if kind not in got:
+            got.append(kind)
+            write_save(self.save)
+
+    def open_night_shift(self):
+        if self.game:
+            self.game.raise_()
+            self.game.activateWindow()
+        else:
+            self.game = NightShift(self)
 
     # ---- eggs, lures
     def open_egg(self):
@@ -1721,7 +2051,7 @@ class App:
         act(m, "Show name tags", self.toggle_tags, checked=self.name_tags)
         act(m, "Sound effects", self.toggle_sound, checked=self.sound_on)
         act(m, "Weather effects", self.toggle_weather, checked=self.weather_on)
-        act(m, "🌙 Night Shift (open the classic Blipville for now)", enabled=False)
+        act(m, "🌙 Play Night Shift…", self.open_night_shift)
         upd = m.addMenu("🔄 Updates")
         act(upd, "Check for updates now", lambda: self.updater.check(quiet=False))
         act(upd, "Update automatically (asks first)", self.updater.set_auto, checked=self.updater.auto)

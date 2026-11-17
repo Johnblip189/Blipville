@@ -9,8 +9,9 @@ The desktop app, rebuilt from scratch on a new engine (Qt).
 - ✅ Mystery Eggs, the hat shop and the Collection
 - ✅ Cryptids, kaiju and World Legends, with the Cryptid Lure and Kaiju Beacon
 - ✅ Worlds, seasonal weather, pets playing ball and tag, sound effects
+- ✅ The Night Shift minigame
 - ✅ The Beta Buddy gift and the self-updater
 
-**Still coming to the Recode:** the Night Shift minigame. Until then, the classic Blipville has it.
+Everything from the classic app is here now.
 
 **Try it:** download `Blipville-Recode.exe` below. Quit the classic Blipville first, so they don't both move your pets around.

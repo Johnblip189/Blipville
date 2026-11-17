@@ -1,14 +1,13 @@
 name: Update the site
-# GitHub Pages builds from the "site" branch; this copies main onto it after every push.
-# A push made with the workflow's own token doesn't start a Pages build by itself, so we ask for one.
-# What GitHub says about the site (its settings and the last build) is saved to the ci-logs branch.
+# Keeps the "site" branch the same as main.
+# The website itself is deployed by pages.yml; this also starts it on the site branch.
 on:
   push:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: write
-  pages: write
+  actions: write
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -17,19 +16,13 @@ jobs:
         with:
           fetch-depth: 0
       - run: git push --force origin HEAD:refs/heads/site
-      - name: Ask GitHub Pages to rebuild the site
+      - name: Deploy the website from the site branch too
+        # (a push made with this workflow's token doesn't start other workflows, but starting one by hand does)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p /tmp/pages
-          api() { curl -sS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$@"; }
-          echo "== settings before" > /tmp/pages/log.txt
-          api "https://api.github.com/repos/${{ github.repository }}/pages" >> /tmp/pages/log.txt
-          echo "== request a build" >> /tmp/pages/log.txt
-          api -X POST "https://api.github.com/repos/${{ github.repository }}/pages/builds" >> /tmp/pages/log.txt
-          sleep 60
-          echo "== latest build (a minute later)" >> /tmp/pages/log.txt
-          api "https://api.github.com/repos/${{ github.repository }}/pages/builds/latest" >> /tmp/pages/log.txt
+          gh workflow run pages.yml --ref site -R ${{ github.repository }} > /tmp/pages/log.txt 2>&1 || true
           cat /tmp/pages/log.txt
       - name: Save what GitHub said to the ci-logs branch
         if: always()

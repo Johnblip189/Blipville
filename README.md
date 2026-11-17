@@ -2,6 +2,8 @@
 
 ![Blipville: pixel pets that live on your taskbar](docs/banner.png)
 
+> 🔜 **Blipville 1.0 drops Sunday, November 22!** No more black flashes, a new engine, and a thank-you for everyone who played the betas.
+
 > 💜 **Thanks for playing the Blipville beta!** This is **Release Candidate 2**, the last step before Blipville 1.0. Spot a bug? Now's the time to tell me. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.

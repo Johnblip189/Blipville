@@ -69,6 +69,9 @@
   .gifts b { color: #ffd23a; font-size: 17px; } .gifts p b { color: var(--text); font-size: inherit; }
   .gifts p { margin: 4px 0 0; font-size: 15px; }
   @media (max-width: 520px) { .gifts { flex-direction: column; text-align: center; } }
+  .countdown { display: inline-block; margin: 18px 0 0; padding: 8px 16px; border-radius: 14px; background: var(--gold); color: #2a1a3a;
+               font-weight: 800; font-size: 16px; }
+  .countdown[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -78,7 +81,8 @@
     <div><b id="maintTitle">Blipville is under maintenance</b><p id="maintMsg"></p><p id="maintLink" hidden><a></a></p></div>
   </div>
   <section class="hero">
-    <img class="banner" src="docs/banner.png" alt="Blipville: Husky Blip, Blip and a dragon on a starry night">
+    <img class="banner" id="heroBanner" src="docs/banner.png" alt="Blipville: Husky Blip, Blip and a dragon on a starry night">
+    <p class="countdown" id="countdown" hidden></p>
     <h1>🏘️ Blipville</h1>
     <p class="tag">Tiny pixel pets that wander, nap, eat cookies, and say hi to each other.</p>
     <div class="cta">
@@ -217,6 +221,20 @@
   const d = new Date(), day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   if (day > "2026-11-24") document.getElementById("gifts").hidden = true;
   else if (day > "2026-11-22") document.getElementById("giftText").innerHTML = "<b>Patch</b> 🔧, a thank-you for waiting out the maintenance, until Tuesday, November 24. Just open Blipville, in your browser or on Windows, and it walks right onto your screen.";
+})();
+</script>
+<script>
+// Countdown to Blipville 1.0 (Sunday, November 22): a teaser banner for each day, by the visitor's own date.
+(() => {
+  const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.round((new Date(2026, 10, 22) - today) / 86400000);
+  if (days < 1 || days > 5) return;
+  const img = document.getElementById("heroBanner");
+  img.src = `docs/teaser-${days}.png`;
+  img.alt = days === 1 ? "Tomorrow: Blipville 1.0, Sunday November 22" : `${days} days to go until Blipville 1.0, Sunday November 22`;
+  const c = document.getElementById("countdown");
+  c.textContent = days === 1 ? "🔜 Blipville 1.0 drops tomorrow!" : `🔜 Blipville 1.0 drops Sunday, November 22 · ${days} days to go`;
+  c.hidden = false;
 })();
 </script>
 </body>

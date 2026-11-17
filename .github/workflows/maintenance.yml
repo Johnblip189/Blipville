@@ -11,8 +11,8 @@ on:
         description: "Close the Windows app (Blipville.exe)"
         type: boolean
         default: false
-      recode:
-        description: "Close Blipville Recode (Blipville-Recode.exe)"
+      redux:
+        description: "Close Blipville Redux (Blipville-Redux.exe)"
         type: boolean
         default: false
       web:
@@ -43,7 +43,7 @@ jobs:
       - name: Update status.json
         env:
           CLASSIC: ${{ inputs.classic }}
-          RECODE: ${{ inputs.recode }}
+          REDUX: ${{ inputs.redux }}
           WEB: ${{ inputs.web }}
           MESSAGE: ${{ inputs.message }}
           LINK: ${{ inputs.link }}
@@ -53,7 +53,7 @@ jobs:
           import json, os
           with open("status.json", encoding="utf-8") as f:
               data = json.load(f)
-          data["maintenance"] = {k: os.environ[k.upper()] == "true" for k in ("classic", "recode", "web")}
+          data["maintenance"] = {k: os.environ[k.upper()] == "true" for k in ("classic", "redux", "web")}
           if os.environ.get("MESSAGE", "").strip():
               data["message"] = os.environ["MESSAGE"].strip()
           link = os.environ.get("LINK", "").strip()
@@ -72,5 +72,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add status.json
           git diff --cached --quiet && echo "Already set." && exit 0
-          git commit -m "Maintenance mode: classic=${{ inputs.classic }} recode=${{ inputs.recode }} web=${{ inputs.web }}"
+          git commit -m "Maintenance mode: classic=${{ inputs.classic }} redux=${{ inputs.redux }} web=${{ inputs.web }}"
           git push

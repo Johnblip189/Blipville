@@ -110,7 +110,7 @@
 <script>
 // The maintenance switch (status.json in the repo) also shows up here.
 (async () => {
-  const names = { classic: "the Windows app", recode: "Blipville Recode", web: "the browser version" };
+  const names = { classic: "the Windows app", redux: "Blipville Redux", web: "the browser version" };
   for (const url of ["https://raw.githubusercontent.com/Johnblip189/Blipville/main/status.json", "status.json"]) {
     try {
       const res = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });

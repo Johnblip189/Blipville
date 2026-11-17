@@ -35,6 +35,10 @@ FPS = 30
 # Filled in by the GitHub build (see .github/workflows/build-exe.yml). "dev" means "running from source".
 APP_VERSION = "dev"
 APP_BUILT = ""                      # UTC time the .exe was built, e.g. 2026-11-17T01:20:00Z
+EDITION = "classic"                 # "redux" for Blipville Redux (set by the Redux build, see build-redux.yml)
+REDUX = EDITION == "redux"
+APP_NAME = "Blipville Redux" if REDUX else "Blipville"
+EXE_NAME = "Blipville-Redux.exe" if REDUX else "Blipville.exe"
 
 PALETTES = [  # outline, body, belly, cheeks, eyes
     {"name": "Lavender", "o": "#2b1d3a", "b": "#9b7bd8", "l": "#ddd0ff", "p": "#ff8fb3", "e": "#1a1024"},
@@ -3375,6 +3379,12 @@ NOTICE_TEXT = ("Thank you so much for playing the Blipville beta! 💜\n\n"
                "This is Release Candidate 2, the last step before Blipville 1.0! It comes with 100 new Blips and 5 new tabs: "
                "Dinos, Ocean, Sweets, Space and Plants. Expect lots of new stuff (and the odd bug).\n\n"
                "Your pets, hearts and unlocks all come with you. Have fun!")
+if REDUX:
+    NOTICE_ID = "redux-0.5"
+    NOTICE_TEXT = ("Welcome to Blipville Redux! 💜\n\n"
+                   "It's the same Blipville, with a brand-new way of drawing your pets: every window is a real see-through "
+                   "picture now, so no more black flashes when you click them or open a menu.\n\n"
+                   "Your pets, hearts and unlocks all come with you. Have fun!")
 IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
 HELP_URL = "https://github.com/Johnblip189/blipville/issues/new?template=help.yml"   # links live in the README, so they can change anytime
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",
@@ -3423,6 +3433,363 @@ def work_area(root):
     return 0, 0, sw, sh - (70 if sys.platform == "darwin" else 40)
 
 
+# ----------------------------------------------------------------------------- see-through windows, the Redux way
+# The classic app makes pet windows see-through with a "magic pink" color key, and Windows has to repaint those
+# windows whenever anything happens to them (a click, a menu, a window passing over). Sometimes it shows black
+# for a moment before the repaint. Blipville Redux draws each window itself into a picture with real see-through
+# pixels (Pillow) and hands it straight to Windows as a layered window. Nothing is repainted, so nothing flashes.
+LAYERED = REDUX and sys.platform == "win32"
+LAYERED_TEST_DIR = os.environ.get("BLIPVILLE_LAYERED_TEST")   # testing on other systems: frames are saved as PNGs here
+SELFTEST = bool(os.environ.get("BLIPVILLE_SELFTEST"))         # the build's automatic test: logs where pets are and clicks
+_PIL_FONTS = {}
+
+
+def _is_emoji(ch):
+    o = ord(ch)
+    return (o >= 0x1F000 or 0x2600 <= o <= 0x27BF or 0x2190 <= o <= 0x21FF or 0x2300 <= o <= 0x23FF
+            or 0x25A0 <= o <= 0x25FF or 0x2B00 <= o <= 0x2BFF or o in (0xFE0F, 0x200D, 0x20E3, 0x3030, 0x303D))
+
+
+def pil_font(px, bold=False, emoji=False):
+    key = (px, bold, emoji)
+    if key not in _PIL_FONTS:
+        from PIL import ImageFont
+        fonts = os.path.join(os.environ.get("WINDIR", r"C:\Windows"), "Fonts")
+        names = ["seguiemj.ttf"] if emoji else (["segoeuib.ttf", "arialbd.ttf"] if bold else ["segoeui.ttf", "arial.ttf"])
+        names.append("DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf")
+        font = None
+        for name in names:
+            for folder in (fonts, "/usr/share/fonts/truetype/dejavu"):
+                try:
+                    font = ImageFont.truetype(os.path.join(folder, name), px)
+                    break
+                except OSError:
+                    continue
+            if font:
+                break
+        _PIL_FONTS[key] = font or ImageFont.load_default()
+    return _PIL_FONTS[key]
+
+
+class _Win32:
+    """The few Windows calls a layered window needs (with proper 64-bit handle types)."""
+    def __init__(self):
+        import ctypes
+        from ctypes import wintypes as wt
+        self.ct, self.wt = ctypes, wt
+        u, g = ctypes.windll.user32, ctypes.windll.gdi32
+        H = ctypes.c_void_p
+        for fn, args, res in ((u.GetDC, [H], H), (u.ReleaseDC, [H, H], ctypes.c_int), (u.GetAncestor, [H, wt.UINT], H),
+                              (u.GetWindowLongW, [H, ctypes.c_int], wt.LONG), (u.SetWindowLongW, [H, ctypes.c_int, wt.LONG], wt.LONG),
+                              (u.UpdateLayeredWindow, [H, H, H, H, H, H, wt.DWORD, H, wt.DWORD], wt.BOOL),
+                              (g.CreateCompatibleDC, [H], H), (g.DeleteDC, [H], wt.BOOL), (g.SelectObject, [H, H], H),
+                              (g.DeleteObject, [H], wt.BOOL), (g.CreateDIBSection, [H, H, wt.UINT, H, H, wt.DWORD], H)):
+            fn.argtypes, fn.restype = args, res
+        self.u, self.g = u, g
+
+        class BLEND(ctypes.Structure):
+            _fields_ = [("op", ctypes.c_ubyte), ("flags", ctypes.c_ubyte), ("alpha", ctypes.c_ubyte), ("fmt", ctypes.c_ubyte)]
+
+        class BMIH(ctypes.Structure):
+            _fields_ = [("size", wt.DWORD), ("w", wt.LONG), ("h", wt.LONG), ("planes", wt.WORD), ("bits", wt.WORD),
+                        ("comp", wt.DWORD), ("img", wt.DWORD), ("xppm", wt.LONG), ("yppm", wt.LONG), ("used", wt.DWORD), ("imp", wt.DWORD)]
+        self.BLEND, self.BMIH = BLEND, BMIH
+
+
+_WIN32 = None
+
+
+class LayeredSurface:
+    """One window's picture, handed to Windows with UpdateLayeredWindow."""
+    def __init__(self, widget, w, h):
+        global _WIN32
+        _WIN32 = _WIN32 or _Win32()
+        k = self.k = _WIN32
+        ct, wt = k.ct, k.wt
+        self.w, self.h = w, h
+        self.hwnd = k.u.GetAncestor(widget.winfo_id(), 2)          # GA_ROOT: the real top-level window
+        ex = k.u.GetWindowLongW(self.hwnd, -20)                     # GWL_EXSTYLE
+        k.u.SetWindowLongW(self.hwnd, -20, ex | 0x80000 | 0x80)     # WS_EX_LAYERED | WS_EX_TOOLWINDOW
+        screen = k.u.GetDC(None)
+        self.dc = k.g.CreateCompatibleDC(screen)
+        bmi = k.BMIH(ct.sizeof(k.BMIH), w, -h, 1, 32, 0, 0, 0, 0, 0, 0)
+        self.bits = ct.c_void_p()
+        self.bmp = k.g.CreateDIBSection(screen, ct.byref(bmi), 0, ct.byref(self.bits), None, 0)
+        k.u.ReleaseDC(None, screen)
+        self.old = k.g.SelectObject(self.dc, self.bmp)
+        self.size, self.src = wt.SIZE(w, h), wt.POINT(0, 0)
+        self.blend = k.BLEND(0, 0, 255, 1)                           # AC_SRC_OVER, per-pixel alpha
+        self.shown, self.failed = 0, False
+
+    def show(self, data):
+        k, ct = self.k, self.k.ct
+        ct.memmove(self.bits, data, len(data))
+        screen = k.u.GetDC(None)
+        ok = k.u.UpdateLayeredWindow(self.hwnd, screen, None, ct.byref(self.size), self.dc, ct.byref(self.src), 0,
+                                     ct.byref(self.blend), 2)       # ULW_ALPHA
+        k.u.ReleaseDC(None, screen)
+        self.shown += 1
+        if not ok and not self.failed:
+            self.failed = True
+            log(f"UpdateLayeredWindow failed (error {ct.GetLastError()})")
+        return ok
+
+    def close(self):
+        try:
+            self.k.g.SelectObject(self.dc, self.old)
+            self.k.g.DeleteObject(self.bmp)
+            self.k.g.DeleteDC(self.dc)
+        except Exception:  # noqa: BLE001
+            pass
+
+
+class PixelCanvas:
+    """Stands in for a tk Canvas (the same create_rectangle / create_text / delete / tag_raise calls), but draws the
+    items itself into a picture with real see-through pixels. flush() puts the picture on screen."""
+    def __init__(self, root, width, height):
+        self.root, self.w, self.h = root, int(width), int(height)
+        self.widget = tk.Frame(root, width=self.w, height=self.h, bg="#000000", highlightthickness=0, bd=0)
+        self.items, self.order, self.next_id = {}, [], 1
+        self.dirty, self.last, self.surface, self.frames = True, None, None, 0
+        self._text_cache = {}
+        try:
+            self.pt = root.winfo_fpixels("1i") / 72.0
+        except tk.TclError:
+            self.pt = 96 / 72.0
+
+    # ---- the tk Canvas calls the game uses
+    def pack(self, **kw):
+        self.widget.pack(**kw)
+
+    def bind(self, seq, fn):
+        self.widget.bind(seq, fn)
+
+    def _add(self, kind, xy, opts):
+        if len(xy) == 1 and isinstance(xy[0], (list, tuple)):
+            xy = xy[0]
+        tags = opts.pop("tags", ())
+        i = self.next_id
+        self.next_id += 1
+        self.items[i] = {"kind": kind, "xy": [float(v) for v in xy], "o": opts,
+                         "tags": {tags} if isinstance(tags, str) else set(tags)}
+        self.order.append(i)
+        self.dirty = True
+        return i
+
+    def create_rectangle(self, *xy, **o):
+        return self._add("rect", xy, o)
+
+    def create_polygon(self, *xy, **o):
+        return self._add("poly", xy, o)
+
+    def create_line(self, *xy, **o):
+        return self._add("line", xy, o)
+
+    def create_text(self, *xy, **o):
+        return self._add("text", xy, o)
+
+    def _find(self, what):
+        if what == "all":
+            return list(self.order)
+        if isinstance(what, int):
+            return [what] if what in self.items else []
+        return [i for i in self.order if what in self.items[i]["tags"]]
+
+    def delete(self, *whats):
+        gone = set()
+        for what in whats:
+            gone.update(self._find(what))
+        if gone:
+            for i in gone:
+                del self.items[i]
+            self.order = [i for i in self.order if i not in gone]
+            self.dirty = True
+
+    def tag_raise(self, what):
+        ids = self._find(what)
+        if ids:
+            s = set(ids)
+            self.order = [i for i in self.order if i not in s] + ids
+            self.dirty = True
+
+    def move(self, what, dx, dy):
+        for i in self._find(what):
+            xy = self.items[i]["xy"]
+            for k in range(0, len(xy) - 1, 2):
+                xy[k] += dx
+                xy[k + 1] += dy
+            self.dirty = True
+
+    def itemconfigure(self, i, **o):
+        if i in self.items:
+            self.items[i]["o"].update(o)
+            self.dirty = True
+
+    itemconfig = itemconfigure
+
+    def bbox(self, i):
+        it = self.items.get(i)
+        if not it:
+            return None
+        if it["kind"] == "text":
+            _, x, y, w, h = self._text(it)
+            return (x, y, x + w, y + h)
+        xs, ys = it["xy"][0::2], it["xy"][1::2]
+        return (int(min(xs)), int(min(ys)), int(max(xs)), int(max(ys)))
+
+    # ---- text: Segoe UI for words, Segoe UI Emoji (in color) for emoji
+    def _runs(self, line):
+        runs = []
+        for ch in line:
+            e = _is_emoji(ch) or (ch in "\ufe0f\u200d" and runs and runs[-1][0])
+            if runs and runs[-1][0] == e:
+                runs[-1][1] += ch
+            else:
+                runs.append([e, ch])
+        return runs
+
+    def _text(self, it):
+        """(image, left, top, width, height) of a text item, laid out like tk does."""
+        o = it["o"]
+        font = o.get("font") or ("Segoe UI", 9)
+        size = font[1] if len(font) > 1 else 9
+        px = max(6, round(abs(size) if size < 0 else size * self.pt))
+        bold = "bold" in font[2:]
+        key = (o.get("text", ""), px, bold, o.get("fill", "#000000"), o.get("width"), o.get("justify", "left"))
+        if key not in self._text_cache:
+            if len(self._text_cache) > 200:
+                self._text_cache.clear()
+            self._text_cache[key] = self._make_text(*key)
+        img, w, h = self._text_cache[key]
+        x, y = it["xy"][0], it["xy"][1]
+        anchor = o.get("anchor", "center")
+        left = x - w / 2 if anchor in ("center", "n", "s") else (x - w if "e" in anchor else x)
+        top = y - h / 2 if anchor in ("center", "e", "w") else (y - h if "s" in anchor else y)
+        return img, int(round(left)), int(round(top)), w, h
+
+    def _make_text(self, text, px, bold, fill, width, justify):
+        from PIL import Image, ImageDraw
+        main, emo = pil_font(px, bold), pil_font(px, emoji=True)
+
+        def measure(s):
+            return sum((emo if e else main).getlength(r) for e, r in self._runs(s))
+        lines = []
+        for para in str(text).split("\n"):
+            cur = ""
+            for word in para.split(" "):
+                trial = f"{cur} {word}" if cur else word
+                if width and cur and measure(trial) > float(width):
+                    lines.append(cur)
+                    cur = word
+                else:
+                    cur = trial
+            lines.append(cur)
+        asc, desc = main.getmetrics()
+        lh = asc + desc
+        widths = [measure(s) for s in lines]
+        w, h = int(max(widths or [0])) + 2, lh * len(lines) + 1
+        img = Image.new("RGBA", (max(1, w), max(1, h)), (0, 0, 0, 0))
+        d = ImageDraw.Draw(img)
+        for n, (s, lw) in enumerate(zip(lines, widths)):
+            x = (w - lw) / 2 if justify == "center" else (w - lw if justify == "right" else 0)
+            for e, r in self._runs(s):
+                f = emo if e else main
+                try:
+                    d.text((x, n * lh + (asc - f.getmetrics()[0]) if e else n * lh), r, font=f, fill=fill, embedded_color=e)
+                except Exception:  # noqa: BLE001  (an old Pillow or a font without color: plain text)
+                    d.text((x, n * lh), r, font=f, fill=fill)
+                x += f.getlength(r)
+        return img, w, h
+
+    # ---- drawing it all and showing it
+    def render(self):
+        from PIL import Image, ImageDraw
+        img = Image.new("RGBA", (self.w, self.h), (0, 0, 0, 0))
+        d = ImageDraw.Draw(img)
+        for i in self.order:
+            it = self.items[i]
+            o, xy, kind = it["o"], it["xy"], it["kind"]
+            fill = o.get("fill", "" if kind == "rect" else "#000000") or None
+            outline = o.get("outline", "#000000" if kind in ("rect", "poly") else "") or None
+            width = max(1, int(round(float(o.get("width", 1)))))
+            if kind == "rect":
+                x1, x2 = sorted((xy[0], xy[2]))
+                y1, y2 = sorted((xy[1], xy[3]))
+                box = [round(x1), round(y1), round(x2) - 1, round(y2) - 1]
+                if box[2] < box[0] or box[3] < box[1]:
+                    continue
+                if fill:
+                    d.rectangle(box, fill=fill)
+                if outline:
+                    d.rectangle(box, outline=outline, width=width)
+            elif kind == "poly":
+                pts = [(round(xy[k]), round(xy[k + 1])) for k in range(0, len(xy) - 1, 2)]
+                d.polygon(pts, fill=fill)
+                if outline:
+                    d.line(pts + pts[:1], fill=outline, width=width)
+            elif kind == "line":
+                if fill:
+                    d.line([(round(xy[k]), round(xy[k + 1])) for k in range(0, len(xy) - 1, 2)], fill=fill, width=width)
+            elif kind == "text":
+                timg, x, y, w, h = self._text(it)
+                sx, sy = max(0, -x), max(0, -y)
+                x2, y2 = min(self.w, x + w), min(self.h, y + h)
+                if x2 > x + sx and y2 > y + sy:
+                    img.alpha_composite(timg, (x + sx, y + sy), (sx, sy, x2 - x, y2 - y))
+        return img
+
+    def attach(self):
+        """Make the window layered (call once it exists on screen)."""
+        if LAYERED and self.surface is None:
+            self.surface = LayeredSurface(self.widget, self.w, self.h)
+            self.dirty = True
+            self.flush()
+
+    def flush(self):
+        if not self.dirty:
+            return
+        self.dirty = False
+        img = self.render()
+        if LAYERED_TEST_DIR and not LAYERED:
+            self.frames += 1
+            if self.frames in (1, 30, 90) or self.frames % 300 == 0:
+                img.save(os.path.join(LAYERED_TEST_DIR, f"{id(self)}-{self.frames}.png"))
+            return
+        if self.surface is None:
+            return
+        data = img.convert("RGBa").tobytes("raw", "BGRa")
+        if data != self.last:
+            self.last = data
+            self.surface.show(data)
+
+    def destroy(self):
+        if self.surface:
+            self.surface.close()
+            self.surface = None
+
+
+def make_canvas(root, w, h, bg):
+    """A tk Canvas (classic) or a PixelCanvas (Redux)."""
+    if LAYERED or LAYERED_TEST_DIR:
+        return PixelCanvas(root, w, h)
+    return tk.Canvas(root, width=w, height=h, bg=bg, highlightthickness=0, bd=0)
+
+
+def show_window(root, canvas, w, h, x, y):
+    """Put a pet / sighting window on screen the first time, without a flash."""
+    if isinstance(canvas, PixelCanvas) and LAYERED:
+        root.geometry(f"{w}x{h}+-32000+-32000")         # off screen while it becomes layered
+        root.update_idletasks()
+        root.deiconify()
+        root.update_idletasks()
+        canvas.attach()
+        root.geometry(f"+{int(x)}+{int(y)}")
+        return
+    root.geometry(f"{w}x{h}+{int(x)}+{int(y)}")
+    root.update_idletasks()
+    root.deiconify()
+
+
 class Blip:
     def __init__(self, app, kind="Blip", name="Blip", x=None):
         self.app = app
@@ -3434,7 +3801,7 @@ class Blip:
         root.overrideredirect(True)
         root.attributes("-topmost", True)
         bg = KEY
-        if sys.platform == "win32":
+        if sys.platform == "win32" and not LAYERED:
             root.attributes("-transparentcolor", KEY)
         elif sys.platform == "darwin":
             try:
@@ -3443,7 +3810,7 @@ class Blip:
             except tk.TclError:
                 pass
         root.config(bg=bg)
-        self.canvas = tk.Canvas(root, width=W, height=H, bg=bg, highlightthickness=0, bd=0)
+        self.canvas = make_canvas(root, W, H, bg)
         self.canvas.pack()
 
         self.left, self.top, self.right, self.bottom = work_area(root)
@@ -3572,9 +3939,7 @@ class Blip:
         if pos == getattr(self, "_placed", None):
             return                                  # moving a see-through window makes Windows repaint it, so only when needed
         if getattr(self, "_placed", None) is None:  # first time: set the size too, then show the window
-            self.root.geometry(f"{W}x{H}+{pos[0]}+{pos[1]}")
-            self.root.update_idletasks()
-            self.root.deiconify()
+            show_window(self.root, self.canvas, W, H, pos[0], pos[1])
         else:
             self.root.geometry(f"+{pos[0]}+{pos[1]}")
         self._placed = pos
@@ -3720,6 +4085,8 @@ class Blip:
 
     # ------------------------------------------------------------------ mouse
     def on_press(self, e):
+        if SELFTEST:
+            log(f"selftest: pressed {self.name} at {e.x},{e.y}")
         self.press = (e.x_root, e.y_root, self.wx, self.wy, time.monotonic())
         self.drag_hist = [(time.monotonic(), e.x_root, e.y_root)]
 
@@ -3758,6 +4125,8 @@ class Blip:
         self.burst("heart", 2)
 
     def on_menu(self, e):
+        if SELFTEST:
+            log(f"selftest: menu for {self.name}")
         self.night_menu.delete(0, "end")
         for k in NIGHT_SHIFT:
             if self.app.is_unlocked(k):
@@ -4105,6 +4474,8 @@ class Blip:
             self.draw_fx(now)
         c.tag_raise("top")                            # name tags and speech bubbles stay on top of hearts and snow
         c.tag_raise("bubble")
+        if isinstance(c, PixelCanvas):
+            c.flush()
 
     def draw_pet(self, now, art, ox, oy):
         c = self.canvas
@@ -4310,7 +4681,7 @@ UNLOCKS = {"Robo Bear": 1, "Robo Bunny": 2, "Robo Hen": 3}   # kind -> Night Shi
 
 
 def log_path():
-    return os.path.join(os.path.dirname(save_path()), "blipville.log")
+    return os.path.join(os.path.dirname(save_path()), "blipville-redux.log" if REDUX else "blipville.log")
 
 
 def log(message):
@@ -4644,7 +5015,7 @@ class Sighting:
         root.overrideredirect(True)
         root.attributes("-topmost", True)
         bg = KEY
-        if sys.platform == "win32":
+        if sys.platform == "win32" and not LAYERED:
             root.attributes("-transparentcolor", KEY)
         elif sys.platform == "darwin":
             try:
@@ -4654,14 +5025,12 @@ class Sighting:
                 pass
         root.config(bg=bg)
         self.cw, self.ch = SCENE_W * SCENE_PX, SCENE_H * SCENE_PX
-        self.canvas = tk.Canvas(root, width=self.cw, height=self.ch, bg=bg, highlightthickness=0, bd=0)
+        self.canvas = make_canvas(root, self.cw, self.ch, bg)
         self.canvas.pack()
         self.canvas.bind("<ButtonPress-1>", self.on_click)
         left, top, right, bottom = work_area(root)
         self.wx = random.uniform(left, max(left, right - self.cw))
-        root.geometry(f"{self.cw}x{self.ch}+{int(self.wx)}+{int(bottom - self.ch)}")
-        root.update_idletasks()
-        root.deiconify()
+        show_window(root, self.canvas, self.cw, self.ch, self.wx, bottom - self.ch)
         self.born = time.monotonic()
         self.facing, self.pos, self.caught = (-1 if flip else 1), self.keys[0][1:], False
         witness = next((p for p in app.pets if p.state not in ("sleep", "held")), None)
@@ -4792,6 +5161,8 @@ class Sighting:
                 for i, ch in enumerate(row):
                     if ch == "x" and qy >= 0:
                         c.create_rectangle(qx + i * 3, qy + r * 3, qx + i * 3 + 3, qy + r * 3 + 3, fill="#ffffff", outline="", tags=("mover",))
+        if isinstance(c, PixelCanvas):
+            c.flush()
 
     def visible(self):
         return self.pos[1] + 12 * self.sc >= self.clip
@@ -4832,6 +5203,8 @@ class Sighting:
         if self in self.app.sightings:
             self.app.sightings.remove(self)
         try:
+            if isinstance(self.canvas, PixelCanvas):
+                self.canvas.destroy()
             self.root.destroy()
         except tk.TclError:
             pass
@@ -4852,7 +5225,7 @@ class Sighting:
 RELEASES_API = "https://api.github.com/repos/Johnblip189/blipville/releases?per_page=10"
 RELEASES_PAGE = "https://github.com/Johnblip189/blipville/releases"
 RELEASES_FEED = "https://github.com/Johnblip189/blipville/releases.atom"
-DOWNLOAD_URL = "https://github.com/Johnblip189/blipville/releases/download/{tag}/Blipville.exe"
+DOWNLOAD_URL = "https://github.com/Johnblip189/blipville/releases/download/{tag}/" + EXE_NAME
 UPDATE_EVERY = 6 * 3600
 
 
@@ -4871,7 +5244,7 @@ def newest_release(releases):
         if r.get("draft"):
             continue
         for a in r.get("assets", []):
-            if a.get("name", "").lower() == "blipville.exe" and a.get("browser_download_url"):
+            if a.get("name", "").lower() == EXE_NAME.lower() and a.get("browser_download_url"):
                 return r.get("tag_name", ""), a
     return None
 
@@ -4998,11 +5371,11 @@ def find_update_backup():
         except Exception:  # noqa: BLE001
             continue
     if head is None:
-        raise RuntimeError("no Blipville.exe found in the latest releases")
+        raise RuntimeError(f"no {EXE_NAME} found in the latest releases")
     size = int(head.get("content-length") or 0)
     modified = head.get("last-modified")
     when = parsedate_to_datetime(modified).strftime("%Y-%m-%dT%H:%M:%SZ") if modified else ""
-    return tag, {"name": "Blipville.exe", "browser_download_url": DOWNLOAD_URL.format(tag=tag), "size": size, "updated_at": when}
+    return tag, {"name": EXE_NAME, "browser_download_url": DOWNLOAD_URL.format(tag=tag), "size": size, "updated_at": when}
 
 
 class Updater:
@@ -5057,7 +5430,7 @@ class Updater:
         self.busy = False
         if result is None or (isinstance(result, tuple) and result[0] == "error"):
             if not quiet:
-                why = result[1] if result else "no Blipville.exe found on the releases page"
+                why = result[1] if result else f"no {EXE_NAME} found on the releases page"
                 messagebox.showinfo("Blipville updates", "Couldn't reach GitHub to check for updates. Check your internet, "
                                     "then try again in a few minutes! (Antivirus or a school/work network can block it too.)"
                                     f"\n\nDetails (send these to the developer if this keeps happening):\n{why}",
@@ -5066,7 +5439,7 @@ class Updater:
         tag, asset = result
         if not is_newer(tag, asset):
             if not quiet:
-                msg = (f"You're on the newest Blipville! 🎉\n\nYou have {version_label()}." if APP_VERSION != "dev" else
+                msg = (f"You're on the newest {APP_NAME}! 🎉\n\nYou have {version_label()}." if APP_VERSION != "dev" else
                        "You're running Blipville from source (blip.pyw), so it can't update itself.\n\nGet the newest version from the releases page.")
                 messagebox.showinfo("Blipville updates", msg, parent=self.app.root)
             return
@@ -5076,7 +5449,7 @@ class Updater:
         if self.app.pets:
             self.app.pets[0].say("ooh, a Blipville update is ready! ✨", 5)
         same = tag == APP_VERSION
-        text = (f"A fresh build of Blipville {tag} is ready!" if same else f"Blipville {tag} is out! (You have {APP_VERSION}.)")
+        text = (f"A fresh build of {APP_NAME} {tag} is ready!" if same else f"{APP_NAME} {tag} is out! (You have {APP_VERSION}.)")
         if not getattr(sys, "frozen", False):
             if messagebox.askyesno("Update Blipville", text + "\n\nOpen the download page?", parent=self.app.root):
                 webbrowser.open(RELEASES_PAGE)
@@ -5117,7 +5490,7 @@ class Updater:
                                 "(right-click a pet → Check for updates), or grab it from the releases page.", parent=self.app.root)
             return
         # A tiny helper script waits for Blipville to close, swaps in the new file and starts it again.
-        bat = os.path.join(os.path.dirname(exe), "blipville-update.bat")
+        bat = os.path.join(os.path.dirname(exe), "blipville-redux-update.bat" if REDUX else "blipville-update.bat")
         with open(bat, "w", encoding="utf-8") as f:
             f.write("@echo off\r\n"
                     "chcp 65001 >nul\r\n"
@@ -5178,7 +5551,7 @@ class Maintenance:
 
             def work():
                 try:
-                    result = fetch_status("classic")
+                    result = fetch_status("redux" if REDUX else "classic")
                 except Exception as e:  # noqa: BLE001
                     log(f"maintenance check failed: {_why(e)}")
                     result = None
@@ -5992,7 +6365,7 @@ class App:
 
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Blipville")
+        self.root.title(APP_NAME)
         self.root.withdraw()                       # pets live in their own little windows
         self.name_tags = tk.BooleanVar(master=self.root, value=True)
         self.season = current_season()
@@ -6019,7 +6392,19 @@ class App:
             self.add_pet("Blip", "Blip")
         self.daily_treat()
         self.last_topmost = self.last_town_save = time.monotonic()
+        if SELFTEST:
+            self.root.after(8000, self.selftest_report)
         self.tick()
+
+    def selftest_report(self):
+        for p in self.pets:                         # hold still so the test can click them
+            p.set_state("idle", 120)
+            p.target_x = None
+            surf = getattr(p.canvas, "surface", None)
+            cx, cy = int(p.wx + W / 2), int(p.wy + H - ART_H * SCALE / 2)
+            log(f"selftest: pet {p.name} state={p.state} click_at={cx},{cy} layered={surf is not None} "
+                f"frames_shown={getattr(surf, 'shown', 0)} failed={getattr(surf, 'failed', None)}")
+        log(f"selftest: {len(self.pets)} pets, LAYERED={LAYERED}, edition={EDITION}")
 
     # ----- remembering your town between launches
     def town_snapshot(self):
@@ -6138,6 +6523,8 @@ class App:
         if self.maintenance.closed:                 # wait until Blipville opens again
             self.root.after(30000, self.show_notice)
             return
+        if SELFTEST:                                # the build's test clicks pets; a dialog would be in the way
+            return
         if self.save.get("notice_seen") == NOTICE_ID:
             if self.give_gift():
                 from tkinter import messagebox
@@ -6150,7 +6537,7 @@ class App:
         gift = self.give_gift()
         text = NOTICE_TEXT + (f"\n\n🎁 As a thank-you, here's {GIFT_NOW}: a limited-edition Blip, only given out until {GIFT_UNTIL_TEXT}. "
                               "Find it any time under Change kind → Gifts 🎁." if gift else "")
-        messagebox.showinfo("Blipville 0.4 RC2: almost 1.0! 💜", text, parent=self.root)
+        messagebox.showinfo("Blipville Redux 💜" if REDUX else "Blipville 0.4 RC2: almost 1.0! 💜", text, parent=self.root)
 
     def world(self):
         """The world your town is visiting right now (or None for home)."""
@@ -6286,6 +6673,8 @@ class App:
     def remove(self, pet):
         if pet in self.pets:
             self.pets.remove(pet)
+            if isinstance(pet.canvas, PixelCanvas):
+                pet.canvas.destroy()
             pet.root.destroy()
         self.save_town()
         if not self.pets:

@@ -4865,10 +4865,75 @@ def version_label():
     return f"{APP_VERSION} (built {time.strftime('%b', t)} {t.tm_mday}, {(t.tm_hour % 12) or 12}:{t.tm_min:02d} {'AM' if t.tm_hour < 12 else 'PM'})"
 
 
-def _fetch(url, method="GET", timeout=15):
+def _why(e):
+    """A short, readable reason for a network error."""
+    text = str(getattr(e, "reason", "") or e) or type(e).__name__
+    return (text[:140] + "…") if len(text) > 140 else text
+
+
+def _curl(args, timeout):
+    """Windows 10/11 ship curl.exe, which uses Windows' own certificates and proxy settings. We fall back to it
+    when Python's own connection is blocked (antivirus, school/work networks, certificate trouble)."""
+    import shutil
+    exe = shutil.which("curl.exe") or shutil.which("curl")
+    if not exe:
+        raise RuntimeError("curl isn't available")
+    flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    r = subprocess.run([exe, "-sSL", "--fail", "-A", "Blipville-updater", "--max-time", str(timeout)] + args,
+                       capture_output=True, timeout=timeout + 10, creationflags=flags)
+    if r.returncode:
+        raise RuntimeError(r.stderr.decode("utf-8", "replace").strip() or f"curl error {r.returncode}")
+    return r.stdout
+
+
+def http_get(url, timeout=15):
     import urllib.request
-    req = urllib.request.Request(url, method=method, headers={"User-Agent": "Blipville-updater"})
-    return urllib.request.urlopen(req, timeout=timeout)
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Blipville-updater"})
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return resp.read()
+    except Exception as e:  # noqa: BLE001
+        first = _why(e)
+    try:
+        return _curl([url], timeout)
+    except Exception as e:  # noqa: BLE001
+        raise RuntimeError(f"{first} / backup: {_why(e)}") from None
+
+
+def http_head(url, timeout=15):
+    """Headers of the final response (after redirects), lower-case keys."""
+    import urllib.request
+    try:
+        req = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "Blipville-updater"})
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return {k.lower(): v for k, v in resp.headers.items()}
+    except Exception as e:  # noqa: BLE001
+        first = _why(e)
+    try:
+        raw = _curl(["-I", url], timeout).decode("latin-1")
+    except Exception as e:  # noqa: BLE001
+        raise RuntimeError(f"{first} / backup: {_why(e)}") from None
+    block = [b for b in raw.replace("\r", "").split("\n\n") if b.strip()][-1]
+    return {ln.split(":", 1)[0].strip().lower(): ln.split(":", 1)[1].strip() for ln in block.split("\n") if ":" in ln}
+
+
+def http_download(url, path, timeout=300):
+    import urllib.request
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Blipville-updater"})
+        with urllib.request.urlopen(req, timeout=timeout) as resp, open(path, "wb") as f:
+            while True:
+                chunk = resp.read(1 << 16)
+                if not chunk:
+                    break
+                f.write(chunk)
+        return
+    except Exception as e:  # noqa: BLE001
+        first = _why(e)
+    try:
+        _curl(["-o", path, url], timeout)
+    except Exception as e:  # noqa: BLE001
+        raise RuntimeError(f"{first} / backup: {_why(e)}") from None
 
 
 def find_update_backup():
@@ -4878,15 +4943,14 @@ def find_update_backup():
     from email.utils import parsedate_to_datetime
     tag = APP_VERSION
     try:
-        with _fetch(RELEASES_FEED) as resp:
-            m = re.search(r"/releases/tag/([^\"<>\s]+)", resp.read().decode("utf-8", "replace"))
-            if m:
-                tag = m.group(1)
+        m = re.search(r"/releases/tag/([^\"<>\s]+)", http_get(RELEASES_FEED).decode("utf-8", "replace"))
+        if m:
+            tag = m.group(1)
     except Exception:  # noqa: BLE001  (no feed: at least look for a rebuild of our own version)
         pass
-    with _fetch(DOWNLOAD_URL.format(tag=tag), method="HEAD") as resp:
-        size = int(resp.headers.get("Content-Length") or 0)
-        modified = resp.headers.get("Last-Modified")
+    head = http_head(DOWNLOAD_URL.format(tag=tag))
+    size = int(head.get("content-length") or 0)
+    modified = head.get("last-modified")
     when = parsedate_to_datetime(modified).strftime("%Y-%m-%dT%H:%M:%SZ") if modified else ""
     return tag, {"name": "Blipville.exe", "browser_download_url": DOWNLOAD_URL.format(tag=tag), "size": size, "updated_at": when}
 
@@ -4929,23 +4993,25 @@ class Updater:
         def work():
             result = None
             try:
-                with _fetch(RELEASES_API) as resp:
-                    result = newest_release(json.loads(resp.read().decode("utf-8")))
-            except Exception:  # noqa: BLE001  (rate limited, GitHub hiccup: try the backup way)
+                result = newest_release(json.loads(http_get(RELEASES_API).decode("utf-8")))
+            except Exception as e1:  # noqa: BLE001  (rate limited, GitHub hiccup: try the backup way)
                 try:
                     result = find_update_backup()
-                except Exception:  # noqa: BLE001  (offline or GitHub down: just try again later)
-                    result = "error"
+                except Exception as e2:  # noqa: BLE001  (offline or GitHub down: just try again later)
+                    result = ("error", f"{_why(e1)}\n{_why(e2)}")
             self.inbox.put(lambda: self.found(result, quiet))
         threading.Thread(target=work, daemon=True).start()
 
     def found(self, result, quiet):
         from tkinter import messagebox
         self.busy = False
-        if result == "error" or result is None:
+        if result is None or (isinstance(result, tuple) and result[0] == "error"):
             if not quiet:
+                why = result[1] if result else "no Blipville.exe found on the releases page"
                 messagebox.showinfo("Blipville updates", "Couldn't reach GitHub to check for updates. Check your internet, "
-                                    "then try again in a few minutes!", parent=self.app.root)
+                                    "then try again in a few minutes! (Antivirus or a school/work network can block it too.)"
+                                    f"\n\nDetails (send these to the developer if this keeps happening):\n{why}",
+                                    parent=self.app.root)
             return
         tag, asset = result
         if not is_newer(tag, asset):
@@ -4979,14 +5045,7 @@ class Updater:
         def work():
             ok = False
             try:
-                import urllib.request
-                req = urllib.request.Request(asset["browser_download_url"], headers={"User-Agent": "Blipville-updater"})
-                with urllib.request.urlopen(req, timeout=120) as resp, open(new, "wb") as f:
-                    while True:
-                        chunk = resp.read(1 << 16)
-                        if not chunk:
-                            break
-                        f.write(chunk)
+                http_download(asset["browser_download_url"], new)
                 size = os.path.getsize(new)
                 with open(new, "rb") as f:
                     ok = f.read(2) == b"MZ" and size > 1_000_000 and (not asset.get("size") or size == asset["size"])

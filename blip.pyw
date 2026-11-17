@@ -4027,12 +4027,31 @@ class Blip:
         return g
 
     def draw(self, now):
+        """Two layers: the pet itself (redrawn only when it changes, since redrawing a see-through window is slow,
+        especially on Windows) and effects like hearts, snow, cookies and balls (redrawn every frame)."""
         c = self.canvas
-        c.delete("all")
         ox = (W - ART_W * SCALE) // 2
         oy = H - ART_H * SCALE - self.lift(now)
+        art = self.build_art(now)
+        talking = self.bubble[0] if self.bubble and now < self.bubble[1] else None
+        if not talking:
+            self.bubble = None
+        key = (tuple(tuple(r) for r in art), oy, self.hat, self.state == "sleep" or now < self.squash_until,
+               self.kind, self.name if self.app.name_tags.get() else None, talking)
+        if key != getattr(self, "_drawn", None):
+            self._drawn = key
+            c.delete("pet")
+            self.draw_pet(now, art, ox, oy)
+        c.delete("fx")
+        if self.particles or self.cookie or self.app.plays:
+            self.draw_fx(now)
+        c.tag_raise("top")                            # name tags and speech bubbles stay on top of hearts and snow
+        c.tag_raise("bubble")
+
+    def draw_pet(self, now, art, ox, oy):
+        c = self.canvas
         # pixel art, merging runs of the same color into one rectangle per row
-        for y, row in enumerate(self.build_art(now)):
+        for y, row in enumerate(art):
             x = 0
             while x < ART_W:
                 color = row[x]
@@ -4043,9 +4062,47 @@ class Blip:
                 while x2 + 1 < ART_W and row[x2 + 1] == color:
                     x2 += 1
                 c.create_rectangle(ox + x * SCALE, oy + y * SCALE, ox + (x2 + 1) * SCALE, oy + (y + 1) * SCALE,
-                                   fill=color, outline="")
+                                   fill=color, outline="", tags=("pet",))
                 x = x2 + 1
 
+        # hat / glasses / scarf
+        hat_top = 0
+        if self.hat in HATS:
+            shift = 1 if (self.state == "sleep" or now < self.squash_until) else 0
+            for row, col, color in hat_cells(VARIANTS[self.kind], HATS[self.hat], shift):
+                c.create_rectangle(ox + col * SCALE, oy + row * SCALE, ox + (col + 1) * SCALE, oy + (row + 1) * SCALE,
+                                   fill=color, outline="", tags=("pet",))
+                hat_top = min(hat_top, row * SCALE)
+
+        # name tag
+        tag_h = 0
+        if self.app.name_tags.get():
+            t = c.create_text(W / 2, oy + hat_top - 6, text=self.name, font=("Segoe UI", 8, "bold"), fill="#ffffff", anchor="s", tags=("pet", "top"))
+            x1, y1, x2, y2 = c.bbox(t)
+            c.create_rectangle(x1 - 4, y1 - 1, x2 + 4, y2 + 1, fill="#1d1b26", outline="#1d1b26", tags=("pet", "top"))
+            c.tag_raise(t)
+            tag_h = y2 - y1 + 6
+
+        # speech bubble
+        if self.bubble and now < self.bubble[1]:
+            t = c.create_text(W / 2, 0, text=self.bubble[0], font=("Segoe UI", 10, "bold"),
+                              fill="#222222", width=W - 30, justify="center", anchor="s", tags=("pet", "bubble"))
+            x1, y1, x2, y2 = c.bbox(t)
+            top_of_pet = oy + hat_top - (6 if self.state != "sleep" else 2) - tag_h
+            h = y2 - y1
+            c.move(t, 0, top_of_pet - 12)
+            x1, y1, x2, y2 = x1 - 8, top_of_pet - 12 - h - 5, x2 + 8, top_of_pet - 7
+            # bubble sits on top of everything else (hearts, Zzz), text on top of the bubble
+            c.create_polygon(W / 2 - 5, y2 - 1, W / 2 + 5, y2 - 1, W / 2, y2 + 6, fill="#ffffff", outline="#222222", width=2, tags=("pet", "bubble"))
+            c.create_rectangle(x1, y1, x2, y2, fill="#ffffff", outline="#222222", width=2, tags=("pet", "bubble"))
+            c.create_line(W / 2 - 4, y2 - 1, W / 2 + 4, y2 - 1, fill="#ffffff", width=3, tags=("pet", "bubble"))
+            c.tag_raise(t)
+        else:
+            self.bubble = None
+
+
+    def draw_fx(self, now):
+        c = self.canvas
         # a ball in flight (games of catch are drawn in every pet window the ball passes through)
         for play in self.app.plays:
             if play["type"] == "ball" and "ball" in play:
@@ -4055,16 +4112,7 @@ class Blip:
                         for xx, ch in enumerate(row):
                             if ch != ".":
                                 c.create_rectangle(bx - 8 + xx * 3, by - 8 + yy * 3, bx - 5 + xx * 3, by - 5 + yy * 3,
-                                                   fill={"w": "#ffffff", "r": "#e8303a", "o": "#3a2a3a"}[ch], outline="")
-
-        # hat / glasses / scarf
-        hat_top = 0
-        if self.hat in HATS:
-            shift = 1 if (self.state == "sleep" or now < self.squash_until) else 0
-            for row, col, color in hat_cells(VARIANTS[self.kind], HATS[self.hat], shift):
-                c.create_rectangle(ox + col * SCALE, oy + row * SCALE, ox + (col + 1) * SCALE, oy + (row + 1) * SCALE,
-                                   fill=color, outline="")
-                hat_top = min(hat_top, row * SCALE)
+                                                   fill={"w": "#ffffff", "r": "#e8303a", "o": "#3a2a3a"}[ch], outline="", tags=("fx",))
 
         # cookie
         ck = self.cookie
@@ -4079,7 +4127,7 @@ class Blip:
                         continue
                     col = "#c98a4b" if ch == "c" else "#5a3418"
                     X, Y = cx - 9 + x * 3, ck["y"] + y * 3
-                    c.create_rectangle(X, Y, X + 3, Y + 3, fill=col, outline="")
+                    c.create_rectangle(X, Y, X + 3, Y + 3, fill=col, outline="", tags=("fx",))
 
         # particles
         alive = []
@@ -4097,65 +4145,40 @@ class Blip:
                     for x, ch in enumerate(row):
                         if ch == "x":
                             X, Y = p["x"] + x * 3, p["y"] + y * 3
-                            c.create_rectangle(X, Y, X + 3, Y + 3, fill="#ff4f7b", outline="")
+                            c.create_rectangle(X, Y, X + 3, Y + 3, fill="#ff4f7b", outline="", tags=("fx",))
             elif p["kind"] == "z":
                 s = 2 + int(age)
                 for y, row in enumerate(ZED):
                     for x, ch in enumerate(row):
                         if ch == "x":
                             X, Y = p["x"] + x * s, p["y"] + y * s
-                            c.create_rectangle(X, Y, X + s, Y + s, fill="#bcd2ff", outline="")
+                            c.create_rectangle(X, Y, X + s, Y + s, fill="#bcd2ff", outline="", tags=("fx",))
             elif p["kind"] == "crumb":
-                c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#c98a4b", outline="")
+                c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#c98a4b", outline="", tags=("fx",))
             elif p["kind"] == "snow":
                 s_ = 3 if p["phase"] > 2 else 2
-                c.create_rectangle(p["x"], p["y"], p["x"] + s_, p["y"] + s_, fill="#f4f8ff", outline="")
+                c.create_rectangle(p["x"], p["y"], p["x"] + s_, p["y"] + s_, fill="#f4f8ff", outline="", tags=("fx",))
             elif p["kind"] in ("leaf", "petal"):
                 X = p["x"] + math.sin(age * 3 + p["phase"]) * 4
                 w_, h_, col = (4, 3, p["color"]) if p["kind"] == "leaf" else (3, 2, "#ffb0d8")
-                c.create_rectangle(X, p["y"], X + w_, p["y"] + h_, fill=col, outline="")
+                c.create_rectangle(X, p["y"], X + w_, p["y"] + h_, fill=col, outline="", tags=("fx",))
             elif p["kind"] == "firefly":
                 if math.sin(age * 5) > -0.3:
-                    c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#fff08a", outline="")
+                    c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#fff08a", outline="", tags=("fx",))
             elif p["kind"] == "bat":
                 shape = BAT if int(age * 8) % 2 else BAT_FLAP
                 for y, row in enumerate(shape):
                     for x, ch in enumerate(row):
                         if ch == "x":
                             X, Y = p["x"] + x * 2, p["y"] + y * 2 + math.sin(age * 6) * 3
-                            c.create_rectangle(X, Y, X + 2, Y + 2, fill="#6a4a9a", outline="")
+                            c.create_rectangle(X, Y, X + 2, Y + 2, fill="#6a4a9a", outline="", tags=("fx",))
             elif p["kind"] == "plus":
-                t = c.create_text(p["x"], p["y"], text=p["text"], font=("Segoe UI", 9, "bold"), fill="#ffffff")
+                t = c.create_text(p["x"], p["y"], text=p["text"], font=("Segoe UI", 9, "bold"), fill="#ffffff", tags=("fx",))
                 x1, y1, x2, y2 = c.bbox(t)
-                c.create_rectangle(x1 - 4, y1 - 1, x2 + 4, y2 + 1, fill="#e8457a", outline="#e8457a")
+                c.create_rectangle(x1 - 4, y1 - 1, x2 + 4, y2 + 1, fill="#e8457a", outline="#e8457a", tags=("fx",))
                 c.tag_raise(t)
         self.particles = alive
 
-        # name tag
-        tag_h = 0
-        if self.app.name_tags.get():
-            t = c.create_text(W / 2, oy + hat_top - 6, text=self.name, font=("Segoe UI", 8, "bold"), fill="#ffffff", anchor="s")
-            x1, y1, x2, y2 = c.bbox(t)
-            c.create_rectangle(x1 - 4, y1 - 1, x2 + 4, y2 + 1, fill="#1d1b26", outline="#1d1b26")
-            c.tag_raise(t)
-            tag_h = y2 - y1 + 6
-
-        # speech bubble
-        if self.bubble and now < self.bubble[1]:
-            t = c.create_text(W / 2, 0, text=self.bubble[0], font=("Segoe UI", 10, "bold"),
-                              fill="#222222", width=W - 30, justify="center", anchor="s")
-            x1, y1, x2, y2 = c.bbox(t)
-            top_of_pet = oy + hat_top - (6 if self.state != "sleep" else 2) - tag_h
-            h = y2 - y1
-            c.move(t, 0, top_of_pet - 12)
-            x1, y1, x2, y2 = x1 - 8, top_of_pet - 12 - h - 5, x2 + 8, top_of_pet - 7
-            # bubble sits on top of everything else (hearts, Zzz), text on top of the bubble
-            c.create_polygon(W / 2 - 5, y2 - 1, W / 2 + 5, y2 - 1, W / 2, y2 + 6, fill="#ffffff", outline="#222222", width=2)
-            c.create_rectangle(x1, y1, x2, y2, fill="#ffffff", outline="#222222", width=2)
-            c.create_line(W / 2 - 4, y2 - 1, W / 2 + 4, y2 - 1, fill="#ffffff", width=3)
-            c.tag_raise(t)
-        else:
-            self.bubble = None
 
     # ------------------------------------------------------------------ loop
     def step(self, now):
@@ -4525,7 +4548,7 @@ class Sighting:
             witness.say(scene["hint"], 4)
 
     # ---- drawing helpers (u = scene units, y up from the ground)
-    def mask(self, rows, colors, cx, by, t, mirror=False):
+    def mask(self, rows, colors, cx, by, t, mirror=False, tags=("mover",), flicker=None):
         c, P = self.canvas, SCENE_PX
         w, h = len(rows[0]), len(rows)
         x0 = round(cx - w / 2)
@@ -4542,16 +4565,20 @@ class Sighting:
                 while x2 + 1 < w and row[x2 + 1] == ch:
                     x2 += 1
                 col = colors[ch]
-                if isinstance(col, list):                     # flickering light
-                    col = col[1] if int(t * 7) % 5 == 0 else col[0]
-                c.create_rectangle((x0 + x) * P, y, (x0 + x2 + 1) * P, y + P, fill=col, outline="")
+                pair = col if isinstance(col, list) else None   # flickering light
+                if pair:
+                    col = pair[1] if int(t * 7) % 5 == 0 else pair[0]
+                item = c.create_rectangle((x0 + x) * P, y, (x0 + x2 + 1) * P, y + P, fill=col, outline="", tags=tags)
+                if pair and flicker is not None:
+                    flicker.append((item, pair))
                 x = x2 + 1
 
     def draw_props(self, layer, t):
+        """Scenery is drawn once and kept; flickering bits just change color."""
         for name, x, y, lay, flip in self.props:
             if lay == layer:
                 p = SCENE_PROPS[name]
-                self.mask(p["rows"], p["colors"], x, y, t, mirror=flip and name != "rec")
+                self.mask(p["rows"], p["colors"], x, y, t, mirror=flip and name != "rec", tags=(layer,), flicker=self.flicker)
 
     def art(self, now):
         v = VARIANTS[self.kind]
@@ -4584,8 +4611,17 @@ class Sighting:
             y += abs(math.sin(t * 8)) * 2
         self.pos = (x, y)
         c, P = self.canvas, SCENE_PX
-        c.delete("all")
-        self.draw_props("back", t)
+        if not getattr(self, "flicker", None) and not getattr(self, "props_drawn", False):
+            self.flicker, self.lit = [], None
+            self.draw_props("back", t)
+            self.draw_props("front", t)
+            self.props_drawn = True
+        lit = int(t * 7) % 5 == 0
+        if lit != self.lit:
+            self.lit = lit
+            for item, pair in self.flicker:
+                c.itemconfigure(item, fill=pair[1] if lit else pair[0])
+        c.delete("mover")
         if self.scene.get("mound") and y < self.clip - 10:
             p = SCENE_PROPS["mound"]
             self.mask(p["rows"], p["colors"], x + math.sin(t * 9) * 0.6, 0, t)
@@ -4599,25 +4635,25 @@ class Sighting:
             for i, col in enumerate(row):
                 if col:
                     left = (x + (i - 8) * sc) * P
-                    c.create_rectangle(left, top, left + P * sc, top + P * sc, fill="#ffffff" if flash else col, outline="")
+                    c.create_rectangle(left, top, left + P * sc, top + P * sc, fill="#ffffff" if flash else col, outline="", tags=("mover",))
         if self.scene.get("sparkle") and not moving:        # Frogman's sparkly wand
             for k in range(3):
                 if int(t * 6 + k * 2) % 3:
                     sx, sy = x + self.facing * (8 + k * 2), y + 5 + (k * 3 + int(t * 4)) % 6
                     c.create_rectangle(sx * P, (SCENE_H - sy) * P, sx * P + P, (SCENE_H - sy) * P + P,
-                                       fill="#fff27a", outline="")
-        self.draw_props("front", t)
+                                       fill="#fff27a", outline="", tags=("mover",))
+        c.tag_raise("front")                               # scenery in front stays in front
         if self.visible() and self.kind in KAIJU:          # how many more clicks it needs
             for k in range(KAIJU_HITS):
                 bx, by = (x - 5 + k * 4) * P, (SCENE_H - (y + 13 * self.sc + 4)) * P
                 if by >= 0:
-                    c.create_rectangle(bx, by, bx + 3 * P, by + 2 * P, fill="#ff5a7a" if k < self.hits else "#ffffff", outline="#16121f")
+                    c.create_rectangle(bx, by, bx + 3 * P, by + 2 * P, fill="#ff5a7a" if k < self.hits else "#ffffff", outline="#16121f", tags=("mover",))
         elif self.visible():
             qx, qy = x * P - 8, (SCENE_H - (y + 22)) * P
             for r, row in enumerate([".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."]):   # a pixel "?"
                 for i, ch in enumerate(row):
                     if ch == "x" and qy >= 0:
-                        c.create_rectangle(qx + i * 3, qy + r * 3, qx + i * 3 + 3, qy + r * 3 + 3, fill="#ffffff", outline="")
+                        c.create_rectangle(qx + i * 3, qy + r * 3, qx + i * 3 + 3, qy + r * 3 + 3, fill="#ffffff", outline="", tags=("mover",))
 
     def visible(self):
         return self.pos[1] + 12 * self.sc >= self.clip
@@ -4687,8 +4723,17 @@ class Collection:
                        (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS),
                        ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
-        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=h, bg="#1d1a2e", highlightthickness=0)
-        self.canvas.pack(padx=6, pady=6)
+        view_h = min(h, self.win.winfo_screenheight() - 140)        # scroll when the screen is too short to fit it all
+        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=view_h, bg="#1d1a2e", highlightthickness=0,
+                                scrollregion=(0, 0, self.COLS * self.CELL_W + 20, h))
+        if view_h < h:
+            bar = tk.Scrollbar(self.win, orient="vertical", command=self.canvas.yview)
+            self.canvas.configure(yscrollcommand=bar.set)
+            bar.pack(side="right", fill="y")
+            wheel = lambda e: self.canvas.yview_scroll(-1 if (getattr(e, "delta", 0) > 0 or getattr(e, "num", 0) == 4) else 1, "units")
+            for ev in ("<MouseWheel>", "<Button-4>", "<Button-5>"):
+                self.canvas.bind(ev, wheel)
+        self.canvas.pack(padx=6, pady=6, side="left")
         self.canvas.tag_bind("cell", "<Button-1>", self.on_click)
         self.canvas.tag_bind("peekall", "<Button-1>", lambda e: self.peek_all())
         self.draw()
@@ -5759,7 +5804,9 @@ class App:
                 self.last_topmost = now
         except tk.TclError:
             return
-        self.root.after(int(1000 / FPS), self.tick)
+        step = 1 / FPS
+        self.next_tick = max(getattr(self, "next_tick", now) + step, time.monotonic() - step)   # don't pile up if we fall behind
+        self.root.after(max(1, int((self.next_tick - time.monotonic()) * 1000)), self.tick)
 
     def run(self):
         self.root.mainloop()

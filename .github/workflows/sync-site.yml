@@ -1,13 +1,11 @@
 name: Update the site
-# Keeps the "site" branch the same as main.
-# The website itself is deployed by pages.yml; this also starts it on the site branch.
+# Keeps the "site" branch the same as main. (The website itself is published by pages.yml on every push to main.)
 on:
   push:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: write
-  actions: write
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -16,21 +14,3 @@ jobs:
         with:
           fetch-depth: 0
       - run: git push --force origin HEAD:refs/heads/site
-      - name: Deploy the website from the site branch too
-        # (a push made with this workflow's token doesn't start other workflows, but starting one by hand does)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          mkdir -p /tmp/pages
-          gh workflow run pages.yml --ref site -R ${{ github.repository }} > /tmp/pages/log.txt 2>&1 || true
-          cat /tmp/pages/log.txt
-      - name: Save what GitHub said to the ci-logs branch
-        if: always()
-        run: |
-          dest="pages-$(date -u +%Y%m%d-%H%M%S)"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin ci-logs && git checkout -f -B ci-logs-tmp FETCH_HEAD
-          mkdir -p "$dest" && cp /tmp/pages/log.txt "$dest/" 2>/dev/null || echo "no log" > "$dest/log.txt"
-          git add "$dest" && git commit -qm "Pages logs: $dest"
-          for i in 1 2 3; do git push origin HEAD:ci-logs && break; git pull --rebase origin ci-logs; sleep 3; done

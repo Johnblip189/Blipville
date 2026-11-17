@@ -4,6 +4,11 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
+- 👻 **Ghosts, a brand-new tier:** 10 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
+  past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
+  🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.
+- 🏆 **Trophies:** 20 to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.
+- 🎨 **Redraws:** Anteater, Camel, Kiwi, Lemming, Platypus, Tapir, Walrus, Wombat, Ankylosaurus and Tsuchinoko.
 - ✨ **The Redux engine, for everyone:** every pet window is a real see-through picture now, handed straight to Windows.
   **No more black flashes** when you click your pets, drag them around or open a menu, and text and speech bubbles
   have smooth edges.
@@ -13,8 +18,8 @@ make Blipville what it is. This is the real thing.
   opens again by itself.
 - 🎁 Gifts can't get lost on the website version any more.
 
-**Everything in Blipville:** 249 Blips and 790+ colors, hats, hearts and Mystery Eggs (20 rare Blips), 25 cryptids,
-5 kaiju, 5 worlds with 10 World Legends, seasons and weather, games of ball and tag, sound effects, the Night Shift
+**Everything in Blipville:** 260 Blips and 790+ colors, hats, hearts and Mystery Eggs (20 rare Blips), 25 cryptids,
+5 kaiju, 10 ghosts, 5 worlds with 10 World Legends, 20 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 
 **Updating?** Blipville (and Blipville Redux) will offer this update by itself: just say yes. Your pets, hearts,

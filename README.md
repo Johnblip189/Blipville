@@ -8,7 +8,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**249 kinds of pets · 790+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
+**260 kinds of pets · 820+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
 
 ## ✨ New in 1.0
 
@@ -17,6 +17,9 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - 🚫 **No more black flashes.** Blipville used to hide a "magic pink" background that Windows had to repaint whenever
   you clicked a pet or opened a menu, and sometimes it showed black for a moment. 1.0 runs on the **Redux engine**: it
   draws every pet as a real see-through picture and hands it straight to Windows, so nothing gets repainted.
+- 👻 **Ghosts:** a new tier of 10 ghosts that drift by at night. Click one while it glows! (Or light a 🕯️ Spirit Candle.)
+- 🏆 **Trophies:** 20 of them, each worth bonus hearts. Right-click a pet → 🏆 Trophies.
+- 🎨 **Redraws** of the 10 roughest Blips.
 - 🔧 **Patch**, a free thank-you gift for waiting out the maintenance (until Tuesday, November 24).
 - 🛠️ **Maintenance mode**, so a big fix never leaves you with a broken app.
 - 💾 Your pets, hearts, worlds and unlocks come with you. Blipville and Blipville Redux both offer the update by themselves.

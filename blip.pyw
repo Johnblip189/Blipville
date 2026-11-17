@@ -3191,7 +3191,19 @@ TAB_KINDS = {
 }
 TAB_GROUPS = [('Dinos 🦕', ['Triceratops', 'Stegosaurus', 'Brachiosaurus', 'Pterodactyl', 'Raptor', 'Ankylosaurus', 'Spinosaurus', 'Parasaurolophus', 'Dimetrodon', 'Iguanodon']), ('Ocean 🌊', ['Seahorse', 'Stingray', 'Squid', 'Lobster', 'Shrimp', 'Anglerfish', 'Eel', 'Swordfish', 'Sea Urchin', 'Hermit Crab']), ('Sweets 🍩', ['Donut', 'Cupcake', 'Ice Cream', 'Macaron', 'Pudding', 'Gummy Bear', 'Dumpling', 'Toast', 'Marshmallow', 'Taco']), ('Space 🚀', ['Space Jelly', 'Astronaut', 'UFO', 'Star', 'Moon', 'Comet', 'Ringed Planet', 'Rocket', 'Space Slug', 'Black Hole']), ('Plants 🌱', ['Bamboo', 'Daisy', 'Sunflower', 'Tulip', 'Flytrap', 'Acorn', 'Pumpkin', 'Pinecone', 'Clover', 'Lotus'])]
 
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS}.items():
+# Gifts 🎁: thank-you Blips handed out for a limited time. Once you have one, it's yours forever.
+GIFTS = {
+ "Beta Buddy": {"eyes": 5, "move": "hop", "speed": 1.1,
+  "lines": ["thanks for playing the beta!! <3", "party time! 🎉", "i'm a limited edition", "rc1 crew, represent", "you were here from the start"],
+  "body": ['.......yy.......', '......hhhh......', '.o...hshhsh...o.', '.ooohhhhhhhhooo.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo',
+           'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'],
+  "colors": [{"name": "Gold", "o": "#4a3006", "b": "#ffd23a", "h": "#ff5a8a", "s": "#ffffff", "y": "#5ae0ff", "p": "#ff9a6a", "e": "#2a1a04"},
+             {"name": "Silver", "o": "#3a3a4a", "b": "#d8dce8", "h": "#7a5ad8", "s": "#ffffff", "y": "#ffd23a", "p": "#ffb0c8", "e": "#1a1a2a"},
+             {"name": "Holo", "o": "#4a2a5a", "b": "#e8c8ff", "h": "#5ad8c8", "s": "#ffffff", "y": "#ff8ac8", "p": "#ff8ab0", "e": "#2a0a3a"}]},
+}
+GIFT_NOW = "Beta Buddy"     # the gift new players get right now. Set to None to end the giveaway.
+
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
@@ -3201,9 +3213,10 @@ NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
+GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
-KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + GIFT_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 BEACON_COST = 100                 # hearts per Kaiju Beacon
@@ -3497,7 +3510,7 @@ class Blip:
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
         groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
                   + list(TAB_GROUPS)
-                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS)]
+                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Gifts 🎁", GIFT_KINDS)]
                   + ([("My Blips ⭐", CUSTOM_KINDS)] if CUSTOM_KINDS else []))
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
@@ -3509,6 +3522,8 @@ class Blip:
                 self.cryptid_menu = sub
             elif members is KAIJU_KINDS:
                 self.kaiju_menu = sub
+            elif members is GIFT_KINDS:
+                self.gift_menu = sub
             else:
                 for k in members:
                     sub.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
@@ -3757,6 +3772,12 @@ class Blip:
         self.kaiju_menu.add_command(label=f"📡 Switch on a Kaiju Beacon… ({BEACON_COST} 💖, {caught}/{len(KAIJU_KINDS)} caught)",
                                     command=lambda: self.app.set_beacon(self.root))
         self.kaiju_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
+        self.gift_menu.delete(0, "end")
+        for k in GIFT_KINDS:
+            if self.app.is_unlocked(k):
+                self.gift_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            else:
+                self.gift_menu.add_command(label="🔒 ???  (a limited-time gift)", state="disabled")
         self.menu.entryconfigure(self.hearts_entry, label=f"💖 {self.app.hearts()} hearts")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
@@ -4661,7 +4682,8 @@ class Collection:
         self.win.attributes("-topmost", True)
         self.groups = [("Rare ✨  hatch them from Mystery Eggs", RARE_KINDS), ("Night Shift 🌙  survive the nights", NIGHT_SHIFT),
                        ("Cryptids 👣  spot them wandering by, then click them!", CRYPTID_KINDS),
-                       (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS)]
+                       (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS),
+                       ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=h, bg="#1d1a2e", highlightthickness=0)
         self.canvas.pack(padx=6, pady=6)
@@ -4673,7 +4695,7 @@ class Collection:
         return self.app.save.setdefault("peeked", [])
 
     def how(self, k):
-        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "hatch from an egg"
+        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "a limited-time gift" if k in GIFTS else "hatch from an egg"
 
     def draw(self):
         c = self.canvas
@@ -5470,18 +5492,35 @@ class App:
         messagebox.showinfo("Cryptid Lure 🔦", "You set out a Cryptid Lure…\n\nWatch the bottom of your screen. "
                             "When a shadow with glowing eyes sneaks by, click it before it gets away!", parent=parent)
 
+    def give_gift(self):
+        """Hand out the current thank-you Blip, once, to everyone who opens this version."""
+        if not GIFT_NOW or GIFT_NOW in self.save.get("gifts", []):
+            return False
+        self.save.setdefault("gifts", []).append(GIFT_NOW)
+        write_save(self.save)
+        pet = self.add_pet(GIFT_NOW, greet=False)
+        if pet:
+            pet.say(f"surprise!! i'm {GIFT_NOW}, a gift for you 🎁", 5)
+            pet.set_face("happy", 2)
+            pet.burst("heart", 8)
+        self.sound.play("fanfare")
+        return True
+
     def show_notice(self):
         """A one-time message for a new phase of Blipville."""
         if self.save.get("notice_seen") == NOTICE_ID:
+            if self.give_gift():
+                from tkinter import messagebox
+                messagebox.showinfo("A gift for you! 🎁", f"Thanks for playing Blipville! Here's {GIFT_NOW}, a limited-edition Blip.\n\n"
+                                    "Find it any time under Change kind → Gifts 🎁.", parent=self.root)
             return
         self.save["notice_seen"] = NOTICE_ID
         write_save(self.save)
         from tkinter import messagebox
-        messagebox.showinfo("Blipville 0.4 RC1: almost 1.0! 💜", NOTICE_TEXT, parent=self.root)
-        if self.pets:
-            self.pets[0].say("thank you for playing!! <3", 4)
-            self.pets[0].set_face("happy", 2)
-            self.pets[0].burst("heart", 8)
+        gift = self.give_gift()
+        text = NOTICE_TEXT + (f"\n\n🎁 As a thank-you, here's {GIFT_NOW}: a limited-edition Blip, only given out during RC1. "
+                              "Find it any time under Change kind → Gifts 🎁." if gift else "")
+        messagebox.showinfo("Blipville 0.4 RC1: almost 1.0! 💜", text, parent=self.root)
 
     def set_beacon(self, parent):
         from tkinter import messagebox
@@ -5500,6 +5539,8 @@ class App:
                             parent=parent)
 
     def is_unlocked(self, kind):
+        if kind in GIFTS:
+            return kind in self.save.get("gifts", [])
         if kind in KAIJU:
             return kind in self.save.get("kaiju", [])
         if kind in CRYPTIDS:

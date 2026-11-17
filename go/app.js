@@ -8,6 +8,7 @@
   const NIGHT = new Set(D.groups.nightShift);
   const CRYPT = new Set(D.groups.cryptids);
   const KAIJU = new Set(D.groups.kaiju || []), HITS = D.kaijuHits || 3;
+  const GIFTS = new Set(D.groups.gifts || []);
   const EGG_COST = D.eggCost;
   let view = window;                                   // the window the town is in (main page or the pop-out)
   const doc = () => view.document;
@@ -22,7 +23,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [] };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
@@ -97,7 +98,7 @@
     if (on && !quiet) sfx("boop");
   }
 
-  const isUnlocked = (k) => KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const isUnlocked = (k) => GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -842,9 +843,10 @@
     const grid_ = $("zooGrid"); grid_.innerHTML = "";
     const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ...(D.groups.tabs || []), ["Rare ✨ (hatch from eggs)", D.groups.rare],
                     ["Night Shift 🌙 (survive the nights)", D.groups.nightShift], ["Cryptids 👣 (spot them in town)", D.groups.cryptids],
-                    [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []]];
+                    [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []],
+                    ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const cells = document.createElement("div"); cells.className = "zooCells";
@@ -1092,6 +1094,14 @@
     const fresh = !save.hatched.length && !save.cryptids.length && save.hearts < 20;
     save.noticeSeen = "rc1-0.4";
     if (!fresh) setTimeout(() => { toast("💜 Thanks for playing the Blipville beta! This is Release Candidate 1, the last step before 1.0, with 100 new Blips and 5 new tabs.", 7); say(pets[0], "thank you for playing!! <3", 4); }, 1200);
+  }
+  if (D.giftNow && !save.gifts.includes(D.giftNow)) {        // limited-time thank-you Blip
+    save.gifts.push(D.giftNow);
+    setTimeout(() => {
+      const g = addPet(D.giftNow, { quiet: true });
+      if (g) { say(g, `surprise!! i'm ${D.giftNow}, a gift for you 🎁`, 5); setFace(g, "happy", 2); burst(g, "heart", 8); }
+      toast(`🎁 A gift for you: ${D.giftNow}, a limited-edition Blip! It's in your 📖 Zoo under Gifts.`, 6);
+    }, 2600);
   }
   const today = new Date().toISOString().slice(0, 10);
   if (save.lastDay !== today) {

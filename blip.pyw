@@ -3475,6 +3475,21 @@ def hat_cells(v, hat, shift=0, body=None):
         top = min(v["eyes"] + 5, 11) + shift + hat.get("y", 0)
     return [(top + r, left + c, hat["colors"][ch]) for r, row in enumerate(rows) for c, ch in enumerate(row) if ch != "."]
 
+# Accessory colors: any hat or outfit's main color can be swapped (free). And a 2nd accessory slot, once, for the town.
+ACCESSORY_TINTS = [("Original", None), ("Red", "#e8303a"), ("Blue", "#3a8aff"), ("Green", "#4ac85a"), ("Gold", "#ffd23a"),
+                   ("Pink", "#ff6fae"), ("Purple", "#8a5aff"), ("Black", "#2a2a32"), ("White", "#f4f4fa")]
+SLOT2_COST = 50
+
+
+def tinted(hat, tint):
+    """A copy of an accessory with its main color swapped (tint = index into ACCESSORY_TINTS; 0 = original)."""
+    color = ACCESSORY_TINTS[int(tint or 0) % len(ACCESSORY_TINTS)][1]
+    if not color:
+        return hat
+    main = next(iter(hat["colors"]))
+    return {**hat, "colors": {**hat["colors"], main: color}}
+
+
 NIGHT_LINES = ["*eyes glow in the dark*", "the night shift starts now", "is anyone still awake?",
                "*whirr... click*", "we're more active at night", "don't mind me. just wandering."]
 
@@ -3983,6 +3998,8 @@ class Blip:
         self.last_hungry_whine = 0.0
         self.last_pet_reward = -99.0
         self.hat = None                            # what it's wearing (from the hat shop)
+        self.hat2 = None                           # a second item, once the 2nd accessory slot is unlocked
+        self.tints = {}                            # item name -> color (index into ACCESSORY_TINTS)
         self.playing = False                       # busy with a game of catch / tag (the App moves it)
         self.nap_buddy = False                     # walking over to nap next to a sleeping friend
         self.last_play = -99.0
@@ -4082,6 +4099,34 @@ class Blip:
         self.place()
 
     # ------------------------------------------------------------------ helpers
+    def worn(self):
+        """What it's wearing, with colors: [(item, tint), ...] (one or two items)."""
+        return [(n, self.tints.get(n, 0)) for n in (self.hat, self.hat2) if n in HATS]
+
+    def wear(self, name):
+        """Put an item on. With the 2nd slot it goes next to the other item, unless both go in the same spot."""
+        if name in (self.hat, self.hat2):
+            return
+        two = bool(self.app.save.get("slot2"))
+        same = next((n for n in (self.hat, self.hat2) if n in HATS and HATS[n]["slot"] == HATS[name]["slot"]), None)
+        if same:                                   # a hat replaces a hat, glasses replace glasses…
+            if self.hat == same:
+                self.hat = name
+            else:
+                self.hat2 = name
+        elif not two or self.hat is None:
+            self.hat, self.hat2 = name, (self.hat2 if two else None)
+        elif self.hat2 is None:
+            self.hat2 = name
+        else:
+            self.hat, self.hat2 = self.hat2, name
+
+    def take_off(self, name):
+        if self.hat == name:
+            self.hat, self.hat2 = self.hat2, None
+        elif self.hat2 == name:
+            self.hat2 = None
+
     def place(self):
         pos = (int(self.wx), int(self.wy))
         if pos == getattr(self, "_placed", None):
@@ -4625,7 +4670,8 @@ class Blip:
         talking = self.bubble[0] if self.bubble and now < self.bubble[1] else None
         if not talking:
             self.bubble = None
-        key = (tuple(tuple(r) for r in art), oy, self.hat, self.state == "sleep" or now < self.squash_until,
+        key = (tuple(tuple(r) for r in art), oy, self.hat, self.hat2, tuple(sorted(self.tints.items())),
+               self.state == "sleep" or now < self.squash_until,
                self.kind, self.name if self.app.name_tags.get() else None, talking)
         if key != getattr(self, "_drawn", None):
             self._drawn = key
@@ -4660,9 +4706,9 @@ class Blip:
 
         # hat / glasses / scarf
         hat_top = 0
-        if self.hat in HATS:
-            shift = 1 if (self.state == "sleep" or now < self.squash_until) else 0
-            for row, col, color in hat_cells(VARIANTS[self.kind], HATS[self.hat], shift):
+        shift = 1 if (self.state == "sleep" or now < self.squash_until) else 0
+        for name, tint in self.worn():
+            for row, col, color in hat_cells(VARIANTS[self.kind], tinted(HATS[name], tint), shift):
                 c.create_rectangle(ox + col * SCALE, oy + row * SCALE, ox + (col + 1) * SCALE, oy + (row + 1) * SCALE,
                                    fill=color, outline="", tags=("pet",))
                 hat_top = min(hat_top, row * SCALE)
@@ -4921,7 +4967,7 @@ def write_save(data):
         pass
 
 
-def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=(), hat=None, silhouette=None):
+def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=(), hat=None, silhouette=None, wear=None):
     """Draw a pet's pixel art on any canvas (top-left at x, y). Used by the minigame."""
     v = VARIANTS[kind]
     colors = kind_colors(kind)
@@ -4963,8 +5009,10 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
             canvas.create_rectangle(x + xx * scale, y + yy * scale, x + (x2 + 1) * scale, y + (yy + 1) * scale,
                                     fill=col, outline="", tags=tags)
             xx = x2 + 1
-    if hat in HATS:
-        for row, col, color in hat_cells(v, HATS[hat]):
+    for name, tint in (wear if wear is not None else ([(hat, 0)] if hat else [])):     # wear: [(item, tint), ...]
+        if name not in HATS:
+            continue
+        for row, col, color in hat_cells(v, tinted(HATS[name], tint)):
             canvas.create_rectangle(x + col * scale, y + row * scale, x + (col + 1) * scale, y + (row + 1) * scale,
                                     fill=color, outline="", tags=tags)
 
@@ -6197,8 +6245,9 @@ class Sound:
 
 # ----------------------------------------------------------------------------- hat shop
 class HatShop:
-    """Try on, buy and wear hats & outfits for one pet."""
-    COLS, CELL_W, CELL_H = 4, 132, 150
+    """Try on, buy and wear hats & outfits for one pet. Owned items can be recolored (free), and with the 2nd accessory
+    slot a pet can wear two things at once (in different spots: head, face, neck)."""
+    COLS, CELL_W, CELL_H = 4, 132, 172
 
     def __init__(self, app, pet):
         self.app, self.pet = app, pet
@@ -6209,10 +6258,12 @@ class HatShop:
         self.win.attributes("-topmost", True)
         names = [n for n in HATS if hat_in_shop(n)]
         rows = -(-len(names) // self.COLS)
-        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=rows * self.CELL_H + 70,
+        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=rows * self.CELL_H + 90,
                                 bg="#1d1a2e", highlightthickness=0)
         self.canvas.pack(padx=6, pady=6)
         self.canvas.tag_bind("cell", "<Button-1>", self.on_click)
+        self.canvas.tag_bind("swatch", "<Button-1>", self.on_swatch)
+        self.canvas.tag_bind("slot2", "<Button-1>", lambda e: self.buy_slot2())
         self.names = names
         self.draw()
 
@@ -6225,37 +6276,93 @@ class HatShop:
         c.create_text(16, 22, anchor="w", text=f"🎩 Dress up {pet.name}", fill="#ffffff", font=("Segoe UI", 14, "bold"))
         c.create_text(self.COLS * self.CELL_W + 4, 22, anchor="e", text=f"💖 {self.app.hearts()}", fill="#ff9fc0",
                       font=("Segoe UI", 13, "bold"))
+        if self.app.save.get("slot2"):
+            c.create_text(16, 48, anchor="w", text="✨ 2 accessory slots: a hat + glasses or a scarf",
+                          fill="#9ad8a8", font=("Segoe UI", 9, "bold"))
+        else:
+            c.create_rectangle(12, 36, 330, 60, fill="#3a2a5a", outline="#ffd23a", width=2, tags=("slot2",))
+            c.create_text(171, 48, text=f"🔓 Unlock a 2nd accessory slot · {SLOT2_COST} 💖", fill="#ffd23a",
+                          font=("Segoe UI", 9, "bold"), tags=("slot2",))
         season = current_season()
         if any(HATS[n].get("season") == season for n in self.names):
-            c.create_text(16, 46, anchor="w", text=f"✨ Seasonal items are here for {season}!", fill="#ffd23a",
+            c.create_text(self.COLS * self.CELL_W + 4, 48, anchor="e", text=f"✨ {season.title()} items are in!", fill="#ffd23a",
                           font=("Segoe UI", 9, "bold"))
+        self.cells, self.swatches = {}, {}
         for i, name in enumerate(self.names):
             hat = HATS[name]
             x0 = 10 + (i % self.COLS) * self.CELL_W
-            y0 = 60 + (i // self.COLS) * self.CELL_H
-            wearing, owned = pet.hat == name, name in self.owned()
+            y0 = 72 + (i // self.COLS) * self.CELL_H
+            wearing, owned = name in (pet.hat, pet.hat2), name in self.owned()
             tag = f"cell{i}"
+            self.cells[tag] = name
             c.create_rectangle(x0, y0, x0 + self.CELL_W - 10, y0 + self.CELL_H - 10, outline="#ffd23a" if wearing else "#3a3360",
                                width=3 if wearing else 2, fill="#2b2547", tags=("cell", tag))
-            draw_sprite(c, pet.kind, pet.palette, x0 + 27, y0 + 34, 4, tags=("cell", tag), hat=name)
+            draw_sprite(c, pet.kind, pet.palette, x0 + 27, y0 + 34, 4, tags=("cell", tag), wear=[(name, pet.tints.get(name, 0))])
             c.create_text(x0 + (self.CELL_W - 10) / 2, y0 + 104, text=name, fill="#ffffff", font=("Segoe UI", 10, "bold"),
                           tags=("cell", tag))
             label = "✓ wearing · click to remove" if wearing else ("owned · click to wear" if owned else f"💖 {hat['price']}")
             color = "#ffd23a" if wearing else ("#9ad8a8" if owned else "#ff9fc0")
             c.create_text(x0 + (self.CELL_W - 10) / 2, y0 + 122, text=label, fill=color, font=("Segoe UI", 7, "bold"),
                           width=self.CELL_W - 18, justify="center", tags=("cell", tag))
-        self.cells = {f"cell{i}": n for i, n in enumerate(self.names)}
+            if owned:                                          # color swatches (free)
+                main = next(iter(hat["colors"].values()))
+                for t, (tname, col) in enumerate(ACCESSORY_TINTS):
+                    sx, sy = x0 + 8 + t * 12, y0 + 138
+                    stag = f"sw{i}_{t}"
+                    self.swatches[stag] = (name, t)
+                    chosen = pet.tints.get(name, 0) == t
+                    c.create_rectangle(sx, sy, sx + 10, sy + 10, fill=col or main, outline="#ffffff" if chosen else "#14121e",
+                                       width=2 if chosen else 1, tags=("swatch", stag))
+
+    def tag_of(self, table):
+        return next((t for t in self.canvas.gettags("current") if t in table), None)
+
+    def on_swatch(self, e):
+        tag = self.tag_of(getattr(self, "swatches", {}))
+        if not tag:
+            return
+        name, t = self.swatches[tag]
+        pet = self.pet
+        pet.tints[name] = t
+        if t == 0:
+            pet.tints.pop(name, None)
+        pet.wear(name)
+        pet.say(f"ooh, {ACCESSORY_TINTS[t][0].lower()}!" if t else "back to the classic look!", 2)
+        pet.set_face("happy", 1.2)
+        self.app.sound.play("pop")
+        self.app.save_town()
+        self.draw()
+
+    def buy_slot2(self):
+        from tkinter import messagebox
+        if self.app.save.get("slot2"):
+            return
+        if self.app.hearts() < SLOT2_COST:
+            messagebox.showinfo("2nd accessory slot", f"The 2nd accessory slot costs {SLOT2_COST} 💖. You have {self.app.hearts()}.",
+                                parent=self.win)
+            return
+        if not messagebox.askyesno("2nd accessory slot", f"Unlock a 2nd accessory slot for {SLOT2_COST} 💖?\n\n"
+                                   "Every Blip in your town can then wear two things at once, like a hat and sunglasses.",
+                                   parent=self.win):
+            return
+        self.app.save["hearts"] = self.app.hearts() - SLOT2_COST
+        self.app.save["slot2"] = True
+        write_save(self.app.save)
+        self.app.sound.play("fanfare")
+        self.pet.say("two accessories?! fancy!", 3)
+        self.pet.set_face("happy", 2)
+        self.draw()
 
     def on_click(self, e):
-        tag = next((t for t in self.canvas.gettags("current") if t in getattr(self, "cells", {})), None)
+        tag = self.tag_of(getattr(self, "cells", {}))
         if not tag:
             return
         name, pet = self.cells[tag], self.pet
-        if pet.hat == name:
-            pet.hat = None
+        if name in (pet.hat, pet.hat2):
+            pet.take_off(name)
             pet.say("back to basics!", 2)
         elif name in self.owned():
-            pet.hat = name
+            pet.wear(name)
             pet.say(random.choice(["how do i look?", "so stylish!", "*strikes a pose*"]), 2.5)
             pet.set_face("happy", 1.5)
         else:
@@ -6268,11 +6375,10 @@ class HatShop:
             self.app.save["hearts"] = self.app.hearts() - price
             self.owned().append(name)
             write_save(self.app.save)
-            pet.hat = name
+            pet.wear(name)
             pet.say(f"a new {name.lower()}! thank you!!", 3)
             self.app.sound.play("coin")
             pet.set_face("happy", 2)
-            pet.burst("heart", 5)
         self.app.save_town()
         self.draw()
 
@@ -6755,7 +6861,8 @@ class App:
 
     # ----- remembering your town between launches
     def town_snapshot(self):
-        return [{"kind": p.kind, "color": p.palette, "name": p.name, "hat": getattr(p, "hat", None),
+        return [{"kind": p.kind, "color": p.palette, "name": p.name, "hat": getattr(p, "hat", None), "hat2": p.hat2,
+                 "tints": {n: t for n, t in p.tints.items() if t},
                  "hunger": round(p.hunger), "energy": round(p.energy)} for p in self.pets]
 
     def save_town(self):
@@ -6779,6 +6886,8 @@ class App:
             pet.palette = int(t.get("color", 0)) % len(kind_colors(kind))
             pet.color_var.set(pet.palette)
             pet.hat = t.get("hat")
+            pet.hat2 = t.get("hat2") if self.save.get("slot2") else None
+            pet.tints = {n: int(v) for n, v in (t.get("tints") or {}).items() if n in HATS}
             pet.hunger = min(100.0, float(t.get("hunger", 10)) + hours_away * 8)    # they got peckish while you were away
             pet.energy = float(t.get("energy", 100))
             pet.say(random.choice(["i'm back!", "missed you!", "*stretches* hi again!", "good to see you!"]), 3)

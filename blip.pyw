@@ -3601,6 +3601,7 @@ class Blip:
         talk.add_command(label="🐾 Suggest an animal…", command=self.suggest)
         talk.add_command(label="💡 Suggest an idea…", command=lambda: self.open_link(IDEA_URL, "ooh, what's your idea?"))
         talk.add_command(label="🆘 Get help / report a problem…", command=lambda: self.open_link(HELP_URL, "let's get you some help!"))
+        talk.add_command(label="📋 Copy error log (for bug reports)", command=self.copy_log)
         self.menu.add_cascade(label="💬 Suggestions & help", menu=talk)
         self.menu.add_command(label="💖 Donate / support Blipville…", command=self.support)
         self.menu.add_separator()
@@ -3728,6 +3729,19 @@ class Blip:
             webbrowser.open(SUPPORT_URL)
         except Exception:  # noqa: BLE001
             self.say("couldn't open the browser :(", 2.5)
+
+    def copy_log(self):
+        try:
+            with open(log_path(), encoding="utf-8", errors="replace") as f:
+                text = "".join(f.readlines()[-80:])
+        except OSError:
+            text = ""
+        if not text.strip():
+            self.say("no errors logged! 🎉", 3)
+            return
+        self.root.clipboard_clear()
+        self.root.clipboard_append(text)
+        self.say("copied the error log! paste it in a bug report 📋", 4)
 
     def open_link(self, url, line):
         self.say(line, 2.5)
@@ -4332,6 +4346,26 @@ class Blip:
 
 # ----------------------------------------------------------------------------- save file
 UNLOCKS = {"Robo Bear": 1, "Robo Bunny": 2, "Robo Hen": 3}   # kind -> Night Shift night you must survive
+
+
+def log_path():
+    return os.path.join(os.path.dirname(save_path()), "blipville.log")
+
+
+def log(message):
+    """Problems go here (there's no console in the .exe). Right-click → Suggestions & help → Copy error log."""
+    try:
+        path = log_path()
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        if os.path.exists(path) and os.path.getsize(path) > 200_000:      # keep it small
+            with open(path, encoding="utf-8", errors="replace") as f:
+                keep = f.read()[-100_000:]
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(keep)
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {APP_VERSION} {APP_BUILT} | {message.rstrip()}\n")
+    except OSError:
+        pass
 
 
 def save_path():
@@ -5876,6 +5910,8 @@ class App:
         self.sound_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("sound", False)))
         self.sound = Sound(self)
         self.updater = Updater(self)
+        self.root.report_callback_exception = lambda *exc: log("error in a click or timer:\n" + "".join(__import__("traceback").format_exception(*exc)))
+        log(f"started on {sys.platform}, Python {sys.version.split()[0]}")
         load_custom_blips()
         self.game = None
         self.plays = []                            # games of catch / tag going on right now
@@ -6282,22 +6318,31 @@ class App:
                 b.facing = -a.facing
 
     def tick(self):
+        """One frame. A problem in one pet or one part of the game is written to the log and skipped: it must never
+        stop the loop, or every window freezes (and on Windows a frozen see-through window can turn black)."""
         now = time.monotonic()
         try:
-            for pet in list(self.pets):
-                pet.step(now)
-            self.socialize(now)
-            self.play_step(now)
-            self.cryptid_step(now)
-            if now - self.last_town_save > 15:     # remember the town every so often
-                self.save_town()
-                self.last_town_save = now
-            if now - self.last_topmost > 60:       # stay above other windows (rarely: it makes Windows repaint them)
-                for pet in self.pets:
-                    pet.root.attributes("-topmost", True)
-                self.last_topmost = now
+            if not self.root.winfo_exists():
+                return
         except tk.TclError:
-            return
+            return                                  # the app is closing
+        start = time.perf_counter()
+        for pet in list(self.pets):
+            self.safely(pet.step, now, what=f"{pet.kind}")
+        self.safely(self.socialize, now, what="pets playing")
+        self.safely(self.play_step, now, what="games")
+        self.safely(self.cryptid_step, now, what="sightings")
+        if now - self.last_town_save > 15:         # remember the town every so often
+            self.safely(self.save_town, what="saving")
+            self.last_town_save = now
+        if now - self.last_topmost > 60:           # stay above other windows (rarely: it makes Windows repaint them)
+            for pet in self.pets:
+                self.safely(pet.root.attributes, "-topmost", True, what="stay on top")
+            self.last_topmost = now
+        took = time.perf_counter() - start
+        if took > 0.25 and now - getattr(self, "last_slow_log", 0) > 60:
+            self.last_slow_log = now
+            log(f"slow frame: {took * 1000:.0f} ms with {len(self.pets)} pets, {len(self.sightings)} sightings")
         # Keep a steady beat, but always leave Windows a little gap to repaint the see-through windows (with no gap
         # they can flash black). If this PC falls behind, skip ahead instead of rushing to catch up.
         step, t = 1 / FPS, time.monotonic()
@@ -6305,6 +6350,18 @@ class App:
         if self.next_tick < t + 0.008:
             self.next_tick = t + 0.008
         self.root.after(int((self.next_tick - t) * 1000), self.tick)
+
+    def safely(self, fn, *args, what=""):
+        try:
+            return fn(*args)
+        except Exception:  # noqa: BLE001
+            import traceback
+            key = (what, traceback.format_exc().splitlines()[-1])
+            seen = self.__dict__.setdefault("_logged", {})
+            if time.monotonic() - seen.get(key, -999) > 60:     # don't flood the log with the same error every frame
+                seen[key] = time.monotonic()
+                log(f"error in {what}:\n{traceback.format_exc()}")
+            return None
 
     def run(self):
         self.root.mainloop()

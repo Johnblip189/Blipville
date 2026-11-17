@@ -3882,10 +3882,15 @@ class Blip:
         for i, col in enumerate(kind_colors(self.kind)):
             self.color_menu.add_radiobutton(label=col["name"], value=i, variable=self.color_var, command=self.pick_color)
         self.menu.entryconfigure(2, label="Wake up" if self.state == "sleep" else "Nap time")
+        # While a menu is open, Windows pauses the app, so windows can't repaint (a see-through window that needs a
+        # repaint then shows black). Hold this pet still while its menu is open, and repaint everything right after.
+        if self.state == "walk":
+            self.set_state("idle", 3)
         try:
             self.menu.tk_popup(e.x_root, e.y_root)
         finally:
             self.menu.grab_release()
+            self.app.repaint_now()
 
     # ------------------------------------------------------------------ brain
     def decide(self, now):
@@ -6350,6 +6355,18 @@ class App:
         if self.next_tick < t + 0.008:
             self.next_tick = t + 0.008
         self.root.after(int((self.next_tick - t) * 1000), self.tick)
+
+    def repaint_now(self):
+        """Redraw every window immediately (used right after a menu closes)."""
+        now = time.monotonic()
+        for p in self.pets:
+            p._drawn = None
+            self.safely(p.draw, now, what="repaint")
+        try:
+            self.root.update_idletasks()
+        except tk.TclError:
+            pass
+        self.root.after(60, lambda: self.safely(self.root.update_idletasks, what="repaint"))
 
     def safely(self, fn, *args, what=""):
         try:

@@ -3473,11 +3473,13 @@ NOTICE_TEXT = ("Thank you so much for playing the Blipville beta! 💜\n\n"
                "Dinos, Ocean, Sweets, Space and Plants. Expect lots of new stuff (and the odd bug).\n\n"
                "Your pets, hearts and unlocks all come with you. Have fun!")
 if REDUX:
-    NOTICE_ID = "redux-0.5"
-    NOTICE_TEXT = ("Welcome to Blipville Redux! 💜\n\n"
-                   "It's the same Blipville, with a brand-new way of drawing your pets: every window is a real see-through "
-                   "picture now, so no more black flashes when you click them or open a menu.\n\n"
-                   "Your pets, hearts and unlocks all come with you. Have fun!")
+    NOTICE_ID = "redux-0.5.1"
+    NOTICE_TEXT = ("👻 Ghosts are here!\n\n"
+                   "A brand-new tier: 10 ghosts drift past haunted houses and graveyards at night (7 PM to 7 AM). They fade in "
+                   "and out, so you can only befriend one while it's glowing. Click fast!\n\n"
+                   "Can't wait for night? Right-click a pet → 🕯️ Light a Spirit Candle (40 💖) and they'll come out in the "
+                   "daytime for 10 minutes.\n\n"
+                   "And Blipville 1.0 is coming Sunday, November 22. 💜")
 IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
 HELP_URL = "https://github.com/Johnblip189/blipville/issues/new?template=help.yml"   # links live in the README, so they can change anytime
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",
@@ -6827,7 +6829,7 @@ class App:
         from tkinter import messagebox
         given = self.give_gift()
         text = NOTICE_TEXT + ("\n\n" + self.gift_text(given) if given else "")
-        messagebox.showinfo("Blipville Redux 💜" if REDUX else "Blipville 0.4 RC2: almost 1.0! 💜", text, parent=self.root)
+        messagebox.showinfo("Blipville Redux: ghosts! 👻" if REDUX else "Blipville 0.4 RC2: almost 1.0! 💜", text, parent=self.root)
 
     def world(self):
         """The world your town is visiting right now (or None for home)."""

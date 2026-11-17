@@ -12,15 +12,16 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 **249 kinds of pets · 790+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
 
-## ✨ New: Blipville Redux (v0.5, early beta)
+## ✨ New: Blipville Redux (v0.5.1, early beta)
 
-**[⬇️ Download Blipville-Redux.exe](https://github.com/Johnblip189/Blipville/releases/download/v0.5.0-redux/Blipville-Redux.exe)**: the Windows app with a brand-new way of drawing your pets.
+**[⬇️ Download Blipville-Redux.exe](https://github.com/Johnblip189/Blipville/releases/download/v0.5.1-redux/Blipville-Redux.exe)**: the Windows app with a brand-new way of drawing your pets.
 
 - 🚫 **No more black flashes.** The classic app hid a "magic pink" background that Windows had to repaint whenever you
   clicked a pet or opened a menu, and sometimes it showed black for a moment. Redux draws every pet as a real see-through
   picture and hands it straight to Windows, so nothing gets repainted.
 - 💾 **Same save**: your pets, hearts, worlds and unlocks come with you. Quit the classic app first so they don't both run.
 - 🧩 **Everything's still here**, and it updates itself like the classic app.
+- 👻 **New in v0.5.1: Ghosts!** 10 ghosts drift by at night and fade in and out: click one while it glows. A 🕯️ Spirit Candle calls them in the daytime.
 
 Redux is built from the same `blip.pyw` (with `EDITION = "redux"`). [More about Redux on the website](https://johnblip189.github.io/Blipville/#redux).
 
@@ -72,7 +73,7 @@ Redux is built from the same `blip.pyw` (with `EDITION = "redux"`). [More about 
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville Redux](https://github.com/Johnblip189/Blipville/releases/download/v0.5.0-redux/Blipville-Redux.exe)** (new, no black flashes), then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville Redux](https://github.com/Johnblip189/Blipville/releases/download/v0.5.1-redux/Blipville-Redux.exe)** (new, no black flashes), then double-click it. A little pet drops onto your taskbar. 🎉
 
 Prefer the classic app? [Blipville.exe (RC2)](https://github.com/Johnblip189/blipville/releases/download/v0.4.0-rc2/Blipville.exe) is still here.
 

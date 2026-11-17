@@ -51,6 +51,17 @@ jobs:
           --exclude-module PySide6.QtSql --exclude-module PySide6.QtTest
           recode/blipville_recode.py 2>&1 | Tee-Object -FilePath logs/3-build.txt
 
+      - name: Debug run (a console build with Qt's plugin messages on)
+        continue-on-error: true
+        run: |
+          pyinstaller --onefile --console --name Blipville-Recode-debug --add-data "recode/blipdata.json;." --exclude-module tkinter recode/blipville_recode.py 2>&1 | Out-File logs/5-debug-build.txt
+          $env:QT_DEBUG_PLUGINS = "1"
+          $p = Start-Process -FilePath "dist/Blipville-Recode-debug.exe" -PassThru -RedirectStandardOutput logs/5-debug-out.txt -RedirectStandardError logs/5-debug-err.txt
+          Start-Sleep -Seconds 15
+          "debug build still running after 15 s: $(-not $p.HasExited) (exit code $($p.ExitCode))" | Out-File logs/5-debug-summary.txt
+          if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+          Remove-Item dist/Blipville-Recode-debug.exe -ErrorAction SilentlyContinue
+
       - name: Smoke test (the app starts and keeps running)
         run: |
           $p = Start-Process -FilePath "dist/Blipville-Recode.exe" -PassThru
@@ -58,6 +69,7 @@ jobs:
           $alive = -not $p.HasExited
           "still running after 15 s: $alive (exit code $($p.ExitCode))" | Tee-Object -FilePath logs/4-smoke.txt
           Copy-Item "$env:APPDATA\Blipville\blipville-recode.log" logs/4-app-log.txt -ErrorAction SilentlyContinue
+          Copy-Item "$env:APPDATA\Blipville\blipville-recode-crash.txt" logs/4-crash.txt -ErrorAction SilentlyContinue
           if (-not $alive) { throw "The app closed right away" }
           Stop-Process -Id $p.Id -Force
           "size: $((Get-Item dist/Blipville-Recode.exe).Length)" | Out-File logs/4-smoke.txt -Append

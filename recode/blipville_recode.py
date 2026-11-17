@@ -2037,5 +2037,20 @@ class Updater:
         self.app.quit_all()
 
 
+def main():
+    # A hard crash (for example Qt failing to start) can't be caught normally; faulthandler writes where it happened.
+    try:
+        import faulthandler
+        os.makedirs(save_dir(), exist_ok=True)
+        main.crash_file = open(os.path.join(save_dir(), "blipville-recode-crash.txt"), "a", encoding="utf-8")
+        main.crash_file.write(f"\n--- {time.strftime('%Y-%m-%d %H:%M:%S')} {APP_VERSION} {APP_BUILT}\n")
+        main.crash_file.flush()
+        faulthandler.enable(main.crash_file)
+    except Exception:  # noqa: BLE001
+        pass
+    log(f"starting {APP_NAME} (frozen={getattr(sys, 'frozen', False)})")
+    return App().run()
+
+
 if __name__ == "__main__":
-    sys.exit(App().run())
+    sys.exit(main())

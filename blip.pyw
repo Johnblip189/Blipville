@@ -5548,7 +5548,7 @@ def is_newer(tag, asset, my_version=None, my_built=None, my_size=None):
             my_size = os.path.getsize(sys.executable)
         except OSError:
             my_size = None
-    if my_version == "dev":
+    if my_version == "dev" or my_version.endswith("-test"):     # source runs and test builds never "update"
         return False
     if tag != my_version:
         return True

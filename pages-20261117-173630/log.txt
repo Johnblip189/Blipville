@@ -1,0 +1,56 @@
+== settings before
+{
+  "url": "https://api.github.com/repos/Johnblip189/Blipville/pages",
+  "status": "built",
+  "cname": null,
+  "custom_404": false,
+  "html_url": "https://johnblip189.github.io/Blipville/",
+  "build_type": "workflow",
+  "source": {
+    "branch": "site",
+    "path": "/"
+  },
+  "public": true,
+  "protected_domain_state": null,
+  "pending_domain_unverified_at": null,
+  "https_enforced": true
+}
+== request a build
+{
+  "message": "The repository does not have a GitHub Pages site. See https://docs.github.com/v3/repos/pages/",
+  "documentation_url": "https://docs.github.com/rest/pages/pages#request-a-apiname-pages-build",
+  "status": "403"
+}
+== latest build (a minute later)
+{
+  "url": "https://api.github.com/repos/Johnblip189/Blipville/pages/builds/1375915503",
+  "status": "built",
+  "error": {
+    "message": null
+  },
+  "pusher": {
+    "login": "Johnblip189",
+    "id": 353547294,
+    "node_id": "U_kgDOFRK0Hg",
+    "avatar_url": "https://avatars.githubusercontent.com/u/353547294?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Johnblip189",
+    "html_url": "https://github.com/Johnblip189",
+    "followers_url": "https://api.github.com/users/Johnblip189/followers",
+    "following_url": "https://api.github.com/users/Johnblip189/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Johnblip189/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Johnblip189/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Johnblip189/subscriptions",
+    "organizations_url": "https://api.github.com/users/Johnblip189/orgs",
+    "repos_url": "https://api.github.com/users/Johnblip189/repos",
+    "events_url": "https://api.github.com/users/Johnblip189/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Johnblip189/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "commit": "dcb82942da1ea3d3614d4acd17a7cbfe5091c57e",
+  "duration": 19460,
+  "created_at": "2026-11-16T21:17:38Z",
+  "updated_at": "2026-11-16T21:17:57Z"
+}

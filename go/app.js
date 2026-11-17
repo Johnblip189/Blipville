@@ -1197,15 +1197,22 @@
     if (!fresh) setTimeout(() => { toast("💜 Thanks for playing the Blipville beta! This is Release Candidate 2, the last step before 1.0, with 100 new Blips and 5 new tabs.", 7); say(pets[0], "thank you for playing!! <3", 4); }, 1200);
   }
   const localDay = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-  const drops = (D.giftDrops || (D.giftNow ? [{ kind: D.giftNow, until: D.giftUntil, why: "" }] : []))   // limited-time thank-you Blips
-    .filter((d) => !save.gifts.includes(d.kind) && (!d.until || localDay() <= d.until));
+  // Limited-time thank-you Blips. A gift only counts as delivered once it has actually walked into town (or, with a full
+  // town, once the player was told it's in the Zoo), so reloading or closing the page early can't lose it.
+  if (!save.giftsDelivered) save.giftsDelivered = save.gifts.filter((k) => k !== "Patch");   // older saves: those already arrived
+  const drops = (D.giftDrops || (D.giftNow ? [{ kind: D.giftNow, until: D.giftUntil, why: "" }] : []))
+    .filter((d) => !save.giftsDelivered.includes(d.kind) && (!d.until || localDay() <= d.until || save.gifts.includes(d.kind)));
   drops.forEach((d, i) => {
-    save.gifts.push(d.kind);
     setTimeout(() => {
-      const g = addPet(d.kind, { quiet: true });
+      if (!save.gifts.includes(d.kind)) save.gifts.push(d.kind);
+      save.giftsDelivered.push(d.kind);
+      const here = pets.some((p) => p.kind === d.kind);
+      const g = here ? null : addPet(d.kind, { quiet: true });
       if (g) { say(g, `surprise!! i'm ${d.kind}, a gift for you 🎁`, 5); setFace(g, "happy", 2); burst(g, "heart", 8); }
-      toast(`🎁 ${d.why ? d.why + " " : ""}Here's ${d.kind}, a limited-edition Blip! It's in your 📖 Zoo under Gifts.`, 6);
-    }, 2600 + i * 6500);
+      toast(`🎁 ${d.why ? d.why + " " : ""}Here's ${d.kind}, a limited-edition Blip! ` +
+            (g || here ? "It's in your 📖 Zoo under Gifts too." : "Your town is full, so it's waiting in your 📖 Zoo under Gifts."), 7);
+      persist(true);
+    }, 2600 + i * 7500);
   });
   const today = new Date().toISOString().slice(0, 10);
   if (save.lastDay !== today) {

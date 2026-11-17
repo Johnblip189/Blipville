@@ -214,3 +214,14 @@ body.mini .card { padding: 10px; border-radius: 14px; }
 .worldRow button.here { background: #3a3260; color: var(--muted); }
 .worldRow button.locked { background: #4a3a10; color: #ffe08a; }
 .worldRow button.armed { background: #a83a6a; color: #fff; }
+
+/* trophies */
+#trophyGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 10px; }
+.trophy { background: var(--card2); border-radius: 14px; padding: 10px 6px 8px; display: flex; flex-direction: column; align-items: center;
+  gap: 4px; text-align: center; color: var(--muted); border: 2px solid transparent; }
+.trophy canvas { width: 48px; height: 44px; image-rendering: pixelated; }
+.trophy b { font-size: 12px; color: #b8b0d8; }
+.trophy small { font-size: 10px; line-height: 1.25; }
+.trophy.earned { border-color: #ffd23a55; }
+.trophy.earned b { color: #ffd23a; }
+.trophy.earned small { color: #9ad8a8; }

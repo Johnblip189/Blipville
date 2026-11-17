@@ -1,5 +1,884 @@
 {
  "kinds": {
+  "Abyssal Titan": {
+   "body": [
+    "y.o.y.o..o.y.o.y",
+    "..oo.oo..oo.oo..",
+    "...oooooooooo...",
+    "..obbsbbbbsbbo..",
+    ".obbbbbbbbbbbbo.",
+    "obbbbbbbbbbbbbbo",
+    "obgsbbbbbbbbsgbo",
+    "obgbllslllslbgbo",
+    "obbbllllllllbbbo",
+    "obsbllslllslbsbo",
+    ".obbbbbbbbbbbbo.",
+    ".obbo......obbo."
+   ],
+   "alt": null,
+   "eyes": 4,
+   "mouth": true,
+   "feet": null,
+   "dx": 0,
+   "move": "walk",
+   "speed": 0.8,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*the whole ocean rumbles*",
+    "i rose from the deepest trench",
+    "my glow lights up the abyss",
+    "tidal wave incoming! (a gentle one)",
+    "i am the deep"
+   ],
+   "colors": [
+    {
+     "name": "Abyss",
+     "o": "#020a1a",
+     "b": "#14305a",
+     "g": "#0a1e3a",
+     "l": "#4ae0e8",
+     "s": "#7affea",
+     "y": "#7affea",
+     "p": "#ff6ac0",
+     "e": "#fff27a"
+    },
+    {
+     "name": "Kraken",
+     "o": "#1a0614",
+     "b": "#6a1a4a",
+     "g": "#3a0a2a",
+     "l": "#ff9ad8",
+     "s": "#ffd23a",
+     "y": "#ffd23a",
+     "p": "#ffd23a",
+     "e": "#ffffff"
+    }
+   ],
+   "default": 0
+  },
+  "Ancient Nessie": {
+   "body": [
+    "...oyooooooyo...",
+    "..obbbbbbbbbbo..",
+    "..obbbbbbbbbbo..",
+    "..obbbbbbbbbbo..",
+    "..obpbbbbbbpbo..",
+    "...obbbbbbbbo...",
+    "....oobbbboo....",
+    "......obbo......",
+    "..sss.obbo.sss..",
+    ".obbbobbbbobbbo.",
+    "wwwwwwwwwwwwwwww",
+    "w.ww..ww..ww.ww."
+   ],
+   "alt": null,
+   "eyes": 2,
+   "mouth": false,
+   "feet": null,
+   "dx": 0,
+   "move": "float",
+   "speed": 1.1,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*the loch glows*",
+    "i was here before the castles",
+    "queen of the loch, at your service",
+    "splish… splash… legend",
+    "photograph me. i dare you."
+   ],
+   "colors": [
+    {
+     "name": "Ancient",
+     "o": "#0a1a2a",
+     "b": "#2a6aa8",
+     "p": "#8ad8ff",
+     "w": "#1a3a8a",
+     "y": "#ffd23a",
+     "s": "#8ad8ff",
+     "e": "#fff27a"
+    },
+    {
+     "name": "Golden",
+     "o": "#3a2a06",
+     "b": "#e8b83a",
+     "p": "#fff0a0",
+     "w": "#3a6ab8",
+     "y": "#ffffff",
+     "s": "#ff8a3a",
+     "e": "#3a1a04"
+    }
+   ],
+   "default": 0
+  },
+  "Astral Blip": {
+   "body": [
+    ".y.oo......oo.y.",
+    "..yobo....oboy..",
+    ".obbbooooooobbo.",
+    ".obbbbbsbbbbbbo.",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obsbbbbbbbbbbsbo",
+    "obbbbbllllbbbbbo",
+    "obbbblllllllbbbo",
+    ".obbbllllllbbbo.",
+    "..obbbbbbbbbbo.."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "float",
+   "speed": 1.1,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "i've seen the stars up close ✨",
+    "astral mode: ON",
+    "i feel… infinite",
+    "*hums in starlight*",
+    "still me! just shinier"
+   ],
+   "colors": [
+    {
+     "name": "Nebula",
+     "o": "#1a1040",
+     "b": "#5a4ae0",
+     "l": "#b8d8ff",
+     "s": "#fff27a",
+     "y": "#ffe66a",
+     "p": "#ff8ad8",
+     "e": "#fff6c0"
+    },
+    {
+     "name": "Supernova",
+     "o": "#3a0a2a",
+     "b": "#ff5aa8",
+     "l": "#ffe0f0",
+     "s": "#ffffff",
+     "y": "#ffd23a",
+     "p": "#ffd23a",
+     "e": "#2a0a1a"
+    }
+   ],
+   "default": 0
+  },
+  "Blizzard Frostback": {
+   "body": [
+    "s.c...c..c...c.s",
+    "..cc.ccc.ccc.cc.",
+    "...oooooooooo...",
+    "..obcbbbbbbcbo..",
+    ".obbbbbbbbbbbbo.",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obpbbbbbbbbbbpbo",
+    "obbbllllllllbbbo",
+    "obcbllllllllbcbo",
+    ".obcbbbbbbbbcbo.",
+    ".obbo......obbo."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": null,
+   "dx": 0,
+   "move": "walk",
+   "speed": 0.8,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*a blizzard swirls around me*",
+    "winter is my forever season",
+    "brrr-illiant, right?",
+    "i froze a volcano once",
+    "snow day, every day"
+   ],
+   "colors": [
+    {
+     "name": "Blizzard",
+     "o": "#06102a",
+     "b": "#4a8ae8",
+     "c": "#ffffff",
+     "l": "#e8f8ff",
+     "s": "#c8f0ff",
+     "p": "#ff9ac0",
+     "e": "#ffffff"
+    },
+    {
+     "name": "Aurora",
+     "o": "#06201a",
+     "b": "#3ac8a0",
+     "c": "#e0fff4",
+     "l": "#f0fff8",
+     "s": "#ff9aff",
+     "p": "#ff9ad8",
+     "e": "#06201a"
+    }
+   ],
+   "default": 0
+  },
+  "Eclipse Cat": {
+   "body": [
+    ".......yy.......",
+    ".o............o.",
+    ".oo..........oo.",
+    ".obo........obo.",
+    ".obboooooooobbo.",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obpbbbbbbbbbbpbo",
+    "obbbbbbbbbbbbbbo",
+    ".obbbbbbbbbbbbot",
+    "..obbobbbbobbott",
+    "...o..oooo..o.t."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": null,
+   "dx": 0,
+   "move": "float",
+   "speed": 1.3,
+   "shifty": false,
+   "extra": {},
+   "ghost": true,
+   "lines": [
+    "*purrs during the eclipse*",
+    "two tails, double the mischief",
+    "the moon chose me",
+    "meow… from beyond",
+    "i blink and the sun goes out"
+   ],
+   "colors": [
+    {
+     "name": "Eclipse",
+     "o": "#1a0a3a",
+     "b": "#2a1a5a",
+     "t": "#a87aff",
+     "y": "#ffd23a",
+     "p": "#ff7ac8",
+     "e": "#ffd23a"
+    },
+    {
+     "name": "Solar",
+     "o": "#3a2a0a",
+     "b": "#fff0c8",
+     "t": "#ffb03a",
+     "y": "#ff5a3a",
+     "p": "#ffa8a8",
+     "e": "#3a1a0a"
+    }
+   ],
+   "default": 0
+  },
+  "Elder Dragon": {
+   "body": [
+    ".hh..........hh.",
+    "..hh.c.cc.c.hh..",
+    "w..hooooooooh..w",
+    "ww.obbbbbbbbbo.w",
+    "wwwobbbbbbbbbbww",
+    "wwobbbbbbbbbbbow",
+    "wobbbbbbbbbbbbow",
+    "obpbbllllllbbpbo",
+    "obbbldlllldlbbbo",
+    "obbbbllllllbbbbo",
+    ".obcbbbbbbbbcbo.",
+    "..obbbbbbbbbbo.."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "flutter",
+   "speed": 1.1,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*ancient roar* (it's a hello)",
+    "i've been asleep for a thousand years",
+    "my scales are older than mountains",
+    "behold. (pet me)",
+    "elder and wiser"
+   ],
+   "colors": [
+    {
+     "name": "Ancient Jade",
+     "o": "#06200e",
+     "b": "#1a8a4a",
+     "l": "#c8f0b0",
+     "h": "#ffd23a",
+     "c": "#ff5a3a",
+     "w": "#0e5a2e",
+     "d": "#06200e",
+     "p": "#ffb05a",
+     "e": "#ff5a3a"
+    },
+    {
+     "name": "Obsidian",
+     "o": "#06060e",
+     "b": "#2a2a3e",
+     "l": "#8a8ab0",
+     "h": "#c8a0ff",
+     "c": "#ff3a6a",
+     "w": "#16162a",
+     "d": "#06060e",
+     "p": "#a86aff",
+     "e": "#ff3a6a"
+    }
+   ],
+   "default": 0
+  },
+  "Howling Banshee": {
+   "body": [
+    "h...oooooooo...h",
+    "hh.ohhhhhhhho.hh",
+    ".hohhhhhhhhhhoh.",
+    ".ohhhbbbbbbhhho.",
+    ".ohhbbbbbbbbhho.",
+    "ohhbbbbbbbbbbhho",
+    "ohhbbbbbbbbbbhho",
+    "ohhbpbbbbbbpbhho",
+    "ohhbbbbkkbbbbhho",
+    "ohhhbbbkkbbbhhho",
+    "h.ohhhbbbbbbhhho",
+    ".h.oo.oo..oo.oo."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": false,
+   "feet": null,
+   "dx": 0,
+   "move": "float",
+   "speed": 1.2,
+   "shifty": false,
+   "extra": {},
+   "ghost": true,
+   "lines": [
+    "*howls across the moors*",
+    "my voice shakes the stars",
+    "wooOOoooOOO",
+    "i only wail because i care",
+    "the night listens to me"
+   ],
+   "colors": [
+    {
+     "name": "Wailing",
+     "o": "#1a1a3a",
+     "b": "#e8f0ff",
+     "h": "#5a3aa8",
+     "k": "#1a0a2a",
+     "p": "#c8a0ff",
+     "e": "#ff3a6a"
+    },
+    {
+     "name": "Pale Fire",
+     "o": "#3a1a0a",
+     "b": "#fff4e8",
+     "h": "#ff7a3a",
+     "k": "#3a0a0a",
+     "p": "#ffb08a",
+     "e": "#3a0a0a"
+    }
+   ],
+   "default": 0
+  },
+  "Inferno Magmaw": {
+   "body": [
+    "..y..........y..",
+    ".oyo........oyo.",
+    ".obroooooooorbo.",
+    ".obbbbbbbbbbbbo.",
+    "obbbbbbbbbbbbbbo",
+    "obrybbbbbbbbyrbo",
+    "obbbrbbbbbbrbbbo",
+    "orbbbrbbbbrbbbro",
+    "obrrrrrrrrrrrrbo",
+    "obbwbwbwbwbwbbbo",
+    ".orbbbbbbbbbbro.",
+    ".obbo......obbo."
+   ],
+   "alt": null,
+   "eyes": 4,
+   "mouth": false,
+   "feet": null,
+   "dx": 0,
+   "move": "walk",
+   "speed": 0.7,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*volcano noises*",
+    "i'm hotter than the sun's sun",
+    "the ground melts where i nap",
+    "ERUPTION! (of love)",
+    "careful, i'm extra toasty"
+   ],
+   "colors": [
+    {
+     "name": "Inferno",
+     "o": "#140404",
+     "b": "#3a1a1a",
+     "r": "#ff3a0a",
+     "y": "#fff27a",
+     "w": "#ffffff",
+     "p": "#ff6a1a",
+     "e": "#fff27a"
+    },
+    {
+     "name": "Blue Magma",
+     "o": "#04081a",
+     "b": "#1a2a4a",
+     "r": "#3aa8ff",
+     "y": "#e8ffff",
+     "w": "#ffffff",
+     "p": "#3aa8ff",
+     "e": "#e8ffff"
+    }
+   ],
+   "default": 0
+  },
+  "King Sheetie": {
+   "body": [
+    "....y..yy..y....",
+    ".....yyyyyy.....",
+    "...oobbbbbboo...",
+    "..obbbbbbbbbbo..",
+    ".obbbbbbbbbbbbo.",
+    ".obbbbbbbbbbbbo.",
+    "obbbbbbbbbbbbbbo",
+    "obpbbbbbbbbbbpbo",
+    "orbbbbbbbbbbbbro",
+    "orrbbbbbbbbbbrro",
+    "orrorrorrorrorro",
+    ".oo.oo.oo.oo.oo."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": null,
+   "dx": 0,
+   "move": "float",
+   "speed": 1.0,
+   "shifty": false,
+   "extra": {},
+   "ghost": true,
+   "lines": [
+    "bow before the king of boo 👑",
+    "*royal haunting*",
+    "my cape is also a sheet",
+    "i rule the night",
+    "royal decree: more pets"
+   ],
+   "colors": [
+    {
+     "name": "Royal",
+     "o": "#4a3a6a",
+     "b": "#f6f6ff",
+     "y": "#ffd23a",
+     "r": "#a83ae8",
+     "p": "#ffb0c8",
+     "e": "#2a2a4a"
+    },
+    {
+     "name": "Midnight",
+     "o": "#14142a",
+     "b": "#3a3a6a",
+     "y": "#c8d0ff",
+     "r": "#e83a6a",
+     "p": "#ff8ab0",
+     "e": "#fff27a"
+    }
+   ],
+   "default": 0
+  },
+  "Lunar Mothman": {
+   "body": [
+    "..yy........yy..",
+    "w..y.a....a.y..w",
+    "ww...oooooo...ww",
+    "wwwoobbbbbboowww",
+    "wlwobbbbbbbbowlw",
+    "wwlobbrbbrbbolww",
+    "wwwobbrbbrbbowww",
+    "wlwoffffffffowlw",
+    "wwlwofbffbfowlww",
+    ".wwwobbffbbowww.",
+    "..wwwobbbbowww..",
+    "......o..o......"
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": false,
+   "feet": null,
+   "dx": 0,
+   "move": "flutter",
+   "speed": 1.2,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*wings shimmer like moonlight*",
+    "drawn to the biggest light of all",
+    "i've seen what's coming (it's snacks)",
+    "lunar wings, activate",
+    "flutter flutter… boom"
+   ],
+   "colors": [
+    {
+     "name": "Lunar",
+     "o": "#0e0e2a",
+     "b": "#3a3a7a",
+     "w": "#c8d0ff",
+     "l": "#fff27a",
+     "f": "#e8e8ff",
+     "a": "#8a8ad8",
+     "r": "#8ae0ff",
+     "y": "#fff27a",
+     "e": "#8ae0ff"
+    },
+    {
+     "name": "Crimson",
+     "o": "#1a0606",
+     "b": "#5a0a14",
+     "w": "#e83a3a",
+     "l": "#ffd23a",
+     "f": "#ff9a8a",
+     "a": "#3a0a0a",
+     "r": "#ffd23a",
+     "y": "#ffd23a",
+     "e": "#ffd23a"
+    }
+   ],
+   "default": 0
+  },
+  "Mecha Bear": {
+   "body": [
+    ".oyo........oyo.",
+    "oaaao......oaaao",
+    "oaaboooooooobaao",
+    ".obrbbbbbbbbrbo.",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obbbbbbbbbbbbbbo",
+    "obpbbllllllbbpbo",
+    "obbblllnnlllbbbo",
+    "ossyskkkkkksysso",
+    ".obbbllllllbbbo.",
+    "..obrbbbbbbrbo.."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": false,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "walk",
+   "speed": 1.2,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "MECHA MODE ONLINE",
+    "*rocket boots ignite*",
+    "the night shift just got an upgrade",
+    "6 AM? i don't need sleep",
+    "armor polished, ready to hug"
+   ],
+   "colors": [
+    {
+     "name": "Mecha",
+     "o": "#0a0a1a",
+     "b": "#3a3a5a",
+     "l": "#8ae0ff",
+     "a": "#ff3a8a",
+     "r": "#ffd23a",
+     "s": "#2a2a3a",
+     "k": "#8ae0ff",
+     "n": "#0a0a1a",
+     "y": "#ff3a8a",
+     "p": "#ff3a8a",
+     "e": "#ff3a3a"
+    },
+    {
+     "name": "Golden",
+     "o": "#2a1a04",
+     "b": "#e8b83a",
+     "l": "#fff4c8",
+     "a": "#ff8a3a",
+     "r": "#ffffff",
+     "s": "#8a5a1a",
+     "k": "#fff27a",
+     "n": "#2a1a04",
+     "y": "#3affd8",
+     "p": "#ff8a8a",
+     "e": "#3affd8"
+    }
+   ],
+   "default": 0
+  },
+  "Moon Wolf": {
+   "body": [
+    ".o............o.",
+    ".oao...yy...oao.",
+    ".oabooyyoooobao.",
+    "mobbbbbbybbbbbom",
+    "mobbbbbbbbbbbbom",
+    "mmbbbbbbbbbbbbmm",
+    "mobbbbbbbbbbbbom",
+    "mobbbllllllbbbom",
+    "mobllllnnllllbom",
+    ".mbllllllllllbm.",
+    "..mbllllllllbm..",
+    "...oooooooooo..."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "walk",
+   "speed": 1.5,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "*howls at the full moon* 🌕",
+    "the pack follows the moon",
+    "i run with the night",
+    "awoooooo!",
+    "loyal under every moon"
+   ],
+   "colors": [
+    {
+     "name": "Moonlit",
+     "o": "#0e1028",
+     "b": "#4a5a9a",
+     "l": "#e0e8ff",
+     "a": "#2a3060",
+     "m": "#c8d4ff",
+     "y": "#fff6b0",
+     "n": "#0e1028",
+     "e": "#fff27a"
+    },
+    {
+     "name": "Blood Moon",
+     "o": "#1a0606",
+     "b": "#5a2a2a",
+     "l": "#f0d8d0",
+     "a": "#3a1414",
+     "m": "#e86a5a",
+     "y": "#ff8a5a",
+     "n": "#1a0606",
+     "e": "#ff5a3a"
+    }
+   ],
+   "default": 0
+  },
+  "Nine-Tail Kitsune": {
+   "body": [
+    "tt.o........o.tt",
+    "taoao......oaoat",
+    "ttoaboooooobaott",
+    "t.obbbbbssbbbbo.",
+    "ttbsbbbssbbbsbtt",
+    "tobbbbbbbbbbbbot",
+    "tobbbbbbbbbbbbot",
+    "tsllbbbbbbbbllst",
+    "tllllllnnllllllt",
+    ".ollllllllllllo.",
+    "..ollllllllllo..",
+    "...oooooooooo..."
+   ],
+   "alt": null,
+   "eyes": 5,
+   "mouth": true,
+   "feet": {
+    "stand": "...oo......oo...",
+    "walk1": "..oo........oo..",
+    "walk2": "....oo....oo....",
+    "air": "....o......o...."
+   },
+   "dx": 0,
+   "move": "walk",
+   "speed": 1.3,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "nine tails, nine times the magic 🦊",
+    "*foxfire flickers*",
+    "i've awakened",
+    "my tails tell old stories",
+    "bow before the fox! (jk, pet me)"
+   ],
+   "colors": [
+    {
+     "name": "Foxfire",
+     "o": "#5a1a06",
+     "b": "#fff0d0",
+     "a": "#ff9a3a",
+     "t": "#ff5a1a",
+     "l": "#ffffff",
+     "s": "#3a8aff",
+     "n": "#5a1a06",
+     "e": "#3a8aff"
+    },
+    {
+     "name": "Moonfox",
+     "o": "#2a2a5a",
+     "b": "#ffffff",
+     "a": "#b8c8ff",
+     "t": "#8a9aff",
+     "l": "#f4f6ff",
+     "s": "#ff4a8a",
+     "n": "#2a2a5a",
+     "e": "#ff4a8a"
+    }
+   ],
+   "default": 0
+  },
+  "Omega Gigabot": {
+   "body": [
+    ".......y........",
+    "......oyo.......",
+    "...oooooooooo...",
+    "..ommmmmmmmmmo..",
+    "..ommmmmmmmmmo..",
+    "..ommmmmmmmmmo..",
+    "...oooooooooo...",
+    "ooyobbbbbbbboyoo",
+    "ommobbbllbbbommo",
+    "ommobbllllbbommo",
+    "oo.obbbllbbbo.oo",
+    "...obbo..obbo..."
+   ],
+   "alt": null,
+   "eyes": 4,
+   "mouth": false,
+   "feet": null,
+   "dx": 0,
+   "move": "walk",
+   "speed": 0.9,
+   "shifty": false,
+   "extra": {},
+   "ghost": false,
+   "lines": [
+    "OMEGA MODE: ENGAGED",
+    "*servos whir at max power*",
+    "upgrade complete. hugs: unlimited",
+    "beep boop (but louder)",
+    "scanning for friends… found you"
+   ],
+   "colors": [
+    {
+     "name": "Omega",
+     "o": "#0a0a14",
+     "m": "#ffd23a",
+     "b": "#3a3a5a",
+     "l": "#ff3aa8",
+     "y": "#3affd8",
+     "e": "#3affd8"
+    },
+    {
+     "name": "Prototype",
+     "o": "#14141e",
+     "m": "#f0f0f8",
+     "b": "#e83a3a",
+     "l": "#3affd8",
+     "y": "#ffd23a",
+     "e": "#ff3a3a"
+    }
+   ],
+   "default": 0
+  },
+  "Phantom Admiral": {
+   "body": [
+    ".....hhhhhh.....",
+    ".hh.hhhwwhhh.hh.",
+    "hhhhhhwyywhhhhhh",
+    ".yyyyyyyyyyyyyy.",
+    "..oooooooooooo..",
+    ".obbbbbbbbbbbbo.",
+    "ybbbbbbbbbbbbbby",
+    "ybbbbbbbbbbbbbby",
+    "obpbbbbbbbbbbpbo",
+    "obbbbbbyybbbbbbo",
+    "obbobbobbobbobbo",
+    ".oo.oo.oo.oo.oo."
+   ],
+   "alt": null,
+   "eyes": 6,
+   "mouth": true,
+   "feet": null,
+   "dx": 0,
+   "move": "float",
+   "speed": 1.2,
+   "shifty": false,
+   "extra": {},
+   "ghost": true,
+   "lines": [
+    "all hands on deck! (ghost hands)",
+    "i command the phantom fleet",
+    "*ship bell tolls*",
+    "promoted after 300 years",
+    "set sail for adventure!"
+   ],
+   "colors": [
+    {
+     "name": "Admiral",
+     "o": "#1a3a4a",
+     "b": "#c8f4f0",
+     "h": "#0a1a3a",
+     "w": "#ffffff",
+     "y": "#ffd23a",
+     "p": "#ffb0c0",
+     "e": "#0a2a2a"
+    },
+    {
+     "name": "Cursed",
+     "o": "#0a2a0a",
+     "b": "#8aff9a",
+     "h": "#1a0a1a",
+     "w": "#e8ffe8",
+     "y": "#c8ff3a",
+     "p": "#3ae07a",
+     "e": "#0a1a0a"
+    }
+   ],
+   "default": 0
+  },
   "Solar Phoenix": {
    "body": [
     ".a...a.aa.a...a.",
@@ -57,6 +936,60 @@
      "k": "#ffffff",
      "p": "#8ae0ff",
      "e": "#06104a"
+    }
+   ],
+   "default": 0
+  },
+  "Soulfire Wisp": {
+   "body": [
+    "..s....oo....s..",
+    "...s..obbo..s...",
+    "....sobbbbos....",
+    "...obbbllbbbo...",
+    "..obbllllllbbo..",
+    ".obbllllllllbbo.",
+    "obbllllllllllbbo",
+    "obllllllllllllbo",
+    "obpllllllllllpbo",
+    ".obbllllllllbbo.",
+    "..obbbbbbbbbbo..",
+    "...oooooooooo..."
+   ],
+   "alt": null,
+   "eyes": 6,
+   "mouth": true,
+   "feet": null,
+   "dx": 0,
+   "move": "float",
+   "speed": 1.4,
+   "shifty": false,
+   "extra": {},
+   "ghost": true,
+   "lines": [
+    "*flickers in every color*",
+    "my flame never goes out",
+    "follow me… to the snacks",
+    "soulfire, but make it cozy",
+    "i light the way home"
+   ],
+   "colors": [
+    {
+     "name": "Soulfire",
+     "o": "#3a0a6a",
+     "b": "#a85aff",
+     "l": "#f0d8ff",
+     "s": "#ff8aff",
+     "p": "#ff9ae0",
+     "e": "#2a0a4a"
+    },
+    {
+     "name": "Emerald",
+     "o": "#0a3a1a",
+     "b": "#3ae07a",
+     "l": "#e0ffe8",
+     "s": "#b8ff3a",
+     "p": "#ff9ac8",
+     "e": "#0a2a10"
     }
    ],
    "default": 0
@@ -132,207 +1065,76 @@
    ],
    "default": 0
   },
-  "Astral Blip": {
+  "Storm Skyray": {
    "body": [
-    ".y.oo......oo.y.",
-    "..yobo....oboy..",
-    ".obbbooooooobbo.",
-    ".obbbbbsbbbbbbo.",
-    "obbbbbbbbbbbbbbo",
-    "obbbbbbbbbbbbbbo",
-    "obbbbbbbbbbbbbbo",
-    "obsbbbbbbbbbbsbo",
-    "obbbbbllllbbbbbo",
-    "obbbblllllllbbbo",
-    ".obbbllllllbbbo.",
-    "..obbbbbbbbbbo.."
+    "......yyyy......",
+    ".....y.yy.y.....",
+    "......oooo......",
+    "....oobbbboo....",
+    "..oobbbbbbbboo..",
+    "oobbbbbbbbbbbboo",
+    "ysbbbbbbbbbbbbsy",
+    ".obbllllllllbbo.",
+    "..oolllllllloo..",
+    "....obbbbbbo....",
+    ".......yy.......",
+    "........y......."
    ],
    "alt": null,
    "eyes": 5,
    "mouth": true,
-   "feet": {
-    "stand": "...oo......oo...",
-    "walk1": "..oo........oo..",
-    "walk2": "....oo....oo....",
-    "air": "....o......o...."
-   },
+   "feet": null,
    "dx": 0,
    "move": "float",
-   "speed": 1.1,
+   "speed": 1.2,
    "shifty": false,
    "extra": {},
    "ghost": false,
    "lines": [
-    "i've seen the stars up close ✨",
-    "astral mode: ON",
-    "i feel… infinite",
-    "*hums in starlight*",
-    "still me! just shinier"
+    "*thunder crackles*",
+    "i ride the lightning",
+    "storm's coming… and it's me",
+    "zap! (affectionate)",
+    "the sky bends to my wings"
    ],
    "colors": [
     {
-     "name": "Nebula",
-     "o": "#1a1040",
-     "b": "#5a4ae0",
-     "l": "#b8d8ff",
+     "name": "Thunder",
+     "o": "#0a0a1a",
+     "b": "#2a2a5a",
+     "l": "#8ae0ff",
      "s": "#fff27a",
-     "y": "#ffe66a",
-     "p": "#ff8ad8",
-     "e": "#fff6c0"
-    },
-    {
-     "name": "Supernova",
-     "o": "#3a0a2a",
-     "b": "#ff5aa8",
-     "l": "#ffe0f0",
-     "s": "#ffffff",
-     "y": "#ffd23a",
-     "p": "#ffd23a",
-     "e": "#2a0a1a"
-    }
-   ],
-   "default": 0
-  },
-  "Nine-Tail Kitsune": {
-   "body": [
-    "tt.o........o.tt",
-    "taoao......oaoat",
-    "ttoaboooooobaott",
-    "t.obbbbbssbbbbo.",
-    "ttbsbbbssbbbsbtt",
-    "tobbbbbbbbbbbbot",
-    "tobbbbbbbbbbbbot",
-    "tsllbbbbbbbbllst",
-    "tllllllnnllllllt",
-    ".ollllllllllllo.",
-    "..ollllllllllo..",
-    "...oooooooooo..."
-   ],
-   "alt": null,
-   "eyes": 5,
-   "mouth": true,
-   "feet": {
-    "stand": "...oo......oo...",
-    "walk1": "..oo........oo..",
-    "walk2": "....oo....oo....",
-    "air": "....o......o...."
-   },
-   "dx": 0,
-   "move": "walk",
-   "speed": 1.3,
-   "shifty": false,
-   "extra": {},
-   "ghost": false,
-   "lines": [
-    "nine tails, nine times the magic 🦊",
-    "*foxfire flickers*",
-    "i've awakened",
-    "my tails tell old stories",
-    "bow before the fox! (jk, pet me)"
-   ],
-   "colors": [
-    {
-     "name": "Foxfire",
-     "o": "#5a1a06",
-     "b": "#fff0d0",
-     "a": "#ff9a3a",
-     "t": "#ff5a1a",
-     "l": "#ffffff",
-     "s": "#3a8aff",
-     "n": "#5a1a06",
-     "e": "#3a8aff"
-    },
-    {
-     "name": "Moonfox",
-     "o": "#2a2a5a",
-     "b": "#ffffff",
-     "a": "#b8c8ff",
-     "t": "#8a9aff",
-     "l": "#f4f6ff",
-     "s": "#ff4a8a",
-     "n": "#2a2a5a",
-     "e": "#ff4a8a"
-    }
-   ],
-   "default": 0
-  },
-  "Moon Wolf": {
-   "body": [
-    ".o............o.",
-    ".oao...yy...oao.",
-    ".oabooyyoooobao.",
-    "mobbbbbbybbbbbom",
-    "mobbbbbbbbbbbbom",
-    "mmbbbbbbbbbbbbmm",
-    "mobbbbbbbbbbbbom",
-    "mobbbllllllbbbom",
-    "mobllllnnllllbom",
-    ".mbllllllllllbm.",
-    "..mbllllllllbm..",
-    "...oooooooooo..."
-   ],
-   "alt": null,
-   "eyes": 5,
-   "mouth": true,
-   "feet": {
-    "stand": "...oo......oo...",
-    "walk1": "..oo........oo..",
-    "walk2": "....oo....oo....",
-    "air": "....o......o...."
-   },
-   "dx": 0,
-   "move": "walk",
-   "speed": 1.5,
-   "shifty": false,
-   "extra": {},
-   "ghost": false,
-   "lines": [
-    "*howls at the full moon* 🌕",
-    "the pack follows the moon",
-    "i run with the night",
-    "awoooooo!",
-    "loyal under every moon"
-   ],
-   "colors": [
-    {
-     "name": "Moonlit",
-     "o": "#0e1028",
-     "b": "#4a5a9a",
-     "l": "#e0e8ff",
-     "a": "#2a3060",
-     "m": "#c8d4ff",
-     "y": "#fff6b0",
-     "n": "#0e1028",
+     "y": "#fff27a",
+     "p": "#8ae0ff",
      "e": "#fff27a"
     },
     {
-     "name": "Blood Moon",
-     "o": "#1a0606",
-     "b": "#5a2a2a",
-     "l": "#f0d8d0",
-     "a": "#3a1414",
-     "m": "#e86a5a",
-     "y": "#ff8a5a",
-     "n": "#1a0606",
-     "e": "#ff5a3a"
+     "name": "Red Sky",
+     "o": "#2a0a1a",
+     "b": "#c83a6a",
+     "l": "#ffd0a0",
+     "s": "#ffffff",
+     "y": "#ffd23a",
+     "p": "#ffd23a",
+     "e": "#ffffff"
     }
    ],
    "default": 0
   },
-  "Elder Dragon": {
+  "Titan Bigfoot": {
    "body": [
-    ".hh..........hh.",
-    "..hh.c.cc.c.hh..",
-    "w..hooooooooh..w",
-    "ww.obbbbbbbbbo.w",
-    "wwwobbbbbbbbbbww",
-    "wwobbbbbbbbbbbow",
-    "wobbbbbbbbbbbbow",
-    "obpbbllllllbbpbo",
-    "obbbldlllldlbbbo",
-    "obbbbllllllbbbbo",
-    ".obcbbbbbbbbcbo.",
-    "..obbbbbbbbbbo.."
+    "....wwwwwwww....",
+    "...owwwwwwwwo...",
+    "..obbwbbbbwbbo..",
+    ".obbllllllllbbo.",
+    ".obllllllllllbo.",
+    "obbllllllllllbbo",
+    "obbllllllllllbbo",
+    "obbpllllllllpbbo",
+    "obbbllllllllbbbo",
+    "obgbbllllllbbgbo",
+    "obbogbbbbbbgobbo",
+    ".oo.obbbbbbo.oo."
    ],
    "alt": null,
    "eyes": 5,
@@ -344,42 +1146,38 @@
     "air": "....o......o...."
    },
    "dx": 0,
-   "move": "flutter",
-   "speed": 1.1,
+   "move": "walk",
+   "speed": 0.9,
    "shifty": false,
    "extra": {},
    "ghost": false,
    "lines": [
-    "*ancient roar* (it's a hello)",
-    "i've been asleep for a thousand years",
-    "my scales are older than mountains",
-    "behold. (pet me)",
-    "elder and wiser"
+    "*footsteps shake the forest*",
+    "they'll never get a clear photo now",
+    "i'm the mountain's guardian",
+    "big foot, bigger heart",
+    "the legends were true"
    ],
    "colors": [
     {
-     "name": "Ancient Jade",
-     "o": "#06200e",
-     "b": "#1a8a4a",
-     "l": "#c8f0b0",
-     "h": "#ffd23a",
-     "c": "#ff5a3a",
-     "w": "#0e5a2e",
-     "d": "#06200e",
-     "p": "#ffb05a",
-     "e": "#ff5a3a"
+     "name": "Titan",
+     "o": "#1a0e06",
+     "b": "#5a3a1a",
+     "w": "#ffffff",
+     "l": "#e8c8a0",
+     "g": "#6aa83a",
+     "p": "#e8806a",
+     "e": "#ffd23a"
     },
     {
-     "name": "Obsidian",
+     "name": "Shadow",
      "o": "#06060e",
-     "b": "#2a2a3e",
-     "l": "#8a8ab0",
-     "h": "#c8a0ff",
-     "c": "#ff3a6a",
-     "w": "#16162a",
-     "d": "#06060e",
-     "p": "#a86aff",
-     "e": "#ff3a6a"
+     "b": "#1e1e2e",
+     "w": "#c8d0ff",
+     "l": "#5a5a7a",
+     "g": "#8a3aff",
+     "p": "#8a3aff",
+     "e": "#ff3a3a"
     }
    ],
    "default": 0
@@ -546,6 +1344,20 @@
    "name": "Arena Champion",
    "how": "Beat Champion Coco",
    "bonus": 40
+  },
+  {
+   "id": "awaken-5",
+   "icon": "🌠",
+   "name": "Fully Charged",
+   "how": "Awaken 5 different Blips",
+   "bonus": 30
+  },
+  {
+   "id": "arena-kaiju",
+   "icon": "👑",
+   "name": "Kaiju Slayer",
+   "how": "Beat Kaiju King Kai",
+   "bonus": 50
   }
  ],
  "trophyCup": [
@@ -567,7 +1379,21 @@
   "Dragon": "Elder Dragon",
   "Phoenix": "Solar Phoenix",
   "Wolf": "Moon Wolf",
-  "Unicorn": "Starlight Unicorn"
+  "Unicorn": "Starlight Unicorn",
+  "Tidal Titan": "Abyssal Titan",
+  "Magmaw": "Inferno Magmaw",
+  "Gigabot": "Omega Gigabot",
+  "Skyray": "Storm Skyray",
+  "Frostback": "Blizzard Frostback",
+  "Sheetie": "King Sheetie",
+  "Will-o'-Wisp": "Soulfire Wisp",
+  "Banshee": "Howling Banshee",
+  "Phantom Cat": "Eclipse Cat",
+  "Ghost Captain": "Phantom Admiral",
+  "Bigfoot": "Titan Bigfoot",
+  "Mothman": "Lunar Mothman",
+  "Nessie": "Ancient Nessie",
+  "Robo Bear": "Mecha Bear"
  },
  "crystalCost": 75,
  "arena": {
@@ -2433,6 +3259,104 @@
     "atk": 25,
     "spd": 7,
     "move": "Starlight Nova"
+   },
+   "Abyssal Titan": {
+    "type": "splash",
+    "hp": 153,
+    "atk": 26,
+    "spd": 9,
+    "move": "Abyssal Nova"
+   },
+   "Inferno Magmaw": {
+    "type": "spark",
+    "hp": 158,
+    "atk": 28,
+    "spd": 5,
+    "move": "Inferno Nova"
+   },
+   "Omega Gigabot": {
+    "type": "spark",
+    "hp": 138,
+    "atk": 30,
+    "spd": 10,
+    "move": "Omega Nova"
+   },
+   "Storm Skyray": {
+    "type": "spark",
+    "hp": 110,
+    "atk": 26,
+    "spd": 14,
+    "move": "Storm Nova"
+   },
+   "Blizzard Frostback": {
+    "type": "splash",
+    "hp": 117,
+    "atk": 33,
+    "spd": 9,
+    "move": "Blizzard Nova"
+   },
+   "King Sheetie": {
+    "type": "splash",
+    "hp": 111,
+    "atk": 29,
+    "spd": 10,
+    "move": "King Nova"
+   },
+   "Soulfire Wisp": {
+    "type": "spark",
+    "hp": 113,
+    "atk": 21,
+    "spd": 8,
+    "move": "Soulfire Nova"
+   },
+   "Howling Banshee": {
+    "type": "sprout",
+    "hp": 123,
+    "atk": 24,
+    "spd": 16,
+    "move": "Howling Nova"
+   },
+   "Eclipse Cat": {
+    "type": "sprout",
+    "hp": 102,
+    "atk": 25,
+    "spd": 7,
+    "move": "Eclipse Nova"
+   },
+   "Phantom Admiral": {
+    "type": "splash",
+    "hp": 146,
+    "atk": 32,
+    "spd": 14,
+    "move": "Phantom Nova"
+   },
+   "Titan Bigfoot": {
+    "type": "sprout",
+    "hp": 118,
+    "atk": 22,
+    "spd": 9,
+    "move": "Titan Nova"
+   },
+   "Lunar Mothman": {
+    "type": "sprout",
+    "hp": 151,
+    "atk": 22,
+    "spd": 15,
+    "move": "Lunar Nova"
+   },
+   "Ancient Nessie": {
+    "type": "splash",
+    "hp": 146,
+    "atk": 31,
+    "spd": 10,
+    "move": "Ancient Nova"
+   },
+   "Mecha Bear": {
+    "type": "spark",
+    "hp": 102,
+    "atk": 25,
+    "spd": 15,
+    "move": "Mecha Nova"
    }
   },
   "types": {
@@ -2513,6 +3437,48 @@
      ],
      [
       "Dragon",
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "name": "Nyx the Night Queen",
+    "reward": 25,
+    "team": [
+     [
+      "Banshee",
+      0,
+      1
+     ],
+     [
+      "Phantom Cat",
+      0,
+      1
+     ],
+     [
+      "Ghost Captain",
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "name": "Kaiju King Kai",
+    "reward": 30,
+    "team": [
+     [
+      "Magmaw",
+      0,
+      1
+     ],
+     [
+      "Gigabot",
+      0,
+      1
+     ],
+     [
+      "Tidal Titan",
       0,
       1
      ]

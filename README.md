@@ -2,7 +2,7 @@
 
 ![Blipville: pixel pets that live on your taskbar](docs/banner.png)
 
-> 💜 **Thanks for playing the Blipville beta! We're going into alpha.** Blipville is still being built. Expect lots of new stuff, changes and the odd bug. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
+> 💜 **Thanks for playing the Blipville beta!** This is **Release Candidate 1**, the last step before Blipville 1.0. Spot a bug? Now's the time to tell me. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
 
@@ -10,9 +10,9 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 **238 kinds of pets · 750+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
 
-## ✨ New in v0.4.0 (alpha)
+## ✨ New in v0.4.0 (release candidate 1)
 
-**Thank you for playing our beta!** 💜 Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipville. Now we're going into **alpha**, starting with:
+**Thank you for playing our beta!** 💜 Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipville. This is **Release Candidate 1**, the last step before **1.0**, and it comes with:
 
 
 - 🐾 **100 new Blips!** 50 new animals (Badger, Cheetah, Moose, Platypus, Peacock, Poodle, Koi and lots more), plus 5 brand-new tabs:
@@ -54,7 +54,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville.exe (alpha)](https://github.com/Johnblip189/blipville/releases/download/v0.4.0-alpha/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
+**[⬇️ Download Blipville.exe (RC1)](https://github.com/Johnblip189/blipville/releases/download/v0.4.0-rc1/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.

@@ -3365,10 +3365,10 @@ def default_color(kind):
     return PALETTE_INDEX[v["palette"]] if "palette" in v and not v.get("colors") else 0
 SUGGEST_URL = "https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml"
 SUPPORT_URL = "https://github.com/Johnblip189/blipville#support-blipville"
-NOTICE_ID = "alpha-0.4"
+NOTICE_ID = "rc1-0.4"
 NOTICE_TEXT = ("Thank you so much for playing the Blipville beta! 💜\n\n"
                "Every pet you hatched, cryptid you spotted and idea you sent helped make Blipville what it is.\n\n"
-               "Blipville is now going into ALPHA, starting with 100 new Blips and 5 new tabs: "
+               "This is Release Candidate 1, the last step before Blipville 1.0! It comes with 100 new Blips and 5 new tabs: "
                "Dinos, Ocean, Sweets, Space and Plants. Expect lots of new stuff (and the odd bug).\n\n"
                "Your pets, hearts and unlocks all come with you. Have fun!")
 IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
@@ -5477,7 +5477,7 @@ class App:
         self.save["notice_seen"] = NOTICE_ID
         write_save(self.save)
         from tkinter import messagebox
-        messagebox.showinfo("Blipville is going into alpha! 💜", NOTICE_TEXT, parent=self.root)
+        messagebox.showinfo("Blipville 0.4 RC1: almost 1.0! 💜", NOTICE_TEXT, parent=self.root)
         if self.pets:
             self.pets[0].say("thank you for playing!! <3", 4)
             self.pets[0].set_face("happy", 2)

@@ -1,0 +1,5 @@
+[2026-11-17 16:51:24] v1.0.0 2026-11-17T16:51:00Z | started on win32, Python 3.12.10
+[2026-11-17 16:51:33] v1.0.0 2026-11-17T16:51:00Z | selftest: pet Blip state=idle click_at=512,694 layered=True frames_shown=239 failed=False
+[2026-11-17 16:51:33] v1.0.0 2026-11-17T16:51:00Z | selftest: 1 pets, LAYERED=True, version=v1.0.0
+[2026-11-17 16:51:35] v1.0.0 2026-11-17T16:51:00Z | selftest: pressed Blip at 110,154
+[2026-11-17 16:51:36] v1.0.0 2026-11-17T16:51:00Z | selftest: menu for Blip

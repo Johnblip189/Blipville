@@ -8,7 +8,16 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**138 kinds of pets · 400+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
+**238 kinds of pets · 750+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
+
+## ✨ Coming next
+
+- 🐾 **100 new Blips!** 50 new animals (Badger, Cheetah, Moose, Platypus, Peacock, Poodle, Koi and lots more), plus 5 brand-new tabs:
+  - 🦕 **Dinos:** Triceratops, Stegosaurus, Brachiosaurus, Pterodactyl, Raptor and more
+  - 🌊 **Ocean:** Seahorse, Stingray, Squid, Lobster, Anglerfish and more
+  - 🍩 **Sweets:** Donut, Cupcake, Ice Cream, Gummy Bear, Taco and more
+  - 🚀 **Space:** Astronaut, UFO, Star, Moon, Rocket, Black Hole and more
+  - 🌱 **Plants:** Sunflower, Tulip, Flytrap, Pumpkin, Lotus and more
 
 ## ✨ New in v0.3.4 (beta)
 

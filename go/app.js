@@ -840,7 +840,7 @@
   // collection
   function openZoo(swapPet = null) {
     const grid_ = $("zooGrid"); grid_.innerHTML = "";
-    const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ["Rare ✨ (hatch from eggs)", D.groups.rare],
+    const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ...(D.groups.tabs || []), ["Rare ✨ (hatch from eggs)", D.groups.rare],
                     ["Night Shift 🌙 (survive the nights)", D.groups.nightShift], ["Cryptids 👣 (spot them in town)", D.groups.cryptids],
                     [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
@@ -1014,7 +1014,7 @@
     feed(p); toast(`🍪 Fed ${p.name}!`, 1.8);
   };
   $("friendBtn").onclick = () => {
-    const pool = D.groups.critters.concat(D.groups.animals).filter(isUnlocked);
+    const pool = D.groups.critters.concat(D.groups.animals, ...(D.groups.tabs || []).map(([, ks]) => ks)).filter(isUnlocked);
     addPet(pick(pool), { x: rnd(40, W - 40) });
   };
   $("eggBtn").onclick = openEgg;

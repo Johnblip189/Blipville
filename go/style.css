@@ -243,3 +243,17 @@ body.mini .card { padding: 10px; border-radius: 14px; }
 #hatTints .tintRow span { min-width: 84px; }
 #hatTints button { width: 24px; height: 24px; border-radius: 7px; border: 2px solid #14121e; padding: 0; }
 #hatTints button.on { border-color: #ffffff; box-shadow: 0 0 0 2px #ffd23a; }
+
+/* arena */
+#arenaTeam button { width: 84px; }
+#arenaTeam button.on { outline: 3px solid #ffd23a; }
+#arenaTeam small { font-size: 9px; color: var(--muted); }
+.bigBtn { display: block; width: 100%; margin-top: 8px; min-height: 44px; border: 0; border-radius: 14px; background: #5a4ae0; color: #fff;
+  font: 800 14px var(--font); }
+.bigBtn.pink { background: #e8457a; }
+#arenaRivals button { display: block; width: 100%; margin: 6px 0; min-height: 40px; border: 0; border-radius: 12px; background: var(--card2);
+  color: var(--text); font: 700 13px var(--font); }
+#arenaCanvas { width: 100%; height: auto; image-rendering: pixelated; background: #14121e; border-radius: 14px; margin-top: 8px; }
+#arenaLog { font-size: 12px; line-height: 1.45; color: var(--muted); margin: 8px 2px; min-height: 90px; }
+#arenaLog div:last-child { color: var(--text); font-weight: 800; }
+#arenaAwaken { background: #c86aff !important; color: #fff; }

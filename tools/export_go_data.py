@@ -14,7 +14,7 @@ bl = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(bl)
 
 kinds = {}
-for k in bl.KINDS:
+for k in list(bl.KINDS) + list(bl.AWAKEN_BASE):
     v = bl.VARIANTS[k]
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
@@ -33,6 +33,10 @@ data = {
     "lureCost": bl.LURE_COST,
     "beaconCost": bl.BEACON_COST,
     "candleCost": bl.CANDLE_COST,
+    "awakenForm": bl.AWAKEN_FORM,
+    "crystalCost": bl.CRYSTAL_COST,
+    "arena": {"stats": bl.ARENA_STATS, "types": bl.ARENA_TYPES, "beats": bl.ARENA_BEATS,
+              "rivals": [{"name": n, "reward": r, "team": t} for n, r, t in bl.ARENA_RIVALS]},
     "accessoryTints": bl.ACCESSORY_TINTS,
     "slot2Cost": bl.SLOT2_COST,
     "trophies": [{"id": t[0], "icon": t[1], "name": t[2], "how": t[3], "bonus": t[5]} for t in bl.TROPHIES],

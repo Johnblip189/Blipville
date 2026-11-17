@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -22,6 +22,7 @@
   <div class="pill" id="hearts" title="Hearts">💖 <b id="heartCount">0</b></div>
   <div class="title">Blipville: <span>On the Go</span></div>
   <div class="right">
+    <button class="pill icon" id="arenaBtn" aria-label="Arena" title="Arena">⚔️</button>
     <button class="pill icon" id="trophyBtn" aria-label="Trophies" title="Trophies">🏆</button>
     <button class="pill icon" id="soundBtn" aria-label="Sound off">🔇</button>
     <button class="pill icon" id="helpBtn" aria-label="How to play">?</button>
@@ -76,6 +77,7 @@
     <div id="hatTints"></div>
     <button class="peekAll lure" id="slot2Btn" hidden>🔓 Unlock a 2nd accessory slot</button>
     <div class="row">
+      <button id="sheetAwaken" hidden>✨ Awaken</button>
       <button id="sheetKind">🔄 Change kind</button>
       <button id="sheetBye" class="danger">👋 Send away</button>
     </div>
@@ -102,6 +104,31 @@
     <div class="sheetTitle">🏆 Trophies <span class="muted" id="trophyCount"></span></div>
     <div class="muted small">Every trophy earns bonus 💖 hearts.</div>
     <div id="trophyGrid"></div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="arenaSheet" hidden>
+  <div class="card tall">
+    <div class="sheetTitle">⚔️ Arena <span class="muted" id="arenaWins"></span></div>
+    <div id="arenaLobby">
+      <div class="muted small">🔥 Spark beats 🌿 Sprout · 🌿 Sprout beats 💧 Splash · 💧 Splash beats 🔥 Spark · ✨ one Awaken per battle</div>
+      <div class="label">Your team <span class="muted small">(tap your Blips to pick 3)</span></div>
+      <div class="chips" id="arenaTeam"></div>
+      <button class="bigBtn" id="arenaCopy">📋 Copy my battle code</button>
+      <button class="bigBtn pink" id="arenaPaste">📥 Battle a friend's code</button>
+      <div class="label">Practice rivals</div>
+      <div id="arenaRivals"></div>
+      <div class="muted small">Share your code on the Blipville Discord and see who can beat your team!</div>
+    </div>
+    <div id="arenaFight" hidden>
+      <canvas id="arenaCanvas" width="360" height="200"></canvas>
+      <div id="arenaLog"></div>
+      <div class="row">
+        <button id="arenaAwaken" hidden>✨ Awaken!</button>
+        <button id="arenaBack">🏳️ Give up</button>
+      </div>
+    </div>
     <button class="close" data-close>Close</button>
   </div>
 </div>
@@ -193,7 +220,7 @@
   </div>
 </div>
 
-<script src="data.js?v=17"></script>
-<script src="app.js?v=17"></script>
+<script src="data.js?v=18"></script>
+<script src="app.js?v=18"></script>
 </body>
 </html>

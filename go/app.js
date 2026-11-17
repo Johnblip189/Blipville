@@ -10,7 +10,8 @@
   const KAIJU = new Set(D.groups.kaiju || []), HITS = D.kaijuHits || 3;
   const GIFTS = new Set(D.groups.gifts || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
-  const GHOST = new Set(D.groups.ghosts || []);                                        // ghosts: at night, tap while they glow
+  const GHOST = new Set(D.groups.ghosts || []);
+  const AWAKEN_FORM = D.awakenForm || {}, AWAKEN_BASE = Object.fromEntries(Object.entries(AWAKEN_FORM).map(([b, f]) => [f, b]));                                        // ghosts: at night, tap while they glow
   const WORLD_LOOK = {
     "Plant World":  { sky: ["#8fd8a8", "#e8ffd8"], land: ["#4ab85a", "#3a9a4a", "#2f7a3a"], fx: [["leaf", 3], ["petal", 3]], sun: "#fff2a8" },
     "Sweets World": { sky: ["#ffb0d8", "#fff0c8"], land: ["#ff8ab8", "#c8885a", "#a86a3a"], fx: [["sprinkle", 7]], sun: "#fff0f8" },
@@ -34,7 +35,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {} };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], rivalsBeaten: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
@@ -109,7 +110,7 @@
     if (on && !quiet) sfx("boop");
   }
 
-  const isUnlocked = (k) => GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const isUnlocked = (k) => AWAKEN_BASE[k] ? save.awakened.includes(AWAKEN_BASE[k]) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -205,7 +206,12 @@
     else setState(p, "idle", rnd(2, 5));
   }
 
+  function sparkle(p, n = 1) {
+    for (let i = 0; i < n; i++) p.particles.push({ kind: "spark", x: rnd(-34, 34) * S / 4, y: rnd(4, 14 * S), vx: 0, vy: -12, life: rnd(0.8, 1.5),
+                                                  born: now(), color: pick(["#ffffff", "#fff27a", "#ffd23a", "#a8d8ff"]) });
+  }
   function update(p, t, dt) {
+    if (AWAKEN_BASE[p.kind] && Math.random() < 0.05) sparkle(p);        // awakened Blips sparkle
     const k = KINDS[p.kind];
     if (t > p.nextBlink) { p.blinkUntil = t + 0.15; p.nextBlink = t + rnd(2, 6); }
     if (p.state !== "sleep") p.energy = Math.max(0, p.energy - dt * 0.12);
@@ -620,6 +626,7 @@
       if (q.kind === "heart") drawMask(HEART, qx, qy, 3, "#ff4f7b");
       else if (q.kind === "z") drawMask(ZED, qx, qy, 2 + Math.floor(a), "#bcd2ff");
       else if (q.kind === "crumb") { ctx.fillStyle = "#c98a4b"; ctx.fillRect(qx, qy, 3, 3); }
+      else if (q.kind === "spark") { ctx.fillStyle = q.color; ctx.fillRect(qx, qy - 2, 2, 6); ctx.fillRect(qx - 2, qy, 6, 2); }
       else if (q.kind === "plus") {
         ctx.font = "800 12px " + FONT;
         const w = ctx.measureText(q.text).width + 10;
@@ -888,7 +895,8 @@
     "egg-1": anyU(D.groups.rare), "egg-all": allU(D.groups.rare), "cryptid-1": anyU(D.groups.cryptids), "cryptid-all": allU(D.groups.cryptids),
     "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts),
     "world-1": () => save.worlds.length >= 1, "world-all": () => save.worlds.length >= WORLDS.length,
-    "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
+    "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
+    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
   };
   function checkTrophies() {
     for (const tr of D.trophies || []) {
@@ -947,6 +955,9 @@
       chips.appendChild(b);
     });
     $("sheetNap").textContent = p.state === "sleep" ? "☀️ Wake" : "💤 Nap";
+    const awBase = AWAKEN_BASE[p.kind] || p.kind, aw = $("sheetAwaken");
+    aw.hidden = !AWAKEN_FORM[awBase];
+    aw.textContent = AWAKEN_BASE[p.kind] ? "💤 Normal form" : save.awakened.includes(awBase) ? "✨ Awaken!" : `✨ Awaken · ${D.crystalCost || 75} 💖`;
     const hc = $("hatChips"); hc.innerHTML = "";
     for (const name of Object.keys(HATS).filter(hatInShop)) {
       const owned = save.hatsOwned.includes(name), wearing = p.hat === name || p.hat2 === name;
@@ -1002,6 +1013,153 @@
     pets.splice(pets.indexOf(sheetPet), 1); toast(`👋 ${sheetPet.name} waved goodbye.`); closeSheets();
   };
   $("sheetKind").onclick = () => openZoo(sheetPet);
+  $("sheetAwaken").onclick = () => {
+    const p = sheetPet; if (!p) return;
+    const base = AWAKEN_BASE[p.kind] || p.kind, form = AWAKEN_FORM[base]; if (!form) return;
+    if (AWAKEN_BASE[p.kind]) { p.kind = base; p.color %= KINDS[base].colors.length; say(p, "phew, back to normal", 2); persist(true); openPetSheet(p); return; }
+    if (!save.awakened.includes(base)) {
+      const cost = D.crystalCost || 75;
+      if (save.hearts < cost) { toast(`Awakening ${base} into ${form} takes an Awakening Crystal (${cost} 💖). You have ${save.hearts}.`, 4); return; }
+      if (!confirm(`Use an Awakening Crystal (${cost} 💖) to awaken ${base} into ${form}?\n\nIt works for every ${base} you have, forever, and you can switch back any time. In the Arena, Awakened Blips hit harder!`)) return;
+      save.hearts -= cost; save.awakened.push(base); updateHearts(true);
+    }
+    p.kind = form; p.color %= KINDS[form].colors.length; sfx("fanfare"); vibrate([30, 40, 30]);
+    say(p, pick(KINDS[form].lines), 3.5); setFace(p, "happy", 2); sparkle(p, 12); persist(true); openPetSheet(p);
+  };
+
+  // ------------------------------------------------------------------ the Arena ⚔️ (same rules and battle codes as the desktop app)
+  const AR = D.arena || { stats: {}, types: {}, beats: {}, rivals: [] };
+  let arenaTeam = [], arenaBattle = null, arenaTimer = null;
+  const arenaEntry = (p) => { const b = AWAKEN_BASE[p.kind] || p.kind; return [b, p.color % KINDS[b].colors.length, AWAKEN_FORM[b] && save.awakened.includes(b) ? 1 : 0]; };
+  function battleCodeFor(name, team) {
+    const raw = JSON.stringify({ n: name.slice(0, 20), t: team.slice(0, 3) });
+    const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(raw)));
+    return "BLIP1-" + b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function readBattleCode(code) {
+    code = String(code).replace(/\s+/g, "");
+    if (!/^BLIP1-/i.test(code)) throw new Error("That's not a Blipville battle code (they start with BLIP1-).");
+    let data;
+    try {
+      let b = code.slice(6).replace(/-/g, "+").replace(/_/g, "/"); while (b.length % 4) b += "=";
+      data = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b), (c) => c.charCodeAt(0))));
+    } catch (e) { throw new Error("That battle code looks broken. Copy it again, all of it."); }
+    const team = (data.t || []).slice(0, 3).map(([k, c, a]) => [String(k), +c || 0, +a || 0]).filter(([k]) => KINDS[AWAKEN_BASE[k] || k]);
+    if (!team.length) throw new Error("That battle code has no Blips in it.");
+    return [String(data.n || "A friend").slice(0, 20), team];
+  }
+  function fighter([kind, color, canAw]) {
+    const base = AWAKEN_BASE[kind] || kind, st = AR.stats[base];
+    return { base, kind: base, color: +color, canAw: !!canAw && !!AWAKEN_FORM[base], hp: st.hp, max: st.hp, aw: false };
+  }
+  const fst = (f) => AR.stats[f.kind];
+  function newBattle(mine, theirs, foe, reward) {
+    return { sides: [mine.map(fighter), theirs.map(fighter)], idx: [0, 0], awLeft: [1, 1], turn: 0, winner: null, last: null, foe, reward, log: [`⚔️ ${foe} wants to battle!`] };
+  }
+  const active = (b, s) => b.sides[s][b.idx[s]] || null;
+  const canAwaken = (b, s) => { const f = active(b, s); return !!(f && b.awLeft[s] && f.canAw && !f.aw); };
+  function awakenF(b, s) {
+    if (!canAwaken(b, s)) return null;
+    b.awLeft[s] = 0; const f = active(b, s), frac = f.hp / f.max;
+    f.kind = AWAKEN_FORM[f.base]; f.aw = true; f.color %= KINDS[f.kind].colors.length;
+    f.max = fst(f).hp; f.hp = Math.min(f.max, Math.round(f.max * frac + f.max * 0.25));
+    return `✨ ${f.base} awakens into ${f.kind}!`;
+  }
+  function stepBattle(b) {
+    if (b.winner !== null) return null;
+    const A = active(b, 0), B = active(b, 1);
+    if (canAwaken(b, 1) && B.hp < B.max * 0.5) return awakenF(b, 1);
+    const first = (fst(A).spd + Math.random() * 0.5) >= (fst(B).spd + Math.random() * 0.5) ? 0 : 1;
+    const side = b.turn % 2 === 0 ? first : 1 - first; b.turn++;
+    const att = active(b, side), dfn = active(b, 1 - side), sa = fst(att), sd = fst(dfn);
+    const mult = AR.beats[sa.type] === sd.type ? 1.5 : AR.beats[sd.type] === sa.type ? 0.7 : 1;
+    const crit = Math.random() < 0.1, dmg = Math.max(1, Math.round(sa.atk * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
+    dfn.hp = Math.max(0, dfn.hp - dmg); b.last = [side, dmg, mult];
+    let line = `${att.kind} used ${sa.move}! ${dmg} damage` + (mult > 1 ? " · super effective!" : mult < 1 ? " · not very effective…" : "") + (crit ? " · critical!" : "");
+    if (dfn.hp === 0) { b.idx[1 - side]++; line += ` · ${dfn.kind} is out!`; if (!active(b, 1 - side)) b.winner = side; }
+    return line;
+  }
+  function openArena() {
+    clearTimeout(arenaTimer); arenaBattle = null;
+    arenaTeam = arenaTeam.filter((p) => pets.includes(p)); if (!arenaTeam.length) arenaTeam = pets.slice(0, 3);
+    $("arenaLobby").hidden = false; $("arenaFight").hidden = true;
+    const wins = stat("arena_wins"); $("arenaWins").textContent = `🏆 ${wins} win${wins === 1 ? "" : "s"}`;
+    const box = $("arenaTeam"); box.innerHTML = "";
+    for (const p of pets) {
+      const e = arenaEntry(p), st = AR.stats[e[0]];
+      const b = doc().createElement("button"); b.className = arenaTeam.includes(p) ? "on" : "";
+      b.appendChild(thumb(e[0], e[1], false, 3)); b.append(`${AR.types[st.type][0]} ${e[0]}`);
+      const sm = doc().createElement("small"); sm.textContent = `❤${st.hp} ⚔${st.atk} 💨${st.spd}${e[2] ? " ✨" : ""}`; b.appendChild(sm);
+      b.onclick = () => { if (arenaTeam.includes(p)) arenaTeam = arenaTeam.filter((q) => q !== p); else { arenaTeam.push(p); if (arenaTeam.length > 3) arenaTeam.shift(); } openArena(); };
+      box.appendChild(b);
+    }
+    const rv = $("arenaRivals"); rv.innerHTML = "";
+    for (const r of AR.rivals) {
+      const b = doc().createElement("button");
+      b.textContent = `🥊 ${r.name} · +${r.reward} 💖${save.rivalsBeaten.includes(r.name) ? " ✓" : ""}`;
+      b.onclick = () => startBattle(r.team, r.name, r.reward); rv.appendChild(b);
+    }
+    $("arenaCopy").onclick = async () => {
+      if (!arenaTeam.length) { toast("Pick at least one Blip for your team!", 2.5); return; }
+      const code = battleCodeFor(arenaTeam[0].name, arenaTeam.map(arenaEntry));
+      try { await navigator.clipboard.writeText(code); toast("📋 Battle code copied! Send it to a friend (or post it on the Blipville Discord).", 4); }
+      catch (e) { prompt("Your battle code (copy it):", code); }
+    };
+    $("arenaPaste").onclick = async () => {
+      let text = ""; try { text = await navigator.clipboard.readText(); } catch (e) { /* not allowed: ask */ }
+      if (!/^\s*BLIP1-/i.test(text)) text = prompt("Paste their battle code (it starts with BLIP1-):") || "";
+      if (!text.trim()) return;
+      try { const [name, team] = readBattleCode(text); startBattle(team, name, 10); } catch (e) { toast(e.message, 3.5); }
+    };
+    openSheet("arenaSheet");
+  }
+  function startBattle(theirs, foe, reward) {
+    if (!arenaTeam.length) { toast("Pick at least one Blip for your team!", 2.5); return; }
+    arenaBattle = newBattle(arenaTeam.map(arenaEntry), theirs, foe, reward);
+    $("arenaLobby").hidden = true; $("arenaFight").hidden = false; sfx("whoosh");
+    drawBattle(); arenaTimer = setTimeout(arenaTick, 900);
+  }
+  function arenaTick() {
+    const b = arenaBattle; if (!b || b.winner !== null) return;
+    const line = stepBattle(b);
+    if (line) { b.log.push(line); sfx(b.last && b.last[1] > 30 ? "thud" : "boop"); }
+    if (b.winner !== null) finishBattle(b);
+    drawBattle();
+    if (b.winner === null) arenaTimer = setTimeout(arenaTick, 900);
+  }
+  function finishBattle(b) {
+    if (b.winner === 0) {
+      bump("arena_wins");
+      if (AR.rivals.some((r) => r.name === b.foe) && !save.rivalsBeaten.includes(b.foe)) save.rivalsBeaten.push(b.foe);
+      reward(pets[0], b.reward); b.log.push(`🏆 You win! +${b.reward} 💖`); sfx("fanfare"); vibrate([30, 40, 30]);
+      const w = stat("arena_wins"); $("arenaWins").textContent = `🏆 ${w} win${w === 1 ? "" : "s"}`;
+    } else b.log.push("💤 Your team needs a nap… try again!");
+    persist(true);
+  }
+  function drawBattle() {
+    const b = arenaBattle, cv = $("arenaCanvas"), c = cv.getContext("2d");
+    c.clearRect(0, 0, cv.width, cv.height); c.imageSmoothingEnabled = false;
+    [0, 1].forEach((side) => {
+      const f = active(b, side), x0 = side === 0 ? 20 : 200;
+      b.sides[side].forEach((g, j) => drawGrid(c, grid(g.kind, g.color, { t: 0, silhouette: g.hp === 0 }), (side === 0 ? 8 : 268) + j * 30, 8, 2));
+      if (!f) return;
+      drawGrid(c, grid(f.kind, f.color, { t: now(), face: f.hp > f.max / 2 ? "happy" : "normal" }), x0 + 12, 52, 7);
+      c.fillStyle = "#fff"; c.font = "700 11px " + FONT; c.textAlign = "center";
+      c.fillText(`${AR.types[fst(f).type][0]} ${f.kind}${f.aw ? " ✨" : ""}`, x0 + 68, 48);
+      c.fillStyle = "#2b2547"; c.fillRect(x0, 150, 136, 12);
+      const fr = f.hp / f.max; c.fillStyle = fr > 0.5 ? "#9ad8a8" : fr > 0.2 ? "#ffd23a" : "#ff5a7a"; c.fillRect(x0, 150, 136 * fr, 12);
+      c.fillStyle = "#ffffff"; c.font = "800 10px " + FONT; c.fillText(`${f.hp} / ${f.max}`, x0 + 68, 160);
+    });
+    if (b.last && b.winner === null) { c.fillStyle = "#ff5a7a"; c.font = "800 18px " + FONT; c.fillText(`-${b.last[1]}`, b.last[0] === 0 ? 280 : 90, 70); }
+    $("arenaLog").innerHTML = ""; for (const l of b.log.slice(-4)) { const d = doc().createElement("div"); d.textContent = l; $("arenaLog").appendChild(d); }
+    const aw = $("arenaAwaken"); aw.hidden = !(b.winner === null && canAwaken(b, 0));
+    if (!aw.hidden) aw.textContent = `✨ Awaken ${active(b, 0).base}!`;
+    aw.onclick = () => { const l = awakenF(b, 0); if (l) { b.log.push(l); sfx("fanfare"); drawBattle(); } };
+    const back = $("arenaBack");
+    back.textContent = b.winner === null ? "🏳️ Give up" : "↩ Back to the Arena";
+    back.onclick = () => { if (b.winner === null) { b.winner = 1; b.log.push("🏳️ You gave up. Next time!"); clearTimeout(arenaTimer); drawBattle(); } else openArena(); };
+  }
+  $("arenaBtn").onclick = openArena;
 
   // ghosts 👻
   function lightCandle() {
@@ -1612,7 +1770,7 @@
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
   window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
-                         nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
+                         nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;
                            plays.push(type === "ball" ? { type, pets: [a, b], from: a, to: b, t0: t, throws: 0, n: 4 }

@@ -4794,6 +4794,8 @@ class Sighting:
 # saves the town, swaps the file and starts again. Running from source (blip.pyw), it just links to the download.
 RELEASES_API = "https://api.github.com/repos/Johnblip189/blipville/releases?per_page=10"
 RELEASES_PAGE = "https://github.com/Johnblip189/blipville/releases"
+RELEASES_FEED = "https://github.com/Johnblip189/blipville/releases.atom"
+DOWNLOAD_URL = "https://github.com/Johnblip189/blipville/releases/download/{tag}/Blipville.exe"
 UPDATE_EVERY = 6 * 3600
 
 
@@ -4850,6 +4852,32 @@ def version_label():
     return f"{APP_VERSION} (built {time.strftime('%b', t)} {t.tm_mday}, {(t.tm_hour % 12) or 12}:{t.tm_min:02d} {'AM' if t.tm_hour < 12 else 'PM'})"
 
 
+def _fetch(url, method="GET", timeout=15):
+    import urllib.request
+    req = urllib.request.Request(url, method=method, headers={"User-Agent": "Blipville-updater"})
+    return urllib.request.urlopen(req, timeout=timeout)
+
+
+def find_update_backup():
+    """Backup check that doesn't count against GitHub's 60-checks-an-hour limit: read the public release feed for the
+    newest version, then look at its Blipville.exe download directly (its size and when it was uploaded)."""
+    import re
+    from email.utils import parsedate_to_datetime
+    tag = APP_VERSION
+    try:
+        with _fetch(RELEASES_FEED) as resp:
+            m = re.search(r"/releases/tag/([^\"<>\s]+)", resp.read().decode("utf-8", "replace"))
+            if m:
+                tag = m.group(1)
+    except Exception:  # noqa: BLE001  (no feed: at least look for a rebuild of our own version)
+        pass
+    with _fetch(DOWNLOAD_URL.format(tag=tag), method="HEAD") as resp:
+        size = int(resp.headers.get("Content-Length") or 0)
+        modified = resp.headers.get("Last-Modified")
+    when = parsedate_to_datetime(modified).strftime("%Y-%m-%dT%H:%M:%SZ") if modified else ""
+    return tag, {"name": "Blipville.exe", "browser_download_url": DOWNLOAD_URL.format(tag=tag), "size": size, "updated_at": when}
+
+
 class Updater:
     def __init__(self, app):
         self.app = app
@@ -4888,12 +4916,13 @@ class Updater:
         def work():
             result = None
             try:
-                import urllib.request
-                req = urllib.request.Request(RELEASES_API, headers={"User-Agent": "Blipville-updater", "Accept": "application/vnd.github+json"})
-                with urllib.request.urlopen(req, timeout=15) as resp:
+                with _fetch(RELEASES_API) as resp:
                     result = newest_release(json.loads(resp.read().decode("utf-8")))
-            except Exception:  # noqa: BLE001  (offline, rate limited, GitHub down: just try again later)
-                result = "error"
+            except Exception:  # noqa: BLE001  (rate limited, GitHub hiccup: try the backup way)
+                try:
+                    result = find_update_backup()
+                except Exception:  # noqa: BLE001  (offline or GitHub down: just try again later)
+                    result = "error"
             self.inbox.put(lambda: self.found(result, quiet))
         threading.Thread(target=work, daemon=True).start()
 
@@ -4902,7 +4931,8 @@ class Updater:
         self.busy = False
         if result == "error" or result is None:
             if not quiet:
-                messagebox.showinfo("Blipville updates", "Couldn't reach GitHub to check for updates. Try again later!", parent=self.app.root)
+                messagebox.showinfo("Blipville updates", "Couldn't reach GitHub to check for updates. Check your internet, "
+                                    "then try again in a few minutes!", parent=self.app.root)
             return
         tag, asset = result
         if not is_newer(tag, asset):

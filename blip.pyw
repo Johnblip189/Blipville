@@ -3619,7 +3619,6 @@ class Blip:
             self.root.geometry(f"{W}x{H}+{pos[0]}+{pos[1]}")
             self.root.update_idletasks()
             self.root.deiconify()
-            no_activate(self.root)
         else:
             self.root.geometry(f"+{pos[0]}+{pos[1]}")
         self._placed = pos
@@ -4349,22 +4348,6 @@ class Blip:
 UNLOCKS = {"Robo Bear": 1, "Robo Bunny": 2, "Robo Hen": 3}   # kind -> Night Shift night you must survive
 
 
-def no_activate(root):
-    """Windows: clicking a window normally 'activates' it, and that repaint can flash a see-through window black.
-    Pets and sighting scenes never need keyboard focus, so tell Windows not to activate them (like desktop widgets)."""
-    if sys.platform != "win32":
-        return
-    try:
-        import ctypes
-        user32 = ctypes.windll.user32
-        root.update_idletasks()
-        hwnd = user32.GetParent(root.winfo_id()) or root.winfo_id()
-        GWL_EXSTYLE, WS_EX_NOACTIVATE = -20, 0x08000000
-        user32.SetWindowLongW(hwnd, GWL_EXSTYLE, user32.GetWindowLongW(hwnd, GWL_EXSTYLE) | WS_EX_NOACTIVATE)
-    except Exception as e:  # noqa: BLE001
-        log(f"couldn't stop window activation: {e}")
-
-
 def log_path():
     return os.path.join(os.path.dirname(save_path()), "blipville.log")
 
@@ -4718,7 +4701,6 @@ class Sighting:
         root.geometry(f"{self.cw}x{self.ch}+{int(self.wx)}+{int(bottom - self.ch)}")
         root.update_idletasks()
         root.deiconify()
-        no_activate(root)
         self.born = time.monotonic()
         self.facing, self.pos, self.caught = (-1 if flip else 1), self.keys[0][1:], False
         witness = next((p for p in app.pets if p.state not in ("sleep", "held")), None)

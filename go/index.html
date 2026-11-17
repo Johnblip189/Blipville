@@ -40,13 +40,14 @@
 
 <div id="toast" role="status" aria-live="polite"></div>
 
-<!-- maintenance screen (turned on with the "Maintenance mode" button on GitHub) -->
+<!-- maintenance screen (status.json in the repo; the "Maintenance mode" button on GitHub turns it on/off) -->
 <div id="maint" hidden>
   <div class="maintCard">
     <img src="icons/maintenance.png" alt="Blips putting traffic cones around the Blipville server">
     <h2>Blipville is under maintenance 🔧</h2>
     <p id="maintMsg">We're fixing things up. Back soon!</p>
-    <p class="gold">Your pets are safe. They're saved on this phone.</p>
+    <p class="gold">Your pets are safe. They're saved on this device.</p>
+    <a id="maintLink" class="maintLink" hidden target="_blank" rel="noopener"></a>
     <button id="maintRetry">Check again</button>
   </div>
 </div>

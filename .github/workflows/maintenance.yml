@@ -1,20 +1,36 @@
-# The maintenance switch for Blipville: On the Go.
-# On GitHub: Actions → "Maintenance mode" → Run workflow → pick on/off (and a message) → Run.
-# It updates go/status.json, which the phone version checks every couple of minutes.
+# The maintenance switch for every version of Blipville.
+# On GitHub: Actions → "Maintenance mode" → Run workflow → pick what's closed (and a message) → Run.
+# It updates status.json. The website version checks it every couple of minutes, the Windows apps every 5 minutes
+# (every minute while closed), and they open again by themselves when it's switched off.
 name: Maintenance mode
 
 on:
   workflow_dispatch:
     inputs:
-      mode:
-        description: "Turn maintenance mode on or off"
-        type: choice
-        options: ["on", "off"]
-        default: "on"
+      classic:
+        description: "Close the Windows app (Blipville.exe)"
+        type: boolean
+        default: false
+      recode:
+        description: "Close Blipville Recode (Blipville-Recode.exe)"
+        type: boolean
+        default: false
+      web:
+        description: "Close the website version"
+        type: boolean
+        default: false
       message:
-        description: "Message for players (optional)"
+        description: "Message for players (leave empty to keep the current one)"
         type: string
-        default: "We're fixing things up. Back soon!"
+        default: ""
+      link:
+        description: "Optional button link (for example a download). Type none to remove it."
+        type: string
+        default: ""
+      link_text:
+        description: "Text on that button"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -24,25 +40,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update go/status.json
+      - name: Update status.json
         env:
-          MODE: ${{ inputs.mode }}
+          CLASSIC: ${{ inputs.classic }}
+          RECODE: ${{ inputs.recode }}
+          WEB: ${{ inputs.web }}
           MESSAGE: ${{ inputs.message }}
+          LINK: ${{ inputs.link }}
+          LINK_TEXT: ${{ inputs.link_text }}
         run: |
           python3 - <<'PY'
           import json, os
-          on = os.environ["MODE"] == "on"
-          data = {"maintenance": on, "message": os.environ.get("MESSAGE", "").strip() if on else ""}
-          with open("go/status.json", "w") as f:
-              json.dump(data, f, indent=2)
+          with open("status.json", encoding="utf-8") as f:
+              data = json.load(f)
+          data["maintenance"] = {k: os.environ[k.upper()] == "true" for k in ("classic", "recode", "web")}
+          if os.environ.get("MESSAGE", "").strip():
+              data["message"] = os.environ["MESSAGE"].strip()
+          link = os.environ.get("LINK", "").strip()
+          if link.lower() == "none":
+              data["link"], data["link_text"] = "", ""
+          elif link:
+              data["link"], data["link_text"] = link, os.environ.get("LINK_TEXT", "").strip() or "More info"
+          with open("status.json", "w", encoding="utf-8") as f:
+              json.dump(data, f, indent=2, ensure_ascii=False)
               f.write("\n")
-          print(data)
+          print(json.dumps(data, indent=2, ensure_ascii=False))
           PY
       - name: Save it
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add go/status.json
+          git add status.json
           git diff --cached --quiet && echo "Already set." && exit 0
-          git commit -m "Maintenance mode: ${{ inputs.mode }}"
+          git commit -m "Maintenance mode: classic=${{ inputs.classic }} recode=${{ inputs.recode }} web=${{ inputs.web }}"
           git push

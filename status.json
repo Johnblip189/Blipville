@@ -1,10 +1,11 @@
 {
-  "_how": "Maintenance switch. Set an app to true to close it: players' pets hide and they see the message below until it's false again. Apps check about every 5 minutes (every minute while closed). Updates still work while closed. classic = Blipville.exe, recode = Blipville-Recode.exe. link and link_text add a button (leave link empty for none).",
+  "_how": "Maintenance switch for every version of Blipville. Set one to true to close it: players see the message below until it's false again. classic = Blipville.exe, recode = Blipville-Recode.exe, web = the website version (go/). Apps check about every 5 minutes (every minute while closed); the website every 2 minutes. Updates still work while closed. link and link_text add a button (leave link empty for none). Easiest way: Actions -> Maintenance mode -> Run workflow.",
   "maintenance": {
     "classic": true,
-    "recode": false
+    "recode": false,
+    "web": true
   },
-  "message": "We're fixing the black flashes and rebuilding the desktop app from the ground up as Blipville Recode. Hang tight, it's almost ready!",
+  "message": "We're fixing some bugs and rebuilding the desktop app from the ground up as Blipville Recode. Hang tight, it's almost ready!",
   "link": "",
   "link_text": ""
 }

@@ -40,10 +40,21 @@
   details.chart { margin-top: 12px; }
   details.chart summary { cursor: pointer; font-weight: 700; }
   details.chart img { width: 100%; margin-top: 12px; border-radius: 12px; }
+  .maint { display: flex; gap: 14px; align-items: center; background: #3a2550; border: 2px solid var(--gold); border-radius: 16px;
+           padding: 14px 18px; margin: 20px 0 0; }
+  .maint[hidden] { display: none; }
+  .maint .icon { font-size: 30px; }
+  .maint b { color: var(--gold); font-size: 17px; }
+  .maint p { margin: 2px 0 0; color: var(--text); font-size: 15px; }
+  .maint a { font-weight: 700; }
 </style>
 </head>
 <body>
 <main>
+  <div class="maint" id="maint" hidden role="status">
+    <div class="icon">🔧</div>
+    <div><b id="maintTitle">Blipville is under maintenance</b><p id="maintMsg"></p><p id="maintLink" hidden><a></a></p></div>
+  </div>
   <section class="hero">
     <img class="banner" src="docs/banner.png" alt="Blipville: Husky Blip, Blip and a dragon on a starry night">
     <h1>🏘️ Blipville</h1>
@@ -96,5 +107,27 @@
     Made with 💜 · open source (MIT)
   </footer>
 </main>
+<script>
+// The maintenance switch (status.json in the repo) also shows up here.
+(async () => {
+  const names = { classic: "the Windows app", recode: "Blipville Recode", web: "the browser version" };
+  for (const url of ["https://raw.githubusercontent.com/Johnblip189/Blipville/main/status.json", "status.json"]) {
+    try {
+      const res = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
+      if (!res.ok) continue;
+      const st = await res.json(), m = st.maintenance || {};
+      const closed = Object.keys(names).filter((k) => m[k]);
+      if (!closed.length) return;
+      const list = closed.map((k) => names[k]);
+      document.getElementById("maintTitle").textContent = (closed.length === Object.keys(names).length ? "Blipville is" :
+        list.join(" and ").replace(/^./, (c) => c.toUpperCase()) + (closed.length > 1 ? " are" : " is")) + " closed for maintenance";
+      document.getElementById("maintMsg").textContent = st.message || "We're fixing things up. Back soon!";
+      if (st.link) { const p = document.getElementById("maintLink"), a = p.firstChild; a.href = st.link; a.textContent = st.link_text || "More info"; p.hidden = false; }
+      document.getElementById("maint").hidden = false;
+      return;
+    } catch (e) { /* try the next one */ }
+  }
+})();
+</script>
 </body>
 </html>

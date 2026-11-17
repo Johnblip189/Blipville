@@ -1431,17 +1431,22 @@
   $("nightBtn").onclick = () => NS.open();
 
   // ------------------------------------------------------------------ maintenance mode
-  // Turned on/off with the "Maintenance mode" button on GitHub (it edits go/status.json).
-  // We read it straight from GitHub (fresh within a few minutes), then from this site as a backup.
-  const STATUS_URLS = ["https://raw.githubusercontent.com/Johnblip189/Blipville/main/go/status.json", "status.json"];
+  // One switch for every version of Blipville: status.json in the repo ("web" is this one). Turned on/off with the
+  // "Maintenance mode" button on GitHub. We read it straight from GitHub (fresh within a few minutes), then from this site.
+  const STATUS_URLS = ["https://raw.githubusercontent.com/Johnblip189/Blipville/main/status.json", "../status.json"];
   async function checkStatus() {
     for (const url of STATUS_URLS) {
       try {
         const res = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) continue;
         const st = await res.json();
-        $("maint").hidden = !st.maintenance;
-        if (st.maintenance) $("maintMsg").textContent = st.message || "We're fixing things up. Back soon!";
+        const closed = typeof st.maintenance === "object" ? !!(st.maintenance && st.maintenance.web) : !!st.maintenance;
+        $("maint").hidden = !closed;
+        if (closed) {
+          $("maintMsg").textContent = st.message || "We're fixing things up. Back soon!";
+          $("maintLink").hidden = !st.link;
+          if (st.link) { $("maintLink").href = st.link; $("maintLink").textContent = st.link_text || "More info"; }
+        }
         return st;
       } catch (e) { /* offline or blocked: try the next one */ }
     }

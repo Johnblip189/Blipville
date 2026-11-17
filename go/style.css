@@ -146,6 +146,9 @@ html, body {
 .maintCard .gold { color: #ffd666; font-weight: 700; }
 .maintCard button { margin-top: 20px; min-height: 48px; padding: 0 28px; border: 0; border-radius: 14px; background: var(--accent);
   color: #fff; font: 800 16px var(--font); }
+.maintLink { display: block; width: fit-content; margin: 18px auto 0; padding: 12px 24px; border-radius: 14px; background: #ffd23a;
+  color: #2a1a3a; font: 800 16px var(--font); text-decoration: none; }
+.maintLink[hidden] { display: none; }
 #bar button[hidden], #popped[hidden] { display: none; }
 #popped { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px;
   background: var(--bg); z-index: 20; }

@@ -2096,10 +2096,10 @@ RARE = {'Phoenix': {'eyes': 5,
              'move': 'walk',
              'lines': ["nine tails? i've got... some.", '*mystical fox noises*', 'i know a little magic', 'kon kon!'],
              'body': ['aa.o........o.aa',
-                      'aaoao......oaoaa',
+                      'taoao......oaoat',
                       'aaoaboooooobaoaa',
-                      '.obbbbbbbbbbbbo.',
-                      'obbsbbbbbbbbsbbo',
+                      '.obbbbbssbbbbbo.',
+                      'obbsbbbssbbbsbbo',
                       'obbbbbbbbbbbbbbo',
                       'obbbbbbbbbbbbbbo',
                       'osllbbbbbbbbllso',
@@ -2108,17 +2108,19 @@ RARE = {'Phoenix': {'eyes': 5,
                       '..ollllllllllo..',
                       '...oooooooooo...'],
              'colors': [{'name': 'Spirit',
-                         'o': '#5a3a4a',
-                         'b': '#ffffff',
-                         'a': '#fff0f4',
+                         'o': '#6a2a3e',
+                         'b': '#fde4ec',
+                         'a': '#ff7a9a',
+                         't': '#e8203a',
                          'l': '#ffffff',
                          's': '#e8203a',
-                         'n': '#3a1a2a',
+                         'n': '#6a2a3e',
                          'e': '#e8203a'},
                         {'name': 'Moon',
                          'o': '#1a1a3a',
                          'b': '#d8dcf0',
                          'a': '#a8b0e8',
+                         't': '#5a6aff',
                          'l': '#ffffff',
                          's': '#5a6aff',
                          'n': '#1a1a3a',
@@ -2127,6 +2129,7 @@ RARE = {'Phoenix': {'eyes': 5,
                          'o': '#3a1406',
                          'b': '#ff9a3a',
                          'a': '#ffd23a',
+                         't': '#c81e1e',
                          'l': '#fff4e6',
                          's': '#c81e1e',
                          'n': '#1a0a02',
@@ -6131,9 +6134,13 @@ class App:
                 self.last_topmost = now
         except tk.TclError:
             return
-        step = 1 / FPS
-        self.next_tick = max(getattr(self, "next_tick", now) + step, time.monotonic() - step)   # don't pile up if we fall behind
-        self.root.after(max(1, int((self.next_tick - time.monotonic()) * 1000)), self.tick)
+        # Keep a steady beat, but always leave Windows a little gap to repaint the see-through windows (with no gap
+        # they can flash black). If this PC falls behind, skip ahead instead of rushing to catch up.
+        step, t = 1 / FPS, time.monotonic()
+        self.next_tick = getattr(self, "next_tick", now) + step
+        if self.next_tick < t + 0.008:
+            self.next_tick = t + 0.008
+        self.root.after(int((self.next_tick - t) * 1000), self.tick)
 
     def run(self):
         self.root.mainloop()

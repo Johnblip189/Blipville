@@ -3385,6 +3385,9 @@ TROPHIES = [
     ("legend-all", "🌟", "Living Legend", f"Find all {len(LEGEND_KINDS)} World Legends", _all(LEGEND_KINDS), 50),
     ("night-1", "🌙", "Night Owl", "Survive Night 1 of Night Shift", lambda a: a.nights_won() >= 1, 10),
     ("night-3", "🏆", "Survivor", "Survive all 3 nights of Night Shift", lambda a: a.nights_won() >= 3, 30),
+    ("awaken-1", "✨", "Awakened", "Awaken a Blip with an Awakening Crystal", lambda a: len(a.save.get("awakened", [])) >= 1, 15),
+    ("arena-1", "⚔️", "Arena Rookie", "Win a battle in the Arena", lambda a: a.stat("arena_wins") >= 1, 10),
+    ("arena-champ", "🥇", "Arena Champion", "Beat Champion Coco", lambda a: "Champion Coco" in a.save.get("rivals_beaten", []), 40),
 ]
 BEACON_COST = 100                 # hearts per Kaiju Beacon
 KAIJU_HITS = 3                    # clicks it takes to befriend a kaiju
@@ -4120,6 +4123,7 @@ class Blip:
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
         self.menu.add_command(label=f"🕯️ Light a Spirit Candle ({CANDLE_COST} 💖)…", command=lambda: app.light_candle(self.root))
         self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
+        self.menu.add_command(label="⚔️ Arena…", command=lambda: Arena(app))
         self.menu.add_command(label="🏆 Trophies…", command=lambda: TrophyShelf(app))
         self.trophy_entry = self.menu.index("end")
         self.world_menu = tk.Menu(self.menu, tearoff=0)
@@ -6080,6 +6084,373 @@ class Maintenance:
         app.repaint_now()
         if app.pets:
             app.pets[0].say("we're open again! 🎉", 4)
+
+
+# ----------------------------------------------------------------------------- the Arena ⚔️
+# Teams of 3 battle automatically; you get one ✨ Awaken per battle. Types: 🔥 Spark beats 🌿 Sprout beats 💧 Splash
+# beats 🔥 Spark. Every Blip's type and stats come from here (the website version gets the same table).
+# A battle code is "BLIP1-" + base64 of {"n": name, "t": [[kind, color, can_awaken], ...]}: send it to a friend and
+# they battle your team (the computer plays it).
+ARENA_TYPES = {"spark": ("🔥", "Spark"), "splash": ("💧", "Splash"), "sprout": ("🌿", "Sprout")}
+ARENA_BEATS = {"spark": "sprout", "sprout": "splash", "splash": "spark"}
+ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash": ["Bubble Burst", "Splash Slam", "Tidal Hug"],
+               "sprout": ["Leaf Whirl", "Vine Bop", "Petal Storm"]}
+_SPARK = {"Phoenix", "Dragon", "Magmaw", "Will-o'-Wisp", "Jersey Devil", "Fox", "Kitsune", "Chochin", "Amber Raptor", "Comet",
+          "Rocket", "Black Hole", "Star", "Moon", "Fennec", "Tiger", "Lion", "Cheetah", "Gigabot", "Robo Bear", "Robo Bunny",
+          "Robo Hen", "Golden Blip", "Bee", "Pumpkin", "Thunderbird", "Snallygaster", "Hodag", "Taco", "Toast", "Poltergeist"}
+_SPLASH = {"Axolotl", "Clownfish", "Crab", "Dolphin", "Frog", "Goldfish", "Jellyfish", "Koi", "Octopus", "Otter", "Penguin",
+           "Pufferfish", "Seal", "Shark", "Starfish", "Turtle", "Whale", "Walrus", "Narwhal", "Nessie", "Kappa", "Tidal Titan",
+           "Pearlfin", "Abyss Wisp", "Ghost Captain", "Frogman", "Duck", "Swan", "Pelican", "Platypus", "Hippo", "Beaver", "Yeti",
+           "Frostback", "Snow Leopard", "Slime", "Pudding", "Ice Cream"}
+_SPROUT = {"Sprout", "Caterpillar", "Ladybug", "Butterfly", "Mantis", "Mossling", "Bloomkin", "Sloth", "Koala", "Panda",
+           "Chameleon", "Gecko", "Iguana", "Snail", "Bigfoot", "Skunk Ape", "Shroomy", "Cactus Pal", "Deer", "Moose", "Rabbit",
+           "Hedgehog", "Tortoise", "Moth", "Mothman", "Owlman", "Gumdrop Golem"}
+
+
+def _fnv(text):
+    h = 2166136261
+    for b in text.encode("utf-8"):
+        h = ((h ^ b) * 16777619) & 0xFFFFFFFF
+    return h
+
+
+def _arena_stats(kind):
+    base = AWAKEN_BASE.get(kind, kind)
+    h = _fnv(base)
+    tab = next((n for n, ks in TAB_GROUPS if base in ks), "")
+    kind_type = ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
+                 "sprout" if base in _SPROUT or tab.startswith("Plants") else ["spark", "splash", "sprout"][h % 3])
+    tier = (1.2 if base in LEGENDS or base in KAIJU else 1.12 if base in RARE or base in CRYPTIDS or base in GHOSTS
+            else 1.1 if base in ROBOTS else 1.05 if base in GIFTS else 1.0)
+    if kind in AWAKEN_BASE:
+        tier *= 1.25
+    v = VARIANTS[base]
+    return {"type": kind_type, "hp": round((70 + h % 41) * tier), "atk": round((15 + (h >> 8) % 9) * tier),
+            "spd": round((6 + (h >> 16) % 10) * v.get("speed", 1.0) * (1.1 if kind in AWAKEN_BASE else 1)),
+            "move": f"{kind.split()[0]} Nova" if kind in AWAKEN_BASE else ARENA_MOVES[kind_type][(h >> 4) % 3]}
+
+
+ARENA_STATS = {k: _arena_stats(k) for k in VARIANTS}
+ARENA_RIVALS = [("Rival Rae", 5, [["Cat", 0, 0], ["Frog", 0, 0], ["Fox", 0, 0]]),
+                ("Rival Rex", 10, [["Bigfoot", 0, 0], ["Shark", 0, 0], ["Phoenix", 0, 1]]),
+                ("Champion Coco", 20, [["Tidal Titan", 0, 0], ["Kitsune", 0, 1], ["Dragon", 0, 1]])]
+
+
+def battle_code(name, team):
+    import base64
+    raw = json.dumps({"n": name[:20], "t": [[k, int(c), int(bool(a))] for k, c, a in team[:3]]}, separators=(",", ":"))
+    return "BLIP1-" + base64.urlsafe_b64encode(raw.encode("utf-8")).decode("ascii").rstrip("=")
+
+
+def read_battle_code(code):
+    """(name, team) from a battle code, or raises ValueError."""
+    import base64
+    code = "".join(str(code).split())
+    if not code.upper().startswith("BLIP1-"):
+        raise ValueError("That's not a Blipville battle code (they start with BLIP1-).")
+    body = code[6:]
+    try:
+        data = json.loads(base64.urlsafe_b64decode(body + "=" * (-len(body) % 4)).decode("utf-8"))
+        team = [[str(k), int(c), int(a)] for k, c, a in data["t"]][:3]
+    except Exception:  # noqa: BLE001
+        raise ValueError("That battle code looks broken. Copy it again, all of it.") from None
+    team = [t for t in team if AWAKEN_BASE.get(t[0], t[0]) in VARIANTS]
+    if not team:
+        raise ValueError("That battle code has no Blips in it.")
+    return str(data.get("n") or "A friend")[:20], team
+
+
+class Fighter:
+    def __init__(self, kind, color, can_awaken):
+        self.base = AWAKEN_BASE.get(kind, kind)
+        self.kind, self.color = self.base, int(color)
+        self.can_awaken = bool(can_awaken) and self.base in AWAKEN_FORM
+        st = ARENA_STATS[self.kind]
+        self.max_hp = self.hp = st["hp"]
+        self.awakened = False
+
+    @property
+    def st(self):
+        return ARENA_STATS[self.kind]
+
+    def awaken(self):
+        frac = self.hp / self.max_hp
+        self.kind, self.awakened = AWAKEN_FORM[self.base], True
+        self.color %= len(kind_colors(self.kind))
+        self.max_hp = self.st["hp"]
+        self.hp = min(self.max_hp, round(self.max_hp * frac + self.max_hp * 0.25))
+
+
+class Battle:
+    """One battle, step by step: step() does the next attack and returns a line for the log."""
+    def __init__(self, mine, theirs, seed=None):
+        self.sides = [[Fighter(*f) for f in mine], [Fighter(*f) for f in theirs]]
+        self.idx = [0, 0]
+        self.awaken_left = [1, 1]
+        self.rng = random.Random(seed)
+        self.turn = 0
+        self.winner = None
+        self.last = None                                  # (attacker side, damage, effective)
+
+    def active(self, side):
+        return self.sides[side][self.idx[side]] if self.idx[side] < len(self.sides[side]) else None
+
+    def can_awaken(self, side):
+        f = self.active(side)
+        return bool(f and self.awaken_left[side] and f.can_awaken and not f.awakened)
+
+    def awaken(self, side):
+        if not self.can_awaken(side):
+            return None
+        self.awaken_left[side] = 0
+        f = self.active(side)
+        f.awaken()
+        return f"✨ {f.base} awakens into {f.kind}!"
+
+    def step(self):
+        if self.winner is not None:
+            return None
+        a, b = self.active(0), self.active(1)
+        if self.can_awaken(1) and b.hp < b.max_hp * 0.5:        # the other team awakens when it's in trouble
+            return self.awaken(1)
+        first = 0 if (a.st["spd"], self.rng.random()) >= (b.st["spd"], self.rng.random()) else 1
+        side = first if self.turn % 2 == 0 else 1 - first
+        self.turn += 1
+        att, dfn = self.active(side), self.active(1 - side)
+        mult = 1.5 if ARENA_BEATS[att.st["type"]] == dfn.st["type"] else 0.7 if ARENA_BEATS[dfn.st["type"]] == att.st["type"] else 1.0
+        crit = self.rng.random() < 0.1
+        dmg = max(1, round(att.st["atk"] * mult * self.rng.uniform(0.85, 1.15) * (1.5 if crit else 1)))
+        dfn.hp = max(0, dfn.hp - dmg)
+        self.last = (side, dmg, mult)
+        line = f"{att.kind} used {att.st['move']}! {dmg} damage" + (" · super effective!" if mult > 1 else " · not very effective…" if mult < 1 else "") + (" · critical!" if crit else "")
+        if dfn.hp == 0:
+            self.idx[1 - side] += 1
+            line += f" · {dfn.kind} is out!"
+            if self.active(1 - side) is None:
+                self.winner = side
+        return line
+
+
+class Arena:
+    """⚔️ Pick 3 Blips from your town, share your battle code, battle a friend's code or a practice rival."""
+    CW, CH = 780, 470
+    BG, CARD, GOLD, PINK, GREEN = "#1d1a2e", "#2b2547", "#ffd23a", "#ff9fc0", "#9ad8a8"
+
+    def __init__(self, app):
+        self.app = app
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville Arena ⚔️")
+        self.win.resizable(False, False)
+        self.win.configure(bg=self.BG)
+        self.win.attributes("-topmost", True)
+        self.c = tk.Canvas(self.win, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0)
+        self.c.pack(padx=6, pady=6)
+        self.c.bind("<Button-1>", self.on_click)
+        self.buttons, self.battle, self.log, self.after_id = [], None, [], None
+        self.team = [p for p in app.pets][:3]
+        self.lobby()
+
+    # ---- little helpers
+    def button(self, x, y, w, h, text, fn, color=None, fg="#ffffff"):
+        self.c.create_rectangle(x, y, x + w, y + h, fill=color or "#3a3360", outline="", width=0)
+        self.c.create_text(x + w / 2, y + h / 2, text=text, fill=fg, font=("Segoe UI", 10, "bold"))
+        self.buttons.append((x, y, x + w, y + h, fn))
+
+    def on_click(self, e):
+        for x1, y1, x2, y2, fn in reversed(self.buttons):
+            if x1 <= e.x <= x2 and y1 <= e.y <= y2:
+                self.app.sound.play("pop")
+                fn()
+                return
+
+    def team_entry(self, pet):
+        base = AWAKEN_BASE.get(pet.kind, pet.kind)
+        return [base, pet.palette % len(kind_colors(base)), int(base in AWAKEN_FORM and base in self.app.save.get("awakened", []))]
+
+    def my_team(self):
+        return [self.team_entry(p) for p in self.team if p in self.app.pets]
+
+    # ---- the lobby
+    def lobby(self):
+        if self.after_id:
+            self.win.after_cancel(self.after_id)
+            self.after_id = None
+        c = self.c
+        c.delete("all")
+        self.buttons = []
+        wins = self.app.stat("arena_wins")
+        c.create_text(16, 24, anchor="w", text="⚔️ Arena", fill="#ffffff", font=("Segoe UI", 16, "bold"))
+        c.create_text(self.CW - 16, 24, anchor="e", text=f"🏆 {wins} win{'s' if wins != 1 else ''}", fill=self.GOLD, font=("Segoe UI", 12, "bold"))
+        c.create_text(16, 52, anchor="w", fill="#c8c0e0", font=("Segoe UI", 9),
+                      text="🔥 Spark beats 🌿 Sprout · 🌿 Sprout beats 💧 Splash · 💧 Splash beats 🔥 Spark · ✨ one Awaken per battle")
+        c.create_text(16, 82, anchor="w", text="Your team (click your Blips below to pick 3)", fill=self.GOLD, font=("Segoe UI", 10, "bold"))
+        for i in range(3):
+            x = 16 + i * 150
+            c.create_rectangle(x, 96, x + 140, 196, fill=self.CARD, outline="#3a3360", width=2)
+            if i < len(self.team) and self.team[i] in self.app.pets:
+                p = self.team[i]
+                base = AWAKEN_BASE.get(p.kind, p.kind)
+                st = ARENA_STATS[base]
+                draw_sprite(c, base, p.palette % len(kind_colors(base)), x + 30, y=104, scale=5)
+                c.create_text(x + 70, 174, text=f"{ARENA_TYPES[st['type']][0]} {base}", fill="#ffffff", font=("Segoe UI", 9, "bold"), width=132)
+                c.create_text(x + 70, 188, text=f"❤ {st['hp']}  ⚔ {st['atk']}  💨 {st['spd']}" + ("  ✨" if self.team_entry(p)[2] else ""),
+                              fill="#c8c0e0", font=("Segoe UI", 8))
+            else:
+                c.create_text(x + 70, 146, text="empty", fill="#6a6290", font=("Segoe UI", 10, "bold"))
+        # town strip
+        for i, p in enumerate(self.app.pets[:12]):
+            x, y = 16 + i * 62, 212
+            on = p in self.team
+            c.create_rectangle(x, y, x + 56, y + 56, fill=self.CARD, outline=self.GOLD if on else "#3a3360", width=2)
+            base = AWAKEN_BASE.get(p.kind, p.kind)
+            draw_sprite(c, base, p.palette % len(kind_colors(base)), x + 4, y + 6, 3)
+            self.buttons.append((x, y, x + 56, y + 56, lambda p=p: self.toggle(p)))
+        # actions
+        self.button(16, 290, 230, 40, "📋 Copy my battle code", self.copy_code, "#5a4ae0")
+        self.button(256, 290, 250, 40, "📥 Battle a friend's code", self.paste_code, "#e8457a")
+        c.create_text(16, 350, anchor="w", text="Practice rivals", fill=self.GOLD, font=("Segoe UI", 10, "bold"))
+        beaten = self.app.save.get("rivals_beaten", [])
+        for i, (name, reward, team) in enumerate(ARENA_RIVALS):
+            x = 16 + i * 252
+            done = name in beaten
+            self.button(x, 364, 240, 40, f"🥊 {name}  ·  +{reward} 💖" + ("  ✓" if done else ""),
+                        lambda r=(name, reward, team): self.start(r[2], r[0], r[1]), "#3a3360")
+        c.create_text(16, 430, anchor="w", fill="#9a92c0", font=("Segoe UI", 9),
+                      text="Share your code on the Blipville Discord and see who can beat your team!")
+
+    def toggle(self, pet):
+        if pet in self.team:
+            self.team.remove(pet)
+        elif len(self.team) < 3:
+            self.team.append(pet)
+        else:
+            self.team = self.team[1:] + [pet]
+        self.lobby()
+
+    def copy_code(self):
+        if not self.my_team():
+            return
+        code = battle_code(self.app.save.get("arena_name") or (self.team[0].name if self.team else "A friend"), self.my_team())
+        self.win.clipboard_clear()
+        self.win.clipboard_append(code)
+        from tkinter import messagebox
+        messagebox.showinfo("Your battle code 📋", f"Copied! Send it to a friend (or post it on the Blipville Discord):\n\n{code}\n\n"
+                            "They paste it into their Arena to battle your team.", parent=self.win)
+
+    def paste_code(self):
+        from tkinter import messagebox, simpledialog
+        try:
+            text = self.win.clipboard_get()
+        except tk.TclError:
+            text = ""
+        if not str(text).strip().upper().startswith("BLIP1-"):
+            text = simpledialog.askstring("Battle a friend", "Paste their battle code (it starts with BLIP1-):", parent=self.win) or ""
+        if not text.strip():
+            return
+        try:
+            name, team = read_battle_code(text)
+        except ValueError as err:
+            messagebox.showinfo("Battle code", str(err), parent=self.win)
+            return
+        self.start(team, name, 10)
+
+    # ---- a battle
+    def start(self, theirs, name, reward):
+        mine = self.my_team()
+        if not mine:
+            from tkinter import messagebox
+            messagebox.showinfo("Arena", "Pick at least one Blip for your team first!", parent=self.win)
+            return
+        self.battle, self.foe, self.reward, self.log, self.done = Battle(mine, theirs), name, reward, [], False
+        self.log.append(f"⚔️ {name} wants to battle!")
+        self.app.sound.play("whoosh")
+        self.draw_battle()
+        self.after_id = self.win.after(900, self.tick)
+
+    def tick(self):
+        self.after_id = None
+        b = self.battle
+        if b is None or b.winner is not None:
+            return
+        line = b.step()
+        if line:
+            self.log.append(line)
+            self.app.sound.play("thud" if b.last and b.last[1] > 30 else "boop")
+        if b.winner is not None:
+            self.finish()
+        self.draw_battle()
+        if b.winner is None:
+            self.after_id = self.win.after(900, self.tick)
+
+    def awaken(self):
+        line = self.battle.awaken(0)
+        if line:
+            self.log.append(line)
+            self.app.sound.play("fanfare")
+            self.draw_battle()
+
+    def finish(self):
+        won = self.battle.winner == 0
+        if won:
+            self.app.bump("arena_wins")
+            if self.foe in [r[0] for r in ARENA_RIVALS] and self.foe not in self.app.save.setdefault("rivals_beaten", []):
+                self.app.save["rivals_beaten"].append(self.foe)
+            self.app.add_hearts(self.reward, self.app.pets[0] if self.app.pets else None)
+            self.log.append(f"🏆 You win! +{self.reward} 💖")
+            self.app.sound.play("fanfare")
+        else:
+            self.log.append("💤 Your team needs a nap… try again!")
+        write_save(self.app.save)
+
+    def fighter_card(self, f, x, flip, active):
+        c = self.c
+        st = f.st
+        scale = 8 if active else 3
+        if active:
+            draw_sprite(c, f.kind, f.color, x, 120, scale, face="happy" if f.hp > f.max_hp * 0.5 else "normal")
+            w = 220
+            bx = x - (60 if flip else 0)
+            c.create_text(bx + w / 2, 96, text=f"{ARENA_TYPES[st['type']][0]} {f.kind}" + (" ✨" if f.awakened else ""), fill="#ffffff",
+                          font=("Segoe UI", 12, "bold"))
+            c.create_rectangle(bx, 236, bx + w, 252, fill="#14121e", outline="")
+            frac = f.hp / f.max_hp
+            c.create_rectangle(bx, 236, bx + w * frac, 252, fill=self.GREEN if frac > 0.5 else "#ffd23a" if frac > 0.2 else "#ff5a7a", outline="")
+            c.create_text(bx + w / 2, 244, text=f"{f.hp} / {f.max_hp}", fill="#14121e" if frac > 0.4 else "#ffffff", font=("Segoe UI", 9, "bold"))
+
+    def draw_battle(self):
+        c, b = self.c, self.battle
+        c.delete("all")
+        self.buttons = []
+        c.create_text(16, 24, anchor="w", text=f"⚔️ You vs {self.foe}", fill="#ffffff", font=("Segoe UI", 15, "bold"))
+        c.create_rectangle(0, 262, self.CW, 266, fill="#3a3360", outline="")
+        for side, x in ((0, 70), (1, 470)):
+            f = b.active(side)
+            if f:
+                self.fighter_card(f, x, side == 1, True)
+            for j, g in enumerate(b.sides[side]):           # the bench: little ones, gray when out
+                gx = (20 if side == 0 else self.CW - 160) + j * 48
+                draw_sprite(c, g.kind, g.color, gx, 50, 2, silhouette="#3a3360" if g.hp == 0 else None)
+        if b.last and b.winner is None:
+            side, dmg, mult = b.last
+            tx = 560 if side == 0 else 170
+            c.create_text(tx, 110, text=f"-{dmg}", fill="#ff5a7a" if mult >= 1 else "#c8c0e0", font=("Segoe UI", 18, "bold"))
+        for i, line in enumerate(self.log[-5:]):
+            c.create_text(16, 284 + i * 22, anchor="w", text=line, fill="#ffffff" if i == len(self.log[-5:]) - 1 else "#a8a0c8",
+                          font=("Segoe UI", 10, "bold" if i == len(self.log[-5:]) - 1 else "normal"), width=self.CW - 32)
+        if b.winner is None:
+            if b.can_awaken(0):
+                self.button(16, 410, 220, 44, f"✨ Awaken {b.active(0).base}!", self.awaken, "#c86aff")
+            self.button(self.CW - 136, 410, 120, 44, "🏳️ Give up", self.give_up, "#3a3360")
+        else:
+            self.button(16, 410, 200, 44, "↩ Back to the Arena", self.lobby, "#5a4ae0")
+            self.button(226, 410, 160, 44, "🔁 Rematch", lambda: self.start([[f.base, f.color, int(f.can_awaken)] for f in b.sides[1]],
+                                                                        self.foe, self.reward), "#e8457a")
+
+    def give_up(self):
+        if self.battle and self.battle.winner is None:
+            self.battle.winner = 1
+            self.log.append("🏳️ You gave up. Next time!")
+            self.draw_battle()
 
 
 # ----------------------------------------------------------------------------- trophy shelf

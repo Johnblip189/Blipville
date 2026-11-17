@@ -3478,7 +3478,10 @@ TROPHIES = [
     ("arena-champ", "🥇", "Arena Champion", "Beat Champion Coco", lambda a: "Champion Coco" in a.save.get("rivals_beaten", []), 40),
     ("awaken-5", "🌠", "Fully Charged", "Awaken 5 different Blips", lambda a: len(a.save.get("awakened", [])) >= 5, 30),
     ("arena-kaiju", "👑", "Kaiju Slayer", "Beat Kaiju King Kai", lambda a: "Kaiju King Kai" in a.save.get("rivals_beaten", []), 50),
+    ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
+    ("mouse-10", "🖱️", "Cat and Mouse", "Your Blips catch your mouse pointer 10 times", lambda a: a.stat("cursor_catches") >= 10, 15),
 ]
+DESKTOP_TROPHIES = {"climb-1", "mouse-10"}     # only the Windows app can earn these (the website leaves them out)
 BEACON_COST = 100                 # hearts per Kaiju Beacon
 KAIJU_HITS = 3                    # clicks it takes to befriend a kaiju
 
@@ -3822,6 +3825,148 @@ def pil_font(px, bold=False, emoji=False):
                 break
         _PIL_FONTS[key] = font or ImageFont.load_default()
     return _PIL_FONTS[key]
+
+
+class DesktopWindows:
+    """The other apps' windows on the screen, so Blips can climb up and ride on them (Windows only).
+
+    The list is refreshed twice a second. It keeps every visible window in z-order (top first) so we can tell whether
+    a spot on a window's top edge is covered by another window, and marks which ones a Blip may stand on."""
+    BORDER = 7                                   # Windows 10/11 windows have invisible resize borders at the sides
+
+    def __init__(self):
+        self.ok, self.wins, self.at = False, [], -99.0
+        if sys.platform != "win32":
+            return
+        try:
+            import ctypes
+            from ctypes import wintypes as wt
+            u = ctypes.windll.user32
+            HW = ctypes.c_void_p
+            self.ct, self.wt, self.u = ctypes, wt, u
+            self.PROC = ctypes.WINFUNCTYPE(wt.BOOL, HW, wt.LPARAM)
+            for fn, args, res in ((u.EnumWindows, [self.PROC, wt.LPARAM], wt.BOOL), (u.IsWindowVisible, [HW], wt.BOOL),
+                                  (u.IsIconic, [HW], wt.BOOL), (u.IsZoomed, [HW], wt.BOOL), (u.IsWindow, [HW], wt.BOOL),
+                                  (u.GetWindowRect, [HW, ctypes.POINTER(wt.RECT)], wt.BOOL),
+                                  (u.GetWindowTextLengthW, [HW], ctypes.c_int),
+                                  (u.GetWindowTextW, [HW, wt.LPWSTR, ctypes.c_int], ctypes.c_int),
+                                  (u.GetClassNameW, [HW, wt.LPWSTR, ctypes.c_int], ctypes.c_int),
+                                  (u.GetWindowLongW, [HW, ctypes.c_int], wt.LONG),
+                                  (u.GetWindowThreadProcessId, [HW, ctypes.POINTER(wt.DWORD)], wt.DWORD),
+                                  (u.SetCursorPos, [ctypes.c_int, ctypes.c_int], wt.BOOL)):
+                fn.argtypes, fn.restype = args, res
+            try:
+                self.dwm = ctypes.windll.dwmapi
+                self.dwm.DwmGetWindowAttribute.argtypes = [HW, wt.DWORD, ctypes.c_void_p, wt.DWORD]
+            except Exception:  # noqa: BLE001
+                self.dwm = None
+            self.pid = os.getpid()
+            self.ok = True
+        except Exception as e:  # noqa: BLE001
+            log(f"window climbing is off: {e!r}")
+
+    def _cloaked(self, hwnd):
+        if not self.dwm:
+            return False
+        v = self.wt.DWORD()
+        try:
+            return self.dwm.DwmGetWindowAttribute(hwnd, 14, self.ct.byref(v), 4) == 0 and v.value != 0   # DWMWA_CLOAKED
+        except Exception:  # noqa: BLE001
+            return False
+
+    def _rect(self, hwnd):
+        r = self.wt.RECT()
+        if not self.u.GetWindowRect(hwnd, self.ct.byref(r)):
+            return None
+        return r.left + self.BORDER, r.top, r.right - self.BORDER, r.bottom - self.BORDER
+
+    def refresh(self, now, force=False):
+        if not self.ok or (not force and now - self.at < 0.5):
+            return
+        self.at = now
+        found, buf = [], self.ct.create_unicode_buffer(256)
+
+        def visit(hwnd, _):
+            try:
+                if not self.u.IsWindowVisible(hwnd) or self.u.IsIconic(hwnd) or self._cloaked(hwnd):
+                    return True
+                pid = self.wt.DWORD()
+                self.u.GetWindowThreadProcessId(hwnd, self.ct.byref(pid))
+                rect = self._rect(hwnd)
+                if not rect or rect[2] - rect[0] < 60 or rect[3] - rect[1] < 40:
+                    return True
+                self.u.GetClassNameW(hwnd, buf, 256)
+                cls = buf.value
+                if cls in ("Progman", "WorkerW", "Shell_TrayWnd", "Shell_SecondaryTrayWnd"):
+                    return True
+                ex = self.u.GetWindowLongW(hwnd, -20)                 # GWL_EXSTYLE
+                ours = pid.value == self.pid
+                perch = (not ours and not ex & 0x80 and self.u.GetWindowTextLengthW(hwnd) > 0   # not a tool window, has a title
+                         and not self.u.IsZoomed(hwnd) and rect[2] - rect[0] >= 160)
+                title = ""
+                if perch:
+                    self.u.GetWindowTextW(hwnd, buf, 256)
+                    title = buf.value
+                found.append({"hwnd": hwnd, "rect": rect, "perch": perch, "ours": ours, "title": title})
+            except Exception:  # noqa: BLE001
+                pass
+            return True
+
+        try:
+            self.u.EnumWindows(self.PROC(visit), 0)
+            self.wins = [w for w in found if not w["ours"]]           # our own pets/windows never hide a window's edge
+        except Exception as e:  # noqa: BLE001
+            log(f"listing windows failed: {e!r}")
+            self.wins = []
+
+    def live_rect(self, hwnd):
+        """Where that window is right now, or None when it closed, got minimized or went full screen."""
+        try:
+            if not self.u.IsWindow(hwnd) or not self.u.IsWindowVisible(hwnd) or self.u.IsIconic(hwnd) or self.u.IsZoomed(hwnd):
+                return None
+            return self._rect(hwnd)
+        except Exception:  # noqa: BLE001
+            return None
+
+    def uncovered(self, hwnd, x, y):
+        """Is the point (x, y) on this window visible, i.e. not under a window that's in front of it?"""
+        for w in self.wins:
+            if w["hwnd"] == hwnd:
+                return True
+            l, t, r, b = w["rect"]
+            if l <= x < r and t <= y < b:
+                return False
+        return True
+
+    def landing(self, cx, feet0, feet1, top_limit, skip=None):
+        """A falling Blip whose feet go from feet0 down to feet1 at screen x cx: the window top it lands on, if any."""
+        for w in self.wins:                                       # front to back: the first edge in the way wins
+            if not w["perch"] or w["hwnd"] == skip:
+                continue
+            l, t, r, b = w["rect"]
+            if l + 16 <= cx <= r - 16 and feet0 <= t <= feet1 and t >= top_limit and self.uncovered(w["hwnd"], cx, t + 2):
+                return w["hwnd"], t
+        return None
+
+    def pick(self, cx, top_limit, bottom_limit):
+        """A window top a Blip near screen x cx could jump up onto: (hwnd, x of the Blip's center, top), or None."""
+        options = []
+        for w in self.wins:
+            l, t, r, b = w["rect"]
+            if not w["perch"] or t < top_limit or t > bottom_limit - 40:
+                continue
+            for _ in range(5):
+                x = random.uniform(l + 30, r - 30)
+                if abs(x - cx) < 1100 and self.uncovered(w["hwnd"], x, t + 2):
+                    options.append((w["hwnd"], x, t))
+                    break
+        return random.choice(options) if options else None
+
+    def move_cursor(self, x, y):
+        try:
+            self.u.SetCursorPos(int(x), int(y))
+        except Exception:  # noqa: BLE001
+            pass
 
 
 class _Win32:
@@ -4219,6 +4364,15 @@ class Blip:
         self.nap_buddy = False                     # walking over to nap next to a sleeping friend
         self.last_play = -99.0
         self.next_shift = time.monotonic() + random.uniform(6, 12)   # chameleons change color now and then
+        self.perch = None                          # the window it's standing on (Windows app: Blips climb windows)
+        self.perch_rect = None
+        self.skip_perch = (None, 0.0)              # just hopped off this window: don't land right back on it
+        self.jump = None                           # jumping up onto a window
+        self.last_wheee = -99.0
+        self.chase_until = 0.0                     # chasing the mouse pointer until then
+        self.chase_seen = (0, 0, 0.0)              # where the pointer was, and when it last moved
+        self.next_pounce = 0.0
+        self.pouncing = False
 
         self.press = None
         self.drag_hist = []
@@ -4297,6 +4451,10 @@ class Blip:
                                                    app.sound.play("boop")))
         self.menu.add_checkbutton(label="Weather effects", variable=app.weather,
                                   command=lambda: app.save.update(weather=app.weather.get()) or write_save(app.save))
+        if app.desk.ok:
+            self.menu.add_checkbutton(label="🪟 Climb on my windows", variable=app.climb_on, command=app.set_climb)
+        self.menu.add_checkbutton(label="🖱️ Play with my mouse (they might steal it!)", variable=app.cursor_play,
+                                  command=lambda: app.save.update(cursor_play=app.cursor_play.get()) or write_save(app.save))
         upd = tk.Menu(self.menu, tearoff=0)
         upd.add_command(label="🔄 Check for updates now", command=lambda: app.updater.check(quiet=False))
         upd.add_checkbutton(label="Update automatically (asks first)", variable=app.updater.auto, command=app.updater.set_auto)
@@ -4377,8 +4535,124 @@ class Blip:
         self.particles.append({"kind": "plus", "text": text, "x": W / 2 + 34, "y": H - ART_H * SCALE - 4,
                                "vx": 0, "vy": -0.6, "life": 1.6, "born": time.monotonic()})
 
+    def walk_bounds(self):
+        """Where it can walk: the whole taskbar, or the top of the window it's standing on."""
+        if self.perch is not None and self.perch_rect:
+            l, t, r, b = self.perch_rect
+            return max(self.left - W / 2, l + 18 - W / 2), min(self.right - W / 2, r - 18 - W / 2)
+        return self.left, self.right - W
+
     def pick_walk_target(self):
-        return random.uniform(self.left + 10, self.right - W - 10)
+        lo, hi = self.walk_bounds()
+        return random.uniform(lo + 5, max(lo + 5, hi - 5))
+
+    # ------------------------------------------------------------------ window climbing (Windows app only)
+    def start_jump(self, hwnd, cx, top, now):
+        x1, y1 = min(max(cx - W / 2, self.left - W / 2), self.right - W / 2), top - H
+        dist = math.hypot(x1 - self.wx, y1 - self.wy)
+        self.jump = {"t0": now, "dur": min(1.3, 0.55 + dist / 1000), "x0": self.wx, "y0": self.wy, "x1": x1, "y1": y1,
+                     "hwnd": hwnd, "arc": 50 + min(dist, 700) * 0.22, "l": None}
+        self.perch = self.perch_rect = None
+        self.facing = 1 if x1 > self.wx else -1
+        self.set_state("jump", 5)
+        self.say(random.choice(["hup!", "up we go!", "ooh, a window!", "*climbs up*", "i wanna see!"]), 1.8)
+        self.app.sound.play("whoosh")
+
+    def jump_step(self, now):
+        j = self.jump
+        rect = self.app.desk.live_rect(j["hwnd"]) if j else None
+        if rect:                                            # the window moved mid-jump: aim for where it is now
+            if j["l"] is not None:
+                j["x1"] += rect[0] - j["l"]
+            j["l"], j["y1"] = rect[0], rect[1] - H
+        u = (now - j["t0"]) / j["dur"] if j else 1
+        if rect is None or u >= 1:
+            self.jump = None
+            if rect and rect[0] + 4 <= j["x1"] + W / 2 <= rect[2] - 4:
+                self.wx, self.wy = j["x1"], j["y1"]
+                self.perch, self.perch_rect = j["hwnd"], rect
+                self.app.bump("climbs")
+                self.squash_until = now + 0.15
+                self.set_state("idle", random.uniform(1.5, 3))
+                self.say(random.choice(["nice view up here!", "i'm on top of the world!", "made it!", "hi from up here!",
+                                        "what are you working on?"]), 2.2)
+                self.app.sound.play("pop")
+            else:
+                self.vx = self.vy = 0
+                self.set_state("fall")
+            self.place()
+            return
+        self.wx = j["x0"] + (j["x1"] - j["x0"]) * u
+        self.wy = j["y0"] + (j["y1"] - j["y0"]) * u - math.sin(math.pi * u) * j["arc"]
+        self.place()
+
+    def hop_down(self, say=True):
+        if self.perch is not None:
+            self.skip_perch = (self.perch, time.monotonic() + 1.5)
+        self.perch = self.perch_rect = None
+        self.vx, self.vy = self.facing * random.uniform(1, 3), -6
+        self.set_state("fall")
+        if say:
+            self.say(random.choice(["wheee!", "coming down!", "*hops off*", "bye, window!"]), 1.6)
+
+    def ride(self, now):
+        """Standing on a window: move along with it, or tumble off when it closes, minimizes, or gets covered."""
+        app = self.app
+        rect = app.desk.live_rect(self.perch) if app.climb_on.get() else None
+        if rect is not None and self.perch_rect:                # the window moved: move with it first
+            dx, dy = rect[0] - self.perch_rect[0], rect[1] - self.perch_rect[1]
+            if dx or dy:
+                self.wx += dx
+                if self.target_x is not None:
+                    self.target_x += dx
+                if abs(dx) + abs(dy) > 18 and now - self.last_wheee > 4 and self.state != "sleep":
+                    self.last_wheee = now
+                    self.say(random.choice(["wheee!", "what a ride!", "faster!!", "hold on tight!"]), 1.5)
+                    self.set_face("happy", 1)
+        cx = self.wx + W / 2
+        if (rect is None or rect[1] < self.top + ART_H * SCALE or not rect[0] + 2 <= cx <= rect[2] - 2
+                or not app.desk.uncovered(self.perch, cx, rect[1] + 2)):
+            walked_off = rect is not None and not rect[0] + 2 <= cx <= rect[2] - 2
+            self.perch = self.perch_rect = None
+            self.vx, self.vy = (self.facing * 2, -2) if walked_off else (0, 0)
+            self.set_state("fall")
+            self.say(random.choice(["whoa!", "eep!", "where'd it go?!", "aaah!"] if not walked_off else ["oops!", "wheee!"]), 1.6)
+            return
+        self.perch_rect = rect
+        self.wy = rect[1] - H
+        self.place()
+
+    # ------------------------------------------------------------------ playing with the mouse pointer
+    def chase_step(self, now):
+        mx, my = self.root.winfo_pointerxy()
+        if (mx, my) != self.chase_seen[:2]:
+            self.chase_seen = (mx, my, now)
+        elif now - self.chase_seen[2] > 2.5:                    # the pointer stopped: lost interest
+            self.chase_until = 0
+            self.say(random.choice(["huh.", "where'd it go?", "...it's sleeping", "i'll get you next time"]), 1.8)
+            self.set_state("idle", random.uniform(1, 2))
+            return
+        cx, feet = self.wx + W / 2, self.wy + H
+        head = feet - ART_H * SCALE
+        dx = mx - cx
+        self.facing = 1 if dx > 0 else -1
+        if abs(dx) < 40 and feet - 260 < my < head + 12 and now > self.next_pounce:
+            reach = max(24, feet - my - ART_H * SCALE / 2)
+            self.vy, self.vx = -min(24, math.sqrt(2 * 1.1 * reach) + 1), dx / 14
+            self.next_pounce = now + 1.3
+            self.pouncing = True
+            self.perch = self.perch_rect = None              # (it lands back on the window if it was on one)
+            self.set_face("surprised", 0.6)
+            self.set_state("fall")
+            self.app.sound.play("boop")
+            return
+        if abs(dx) > 12:
+            self.wx = min(max(self.wx + 4.2 * self.facing * VARIANTS[self.kind].get("speed", 1.0) ** 0.5, self.left - W / 2 + 20),
+                          self.right - W / 2 - 20)
+            self.state = "walk"
+        else:
+            self.state = "idle"
+        self.place()
 
     # ------------------------------------------------------------------ actions
     def pet(self):
@@ -4552,6 +4826,8 @@ class Blip:
             return
         if self.state != "held":
             self.set_state("held")
+            self.perch = self.perch_rect = self.jump = None
+            self.chase_until, self.pouncing = 0, False
             self.say(random.choice(LINES_HELD), 2.5)
             self.set_face("surprised", 9999)
         self.wx, self.wy = wx0 + e.x_root - px, wy0 + e.y_root - py
@@ -4703,13 +4979,24 @@ class Blip:
         if self.hunger > 70 and now - self.last_hungry_whine > 25:
             self.last_hungry_whine = now
             self.say(random.choice(LINES_HUNGRY), 3)
+        app = self.app
+        if self.perch is not None and random.random() < 0.12:
+            self.hop_down()
+            return
+        if (self.perch is None and app.desk.ok and app.climb_on.get() and random.random() < 0.09
+                and not getattr(self, "visitor", None)):
+            spot = app.desk.pick(self.wx + W / 2, self.top + ART_H * SCALE + 20, self.ground + H)
+            if spot:
+                self.start_jump(*spot, now)
+                return
         r = random.random()
+        lo, hi = self.walk_bounds()
         if r < 0.45:
             self.target_x = self.pick_walk_target()
             self.set_state("walk", 12)
         elif r < 0.60:
             mx = self.root.winfo_pointerx()
-            self.target_x = min(max(mx - W / 2, self.left), self.right - W)
+            self.target_x = min(max(mx - W / 2, lo), hi)
             self.set_state("walk", 6)
         elif r < 0.75:
             self.say(random.choice(self.lines()), 3)
@@ -4746,18 +5033,42 @@ class Blip:
         st = self.state
         if st == "held":
             return
+        if st == "jump":
+            self.jump_step(now)
+            return
+        if self.perch is not None and st != "fall":
+            self.ride(now)
+            st = self.state
         if st == "fall":
+            feet0 = self.wy + H
             self.vy += 1.1
             self.wx += self.vx
             self.wy += self.vy
+            if self.pouncing:                                  # pounced at the mouse pointer: did it catch it?
+                mx, my = self.root.winfo_pointerxy()
+                cx, feet = self.wx + W / 2, self.wy + H
+                if abs(mx - cx) < 36 and feet - ART_H * SCALE - 12 <= my <= feet:
+                    self.pouncing = False
+                    self.app.caught_cursor(self, now)
             if self.wx < self.left:
                 self.wx, self.vx = self.left, -self.vx * 0.6
             elif self.wx > self.right - W:
                 self.wx, self.vx = self.right - W, -self.vx * 0.6
             if self.wy < self.top - H / 2 and self.vy < 0:
                 self.vy *= -0.3
-            if self.wy >= self.ground:
-                self.wy = self.ground
+            floor, on = self.ground, None
+            if self.vy > 0 and self.app.desk.ok and self.app.climb_on.get():
+                skip, until = self.skip_perch
+                hit = self.app.desk.landing(self.wx + W / 2, feet0, self.wy + H, self.top + ART_H * SCALE,
+                                            skip if now < until else None)
+                if hit:
+                    on, floor = hit[0], hit[1] - H
+            if self.wy >= floor:
+                self.wy = floor
+                if on is not None and self.perch != on:
+                    self.app.bump("climbs")
+                self.perch, self.perch_rect = on, (self.app.desk.live_rect(on) if on is not None else None)
+                self.pouncing = False
                 hard = self.vy > 14
                 if self.vy > 6:
                     self.vy = -self.vy * 0.35
@@ -4794,6 +5105,13 @@ class Blip:
             elif random.random() < 0.3:
                 self.particles.append({"kind": "crumb", "x": W / 2 + random.uniform(-6, 6), "y": H - 22,
                                        "vx": random.uniform(-1.5, 1.5), "vy": random.uniform(-3, -1), "life": 0.6, "born": now})
+            return
+
+        if self.follow.get() and self.perch is not None:
+            self.hop_down(say=False)
+            return
+        if now < self.chase_until and self.state in ("idle", "walk") and not self.follow.get():
+            self.chase_step(now)
             return
 
         # follow-my-mouse mode overrides wandering
@@ -4865,7 +5183,7 @@ class Blip:
                     g[y + shift][x] = pal.get(ch, pal["o"])
         if not lying and v["feet"]:
             feet_set = v["feet"]
-            if self.state in ("fall", "held") or self.lift(now) > 3:
+            if self.state in ("fall", "held", "jump") or self.lift(now) > 3:
                 feet = feet_set["air"]
             elif self.state == "walk":
                 feet = feet_set["walk1"] if int(now * 6) % 2 else feet_set["walk2"]
@@ -7462,6 +7780,11 @@ class App:
         self.save = load_save()
         self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))
         self.sound_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("sound", False)))
+        self.climb_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("climb", True)))
+        self.cursor_play = tk.BooleanVar(master=self.root, value=bool(self.save.get("cursor_play", True)))
+        self.desk = DesktopWindows()
+        self.mouse_hist, self.next_chase, self.steal = [], 0.0, None
+        self.last_steal = self.last_cursor_heart = -99.0
         self.sound = Sound(self)
         self.updater = Updater(self)
         self.maintenance = Maintenance(self)
@@ -7496,6 +7819,20 @@ class App:
             cx, cy = int(p.wx + W / 2), int(p.wy + H - ART_H * SCALE / 2)
             log(f"selftest: pet {p.name} state={p.state} click_at={cx},{cy} layered={surf is not None} "
                 f"frames_shown={getattr(surf, 'shown', 0)} failed={getattr(surf, 'failed', None)}")
+        self.root.after(8000, self.selftest_climb)
+
+    def selftest_climb(self):
+        """The build's test opens Notepad: one Blip should be able to jump up onto it."""
+        self.desk.refresh(time.monotonic(), force=True)
+        perch = [w for w in self.desk.wins if w["perch"]]
+        log(f"selftest: windows={len(self.desk.wins)} perchable={[w['title'][:30] for w in perch][:5]}")
+        p = self.pets[0] if self.pets else None
+        spot = p and self.desk.pick(p.wx + W / 2, p.top + ART_H * SCALE + 20, p.ground + H)
+        if not spot:
+            log("selftest: perched=False (no window to climb)")
+            return
+        p.start_jump(*spot, time.monotonic())
+        self.root.after(2500, lambda: log(f"selftest: perched={p.perch is not None} state={p.state} at={int(p.wx)},{int(p.wy)}"))
         log(f"selftest: {len(self.pets)} pets, LAYERED={LAYERED}, version={APP_VERSION}")
 
     # ----- remembering your town between launches
@@ -7840,6 +8177,69 @@ class App:
         self.save_town()
         self.root.destroy()
 
+    # ----- desktop-only fun: climbing windows, playing with the mouse pointer
+    def set_climb(self):
+        self.save["climb"] = self.climb_on.get()
+        write_save(self.save)
+        if not self.climb_on.get():
+            for p in self.pets:
+                if p.perch is not None or p.state == "jump":
+                    p.jump = None
+                    p.hop_down(say=False)
+
+    def cursor_step(self, now):
+        st = self.steal
+        if st:                                           # a Blip is "stealing" the pointer for a moment
+            p = st["pet"]
+            if now > st["until"] or p not in self.pets or p.state == "held":
+                self.steal = None
+                if p in self.pets:
+                    p.say(random.choice(["hehe, you can have it back", "ok ok, here", "*gives it back*"]), 2)
+            else:
+                self.desk.move_cursor(p.wx + W / 2 + 10 * p.facing, p.wy + H - ART_H * SCALE + 6)
+            return
+        if not self.cursor_play.get() or not self.pets:
+            return
+        x, y = self.root.winfo_pointerxy()
+        h = self.mouse_hist
+        h.append((now, x, y))
+        while h and now - h[0][0] > 1.0:
+            h.pop(0)
+        if now < self.next_chase or len(h) < 6:
+            return
+        turns, travel, last = 0, 0, 0
+        for (_, x0, y0), (_, x1, y1) in zip(h, h[1:]):           # a wiggle: the pointer zig-zags back and forth
+            travel += abs(x1 - x0) + abs(y1 - y0)
+            if abs(x1 - x0) >= 6:
+                d = 1 if x1 > x0 else -1
+                turns += bool(last and d != last)
+                last = d
+        if turns < 3 or travel < 250:
+            return
+        near = [p for p in self.pets if p.state in ("idle", "walk") and not p.playing and not p.nap_buddy and not p.follow.get()
+                and now > p.chase_until and math.hypot(p.wx + W / 2 - x, p.wy + H - 30 - y) < 450]
+        if not near:
+            return
+        self.next_chase = now + 4
+        for i, p in enumerate(sorted(near, key=lambda p: math.hypot(p.wx + W / 2 - x, p.wy + H - y))[:2]):
+            if i and random.random() < 0.5:
+                break
+            p.chase_until, p.chase_seen = now + random.uniform(7, 10), (x, y, now)
+            p.say(random.choice(["!!", "*wiggle wiggle*", "what's that?!", "i'm gonna get it!", "mouse!!"]), 1.5)
+            p.set_face("surprised", 0.8)
+
+    def caught_cursor(self, pet, now):
+        self.bump("cursor_catches")
+        pet.say(random.choice(["got it!!", "gotcha!", "*pounce*", "mine!", "caught the mouse!"]), 1.6)
+        pet.set_face("happy", 1.5)
+        pet.burst("heart", 3)
+        if now - self.last_cursor_heart > 20:
+            self.last_cursor_heart = now
+            self.add_hearts(1, pet)
+        if self.desk.ok and random.random() < 0.3 and now - self.last_steal > 60:
+            self.last_steal = now
+            self.steal = {"pet": pet, "until": now + 0.8}
+
     # ----- pets playing together
     def head_pos(self, pet):
         return pet.wx + W / 2, pet.wy + H - ART_H * SCALE + 6
@@ -7858,7 +8258,7 @@ class App:
     def play_step(self, now):
         dt = 1 / FPS
         free = [p for p in self.pets if not p.playing and p.state == "idle" and now - p.last_play > 40
-                and not getattr(p, "visitor", None)]
+                and not getattr(p, "visitor", None) and p.perch is None and now > p.chase_until]
         # start a game now and then
         for i, a in enumerate(free):
             for b in free[i + 1:]:
@@ -7880,6 +8280,7 @@ class App:
         for sleeper in [p for p in self.pets if p.state == "sleep"]:
             for p in self.pets:
                 if (p is not sleeper and not p.playing and not p.nap_buddy and p.state == "idle" and p.energy < 60
+                        and p.perch is None and sleeper.perch is None
                         and abs(p.wx - sleeper.wx) < 600 and random.random() < dt * 0.15):
                     p.nap_buddy = True
                     p.target_x = min(max(sleeper.wx + random.choice([-1, 1]) * 70, self.pets[0].left), self.pets[0].right - W)
@@ -7946,7 +8347,7 @@ class App:
         idle_pets = [p for p in self.pets if not p.playing]
         for i, a in enumerate(idle_pets):
             for b in idle_pets[i + 1:]:
-                if a.state not in calm or b.state not in calm or abs(a.wx - b.wx) > 90:
+                if a.state not in calm or b.state not in calm or abs(a.wx - b.wx) > 90 or a.perch != b.perch:
                     continue
                 if now - a.greeted.get(b.name, -999) < 60:
                     continue
@@ -7971,6 +8372,9 @@ class App:
             self.root.after(250, self.tick)
             return
         start = time.perf_counter()
+        if self.climb_on.get():
+            self.safely(self.desk.refresh, now, what="windows")
+        self.safely(self.cursor_step, now, what="mouse play")
         for pet in list(self.pets):
             self.safely(pet.step, now, what=f"{pet.kind}")
         self.safely(self.socialize, now, what="pets playing")

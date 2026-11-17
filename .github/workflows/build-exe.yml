@@ -90,6 +90,8 @@ jobs:
           $log = "$env:APPDATA\Blipville\blipville.log"
           $env:BLIPVILLE_SELFTEST = "1"
           $env:BLIPVILLE_NO_MAINTENANCE = "1"
+          $np = Start-Process notepad -PassThru                    # a window for a Blip to climb onto
+          Start-Sleep -Seconds 2
           $p = Start-Process -FilePath "dist/$env:APP_NAME.exe" -PassThru
           Start-Sleep -Seconds 5
           Shot "4a-after-5s"
@@ -113,17 +115,20 @@ jobs:
             [System.Windows.Forms.SendKeys]::SendWait("{ESC}"); Start-Sleep -Milliseconds 800
             Shot "4d-menu-closed"
           } elseif ($alive) { "no pet position in the log" | Tee-Object -FilePath logs/4-test.txt -Append }
-          Start-Sleep -Seconds 2
+          Start-Sleep -Seconds 12                                  # the app makes a Blip jump onto Notepad
+          Shot "4e-climbed"
           $alive = -not $p.HasExited
           "still running at the end: $alive" | Tee-Object -FilePath logs/4-test.txt -Append
           Copy-Item $log logs/4-app-log.txt -ErrorAction SilentlyContinue
           if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+          if (-not $np.HasExited) { Stop-Process -Id $np.Id -Force }
           $text = Get-Content logs/4-app-log.txt -Raw -ErrorAction SilentlyContinue
           if (-not $alive) { throw "The app closed by itself" }
           if ($text -notmatch "layered=True") { throw "The pet windows didn't become see-through layered windows" }
           if ($text -match "failed=True") { throw "Windows refused to show a layered window" }
           if ($text -notmatch "selftest: pressed") { "WARNING: the test click didn't reach the pet" | Tee-Object -FilePath logs/4-test.txt -Append }
           if ($text -notmatch "selftest: menu") { "WARNING: the right-click menu didn't open" | Tee-Object -FilePath logs/4-test.txt -Append }
+          if ($text -notmatch "selftest: perched=True") { "WARNING: no Blip climbed onto Notepad" | Tee-Object -FilePath logs/4-test.txt -Append }
           "size: $((Get-Item dist/$env:APP_NAME.exe).Length)" | Out-File logs/4-test.txt -Append
 
       - name: Add a copy for Blipville Redux players

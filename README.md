@@ -19,11 +19,13 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - 🚫 **No more black flashes.** Blipville used to hide a "magic pink" background that Windows had to repaint whenever
   you clicked a pet or opened a menu, and sometimes it showed black for a moment. 1.0 runs on the **Redux engine**: it
   draws every pet as a real see-through picture and hands it straight to Windows, so nothing gets repainted.
+- 🪟 **Blips climb your windows** (Windows app only): they jump onto open windows, ride along when you drag them, and tumble down when you close them.
+- 🖱️ **They play with your mouse** (Windows app only): wiggle the pointer and they chase it, pounce, and sometimes steal it for a second.
 - ⚔️ **The Arena:** battle with a team of 3. Share your **battle code** so friends can battle your team (works between Windows and the browser).
 - ✨ **20 Awakened forms**, including every kaiju, ghosts like King Sheetie and cryptids like Lunar Mothman, with one Awaken per Arena battle.
 - 🎨 **Accessory colors** and a **2nd accessory slot**.
 - 👻 **Ghosts:** a new tier of 10 ghosts that drift by at night. Click one while it glows! (Or light a 🕯️ Spirit Candle.)
-- 🏆 **Trophies:** 20 of them, each worth bonus hearts. Right-click a pet → 🏆 Trophies.
+- 🏆 **Trophies:** 27 of them, each worth bonus hearts. Right-click a pet → 🏆 Trophies.
 - 🎨 **Redraws** of the 10 roughest Blips.
 - 🔧 **Patch**, a free thank-you gift for waiting out the maintenance (until Tuesday, November 24).
 - 🛠️ **Maintenance mode**, so a big fix never leaves you with a broken app.

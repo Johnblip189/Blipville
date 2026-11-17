@@ -4,6 +4,11 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
+- 🪟 **Only on Windows: Blips climb your windows!** Now and then a Blip jumps up onto the top edge of an open window,
+  walks along it and naps there. Drag the window and they ride along (wheee!); close or minimize it and they tumble back
+  down. You can even toss a Blip onto a window. Turn it off with right-click → 🪟 Climb on my windows.
+- 🖱️ **Only on Windows: they play with your mouse.** Wiggle the pointer near a Blip and it chases it and pounces. Sometimes
+  it catches it and "steals" it for a second. Right-click → 🖱️ Play with my mouse to turn it off.
 - ⚔️ **The Arena:** pick a team of 3 and battle! Every Blip has a type (🔥 Spark beats 🌿 Sprout beats 💧 Splash beats 🔥 Spark),
   stats and a move. Copy your **battle code** and send it to a friend (or post it on the Discord) so they can battle your
   team, or take on five practice rivals, up to Nyx the Night Queen and Kaiju King Kai. Battle codes work between Windows and the browser version.
@@ -15,7 +20,7 @@ make Blipville what it is. This is the real thing.
 - 👻 **Ghosts, a brand-new tier:** 10 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
   🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.
-- 🏆 **Trophies:** 20 to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.
+- 🏆 **Trophies:** 27 to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.
 - 🎨 **Redraws:** Anteater, Camel, Kiwi, Lemming, Platypus, Tapir, Walrus, Wombat, Ankylosaurus and Tsuchinoko.
 - ✨ **The Redux engine, for everyone:** every pet window is a real see-through picture now, handed straight to Windows.
   **No more black flashes** when you click your pets, drag them around or open a menu, and text and speech bubbles
@@ -27,7 +32,7 @@ make Blipville what it is. This is the real thing.
 - 🎁 Gifts can't get lost on the website version any more.
 
 **Everything in Blipville:** 260 Blips and 790+ colors, hats, hearts and Mystery Eggs (20 rare Blips), 25 cryptids,
-5 kaiju, 10 ghosts, 5 worlds with 10 World Legends, 20 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
+5 kaiju, 10 ghosts, 5 worlds with 10 World Legends, 27 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 
 **Updating?** Blipville (and Blipville Redux) will offer this update by itself: just say yes. Your pets, hearts,

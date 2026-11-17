@@ -39,7 +39,8 @@ data = {
               "rivals": [{"name": n, "reward": r, "team": t} for n, r, t in bl.ARENA_RIVALS]},
     "accessoryTints": bl.ACCESSORY_TINTS,
     "slot2Cost": bl.SLOT2_COST,
-    "trophies": [{"id": t[0], "icon": t[1], "name": t[2], "how": t[3], "bonus": t[5]} for t in bl.TROPHIES],
+    "trophies": [{"id": t[0], "icon": t[1], "name": t[2], "how": t[3], "bonus": t[5]} for t in bl.TROPHIES
+                       if t[0] not in getattr(bl, "DESKTOP_TROPHIES", ())],
     "trophyCup": bl.TROPHY_CUP,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,

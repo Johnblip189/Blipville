@@ -1,29 +1,23 @@
-## 💜 Release Candidate 2
+## 💜 Blipville 1.0
 
-**New in RC2:**
-- 🌍 **Worlds** on desktop *and* phones/laptops: unlock Plant, Sweets, Ocean, Dino and Space World with hearts, then visit them
-- 🔄 **Updates that actually reach you:** a backup way to check, a fallback for blocked connections, the build time in the Updates menu, and a fix for the "Failed to load Python DLL" error after updating
-- ⚡ **Smoother and no black flashes:** steady 30 FPS, pets only redraw when they change, fewer window repaints
-- 🌟 **World Legends:** 10 legendary Blips, 2 per world, that only stroll by while you're visiting their world. Click them to befriend them!
-- 🦊 Kitsune's Spirit colors redrawn
+**Thank you.** Every pet you hatched, cryptid you spotted, bug you reported and idea you sent through the betas helped
+make Blipville what it is. This is the real thing.
 
-**Updating from RC1?** If your copy can't find this update, download it once by hand from this page. After that it updates itself.
+**New in 1.0:**
+- ✨ **The Redux engine, for everyone:** every pet window is a real see-through picture now, handed straight to Windows.
+  **No more black flashes** when you click your pets, drag them around or open a menu, and text and speech bubbles
+  have smooth edges.
+- 🔧 **Patch**, a little repair-crew Blip in a hard hat, as a thank-you for waiting out the maintenance: a free gift
+  until Tuesday, November 24 (and **Beta Buddy** until Sunday, November 22, if you missed it).
+- 🛠️ **Maintenance mode:** if something big ever needs fixing, Blipville can tell you instead of misbehaving, and
+  opens again by itself.
+- 🎁 Gifts can't get lost on the website version any more.
 
----
+**Everything in Blipville:** 249 Blips and 790+ colors, hats, hearts and Mystery Eggs (20 rare Blips), 25 cryptids,
+5 kaiju, 5 worlds with 10 World Legends, seasons and weather, games of ball and tag, sound effects, the Night Shift
+minigame, and updates that install themselves.
 
-## 💜 Thanks for playing our beta!
+**Updating?** Blipville (and Blipville Redux) will offer this update by itself: just say yes. Your pets, hearts,
+worlds and unlocks all come with you. New here? Download `Blipville.exe` below and double-click it.
 
-Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipville. Thank you!
-
-**v0.4.0** is the last step before **Blipville 1.0**. It comes with:
-
-- 🐾 **100 new Blips**: 50 new animals, plus 5 brand-new tabs: 🦕 Dinos, 🌊 Ocean, 🍩 Sweets, 🚀 Space and 🌱 Plants
-- 🎁 **A free gift:** open this version and you get **Beta Buddy**, a limited-edition party Blip, only given out **this week** (until Sunday, November 22)
-- 🔄 **Auto-updates:** from now on Blipville checks for new versions and updates itself (it always asks first)
-- ⚡ Smoother frame rate
-- 🌍 **Worlds:** unlock Plant, Sweets, Ocean, Dino and Space World with hearts to pick their Blips, then visit them (right-click a pet → 🌍 Worlds). Blips you already had stay yours
-- 🎨 20 of the new Blips already got a second round of polish
-
-Your pets, hearts and unlocks all carry over. Spot a bug or have an idea? Right-click any pet → **💬 Suggestions & help**. Now's the time, before 1.0!
-
-**Updating?** Quit the old Blipville first (right-click a pet → **Goodbye everyone (quit)**), then open the new `Blipville.exe`.
+Windows may say "protected your PC" the first time. Click **More info → Run anyway**.

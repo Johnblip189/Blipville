@@ -1,22 +1,24 @@
 name: Build Windows app
 
 # Three ways to publish a new version:
-#   1. Edit the VERSION file on main (e.g. v0.3.0-beta) and commit it.  ← easiest
+#   1. Edit the VERSION file on main (e.g. v1.0.1) and commit it.  ← easiest
 #   2. Actions tab → "Build Windows app" → Run workflow → type a version.
-#   3. Push a tag like v0.3.0-beta.
+#   3. Push a tag like v1.0.1.
 # Versions starting with v0 or containing "-" (like -beta) are shown on GitHub as a "Pre-release";
 # v1.0.0 and up are full releases.
+# Pushes to a release-* branch build and test the app (logs and screenshots go to the ci-logs branch) without
+# publishing anything.
 on:
   push:
-    branches: [main]
-    paths: ["VERSION"]
+    branches: [main, "release-*"]
+    paths: ["VERSION", ".github/workflows/build-exe.yml"]
     tags: ["v*"]
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to publish (beta: v0.2.0-beta, full release: v1.0.0)"
+        description: "Version to publish (for example v1.0.1)"
         required: true
-        default: "v0.2.0-beta"
+        default: "v1.0.0"
 
 permissions:
   contents: write
@@ -24,52 +26,115 @@ permissions:
 env:
   APP_NAME: Blipville
 
+defaults:
+  run:
+    shell: pwsh
+
 jobs:
   build:
     runs-on: windows-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4.2.2
 
       - name: Work out the version
         id: ver
-        shell: pwsh
         run: |
+          New-Item -ItemType Directory -Force logs | Out-Null
           $v = "${{ github.event.inputs.version }}"
           if (-not $v -and "${{ github.ref_type }}" -eq "tag") { $v = "${{ github.ref_name }}" }
           if (-not $v) { $v = (Get-Content VERSION -Raw).Trim() }
-          if ($v -notmatch '^v\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$') { throw "Not a version: '$v' (use something like v0.2.0-beta)" }
+          if ($v -notmatch '^v\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$') { throw "Not a version: '$v' (use something like v1.0.1)" }
           $pre = ($v.StartsWith("v0") -or $v.Contains("-")).ToString().ToLower()
+          $publish = ("${{ github.ref }}" -eq "refs/heads/main" -or "${{ github.ref_type }}" -eq "tag" -or "${{ github.event_name }}" -eq "workflow_dispatch").ToString().ToLower()
           "version=$v" >> $env:GITHUB_OUTPUT
           "prerelease=$pre" >> $env:GITHUB_OUTPUT
-          Write-Host "Publishing $v (pre-release: $pre)"
+          "publish=$publish" >> $env:GITHUB_OUTPUT
+          "version $v, commit $env:GITHUB_SHA, ref ${{ github.ref }}, publish $publish" | Tee-Object -FilePath logs/summary.txt
 
       - uses: actions/setup-python@v5.3.0
         with:
           python-version: "3.12"
 
-      - name: Install PyInstaller
-        run: pip install pyinstaller==6.11.1
+      - name: Install PyInstaller and Pillow
+        run: pip install pyinstaller==6.11.1 pillow==11.0.0 2>&1 | Tee-Object -FilePath logs/1-install.txt
 
       - name: Stamp the version (so the app can update itself)
-        run: python tools/stamp_version.py ${{ steps.ver.outputs.version }}
+        run: python tools/stamp_version.py ${{ steps.ver.outputs.version }} 2>&1 | Tee-Object -FilePath logs/2-stamp.txt
 
       - name: Build the .exe
-        run: pyinstaller --onefile --noconsole --name ${{ env.APP_NAME }} --icon assets/icon.ico blip.pyw
+        run: >
+          pyinstaller --onefile --noconsole --name ${{ env.APP_NAME }} --icon assets/icon.ico
+          --hidden-import PIL.ImageFont --hidden-import PIL.ImageDraw
+          blip.pyw 2>&1 | Tee-Object -FilePath logs/3-build.txt
 
-      - name: Smoke test (the app starts and keeps running)
-        shell: pwsh
+      - name: Test on Windows (starts, pets are see-through, clicks reach them)
         run: |
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          Add-Type -Namespace W -Name U -MemberDefinition @'
+            [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
+            [DllImport("user32.dll")] public static extern void mouse_event(uint f, uint dx, uint dy, uint d, System.UIntPtr e);
+          '@
+          $logs = (Resolve-Path logs).Path
+          function Shot($name) { try {
+            $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+            $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+            $g = [System.Drawing.Graphics]::FromImage($bmp)
+            $g.Clear([System.Drawing.Color]::FromArgb(40, 120, 80))
+            $g.CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size,
+              [System.Drawing.CopyPixelOperation]::SourceCopy -bor [System.Drawing.CopyPixelOperation]::CaptureBlt)
+            $bmp.Save("$logs\$name.png"); $g.Dispose(); $bmp.Dispose()
+          } catch { "screenshot $name failed: $_" | Tee-Object -FilePath logs/4-test.txt -Append } }
+          $log = "$env:APPDATA\Blipville\blipville.log"
+          $env:BLIPVILLE_SELFTEST = "1"
+          $env:BLIPVILLE_NO_MAINTENANCE = "1"
           $p = Start-Process -FilePath "dist/$env:APP_NAME.exe" -PassThru
-          Start-Sleep -Seconds 10
-          if ($p.HasExited) { throw "The app closed right away (exit code $($p.ExitCode))" }
-          Stop-Process -Id $p.Id -Force
+          Start-Sleep -Seconds 5
+          Shot "4a-after-5s"
+          $line = $null
+          for ($i = 0; $i -lt 20 -and -not $line -and -not $p.HasExited; $i++) {
+            Start-Sleep -Seconds 1
+            $line = Get-Content $log -ErrorAction SilentlyContinue | Select-String "click_at=(\d+),(\d+)" | Select-Object -First 1
+          }
+          $alive = -not $p.HasExited
+          "still running after start-up: $alive (exit code $($p.ExitCode))" | Tee-Object -FilePath logs/4-test.txt -Append
+          if ($alive -and $line) {
+            $x = [int]$line.Matches[0].Groups[1].Value; $y = [int]$line.Matches[0].Groups[2].Value
+            "clicking a pet at $x,$y" | Tee-Object -FilePath logs/4-test.txt -Append
+            [W.U]::SetCursorPos($x, $y) | Out-Null; Start-Sleep -Milliseconds 300
+            [W.U]::mouse_event(0x2, 0, 0, 0, [UIntPtr]::Zero); Start-Sleep -Milliseconds 120
+            [W.U]::mouse_event(0x4, 0, 0, 0, [UIntPtr]::Zero); Start-Sleep -Milliseconds 700
+            Shot "4b-after-click"
+            [W.U]::mouse_event(0x8, 0, 0, 0, [UIntPtr]::Zero); Start-Sleep -Milliseconds 120
+            [W.U]::mouse_event(0x10, 0, 0, 0, [UIntPtr]::Zero); Start-Sleep -Milliseconds 1200
+            Shot "4c-menu-open"
+            [System.Windows.Forms.SendKeys]::SendWait("{ESC}"); Start-Sleep -Milliseconds 800
+            Shot "4d-menu-closed"
+          } elseif ($alive) { "no pet position in the log" | Tee-Object -FilePath logs/4-test.txt -Append }
+          Start-Sleep -Seconds 2
+          $alive = -not $p.HasExited
+          "still running at the end: $alive" | Tee-Object -FilePath logs/4-test.txt -Append
+          Copy-Item $log logs/4-app-log.txt -ErrorAction SilentlyContinue
+          if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+          $text = Get-Content logs/4-app-log.txt -Raw -ErrorAction SilentlyContinue
+          if (-not $alive) { throw "The app closed by itself" }
+          if ($text -notmatch "layered=True") { throw "The pet windows didn't become see-through layered windows" }
+          if ($text -match "failed=True") { throw "Windows refused to show a layered window" }
+          if ($text -notmatch "selftest: pressed") { "WARNING: the test click didn't reach the pet" | Tee-Object -FilePath logs/4-test.txt -Append }
+          if ($text -notmatch "selftest: menu") { "WARNING: the right-click menu didn't open" | Tee-Object -FilePath logs/4-test.txt -Append }
+          "size: $((Get-Item dist/$env:APP_NAME.exe).Length)" | Out-File logs/4-test.txt -Append
+
+      - name: Add a copy for Blipville Redux players
+        # Redux (v0.5) looks for Blipville-Redux.exe when it checks for updates, so it finds 1.0 too.
+        run: Copy-Item dist/$env:APP_NAME.exe dist/Blipville-Redux.exe
 
       - uses: actions/upload-artifact@v4.4.3
         with:
           name: windows-app
-          path: dist/*.exe
+          path: dist/${{ env.APP_NAME }}.exe
 
       - name: Attach to the release
+        if: steps.ver.outputs.publish == 'true'
         uses: softprops/action-gh-release@v2.2.1
         with:
           tag_name: ${{ steps.ver.outputs.version }}
@@ -78,4 +143,23 @@ jobs:
           prerelease: ${{ steps.ver.outputs.prerelease == 'true' }}
           files: dist/*.exe
           body_path: RELEASE_NOTES.md
-          generate_release_notes: true
+
+      - name: Save the logs and screenshots to the ci-logs branch
+        if: always()
+        run: |
+          "result: ${{ job.status }}" | Out-File logs/summary.txt -Append
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          $dest = "app-$(Get-Date -Format yyyyMMdd-HHmmss)"
+          git fetch origin ci-logs 2>&1 | Out-Null
+          if ($LASTEXITCODE -eq 0) { git checkout -f -B ci-logs-tmp FETCH_HEAD 2>&1 | Out-Null }
+          else { git switch --orphan ci-logs-tmp 2>&1 | Out-Null; git rm -rf --cached . 2>&1 | Out-Null }
+          New-Item -ItemType Directory -Force $dest | Out-Null
+          Copy-Item logs/* $dest/
+          git add $dest
+          git commit -m "Build logs: $dest (${{ job.status }})" 2>&1 | Out-Null
+          for ($i = 0; $i -lt 4; $i++) {
+            git push origin HEAD:ci-logs 2>&1 | Write-Host
+            if ($LASTEXITCODE -eq 0) { break }
+            git fetch origin ci-logs 2>&1 | Out-Null; git rebase FETCH_HEAD 2>&1 | Out-Null; Start-Sleep -Seconds 3
+          }

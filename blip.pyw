@@ -35,10 +35,8 @@ FPS = 30
 # Filled in by the GitHub build (see .github/workflows/build-exe.yml). "dev" means "running from source".
 APP_VERSION = "dev"
 APP_BUILT = ""                      # UTC time the .exe was built, e.g. 2026-11-17T01:20:00Z
-EDITION = "classic"                 # "redux" for Blipville Redux (set by the Redux build, see build-redux.yml)
-REDUX = EDITION == "redux"
-APP_NAME = "Blipville Redux" if REDUX else "Blipville"
-EXE_NAME = "Blipville-Redux.exe" if REDUX else "Blipville.exe"
+APP_NAME = "Blipville"
+EXE_NAME = "Blipville.exe"
 
 PALETTES = [  # outline, body, belly, cheeks, eyes
     {"name": "Lavender", "o": "#2b1d3a", "b": "#9b7bd8", "l": "#ddd0ff", "p": "#ff8fb3", "e": "#1a1024"},
@@ -3389,18 +3387,14 @@ def default_color(kind):
     return PALETTE_INDEX[v["palette"]] if "palette" in v and not v.get("colors") else 0
 SUGGEST_URL = "https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml"
 SUPPORT_URL = "https://github.com/Johnblip189/blipville#support-blipville"
-NOTICE_ID = "rc1-0.4"
-NOTICE_TEXT = ("Thank you so much for playing the Blipville beta! 💜\n\n"
-               "Every pet you hatched, cryptid you spotted and idea you sent helped make Blipville what it is.\n\n"
-               "This is Release Candidate 2, the last step before Blipville 1.0! It comes with 100 new Blips and 5 new tabs: "
-               "Dinos, Ocean, Sweets, Space and Plants. Expect lots of new stuff (and the odd bug).\n\n"
-               "Your pets, hearts and unlocks all come with you. Have fun!")
-if REDUX:
-    NOTICE_ID = "redux-0.5"
-    NOTICE_TEXT = ("Welcome to Blipville Redux! 💜\n\n"
-                   "It's the same Blipville, with a brand-new way of drawing your pets: every window is a real see-through "
-                   "picture now, so no more black flashes when you click them or open a menu.\n\n"
-                   "Your pets, hearts and unlocks all come with you. Have fun!")
+NOTICE_ID = "1.0"
+NOTICE_TITLE = "Blipville 1.0 is here! 💜"
+NOTICE_TEXT = ("Thank you so much for playing Blipville! 💜\n\n"
+               "Every pet you hatched, cryptid you spotted and idea you sent through the betas helped make Blipville what it is. "
+               "This is version 1.0: the real thing.\n\n"
+               "It's built on the Redux engine: every pet window is a real see-through picture now, so no more black flashes "
+               "when you click your pets or open a menu.\n\n"
+               "249 Blips, 5 worlds, cryptids, kaiju, Night Shift and more. Your pets, hearts and unlocks all come with you. Have fun!")
 IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
 HELP_URL = "https://github.com/Johnblip189/blipville/issues/new?template=help.yml"   # links live in the README, so they can change anytime
 NAMES = ["Pip", "Mochi", "Bean", "Nugget", "Pixel", "Tofu", "Biscuit", "Sprinkles", "Wobble", "Gizmo",
@@ -3449,12 +3443,17 @@ def work_area(root):
     return 0, 0, sw, sh - (70 if sys.platform == "darwin" else 40)
 
 
-# ----------------------------------------------------------------------------- see-through windows, the Redux way
-# The classic app makes pet windows see-through with a "magic pink" color key, and Windows has to repaint those
-# windows whenever anything happens to them (a click, a menu, a window passing over). Sometimes it shows black
-# for a moment before the repaint. Blipville Redux draws each window itself into a picture with real see-through
-# pixels (Pillow) and hands it straight to Windows as a layered window. Nothing is repainted, so nothing flashes.
-LAYERED = REDUX and sys.platform == "win32"
+# ----------------------------------------------------------------------------- see-through windows (the Redux engine)
+# Before 1.0, pet windows were made see-through with a "magic pink" color key, and Windows had to repaint them whenever
+# anything happened (a click, a menu, a window passing over). Sometimes it showed black for a moment before the repaint.
+# Now each window is drawn into a picture with real see-through pixels (Pillow) and handed straight to Windows as a
+# layered window. Nothing is repainted, so nothing flashes. BLIPVILLE_OLD_DRAWING=1 switches back to the color key.
+LAYERED = sys.platform == "win32" and not os.environ.get("BLIPVILLE_OLD_DRAWING")
+if LAYERED:
+    try:                                        # the .exe always has Pillow; running blip.pyw without it uses the color key
+        import PIL.Image, PIL.ImageDraw, PIL.ImageFont  # noqa: E401,F401
+    except ImportError:
+        LAYERED = False
 LAYERED_TEST_DIR = os.environ.get("BLIPVILLE_LAYERED_TEST")   # testing on other systems: frames are saved as PNGs here
 SELFTEST = bool(os.environ.get("BLIPVILLE_SELFTEST"))         # the build's automatic test: logs where pets are and clicks
 _PIL_FONTS = {}
@@ -4697,7 +4696,7 @@ UNLOCKS = {"Robo Bear": 1, "Robo Bunny": 2, "Robo Hen": 3}   # kind -> Night Shi
 
 
 def log_path():
-    return os.path.join(os.path.dirname(save_path()), "blipville-redux.log" if REDUX else "blipville.log")
+    return os.path.join(os.path.dirname(save_path()), "blipville.log")
 
 
 def log(message):
@@ -5506,7 +5505,7 @@ class Updater:
                                 "(right-click a pet → Check for updates), or grab it from the releases page.", parent=self.app.root)
             return
         # A tiny helper script waits for Blipville to close, swaps in the new file and starts it again.
-        bat = os.path.join(os.path.dirname(exe), "blipville-redux-update.bat" if REDUX else "blipville-update.bat")
+        bat = os.path.join(os.path.dirname(exe), "blipville-update.bat")
         with open(bat, "w", encoding="utf-8") as f:
             f.write("@echo off\r\n"
                     "chcp 65001 >nul\r\n"
@@ -5567,7 +5566,7 @@ class Maintenance:
 
             def work():
                 try:
-                    result = fetch_status("redux" if REDUX else "classic")
+                    result = fetch_status("classic")
                 except Exception as e:  # noqa: BLE001
                     log(f"maintenance check failed: {_why(e)}")
                     result = None
@@ -6420,7 +6419,7 @@ class App:
             cx, cy = int(p.wx + W / 2), int(p.wy + H - ART_H * SCALE / 2)
             log(f"selftest: pet {p.name} state={p.state} click_at={cx},{cy} layered={surf is not None} "
                 f"frames_shown={getattr(surf, 'shown', 0)} failed={getattr(surf, 'failed', None)}")
-        log(f"selftest: {len(self.pets)} pets, LAYERED={LAYERED}, edition={EDITION}")
+        log(f"selftest: {len(self.pets)} pets, LAYERED={LAYERED}, version={APP_VERSION}")
 
     # ----- remembering your town between launches
     def town_snapshot(self):
@@ -6560,7 +6559,7 @@ class App:
         from tkinter import messagebox
         given = self.give_gift()
         text = NOTICE_TEXT + ("\n\n" + self.gift_text(given) if given else "")
-        messagebox.showinfo("Blipville Redux 💜" if REDUX else "Blipville 0.4 RC2: almost 1.0! 💜", text, parent=self.root)
+        messagebox.showinfo(NOTICE_TITLE, text, parent=self.root)
 
     def world(self):
         """The world your town is visiting right now (or None for home)."""

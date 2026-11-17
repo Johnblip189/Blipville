@@ -2,7 +2,7 @@
 
 ![Blipville: pixel pets that live on your taskbar](docs/banner.png)
 
-> 💜 **Thanks for playing the Blipville beta!** This is **Release Candidate 2**, the last step before Blipville 1.0. Spot a bug? Now's the time to tell me. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
+> 💜 **Blipville 1.0 is here!** Thank you to everyone who played the betas. Spot a bug or have an idea? [Tell me!](https://github.com/Johnblip189/blipville/issues/new/choose)
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
 
@@ -10,19 +10,20 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 **249 kinds of pets · 790+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
 
-## ✨ New: Blipville Redux (v0.5, early beta)
+## ✨ New in 1.0
 
-**[⬇️ Download Blipville-Redux.exe](https://github.com/Johnblip189/Blipville/releases/download/v0.5.0-redux/Blipville-Redux.exe)**: the Windows app with a brand-new way of drawing your pets.
+**[⬇️ Download Blipville.exe (1.0)](https://github.com/Johnblip189/Blipville/releases/latest/download/Blipville.exe)**
 
-- 🚫 **No more black flashes.** The classic app hid a "magic pink" background that Windows had to repaint whenever you
-  clicked a pet or opened a menu, and sometimes it showed black for a moment. Redux draws every pet as a real see-through
-  picture and hands it straight to Windows, so nothing gets repainted.
-- 💾 **Same save**: your pets, hearts, worlds and unlocks come with you. Quit the classic app first so they don't both run.
-- 🧩 **Everything's still here**, and it updates itself like the classic app.
+- 🚫 **No more black flashes.** Blipville used to hide a "magic pink" background that Windows had to repaint whenever
+  you clicked a pet or opened a menu, and sometimes it showed black for a moment. 1.0 runs on the **Redux engine**: it
+  draws every pet as a real see-through picture and hands it straight to Windows, so nothing gets repainted.
+- 🔧 **Patch**, a free thank-you gift for waiting out the maintenance (until Tuesday, November 24).
+- 🛠️ **Maintenance mode**, so a big fix never leaves you with a broken app.
+- 💾 Your pets, hearts, worlds and unlocks come with you. Blipville and Blipville Redux both offer the update by themselves.
 
-Redux is built from the same `blip.pyw` (with `EDITION = "redux"`). [More about Redux on the website](https://johnblip189.github.io/Blipville/#redux).
+## Earlier versions
 
-## ✨ New in v0.4.0 (release candidate 2)
+### v0.4.0 (release candidate 2)
 
 **Thank you for playing our beta!** 💜 Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipville. This is **Release Candidate 2**, the last step before **1.0**, and it comes with:
 
@@ -38,26 +39,26 @@ Redux is built from the same `blip.pyw` (with `EDITION = "redux"`). [More about 
 - 🌟 **World Legends:** each world hides 2 legendary Blips (10 in all: Mossling, Bloomkin, Gumdrop Golem, Cotton Candy Cloud, Pearlfin, Abyss Wisp, Fossilbones, Amber Raptor, Nebula Cat, Cosmo Pup). They only stroll by while you're visiting their world, sparkling in full color. Click one before it leaves!
 - 🎁 **A free gift:** everyone who plays this week gets **Beta Buddy**, a limited-edition party Blip, in the new Gifts tab. **This week only** (until Sunday, November 22)!
 
-## ✨ New in v0.3.4 (beta)
+### v0.3.4 (beta)
 
 - 💬 **Suggestions & help** in every pet's right-click menu: suggest an animal or an idea, or get help if you're stuck.
 - 💖 **Donate / support Blipville** button.
 
-## ✨ New in v0.3.3 (beta)
+### v0.3.3 (beta)
 
 - 🎨 **More redraws:** Ladybug, Hippo, Nessie and Goldfish got makeovers.
 
-## ✨ New in v0.3.2 (beta)
+### v0.3.2 (beta)
 
 - 🦖 **New rarity: Kaiju!** 5 giant monsters (Tidal Titan, Magmaw, Gigabot, Skyray and Frostback) that stomp through a little city at the bottom of your screen. They're **way** harder to get than cryptids: they show up rarely, move fast, and you have to click one **3 times** before it leaves. Or switch on a 📡 Kaiju Beacon.
 - 👣 **13 more cryptids:** Thunderbird, Hodag, Mokele-mbembe, Lizard Man, Kappa, Tsuchinoko, Owlman, Beast of Bodmin, Pope Lick Monster, Bunyip, Skunk Ape, Wendigo and Snallygaster, each with its own scene.
 - 🎨 **Redrawn Blips:** Mothman, Flamingo, Snake, Capybara, Butterfly, Death Worm, Dover Demon and Fresno Nightcrawler got makeovers.
 
-## ✨ New in v0.3.1 (beta)
+### v0.3.1 (beta)
 
 - 👣 **New rarity: Cryptids!** 12 Blips based on legendary creatures (Bigfoot, Mothman, Nessie and more). Spot one in its own little scene, like Mothman on a lamp post, and click it before it gets away. Or set out a 🔦 Cryptid Lure.
 
-## ✨ New in v0.3.0 (beta)
+### v0.3.0 (beta)
 
 - 🏠 **Your pets are remembered.** Close Blipville and your whole town comes back next time, names, colors and hats included.
 - 🎩 **Hats & outfits shop.** Spend hearts on 12 hats and outfits, plus seasonal ones that only show up at the right time of year.
@@ -70,9 +71,7 @@ Redux is built from the same `blip.pyw` (with `EDITION = "redux"`). [More about 
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville Redux](https://github.com/Johnblip189/Blipville/releases/download/v0.5.0-redux/Blipville-Redux.exe)** (new, no black flashes), then double-click it. A little pet drops onto your taskbar. 🎉
-
-Prefer the classic app? [Blipville.exe (RC2)](https://github.com/Johnblip189/blipville/releases/download/v0.4.0-rc2/Blipville.exe) is still here.
+**[⬇️ Download Blipville.exe](https://github.com/Johnblip189/Blipville/releases/latest/download/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.
@@ -81,6 +80,8 @@ Prefer the classic app? [Blipville.exe (RC2)](https://github.com/Johnblip189/bli
 
 1. Install [Python](https://www.python.org/downloads/) (on Windows, tick **"Add python.exe to PATH"** during setup).
 2. Download [`blip.pyw`](blip.pyw) and double-click it, or run `python blip.pyw`.
+3. Optional, on Windows: `pip install pillow` turns on the Redux engine (no black flashes). Without it, Blipville
+   still runs and uses the older see-through trick.
 
 > Made for **Windows**. Should also work on **macOS**. (On Linux the pet shows up in a pink box, because most Linux desktops don't support see-through windows from Python.)
 

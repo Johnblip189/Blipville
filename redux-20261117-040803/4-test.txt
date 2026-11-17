@@ -1,0 +1,5 @@
+still running after 11 s: True (exit code )
+no pet position in the log
+still running after the clicks: True
+WARNING: the test click didn't reach the pet (this machine may not take mouse input)
+size: 15173042

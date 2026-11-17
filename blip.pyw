@@ -5029,14 +5029,20 @@ def find_update_backup():
     newest version, then look at its Blipville.exe download directly (its size and when it was uploaded)."""
     import re
     from email.utils import parsedate_to_datetime
-    tag = APP_VERSION
-    try:
-        m = re.search(r"/releases/tag/([^\"<>\s]+)", http_get(RELEASES_FEED).decode("utf-8", "replace"))
-        if m:
-            tag = m.group(1)
+    tags = []
+    try:   # newest first; some releases (like Blipville Recode) don't have a classic Blipville.exe, so try a few
+        tags = re.findall(r"/releases/tag/([^\"<>\s]+)", http_get(RELEASES_FEED).decode("utf-8", "replace"))
     except Exception:  # noqa: BLE001  (no feed: at least look for a rebuild of our own version)
         pass
-    head = http_head(DOWNLOAD_URL.format(tag=tag))
+    head = None
+    for tag in list(dict.fromkeys(tags))[:6] + [APP_VERSION]:
+        try:
+            head = http_head(DOWNLOAD_URL.format(tag=tag))
+            break
+        except Exception:  # noqa: BLE001
+            continue
+    if head is None:
+        raise RuntimeError("no Blipville.exe found in the latest releases")
     size = int(head.get("content-length") or 0)
     modified = head.get("last-modified")
     when = parsedate_to_datetime(modified).strftime("%Y-%m-%dT%H:%M:%SZ") if modified else ""

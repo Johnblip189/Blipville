@@ -1,0 +1,69 @@
+name: Build Blipville Recode
+
+# Blipville Recode (the Qt rebuild of the desktop app). To publish a new build, edit RECODE_VERSION and commit it,
+# or run this workflow by hand from the Actions tab.
+on:
+  push:
+    branches: [main]
+    paths: ["RECODE_VERSION"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Work out the version
+        id: ver
+        shell: pwsh
+        run: |
+          $v = (Get-Content RECODE_VERSION -Raw).Trim()
+          if ($v -notmatch '^v\d+\.\d+\.\d+([-.][0-9A-Za-z.-]+)?$') { throw "Not a version: '$v'" }
+          "version=$v" >> $env:GITHUB_OUTPUT
+
+      - uses: actions/setup-python@v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Install PyInstaller and Qt
+        run: pip install pyinstaller==6.11.1 PySide6-Essentials==6.8.1
+
+      - name: Export the art and stamp the version
+        run: |
+          python tools/export_recode_data.py
+          python tools/stamp_version.py ${{ steps.ver.outputs.version }} recode/blipville_recode.py
+
+      - name: Build the .exe
+        run: >
+          pyinstaller --onefile --noconsole --name Blipville-Recode --icon assets/icon.ico
+          --add-data "recode/blipdata.json;."
+          --exclude-module tkinter --exclude-module PySide6.QtNetwork --exclude-module PySide6.QtQml
+          --exclude-module PySide6.QtQuick --exclude-module PySide6.QtSql --exclude-module PySide6.QtTest
+          recode/blipville_recode.py
+
+      - name: Smoke test (the app starts and keeps running)
+        shell: pwsh
+        run: |
+          $p = Start-Process -FilePath "dist/Blipville-Recode.exe" -PassThru
+          Start-Sleep -Seconds 12
+          if ($p.HasExited) { throw "The app closed right away (exit code $($p.ExitCode))" }
+          Stop-Process -Id $p.Id -Force
+
+      - uses: actions/upload-artifact@v4.4.3
+        with:
+          name: blipville-recode
+          path: dist/*.exe
+
+      - name: Attach to the release
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          tag_name: ${{ steps.ver.outputs.version }}
+          name: Blipville Recode ${{ steps.ver.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          prerelease: true
+          files: dist/*.exe
+          body_path: recode/RELEASE_NOTES.md

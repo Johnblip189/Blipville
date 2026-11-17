@@ -3303,6 +3303,38 @@ KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRY
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, even in the daytime)
+
+# Trophies 🏆: (id, icon, name, how to get it, check, bonus hearts). Checked every few seconds; earned once, kept forever.
+def _all(group):
+    return lambda a: all(a.is_unlocked(k) for k in group)
+
+
+def _any(group):
+    return lambda a: any(a.is_unlocked(k) for k in group)
+
+
+TROPHIES = [
+    ("first-pet", "🐾", "First Friend", "Pet a Blip", lambda a: a.stat("pets") >= 1, 5),
+    ("pets-100", "💖", "Best Friends", "Pet your Blips 100 times", lambda a: a.stat("pets") >= 100, 20),
+    ("cookies-25", "🍪", "Snack Time", "Feed your Blips 25 cookies", lambda a: a.stat("cookies") >= 25, 10),
+    ("days-7", "📅", "Regular", "Play on 7 different days", lambda a: a.stat("days") >= 7, 20),
+    ("full-town", "🏘️", "Full House", "Have a full town of Blips", lambda a: len(a.pets) >= a.MAX_PETS, 15),
+    ("hats-5", "🎩", "Fashionista", "Own 5 hats or outfits", lambda a: len(a.save.get("hats_owned", [])) >= 5, 15),
+    ("egg-1", "🥚", "Egg-cellent", "Hatch a Mystery Egg", _any(RARE_KINDS), 10),
+    ("egg-all", "🪺", "Full Nest", "Hatch all 20 rare Blips", _all(RARE_KINDS), 50),
+    ("cryptid-1", "👣", "Cryptid Spotter", "Spot a cryptid", _any(CRYPTID_KINDS), 10),
+    ("cryptid-all", "📸", "Believer", f"Spot all {len(CRYPTID_KINDS)} cryptids", _all(CRYPTID_KINDS), 50),
+    ("kaiju-1", "🦖", "Monster Friend", "Befriend a kaiju", _any(KAIJU_KINDS), 20),
+    ("kaiju-all", "🏙️", "Kaiju Keeper", f"Befriend all {len(KAIJU_KINDS)} kaiju", _all(KAIJU_KINDS), 50),
+    ("ghost-1", "👻", "Ghost Whisperer", "Befriend a ghost", _any(GHOST_KINDS), 10),
+    ("ghost-all", "🕯️", "Spirit Squad", f"Befriend all {len(GHOST_KINDS)} ghosts", _all(GHOST_KINDS), 50),
+    ("world-1", "🌍", "Explorer", "Unlock a world", lambda a: len(a.save.get("worlds", [])) >= 1, 10),
+    ("world-all", "🧭", "World Traveler", "Unlock all 5 worlds", lambda a: len(a.save.get("worlds", [])) >= len(WORLDS), 50),
+    ("legend-1", "✨", "Legend Hunter", "Find a World Legend", _any(LEGEND_KINDS), 15),
+    ("legend-all", "🌟", "Living Legend", f"Find all {len(LEGEND_KINDS)} World Legends", _all(LEGEND_KINDS), 50),
+    ("night-1", "🌙", "Night Owl", "Survive Night 1 of Night Shift", lambda a: a.nights_won() >= 1, 10),
+    ("night-3", "🏆", "Survivor", "Survive all 3 nights of Night Shift", lambda a: a.nights_won() >= 3, 30),
+]
 BEACON_COST = 100                 # hearts per Kaiju Beacon
 KAIJU_HITS = 3                    # clicks it takes to befriend a kaiju
 
@@ -4017,6 +4049,8 @@ class Blip:
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
         self.menu.add_command(label=f"🕯️ Light a Spirit Candle ({CANDLE_COST} 💖)…", command=lambda: app.light_candle(self.root))
         self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
+        self.menu.add_command(label="🏆 Trophies…", command=lambda: TrophyShelf(app))
+        self.trophy_entry = self.menu.index("end")
         self.world_menu = tk.Menu(self.menu, tearoff=0)
         self.menu.add_cascade(label="🌍 Worlds", menu=self.world_menu)
         self.menu.add_command(label="💖 0 hearts", state="disabled")
@@ -4087,6 +4121,7 @@ class Blip:
             self.wake()
             return
         self.app.sound.play("boop")
+        self.app.bump("pets")
         now = time.monotonic()
         if now - self.last_pet_reward > 6:          # petting earns a heart (not by spam-clicking)
             self.last_pet_reward = now
@@ -4104,6 +4139,7 @@ class Blip:
         cx = self.wx + W / 2 + random.choice([-1, 1]) * random.uniform(45, 85)
         cx = min(max(cx, self.left + 30), self.right - 30)
         self.cookie = {"x": cx, "y": 0.0, "vy": 0.0, "landed": False}
+        self.app.bump("cookies")
         self.say("ooh! a cookie!", 2)
         self.set_face("surprised", 1.0)
 
@@ -4326,6 +4362,7 @@ class Blip:
             else:
                 self.gift_menu.add_command(label="🔒 ???  (a limited-time gift)", state="disabled")
         self.menu.entryconfigure(self.hearts_entry, label=f"💖 {self.app.hearts()} hearts")
+        self.menu.entryconfigure(self.trophy_entry, label=f"🏆 Trophies ({len(self.app.save.get('trophies', []))}/{len(TROPHIES)})…")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
             self.color_menu.add_radiobutton(label=col["name"], value=i, variable=self.color_var, command=self.pick_color)
@@ -5891,6 +5928,59 @@ class Maintenance:
             app.pets[0].say("we're open again! 🎉", 4)
 
 
+# ----------------------------------------------------------------------------- trophy shelf
+TROPHY_CUP = ["..cccccccc..", "hhcccccccchh", "h.cccccccc.h", "h.cccccccc.h", ".hcccccccch.", "..cccccccc..",
+              "...cccccc...", ".....cc.....", ".....cc.....", "...bbbbbb...", "..bbbbbbbb.."]
+
+
+class TrophyShelf:
+    """Every trophy on wooden shelves: gold when you've earned it, a shadow with a hint when you haven't."""
+    COLS, CELL_W, CELL_H = 5, 150, 128
+
+    def __init__(self, app):
+        self.app = app
+        app.check_trophies()
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville trophies")
+        self.win.resizable(False, False)
+        self.win.configure(bg="#1d1a2e")
+        self.win.attributes("-topmost", True)
+        rows = -(-len(TROPHIES) // self.COLS)
+        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 24, height=rows * self.CELL_H + 64, bg="#1d1a2e",
+                                highlightthickness=0)
+        self.canvas.pack(padx=6, pady=6)
+        self.draw()
+
+    def cup(self, x, y, s, earned):
+        gold = {"c": "#ffd23a", "h": "#e8a81a", "b": "#8a5a2a"} if earned else {"c": "#433b68", "h": "#433b68", "b": "#433b68"}
+        for r, row in enumerate(TROPHY_CUP):
+            for i, ch in enumerate(row):
+                if ch != ".":
+                    self.canvas.create_rectangle(x + i * s, y + r * s, x + (i + 1) * s, y + (r + 1) * s, fill=gold[ch], outline="")
+        if earned:                                                  # a little shine
+            self.canvas.create_rectangle(x + 3 * s, y + 1 * s, x + 4 * s, y + 4 * s, fill="#fff6c0", outline="")
+
+    def draw(self):
+        c, got = self.canvas, self.app.save.get("trophies", [])
+        c.delete("all")
+        earned = sum(1 for t in TROPHIES if t[0] in got)
+        c.create_text(16, 24, anchor="w", text=f"🏆 Trophies  {earned}/{len(TROPHIES)}", fill="#ffffff", font=("Segoe UI", 14, "bold"))
+        c.create_text(self.COLS * self.CELL_W + 8, 24, anchor="e", text="each one earns bonus 💖", fill="#ff9fc0",
+                      font=("Segoe UI", 10, "bold"))
+        for n, (tid, icon, name, how, check, bonus) in enumerate(TROPHIES):
+            x0, y0 = 12 + (n % self.COLS) * self.CELL_W, 50 + (n // self.COLS) * self.CELL_H
+            have = tid in got
+            c.create_rectangle(x0, y0, x0 + self.CELL_W - 10, y0 + self.CELL_H - 10, fill="#2b2547", outline="#3a3360" if have else "#2b2547",
+                               width=2)
+            c.create_rectangle(x0 + 8, y0 + 58, x0 + self.CELL_W - 18, y0 + 63, fill="#6a4a2a" if have else "#241f3a", outline="")
+            self.cup(x0 + (self.CELL_W - 10) / 2 - 18, y0 + 8, 3, have)
+            mid = x0 + (self.CELL_W - 10) / 2
+            c.create_text(mid, y0 + 78, text=f"{icon} {name}", fill="#ffd23a" if have else "#b8b0d8", font=("Segoe UI", 9, "bold"),
+                          width=self.CELL_W - 18)
+            c.create_text(mid, y0 + 99, text=how + ("" if have else f"  (+{bonus} 💖)"), fill="#9ad8a8" if have else "#c8c0e0",
+                          font=("Segoe UI", 8), width=self.CELL_W - 18, justify="center")
+
+
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)
 class Collection:
     """Every rare and Night Shift Blip. Locked ones are shadows, but you can peek (spoilers!)."""
@@ -6903,6 +6993,30 @@ class App:
     def hearts(self):
         return int(self.save.get("hearts", 0))
 
+    # ----- trophies 🏆
+    def stat(self, name):
+        return int(self.save.get("stats", {}).get(name, 0))
+
+    def bump(self, name, n=1):
+        stats = self.save.setdefault("stats", {})
+        stats[name] = int(stats.get(name, 0)) + n           # saved with the next write_save
+
+    def check_trophies(self):
+        got = self.save.setdefault("trophies", [])
+        for tid, icon, name, how, check, bonus in TROPHIES:
+            if tid in got or not check(self):
+                continue
+            got.append(tid)
+            log(f"trophy: {name}")
+            pet = next((p for p in self.pets if p.state not in ("sleep", "held")), self.pets[0] if self.pets else None)
+            self.add_hearts(bonus, pet)
+            self.sound.play("fanfare")
+            if pet:
+                pet.say(f"🏆 trophy: {name}! +{bonus} 💖", 5)
+                pet.set_face("happy", 2)
+                pet.burst("heart", 6)
+            return                                            # one at a time, so each one gets its moment
+
     def add_hearts(self, n, pet=None):
         self.save["hearts"] = self.hearts() + n
         write_save(self.save)
@@ -6913,6 +7027,7 @@ class App:
         today = time.strftime("%Y-%m-%d")
         if self.save.get("last_day") != today:
             self.save["last_day"] = today
+            self.bump("days")
             self.add_hearts(10, self.pets[0] if self.pets else None)
             if self.pets:
                 self.pets[0].say("daily treat! +10 💖", 4)
@@ -7109,6 +7224,9 @@ class App:
         self.safely(self.socialize, now, what="pets playing")
         self.safely(self.play_step, now, what="games")
         self.safely(self.cryptid_step, now, what="sightings")
+        if now - getattr(self, "last_trophy_check", 0) > 3:
+            self.last_trophy_check = now
+            self.safely(self.check_trophies, what="trophies")
         if now - self.last_town_save > 15:         # remember the town every so often
             self.safely(self.save_town, what="saving")
             self.last_town_save = now

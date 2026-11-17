@@ -3153,6 +3153,81 @@ TAB_KINDS = {
 }
 TAB_GROUPS = [('Dinos 🦕', ['Triceratops', 'Stegosaurus', 'Brachiosaurus', 'Pterodactyl', 'Raptor', 'Ankylosaurus', 'Spinosaurus', 'Parasaurolophus', 'Dimetrodon', 'Iguanodon']), ('Ocean 🌊', ['Seahorse', 'Stingray', 'Squid', 'Lobster', 'Shrimp', 'Anglerfish', 'Eel', 'Swordfish', 'Sea Urchin', 'Hermit Crab']), ('Sweets 🍩', ['Donut', 'Cupcake', 'Ice Cream', 'Macaron', 'Pudding', 'Gummy Bear', 'Dumpling', 'Toast', 'Marshmallow', 'Taco']), ('Space 🚀', ['Space Jelly', 'Astronaut', 'UFO', 'Star', 'Moon', 'Comet', 'Ringed Planet', 'Rocket', 'Space Slug', 'Black Hole']), ('Plants 🌱', ['Bamboo', 'Daisy', 'Sunflower', 'Tulip', 'Flytrap', 'Acorn', 'Pumpkin', 'Pinecone', 'Clover', 'Lotus'])]
 
+# Ghosts 👻: they drift past haunted scenes at night (or when you light a Spirit Candle). They fade in and out, and
+# you can only befriend one while it's glowing. With the Redux engine they're really see-through, even in your town.
+GHOSTS = {
+ "Sheetie": {"eyes": 5, "move": "float", "speed": 0.9, "feet": False, "ghost": True,
+  "lines": ["boo! (did i get you?)", "i'm just a sheet with feelings", "*floats spookily*", "do you have fabric softener?", "it's cozy under here"],
+  "body": ["................", ".....oooooo.....", "...oobbbbbboo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbobbobbobbobbo", ".oo.oo.oo.oo.oo."],
+  "colors": [{"name": "Bedsheet", "o": "#6a6a8a", "b": "#f6f6ff", "p": "#ffb0c8", "e": "#2a2a4a"},
+             {"name": "Lavender", "o": "#5a4a8a", "b": "#e4d8ff", "p": "#ff9ad0", "e": "#2a1a4a"},
+             {"name": "Minty", "o": "#3a7a6a", "b": "#d8fff0", "p": "#ffb0c0", "e": "#0a2a24"}]},
+ "Will-o'-Wisp": {"eyes": 6, "move": "float", "speed": 1.2, "feet": False, "ghost": True,
+  "lines": ["*flickers*", "follow meee~", "i'm a little lost light", "don't follow me into the swamp, ok?", "warm and glowy"],
+  "body": [".......oo.......", "......obbo......", ".....obbbbo.....", "....obbllbbo....", "...obbllllbbo...", "..obbllllllbbo..",
+           ".obbllllllllbbo.", "obbllllllllllbbo", "obpllllllllllpbo", ".obbllllllllbbo.", "..obbbbbbbbbbo..", "...oooooooooo..."],
+  "colors": [{"name": "Blue Flame", "o": "#1a3a8a", "b": "#5aa8ff", "l": "#d0f0ff", "p": "#ff9ae0", "e": "#0a1a4a"},
+             {"name": "Swamp", "o": "#1a5a2a", "b": "#6ae07a", "l": "#e0ffd0", "p": "#ffb0a0", "e": "#0a2a0a"},
+             {"name": "Violet", "o": "#4a1a8a", "b": "#b07aff", "l": "#f0e0ff", "p": "#ff9ad8", "e": "#1a0a3a"}]},
+ "Poltergeist": {"eyes": 5, "move": "float", "speed": 1.4, "feet": False, "ghost": True, "mouth": False,
+  "lines": ["*throws a spoon*", "hehehe", "who moved your keys? me.", "i make the lights blink", "CRASH! oops"],
+  "body": ["................", ".....oooooo.....", "...oobbbbbboo...", "..obbbbbbbbbbo..", "o.obbbbbbbbbbo.o", "obobbbbbbbbbbobo",
+           "obbbbbbbbbbbbbbo", ".obpbbbbbbbbpbo.", "..obbwwwwwwbbo..", "..obbbwwwwbbbo..", "..obbobbbbobbo..", "...oo.oooo.oo..."],
+  "colors": [{"name": "Mischief", "o": "#3a2a5a", "b": "#c8b8f0", "w": "#ffffff", "p": "#ff8ac0", "e": "#1a0a2a"},
+             {"name": "Ectoplasm", "o": "#1a4a2a", "b": "#a8f0b0", "w": "#ffffff", "p": "#ffb0a0", "e": "#0a1a0a"},
+             {"name": "Ember", "o": "#5a1a1a", "b": "#ffb0a0", "w": "#fff8e0", "p": "#ff6a8a", "e": "#2a0a0a"}]},
+ "Banshee": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False,
+  "lines": ["*wails* (politely)", "oooOOOooo~", "i sing at night", "my hair is always windswept", "sorry, was that too loud?"],
+  "body": ["....oooooooo....", "...ohhhhhhhho...", "..ohhhhhhhhhho..", ".ohhhbbbbbbhhho.", ".ohhbbbbbbbbhho.", "ohhbbbbbbbbbbhho",
+           "ohhbbbbbbbbbbhho", "ohhbpbbbbbbpbhho", "ohhbbbbkkbbbbhho", "ohhhbbbkkbbbhhho", ".ohhhbbbbbbhhho.", "..oo.oo..oo.oo.."],
+  "colors": [{"name": "Moonlit", "o": "#2a2a4a", "b": "#e8ecff", "h": "#9aa8d8", "k": "#3a2a5a", "p": "#ffb0c8", "e": "#2a2a5a"},
+             {"name": "Ember Hair", "o": "#3a1a1a", "b": "#fff0e8", "h": "#e86a4a", "k": "#5a1a2a", "p": "#ff9aa8", "e": "#3a1a1a"},
+             {"name": "Night", "o": "#0a0a1a", "b": "#d8d8f0", "h": "#2a2a4a", "k": "#1a1a3a", "p": "#c8a0d8", "e": "#5ae0ff"}]},
+ "Phantom Cat": {"eyes": 5, "move": "float", "speed": 1.1, "feet": False, "ghost": True,
+  "lines": ["*purrs from beyond*", "nine lives? i'm on number ten", "mrrrow~", "i still knock things off tables", "pet me (your hand goes through)"],
+  "body": ["................", ".o............o.", ".oo..........oo.", ".obo........obo.", ".obboooooooobbo.", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "...o..oooo..o..."],
+  "colors": [{"name": "Misty", "o": "#4a5a7a", "b": "#dce8ff", "p": "#ffa8c8", "e": "#2a3a5a"},
+             {"name": "Spirit Black", "o": "#0a0a1a", "b": "#4a4a6a", "p": "#a87ac8", "e": "#9affd0"},
+             {"name": "Lilac", "o": "#5a3a7a", "b": "#ecdcff", "p": "#ff9ad8", "e": "#3a1a5a"}]},
+ "Spectral Pup": {"eyes": 5, "move": "float", "speed": 1.3, "feet": False, "ghost": True,
+  "lines": ["*ghostly woof*", "wanna play fetch? the ball goes through me", "good boy, even now", "awoooo~", "i guard the graveyard"],
+  "body": ["................", "................", ".ooo..oooo..ooo.", "oaaoobbbbbbooaao", "oaaobbbbbbbboaao", "oaobbbbbbbbbboao",
+           ".obbbbbbbbbbbbo.", "obpbbbbbbbbbbpbo", "obbbbbbnnbbbbbbo", ".obbccccccccbbo.", "..obbobbbbobbo..", "...o..oooo..o..."],
+  "colors": [{"name": "Wisp", "o": "#4a5a6a", "b": "#e0f0ff", "a": "#a8c0d8", "n": "#4a5a6a", "c": "#7ac8ff", "p": "#ffa8c0", "e": "#1a2a3a"},
+             {"name": "Ember", "o": "#5a3a2a", "b": "#ffe8d0", "a": "#e0a878", "n": "#5a3a2a", "c": "#ff6a5a", "p": "#ff9a8a", "e": "#2a1a0a"},
+             {"name": "Shadow", "o": "#0a0a14", "b": "#3a3a52", "a": "#24243a", "n": "#0a0a14", "c": "#c86aff", "p": "#8a6aa8", "e": "#ffe66a"}]},
+ "Chochin": {"eyes": 5, "move": "float", "speed": 0.9, "feet": False, "ghost": True, "mouth": False,
+  "lines": ["*sways on its string*", "i'm a lantern with a secret", "blehhh (tongue out)", "i light the way home", "paper and spooky vibes"],
+  "body": [".....kkkkkk.....", "....okkkkkko....", "...obbbbbbbbo...", "..osssssssssso..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "osssssssssssssso", "obpbbbbbbbbbbpbo", "obbbbbbrrbbbbbbo", ".ossssrrrrsssso.", "..obbbbrrbbbbo..", "...okkkkkkkko..."],
+  "colors": [{"name": "Festival", "o": "#5a1a0a", "b": "#ff9a4a", "s": "#c8501a", "k": "#2a1a14", "r": "#ff4a6a", "p": "#ffd0a0", "e": "#2a0a04"},
+             {"name": "Paper", "o": "#5a4a3a", "b": "#fff4dc", "s": "#e0c8a0", "k": "#2a1a14", "r": "#ff5a7a", "p": "#ffb0a8", "e": "#2a1a0a"},
+             {"name": "Spirit Blue", "o": "#1a2a5a", "b": "#9ad0ff", "s": "#5a8ad8", "k": "#14142a", "r": "#ff6aa8", "p": "#ffb0e0", "e": "#0a1a3a"}]},
+ "Gloom": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False,
+  "lines": ["...", "*lurks*", "i'm not scary, i'm shy", "the dark is comfy", "hi. (quietly)"],
+  "body": ["................", "....o.oooo.o....", "...oboobbooboo..", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", "obobbobbobbobbo.", "o.o.o.o.o.o.o..."],
+  "colors": [{"name": "Shadow", "o": "#06060e", "b": "#1e1a2e", "p": "#3a2a4a", "e": "#ffe66a"},
+             {"name": "Abyss", "o": "#020a14", "b": "#0e1e2e", "p": "#1a3a4a", "e": "#6affe0"},
+             {"name": "Ember Eyes", "o": "#0e0606", "b": "#2a1414", "p": "#4a1a1a", "e": "#ff5a3a"}]},
+ "Grey Lady": {"eyes": 6, "move": "float", "speed": 0.7, "feet": False, "ghost": True,
+  "lines": ["*glides down the hallway*", "i've lived here for 300 years", "tea? it's been steeping a while", "how do you do", "mind the creaky stair"],
+  "body": ["......oooo......", "....oovvvvoo....", "...ovvvvvvvvo...", "..ovvbbbbbbvvo..", "..ovbbbbbbbbvo..", ".ovvbbbbbbbbvvo.",
+           ".ovbbbbbbbbbbvo.", ".ovbpbbbbbbpbvo.", "ovvbbbbbbbbbbvvo", "ovvvvwwwwwwvvvvo", "ovvvvvvvvvvvvvvo", ".oo.ooo..ooo.oo."],
+  "colors": [{"name": "Grey", "o": "#3a3a4a", "b": "#e8e8f0", "v": "#a8a8b8", "w": "#ffffff", "p": "#d8b0c0", "e": "#2a2a3a"},
+             {"name": "Rose", "o": "#4a2a3a", "b": "#fff0f4", "v": "#d8a0b8", "w": "#ffffff", "p": "#ff9ab8", "e": "#3a1a2a"},
+             {"name": "Moonbeam", "o": "#2a3a5a", "b": "#eef4ff", "v": "#9ab8e8", "w": "#ffffff", "p": "#c8b0e8", "e": "#1a2a4a"}]},
+ "Ghost Captain": {"eyes": 6, "move": "float", "speed": 1.0, "feet": False, "ghost": True,
+  "lines": ["yo ho ho… boo!", "my ship sank but my spirit didn't", "arrr, the sea is calling", "*spooky sea shanty*", "anyone seen my parrot?"],
+  "body": ["................", "..hh.hhhhhh.hh..", ".hhhhhhwwhhhhhh.", "..hhhhhhhhhhhh..", "..oooooooooooo..", ".obbbbbbbbbbbbo.",
+           "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", "obbobbobbobbobbo", ".oo.oo.oo.oo.oo."],
+  "colors": [{"name": "Sea Spirit", "o": "#1a3a4a", "b": "#c8f4f0", "h": "#14141e", "w": "#ffffff", "p": "#ffb0c0", "e": "#0a2a2a"},
+             {"name": "Old Gold", "o": "#3a2a0a", "b": "#fff0c0", "h": "#3a1a0a", "w": "#ffd23a", "p": "#ffa890", "e": "#2a1a04"},
+             {"name": "Phantom", "o": "#14142a", "b": "#a8b8e8", "h": "#0a0a14", "w": "#e8303a", "p": "#c8a0e0", "e": "#ffe66a"}]},
+}
+
 # Gifts 🎁: thank-you Blips handed out for a limited time. Once you have one, it's yours forever.
 GIFTS = {
  "Beta Buddy": {"eyes": 5, "move": "hop", "speed": 1.1,
@@ -3199,17 +3274,18 @@ GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest on
 GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
 GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS}.items():
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
-                       "shifty": _a.get("shifty", False)}
+                       "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False)}
 
 NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
 GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
+GHOST_KINDS = list(GHOSTS)        # met at night
 LEGEND_KINDS = list(LEGENDS)      # found only while visiting their world
 # Worlds 🌍: each new tab's Blips are locked until you unlock its world with hearts. Blips you already have stay yours.
 WORLDS = [  # name, the tab it unlocks, cost in hearts, the air while you're visiting
@@ -3223,9 +3299,10 @@ WORLD_OF = {k: w["name"] for w in WORLDS for t, ks in TAB_GROUPS if t == w["tab"
 WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
-KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GIFT_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
+CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, even in the daytime)
 BEACON_COST = 100                 # hearts per Kaiju Beacon
 KAIJU_HITS = 3                    # clicks it takes to befriend a kaiju
 
@@ -3716,11 +3793,30 @@ class PixelCanvas:
 
     # ---- drawing it all and showing it
     def render(self):
-        from PIL import Image, ImageDraw
+        from PIL import Image, ImageColor, ImageDraw
         img = Image.new("RGBA", (self.w, self.h), (0, 0, 0, 0))
         d = ImageDraw.Draw(img)
-        for i in self.order:
-            it = self.items[i]
+        layer = None                                  # see-through items (ghosts) go on a layer that's blended in
+        for i in self.order + [None]:
+            it = self.items[i] if i is not None else None
+            alpha = it["o"].get("alpha") if it else None
+            if alpha is not None and alpha < 0.999 and it["kind"] == "rect":
+                if layer is None:
+                    layer = Image.new("RGBA", (self.w, self.h), (0, 0, 0, 0))
+                    ld = ImageDraw.Draw(layer)
+                fill = it["o"].get("fill")
+                if fill:
+                    x1, x2 = sorted((it["xy"][0], it["xy"][2]))
+                    y1, y2 = sorted((it["xy"][1], it["xy"][3]))
+                    if round(x2) - 1 >= round(x1) and round(y2) - 1 >= round(y1):
+                        ld.rectangle([round(x1), round(y1), round(x2) - 1, round(y2) - 1],
+                                     fill=ImageColor.getrgb(fill)[:3] + (max(0, min(255, int(alpha * 255))),))
+                continue
+            if layer is not None:
+                img.alpha_composite(layer)
+                layer = None
+            if it is None:
+                break
             o, xy, kind = it["o"], it["xy"], it["kind"]
             fill = o.get("fill", "" if kind == "rect" else "#000000") or None
             outline = o.get("outline", "#000000" if kind in ("rect", "poly") else "") or None
@@ -3882,7 +3978,7 @@ class Blip:
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
         groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
                   + list(TAB_GROUPS)
-                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Gifts 🎁", GIFT_KINDS)]
+                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Ghosts 👻", GHOST_KINDS), ("Gifts 🎁", GIFT_KINDS)]
                   + ([("My Blips ⭐", CUSTOM_KINDS)] if CUSTOM_KINDS else []))
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
@@ -3898,6 +3994,8 @@ class Blip:
                 self.gift_menu = sub
             elif members is LEGEND_KINDS:
                 self.legend_menu = sub
+            elif members is GHOST_KINDS:
+                self.ghost_menu = sub
             elif any(members is ks for _, ks in TAB_GROUPS):
                 self.tab_menus = getattr(self, "tab_menus", {})
                 self.tab_menus[group] = (sub, members)
@@ -3917,6 +4015,7 @@ class Blip:
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
         self.menu.add_command(label=f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", command=lambda: app.set_lure(self.root))
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
+        self.menu.add_command(label=f"🕯️ Light a Spirit Candle ({CANDLE_COST} 💖)…", command=lambda: app.light_candle(self.root))
         self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
         self.world_menu = tk.Menu(self.menu, tearoff=0)
         self.menu.add_cascade(label="🌍 Worlds", menu=self.world_menu)
@@ -4170,6 +4269,17 @@ class Blip:
         self.cryptid_menu.add_command(label=f"🔦 Set out a Cryptid Lure… ({LURE_COST} 💖, {spotted}/{len(CRYPTID_KINDS)} spotted)",
                                       command=lambda: self.app.set_lure(self.root))
         self.cryptid_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
+        self.ghost_menu.delete(0, "end")
+        for k in GHOST_KINDS:
+            if self.app.is_unlocked(k):
+                self.ghost_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            else:
+                self.ghost_menu.add_command(label="🔒 ???", state="disabled")
+        met = sum(1 for k in GHOST_KINDS if self.app.is_unlocked(k))
+        self.ghost_menu.add_separator()
+        self.ghost_menu.add_command(label=f"🕯️ Light a Spirit Candle… ({CANDLE_COST} 💖, {met}/{len(GHOST_KINDS)} met)",
+                                    command=lambda: self.app.light_candle(self.root))
+        self.ghost_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
         self.kaiju_menu.delete(0, "end")
         for k in KAIJU_KINDS:
             if self.app.is_unlocked(k):
@@ -4492,6 +4602,8 @@ class Blip:
 
     def draw_pet(self, now, art, ox, oy):
         c = self.canvas
+        # ghosts stay a little see-through in your town too (with the Redux engine)
+        ghost = {"alpha": 0.8} if VARIANTS[self.kind].get("ghost") and isinstance(c, PixelCanvas) else {}
         # pixel art, merging runs of the same color into one rectangle per row
         for y, row in enumerate(art):
             x = 0
@@ -4504,7 +4616,7 @@ class Blip:
                 while x2 + 1 < ART_W and row[x2 + 1] == color:
                     x2 += 1
                 c.create_rectangle(ox + x * SCALE, oy + y * SCALE, ox + (x2 + 1) * SCALE, oy + (y + 1) * SCALE,
-                                   fill=color, outline="", tags=("pet",))
+                                   fill=color, outline="", tags=("pet",), **ghost)
                 x = x2 + 1
 
         # hat / glasses / scarf
@@ -4873,6 +4985,74 @@ def _volcano():
     return rows
 
 
+
+def _house():
+    """A little haunted house: pointy roof, a chimney, flickering windows."""
+    w, rows = 34, []
+    for r in range(36):
+        def cell(i, r=r):
+            if r < 6:
+                return "c" if 24 <= i <= 26 and r >= 1 else "."
+            if r < 17:                                   # roof
+                half = (r - 5) * 1.5
+                if abs(i - 16.5) > half:
+                    return "c" if 24 <= i <= 26 else "."
+                return "*" if 11 <= r <= 13 and 15 <= i <= 18 else "r"
+            if r == 17:
+                return "t"
+            if 2 <= i <= 31:                             # walls
+                if 20 <= r <= 25 and (6 <= i <= 10 or 23 <= i <= 27):
+                    return "t" if r in (20, 25) or i in (6, 10, 23, 27) else "*"
+                if r >= 28 and 14 <= i <= 19:
+                    return "d"
+                return "w"
+            return "."
+        rows.append(_row(w, cell))
+    return rows
+
+
+def _graves():
+    """A row of tombstones (the middle one has a cross) on a strip of grass."""
+    stones = [(8, 8), (27, 6), (49, 9), (70, 7), (90, 8)]
+    rows = []
+    for r in range(11):
+        h = 10 - r                                       # height above the ground
+        def cell(i, h=h):
+            if h == 0:
+                return "g"
+            for cx, top in stones:
+                dx = abs(i - cx)
+                if dx <= 4 and h <= top - (1 if dx == 4 else 0):
+                    if cx == 49 and ((dx == 0 and top - 6 <= h <= top - 2) or (h == top - 3 and dx <= 2)):
+                        return "+"
+                    return "d" if i - cx == 4 or h == 1 else "s"
+            return "."
+        rows.append(_row(100, cell))
+    return rows
+
+
+def _fence():
+    """An iron fence: a post every 5 steps and two rails."""
+    return [_row(100, lambda i, r=r: "i" if i % 5 == 0 or r in (3, 7) else ".") for r in range(9)]
+
+
+def _deadtree():
+    shape = ["........t..........t....", ".........t........t.....", "..t.......t......t......", "...t......t.....t...t...",
+             "....t.....tt...tt..t....", ".....tt....t..tt..t.....", ".......t...tttt..t......", "........tt.ttt.tt.......",
+             "..........tttttt........", "...........tttt.........", "...........tttt.........", "...........tttt.........",
+             "...........tttt.........", "...........tttt.........", "..........ttttt.........", "..........tttttt........",
+             ".........ttttttt........", "........tttttttttt......"]
+    return shape
+
+
+def _moon():
+    rows = []
+    for r in range(11):
+        rows.append(_row(11, lambda i, r=r: ("c" if (i, r) in ((3, 3), (4, 3), (6, 6), (7, 6), (4, 7)) else "m")
+                         if (i - 5) ** 2 + (r - 5) ** 2 <= 26 else "."))
+    return rows
+
+
 SCENE_PROPS = {
     "lamp": {"colors": {"o": "#2a2a3a", "*": ["#ffe08a", "#6a5a3a"], "p": "#3a3a4a"},
              "rows": ["..ooooo..", ".o*****o.", ".o*****o.", "..ooooo.."] + ["....p...."] * 29
@@ -4918,6 +5098,15 @@ SCENE_PROPS = {
                        _row(100, lambda i: "g" if i % 9 in (2, 5, 6) else "."), _row(100, lambda i: "g" if i % 3 else "d"),
                        _row(100, lambda i: "d" if i % 4 == 1 else "g"), _row(100, lambda i: "d")]},
 }
+
+SCENE_PROPS.update({
+    "house": {"colors": {"r": "#1e1830", "w": "#2e2646", "c": "#1e1830", "t": "#4a3e6a", "d": "#140f20",
+                         "*": ["#ffd86a", "#3a3456"]}, "rows": _house()},
+    "graves": {"colors": {"s": "#8a8a9e", "d": "#5e5e72", "+": "#4a4a5e", "g": "#2a4a2a"}, "rows": _graves()},
+    "fence": {"colors": {"i": "#1a1626"}, "rows": _fence()},
+    "deadtree": {"colors": {"t": "#2a2030"}, "rows": _deadtree()},
+    "moon": {"colors": {"m": "#fff4c8", "c": "#e8dca0"}, "rows": _moon()},
+})
 
 # props: [prop, center x, bottom y, layer]   keys: [seconds, center x, y]   clip: hidden below this height
 CRYPTID_SCENES = {
@@ -4995,7 +5184,35 @@ LEGEND_SCENES = {k: {"hint": "something sparkly is coming this way… ✨", "leg
                      "keys": [[0, -12, 0], [6, 46, 0], [10, 48, 0], [17, 112, 0]] if LEGENDS[k]["move"] == "walk" else
                              [[0, -12, 14], [6, 46, 10], [10, 50, 14], [16, 112, 18]]}
                  for k, w in LEGEND_WORLD.items()}
-SCENES = {**CRYPTID_SCENES, **KAIJU_SCENES, **LEGEND_SCENES}
+_FLOAT_KEYS = [[[0, -14, 12], [5, 30, 15], [9, 62, 11], [15, 116, 15]], [[0, 116, 16], [5, 70, 12], [9, 40, 16], [15, -16, 12]],
+               [[0, -14, 18], [4, 26, 12], [8, 50, 14], [11, 74, 10], [16, 116, 16]]]
+GHOST_SCENES = {
+    "Sheetie": {"hint": "the old house's lights are flickering…", "props": [["moon", 86, 40, "back"], ["house", 30, 0, "back"], ["fence", 50, 0, "front"]]},
+    "Will-o'-Wisp": {"hint": "a little light is bobbing over the swamp…", "props": [["moon", 14, 42, "back"], ["reeds", 50, 0, "front"], ["water", 50, 0, "front"]]},
+    "Poltergeist": {"hint": "did something just fall over in there?!", "props": [["house", 70, 0, "back"], ["fence", 50, 0, "front"]]},
+    "Banshee": {"hint": "what's that wailing sound…?", "props": [["moon", 80, 40, "back"], ["deadtree", 18, 0, "back"], ["graves", 50, 0, "front"]]},
+    "Phantom Cat": {"hint": "two eyes are glowing on the fence…", "props": [["moon", 20, 42, "back"], ["fence", 50, 0, "front"]]},
+    "Spectral Pup": {"hint": "a faint howl from the graveyard…", "props": [["moon", 84, 42, "back"], ["graves", 50, 0, "front"]]},
+    "Chochin": {"hint": "a paper lantern is swaying in the dark…", "props": [["deadtree", 76, 0, "back"], ["lamp", 22, 0, "back"]]},
+    "Gloom": {"hint": "the shadows are moving…", "props": [["deadtree", 24, 0, "back"], ["deadtree", 82, 0, "back"], ["fence", 50, 0, "front"]]},
+    "Grey Lady": {"hint": "someone is gliding past the windows…", "props": [["moon", 14, 42, "back"], ["house", 64, 0, "back"]]},
+    "Ghost Captain": {"hint": "a ship's bell is ringing out on the water…", "props": [["moon", 78, 40, "back"], ["water", 50, 0, "front"]]},
+}
+for _i, (_k, _sc) in enumerate(GHOST_SCENES.items()):
+    _sc.update({"ghost": True, "keys": _FLOAT_KEYS[_i % len(_FLOAT_KEYS)]})
+SCENES = {**CRYPTID_SCENES, **KAIJU_SCENES, **LEGEND_SCENES, **GHOST_SCENES}
+
+
+def ghost_hours():
+    """Ghosts come out from 7 PM to 7 AM (your computer's clock)."""
+    h = time.localtime().tm_hour
+    return h >= 19 or h < 7
+
+
+def ghost_alpha(t, phase=0.0):
+    """How solid a ghost is t seconds into its scene: it fades in and out. Catchable at 0.6 and up."""
+    s = math.sin(t * 1.7 + phase)
+    return 0.12 + 0.88 * min(1.0, max(0.0, (s + 0.35) / 1.0))
 
 
 def scene_pos(keys, t):
@@ -5045,6 +5262,7 @@ class Sighting:
         self.wx = random.uniform(left, max(left, right - self.cw))
         show_window(root, self.canvas, self.cw, self.ch, self.wx, bottom - self.ch)
         self.born = time.monotonic()
+        self.phase = random.uniform(0, 6.28)          # ghosts: where in their fade they start
         self.facing, self.pos, self.caught = (-1 if flip else 1), self.keys[0][1:], False
         witness = next((p for p in app.pets if p.state not in ("sleep", "held")), None)
         if witness:
@@ -5085,7 +5303,7 @@ class Sighting:
 
     def art(self, now):
         v = VARIANTS[self.kind]
-        if self.kind in LEGENDS:                    # legends stroll by in full color
+        if self.kind in LEGENDS or self.kind in GHOSTS:   # legends and ghosts show up in full color
             pal = {**kind_colors(self.kind)[0], **v.get("extra", {})}
             g = [[pal.get(ch, pal["o"]) if ch != "." else None for ch in row] + [None] * (ART_W - len(row)) for row in v["body"]]
             g.append([None] * ART_W)
@@ -5147,7 +5365,8 @@ class Sighting:
             self.mask(p["rows"], p["colors"], x + math.sin(t * 9) * 0.6, 0, t)
         g = self.art(now)
         sc, flash = self.sc, now < self.flash_until
-        for r, row in enumerate(g):
+        ghost = self.ghost_style(t)
+        for r, row in enumerate(g if ghost is not None else []):
             if y + (12 - r) * sc < self.clip:
                 continue
             row = row if self.facing == 1 else row[::-1]
@@ -5155,7 +5374,8 @@ class Sighting:
             for i, col in enumerate(row):
                 if col:
                     left = (x + (i - 8) * sc) * P
-                    c.create_rectangle(left, top, left + P * sc, top + P * sc, fill="#ffffff" if flash else col, outline="", tags=("mover",))
+                    c.create_rectangle(left, top, left + P * sc, top + P * sc, fill="#ffffff" if flash else col, outline="",
+                                       tags=("mover",), **ghost)
         if self.scene.get("sparkle") and (not moving or self.scene.get("legend")):        # Frogman's sparkly wand
             for k in range(3):
                 if int(t * 6 + k * 2) % 3:
@@ -5168,7 +5388,7 @@ class Sighting:
                 bx, by = (x - 5 + k * 4) * P, (SCENE_H - (y + 13 * self.sc + 4)) * P
                 if by >= 0:
                     c.create_rectangle(bx, by, bx + 3 * P, by + 2 * P, fill="#ff5a7a" if k < self.hits else "#ffffff", outline="#16121f", tags=("mover",))
-        elif self.visible() and not self.scene.get("legend"):
+        elif self.visible() and not self.scene.get("legend") and (not self.scene.get("ghost") or self.solid(t)):
             qx, qy = x * P - 8, (SCENE_H - (y + 22)) * P
             for r, row in enumerate([".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."]):   # a pixel "?"
                 for i, ch in enumerate(row):
@@ -5180,8 +5400,27 @@ class Sighting:
     def visible(self):
         return self.pos[1] + 12 * self.sc >= self.clip
 
+    def solid(self, t):
+        """Ghosts can only be befriended while they glow (not while they've faded out)."""
+        return not self.scene.get("ghost") or ghost_alpha(t, self.phase) >= 0.6
+
+    def ghost_style(self, t):
+        """Extra drawing options: ghosts are see-through (Redux engine) or just blink out (old drawing). None = don't draw."""
+        if not self.scene.get("ghost"):
+            return {}
+        a = ghost_alpha(t, self.phase)
+        if isinstance(self.canvas, PixelCanvas):
+            return {"alpha": a}
+        return {} if a >= 0.45 else None
+
     def on_click(self, e):
         if self.caught or not self.visible():
+            return
+        if not self.solid(time.monotonic() - self.born):  # it has faded out: the click goes right through
+            witness = next((p for p in self.app.pets if p.state not in ("sleep", "held")), None)
+            if witness and time.monotonic() - getattr(self, "last_fade_hint", 0) > 3:
+                self.last_fade_hint = time.monotonic()
+                witness.say(random.choice(["it faded out! wait till it glows…", "your hand went right through!", "now you see it, now you don't…"]), 2.5)
             return
         ux, uy = e.x / SCENE_PX, SCENE_H - e.y / SCENE_PX
         x, y = self.pos
@@ -5198,7 +5437,7 @@ class Sighting:
                     witness.say(random.choice(["again! click it again!", "it's working!", "keep going!!", "almost!"]), 2)
                 return
         self.caught = True
-        app.save.setdefault("kaiju" if kind in KAIJU else "legends" if kind in LEGENDS else "cryptids", []).append(kind)
+        app.save.setdefault("kaiju" if kind in KAIJU else "legends" if kind in LEGENDS else "ghosts" if kind in GHOSTS else "cryptids", []).append(kind)
         write_save(app.save)
         app.sound.play("fanfare")
         screen_x = self.wx + x * SCENE_PX - W / 2
@@ -5668,6 +5907,7 @@ class Collection:
                        ("Cryptids 👣  spot them wandering by, then click them!", CRYPTID_KINDS),
                        (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS),
                        ("Legends ✨  visit a world and click them when they stroll by", LEGEND_KINDS),
+                       ("Ghosts 👻  they drift by at night: click one while it glows!", GHOST_KINDS),
                        ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         view_h = min(h, self.win.winfo_screenheight() - 140)        # scroll when the screen is too short to fit it all
@@ -5689,7 +5929,7 @@ class Collection:
         return self.app.save.setdefault("peeked", [])
 
     def how(self, k):
-        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "a limited-time gift" if k in GIFTS else f"find it in {LEGEND_WORLD[k]}" if k in LEGENDS else "hatch from an egg"
+        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "a limited-time gift" if k in GIFTS else f"find it in {LEGEND_WORLD[k]}" if k in LEGENDS else "meet it at night" if k in GHOSTS else "hatch from an egg"
 
     def draw(self):
         c = self.canvas
@@ -6397,6 +6637,8 @@ class App:
         self.next_sighting = time.monotonic() + random.uniform(6, 14) * 60
         self.next_kaiju = time.monotonic() + random.uniform(30, 60) * 60     # kaiju are much rarer
         self.next_legend = time.monotonic() + random.uniform(1, 3) * 60      # world legends, while visiting a world
+        self.next_ghost = time.monotonic() + random.uniform(2, 5) * 60       # ghosts, at night or with a Spirit Candle
+        self.candle_until = 0.0
         self.root.after(2500, self.show_notice)
         self.updater.start()
         self.pets = []
@@ -6490,6 +6732,14 @@ class App:
                 self.sightings.append(Sighting(self, random.choice(left)))
                 self.sound.play("thud")
                 return
+        candle = now < getattr(self, "candle_until", 0)
+        if (ghost_hours() or candle) and now >= getattr(self, "next_ghost", 0):
+            self.next_ghost = now + (random.uniform(1, 3) if candle else random.uniform(6, 14)) * 60
+            left = [k for k in GHOST_KINDS if not self.is_unlocked(k)]
+            if left and self.pets:
+                self.sightings.append(Sighting(self, random.choice(left)))
+                self.sound.play("whoosh")
+                return
         if now < self.next_sighting:
             return
         wait = random.uniform(8, 20) * 60          # the next one shows up in 8-20 minutes (sooner at night)
@@ -6514,6 +6764,23 @@ class App:
         self.next_sighting = min(self.next_sighting, time.monotonic() + random.uniform(15, 45))
         messagebox.showinfo("Cryptid Lure 🔦", "You set out a Cryptid Lure…\n\nWatch the bottom of your screen. "
                             "When a shadow with glowing eyes sneaks by, click it before it gets away!", parent=parent)
+
+    def light_candle(self, parent):
+        from tkinter import messagebox
+        if all(self.is_unlocked(k) for k in GHOST_KINDS):
+            messagebox.showinfo("Spirit Candle", "You've met every ghost! 🏆👻", parent=parent)
+            return
+        if self.hearts() < CANDLE_COST:
+            messagebox.showinfo("Spirit Candle", f"A Spirit Candle costs {CANDLE_COST} 💖 hearts. You have {self.hearts()}.\n\n"
+                                "Ghosts also drift by on their own at night (7 PM to 7 AM). Keep an eye out!", parent=parent)
+            return
+        self.save["hearts"] = self.hearts() - CANDLE_COST
+        write_save(self.save)
+        now = time.monotonic()
+        self.candle_until = now + 10 * 60
+        self.next_ghost = min(getattr(self, "next_ghost", 0) or now, now + random.uniform(15, 40))
+        messagebox.showinfo("Spirit Candle 🕯️", "You lit a Spirit Candle…\n\nFor the next 10 minutes ghosts will drift by, even in "
+                            "the daytime. They fade in and out: click one while it's glowing!", parent=parent)
 
     def give_gift(self):
         """Hand out every thank-you Blip that's on right now, once each. Returns the ones just given."""
@@ -6627,6 +6894,8 @@ class App:
             return kind in self.save.get("kaiju", [])
         if kind in CRYPTIDS:
             return kind in self.save.get("cryptids", [])
+        if kind in GHOSTS:
+            return kind in self.save.get("ghosts", [])
         if kind in RARE:
             return kind in self.save.get("hatched", [])
         return kind not in UNLOCKS or kind in self.save.get("unlocked", [])

@@ -19,7 +19,7 @@ import webbrowser
 
 from PySide6.QtCore import QPoint, QRect, Qt, QTimer
 from PySide6.QtGui import QAction, QColor, QCursor, QFont, QFontMetrics, QGuiApplication, QPainter, QPainterPath, QPen
-from PySide6.QtWidgets import QApplication, QInputDialog, QMenu, QMessageBox, QWidget
+from PySide6.QtWidgets import QApplication, QInputDialog, QMenu, QMessageBox, QScrollArea, QWidget
 
 # Filled in by the GitHub build. "dev" means "running from source".
 APP_VERSION = "dev"
@@ -32,6 +32,7 @@ ART_W, ART_H = 16, 13
 W, H = 220, 180                 # each pet's window (room above it for bubbles and hearts)
 FPS = 30
 MAX_PETS = 8
+UI_BG, UI_CARD, UI_EDGE, UI_GOLD, UI_PINK, UI_GREEN = "#1d1a2e", "#2b2547", "#3a3360", "#ffd23a", "#ff9fc0", "#9ad8a8"
 
 
 # ----------------------------------------------------------------------------- data
@@ -49,7 +50,15 @@ HATS = DATA["hats"]
 ROBOTS = set(DATA["robots"])
 WORLD_OF = DATA["worldOf"]
 LEGEND_WORLD = DATA["legendWorld"]
-HEART, ZED, COOKIE = DATA["shapes"]["heart"], DATA["shapes"]["zed"], DATA["shapes"]["cookie"]
+WORLDS = DATA["worlds"]
+WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
+SHAPES = DATA["shapes"]
+HEART, ZED, COOKIE, BALL, BAT, BAT_FLAP, EGG = (SHAPES[k] for k in ("heart", "zed", "cookie", "ball", "bat", "batFlap", "egg"))
+SCENES, SCENE_PROPS = DATA["scenes"], DATA["sceneProps"]
+SCENE_W, SCENE_H, SCENE_PX = DATA["scene"]
+KAIJU_HITS, LURE_COST, BEACON_COST, EGG_COST = DATA["kaijuHits"], DATA["lureCost"], DATA["beaconCost"], DATA["eggCost"]
+GIFT = DATA["gift"]
+NOTICE = DATA["notice"]
 
 
 def kind_colors(kind):
@@ -63,10 +72,131 @@ def is_night():
 
 def season():
     t = time.localtime()
-    if t.tm_mon == 10 and t.tm_mday >= 15:
+    md = (t.tm_mon, t.tm_mday)
+    if (10, 15) <= md <= (11, 2):
         return "spooky"
-    return {12: "winter", 1: "winter", 2: "winter", 3: "spring", 4: "spring", 5: "spring",
-            6: "summer", 7: "summer", 8: "summer"}.get(t.tm_mon, "autumn")
+    if md >= (12, 1) or md <= (2, 29):
+        return "winter"
+    if (3, 20) <= md <= (5, 31):
+        return "spring"
+    if (6, 1) <= md <= (8, 31):
+        return "summer"
+    return "autumn"
+
+
+def hat_in_shop(name):
+    s = HATS[name].get("season")
+    return s is None or s == season()
+
+
+# ----------------------------------------------------------------------------- sprites (shared by pets and the windows)
+def build_grid(kind, ci=0, *, now=0.0, face="normal", blink=False, eye=(0, 0), lying=False, feet="stand", flap=False,
+               night_eyes=False):
+    """A pet's 16x13 pixel art as rows of colors (None = see-through), face included."""
+    v = KINDS[kind]
+    cols = kind_colors(kind)
+    pal = {**cols[ci % len(cols)], **(v.get("extra") or {})}
+    g = [[None] * ART_W for _ in range(ART_H)]
+    body = pal.get("art") or (v["alt"] if flap and v.get("alt") else v["body"])
+    shift = 1 if lying else 0
+    for y, row in enumerate(body):
+        for x, ch in enumerate(row):
+            if ch != "." and y + shift < ART_H:
+                g[y + shift][x] = pal.get(ch, pal["o"])
+    dxo = v.get("dx", 0)
+    if not lying and v["feet"]:
+        for x, ch in enumerate(v["feet"][feet]):
+            if ch != "." and 0 <= x + dxo < ART_W:
+                g[12][x + dxo] = pal.get("f", pal["o"])
+    face_dy = v["eyes"] - 5
+
+    def px(x, y, color):
+        y += shift + face_dy
+        x += dxo
+        if 0 <= x < ART_W and 0 <= y < ART_H:
+            g[y][x] = color
+    e, white = pal["e"], "#ffffff"
+    r_, g_, b_ = (int(e[i:i + 2], 16) for i in (1, 3, 5))
+    if 0.299 * r_ + 0.587 * g_ + 0.114 * b_ > 150:
+        white = pal["o"]
+    if night_eyes:
+        white = e
+    if face == "sleep" or (blink and face == "normal"):
+        for x in (4, 5, 10, 11):
+            px(x, 6, e)
+    elif face == "happy":
+        for ex in (4, 9):
+            px(ex, 6, e); px(ex + 1, 5, e); px(ex + 2, 6, e)
+    elif face == "munch":
+        for ex in (4, 10):
+            px(ex, 6, e); px(ex + 1, 6, e)
+    else:
+        ox, oy = (0, 0) if face == "surprised" else eye
+        for ex in (4, 10):
+            for yy in range(2):
+                for xx in range(2):
+                    px(ex + ox + xx, 5 + oy + yy, e)
+            px(ex + ox, 5 + oy, white)
+    if v.get("mouth", True):
+        if face == "surprised":
+            px(7, 8, e); px(8, 8, e); px(7, 9, e); px(8, 9, e)
+        elif face == "happy":
+            px(6, 8, e); px(7, 9, e); px(8, 9, e); px(9, 8, e)
+        elif face == "munch":
+            if int(now * 8) % 2:
+                px(7, 8, e); px(8, 8, e)
+            px(7, 9, e); px(8, 9, e)
+        elif face != "sleep":
+            px(7, 9, e); px(8, 9, e)
+    return g
+
+
+def hat_cells(kind, hat_name, shift=0):
+    hat = HATS.get(hat_name)
+    if not hat:
+        return []
+    v = KINDS[kind]
+    body = v["body"]
+    rows, w = hat["rows"], len(hat["rows"][0])
+    left = round(8 - w / 2) + v.get("dx", 0) + hat.get("x", 0)
+    if hat["slot"] == "head":
+        head_top = next((i for i, r in enumerate(body) if len(r) - r.count(".") >= 8), next(i for i, r in enumerate(body) if r.strip(".")))
+        top = head_top + shift + hat.get("overlap", 1) - len(rows)
+    elif hat["slot"] == "face":
+        top = v["eyes"] + shift + hat.get("y", 0)
+    else:
+        top = min(v["eyes"] + 5, 11) + shift + hat.get("y", 0)
+    return [(top + r, left + c, hat["colors"][ch]) for r, row in enumerate(rows) for c, ch in enumerate(row) if ch != "."]
+
+
+def paint_grid(p, g, x, y, scale, silhouette=None, mirror=False):
+    for r, row in enumerate(g):
+        row = row[::-1] if mirror else row
+        c = 0
+        while c < len(row):
+            col = row[c]
+            if col is None:
+                c += 1
+                continue
+            c2 = c
+            while c2 + 1 < len(row) and row[c2 + 1] == col:
+                c2 += 1
+            p.fillRect(int(x + c * scale), int(y + r * scale), (c2 - c + 1) * scale, scale, QColor(silhouette or col))
+            c = c2 + 1
+
+
+def paint_sprite(p, kind, ci, x, y, scale, face="normal", hat=None, silhouette=None):
+    paint_grid(p, build_grid(kind, ci, face=face), x, y, scale, silhouette)
+    if hat and not silhouette:
+        for r, c, col in hat_cells(kind, hat):
+            p.fillRect(int(x + c * scale), int(y + r * scale), scale, scale, QColor(col))
+
+
+def paint_shape(p, rows, x, y, size, color):
+    for r, row in enumerate(rows):
+        for c, ch in enumerate(row):
+            if ch == "x":
+                p.fillRect(int(x + c * size), int(y + r * size), size, size, QColor(color))
 
 
 # ----------------------------------------------------------------------------- save file + log (shared with the classic app)
@@ -117,6 +247,119 @@ def log(message):
         pass
 
 
+def ask(title, text):
+    return QMessageBox.question(None, title, text) == QMessageBox.Yes
+
+
+def tell(title, text):
+    QMessageBox.information(None, title, text)
+
+
+# ----------------------------------------------------------------------------- sound effects (made with code, off by default)
+def _synth(name):
+    import struct
+    rate, out = 22050, []
+
+    def tone(f0, f1, dur, vol=0.35, shape="sine", decay=True):
+        n, phase = int(rate * dur), 0.0
+        for i in range(n):
+            t = i / n
+            phase += 2 * math.pi * (f0 + (f1 - f0) * t) / rate
+            v = math.sin(phase)
+            if shape == "square":
+                v = 0.6 if v >= 0 else -0.6
+            elif shape == "tri":
+                v = 2 / math.pi * math.asin(math.sin(phase))
+            out.append(v * vol * min(1.0, i / (rate * 0.005)) * ((1 - t) ** 2 if decay else 1))
+
+    def noise(dur, vol=0.3, swell=False):
+        n, last = int(rate * dur), 0.0
+        for i in range(n):
+            t = i / n
+            last = last * 0.6 + random.uniform(-1, 1) * 0.4
+            out.append(last * vol * (math.sin(math.pi * t) if swell else (1 - t) ** 3))
+
+    def rest(dur):
+        out.extend([0.0] * int(rate * dur))
+    random.seed(name)
+    if name == "boop":
+        tone(520, 820, 0.12)
+    elif name == "pop":
+        tone(900, 1400, 0.06, 0.3)
+    elif name == "munch":
+        for _ in range(3):
+            noise(0.05, 0.45)
+            rest(0.06)
+    elif name == "whoosh":
+        noise(0.28, 0.35, swell=True)
+    elif name == "thud":
+        tone(150, 60, 0.14, 0.5)
+    elif name == "coin":
+        tone(988, 988, 0.07, 0.25, "square", decay=False)
+        tone(1319, 1319, 0.2, 0.25, "square")
+    elif name == "crack":
+        noise(0.03, 0.6)
+        rest(0.05)
+        noise(0.04, 0.6)
+    elif name == "fanfare":
+        for f in (523, 659, 784):
+            tone(f, f, 0.09, 0.3, "tri", decay=False)
+        tone(1047, 1047, 0.3, 0.3, "tri")
+    elif name == "zap":
+        tone(1600, 400, 0.15, 0.25, "square")
+    elif name == "boing":
+        n, phase = int(rate * 0.4), 0.0
+        for i in range(n):
+            t = i / n
+            phase += 2 * math.pi * (260 + 200 * t + 60 * math.sin(t * 40)) / rate
+            out.append(math.sin(phase) * 0.4 * (1 - t))
+    random.seed()
+    frames = b"".join(struct.pack("<h", int(max(-1.0, min(1.0, v)) * 32000)) for v in out)
+    header = b"RIFF" + struct.pack("<I", 36 + len(frames)) + b"WAVEfmt " + struct.pack("<IHHIIHH", 16, 1, 1, rate, rate * 2, 2, 16)
+    return header + b"data" + struct.pack("<I", len(frames)) + frames
+
+
+class Sound:
+    def __init__(self, app):
+        self.app, self.last = app, {}
+        self.dir = os.path.join(save_dir(), "sounds-v1")       # same sounds the classic app made
+
+    def path(self, name):
+        p = os.path.join(self.dir, name + ".wav")
+        if not os.path.isfile(p):
+            try:
+                os.makedirs(self.dir, exist_ok=True)
+                with open(p, "wb") as f:
+                    f.write(_synth(name))
+            except OSError:
+                return None
+        return p
+
+    def play(self, name):
+        if not self.app.sound_on:
+            return
+        now = time.monotonic()
+        if now - self.last.get(name, 0) < {"thud": 0.8, "munch": 0.5}.get(name, 0.08):
+            return
+        self.last[name] = now
+        p = self.path(name)
+        if not p:
+            return
+        try:
+            if sys.platform == "win32":
+                import winsound
+                winsound.PlaySound(p, winsound.SND_FILENAME | winsound.SND_ASYNC | winsound.SND_NODEFAULT)
+            elif sys.platform == "darwin":
+                subprocess.Popen(["afplay", p], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            else:
+                import shutil
+                player = shutil.which("paplay") or shutil.which("aplay")
+                if player:
+                    subprocess.Popen([player, p], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:  # noqa: BLE001
+            pass
+
+
 # ----------------------------------------------------------------------------- one pet
 class Pet(QWidget):
     def __init__(self, app, kind="Blip", name="Blip", x=None):
@@ -144,11 +387,10 @@ class Pet(QWidget):
         self.bubble = None                       # (text, until)
         self.particles = []
         self.cookie = None
-        self.last_pet_reward = 0.0
-        self.last_hungry = 0.0
-        self.press = None
-        self.drag_hist = []
+        self.last_pet_reward = self.last_hungry = 0.0
+        self.press, self.drag_hist = None, []
         self.follow = False
+        self.playing, self.nap_buddy, self.last_play, self.greeted = False, False, 0.0, {}
         self.next_shift = time.monotonic() + random.uniform(8, 15)
         self._key = None
         self.place()
@@ -193,6 +435,7 @@ class Pet(QWidget):
         if self.state == "sleep":
             self.wake()
             return
+        self.app.sound.play("boop")
         now = time.monotonic()
         if now - self.last_pet_reward > 6:       # petting earns a heart (not by spam-clicking)
             self.last_pet_reward = now
@@ -240,8 +483,7 @@ class Pet(QWidget):
             self.target_x = random.uniform(self.left + 10, self.right - W - 10)
             self.set_state("walk", 12)
         elif r < 0.60:
-            mx = QCursor.pos().x()
-            self.target_x = min(max(mx - W / 2, self.left), self.right - W)
+            self.target_x = min(max(QCursor.pos().x() - W / 2, self.left), self.right - W)
             self.set_state("walk", 6)
         elif r < 0.75:
             self.say(random.choice(self.lines()), 3)
@@ -253,6 +495,8 @@ class Pet(QWidget):
         dt = 1 / FPS
         if now > self.next_blink:
             self.blink_until, self.next_blink = now + 0.15, now + random.uniform(2, 6)
+        if self.playing:
+            return
         if self.state != "sleep":
             self.energy = max(0, self.energy - dt * 0.12)
         self.hunger = min(100, self.hunger + dt * 0.08)
@@ -289,6 +533,7 @@ class Pet(QWidget):
                     self.squash_until = now + 0.15
                     if hard:
                         self.say(random.choice(LINES["land"]), 2)
+                        self.app.sound.play("thud")
                 else:
                     self.vy = self.vx = 0
                     self.squash_until = now + 0.2
@@ -330,6 +575,7 @@ class Pet(QWidget):
                 self.target_x = None
                 if self.cookie and self.cookie["landed"] and abs(self.cookie["x"] - (self.wx + W / 2)) < 30:
                     self.set_state("eat", 1.8)
+                    self.app.sound.play("munch")
                     self.set_face("munch", 1.8)
                 else:
                     self.set_state("idle", random.uniform(1, 3))
@@ -338,6 +584,41 @@ class Pet(QWidget):
             self.place()
         elif self.state == "idle" and now > self.state_until and not self.follow:
             self.decide(now)
+
+    def weather(self, now):
+        """Seasonal weather around this pet, or the air of the world you're visiting."""
+        dt = 1 / FPS
+        world = self.app.world()
+        if world:
+            rates = world["fx"]
+        elif self.app.weather_on:
+            rates = {"winter": [("snow", 4.0)], "spring": [("petal", 2.0)], "autumn": [("leaf", 1.8)],
+                     "spooky": [("leaf", 1.0), ("bat", 0.12)], "summer": [("firefly", 1.4)] if is_night() else []}.get(season(), [])
+        else:
+            return
+        for kind, rate in rates:
+            if random.random() > rate * dt:
+                continue
+            base = {"kind": kind, "born": now, "phase": random.uniform(0, 6.3)}
+            if kind == "bat":
+                d = random.choice([-1, 1])
+                base.update(x=-10 if d > 0 else W + 10, y=random.uniform(15, 80), vx=1.6 * d, vy=0, life=(W + 20) / 1.6 / FPS)
+            elif kind == "firefly":
+                base.update(x=random.uniform(10, W - 10), y=random.uniform(40, H - 20), vx=random.uniform(-0.3, 0.3),
+                            vy=random.uniform(-0.3, 0.1), life=3.0)
+            elif kind == "bubble":
+                vy = -random.uniform(0.5, 1.0)
+                base.update(x=random.uniform(0, W), y=H + 4, vx=0, vy=vy, life=H / -vy / FPS, size=random.choice([3, 4, 6]))
+            elif kind == "star":
+                base.update(x=random.uniform(6, W - 6), y=random.uniform(10, H - 30), vx=0, vy=0, life=random.uniform(1.5, 3.0),
+                            color=random.choice(["#ffffff", "#fff27a", "#a8d8ff"]))
+            else:
+                vy = random.uniform(0.3, 0.7) if kind == "ash" else random.uniform(0.6, 1.2) if kind == "sprinkle" else random.uniform(0.5, 1.1)
+                colors = {"ash": ["#8a8090", "#5a5060", "#ff8a3a"],
+                          "sprinkle": ["#ff5a8a", "#5ad8ff", "#ffd23a", "#8af05a", "#b88aff", "#ffffff"]}.get(kind, ["#e8702a", "#c8402a", "#ffb83a"])
+                base.update(x=random.uniform(0, W), y=-4, vx=random.uniform(-0.3, 0.3), vy=vy, life=H / vy / FPS,
+                            color=random.choice(colors), tall=random.random() < 0.5)
+            self.particles.append(base)
 
     # ---- art
     def lift(self, now):
@@ -360,96 +641,23 @@ class Pet(QWidget):
         return (-1 if dx < -40 else (1 if dx > 40 else 0)), (-1 if dy < -80 else (1 if dy > 40 else 0))
 
     def build_art(self, now):
-        v = self.v()
-        cols = kind_colors(self.kind)
-        pal = {**cols[self.palette_i % len(cols)], **(v.get("extra") or {})}
-        g = [[None] * ART_W for _ in range(ART_H)]
-        body = pal.get("art") or v["body"]
-        if v.get("alt") and self.state in ("walk", "fall", "held") and int(now * 10) % 2:
-            body = v["alt"]
         lying = self.state == "sleep" or now < self.squash_until
-        shift = 1 if lying else 0
-        for y, row in enumerate(body):
-            for x, ch in enumerate(row):
-                if ch != "." and y + shift < ART_H:
-                    g[y + shift][x] = pal.get(ch, pal["o"])
-        dxo = v.get("dx", 0)
-        if not lying and v["feet"]:
-            fs = v["feet"]
-            if self.state in ("fall", "held") or self.lift(now) > 3:
-                feet = fs["air"]
-            elif self.state == "walk":
-                feet = fs["walk1"] if int(now * 6) % 2 else fs["walk2"]
-            else:
-                feet = fs["stand"]
-            for x, ch in enumerate(feet):
-                if ch != "." and 0 <= x + dxo < ART_W:
-                    g[12][x + dxo] = pal.get("f", pal["o"])
-        face_dy = v["eyes"] - 5
-
-        def px(x, y, color):
-            y += shift + face_dy
-            x += dxo
-            if 0 <= x < ART_W and 0 <= y < ART_H:
-                g[y][x] = color
-        face = self.face if now < self.face_until else "normal"
-        if self.state == "sleep":
-            face = "sleep"
-        e, white = pal["e"], "#ffffff"
-        r_, g_, b_ = (int(e[i:i + 2], 16) for i in (1, 3, 5))
-        if 0.299 * r_ + 0.587 * g_ + 0.114 * b_ > 150:
-            white = pal["o"]
-        if self.kind in ROBOTS and is_night():
-            white = e
-        if face == "sleep" or (now < self.blink_until and face == "normal"):
-            for x in (4, 5, 10, 11):
-                px(x, 6, e)
-        elif face == "happy":
-            for ex in (4, 9):
-                px(ex, 6, e); px(ex + 1, 5, e); px(ex + 2, 6, e)
-        elif face == "munch":
-            for ex in (4, 10):
-                px(ex, 6, e); px(ex + 1, 6, e)
+        if self.state in ("fall", "held") or self.lift(now) > 3:
+            feet = "air"
+        elif self.state == "walk":
+            feet = "walk1" if int(now * 6) % 2 else "walk2"
         else:
-            ox, oy = (0, 0) if face == "surprised" else self.eye_offset()
-            for ex in (4, 10):
-                for yy in range(2):
-                    for xx in range(2):
-                        px(ex + ox + xx, 5 + oy + yy, e)
-                px(ex + ox, 5 + oy, white)
-        if v.get("mouth", True):
-            if face == "surprised":
-                px(7, 8, e); px(8, 8, e); px(7, 9, e); px(8, 9, e)
-            elif face == "happy":
-                px(6, 8, e); px(7, 9, e); px(8, 9, e); px(9, 8, e)
-            elif face == "munch":
-                if int(now * 8) % 2:
-                    px(7, 8, e); px(8, 8, e)
-                px(7, 9, e); px(8, 9, e)
-            elif face != "sleep":
-                px(7, 9, e); px(8, 9, e)
-        if self.facing < 0 and False:            # art faces the viewer; no flipping needed
-            g = [list(reversed(r)) for r in g]
-        return g, shift
-
-    def hat_cells(self, shift):
-        hat = HATS.get(self.hat)
-        if not hat:
-            return []
-        v, body = self.v(), self.v()["body"]
-        rows, w = hat["rows"], len(hat["rows"][0])
-        left = round(8 - w / 2) + v.get("dx", 0) + hat.get("x", 0)
-        if hat["slot"] == "head":
-            head_top = next((i for i, r in enumerate(body) if len(r) - r.count(".") >= 8), next(i for i, r in enumerate(body) if r.strip(".")))
-            top = head_top + shift + hat.get("overlap", 1) - len(rows)
-        elif hat["slot"] == "face":
-            top = v["eyes"] + shift + hat.get("y", 0)
-        else:
-            top = min(v["eyes"] + 5, 11) + shift + hat.get("y", 0)
-        return [(top + r, left + c, hat["colors"][ch]) for r, row in enumerate(rows) for c, ch in enumerate(row) if ch != "."]
+            feet = "stand"
+        face = "sleep" if self.state == "sleep" else (self.face if now < self.face_until else "normal")
+        g = build_grid(self.kind, self.palette_i, now=now, face=face, blink=now < self.blink_until,
+                       eye=self.eye_offset() if face == "normal" else (0, 0), lying=lying, feet=feet,
+                       flap=self.state in ("walk", "fall", "held") and int(now * 10) % 2 == 1,
+                       night_eyes=self.kind in ROBOTS and is_night())
+        return g, 1 if lying else 0
 
     # ---- frame
     def step(self, now):
+        self.weather(now)
         self.update_state(now)
         alive = []
         for p in self.particles:
@@ -465,9 +673,9 @@ class Pet(QWidget):
             self.bubble = None
         art, shift = self.build_art(now)
         self._frame = (art, shift, self.lift(now), now)
-        key = (str(art), self._frame[2], self.hat, self.bubble and self.bubble[0], self.app.name_tags,
-               self.name, len(self.particles), self.cookie is not None)
-        if key != self._key or self.particles or self.cookie:
+        ball = self.app.ball_near(self)
+        key = (str(art), self._frame[2], self.hat, self.bubble and self.bubble[0], self.app.name_tags, self.name)
+        if key != self._key or self.particles or self.cookie or ball:
             self._key = key
             self.update()
 
@@ -478,22 +686,18 @@ class Pet(QWidget):
         p = QPainter(self)
         ox = (W - ART_W * SCALE) // 2
         oy = H - ART_H * SCALE - lift
-        for y, row in enumerate(art):
-            x = 0
-            while x < ART_W:
-                c = row[x]
-                if c is None:
-                    x += 1
-                    continue
-                x2 = x
-                while x2 + 1 < ART_W and row[x2 + 1] == c:
-                    x2 += 1
-                p.fillRect(ox + x * SCALE, oy + y * SCALE, (x2 - x + 1) * SCALE, SCALE, QColor(c))
-                x = x2 + 1
+        paint_grid(p, art, ox, oy, SCALE)
         hat_top = 0
-        for r, c, col in self.hat_cells(shift):
+        for r, c, col in hat_cells(self.kind, self.hat, shift):
             p.fillRect(ox + c * SCALE, oy + r * SCALE, SCALE, SCALE, QColor(col))
             hat_top = min(hat_top, r * SCALE)
+        ball = self.app.ball_near(self)
+        if ball:
+            bx, by = ball[0] - self.wx, ball[1] - self.wy
+            for yy, row in enumerate(BALL):
+                for xx, ch in enumerate(row):
+                    if ch != ".":
+                        p.fillRect(int(bx - 8 + xx * 3), int(by - 8 + yy * 3), 3, 3, QColor({"w": "#ffffff", "r": "#e8303a", "o": "#3a2a3a"}[ch]))
         ck = self.cookie
         if ck:
             cx = (W / 2 + 10 * self.facing) if self.state == "eat" else ck["x"] - self.wx
@@ -503,29 +707,8 @@ class Pet(QWidget):
                     if ch == "." or (self.state == "eat" and x >= 6 - bites):
                         continue
                     p.fillRect(int(cx - 9 + x * 3), int(ck["y"] + y * 3), 3, 3, QColor("#c98a4b" if ch == "c" else "#5a3418"))
+        self.paint_particles(p, now)
         small = QFont("Segoe UI", 8, QFont.Bold)
-        for q in self.particles:
-            age = now - q["born"]
-            if q["kind"] == "heart":
-                for y, row in enumerate(HEART):
-                    for x, ch in enumerate(row):
-                        if ch == "x":
-                            p.fillRect(int(q["x"] + x * 3), int(q["y"] + y * 3), 3, 3, QColor("#ff4f7b"))
-            elif q["kind"] == "z":
-                s = 2 + int(age)
-                for y, row in enumerate(ZED):
-                    for x, ch in enumerate(row):
-                        if ch == "x":
-                            p.fillRect(int(q["x"] + x * s), int(q["y"] + y * s), s, s, QColor("#bcd2ff"))
-            elif q["kind"] == "crumb":
-                p.fillRect(int(q["x"]), int(q["y"]), 3, 3, QColor("#c98a4b"))
-            elif q["kind"] == "plus":
-                p.setFont(small)
-                r = QFontMetrics(small).boundingRect(q["text"]).adjusted(-4, -1, 4, 1)
-                r.moveCenter(QPoint(int(q["x"]), int(q["y"])))
-                p.fillRect(r, QColor("#e8457a"))
-                p.setPen(QColor("#ffffff"))
-                p.drawText(r, Qt.AlignCenter, q["text"])
         tag_h = 0
         if self.app.name_tags:
             p.setFont(small)
@@ -548,14 +731,59 @@ class Pet(QWidget):
             tail.lineTo(W / 2 + 5, box.bottom())
             tail.lineTo(W / 2, box.bottom() + 7)
             tail.closeSubpath()
-            path = path.united(tail)
             p.setRenderHint(QPainter.Antialiasing)
             p.setPen(QPen(QColor("#222222"), 2))
             p.setBrush(QColor("#ffffff"))
-            p.drawPath(path)
+            p.drawPath(path.united(tail))
             p.setPen(QColor("#222222"))
             p.drawText(box, Qt.TextWordWrap | Qt.AlignCenter, self.bubble[0])
         p.end()
+
+    def paint_particles(self, p, now):
+        small = QFont("Segoe UI", 8, QFont.Bold)
+        for q in self.particles:
+            age, k = now - q["born"], q["kind"]
+            if k == "heart":
+                paint_shape(p, HEART, q["x"], q["y"], 3, "#ff4f7b")
+            elif k == "z":
+                paint_shape(p, ZED, q["x"], q["y"], 2 + int(age), "#bcd2ff")
+            elif k == "crumb":
+                p.fillRect(int(q["x"]), int(q["y"]), 3, 3, QColor("#c98a4b"))
+            elif k == "snow":
+                s = 3 if q["phase"] > 2 else 2
+                p.fillRect(int(q["x"]), int(q["y"]), s, s, QColor("#f4f8ff"))
+            elif k in ("leaf", "petal"):
+                x = q["x"] + math.sin(age * 3 + q["phase"]) * 4
+                w_, h_, col = (4, 3, q["color"]) if k == "leaf" else (3, 2, "#ffb0d8")
+                p.fillRect(int(x), int(q["y"]), w_, h_, QColor(col))
+            elif k == "firefly":
+                if math.sin(age * 5) > -0.3:
+                    p.fillRect(int(q["x"]), int(q["y"]), 3, 3, QColor("#fff08a"))
+            elif k == "bat":
+                paint_shape(p, BAT if int(age * 8) % 2 else BAT_FLAP, q["x"], q["y"] + math.sin(age * 6) * 3, 2, "#6a4a9a")
+            elif k == "bubble":
+                x, s = int(q["x"] + math.sin(age * 3 + q["phase"]) * 3), q["size"]
+                p.setPen(QColor("#bfe8ff"))
+                p.setBrush(Qt.NoBrush)
+                p.drawRect(x, int(q["y"]), s, s)
+                p.fillRect(x + 1, int(q["y"]) + 1, 1, 1, QColor("#ffffff"))
+            elif k == "star":
+                if math.sin(age * 6 + q["phase"]) > -0.2:
+                    x, y = int(q["x"]), int(q["y"])
+                    p.fillRect(x, y - 2, 2, 6, QColor(q["color"]))
+                    p.fillRect(x - 2, y, 6, 2, QColor(q["color"]))
+            elif k == "sprinkle":
+                x = q["x"] + math.sin(age * 2 + q["phase"]) * 2
+                p.fillRect(int(x), int(q["y"]), 2 if q["tall"] else 4, 4 if q["tall"] else 2, QColor(q["color"]))
+            elif k == "ash":
+                p.fillRect(int(q["x"] + math.sin(age * 2 + q["phase"]) * 3), int(q["y"]), 2, 2, QColor(q["color"]))
+            elif k == "plus":
+                p.setFont(small)
+                r = QFontMetrics(small).boundingRect(q["text"]).adjusted(-4, -1, 4, 1)
+                r.moveCenter(QPoint(int(q["x"]), int(q["y"])))
+                p.fillRect(r, QColor("#e8457a"))
+                p.setPen(QColor("#ffffff"))
+                p.drawText(r, Qt.AlignCenter, q["text"])
 
     # ---- mouse
     def mousePressEvent(self, e):
@@ -572,6 +800,7 @@ class Pet(QWidget):
         if self.state != "held" and abs(g.x() - px_) + abs(g.y() - py_) < 5:
             return
         if self.state != "held":
+            self.playing = False
             self.set_state("held")
             self.say(random.choice(LINES["held"]), 2.5)
             self.set_face("surprised", 9999)
@@ -590,6 +819,8 @@ class Pet(QWidget):
             self.vy = max(-40, min(40, (g.y() - y0) / dt / FPS))
             self.set_face("surprised", 0.6)
             self.set_state("fall")
+            if abs(self.vx) + abs(self.vy) > 12:
+                self.app.sound.play("whoosh")
         else:
             self.pet()
         self.press = None
@@ -598,6 +829,445 @@ class Pet(QWidget):
         if self.state == "walk":
             self.set_state("idle", 3)
         self.app.menu_for(self).exec(e.globalPos())
+
+
+# ----------------------------------------------------------------------------- cryptid / kaiju / legend sightings
+def scene_pos(keys, t):
+    if t <= keys[0][0]:
+        return keys[0][1], keys[0][2]
+    for (t0, x0, y0), (t1, x1, y1) in zip(keys, keys[1:]):
+        if t <= t1:
+            f = (t - t0) / (t1 - t0) if t1 > t0 else 1.0
+            return x0 + (x1 - x0) * f, y0 + (y1 - y0) * f
+    return keys[-1][1], keys[-1][2]
+
+
+class Sighting(QWidget):
+    """A cryptid, kaiju or world legend appears in its own little scene at the bottom of the screen. Click it!"""
+    SHADOW, GLOW = "#16121f", "#ffe66a"
+
+    def __init__(self, app, kind):
+        super().__init__(None, Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setAttribute(Qt.WA_ShowWithoutActivating)
+        self.app, self.kind = app, kind
+        self.scene = sc = SCENES[kind]
+        flip = random.random() < 0.5
+        self.keys = [(t, SCENE_W - x if flip else x, y) for t, x, y in sc["keys"]]
+        self.props = [(n, SCENE_W - x if flip else x, y, layer, flip) for n, x, y, layer in sc["props"]]
+        self.clip, self.sc = sc.get("clip", -99), sc.get("scale", 1)
+        self.legend, self.kaiju = bool(sc.get("legend")), kind in G["kaiju"]
+        self.hits, self.flash_until, self.caught = 0, 0.0, False
+        self.cw, self.ch = SCENE_W * SCENE_PX, SCENE_H * SCENE_PX
+        self.setFixedSize(self.cw, self.ch)
+        a = app.area
+        self.wx = random.uniform(a.left(), max(a.left(), a.right() - self.cw))
+        self.move(int(self.wx), a.bottom() + 1 - self.ch)
+        self.born = time.monotonic()
+        self.facing, self.pos, self.moving, self.now = (-1 if flip else 1), self.keys[0][1:], False, self.born
+        witness = next((p for p in app.pets if p.state not in ("sleep", "held")), None)
+        if witness:
+            witness.say(sc["hint"], 4)
+        self.show()
+
+    def visible_now(self):
+        return self.pos[1] + 12 * self.sc >= self.clip
+
+    def step(self, now):
+        t = now - self.born
+        if t > self.keys[-1][0]:
+            self.leave(escaped=True)
+            return
+        x, y = scene_pos(self.keys, t)
+        nx, _ = scene_pos(self.keys, t + 0.1)
+        self.moving = abs(nx - x) > 0.05
+        if self.moving:
+            self.facing = 1 if nx > x else -1
+        move = KINDS[self.kind]["move"]
+        if move == "float":
+            y += math.sin(t * 2.5) * 1.2
+        elif move in ("hop", "flutter") and self.moving:
+            y += abs(math.sin(t * 8)) * 2
+        self.pos, self.now = (x, y), now
+        self.update()
+
+    def mask(self, p, rows, colors, cx, by, t, mirror=False):
+        P = SCENE_PX
+        w, h = len(rows[0]), len(rows)
+        x0 = round(cx - w / 2)
+        lit = int(t * 7) % 5 == 0
+        for r, row in enumerate(rows):
+            row = row[::-1] if mirror else row
+            y = (SCENE_H - (by + h - r)) * P
+            x = 0
+            while x < w:
+                ch = row[x]
+                if ch == ".":
+                    x += 1
+                    continue
+                x2 = x
+                while x2 + 1 < w and row[x2 + 1] == ch:
+                    x2 += 1
+                col = colors[ch]
+                if isinstance(col, list):
+                    col = col[1] if lit else col[0]
+                p.fillRect(int((x0 + x) * P), int(y), (x2 - x + 1) * P, P, QColor(col))
+                x = x2 + 1
+
+    def art(self, now):
+        v = KINDS[self.kind]
+        if self.legend:                          # legends stroll by in full color
+            return build_grid(self.kind, 0, now=now, blink=int(now * 2.5) % 10 == 0,
+                              feet="walk1" if int(now * 6) % 2 else "walk2")
+        g = [[self.SHADOW if ch != "." else None for ch in row] + [None] * (ART_W - len(row)) for row in v["body"]]
+        g.append([None] * ART_W)
+        if v.get("feet"):
+            for x, ch in enumerate(v["feet"]["walk1" if int(now * 6) % 2 else "walk2"]):
+                if ch != "." and 0 <= x < ART_W:
+                    g[12][x] = self.SHADOW
+        if int(now * 2.5) % 10:                  # glowing eyes, with the odd blink
+            for ex in (4, 10):
+                g[v["eyes"]][ex] = g[v["eyes"]][ex + 1] = self.GLOW
+        return g
+
+    def paintEvent(self, _e):
+        p = QPainter(self)
+        P, now = SCENE_PX, self.now
+        t = now - self.born
+        x, y = self.pos
+        for name, px_, py_, layer, flip in self.props:
+            if layer == "back":
+                pr = SCENE_PROPS[name]
+                self.mask(p, pr["rows"], pr["colors"], px_, py_, t, flip and name != "rec")
+        if self.scene.get("mound") and y < self.clip - 10:
+            pr = SCENE_PROPS["mound"]
+            self.mask(p, pr["rows"], pr["colors"], x + math.sin(t * 9) * 0.6, 0, t)
+        sc, flash = self.sc, now < self.flash_until
+        for r, row in enumerate(self.art(now)):
+            if y + (12 - r) * sc < self.clip:
+                continue
+            row = row if self.facing == 1 else row[::-1]
+            top = (SCENE_H - (y + (13 - r) * sc)) * P
+            for i, col in enumerate(row):
+                if col:
+                    left = (x + (i - 8) * sc) * P
+                    p.fillRect(int(left), int(top), int(P * sc), int(P * sc), QColor("#ffffff" if flash else col))
+        if self.scene.get("sparkle") and (not self.moving or self.legend):
+            for k in range(3):
+                if int(t * 6 + k * 2) % 3:
+                    sx, sy = x + self.facing * (8 + k * 2), y + 5 + (k * 3 + int(t * 4)) % 6
+                    p.fillRect(int(sx * P), int((SCENE_H - sy) * P), P, P, QColor("#fff27a"))
+        for name, px_, py_, layer, flip in self.props:
+            if layer == "front":
+                pr = SCENE_PROPS[name]
+                self.mask(p, pr["rows"], pr["colors"], px_, py_, t, flip and name != "rec")
+        if self.visible_now() and self.kaiju:           # how many more clicks it needs
+            for k in range(KAIJU_HITS):
+                bx, by = (x - 5 + k * 4) * P, (SCENE_H - (y + 13 * sc + 4)) * P
+                if by >= 0:
+                    p.setPen(QColor("#16121f"))
+                    p.setBrush(QColor("#ff5a7a" if k < self.hits else "#ffffff"))
+                    p.drawRect(int(bx), int(by), 3 * P, 2 * P)
+        elif self.visible_now() and not self.legend:
+            qx, qy = x * P - 8, (SCENE_H - (y + 22)) * P
+            for r, row in enumerate([".xxx.", "x...x", "...x.", "..x..", ".....", "..x.."]):
+                for i, ch in enumerate(row):
+                    if ch == "x" and qy >= 0:
+                        p.fillRect(int(qx + i * 3), int(qy + r * 3), 3, 3, QColor("#ffffff"))
+        p.end()
+
+    def mousePressEvent(self, e):
+        if e.button() != Qt.LeftButton or self.caught or not self.visible_now():
+            return
+        pt = e.position()
+        ux, uy = pt.x() / SCENE_PX, SCENE_H - pt.y() / SCENE_PX
+        x, y = self.pos
+        if abs(ux - x) > 10 * self.sc or not (max(y, self.clip) - 2 <= uy <= y + 16 * self.sc):
+            return
+        app, kind = self.app, self.kind
+        if self.kaiju:
+            self.hits += 1
+            if self.hits < KAIJU_HITS:
+                self.flash_until = time.monotonic() + 0.15
+                app.sound.play("thud")
+                w = next((p for p in app.pets if p.state not in ("sleep", "held")), None)
+                if w:
+                    w.say(random.choice(["again! click it again!", "it's working!", "keep going!!", "almost!"]), 2)
+                return
+        self.caught = True
+        app.save.setdefault("kaiju" if self.kaiju else "legends" if self.legend else "cryptids", []).append(kind)
+        write_save(app.save)
+        app.sound.play("fanfare")
+        screen_x = self.wx + x * SCENE_PX - W / 2
+        self.leave()
+        pet = app.add_pet(kind, x=screen_x, greet=False)
+        if pet:
+            pet.wy = pet.ground
+            pet.say(f"you spotted me! 📸 i'm a {kind}!", 5)
+            pet.set_face("happy", 2)
+            pet.burst("heart", 6)
+        elif app.pets:
+            app.pets[0].say(f"you befriended a {kind}! 📸 (it's in your Collection)", 5)
+
+    def leave(self, escaped=False):
+        if self in self.app.sightings:
+            self.app.sightings.remove(self)
+        self.close()
+        self.deleteLater()
+        if escaped:
+            w = next((p for p in self.app.pets if p.state not in ("sleep", "held")), None)
+            if w:
+                lines = (["aww, it sparkled away…", "it went back into the world!", "so pretty! next time!"] if self.legend else
+                         ["it stomped away!!", "THAT WAS HUGE", "the whole town shook!", "next time we'll get it!"] if self.kaiju else
+                         ["did you see that?!", "w-what was THAT?", "i think i saw something…", "*rubs eyes* huh?", "it got away!"])
+                w.say(random.choice(lines), 3)
+
+
+# ----------------------------------------------------------------------------- windows: egg, hat shop, collection
+class Panel(QWidget):
+    """A small dark window drawn by hand, with clickable rectangles."""
+    def __init__(self, title, w, h):
+        super().__init__(None, Qt.Window | Qt.WindowStaysOnTopHint)
+        self.setWindowTitle(title)
+        self.setFixedSize(w, h)
+        self.spots = []                          # (QRect, callback)
+
+    def spot(self, rect, fn):
+        self.spots.append((rect, fn))
+
+    def mousePressEvent(self, e):
+        pt = e.position().toPoint()
+        for rect, fn in reversed(self.spots):
+            if rect.contains(pt):
+                fn()
+                return
+
+    def text(self, p, x, y, s, size=10, color="#ffffff", bold=True, align=Qt.AlignLeft | Qt.AlignVCenter, w=400, h=24):
+        p.setFont(QFont("Segoe UI", size, QFont.Bold if bold else QFont.Normal))
+        p.setPen(QColor(color))
+        flags = align | Qt.TextWordWrap
+        rect = QRect(int(x), int(y), int(w), int(h))
+        if align & Qt.AlignHCenter:
+            rect.moveLeft(int(x - w / 2))
+        p.drawText(rect, flags, s)
+
+
+class EggHatch(Panel):
+    """A Mystery Egg wobbles, cracks and hatches a rare Blip."""
+    def __init__(self, app, kind):
+        super().__init__("Mystery Egg — Blipville", 360, 330)
+        self.app, self.kind, self.t0 = app, kind, time.monotonic()
+        self.cracked = self.revealed = self.released = False
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update)
+        self.timer.start(40)
+        self.show()
+
+    def closeEvent(self, e):
+        self.release()
+        super().closeEvent(e)
+
+    def release(self):
+        if not self.released:
+            self.released = True
+            pet = self.app.add_pet(self.kind)
+            if pet:
+                pet.say("i'm new here! hi!! ✨", 4)
+
+    def paintEvent(self, _e):
+        p = QPainter(self)
+        p.fillRect(self.rect(), QColor(UI_BG))
+        self.spots = []
+        t = time.monotonic() - self.t0
+        cx, cy = 180, 150
+        if t < 2.6:
+            wob = math.sin(t * (6 + t * 6)) * min(10, 2 + t * 4)
+            for y, row in enumerate(EGG):
+                for x, ch in enumerate(row):
+                    if ch != ".":
+                        p.fillRect(int(cx - 48 + wob + x * 8), int(cy - 56 + y * 8), 8, 8, QColor({"o": "#3a2a4a", "e": "#fff4dc", "s": "#ff9fd0"}[ch]))
+            if t > 1.2:
+                if not self.cracked:
+                    self.cracked = True
+                    self.app.sound.play("crack")
+                pts = [(cx - 30 + wob, cy - 8), (cx - 14 + wob, cy - 18), (cx + wob, cy - 6), (cx + 16 + wob, cy - 20), (cx + 30 + wob, cy - 8)]
+                n = min(len(pts), 2 + int((t - 1.2) * 3))
+                p.setPen(QPen(QColor("#3a2a4a"), 3))
+                for a, b in zip(pts[:n], pts[1:n]):
+                    p.drawLine(int(a[0]), int(a[1]), int(b[0]), int(b[1]))
+            self.text(p, cx, 252, "✨ something is hatching… ✨", 11, "#d8d0ff", align=Qt.AlignHCenter | Qt.AlignVCenter, w=340)
+        else:
+            if not self.revealed:
+                self.revealed = True
+                self.app.sound.play("fanfare")
+            if t < 2.9:
+                p.fillRect(self.rect(), QColor("#ffffff"))
+            for i in range(12):
+                a = i * math.pi / 6 + t
+                r = 90 + 10 * math.sin(t * 4 + i)
+                p.fillRect(int(cx + math.cos(a) * r - 3), int(cy - 10 + math.sin(a) * r * 0.7 - 3), 6, 6,
+                           QColor(["#ffd23a", "#ff9fd0", "#9ad8ff"][i % 3]))
+            paint_sprite(p, self.kind, 0, cx - 48, cy - 64, 6, face="happy")
+            self.text(p, cx, 222, f"You hatched a {self.kind}!", 15, align=Qt.AlignHCenter | Qt.AlignVCenter, w=340, h=30)
+            found = sum(1 for k in G["rare"] if self.app.is_unlocked(k))
+            self.text(p, cx, 252, f"Rare Blips found: {found}/{len(G['rare'])}", 10, "#b8b2d8", False, Qt.AlignHCenter | Qt.AlignVCenter, w=340)
+            btn = QRect(110, 282, 140, 34)
+            p.setRenderHint(QPainter.Antialiasing)
+            p.setPen(Qt.NoPen)
+            p.setBrush(QColor("#6a4cff"))
+            p.drawRoundedRect(btn, 10, 10)
+            self.text(p, 180, 282, "Yay! Let it out 🐾", 11, align=Qt.AlignHCenter | Qt.AlignVCenter, w=140, h=34)
+            self.spot(btn, self.close)
+        p.end()
+
+
+class HatShop(Panel):
+    COLS, CW, CH = 4, 132, 150
+
+    def __init__(self, app, pet):
+        self.names = [n for n in HATS if hat_in_shop(n)]
+        rows = -(-len(self.names) // self.COLS)
+        super().__init__(f"Hats & outfits — {pet.name}", self.COLS * self.CW + 20, rows * self.CH + 70)
+        self.app, self.pet = app, pet
+        self.show()
+
+    def owned(self):
+        return self.app.save.setdefault("hats_owned", [])
+
+    def paintEvent(self, _e):
+        p = QPainter(self)
+        p.fillRect(self.rect(), QColor(UI_BG))
+        self.spots, pet = [], self.pet
+        self.text(p, 16, 10, f"🎩 Dress up {pet.name}", 14, w=360, h=26)
+        self.text(p, self.width() - 216, 10, f"💖 {self.app.hearts()}", 13, UI_PINK, align=Qt.AlignRight | Qt.AlignVCenter, w=200, h=26)
+        for i, name in enumerate(self.names):
+            hat = HATS[name]
+            x0, y0 = 10 + (i % self.COLS) * self.CW, 50 + (i // self.COLS) * self.CH
+            wearing, owned = pet.hat == name, name in self.owned()
+            box = QRect(x0, y0, self.CW - 10, self.CH - 10)
+            p.setPen(QPen(QColor(UI_GOLD if wearing else UI_EDGE), 3 if wearing else 2))
+            p.setBrush(QColor(UI_CARD))
+            p.drawRect(box)
+            paint_sprite(p, pet.kind, pet.palette_i, x0 + 29, y0 + 30, 4, hat=name)
+            self.text(p, x0 + (self.CW - 10) / 2, y0 + 92, name, 10, align=Qt.AlignHCenter | Qt.AlignVCenter, w=self.CW - 14)
+            label = "✓ wearing · click to remove" if wearing else ("owned · click to wear" if owned else f"💖 {hat['price']}")
+            self.text(p, x0 + (self.CW - 10) / 2, y0 + 112, label, 7, UI_GOLD if wearing else (UI_GREEN if owned else UI_PINK),
+                      align=Qt.AlignHCenter | Qt.AlignVCenter, w=self.CW - 18, h=24)
+            self.spot(box, lambda n=name: self.pick(n))
+        p.end()
+
+    def pick(self, name):
+        pet, app = self.pet, self.app
+        if pet.hat == name:
+            pet.hat = None
+            pet.say("back to basics!", 2)
+        elif name in self.owned():
+            pet.hat = name
+            pet.say(random.choice(["how do i look?", "so stylish!", "*strikes a pose*"]), 2.5)
+            pet.set_face("happy", 1.5)
+        else:
+            price = HATS[name]["price"]
+            if app.hearts() < price:
+                tell("Hats & outfits", f"{name} costs {price} 💖. You have {app.hearts()}.\n\nPet, feed and nap your Blips to earn more hearts!")
+                return
+            app.save["hearts"] = app.hearts() - price
+            self.owned().append(name)
+            write_save(app.save)
+            pet.hat = name
+            pet.say(f"a new {name.lower()}! thank you!!", 3)
+            app.sound.play("coin")
+            pet.set_face("happy", 2)
+            pet.burst("heart", 5)
+        app.save_town()
+        self.update()
+
+
+class CollectionView(Panel):
+    COLS, CW, CH = 13, 84, 92
+
+    def __init__(self, app):
+        self.groups = [("Rare ✨  hatch them from Mystery Eggs", G["rare"]), ("Night Shift 🌙  survive the nights", G["nightShift"]),
+                       ("Cryptids 👣  spot them wandering by, then click them!", G["cryptids"]),
+                       (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", G["kaiju"]),
+                       ("Legends ✨  visit a world and click them when they stroll by", G["legends"]),
+                       ("Gifts 🎁  limited-time thank-you Blips", G["gifts"])]
+        h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CH for _, k in self.groups)
+        super().__init__("Blipville collection", self.COLS * self.CW + 20, h)
+        self.app = app
+
+    def peeked(self):
+        return self.app.save.setdefault("peeked", [])
+
+    def how(self, k):
+        if k in DATA["unlocks"]:
+            return f"survive Night {DATA['unlocks'][k]}"
+        if k in G["cryptids"]:
+            return "spot it in the wild"
+        if k in G["kaiju"]:
+            return "catch it in the city"
+        if k in G["gifts"]:
+            return "a limited-time gift"
+        if k in LEGEND_WORLD:
+            return f"find it in {LEGEND_WORLD[k]}"
+        return "hatch from an egg"
+
+    def paintEvent(self, _e):
+        p = QPainter(self)
+        p.fillRect(self.rect(), QColor(UI_BG))
+        self.spots = []
+        every = [k for _, ks in self.groups for k in ks]
+        found = sum(1 for k in every if self.app.is_unlocked(k))
+        self.text(p, 16, 12, f"📖 Collection  {found}/{len(every)}", 14, w=400, h=26)
+        if any(not self.app.is_unlocked(k) and k not in self.peeked() for k in every):
+            r = QRect(self.width() - 230, 12, 214, 26)
+            self.text(p, r.x(), r.y(), "👀 peek at all (spoilers!)", 10, UI_PINK, align=Qt.AlignRight | Qt.AlignVCenter, w=214, h=26)
+            self.spot(r, self.peek_all)
+        y = 50
+        for title, kinds in self.groups:
+            self.text(p, 16, y, title, 10, UI_GOLD, w=900)
+            y += 30
+            for i, k in enumerate(kinds):
+                x0, y0 = 10 + (i % self.COLS) * self.CW, y + (i // self.COLS) * self.CH
+                open_, peek = self.app.is_unlocked(k), k in self.peeked()
+                box = QRect(x0, y0, self.CW - 8, self.CH - 8)
+                p.setPen(QPen(QColor(UI_EDGE if open_ else UI_CARD), 2))
+                p.setBrush(QColor(UI_CARD))
+                p.drawRect(box)
+                paint_sprite(p, k, KINDS[k].get("default", 0), x0 + 14, y0 + 4, 3, silhouette=None if open_ or peek else "#0f0d1a")
+                mid = x0 + (self.CW - 8) / 2
+                self.text(p, mid, y0 + 44, k if open_ or peek else "???", 8, "#ffffff" if open_ else "#b8b0d8",
+                          align=Qt.AlignHCenter | Qt.AlignVCenter, w=self.CW - 12, h=18)
+                sub = "✓ yours!" if open_ else (f"🔒 {self.how(k)}" if peek else "peek 👀")
+                self.text(p, mid, y0 + 60, sub, 7, UI_GREEN if open_ else UI_PINK, align=Qt.AlignHCenter | Qt.AlignTop, w=self.CW - 12, h=24)
+                if not open_ and not peek:
+                    self.spot(box, lambda k=k: self.peek(k))
+            y += -(-len(kinds) // self.COLS) * self.CH + 4
+        p.end()
+
+    def peek(self, k):
+        if ask("Spoiler warning 👀", "Peek at this locked Blip?\n\nYou'll see what it looks like before you unlock it."):
+            self.peeked().append(k)
+            write_save(self.app.save)
+            self.app.sound.play("pop")
+            self.update()
+
+    def peek_all(self):
+        if ask("Spoiler warning 👀", "Peek at every locked Blip?\n\nYou'll see what they look like before you unlock them."):
+            self.peeked().extend(k for _, ks in self.groups for k in ks if k not in self.peeked())
+            write_save(self.app.save)
+            self.update()
+
+
+def open_collection(app):
+    view = CollectionView(app)
+    scroll = QScrollArea()
+    scroll.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint)
+    scroll.setWindowTitle("Blipville collection")
+    scroll.setWidget(view)
+    scroll.setStyleSheet(f"QScrollArea {{ background: {UI_BG}; border: 0; }}")
+    scroll.resize(view.width() + 20, min(view.height() + 4, app.area.height() - 120))
+    scroll.show()
+    app.windows.append(scroll)
 
 
 # ----------------------------------------------------------------------------- the app
@@ -609,20 +1279,29 @@ class App:
         self.area = QGuiApplication.primaryScreen().availableGeometry()
         self.save = load_save()
         self.name_tags = bool(self.save.get("name_tags", True))
-        self.pets = []
-        self.last_town_save = time.monotonic()
+        self.sound_on = bool(self.save.get("sound", False))
+        self.weather_on = bool(self.save.get("weather", True))
+        self.sound = Sound(self)
+        self.pets, self.sightings, self.plays, self.windows = [], [], [], []
+        now = time.monotonic()
+        self.last_town_save = now
+        self.next_sighting = now + random.uniform(6, 14) * 60
+        self.next_kaiju = now + random.uniform(30, 60) * 60
+        self.next_legend = now + random.uniform(1, 3) * 60
+        self._logged = {}
         self.updater = Updater(self)
         log(f"started {APP_NAME} on {sys.platform}, Python {sys.version.split()[0]}")
         if not self.restore_town():
             self.add_pet("Blip", "Blip")
         QTimer.singleShot(1600, self.daily_treat)
+        QTimer.singleShot(2500, self.show_notice)
         self.timer = QTimer()
         self.timer.setTimerType(Qt.PreciseTimer)
         self.timer.timeout.connect(self.tick)
         self.timer.start(int(1000 / FPS))
         self.updater.start()
 
-    # ---- unlocks and hearts
+    # ---- hearts, unlocks, worlds
     def hearts(self):
         return int(self.save.get("hearts", 0))
 
@@ -648,6 +1327,43 @@ class App:
             return kind in s.get("hatched", [])
         return kind not in DATA["unlocks"] or kind in s.get("unlocked", [])
 
+    def world(self):
+        w = self.save.get("world")
+        return WORLD_BY_NAME.get(w) if w in self.save.get("worlds", []) else None
+
+    def visit_world(self, name):
+        self.save["world"] = name
+        write_save(self.save)
+        w = WORLD_BY_NAME.get(name)
+        for p in self.pets:
+            p.particles = [q for q in p.particles if q["kind"] in ("heart", "z", "crumb", "plus")]
+        if name:
+            self.next_legend = min(self.next_legend, time.monotonic() + random.uniform(45, 120))
+        if self.pets:
+            self.pets[0].say(f"welcome to {name}! {w['icon']}" if w else "home sweet home!", 3)
+            self.pets[0].set_face("happy", 1.5)
+
+    def unlock_world(self, name):
+        w = WORLD_BY_NAME[name]
+        if name in self.save.get("worlds", []):
+            self.visit_world(name)
+            return
+        if self.hearts() < w["cost"]:
+            tell(name, f"{name} {w['icon']} costs {w['cost']} 💖 hearts. You have {self.hearts()}.\n\nPet, feed and care for your Blips to earn more!")
+            return
+        if not ask(name, f"Unlock {name} {w['icon']} for {w['cost']} 💖?\n\nYou'll be able to pick every Blip in the {w['tab']} tab, "
+                   "and your town can visit it any time."):
+            return
+        self.save["hearts"] = self.hearts() - w["cost"]
+        self.save.setdefault("worlds", []).append(name)
+        write_save(self.save)
+        self.sound.play("fanfare")
+        self.visit_world(name)
+        pet = self.add_pet(random.choice([k for k, wn in WORLD_OF.items() if wn == name]), greet=False)
+        if pet:
+            pet.say(f"hi! i'm from {name} {w['icon']}", 4)
+            pet.burst("heart", 6)
+
     def daily_treat(self):
         today = time.strftime("%Y-%m-%d")
         if self.save.get("last_day") != today and self.pets:
@@ -655,12 +1371,104 @@ class App:
             self.add_hearts(10, self.pets[0])
             self.pets[0].say("daily treat! +10 💖", 4)
 
+    def give_gift(self):
+        g = GIFT.get("now")
+        if not g or g in self.save.get("gifts", []) or time.strftime("%Y-%m-%d") > GIFT["until"]:
+            return False
+        self.save.setdefault("gifts", []).append(g)
+        write_save(self.save)
+        pet = self.add_pet(g, greet=False)
+        if pet:
+            pet.say(f"surprise!! i'm {g}, a gift for you 🎁", 5)
+            pet.set_face("happy", 2)
+            pet.burst("heart", 8)
+        self.sound.play("fanfare")
+        return True
+
+    def show_notice(self):
+        gift = self.give_gift()
+        g = GIFT.get("now")
+        if self.save.get("notice_seen") != NOTICE["id"]:
+            self.save["notice_seen"] = NOTICE["id"]
+            write_save(self.save)
+            tell("Blipville 💜", NOTICE["text"] + (f"\n\n🎁 As a thank-you, here's {g}: a limited-edition Blip, only given out until "
+                                                  f"{GIFT['untilText']}." if gift else ""))
+        elif gift:
+            tell("A gift for you! 🎁", f"Here's {g}, a limited-edition Blip, only given out until {GIFT['untilText']}.\n\n"
+                 "Find it any time under Change kind → Gifts 🎁.")
+
+    # ---- eggs, lures
+    def open_egg(self):
+        left = [k for k in G["rare"] if not self.is_unlocked(k)]
+        if not left:
+            tell("Mystery Egg", "You've hatched every rare Blip! 🏆")
+            return
+        if self.hearts() < EGG_COST:
+            tell("Mystery Egg", f"A Mystery Egg costs {EGG_COST} 💖 hearts. You have {self.hearts()}.\n\n"
+                 "Earn hearts by taking care of your Blips:\n  💖 pet them (+1)\n  🍪 feed them a cookie (+3, or +5 when they're hungry)\n"
+                 "  💤 let them nap until rested (+2)\n  🎁 come back each day for a daily treat (+10)")
+            return
+        kind = random.choices(left, weights=[0.25 if k == "Golden Blip" else 1.0 for k in left])[0]
+        self.save["hearts"] = self.hearts() - EGG_COST
+        self.save.setdefault("hatched", []).append(kind)
+        write_save(self.save)
+        self.windows.append(EggHatch(self, kind))
+
+    def set_lure(self, beacon=False):
+        kinds, cost = (G["kaiju"], BEACON_COST) if beacon else (G["cryptids"], LURE_COST)
+        what = "Kaiju Beacon" if beacon else "Cryptid Lure"
+        if all(self.is_unlocked(k) for k in kinds):
+            tell(what, "You've caught them all! 🏆")
+            return
+        if self.hearts() < cost:
+            tell(what, f"A {what} costs {cost} 💖 hearts. You have {self.hearts()}.")
+            return
+        self.save["hearts"] = self.hearts() - cost
+        write_save(self.save)
+        soon = time.monotonic() + random.uniform(15, 45)
+        if beacon:
+            self.next_kaiju = min(self.next_kaiju, soon)
+            tell("Kaiju Beacon 📡", f"Something HUGE is coming. When it stomps through the city at the bottom of your screen, click it {KAIJU_HITS} times!")
+        else:
+            self.next_sighting = min(self.next_sighting, soon)
+            tell("Cryptid Lure 🔦", "Watch the bottom of your screen. When a shadow with glowing eyes sneaks by, click it before it gets away!")
+
+    def sighting_step(self, now):
+        for s in list(self.sightings):
+            s.step(now)
+        if self.sightings or not self.pets:
+            return
+        world = self.world()
+        if world and now >= self.next_legend:
+            self.next_legend = now + random.uniform(3, 7) * 60
+            left = [k for k, w in LEGEND_WORLD.items() if w == world["name"] and not self.is_unlocked(k)]
+            if left:
+                self.sightings.append(Sighting(self, random.choice(left)))
+                self.sound.play("boing")
+                return
+        if now >= self.next_kaiju:
+            self.next_kaiju = now + random.uniform(45, 90) * 60
+            left = [k for k in G["kaiju"] if not self.is_unlocked(k)]
+            if left:
+                self.sightings.append(Sighting(self, random.choice(left)))
+                self.sound.play("thud")
+                return
+        if now >= self.next_sighting:
+            wait = random.uniform(8, 20) * 60
+            self.next_sighting = now + (wait / 2 if is_night() else wait)
+            left = [k for k in G["cryptids"] if not self.is_unlocked(k)]
+            if left:
+                self.sightings.append(Sighting(self, random.choice(left)))
+                self.sound.play("whoosh")
+
     # ---- the town
     def add_pet(self, kind=None, name=None, x=None, greet=True):
         if len(self.pets) >= MAX_PETS:
             if self.pets:
                 self.pets[0].say("that's enough friends for now!", 2.5)
             return None
+        if not kind and self.world() and random.random() < 0.5:
+            kind = random.choice([k for k, wn in WORLD_OF.items() if wn == self.world()["name"]])
         kind = kind or random.choice([k for k in KINDS if self.is_unlocked(k)])
         name = name or random.choice(DATA["names"])
         pet = Pet(self, kind, name, x)
@@ -711,16 +1519,143 @@ class App:
         self.save_town()
         self.qt.quit()
 
+    # ---- pets together
+    def head_pos(self, pet):
+        return pet.wx + W / 2, pet.wy + H - ART_H * SCALE + 6
+
+    def ball_near(self, pet):
+        for play in self.plays:
+            if play["type"] == "ball" and "ball" in play:
+                bx, by = play["ball"]
+                if pet.wx - 10 < bx < pet.wx + W + 10 and pet.wy - 10 < by < pet.wy + H + 10:
+                    return play["ball"]
+        return None
+
+    def end_play(self, play, now, happy=True):
+        for pet in play["pets"]:
+            pet.playing, pet.last_play = False, now
+            if happy and pet.state not in ("held", "fall", "sleep"):
+                pet.set_state("idle", random.uniform(1.5, 3))
+                pet.set_face("happy", 1.5)
+                pet.burst("heart", 2)
+        if play in self.plays:
+            self.plays.remove(play)
+
+    def play_step(self, now):
+        dt = 1 / FPS
+        free = [p for p in self.pets if not p.playing and p.state == "idle" and now - p.last_play > 40]
+        for i, a in enumerate(free):
+            for b in free[i + 1:]:
+                d = abs(a.wx - b.wx)
+                if 60 < d < 190 and random.random() < dt * 0.04:
+                    a.playing = b.playing = True
+                    self.plays.append({"type": "ball", "pets": [a, b], "from": a, "to": b, "t0": now, "throws": 0, "n": random.randint(4, 7)})
+                    a.say(random.choice(["catch!", f"heads up, {b.name}!", "wanna play?"]), 2)
+                    break
+                if d < 320 and random.random() < dt * 0.015:
+                    a.playing = b.playing = True
+                    self.plays.append({"type": "chase", "pets": [a, b], "runner": a, "chaser": b, "until": now + 7, "swapped": False})
+                    a.say(random.choice(["can't catch me!", "tag, you're it!"]), 2)
+                    b.say("hey! get back here!", 2)
+                    break
+        for sleeper in [p for p in self.pets if p.state == "sleep"]:
+            for p in self.pets:
+                if (p is not sleeper and not p.playing and not p.nap_buddy and p.state == "idle" and p.energy < 60
+                        and abs(p.wx - sleeper.wx) < 600 and random.random() < dt * 0.15):
+                    p.nap_buddy = True
+                    p.target_x = min(max(sleeper.wx + random.choice([-1, 1]) * 70, p.left), p.right - W)
+                    p.set_state("walk", 10)
+                    p.say("*yawn* me too...", 2)
+        for p in self.pets:
+            if p.nap_buddy and p.state == "idle":
+                p.nap_buddy = False
+                p.set_state("sleep", 20)
+                p.say("*snuggles*", 2)
+        for play in list(self.plays):
+            a, b = play["pets"]
+            if any(p not in self.pets or p.state in ("held", "fall", "sleep") or not p.playing for p in (a, b)):
+                self.end_play(play, now, happy=False)
+                continue
+            if play["type"] == "ball":
+                src, dst = play["from"], play["to"]
+                for p in (a, b):
+                    p.state = "idle"
+                    other = b if p is a else a
+                    p.facing = 1 if other.wx > p.wx else -1
+                u = (now - play["t0"]) / 0.9
+                (x0, y0), (x1, y1) = self.head_pos(src), self.head_pos(dst)
+                play["ball"] = (x0 + (x1 - x0) * min(u, 1), y0 + (y1 - y0) * min(u, 1) - math.sin(math.pi * min(u, 1)) * 60)
+                if u >= 1:
+                    play["throws"] += 1
+                    self.sound.play("pop")
+                    if random.random() < 0.5:
+                        dst.say(random.choice(["got it!", "nice!", "catch!", "woo!"]), 1.2)
+                    dst.set_face("happy", 0.6)
+                    play["from"], play["to"], play["t0"] = dst, src, now
+                    if play["throws"] >= play["n"]:
+                        dst.say(random.choice(["that was fun!", "good game!", "again later!"]), 2.5)
+                        self.end_play(play, now)
+            else:
+                runner, chaser = play["runner"], play["chaser"]
+                left, right = runner.left, runner.right - W
+                away = 1 if runner.wx >= chaser.wx else -1
+                if (away > 0 and runner.wx >= right - 2) or (away < 0 and runner.wx <= left + 2):
+                    away = -away
+                runner.wx = min(max(runner.wx + 2.2 * away * KINDS[runner.kind].get("speed", 1.0) ** 0.5, left), right)
+                toward = 1 if runner.wx > chaser.wx else -1
+                chaser.wx += 4.4 * toward * KINDS[chaser.kind].get("speed", 1.0) ** 0.5
+                runner.facing, chaser.facing = away, toward
+                runner.state = chaser.state = "walk"
+                runner.place()
+                chaser.place()
+                if abs(runner.wx - chaser.wx) < 26:
+                    chaser.say("tag! you're it!", 1.8)
+                    if not play["swapped"]:
+                        play["runner"], play["chaser"], play["swapped"] = chaser, runner, True
+                        play["until"] = now + 6
+                        runner.wx += 30 * (1 if runner.wx > chaser.wx else -1)
+                    else:
+                        self.end_play(play, now)
+                elif now > play["until"]:
+                    runner.say("*pant pant* ok you win", 2)
+                    self.end_play(play, now)
+
+    def socialize(self, now):
+        calm = ("idle", "walk")
+        idle = [p for p in self.pets if not p.playing]
+        for i, a in enumerate(idle):
+            for b in idle[i + 1:]:
+                if a.state not in calm or b.state not in calm or abs(a.wx - b.wx) > 90:
+                    continue
+                if now - a.greeted.get(b.name, -999) < 60:
+                    continue
+                a.greeted[b.name] = b.greeted[a.name] = now
+                a.say(random.choice([f"hi {b.name}!", f"oh, {b.name}!", f"hey {b.name} :)"]), 2.5)
+                b.say(random.choice([f"hi {a.name}!", "oh hi!", f"{a.name}!! :D"]), 2.5)
+                a.set_face("happy", 1.5)
+                b.set_face("happy", 1.5)
+
+    # ---- the loop
+    def safely(self, fn, *args, what=""):
+        try:
+            return fn(*args)
+        except Exception:  # noqa: BLE001  (one problem must never stop the game)
+            import traceback
+            key = (what, traceback.format_exc().splitlines()[-1])
+            if time.monotonic() - self._logged.get(key, -999) > 60:
+                self._logged[key] = time.monotonic()
+                log(f"error in {what}:\n{traceback.format_exc()}")
+            return None
+
     def tick(self):
         now = time.monotonic()
         for pet in list(self.pets):
-            try:
-                pet.step(now)
-            except Exception:  # noqa: BLE001  (one pet's problem must never stop the others)
-                import traceback
-                log(f"error in {pet.kind}:\n{traceback.format_exc()}")
+            self.safely(pet.step, now, what=pet.kind)
+        self.safely(self.socialize, now, what="saying hi")
+        self.safely(self.play_step, now, what="games")
+        self.safely(self.sighting_step, now, what="sightings")
         if now - self.last_town_save > 15:
-            self.save_town()
+            self.safely(self.save_town, what="saving")
             self.last_town_save = now
 
     # ---- right-click menu
@@ -752,30 +1687,41 @@ class App:
                      ("Kaiju 🦖", G["kaiju"]), ("Legends ✨", G["legends"]), ("Gifts 🎁", G["gifts"])])
         for title, members in groups:
             sub = kinds.addMenu(title)
+            tab_world = next((w for w in WORLDS if w["tab"] == title), None)
+            if tab_world and tab_world["name"] not in self.save.get("worlds", []):
+                act(sub, f"🔒 Unlock {tab_world['name']} {tab_world['icon']} ({tab_world['cost']} 💖)…",
+                    lambda _=False, n=tab_world["name"]: self.unlock_world(n))
+                sub.addSeparator()
             for k in members:
                 if self.is_unlocked(k):
                     act(sub, k, lambda _=False, k=k: self.change_kind(pet, k), checked=(k == pet.kind))
                 else:
-                    secret = k not in WORLD_OF
-                    act(sub, "🔒 ???" if secret else f"🔒 {k}", enabled=False)
+                    act(sub, f"🔒 {k}" if k in WORLD_OF else (f"🔒 ???  (visit {LEGEND_WORLD[k]})" if k in LEGEND_WORLD else "🔒 ???"), enabled=False)
         colors = m.addMenu("Change color")
         for i, c in enumerate(kind_colors(pet.kind)):
             act(colors, c["name"], lambda _=False, i=i: self.change_color(pet, i), checked=(i == pet.palette_i))
         act(m, "Rename…", lambda: self.rename(pet))
-        hats = m.addMenu("🎩 Hat")
-        act(hats, "No hat", lambda: setattr(pet, "hat", None), checked=pet.hat is None)
-        for h in self.save.get("hats_owned", []):
-            if h in HATS:
-                act(hats, h, lambda _=False, h=h: setattr(pet, "hat", h), checked=pet.hat == h)
         m.addSeparator()
         act(m, "Add a friend", lambda: self.add_pet(x=pet.wx))
+        act(m, "🎩 Hats & outfits…", lambda: self.windows.append(HatShop(self, pet)))
+        act(m, f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", self.open_egg)
+        act(m, f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", lambda: self.set_lure(False))
+        act(m, f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", lambda: self.set_lure(True))
+        act(m, "📖 Collection (peek at locked Blips)…", lambda: open_collection(self))
+        worlds = m.addMenu("🌍 Worlds")
+        here = self.world()
+        act(worlds, "🏠 Home", lambda: self.visit_world(None), checked=here is None)
+        for w in WORLDS:
+            if w["name"] in self.save.get("worlds", []):
+                act(worlds, f"{w['icon']} Visit {w['name']}", lambda _=False, n=w["name"]: self.visit_world(n),
+                    checked=bool(here and here["name"] == w["name"]))
+            else:
+                act(worlds, f"🔒 {w['icon']} Unlock {w['name']} ({w['cost']} 💖)…", lambda _=False, n=w["name"]: self.unlock_world(n))
         act(m, f"💖 {self.hearts()} hearts", enabled=False)
         act(m, "Show name tags", self.toggle_tags, checked=self.name_tags)
-        soon = m.addMenu("🚧 Coming to the Recode soon")
-        for label in ("🥚 Mystery Eggs", "📖 Collection", "👣 Cryptids, 🦖 kaiju & ✨ legends", "🌍 Worlds & weather",
-                      "🎩 Hat shop", "🌙 Night Shift", "🔊 Sounds"):
-            act(soon, label, enabled=False)
-        act(soon, "(open the classic Blipville for these for now)", enabled=False)
+        act(m, "Sound effects", self.toggle_sound, checked=self.sound_on)
+        act(m, "Weather effects", self.toggle_weather, checked=self.weather_on)
+        act(m, "🌙 Night Shift (open the classic Blipville for now)", enabled=False)
         upd = m.addMenu("🔄 Updates")
         act(upd, "Check for updates now", lambda: self.updater.check(quiet=False))
         act(upd, "Update automatically (asks first)", self.updater.set_auto, checked=self.updater.auto)
@@ -809,8 +1755,16 @@ class App:
             pet.set_face("happy", 1.2)
 
     def toggle_tags(self, on):
-        self.name_tags = bool(on)
-        self.save["name_tags"] = self.name_tags
+        self.name_tags = self.save["name_tags"] = bool(on)
+        write_save(self.save)
+
+    def toggle_sound(self, on):
+        self.sound_on = self.save["sound"] = bool(on)
+        write_save(self.save)
+        self.sound.play("boop")
+
+    def toggle_weather(self, on):
+        self.weather_on = self.save["weather"] = bool(on)
         write_save(self.save)
 
     def copy_log(self, pet):
@@ -1020,14 +1974,14 @@ class Updater:
         pet = self.app.pets[0] if self.app.pets else None
         if result is None or (isinstance(result, tuple) and result[0] == "error"):
             if not quiet:
-                QMessageBox.information(None, "Blipville updates", "Couldn't reach GitHub to check for updates. Check your internet "
-                                        "and try again in a few minutes!\n\nDetails:\n" + (result[1] if result else "no download found"))
+                tell("Blipville updates", "Couldn't reach GitHub to check for updates. Check your internet and try again in a few minutes!"
+                     "\n\nDetails:\n" + (result[1] if result else "no download found"))
             return
         tag, asset = result
         if not is_newer(tag, asset):
             if not quiet:
-                QMessageBox.information(None, "Blipville updates", f"You're on the newest {APP_NAME}! 🎉\n\nYou have {version_label()}."
-                                        if APP_VERSION != "dev" else "You're running from source, so it can't update itself.")
+                tell("Blipville updates", f"You're on the newest {APP_NAME}! 🎉\n\nYou have {version_label()}."
+                     if APP_VERSION != "dev" else "You're running from source, so it can't update itself.")
             return
         if quiet and self.offered == asset.get("updated_at"):
             return
@@ -1036,11 +1990,10 @@ class Updater:
             pet.say("ooh, an update is ready! ✨", 5)
         text = f"A fresh build of {APP_NAME} {tag} is ready!" if tag == APP_VERSION else f"{APP_NAME} {tag} is out! (You have {APP_VERSION}.)"
         if not getattr(sys, "frozen", False):
-            if QMessageBox.question(None, "Update", text + "\n\nOpen the download page?") == QMessageBox.Yes:
+            if ask("Update", text + "\n\nOpen the download page?"):
                 webbrowser.open(RELEASES_PAGE)
             return
-        if QMessageBox.question(None, "Update", text + "\n\nUpdate now? It closes for a few seconds and comes right back. "
-                                "Your pets, hearts and unlocks are kept.") == QMessageBox.Yes:
+        if ask("Update", text + "\n\nUpdate now? It closes for a few seconds and comes right back. Your pets, hearts and unlocks are kept."):
             self.download(asset)
 
     def download(self, asset):
@@ -1068,7 +2021,7 @@ class Updater:
                 os.remove(new)
             except OSError:
                 pass
-            QMessageBox.information(None, "Update", "The download didn't finish. Try again later, or get it from the releases page.")
+            tell("Update", "The download didn't finish. Try again later, or get it from the releases page.")
             return
         bat = os.path.join(os.path.dirname(exe), "blipville-recode-update.bat")
         with open(bat, "w", encoding="utf-8") as f:

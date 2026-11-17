@@ -32,7 +32,12 @@ data = {
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND, "eat": bl.LINES_EAT,
               "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY, "night": bl.NIGHT_LINES, "season": bl.SEASON_LINES},
     "names": bl.NAMES, "eggCost": bl.EGG_COST,
-    "shapes": {"heart": bl.HEART, "zed": bl.ZED, "cookie": bl.COOKIE},
+    "shapes": {"heart": bl.HEART, "zed": bl.ZED, "cookie": bl.COOKIE, "ball": bl.BALL, "bat": bl.BAT, "batFlap": bl.BAT_FLAP,
+               "egg": bl.EGG},
+    "scenes": bl.SCENES, "sceneProps": bl.SCENE_PROPS, "scene": [bl.SCENE_W, bl.SCENE_H, bl.SCENE_PX],
+    "kaijuHits": bl.KAIJU_HITS, "lureCost": bl.LURE_COST, "beaconCost": bl.BEACON_COST,
+    "gift": {"now": bl.GIFT_NOW, "until": bl.GIFT_UNTIL, "untilText": bl.GIFT_UNTIL_TEXT},
+    "notice": {"id": bl.NOTICE_ID, "text": bl.NOTICE_TEXT},
 }
 out = os.path.join(ROOT, "recode", "blipdata.json")
 with open(out, "w", encoding="utf-8") as f:

@@ -57,6 +57,8 @@ make Blipville what it is. This is the real thing.
   others). Survive it to unlock the fox. After that, keep an eye out at night: the **Wind-Up Hare**, an old forgotten
   wind-up toy with a brass key in its head, sometimes turns up in the old workshop. Both join Pull the Strings and get
   Shadow colors from The Puppet Master.
+- 🎭 **Don't feel like playing Night Shift?** Keep a **Puppet Master** in your town and the Night Shift robos
+  sometimes wander by on their own. Click one before it leaves to befriend it.
 - 👻 **Ghosts, a brand-new tier:** 25 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
   🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.

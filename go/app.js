@@ -122,7 +122,7 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const isUnlocked = (k) => codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -693,7 +693,7 @@
   let sighting = null, nextSighting = now() + rnd(2, 5) * 60;
   let nextKaiju = now() + rnd(15, 30) * 60;
   let nextLegend = now() + rnd(1, 2) * 60;
-  let nextGhost = now() + rnd(1, 3) * 60, candleUntil = 0;     // ghosts: 7 PM to 7 AM, or after a Spirit Candle
+  let nextGhost = now() + rnd(1, 3) * 60, candleUntil = 0, nextRobo = 0;     // ghosts: 7 PM to 7 AM, or after a Spirit Candle
   const ghostHours = () => { const h = new Date().getHours(); return h >= 19 || h < 7; };
   const ghostAlpha = (t, phase) => 0.12 + 0.88 * Math.min(1, Math.max(0, Math.sin(t * 1.7 + phase) + 0.35));
   const solid = () => !sighting || !GHOST.has(sighting.kind) || ghostAlpha(now() - sighting.t0, sighting.phase) >= 0.6;              // legends: only while you're visiting their world            // kaiju: much rarer, bigger, and they take 3 taps
@@ -745,6 +745,11 @@
         nextKaiju = t + rnd(30, 60) * 60;
         const leftK = (D.groups.kaiju || []).filter((k) => !isUnlocked(k));
         if (leftK.length && $("nsSheet").hidden) { startSighting(pick(leftK)); return; }
+      }
+      if (pets.some((p) => p.kind === D.roboPuppet) && t >= nextRobo) {   // 🎭 the Puppet Master lures robos into town
+        nextRobo = t + rnd(8, 16) * 60;
+        const leftR = (D.roboScenes || []).filter((k) => !isUnlocked(k));
+        if (leftR.length && Math.random() < 0.6 && $("nsSheet").hidden) { startSighting(pick(leftR)); return; }
       }
       if ((ghostHours() || t < candleUntil) && t >= nextGhost) {
         nextGhost = t + (t < candleUntil ? rnd(1, 2) : rnd(4, 9)) * 60;
@@ -827,7 +832,8 @@
       return;
     }
     sighting = null;
-    (KAIJU.has(kind) ? save.kaiju : LEG.has(kind) ? save.legends : GHOST.has(kind) ? save.ghosts : save.cryptids).push(kind); persist(true); sfx("fanfare"); vibrate([30, 40, 30]);
+    if ((D.roboScenes || []).includes(kind)) (save.robosFound = save.robosFound || []).push(kind);   // 🎭 a wandering Night Shift robo
+    else (KAIJU.has(kind) ? save.kaiju : LEG.has(kind) ? save.legends : GHOST.has(kind) ? save.ghosts : save.cryptids).push(kind); persist(true); sfx("fanfare"); vibrate([30, 40, 30]);
     const p = addPet(kind, { x: clamp(x, 10 * S, W - 10 * S), quiet: true });
     if (p) { say(p, `you spotted me! 📸 i'm a ${kind}!`, 5); setFace(p, "happy", 2); burst(p, "heart", 6); }
     else toast(`You befriended a ${kind}! 📸 It's waiting in your 📖 Zoo.`, 4);

@@ -6246,7 +6246,18 @@ GHOST_SCENES["Puppet Box"] = {"hint": "an old toy chest is creaking open by itse
 GHOST_SCENES.update({"Wick": {"hint": "a candle is floating by on its own…", "props": [["house", 70, 0, "back"], ["fence", 50, 0, "front"]]}, "Phantom Knight": {"hint": "armor is clanking in the empty hall…", "props": [["moon", 84, 40, "back"], ["wall", 50, 0, "back"]]}, "Jack-o'-Ghost": {"hint": "a pumpkin is grinning in the dark…", "props": [["moon", 16, 42, "back"], ["fence", 50, 0, "front"]]}, "Yurei": {"hint": "something pale is drifting by the willow…", "props": [["deadtree", 30, 0, "back"], ["water", 50, 0, "front"]]}, "Mirror Spirit": {"hint": "your reflection just waved… without you", "props": [["house", 30, 0, "back"]]}, "Bookwraith": {"hint": "pages are fluttering out of the window…", "props": [["house", 76, 0, "back"], ["moon", 20, 40, "back"]]}, "Foxfire Spirit": {"hint": "little blue flames are bobbing in the trees…", "props": [["pine", 20, 0, "back"], ["pine", 80, 0, "back"]]}, "Ecto Slime": {"hint": "something is going *gloop* in the graveyard…", "props": [["graves", 50, 0, "front"], ["deadtree", 82, 0, "back"]]}, "Veil": {"hint": "music from an empty ballroom…", "props": [["house", 50, 0, "back"], ["moon", 84, 42, "back"]]}, "Specter Owl": {"hint": "a pale owl is watching from the dead tree…", "props": [["deadtree", 60, 0, "back"], ["moon", 20, 42, "back"]]}, "Haunted Teacup": {"hint": "a teacup is rattling in the old house…", "props": [["house", 24, 0, "back"], ["fence", 50, 0, "front"]]}, "Boo Bunny": {"hint": "a see-through bunny just hopped past…", "props": [["moon", 80, 40, "back"], ["grass", 50, 0, "front"]]}})
 for _i, (_k, _sc) in enumerate(GHOST_SCENES.items()):
     _sc.update({"ghost": True, "keys": _FLOAT_KEYS[_i % len(_FLOAT_KEYS)]})
-SCENES = {**CRYPTID_SCENES, **KAIJU_SCENES, **LEGEND_SCENES, **GHOST_SCENES}
+# 🎭 With the Puppet Master (the Puppet Box's Awakened form) in town, Night Shift robos sometimes wander by on their own,
+# so you can befriend them without playing Night Shift.
+ROBO_SCENES = {
+ "Robo Bear": {"hint": "*servo whirr*… something big is clanking past the window", "props": [["house", 76, 0, "back"], ["fence", 40, 0, "front"]]},
+ "Robo Bunny": {"hint": "*boing* *clank*… a metal bunny just hopped by!", "props": [["grass", 50, 0, "front"], ["moon", 20, 42, "back"]]},
+ "Robo Hen": {"hint": "bawk. boop. something is pecking at the fence…", "props": [["fence", 50, 0, "front"], ["house", 24, 0, "back"]]},
+ "Robo Fox": {"hint": "zip zip… a robot fox is racing through town!", "props": [["lamp", 30, 0, "back"], ["fence", 70, 0, "front"]]},
+}
+for _k, _sc in ROBO_SCENES.items():
+    _sc["keys"] = [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]] if _k != "Robo Fox" else [[0, 112, 0], [4, 50, 0], [5.5, 50, 0], [10, -12, 0]]
+ROBO_PUPPET = "Puppet Master"                      # the Blip that has to be in town
+SCENES = {**CRYPTID_SCENES, **KAIJU_SCENES, **LEGEND_SCENES, **GHOST_SCENES, **ROBO_SCENES}
 
 
 def ghost_hours():
@@ -6483,7 +6494,10 @@ class Sighting:
                     witness.say(random.choice(["again! click it again!", "it's working!", "keep going!!", "almost!"]), 2)
                 return
         self.caught = True
-        app.save.setdefault("kaiju" if kind in KAIJU else "legends" if kind in LEGENDS else "ghosts" if kind in GHOSTS else "cryptids", []).append(kind)
+        if kind in ROBO_SCENES:                              # 🎭 a wandering Night Shift robo
+            app.unlock(kind)
+        else:
+            app.save.setdefault("kaiju" if kind in KAIJU else "legends" if kind in LEGENDS else "ghosts" if kind in GHOSTS else "cryptids", []).append(kind)
         write_save(app.save)
         app.sound.play("fanfare")
         screen_x = self.wx + x * SCENE_PX - W / 2
@@ -9253,6 +9267,13 @@ class App:
             if left and self.pets:
                 self.sightings.append(Sighting(self, random.choice(left)))
                 self.sound.play("thud")
+                return
+        if any(p.kind == ROBO_PUPPET for p in self.pets) and now >= getattr(self, "next_robo", 0):
+            self.next_robo = now + random.uniform(8, 16) * 60
+            left = [k for k in ROBO_SCENES if not self.is_unlocked(k)]
+            if left and random.random() < 0.6:
+                self.sightings.append(Sighting(self, random.choice(left)))
+                self.sound.play("whoosh")
                 return
         candle = now < getattr(self, "candle_until", 0)
         if (ghost_hours() or candle) and now >= getattr(self, "next_ghost", 0):

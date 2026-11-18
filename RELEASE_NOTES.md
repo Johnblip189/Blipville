@@ -17,6 +17,9 @@ make Blipville what it is. This is the real thing.
   Magmaw, Omega Gigabot, Storm Skyray, Blizzard Frostback), **ghosts** (King Sheetie, Soulfire Wisp, Howling Banshee,
   Eclipse Cat, Phantom Admiral), **cryptids** (Titan Bigfoot, Lunar Mothman, Ancient Nessie) and the Night Shift's
   **Mecha Bear**. Use an Awakening Crystal once, then switch any time. In the Arena you get one Awaken per battle, so time it right!
+- 💾 **Save codes on Windows:** right-click a pet → 💾 Save code to copy your whole town as one line, or paste a code to
+  load one. They're the same codes as the website version, so your town can move between Windows and a browser,
+  phone or Chromebook, both ways.
 - 🎨 **Accessory colors** (free, 9 of them) and a **2nd accessory slot** (50 💖) to wear a hat with glasses or a scarf.
 - 👁️ **The Lurker:** a new ghost made of shadow and *lots* of eyes. It loves tag (it's always "it"), and it's the
   only Blip that **Awakens 3 times**: Wide-Eyed Lurker → Shadow Lurker → **Lurker Eternal**. Each Awakening needs a

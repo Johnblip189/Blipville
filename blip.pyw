@@ -4506,6 +4506,7 @@ class Blip:
         upd.add_checkbutton(label="Update automatically (asks first)", variable=app.updater.auto, command=app.updater.set_auto)
         upd.add_command(label=f"You have {version_label()}", state="disabled")
         self.menu.add_cascade(label="🔄 Updates", menu=upd)
+        self.menu.add_command(label="💾 Save code (move your town)…", command=lambda: SaveCodeWindow(app))
         talk = tk.Menu(self.menu, tearoff=0)
         talk.add_command(label="💬 Join the Blipville Discord…", command=lambda: self.open_link(DISCORD_URL, "come say hi on discord!"))
         talk.add_command(label="🐾 Suggest an animal…", command=self.suggest)
@@ -6517,6 +6518,120 @@ def fetch_status(app_key):
 def maintenance_skipped():
     return APP_VERSION == "dev" or bool(os.environ.get("BLIPVILLE_NO_MAINTENANCE"))
 
+# ----------------------------------------------------------------------------- save codes
+# The same codes as the website version ("BLIPVILLE1:" + the save as base64 JSON), so a town can move between the Windows
+# app and a browser, phone or Chromebook, both ways. Keys are written the website's way.
+SAVE_CODE_PREFIX = "BLIPVILLE1:"
+SAVE_CODE_KEYS = {"hearts": "hearts", "hatched": "hatched", "hats_owned": "hatsOwned", "peeked": "peeked", "nights_won": "nightsWon",
+                  "cryptids": "cryptids", "kaiju": "kaiju", "gifts": "gifts", "worlds": "worlds", "world": "world", "legends": "legends",
+                  "ghosts": "ghosts", "trophies": "trophies", "stats": "stats", "awakened": "awakened", "awaken_level": "awakenLevel",
+                  "rivals_beaten": "rivalsBeaten", "slot2": "slot2"}
+
+
+def make_save_code(save, town):
+    import base64
+    d = {web: save[k] for k, web in SAVE_CODE_KEYS.items() if k in save}
+    d["pets"] = town
+    d["giftsDelivered"] = list(save.get("gifts", []))
+    raw = json.dumps(d, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return SAVE_CODE_PREFIX + base64.b64encode(raw).decode("ascii")
+
+
+def read_save_code(text):
+    """A save dict (the Windows app's keys) from a save code made here or on the website, or None if it isn't one."""
+    import base64
+    text = "".join(str(text or "").split())
+    if not text.startswith(SAVE_CODE_PREFIX):
+        return None
+    try:
+        body = text[len(SAVE_CODE_PREFIX):]
+        d = json.loads(base64.b64decode(body + "=" * (-len(body) % 4)).decode("utf-8"))
+        if not isinstance(d, dict) or not isinstance(d.get("pets"), list):
+            return None
+        new = {}
+        for k, web in SAVE_CODE_KEYS.items():
+            v = d.get(web)
+            if v is None:
+                continue
+            if k in ("hearts", "nights_won"):
+                v = max(0, int(v))
+            elif k in ("stats", "awaken_level"):
+                v = {str(a): int(b) for a, b in dict(v).items()}
+            elif k == "world":
+                v = str(v) if v else None
+            elif k == "slot2":
+                v = bool(v)
+            else:
+                v = [str(x) for x in v]
+            new[k] = v
+        new["gifts"] = sorted(set(new.get("gifts", [])) | {str(x) for x in d.get("giftsDelivered") or []})
+        town = []
+        for t in d["pets"][:20]:
+            if isinstance(t, dict) and str(t.get("kind")) in VARIANTS:
+                town.append({"kind": str(t["kind"]), "color": int(t.get("color") or 0), "name": str(t.get("name") or t["kind"])[:16],
+                             "hat": t.get("hat") if t.get("hat") in HATS else None, "hat2": t.get("hat2") if t.get("hat2") in HATS else None,
+                             "tints": {n: int(v) for n, v in (t.get("tints") or {}).items() if n in HATS},
+                             "hunger": float(t.get("hunger") or 10), "energy": float(t.get("energy") or 100)})
+        new["town"], new["town_saved_at"] = town, time.time()
+        new["unlocked"] = [k for k, night in UNLOCKS.items() if night <= new.get("nights_won", 0)]
+        return new
+    except Exception:  # noqa: BLE001
+        return None
+
+
+class SaveCodeWindow:
+    """💾 Copy your save code (to move your town to the website or another PC), or paste one to load it here."""
+    BG, CARD, TEXT, GOLD = "#1d1a2e", "#2b2547", "#e8e4ff", "#ffd23a"
+
+    def __init__(self, app):
+        self.app = app
+        app.save_town()
+        w = self.win = tk.Toplevel(app.root)
+        w.title("Blipville save code")
+        w.configure(bg=self.BG, padx=16, pady=14)
+        w.resizable(False, False)
+        w.attributes("-topmost", True)
+        lab = dict(bg=self.BG, fg=self.TEXT, font=("Segoe UI", 10), justify="left", wraplength=470, anchor="w")
+        btn = dict(relief="flat", bd=0, font=("Segoe UI", 10, "bold"), padx=14, pady=6, cursor="hand2", fg="#ffffff")
+        tk.Label(w, text="💾 Save code", bg=self.BG, fg=self.GOLD, font=("Segoe UI", 14, "bold"), anchor="w").pack(fill="x")
+        tk.Label(w, text="Your whole town in one line: pets, hearts, unlocks, worlds and trophies. Copy it to move your town "
+                         "to the website version (? → 💾 Save code), a phone or another PC, or just to keep a backup.", **lab).pack(fill="x", pady=(2, 8))
+        self.mine = tk.Text(w, height=3, width=60, wrap="char", bg=self.CARD, fg=self.TEXT, relief="flat", font=("Consolas", 9),
+                            insertbackground=self.TEXT)
+        self.mine.insert("1.0", make_save_code(app.save, app.town_snapshot()))
+        self.mine.configure(state="disabled")
+        self.mine.pack(fill="x")
+        tk.Button(w, text="📋 Copy my save code", command=self.copy, bg="#5a4ae0", activebackground="#7a6aff", **btn).pack(anchor="w", pady=(6, 14))
+        tk.Label(w, text="Got a code from the website or another PC? Paste it here and load it. "
+                         "This replaces the town on this PC.", **lab).pack(fill="x", pady=(0, 6))
+        self.theirs = tk.Text(w, height=3, width=60, wrap="char", bg=self.CARD, fg=self.TEXT, relief="flat", font=("Consolas", 9),
+                              insertbackground=self.TEXT)
+        self.theirs.pack(fill="x")
+        tk.Button(w, text="📥 Load this code", command=self.load, bg="#e8457a", activebackground="#ff6a9a", **btn).pack(anchor="w", pady=(6, 0))
+        self.msg = tk.Label(w, text="", **lab)
+        self.msg.pack(fill="x", pady=(8, 0))
+
+    def copy(self):
+        code = self.mine.get("1.0", "end").strip()
+        self.win.clipboard_clear()
+        self.win.clipboard_append(code)
+        self.msg.configure(text="✅ Copied! Paste it somewhere safe, or into the website's 💾 Save code box.", fg="#9ad8a8")
+        self.app.sound.play("coin")
+
+    def load(self):
+        from tkinter import messagebox
+        new = read_save_code(self.theirs.get("1.0", "end"))
+        if not new:
+            self.msg.configure(text="That doesn't look like a Blipville save code. Paste the whole thing, starting with BLIPVILLE1:",
+                               fg="#ff9fc0")
+            return
+        n = len(new["town"])
+        if not messagebox.askyesno("Load save code?", f"Load this town ({n} Blip{'s' if n != 1 else ''}, {new.get('hearts', 0)} 💖)?\n\n"
+                                   "It replaces the town on this PC. (Copy your own code first if you want to keep it.)", parent=self.win):
+            return
+        self.app.load_save_data(new)
+        self.win.destroy()
+
 
 class Maintenance:
     BG, FG, DIM = "#2a1a3a", "#ffffff", "#c9b8e8"
@@ -8329,6 +8444,25 @@ class App:
             self.game.win.focus_force()
         else:
             self.game = NightShiftGame(self)
+
+    def load_save_data(self, new):
+        """Replace this town with one from a save code (keeping this PC's own settings)."""
+        keep = {k: self.save[k] for k in ("auto_update", "climb", "cursor_play", "weather", "sound", "notice_seen", "arena_name",
+                                          "last_day") if k in self.save}
+        for p in list(self.pets):
+            self.pets.remove(p)
+            if isinstance(p.canvas, PixelCanvas):
+                p.canvas.destroy()
+            p.root.destroy()
+        self.save.clear()
+        self.save.update(new)
+        self.save.update(keep)
+        write_save(self.save)
+        if not self.restore_town():
+            self.add_pet("Blip", "Blip")
+        log(f"loaded a save code: {len(self.pets)} pets, {self.hearts()} hearts")
+        if self.pets:
+            self.pets[0].say("we moved in! 📦", 3)
 
     def remove(self, pet):
         if pet in self.pets:

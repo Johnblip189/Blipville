@@ -748,7 +748,7 @@
       }
       if ((ghostHours() || t < candleUntil) && t >= nextGhost) {
         nextGhost = t + (t < candleUntil ? rnd(1, 2) : rnd(4, 9)) * 60;
-        const leftG = (D.groups.ghosts || []).filter((k) => !isUnlocked(k));
+        const leftG = (D.groups.ghosts || []).filter((k) => !isUnlocked(k) && save.nightsWon >= ((D.ghostNights || {})[k] || 0));   // 🐇 some only after a Night Shift night
         if (leftG.length && $("nsSheet").hidden) { startSighting(pick(leftG)); return; }
       }
       if (t < nextSighting) return;
@@ -1277,7 +1277,7 @@
       if (AR.rivals.some((r) => r.name === b.foe) && !save.rivalsBeaten.includes(b.foe)) save.rivalsBeaten.push(b.foe);
       if (b.foe === D.puppetRival) {                          // 🎭 Shadow colors for the Night Shift crew
         save.skins = save.skins || []; const fresh = (D.shadowSkins || []).filter((sk) => !save.skins.includes(sk));
-        if (fresh.length) { save.skins.push(...fresh); b.log.push("🎭 The strings are cut! Shadow colors unlocked for Robo Bear, Robo Bunny and Robo Hen."); }
+        if (fresh.length) { save.skins.push(...fresh); b.log.push("🎭 The strings are cut! Shadow colors unlocked for the Night Shift crew and the Wind-Up Hare."); }
       }
       reward(pets[0], b.reward); b.log.push(`🏆 You win! +${b.reward} 💖`); sfx("fanfare"); vibrate([30, 40, 30]);
       const w = stat("arena_wins"); $("arenaWins").textContent = `🏆 ${w} win${w === 1 ? "" : "s"}`;
@@ -1777,7 +1777,7 @@
   $("devUnlock").onclick = () => {
     save.hatched = [...D.groups.rare]; save.cryptids = [...D.groups.cryptids]; save.kaiju = [...D.groups.kaiju];
     save.ghosts = [...D.groups.ghosts]; save.legends = [...D.groups.legends]; save.worlds = WORLDS.map((w) => w.name);
-    save.nightsWon = Math.max(3, save.nightsWon); save.awakened = Object.keys(AWAKEN_CHAIN);
+    save.nightsWon = Math.max(4, save.nightsWon); save.awakened = Object.keys(AWAKEN_CHAIN);
     save.awakenLevel = Object.fromEntries(Object.entries(AWAKEN_CHAIN).map(([b, ch]) => [b, ch.length]));
     persist(true); sfx("fanfare"); toast("🔓 Everything's unlocked!", 2.5);
   };
@@ -2043,7 +2043,9 @@
       1: { robots: ["Robo Bear"], interval: 6.0, chance: 0.55, grace: 3.4 },
       2: { robots: ["Robo Bear", "Robo Bunny"], interval: 4.4, chance: 0.66, grace: 2.2 },
       3: { robots: ["Robo Bear", "Robo Bunny", "Robo Hen"], interval: 3.9, chance: 0.75, grace: 1.9 },
+      4: { robots: ["Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox"], interval: 3.7, chance: 0.78, grace: 1.7 },
     };
+    const FAST = { "Robo Fox": 0.7 }, LAST = 4;   // 🦊 the fox moves sooner than the others
     const FLASH_COST = 5, DRAIN = 0.2, CAM_DRAIN = 0.5;
     const DOORS = { L: [10, 110], R: [250, 350] };
     const cv = $("nsCanvas"), c = cv.getContext("2d");
@@ -2099,7 +2101,7 @@
           continue;
         }
         if (g.t < r.next) continue;
-        r.next = g.t + g.cfg.interval * rnd(0.7, 1.3);
+        r.next = g.t + g.cfg.interval * rnd(0.7, 1.3) * (FAST[r.kind] || 1);
         if (g.cam === r.room) continue;                         // being watched: frozen
         if (Math.random() < g.cfg.chance) {
           r.room = pick(NEXT[r.room]);
@@ -2117,7 +2119,7 @@
       wrap("Survive from 12 AM to 6 AM. Glowing eyes in a doorway? Tap that door to FLASH it. A robo you watch on camera can't move, but cameras and flashes use battery!",
            CW / 2, 64, CW - 30, 12.5, "#b8b2d8", 17);
       D.groups.nightShift.forEach((k, i) => {
-        const x = CW / 2 - 110 + i * 110, open = isUnlocked(k);
+        const x = CW / 2 - 42 * (D.groups.nightShift.length - 1) + i * 84, open = isUnlocked(k);
         if (open || save.peeked.includes(k)) sprite(k, x - 24, 156, 3); else drawGrid(c, grid(k, 0, { t: 0, silhouette: true }), x - 24, 156, 3);
         text(open ? k : "🔒 " + (save.peeked.includes(k) ? k : "???"), x, 208, 11, open ? "#e8e4ff" : "#7a7598");
         text(`Night ${D.unlocks[k]}`, x, 224, 10, "#7a7598", "center", 600);
@@ -2187,7 +2189,7 @@
       text("6 AM 🌅", CW / 2, 34, 26, "#ffd23a");
       text(`You survived Night ${g.night}!`, CW / 2, 66, 15, "#e8e4ff");
       sprite(g.newUnlock || "Blip", CW / 2 - 40, 88, 5, "happy");
-      wrap(g.newUnlock ? `UNLOCKED: ${g.newUnlock}! Bring it to town from here or the 📖 Zoo.` : g.night === 3 ? "You beat every night. The whole crew is yours! 🏆" : "Blip is proud of you.",
+      wrap(g.newUnlock ? `UNLOCKED: ${g.newUnlock}! Bring it to town from here or the 📖 Zoo.` : g.night === LAST ? "You beat every night. The whole crew is yours! 🏆" : "Blip is proud of you.",
            CW / 2, 175, CW - 40, 13, "#ffffff", 18);
     }
     function frame(ts) {
@@ -2206,8 +2208,8 @@
       const row = () => { const r = document.createElement("div"); r.className = "nsRow"; box.appendChild(r); return r; };
       if (g.state === "menu") {
         const r = row();
-        for (const n of [1, 2, 3]) {
-          const b = btn(`Night ${n}${n <= save.nightsWon ? " ✓" : ""}`, () => start(n), n === Math.min(save.nightsWon + 1, 3) ? "primary" : "");
+        for (const n of Object.keys(NIGHTS).map(Number)) {
+          const b = btn(`Night ${n}${n <= save.nightsWon ? " ✓" : ""}`, () => start(n), n === Math.min(save.nightsWon + 1, LAST) ? "primary" : "");
           b.disabled = n > save.nightsWon + 1; r.appendChild(b);
         }
       } else if (g.state === "play") {
@@ -2226,7 +2228,7 @@
           r.appendChild(btn("Bring it to town 🐾", () => {
             closeSheets(); const p = addPet(k, { color: MIDNIGHT, quiet: true }); if (p) say_(p, "*whirr* ...i'm free! hi!!", 4);
           }, "primary"));
-        } else if (g.night < 3) r.appendChild(btn(`Night ${g.night + 1} ▶`, () => start(g.night + 1), "primary"));
+        } else if (g.night < LAST) r.appendChild(btn(`Night ${g.night + 1} ▶`, () => start(g.night + 1), "primary"));
         r.appendChild(btn("Menu", menu));
       }
     }

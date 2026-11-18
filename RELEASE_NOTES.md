@@ -53,7 +53,11 @@ make Blipville what it is. This is the real thing.
   rival, **The Puppet Master**, to unlock the Shadow colors for Robo Bear, Robo Bunny and Robo Hen.
 - 🎵 **Battle music:** every Arena stage has its own tune (9 in all: Sunny Showdown, Magma Rush, Skyscraper Smash, Music Box Waltz…) that plays during the battle
   (with sound on).
-- 👻 **Ghosts, a brand-new tier:** 24 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
+- 🌙 **Night Shift Night 4:** a new, harder night where the **Robo Fox** joins the crew (it moves faster than the
+  others). Survive it to unlock the fox. After that, keep an eye out at night: the **Wind-Up Hare**, an old forgotten
+  wind-up toy with a brass key in its head, sometimes turns up in the old workshop. Both join Pull the Strings and get
+  Shadow colors from The Puppet Master.
+- 👻 **Ghosts, a brand-new tier:** 25 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
   🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.
 - 🏆 **Trophies:** 31 to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.
@@ -67,8 +71,8 @@ make Blipville what it is. This is the real thing.
   opens again by itself.
 - 🎁 Gifts can't get lost on the website version any more.
 
-**Everything in Blipville:** 348 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
-17 kaiju, 24 ghosts, 5 worlds with 22 World Legends, 33 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
+**Everything in Blipville:** 350 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
+17 kaiju, 25 ghosts, 5 worlds with 22 World Legends, 33 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 
 **Updating?** Blipville (and Blipville Redux) will offer this update by itself: just say yes. Your pets, hearts,

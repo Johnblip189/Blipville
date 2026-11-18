@@ -388,10 +388,13 @@
   }
 
   // ------------------------------------------------------------------ pixel art (same rules as the desktop app)
+  const glitching = (t) => { const p = ((t % 5) + 5) % 5; return p < 0.12 || (p >= 0.24 && p < 0.34); };   // twice, briefly, every 5 s
   const isNight = () => { const h = new Date().getHours(); return h >= 22 || h < 6; };
   function grid(kind, colorIdx, opt = {}) {
-    const k = KINDS[kind], cols = k.colors, pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
+    const k = KINDS[kind], cols = k.colors;
     const t = opt.t ?? now(), st = opt.state || "idle";
+    let pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
+    if (opt.live && pal.glitch != null && glitching(t + (opt.phase || 0))) pal = Object.assign({}, cols[pal.glitch], k.extra || {});   // ⚡ flicker to an old look
     let body = pal.art || k.body;
     if (k.alt && ["walk", "fall", "held"].includes(st) && Math.floor(t * 10) % 2) body = k.alt;
     const g = Array.from({ length: 13 }, () => Array(16).fill(null));
@@ -646,9 +649,9 @@
     const dx = pointer.x - p.x, dy = pointer.y - (top + 6 * S);
     const look = Math.hypot(dx, dy) < 30 ? [0, 0] : [dx < -40 ? -1 : dx > 40 ? 1 : 0, dy < -80 ? -1 : dy > 40 ? 1 : 0];
     const face = t < p.faceUntil ? p.face : "normal";
-    if (KINDS[p.kind].ghost) ctx.globalAlpha = 0.8;                // ghosts stay a little see-through
+    if (KINDS[p.kind].ghost && !KINDS[p.kind].colors[p.color % KINDS[p.kind].colors.length].solid) ctx.globalAlpha = 0.8;   // ghosts stay a little see-through (unless the color is solid)
     const K = KINDS[p.kind], soul = K.soul ? new Set([...K.soul].map((ch) => K.colors[p.color % K.colors.length][ch]).filter(Boolean)) : null;
-    drawGrid(ctx, grid(p.kind, p.color, { t, state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
+    drawGrid(ctx, grid(p.kind, p.color, { t, live: true, state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
              soul, soul ? ghostAlpha(t, p.x * 0.01) * 0.75 : 1);
     ctx.globalAlpha = 1;
     const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;
@@ -2328,7 +2331,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

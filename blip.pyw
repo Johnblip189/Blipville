@@ -3602,7 +3602,8 @@ CRYPTIDS.update({"Ningen": {"eyes": 4, "move": "float", "speed": 0.7, "feet": Fa
 GHOSTS['Phantom Knight'] = {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False, "lines": ["*clank… clank…*", "i guard this castle forever", "my armor is empty. and spooky", "halt! who goes there? (a friend)", "for the realm!"], "body": [".......rr.......", "......rrrr......", "....oooooooo....", "...ohhhhhhhho...", "..ohhhhhhhhhho..", "..ohvvvvvvvvho..", "..ohhhhhhhhhho..", ".oossssssssssoo.", "oaossssbbssssoao", ".osssssssssssso.", "..wwwwwwwwwwww..", "...w.ww..ww.w..."], "colors": [{"name": "Iron", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8"}, {"name": "Gilded", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a"}]}   # redrawn for 1.0, with his own Phantom type and 3 Awakenings
 GHOSTS['Wind-Up Hare'] = {"eyes": 5, "move": "walk", "speed": 0.7, "feet": True, "ghost": True, "mouth": False, "night": 4, "lines": ["*tick… tick… tick…*", "wind me up and watch me go", "i was the first toy on the night shift", "my key is stuck. help?", "*one ear flops over*", "they forgot me in the old workshop"], "body": ["..oo..yyyy......", ".obao..yy..oooo.", ".obao..yy.obbbo.", ".obboooooooooo..", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obxbbbbbbbbbggbo", "obpbbllllllbggbo", "obbbllllllllbbbo", "osssskkkkkksssso", ".obxbllllllbbbo.", "..obrbbbbbbrbo.."], "colors": [{"name": "Patina", "o": "#14201a", "b": "#5a9a8a", "l": "#c8e0c8", "a": "#3a6a5a", "x": "#2a3a2a", "g": "#c8a03a", "y": "#d8b04a", "r": "#a8b0a0", "s": "#2a3a34", "k": "#e8e8d8", "p": "#8a5a5a", "e": "#7affd8"}, {"name": "Rust", "o": "#200c04", "b": "#a8643a", "l": "#e8c8a0", "a": "#6a3414", "x": "#3a1a0a", "g": "#ffd23a", "y": "#c8a03a", "r": "#c8a888", "s": "#3a2014", "k": "#f0e0c8", "p": "#c86a5a", "e": "#ff8a2a"}, {"name": "Brass", "o": "#2a1a04", "b": "#c8a03a", "l": "#fff0c0", "a": "#8a6a1a", "x": "#5a4010", "g": "#7a5a1a", "y": "#e8e8d8", "r": "#fff0c0", "s": "#4a3410", "k": "#fffaf0", "p": "#e88a6a", "e": "#5affd8"}, {"name": "Midnight", "o": "#06060c", "b": "#2a2a3a", "l": "#4a4a62", "a": "#16161f", "x": "#0a0a12", "g": "#5a4a2a", "y": "#8a7a4a", "r": "#7a7a8a", "s": "#12121a", "k": "#d8d8e0", "p": "#5a2a3a", "e": "#ff3b3b"}, {"name": "Shadow", "unlock": "puppet", "o": "#000000", "b": "#14101e", "l": "#2a2240", "a": "#0a0812", "x": "#000000", "g": "#b05aff", "y": "#b05aff", "r": "#b05aff", "s": "#0a0812", "k": "#e0d8ff", "p": "#3a1a4a", "e": "#f4f0ff"}]}   # 🐇 only after Night 4
 # ✨ Prime: the Wind-Up Hare in its prime: polished gold, ears up, flexing in a showman's cape and bow tie. A color with its own drawing.
-GHOSTS['Wind-Up Hare']["colors"].append({"name": "Prime", "o": "#3a2604", "b": "#f4c84a", "h": "#fffbe8", "s": "#c8902a", "a": "#ff9ab8", "y": "#ffe27a", "g": "#d8d8e8", "k": "#ffffff", "p": "#ff9a7a", "l": "#fff4d8", "e": "#3a8aff", "w": "#ffffff", "d": "#e83a4a", "r": "#a8202e", "art": ["..oo...yy...oo..", ".obao.yooy.oabo.", ".obao..yy..oabo.", "k.obaooggooabo.k", "ww.ohbbbbbbbo.ww", "wgohhbbbbbbbbsgw", "oobbbbbbbbbbbsoo", ".opbbblaalbbbpo.", ".robbbowwobbbor.", "rrrowddrrddworrr", ".rodwwwwwwwwdor.", ".rroddwyywddorr."]})
+# Fully solid (no ghostly see-through), with a split-second glitch back to its old Patina look now and then.
+GHOSTS['Wind-Up Hare']["colors"].append({"name": "Prime", "solid": True, "glitch": 0, "o": "#3a2604", "b": "#f4c84a", "h": "#fffbe8", "s": "#c8902a", "a": "#ff9ab8", "y": "#ffe27a", "g": "#d8d8e8", "k": "#ffffff", "p": "#ff9a7a", "l": "#fff4d8", "e": "#3a8aff", "w": "#ffffff", "d": "#e83a4a", "r": "#a8202e", "art": ["..oo...yy...oo..", ".obao.yooy.oabo.", ".obao..yy..oabo.", "k.obaooggooabo.k", "ww.ohbbbbbbbo.ww", "wgohhbbbbbbbbsgw", "oobbbbbbbbbbbsoo", ".opbbblaalbbbpo.", ".robbbowwobbbor.", "rrrowddrrddworrr", ".rodwwwwwwwwdor.", ".rroddwyywddorr."]})
 GHOSTS['Puppet Box'] = {"eyes": 5, "move": "hop", "speed": 0.7, "feet": False, "body": ["...s........s...", ".oooooooooooooo.", ".obbbbbkkbbbbbo.", ".oddddddddddddo.", "..gggggggggggg..", "..gggggggggggg..", "..gggggggggggg..", ".oooooooooooooo.", ".obbbbbkkbbbbbo.", ".obbbbbyybbbbbo.", ".odddddkkdddddo.", ".oooooooooooooo."], "colors": [{"name": "Oak", "o": "#2a1408", "b": "#9a6a3a", "d": "#6a4220", "k": "#e8c04a", "y": "#1a0a04", "g": "#0a0610", "s": "#c8c0d8", "e": "#ff3a4a"}, {"name": "Ebony", "o": "#0e080e", "b": "#3a2a3a", "d": "#241824", "k": "#c8c8d8", "y": "#0a0610", "g": "#050308", "s": "#c8c0d8", "e": "#ff3a4a"}], "ghost": True, "mouth": False, "lines": ["*creak…*", "don't open the lid… (please open the lid)", "*a tiny tune plays from inside*", "the strings are pulling…", "i'm just a box. probably.", "*the keyhole blinks*"]}
 GHOSTS['Puppet Box']["colors"].append({"name": "Black Light", "o": "#000000", "b": "#141020", "d": "#0a0812", "k": "#ffffff", "y": "#b05aff", "g": "#000000", "s": "#e0d8ff", "e": "#f4f0ff"})   # 🔦 Black Light: glows under UV
 # ⭐ Creator Blips: only the people who make Blipville can get these (with the secret creator code). They never show up for anyone
@@ -5576,6 +5577,8 @@ class Blip:
         v = VARIANTS[self.kind]
         colors = kind_colors(self.kind)
         pal = {**colors[self.palette % len(colors)], **v.get("extra", {})}
+        if pal.get("glitch") is not None and glitching(now + id(self) % 50 / 10):
+            pal = {**colors[pal["glitch"]], **v.get("extra", {})}   # ⚡ a split-second flicker back to an old look
         g = [[None] * ART_W for _ in range(ART_H)]
         body = pal.get("art") or v["body"]          # some colors come with their own markings
         if v.get("alt") and self.state in ("walk", "fall", "held") and int(now * 10) % 2:
@@ -5681,7 +5684,8 @@ class Blip:
     def draw_pet(self, now, art, ox, oy):
         c = self.canvas
         # ghosts stay a little see-through in your town too (with the Redux engine)
-        ghost = {"alpha": 0.8} if VARIANTS[self.kind].get("ghost") and isinstance(c, PixelCanvas) else {}
+        solid = kind_colors(self.kind)[self.palette % len(kind_colors(self.kind))].get("solid")   # some ghost colors are fully solid
+        ghost = {"alpha": 0.8} if VARIANTS[self.kind].get("ghost") and not solid and isinstance(c, PixelCanvas) else {}
         soul_chars = VARIANTS[self.kind].get("soul", "")
         pal = kind_colors(self.kind)[self.palette % len(kind_colors(self.kind))] if soul_chars else {}
         soul = {pal[ch] for ch in soul_chars if ch in pal}           # 🎭 only these colors are see-through
@@ -6313,6 +6317,12 @@ def ghost_hours():
     """Ghosts come out from 7 PM to 7 AM (your computer's clock)."""
     h = time.localtime().tm_hour
     return h >= 19 or h < 7
+
+
+def glitching(t):
+    """⚡ Glitchy colors flicker to another look twice, very briefly, every 5 seconds."""
+    p = t % 5.0
+    return p < 0.12 or 0.24 <= p < 0.34
 
 
 def ghost_alpha(t, phase=0.0):

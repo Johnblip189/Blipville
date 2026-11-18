@@ -11,7 +11,11 @@
   const GIFTS = new Set(D.groups.gifts || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
-  const AWAKEN_FORM = D.awakenForm || {}, AWAKEN_BASE = Object.fromEntries(Object.entries(AWAKEN_FORM).map(([b, f]) => [f, b]));                                        // ghosts: at night, tap while they glow
+  const AWAKEN_FORM = D.awakenForm || {};
+  const AWAKEN_CHAIN = D.awakenChain || Object.fromEntries(Object.entries(AWAKEN_FORM).map(([b, f]) => [b, [f]]));   // some Blips awaken up to 3 times
+  const AWAKEN_BASE = Object.fromEntries(Object.entries(AWAKEN_CHAIN).flatMap(([b, fs]) => fs.map((f) => [f, b])));
+  const STAGE_COSTS = D.stageCosts || [D.crystalCost || 75, 150, 250];
+  const awStage = (k) => AWAKEN_BASE[k] ? AWAKEN_CHAIN[AWAKEN_BASE[k]].indexOf(k) + 1 : 0;                                        // ghosts: at night, tap while they glow
   const WORLD_LOOK = {
     "Plant World":  { sky: ["#8fd8a8", "#e8ffd8"], land: ["#4ab85a", "#3a9a4a", "#2f7a3a"], fx: [["leaf", 3], ["petal", 3]], sun: "#fff2a8" },
     "Sweets World": { sky: ["#ffb0d8", "#fff0c8"], land: ["#ff8ab8", "#c8885a", "#a86a3a"], fx: [["sprinkle", 7]], sun: "#fff0f8" },
@@ -35,7 +39,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], rivalsBeaten: [] };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [] };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
@@ -110,7 +114,8 @@
     if (on && !quiet) sfx("boop");
   }
 
-  const isUnlocked = (k) => AWAKEN_BASE[k] ? save.awakened.includes(AWAKEN_BASE[k]) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const awLevel = (b) => Math.max(+((save.awakenLevel || {})[b]) || 0, save.awakened.includes(b) ? 1 : 0);
+  const isUnlocked = (k) => AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -877,7 +882,7 @@
     "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts),
     "world-1": () => save.worlds.length >= 1, "world-all": () => save.worlds.length >= WORLDS.length,
     "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
-    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
+    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
   };
   function checkTrophies() {
     for (const tr of D.trophies || []) {
@@ -935,9 +940,11 @@
       chips.appendChild(b);
     });
     $("sheetNap").textContent = p.state === "sleep" ? "☀️ Wake" : "💤 Nap";
-    const awBase = AWAKEN_BASE[p.kind] || p.kind, aw = $("sheetAwaken");
-    aw.hidden = !AWAKEN_FORM[awBase];
-    aw.textContent = AWAKEN_BASE[p.kind] ? "💤 Normal form" : save.awakened.includes(awBase) ? "✨ Awaken!" : `✨ Awaken · ${D.crystalCost || 75} 💖`;
+    const awBase = AWAKEN_BASE[p.kind] || p.kind, aw = $("sheetAwaken"), chain = AWAKEN_CHAIN[awBase], stg = awStage(p.kind);
+    aw.hidden = !chain;
+    aw.textContent = !chain ? "" : stg >= chain.length ? "💤 Normal form" :
+      `✨ Awaken${stg ? " again" : ""}${awLevel(awBase) > stg ? "!" : ` · ${STAGE_COSTS[stg]} 💖`}`;
+    $("sheetAwakenBack").hidden = !(chain && stg > 0 && stg < chain.length);
     const hc = $("hatChips"); hc.innerHTML = "";
     for (const name of Object.keys(HATS).filter(hatInShop)) {
       const owned = save.hatsOwned.includes(name), wearing = p.hat === name;
@@ -972,15 +979,20 @@
     pets.splice(pets.indexOf(sheetPet), 1); toast(`👋 ${sheetPet.name} waved goodbye.`); closeSheets();
   };
   $("sheetKind").onclick = () => openZoo(sheetPet);
+  const toNormal = (p) => { const base = AWAKEN_BASE[p.kind]; if (!base) return; p.kind = base; p.color %= KINDS[base].colors.length; say(p, "phew, back to normal", 2); persist(true); openPetSheet(p); };
+  $("sheetAwakenBack").onclick = () => sheetPet && toNormal(sheetPet);
   $("sheetAwaken").onclick = () => {
     const p = sheetPet; if (!p) return;
-    const base = AWAKEN_BASE[p.kind] || p.kind, form = AWAKEN_FORM[base]; if (!form) return;
-    if (AWAKEN_BASE[p.kind]) { p.kind = base; p.color %= KINDS[base].colors.length; say(p, "phew, back to normal", 2); persist(true); openPetSheet(p); return; }
-    if (!save.awakened.includes(base)) {
-      const cost = D.crystalCost || 75;
-      if (save.hearts < cost) { toast(`Awakening ${base} into ${form} takes an Awakening Crystal (${cost} 💖). You have ${save.hearts}.`, 4); return; }
-      if (!confirm(`Use an Awakening Crystal (${cost} 💖) to awaken ${base} into ${form}?\n\nIt works for every ${base} you have, forever, and you can switch back any time. In the Arena, Awakened Blips hit harder!`)) return;
-      save.hearts -= cost; save.awakened.push(base); updateHearts(true);
+    const base = AWAKEN_BASE[p.kind] || p.kind, chain = AWAKEN_CHAIN[base]; if (!chain) return;
+    const stg = awStage(p.kind);
+    if (stg >= chain.length) { toNormal(p); return; }
+    const form = chain[stg];
+    if (awLevel(base) <= stg) {
+      const cost = STAGE_COSTS[stg], again = ["", "again ", "a third time "][stg];
+      if (save.hearts < cost) { toast(`Awakening ${p.kind} ${again}into ${form} takes an Awakening Crystal (${cost} 💖). You have ${save.hearts}.`, 4); return; }
+      if (!confirm(`Use an Awakening Crystal (${cost} 💖) to awaken ${p.kind} ${again}into ${form}?\n\nIt works for every ${base} you have, forever, and you can switch back any time. In the Arena, Awakened Blips hit harder!`)) return;
+      save.hearts -= cost; updateHearts(true);
+      if (stg === 0) save.awakened.push(base); else (save.awakenLevel = save.awakenLevel || {})[base] = stg + 1;
     }
     p.kind = form; p.color %= KINDS[form].colors.length; sfx("fanfare"); vibrate([30, 40, 30]);
     say(p, pick(KINDS[form].lines), 3.5); setFace(p, "happy", 2); sparkle(p, 12); persist(true); openPetSheet(p);
@@ -989,7 +1001,7 @@
   // ------------------------------------------------------------------ the Arena ⚔️ (same rules and battle codes as the desktop app)
   const AR = D.arena || { stats: {}, types: {}, beats: {}, rivals: [] };
   let arenaTeam = [], arenaBattle = null, arenaTimer = null;
-  const arenaEntry = (p) => { const b = AWAKEN_BASE[p.kind] || p.kind; return [b, p.color % KINDS[b].colors.length, AWAKEN_FORM[b] && save.awakened.includes(b) ? 1 : 0]; };
+  const arenaEntry = (p) => { const b = AWAKEN_BASE[p.kind] || p.kind; return [b, p.color % KINDS[b].colors.length, Math.min(awLevel(b), (AWAKEN_CHAIN[b] || []).length)]; };
   function battleCodeFor(name, team) {
     const raw = JSON.stringify({ n: name.slice(0, 20), t: team.slice(0, 3) });
     const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(raw)));
@@ -1009,20 +1021,49 @@
   }
   function fighter([kind, color, canAw]) {
     const base = AWAKEN_BASE[kind] || kind, st = AR.stats[base];
-    return { base, kind: base, color: +color, canAw: !!canAw && !!AWAKEN_FORM[base], hp: st.hp, max: st.hp, aw: false };
+    const lvl = Math.min(+canAw || 0, (AWAKEN_CHAIN[base] || []).length);
+    return { base, kind: base, color: +color, lvl, stage: 0, canAw: lvl > 0, hp: st.hp, max: st.hp, aw: false };
   }
   const fst = (f) => AR.stats[f.kind];
+  // backgrounds: little scenes 120 x 40 units, the same as the desktop app's (from blip.pyw)
+  const fnv = (t) => { let h = 2166136261; for (const b of new TextEncoder().encode(t)) h = Math.imul(h ^ b, 16777619) >>> 0; return h; };
+  const arenaBgFor = (foe) => (D.rivalBgs || {})[foe] || (D.friendBgs || ["meadow"])[fnv(foe) % (D.friendBgs || ["meadow"]).length];
+  function drawArenaBg(c, name, w, h) {
+    const bg = (D.arenaBgs || {})[name]; if (!bg) return;
+    const s = 4, x0 = (w - 120 * s) / 2, y0 = h - 40 * s;
+    const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, bg.sky[0]); gr.addColorStop(1, bg.sky[1]);
+    c.fillStyle = gr; c.fillRect(0, 0, w, h);
+    const Y = (v) => (v ? y0 + v * s : 0);                 // shapes touching the top reach the top of the canvas
+    for (const sh of bg.shapes) {
+      const [kind, ...r] = sh;
+      if (kind === "rect") { c.fillStyle = r[0]; const ya = Y(r[2]); c.fillRect(x0 + r[1] * s, ya, r[3] * s, y0 + (r[2] + r[4]) * s - ya); }
+      else if (kind === "poly") { c.fillStyle = r[0]; c.beginPath(); for (let i = 0; i < r[1].length; i += 2) c.lineTo(x0 + r[1][i] * s, Y(r[1][i + 1])); c.closePath(); c.fill(); }
+      else if (kind === "circ") { c.fillStyle = r[0]; c.beginPath(); c.arc(x0 + r[1] * s, y0 + r[2] * s, r[3] * s, 0, Math.PI * 2); c.fill(); }
+      else if (kind === "pix") {
+        const px = D.arenaPix[r[0]], pal = px[r[4] || "pal"], u = r[3];
+        px.rows.forEach((row, ry) => [...row].forEach((ch, rx) => {
+          if (ch !== ".") { c.fillStyle = pal[ch]; c.fillRect(x0 + (r[1] + rx * u) * s, y0 + (r[2] + ry * u) * s, Math.ceil(u * s), Math.ceil(u * s)); }
+        }));
+      }
+    }
+  }
   function newBattle(mine, theirs, foe, reward) {
-    return { sides: [mine.map(fighter), theirs.map(fighter)], idx: [0, 0], awLeft: [1, 1], turn: 0, winner: null, last: null, foe, reward, log: [`⚔️ ${foe} wants to battle!`] };
+    return { sides: [mine.map(fighter), theirs.map(fighter)], idx: [0, 0], awLeft: [1, 1], turn: 0, winner: null, last: null, foe, reward,
+             bg: arenaBgFor(foe), log: [`⚔️ ${foe} wants to battle!`] };
   }
   const active = (b, s) => b.sides[s][b.idx[s]] || null;
-  const canAwaken = (b, s) => { const f = active(b, s); return !!(f && b.awLeft[s] && f.canAw && !f.aw); };
+  // one Awaken per battle, but a Blip that can awaken more than once may keep going (the Lurker!)
+  const canAwaken = (b, s) => { const f = active(b, s); return !!(f && f.stage < f.lvl && (b.awLeft[s] || f.stage > 0)); };
   function awakenF(b, s) {
     if (!canAwaken(b, s)) return null;
-    b.awLeft[s] = 0; const f = active(b, s), frac = f.hp / f.max;
-    f.kind = AWAKEN_FORM[f.base]; f.aw = true; f.color %= KINDS[f.kind].colors.length;
+    b.awLeft[s] = 0; const f = active(b, s), frac = f.hp / f.max, was = f.kind;
+    f.stage += 1; f.kind = AWAKEN_CHAIN[f.base][f.stage - 1]; f.aw = true; f.color %= KINDS[f.kind].colors.length;
     f.max = fst(f).hp; f.hp = Math.min(f.max, Math.round(f.max * frac + f.max * 0.25));
-    return `✨ ${f.base} awakens into ${f.kind}!`;
+    if (f.kind === "Lurker Eternal" && b.bg !== "dam") {
+      b.bg = "dam";
+      return `✨ ${was} awakens into ${f.kind}! The ground shakes… a wall of Lurkers rises, holding up a giant dam! 🌊`;
+    }
+    return `✨ ${was} awakens into ${f.kind}!`;
   }
   function stepBattle(b) {
     if (b.winner !== null) return null;
@@ -1098,13 +1139,16 @@
   function drawBattle() {
     const b = arenaBattle, cv = $("arenaCanvas"), c = cv.getContext("2d");
     c.clearRect(0, 0, cv.width, cv.height); c.imageSmoothingEnabled = false;
+    drawArenaBg(c, b.bg, cv.width, cv.height);
     [0, 1].forEach((side) => {
       const f = active(b, side), x0 = side === 0 ? 20 : 200;
       b.sides[side].forEach((g, j) => drawGrid(c, grid(g.kind, g.color, { t: 0, silhouette: g.hp === 0 }), (side === 0 ? 8 : 268) + j * 30, 8, 2));
       if (!f) return;
       drawGrid(c, grid(f.kind, f.color, { t: now(), face: f.hp > f.max / 2 ? "happy" : "normal" }), x0 + 12, 52, 7);
       c.fillStyle = "#fff"; c.font = "700 11px " + FONT; c.textAlign = "center";
-      c.fillText(`${AR.types[fst(f).type][0]} ${f.kind}${f.aw ? " ✨" : ""}`, x0 + 68, 48);
+      const label = `${AR.types[fst(f).type][0]} ${f.kind}${f.aw ? " ✨" : ""}`;
+      c.strokeStyle = "rgba(10, 8, 20, .85)"; c.lineWidth = 3; c.lineJoin = "round"; c.strokeText(label, x0 + 68, 48);
+      c.fillText(label, x0 + 68, 48);
       c.fillStyle = "#2b2547"; c.fillRect(x0, 150, 136, 12);
       const fr = f.hp / f.max; c.fillStyle = fr > 0.5 ? "#9ad8a8" : fr > 0.2 ? "#ffd23a" : "#ff5a7a"; c.fillRect(x0, 150, 136 * fr, 12);
       c.fillStyle = "#ffffff"; c.font = "800 10px " + FONT; c.fillText(`${f.hp} / ${f.max}`, x0 + 68, 160);

@@ -31,9 +31,10 @@ for k in list(bl.KINDS) + list(getattr(bl, "AWAKEN_BASE", [])):
         "default": bl.default_color(k),
     }
 kinds.update(EARLY.get("kinds", {}))
+EARLY_DATA = {k: v for k, v in EARLY.items() if k not in ("kinds", "extraGhosts", "extraScenes")}
 data = {
     "kinds": kinds,
-    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS},
+    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS + EARLY.get("extraGhosts", [])},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,
@@ -45,14 +46,14 @@ data = {
         "trophyCup": bl.TROPHY_CUP, "awakenForm": bl.AWAKEN_FORM, "crystalCost": bl.CRYSTAL_COST,
         "arena": {"stats": bl.ARENA_STATS, "types": bl.ARENA_TYPES, "beats": bl.ARENA_BEATS,
                   "rivals": [{"name": n, "reward": r, "team": t} for n, r, t in bl.ARENA_RIVALS]}}
-       if not EARLY else {k: v for k, v in EARLY.items() if k != "kinds"}),
+       if not EARLY else EARLY_DATA),
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,
     "giftDrops": [{k: d[k] for k in ("kind", "until", "why")} for d in bl.GIFT_DROPS],
     "legendWorld": bl.LEGEND_WORLD,
     "worlds": [{k: w[k] for k in ("name", "icon", "tab", "cost")} for w in bl.WORLDS],
     "giftUntil": bl.GIFT_UNTIL,
-    "scenes": bl.SCENES,
+    "scenes": {**bl.SCENES, **EARLY.get("extraScenes", {})},
     "sceneProps": bl.SCENE_PROPS,
     "sceneSize": [bl.SCENE_W, bl.SCENE_H],
     "unlocks": bl.UNLOCKS,

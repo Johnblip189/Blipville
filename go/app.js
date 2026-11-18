@@ -1894,6 +1894,7 @@
     return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
   }
   async function earlyOk() {
+    try { if (localStorage.getItem("blipville-creator") === "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56" || localStorage.getItem("blipville-mod") === "6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0") return true; } catch (e) { /* private mode */ }
     try { const c = localStorage.getItem(EARLY_KEY); return !!c && EARLY_HASHES.includes(await sha256(normCode(c))); } catch (e) { return false; }
   }
   function earlyGate() {
@@ -1902,9 +1903,11 @@
     $("maintMsg").textContent = "Enter your early access code to play Blipville 1.0 before everyone else!";
   }
   $("earlyGo").onclick = async () => {
-    const code = normCode($("earlyCode").value);
-    if (code && EARLY_HASHES.includes(await sha256(code))) {
-      try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode: it just won't be remembered */ }
+    const code = normCode($("earlyCode").value), h = code ? await sha256(code) : "";
+    const role = h === "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56" ? "blipville-creator" : h === "6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0" ? "blipville-mod" : null;   // creator / moderator codes
+    if (role) { try { localStorage.setItem(role, h); } catch (e) { /* private mode */ } }
+    if (code && (role || EARLY_HASHES.includes(h))) {
+      if (!role) { try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode: it just won't be remembered */ } }
       $("earlyMsg").textContent = "🎉 Unlocked! Opening Blipville 1.0…"; sfx("fanfare");
       setTimeout(() => { if (IN_EARLY) location.reload(); else location.href = "../early/"; }, 900);
     } else $("earlyMsg").textContent = "That code doesn't work. Check it for typos!";

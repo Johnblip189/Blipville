@@ -49,6 +49,10 @@ make Blipville what it is. This is the real thing.
 - 🎭 **The Puppet Box:** an old toy chest that creaks open by itself at night, with red eyes peeking out of the gap.
   Awaken it and it opens into the **Puppet Master**: a cracked porcelain mask with red tears, a little top hat and puppet
   strings (👻 Phantom + 🍬 Sweet). When it awakens in the Arena, the battle moves to **The Puppet Theater**.
+  Its **Pull the Strings** move brings 2 **Shadow** Night Shift Blips into your team (once per battle). Beat the new
+  rival, **The Puppet Master**, to unlock the Shadow colors for Robo Bear, Robo Bunny and Robo Hen.
+- 🎵 **Stage music:** The Puppet Theater, The Haunted Keep and The Dam each have their own tune that plays during the battle
+  (with sound on).
 - 👻 **Ghosts, a brand-new tier:** 24 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
   🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.

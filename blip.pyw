@@ -780,6 +780,7 @@ ROBOTS = {
     dict(name="Rusty",    o="#2a1206", b="#b8643a", l="#e8c0a0", a="#7a3a1a", r="#c8a070", s="#4a3424", k="#f2e6c8", n="#1a0a04", p="#e87a6a", e="#ff8a1f"),
     dict(name="Bubblegum", o="#5a1a3a", b="#ff9fcf", l="#fff0f8", a="#e85a9a", r="#ffffff", s="#a8708a", k="#ffffff", n="#5a1a3a", p="#ff5f9f", e="#5af0ff"),
     dict(name="Midnight", o="#06060c", b="#2a2a3a", l="#4a4a62", a="#16161f", r="#7a7a8a", s="#12121a", k="#d8d8e0", n="#06060c", p="#5a2a3a", e="#ff3b3b"),
+    dict(name="Shadow", unlock="puppet", o="#000000", b="#14101e", l="#2a2240", a="#0a0812", r="#b05aff", s="#0a0812", k="#e0d8ff", n="#000000", p="#3a1a4a", e="#f4f0ff"),
  ]),
  "Robo Bunny": dict(eyes=6, mouth=False, body=[
     "...oo......oo...",
@@ -798,6 +799,7 @@ ROBOTS = {
     dict(name="Rusty",    o="#2a1206", b="#c87a4a", l="#f0d0b0", a="#7a3a1a", r="#d8b080", s="#4a3424", k="#f2e6c8", n="#1a0a04", p="#e87a6a", e="#ffd23a"),
     dict(name="Sunset",   o="#3a1406", b="#ff9a4a", l="#fff0dc", a="#ffd06a", r="#ffffff", s="#a85a2a", k="#ffffff", n="#a82a2a", p="#ff6a5a", e="#3a1406"),
     dict(name="Midnight", o="#06060c", b="#2a2a3a", l="#4a4a62", a="#16161f", r="#7a7a8a", s="#12121a", k="#d8d8e0", n="#06060c", p="#5a2a3a", e="#ff3b3b"),
+    dict(name="Shadow", unlock="puppet", o="#000000", b="#14101e", l="#2a2240", a="#b05aff", r="#b05aff", s="#0a0812", k="#e0d8ff", n="#000000", p="#3a1a4a", e="#f4f0ff"),
  ]),
  "Robo Hen": dict(eyes=5, mouth=False, body=[
     "......o..o......",
@@ -816,6 +818,7 @@ ROBOTS = {
     dict(name="Rusty",    o="#2a1206", b="#b8643a", r="#d8b080", s="#4a3424", n="#e8c03a", d="#1a0a04", p="#e87a6a", e="#ffd23a", f="#e8c03a"),
     dict(name="Arcade",   o="#3a0a14", b="#e8303a", r="#ffffff", s="#8a1a24", n="#ffd23a", d="#3a0a14", p="#ff9f9f", e="#5af0ff", f="#ffd23a"),
     dict(name="Midnight", o="#06060c", b="#2a2a3a", r="#7a7a8a", s="#12121a", n="#5a4a2a", d="#06060c", p="#5a2a3a", e="#ff3b3b", f="#3a3a4a"),
+    dict(name="Shadow", unlock="puppet", o="#000000", b="#14101e", r="#b05aff", s="#0a0812", n="#b05aff", d="#000000", p="#3a1a4a", e="#f4f0ff", f="#2a2240"),
  ]),
 }
 ANIMALS.update(ROBOTS)
@@ -3904,10 +3907,10 @@ def event_on():
 
 
 def skin_locked(save, kind, idx):
-    """Event skins stay locked until you earn them."""
+    """Event skins (and special unlockable colors, like the Shadow crew) stay locked until you earn them."""
     cols = kind_colors(kind)
     col = cols[idx % len(cols)]
-    return bool(col.get("event")) and f"{kind}:{col['name']}" not in save.get("skins", [])
+    return bool(col.get("event") or col.get("unlock")) and f"{kind}:{col['name']}" not in save.get("skins", [])
 
 
 def kind_colors(kind):
@@ -5001,7 +5004,11 @@ class Blip:
                 self.wake()
 
     def next_color(self):
-        self.palette = (self.palette + 1) % len(kind_colors(self.kind))
+        n = len(kind_colors(self.kind))
+        for _ in range(n):                                # skip colors you haven't unlocked yet
+            self.palette = (self.palette + 1) % n
+            if not skin_locked(self.app.save, self.kind, self.palette):
+                break
         self.color_var.set(self.palette)
         self.say(f"{kind_colors(self.kind)[self.palette]['name'].lower()}!", 1.5)
         self.burst("heart", 2)
@@ -7152,6 +7159,11 @@ def effect_text(mult):
             else " · not very effective…" if mult < 0.9 else "")
 
 
+def shadow_color(kind):
+    """The index of a Night Shift Blip's Shadow color."""
+    return next((i for i, c in enumerate(kind_colors(kind)) if c["name"] == "Shadow"), 0)
+
+
 def _fnv(text):
     h = 2166136261
     for b in text.encode("utf-8"):
@@ -7184,6 +7196,11 @@ BIG_MOVES = {"spark": "Blaze Burst", "splash": "Tidal Wave", "sprout": "Bloom Bl
              "gust": "Cyclone", "frost": "Blizzard", "sweet": "Sugar Storm", "phantom": "Nightmare", "cosmic": "Supernova"}
 QUICK_MOVES = {"spark": "Flicker Dash", "splash": "Splish Dash", "sprout": "Seed Flick", "volt": "Zip Zap", "stone": "Pebble Flick",
                "gust": "Swoosh", "frost": "Frost Flick", "sweet": "Sprinkle Flick", "phantom": "Shadow Blink", "cosmic": "Star Dart"}
+# 🎭 Pull the Strings (Puppet Box and Puppet Master): once per battle, 2 Shadow Night Shift Blips join the back of your
+# team. They're puppets, so they're a bit weaker (SUMMON_HP of their HP, SUMMON_ATK of their attack).
+SUMMON_SLOT = {"Puppet Box": 0, "Puppet Master": 1}      # which move button it replaces
+SUMMON_KINDS = ["Robo Bear", "Robo Bunny", "Robo Hen"]
+SUMMON_HP, SUMMON_ATK = 0.6, 0.75
 MOVE_POWER, QUICK_POWER, BIG_POWER, BIG_ACC, SNACK_HEAL = 1.2, 0.8, 1.9, 0.75, 0.35
 
 
@@ -7194,7 +7211,10 @@ def _arena_moves(kind, st):
     second = ({"name": ARENA_MOVES[t2][(h >> 6) % 3], "type": t2, "power": MOVE_POWER, "acc": 1.0} if t2 else
               {"name": QUICK_MOVES[t1], "type": t1, "power": QUICK_POWER, "acc": 1.0, "fast": True})
     big = {"name": BIG_MOVES[t1], "type": t1, "power": BIG_POWER, "acc": BIG_ACC}
-    return [first, second, big, {"name": "Snack", "type": "", "power": 0, "acc": 1.0, "heal": SNACK_HEAL}]
+    moves = [first, second, big, {"name": "Snack", "type": "", "power": 0, "acc": 1.0, "heal": SNACK_HEAL}]
+    if kind in SUMMON_SLOT:                               # 🎭 the Puppet's strings: a summon instead of a normal move
+        moves[SUMMON_SLOT[kind]] = {"name": "Pull the Strings", "type": "phantom", "power": 0, "acc": 1.0, "summon": SUMMON_KINDS}
+    return moves
 
 
 ARENA_STATS = {k: _arena_stats(k) for k in VARIANTS}
@@ -7286,7 +7306,7 @@ ARENA_BGS["keep"] = {"name": "The Haunted Keep", "sky": ["#06060e", "#1e1a30"], 
     ["pix", "knight_salute", 90, 14, 1.4, "dim"], ["rect", "#14121e", 0, 31, 120, 9], ["rect", "#2a2440", 0, 31, 120, 1],
     ["pix", "knight_salute", -4, 15, 2], ["pix", "knight_salute", 100, 15, 2],
     ["rect", "#3a1a4a", 30, 34, 60, 6], ["rect", "#5a2a6a", 30, 34, 60, 1]]}
-RIVAL_BGS = {"Rival Rae": "meadow", "Rival Rex": "volcano", "Champion Coco": "beach", "Nyx the Night Queen": "graveyard", "Kaiju King Kai": "city"}
+RIVAL_BGS = {"The Puppet Master": "theater", "Rival Rae": "meadow", "Rival Rex": "volcano", "Champion Coco": "beach", "Nyx the Night Queen": "graveyard", "Kaiju King Kai": "city"}
 FRIEND_BGS = ["meadow", "beach", "volcano", "graveyard", "city", "cave"]
 
 
@@ -7327,7 +7347,11 @@ ARENA_RIVALS = [("Rival Rae", 5, [["Cat", 0, 0], ["Frog", 0, 0], ["Fox", 0, 0]])
                 ("Rival Rex", 10, [["Bigfoot", 0, 0], ["Shark", 0, 0], ["Phoenix", 0, 1]]),
                 ("Champion Coco", 20, [["Tidal Titan", 0, 0], ["Kitsune", 0, 1], ["Dragon", 0, 1]]),
                 ("Nyx the Night Queen", 25, [["Banshee", 0, 1], ["Phantom Cat", 0, 1], ["Ghost Captain", 0, 1]]),
-                ("Kaiju King Kai", 30, [["Magmaw", 0, 1], ["Gigabot", 0, 1], ["Tidal Titan", 0, 1]])]
+                ("Kaiju King Kai", 30, [["Magmaw", 0, 1], ["Gigabot", 0, 1], ["Tidal Titan", 0, 1]]),
+                ("The Puppet Master", 30, [["Robo Hen", 4, 0], ["Robo Bunny", 4, 0], ["Puppet Box", 0, 1]])]
+# 🎭 beat The Puppet Master to unlock the Shadow colors for the Night Shift crew
+PUPPET_RIVAL = "The Puppet Master"
+SHADOW_SKINS = [f"{k}:Shadow" for k in SUMMON_KINDS]
 
 
 def battle_code(name, team):
@@ -7364,6 +7388,7 @@ class Fighter:
         st = ARENA_STATS[self.kind]
         self.max_hp = self.hp = st["hp"]
         self.snacked = False                              # 🍪 one Snack per Blip per battle
+        self.atk_mult = 1.0
 
     @property
     def awakened(self):
@@ -7378,7 +7403,7 @@ class Fighter:
         self.stage += 1
         self.kind = AWAKEN_CHAIN[self.base][self.stage - 1]
         self.color %= len(kind_colors(self.kind))
-        self.max_hp = self.st["hp"]
+        self.max_hp = round(self.st["hp"] * (SUMMON_HP if self.atk_mult < 1 else 1))
         self.hp = min(self.max_hp, round(self.max_hp * frac + self.max_hp * 0.25))
 
 
@@ -7388,6 +7413,7 @@ class Battle:
         self.sides = [[Fighter(*f) for f in mine], [Fighter(*f) for f in theirs]]
         self.idx = [0, 0]
         self.awaken_left = [1, 1]
+        self.summoned = [False, False]                    # 🎭 Pull the Strings: once per side per battle
         self.bg = "meadow"
         self.rng = random.Random(seed)
         self.turn = 0
@@ -7423,7 +7449,8 @@ class Battle:
 
     def usable(self, side, i):
         f = self.active(side)
-        return bool(f) and not (self.moves(side)[i].get("heal") and (f.snacked or f.hp >= f.max_hp))
+        m = self.moves(side)[i] if f else {}
+        return bool(f) and not (m.get("heal") and (f.snacked or f.hp >= f.max_hp)) and not (m.get("summon") and self.summoned[side])
 
     def ai_move(self, side=1):
         """The computer's pick: snack when it's low, otherwise the move that should hurt most (with a little randomness)."""
@@ -7431,8 +7458,11 @@ class Battle:
         ms = self.moves(side)
         if f.hp < f.max_hp * 0.35 and self.usable(side, 3) and self.rng.random() < 0.6:
             return 3
+        pull = next((i for i, m in enumerate(ms) if m.get("summon")), None)
+        if pull is not None and self.usable(side, pull) and self.rng.random() < 0.7:
+            return pull
         score = [(m["power"] * m["acc"] * type_mult(m["type"], arena_types(foe.st)) * self.rng.uniform(0.8, 1.2), i)
-                 for i, m in enumerate(ms) if not m.get("heal")]
+                 for i, m in enumerate(ms) if not m.get("heal") and not m.get("summon")]
         return max(score)[1]
 
     def plan(self, my_move):
@@ -7466,6 +7496,18 @@ class Battle:
             att.hp += gain
             self.last = (side, -gain, 1.0)
             return f"🍪 {att.kind} had a snack and got {gain} HP back!"
+        if m.get("summon"):
+            if self.summoned[side]:
+                return None
+            self.summoned[side] = True
+            picks = self.rng.sample(m["summon"], 2)
+            for k in picks:
+                pup = Fighter(k, shadow_color(k), 0)
+                pup.atk_mult = SUMMON_ATK
+                pup.max_hp = pup.hp = round(pup.max_hp * SUMMON_HP)
+                self.sides[side].append(pup)
+            self.last = (side, 0, 1.0)
+            return f"🎭 {att.kind} pulls the strings… Shadow {picks[0]} and Shadow {picks[1]} join the team!"
         if self.rng.random() > m["acc"]:
             self.last = (side, 0, 1.0)
             return f"{att.kind} used {m['name']}… but it missed!"
@@ -7474,7 +7516,7 @@ class Battle:
             return f"{att.kind} used {m['name']}… but it passed right through {dfn.kind}! 👻"
         mult = type_mult(m["type"], arena_types(dfn.st))
         crit = self.rng.random() < (COSMIC_CRIT if "cosmic" in arena_types(att.st) else 0.1)
-        dmg = max(1, round(att.st["atk"] * m["power"] * mult * self.rng.uniform(0.85, 1.15) * (1.5 if crit else 1)))
+        dmg = max(1, round(att.st["atk"] * att.atk_mult * m["power"] * mult * self.rng.uniform(0.85, 1.15) * (1.5 if crit else 1)))
         dfn.hp = max(0, dfn.hp - dmg)
         self.last = (side, dmg, mult)
         line = f"{att.kind} used {m['name']}! {dmg} damage" + effect_text(mult) + (" · critical!" if crit else "")
@@ -7513,6 +7555,8 @@ class Arena:
         self.c.pack(padx=6, pady=6)
         self.c.bind("<Button-1>", self.on_click)
         self.buttons, self.battle, self.log, self.after_id, self.queue = [], None, [], None, []
+        self.music = Music(app)
+        self.win.protocol("WM_DELETE_WINDOW", self.close)
         self.team = [p for p in app.pets][:3]
         self.lobby()
 
@@ -7536,8 +7580,15 @@ class Arena:
     def my_team(self):
         return [self.team_entry(p) for p in self.team if p in self.app.pets]
 
+    def close(self):
+        self.music.stop()
+        if self.after_id:
+            self.win.after_cancel(self.after_id)
+        self.win.destroy()
+
     # ---- the lobby
     def lobby(self):
+        self.music.stop()
         if self.after_id:
             self.win.after_cancel(self.after_id)
             self.after_id = None
@@ -7694,6 +7745,12 @@ class Arena:
             if self.foe in [r[0] for r in ARENA_RIVALS] and self.foe not in self.app.save.setdefault("rivals_beaten", []):
                 self.app.save["rivals_beaten"].append(self.foe)
             reward = self.reward
+            if self.foe == PUPPET_RIVAL:
+                skins = self.app.save.setdefault("skins", [])
+                new = [sk for sk in SHADOW_SKINS if sk not in skins]
+                skins.extend(new)
+                if new:
+                    self.log.append("🎭 The strings are cut! Shadow colors unlocked for Robo Bear, Robo Bunny and Robo Hen.")
             if any(f.base == "Blipmaker" for f in self.battle.sides[1]):          # beat the creator's boss team!
                 reward += CREATOR_BOSS_REWARD
                 self.app.save["beat_creator"] = True
@@ -7721,6 +7778,7 @@ class Arena:
 
     def draw_battle(self):
         c, b = self.c, self.battle
+        self.music.play(b.bg if b.winner is None and b.bg in ARENA_MUSIC else None)   # 🎵 special stages have music
         c.delete("all")
         self.buttons = []
         draw_arena_bg(c, b.bg, self.CW, 2, self.CW / 120, 262)
@@ -8231,6 +8289,157 @@ def _synth(name):
     header = b"RIFF" + struct.pack("<I", 36 + len(frames)) + b"WAVEfmt " + struct.pack("<IHHIIHH", 16, 1, 1, rate, rate * 2, 2, 16)
     return header + b"data" + struct.pack("<I", len(frames)) + frames
 
+
+# 🎵 Music for the special stages: it plays while a battle is on one of these backgrounds (with sound on), on both the
+# Windows app and the website. Original little tunes made for Blipville. Each part is [note, beats]; "-" is a rest.
+ARENA_MUSIC = {
+ "theater": {"name": "Music Box Waltz", "bpm": 138, "lead": "bell", "low": "tri",
+   "melody": [["E5", 1], ["A5", 1], ["C6", 1], ["B5", 1], ["A5", 1], ["E5", 1], ["F5", 1], ["E5", 1], ["D#5", 1], ["E5", 3],
+              ["E5", 1], ["A5", 1], ["C6", 1], ["D6", 1], ["C6", 1], ["B5", 1], ["A5", 1], ["G#5", 1], ["B5", 1], ["A5", 3]],
+   "bass": [["A2", 1], ["E3", 1], ["A3", 1], ["A2", 1], ["E3", 1], ["A3", 1], ["D3", 1], ["F3", 1], ["A3", 1], ["E2", 1], ["G#3", 1], ["B3", 1],
+            ["A2", 1], ["E3", 1], ["A3", 1], ["F2", 1], ["A3", 1], ["C4", 1], ["E2", 1], ["G#3", 1], ["B3", 1], ["A2", 1], ["E3", 1], ["A3", 1]]},
+ "keep": {"name": "March of the Phantom Guard", "bpm": 112, "lead": "square", "low": "tri",
+   "melody": [["D5", 1], ["D5", 0.5], ["D5", 0.5], ["F5", 1], ["A5", 1], ["G5", 1], ["F5", 0.5], ["E5", 0.5], ["F5", 2],
+              ["A5", 1], ["A5", 0.5], ["A5", 0.5], ["A#5", 1], ["A5", 1], ["G5", 1], ["E5", 1], ["D5", 2],
+              ["D5", 1], ["F5", 1], ["A5", 1], ["D6", 1], ["C6", 1], ["A#5", 0.5], ["A5", 0.5], ["G5", 2],
+              ["F5", 1], ["E5", 1], ["D5", 1], ["C#5", 1], ["D5", 3], ["-", 1]],
+   "bass": [["D3", 1], ["A2", 1], ["D3", 1], ["A2", 1], ["A#2", 1], ["F3", 1], ["A#2", 1], ["F3", 1], ["F2", 1], ["C3", 1], ["F2", 1], ["C3", 1],
+            ["G2", 1], ["A2", 1], ["D3", 1], ["A2", 1], ["D3", 1], ["A2", 1], ["D3", 1], ["A2", 1], ["C3", 1], ["G2", 1], ["C3", 1], ["G2", 1],
+            ["A2", 1], ["E3", 1], ["A2", 1], ["E3", 1], ["D3", 1], ["A2", 1], ["D2", 2]]},
+ "dam": {"name": "Deep Water Rising", "bpm": 76, "lead": "tri", "low": "tri",
+   "melody": [["E4", 2], ["G4", 2], ["F#4", 2], ["D#4", 2], ["E4", 3], ["-", 1], ["-", 2], ["B3", 2],
+              ["E4", 2], ["B4", 2], ["C5", 2], ["B4", 1], ["A4", 1], ["G4", 2], ["F#4", 2], ["E4", 4]],
+   "bass": [["E2", 4], ["B1", 4], ["C2", 4], ["B1", 4], ["E2", 4], ["A1", 4], ["B1", 4], ["E2", 4]]},
+}
+
+
+def _note_hz(name):
+    if name == "-":
+        return 0.0
+    names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+    n, octave = name[:-1], int(name[-1])
+    return 440.0 * 2 ** ((names.index(n) + 12 * (octave + 1) - 69) / 12)
+
+
+def _music_wav(name):
+    """One loop of a stage's tune as a WAV file (bytes)."""
+    import array, io, wave
+    song, rate = ARENA_MUSIC[name], 22050
+    beat = 60 / song["bpm"]
+    total = int(rate * beat * sum(b for _, b in song["melody"]))
+    mix = array.array("f", [0.0]) * total
+
+    def voice(part, shape, vol):
+        pos = 0
+        for note, beats in part:
+            n, f = int(rate * beat * beats), _note_hz(note)
+            if f:
+                phase, step = 0.0, f / rate
+                for i in range(min(n, total - pos)):
+                    phase = (phase + step) % 1.0
+                    if shape == "square":
+                        v = 1.0 if phase < 0.5 else -1.0
+                        env = max(0.0, 1 - i / n * 0.6) * 0.5
+                    elif shape == "bell":                              # music box: bright, quickly fading
+                        v = math.sin(2 * math.pi * phase) + 0.3 * math.sin(4 * math.pi * phase)
+                        env = math.exp(-5 * i / rate)
+                    else:                                              # triangle
+                        v = 4 * abs(phase - 0.5) - 1
+                        env = 1.0
+                    env *= min(1.0, i / 80, (n - i) / 300)             # no clicks
+                    mix[pos + i] += v * env * vol
+            pos += n
+
+    voice(song["melody"], song["lead"], 0.22)
+    voice(song["bass"], song["low"], 0.18)
+    pcm = array.array("h", (max(-32767, min(32767, int(x * 32767))) for x in mix))
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(rate)
+        w.writeframes(pcm.tobytes())
+    return buf.getvalue()
+
+
+class Music:
+    """Loops one stage tune at a time, alongside the sound effects (Windows: MCI; Mac/Linux: a player process)."""
+    def __init__(self, app):
+        self.app, self.name, self.proc, self.after_id = app, None, None, None
+
+    def path(self, name):
+        p = os.path.join(os.path.dirname(save_path()), "music-v1", name + ".wav")
+        if not os.path.isfile(p):
+            try:
+                os.makedirs(os.path.dirname(p), exist_ok=True)
+                with open(p, "wb") as f:
+                    f.write(_music_wav(name))
+            except OSError:
+                return None
+        return p
+
+    def _mci(self, cmd):
+        import ctypes
+        buf = ctypes.create_unicode_buffer(64)
+        ctypes.windll.winmm.mciSendStringW(cmd, buf, 64, 0)
+        return buf.value
+
+    def play(self, name):
+        if name == self.name:
+            return
+        self.stop()
+        if not name or name not in ARENA_MUSIC or not self.app.sound_on.get():
+            return
+        p = self.path(name)
+        if not p:
+            return
+        self.name = name
+        try:
+            if sys.platform == "win32":
+                self._mci(f'open "{p}" type waveaudio alias blipmusic')
+                self._mci("play blipmusic from 0")
+            else:
+                self._spawn(p)
+        except Exception:  # noqa: BLE001  (no audio: stay quiet)
+            self.name = None
+            return
+        self.after_id = self.app.root.after(500, self._loop)
+
+    def _spawn(self, p):
+        import shutil
+        player = "afplay" if sys.platform == "darwin" else (shutil.which("paplay") or shutil.which("aplay"))
+        self.proc = subprocess.Popen([player, p], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) if player else None
+
+    def _loop(self):
+        self.after_id = None
+        if not self.name:
+            return
+        if not self.app.sound_on.get():
+            self.stop()
+            return
+        try:
+            if sys.platform == "win32":
+                if self._mci("status blipmusic mode") != "playing":
+                    self._mci("play blipmusic from 0")
+            elif self.proc is None or self.proc.poll() is not None:
+                self._spawn(self.path(self.name))
+        except Exception:  # noqa: BLE001
+            pass
+        self.after_id = self.app.root.after(400, self._loop)
+
+    def stop(self):
+        if self.after_id:
+            self.app.root.after_cancel(self.after_id)
+            self.after_id = None
+        if self.name:
+            try:
+                if sys.platform == "win32":
+                    self._mci("close blipmusic")
+                elif self.proc and self.proc.poll() is None:
+                    self.proc.terminate()
+            except Exception:  # noqa: BLE001
+                pass
+        self.name, self.proc = None, None
 
 SOUNDS = ("boop", "pop", "munch", "whoosh", "thud", "coin", "crack", "fanfare", "zap", "boing")
 

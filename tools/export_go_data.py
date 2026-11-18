@@ -39,7 +39,7 @@ data = {
                     "kinds": bl.CATCH_KINDS},
     "bond": {"levels": bl.BOND_LEVELS, "titles": bl.BOND_TITLES, "gain": bl.BOND_GAIN},
     "questRewards": {"hearts": getattr(bl, "QUEST_HEARTS", 10), "points": getattr(bl, "QUEST_POINTS", 5), "bonus": getattr(bl, "QUEST_BONUS", 5)},
-    "arenaBgs": bl.ARENA_BGS, "finalFormBgs": bl.FINAL_FORM_BGS, "phantomDodge": bl.PHANTOM_DODGE, "cosmicCrit": bl.COSMIC_CRIT, "arenaPix": bl.ARENA_PIX, "rivalBgs": bl.RIVAL_BGS, "friendBgs": bl.FRIEND_BGS,
+    "arenaBgs": bl.ARENA_BGS, "finalFormBgs": bl.FINAL_FORM_BGS, "phantomDodge": bl.PHANTOM_DODGE, "cosmicCrit": bl.COSMIC_CRIT, "arenaMusic": bl.ARENA_MUSIC, "summon": {"hp": bl.SUMMON_HP, "atk": bl.SUMMON_ATK}, "puppetRival": bl.PUPPET_RIVAL, "shadowSkins": bl.SHADOW_SKINS, "arenaPix": bl.ARENA_PIX, "rivalBgs": bl.RIVAL_BGS, "friendBgs": bl.FRIEND_BGS,
         "awakenForm": bl.AWAKEN_FORM, "awakenChain": bl.AWAKEN_CHAIN, "stageCosts": bl.STAGE_COSTS,
     "crystalCost": bl.CRYSTAL_COST,
     "arena": {"stats": bl.ARENA_STATS, "types": bl.ARENA_TYPES, "beats": bl.ARENA_BEATS,

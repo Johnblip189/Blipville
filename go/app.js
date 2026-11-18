@@ -1101,7 +1101,7 @@
   function fighter([kind, color, canAw]) {
     const base = AWAKEN_BASE[kind] || kind, st = AR.stats[base];
     const lvl = Math.min(+canAw || 0, (AWAKEN_CHAIN[base] || []).length);
-    return { base, kind: base, color: +color, lvl, stage: 0, canAw: lvl > 0, hp: st.hp, max: st.hp, aw: false, snacked: false };
+    return { base, kind: base, color: +color, lvl, stage: 0, canAw: lvl > 0, hp: st.hp, max: st.hp, aw: false, snacked: false, atkMult: 1 };
   }
   const fst = (f) => AR.stats[f.kind];
   // backgrounds: little scenes 120 x 40 units, the same as the desktop app's (from blip.pyw)
@@ -1127,7 +1127,7 @@
     }
   }
   function newBattle(mine, theirs, foe, reward) {
-    return { sides: [mine.map(fighter), theirs.map(fighter)], idx: [0, 0], awLeft: [1, 1], turn: 0, winner: null, last: null, foe, reward,
+    return { sides: [mine.map(fighter), theirs.map(fighter)], idx: [0, 0], awLeft: [1, 1], summoned: [false, false], turn: 0, winner: null, last: null, foe, reward,
              bg: arenaBgFor(foe), queue: [], log: [`⚔️ ${foe} wants to battle! Pick a move.`] };
   }
   const active = (b, s) => b.sides[s][b.idx[s]] || null;
@@ -1137,19 +1137,21 @@
     if (!canAwaken(b, s)) return null;
     b.awLeft[s] = 0; const f = active(b, s), frac = f.hp / f.max, was = f.kind;
     f.stage += 1; f.kind = AWAKEN_CHAIN[f.base][f.stage - 1]; f.aw = true; f.color %= KINDS[f.kind].colors.length;
-    f.max = fst(f).hp; f.hp = Math.min(f.max, Math.round(f.max * frac + f.max * 0.25));
+    f.max = Math.round(fst(f).hp * (f.atkMult < 1 ? (D.summon || {}).hp || 0.6 : 1)); f.hp = Math.min(f.max, Math.round(f.max * frac + f.max * 0.25));
     const fin = (D.finalFormBgs || {})[f.kind];
     if (fin && b.bg !== fin[0]) { b.bg = fin[0]; return `✨ ${was} awakens into ${f.kind}! ${fin[1]}`; }
     return `✨ ${was} awakens into ${f.kind}!`;
   }
   // ---- turns: each round you pick a move, the other side picks one, and the faster one goes first (same rules as blip.pyw)
   const movesOf = (b, s) => { const f = active(b, s); return f ? fst(f).moves : []; };
-  const usable = (b, s, i) => { const f = active(b, s), m = movesOf(b, s)[i]; return !!(f && m && !(m.heal && (f.snacked || f.hp >= f.max))); };
+  const usable = (b, s, i) => { const f = active(b, s), m = movesOf(b, s)[i]; return !!(f && m && !(m.heal && (f.snacked || f.hp >= f.max)) && !(m.summon && b.summoned[s])); };
   function aiMove(b, s) {
     const f = active(b, s), foe = active(b, 1 - s), ms = movesOf(b, s);
     if (f.hp < f.max * 0.35 && usable(b, s, 3) && Math.random() < 0.6) return 3;
+    const pull = ms.findIndex((m) => m.summon);
+    if (pull >= 0 && usable(b, s, pull) && Math.random() < 0.7) return pull;
     let best = 0, top = -1;
-    ms.forEach((m, i) => { if (m.heal) return; const v = m.power * m.acc * typeMult(m.type, typesOf(fst(foe))) * rnd(0.8, 1.2); if (v > top) { top = v; best = i; } });
+    ms.forEach((m, i) => { if (m.heal || m.summon) return; const v = m.power * m.acc * typeMult(m.type, typesOf(fst(foe))) * rnd(0.8, 1.2); if (v > top) { top = v; best = i; } });
     return best;
   }
   function planRound(b, mine) {
@@ -1171,13 +1173,24 @@
       att.snacked = true; const gain = Math.min(att.max - att.hp, Math.round(att.max * m.heal)); att.hp += gain;
       b.last = [side, -gain, 1]; return `🍪 ${att.kind} had a snack and got ${gain} HP back!`;
     }
+    if (m.summon) {                                         // 🎭 Pull the Strings: 2 Shadow Night Shift Blips join the team
+      if (b.summoned[side]) return null;
+      b.summoned[side] = true;
+      const picks = m.summon.slice().sort(() => Math.random() - 0.5).slice(0, 2), S = D.summon || { hp: 0.6, atk: 0.75 };
+      for (const k of picks) {
+        const shadow = Math.max(0, KINDS[k].colors.findIndex((c) => c.name === "Shadow"));
+        const pup = fighter([k, shadow, 0]); pup.atkMult = S.atk; pup.max = pup.hp = Math.round(pup.max * S.hp);
+        b.sides[side].push(pup);
+      }
+      b.last = [side, 0, 1]; return `🎭 ${att.kind} pulls the strings… Shadow ${picks[0]} and Shadow ${picks[1]} join the team!`;
+    }
     if (Math.random() > m.acc) { b.last = [side, 0, 1]; return `${att.kind} used ${m.name}… but it missed!`; }
     if (typesOf(fst(dfn)).includes("phantom") && Math.random() < (D.phantomDodge || 0.2)) {   // 👻 hits can pass right through a Phantom
       b.last = [side, 0, 1]; return `${att.kind} used ${m.name}… but it passed right through ${dfn.kind}! 👻`;
     }
     const mult = typeMult(m.type, typesOf(fst(dfn)));
     const crit = Math.random() < (typesOf(fst(att)).includes("cosmic") ? D.cosmicCrit || 0.25 : 0.1);
-    const dmg = Math.max(1, Math.round(fst(att).atk * m.power * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
+    const dmg = Math.max(1, Math.round(fst(att).atk * (att.atkMult || 1) * m.power * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
     dfn.hp = Math.max(0, dfn.hp - dmg); b.last = [side, dmg, mult];
     let line = `${att.kind} used ${m.name}! ${dmg} damage` + effectText(mult) + (crit ? " · critical!" : "");
     if (dfn.hp === 0) {
@@ -1260,13 +1273,50 @@
       bump("arena_wins"); questTick("arena_win");
       if (b.sides[1].some((f) => f.base === "Blipmaker")) { b.reward = (b.reward || 0) + ((D.creator || {}).bossReward || 50); save.beatCreator = true; b.log.push("You beat the Blipmaker! 👑"); } arenaTeam.forEach((q) => pets.includes(q) && bondUp(q, "arena"));
       if (AR.rivals.some((r) => r.name === b.foe) && !save.rivalsBeaten.includes(b.foe)) save.rivalsBeaten.push(b.foe);
+      if (b.foe === D.puppetRival) {                          // 🎭 Shadow colors for the Night Shift crew
+        save.skins = save.skins || []; const fresh = (D.shadowSkins || []).filter((sk) => !save.skins.includes(sk));
+        if (fresh.length) { save.skins.push(...fresh); b.log.push("🎭 The strings are cut! Shadow colors unlocked for Robo Bear, Robo Bunny and Robo Hen."); }
+      }
       reward(pets[0], b.reward); b.log.push(`🏆 You win! +${b.reward} 💖`); sfx("fanfare"); vibrate([30, 40, 30]);
       const w = stat("arena_wins"); $("arenaWins").textContent = `🏆 ${w} win${w === 1 ? "" : "s"}`;
     } else b.log.push("💤 Your team needs a nap… try again!");
     persist(true);
   }
+  // 🎵 music for the special stages (same tunes as the Windows app): a little note scheduler on the sound-effects audio
+  const music = { name: null, timer: null, next: 0, pos: [0, 0], at: [0, 0] };
+  const NOTE = (n) => { if (n === "-") return 0; const i = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"].indexOf(n.slice(0, -1)); return 440 * 2 ** ((i + 12 * (+n.slice(-1) + 1) - 69) / 12); };
+  function musicNote(a, out, f, t, dur, shape, vol) {
+    if (!f) return;
+    const o = a.createOscillator(), g = a.createGain();
+    o.type = shape === "square" ? "square" : shape === "bell" ? "sine" : "triangle"; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol * (shape === "square" ? 0.5 : 1), t + 0.01);
+    if (shape === "bell") g.gain.exponentialRampToValueAtTime(0.0001, t + Math.min(dur, 1.2));
+    else { g.gain.setValueAtTime(vol * (shape === "square" ? 0.4 : 1), t + Math.max(0.02, dur - 0.04)); g.gain.linearRampToValueAtTime(0.0001, t + dur); }
+    o.connect(g).connect(out); o.start(t); o.stop(t + dur + 0.05);
+  }
+  function stopMusic() { clearInterval(music.timer); music.timer = null; if (music.out) { try { music.out.disconnect(); } catch (e) { /* gone */ } } music.name = null; }
+  function playMusic(name) {
+    if (name === music.name) return;
+    stopMusic();
+    const song = (D.arenaMusic || {})[name]; if (!song || !save.sound) return;
+    const a = audio(); if (!a) return;
+    music.name = name; music.out = a.createGain(); music.out.gain.value = 0.35; music.out.connect(a.destination);
+    const beat = 60 / song.bpm, parts = [[song.melody, song.lead, 0.22], [song.bass, song.low, 0.18]];
+    music.pos = [0, 0]; music.at = [a.currentTime + 0.1, a.currentTime + 0.1];
+    music.timer = setInterval(() => {
+      if (!save.sound || $("arenaSheet").hidden || !arenaBattle || arenaBattle.winner !== null || (D.arenaMusic || {})[arenaBattle.bg] !== song) { stopMusic(); return; }
+      parts.forEach(([part, shape, vol], v) => {
+        while (music.at[v] < a.currentTime + 0.6) {
+          const [n, beats] = part[music.pos[v] % part.length];
+          musicNote(a, music.out, NOTE(n), music.at[v], beats * beat, shape, vol);
+          music.at[v] += beats * beat; music.pos[v]++;
+        }
+      });
+    }, 150);
+  }
   function drawBattle() {
     const b = arenaBattle, cv = $("arenaCanvas"), c = cv.getContext("2d");
+    playMusic(b.winner === null ? b.bg : null);
     c.clearRect(0, 0, cv.width, cv.height); c.imageSmoothingEnabled = false;
     drawArenaBg(c, b.bg, cv.width, cv.height);
     [0, 1].forEach((side) => {
@@ -1295,6 +1345,7 @@
         const bt = doc().createElement("button"); bt.className = "move m" + i; bt.disabled = busy || !usable(b, 0, i);
         const top = doc().createElement("b"), info = doc().createElement("small");
         if (m.heal) { top.textContent = "🍪 Snack"; info.textContent = me.snacked ? "used" : `heal ${Math.round(m.heal * 100)}% · once`; }
+        else if (m.summon) { top.append(pxImg("phantom"), " Pull the Strings"); info.textContent = b.summoned[0] ? "used" : "2 Shadow puppets join · once"; }
         else {
           top.append(pxImg(m.type), ` ${m.name}`);
           const mult = typeMult(m.type, typesOf(fst(foe)));
@@ -1742,7 +1793,7 @@
   const eventOn = () => EVENT.start <= todayStr() && todayStr() <= EVENT.until && !eventPaused();
   function skinLocked(kind, i) {
     const cols = KINDS[kind].colors, col = cols[i % cols.length];
-    return !!col.event && !(save.skins || []).includes(`${kind}:${col.name}`);
+    return !!(col.event || col.unlock) && !(save.skins || []).includes(`${kind}:${col.name}`);
   }
   const eventPts = () => +((save.eventPoints || {})[EVENT.id] || 0);
   function eventPoint(p, n, anyKind = false) {
@@ -2241,7 +2292,7 @@
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
   window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
-                         nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
+                         nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;
                            plays.push(type === "ball" ? { type, pets: [a, b], from: a, to: b, t0: t, throws: 0, n: 4 }

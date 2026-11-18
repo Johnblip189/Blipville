@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=25">
+<link rel="stylesheet" href="style.css?v=26">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -49,11 +49,16 @@
 <div id="maint" hidden>
   <div class="maintCard">
     <img src="icons/maintenance.png" alt="Blips putting traffic cones around the Blipville server">
-    <h2>Blipville is under maintenance 🔧</h2>
+    <h2 id="maintTitle">Blipville is under maintenance 🔧</h2>
     <p id="maintMsg">We're fixing things up. Back soon!</p>
     <p class="gold">Your pets are safe. They're saved on this device.</p>
     <a id="maintLink" class="maintLink" hidden target="_blank" rel="noopener"></a>
     <button id="maintRetry">Check again</button>
+    <div class="earlyBox">
+      <div class="small">🎟️ Got an early access code?</div>
+      <div class="earlyRow"><input id="earlyCode" placeholder="BLIP-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="20"><button id="earlyGo">Unlock</button></div>
+      <div id="earlyMsg" class="small gold"></div>
+    </div>
   </div>
 </div>
 
@@ -241,7 +246,7 @@
   </div>
 </div>
 
-<script src="data.js?v=25"></script>
-<script src="app.js?v=25"></script>
+<script src="data.js?v=26"></script>
+<script src="app.js?v=26"></script>
 </body>
 </html>

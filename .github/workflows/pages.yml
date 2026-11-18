@@ -29,6 +29,8 @@ jobs:
         run: |
           mkdir _site
           for f in index.html status.json .nojekyll go docs assets; do [ -e "$f" ] && cp -r "$f" _site/; done
+          # 🎟️ early access: the upcoming version's web app (from the release branch), behind early access codes
+          git fetch -q --depth=1 origin release-1.0 && mkdir -p _site/early && git archive FETCH_HEAD go | tar -x -C /tmp && cp -r /tmp/go/* _site/early/ || echo "no release branch: no early access"
           ls -la _site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

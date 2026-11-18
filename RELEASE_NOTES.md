@@ -58,6 +58,9 @@ make Blipville what it is. This is the real thing.
   wind-up toy with a brass key in its head, sometimes turns up in the old workshop. Both join Pull the Strings and get
   Shadow colors from The Puppet Master. The hare's 🧪 **Prime** color shows it in its prime: polished gold, both ears
   up, flexing in a red showman's cape and bow tie.
+- 🎨 **Classic crew colors:** each Night Shift robo has a 🍬 Classic color with its own drawing for its job: a
+  watchman Robo Bear in a cap and badge, a lights-crew Robo Bunny with a bulb and battery meter, a diner-cook Robo Hen
+  ("Sunny") in a chef hat and apron, and a racer Robo Fox with goggles and a lightning bolt.
 - 🍬🧪 **Color Candy and Color Potions:** changing a Blip's color now takes a treat. A 🍬 Color Candy (10 💖) for
   everyday colors, a 🧪 Color Potion (40 💖) for the rare and special ones (Midnight, Black Light, Shadow, event skins…).
 - 🎭 **Don't feel like playing Night Shift?** Keep a **Puppet Master** in your town and the Night Shift robos

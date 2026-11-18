@@ -170,6 +170,9 @@ ANIMALS = {
     dict(name="Red",    o="#3a1606", b="#f07a2a", l="#fff4ea", a="#2a1208", n="#1a0a04", e="#1a0a04"),
     dict(name="Arctic", o="#5a6170", b="#eef2f7", l="#ffffff", a="#9aa3b2", n="#2a2e36", e="#2a2e36"),
     dict(name="Silver", o="#1c1e24", b="#5e6470", l="#e6e8ec", a="#22252c", n="#111216", e="#f2c14e"),
+    dict(name="Ember", event="spiky-week", o="#2a0604", b="#e8361a", l="#ffd08a", a="#3a0a04", n="#1a0402", e="#ffd23a"),
+    dict(name="Aurora", event="spiky-week", o="#14284a", b="#8ae0d0", l="#ffffff", a="#5a8aff", n="#14284a", e="#14284a"),
+    dict(name="Maple", event="spiky-week", o="#3a1404", b="#c8501a", l="#ffe0b0", a="#6a2a0a", n="#2a0e04", e="#2a0e04"),
  ]),
  "Bear": dict(eyes=5, body=[
     ".ooo........ooo.",
@@ -469,6 +472,17 @@ ANIMALS.update({
     dict(name="Brown",  o="#2a1a0e", s="#6a4a2e", b="#f2dcc0", p="#ff9f9f", n="#1a0e06", e="#120a04"),
     dict(name="Albino", o="#7a6a6a", s="#f2e6d8", b="#ffffff", p="#ffb0c0", n="#ff8fa3", e="#d81e3a"),
     dict(name="Cinnamon", o="#3a1a08", s="#b8682a", b="#fff0dc", p="#ff9f8a", n="#3a1a08", e="#1a0a02"),
+    dict(name="Pinecone", event="spiky-week", o="#2a1406", s="#7a4a1a", b="#e8c890", p="#ff9f7a", n="#2a1406", e="#1a0a02"),
+    dict(name="Midnight", event="spiky-week", o="#0e0a24", s="#3a2a6a", b="#d8d0ff", p="#ff9ad8", n="#0e0a24", e="#0e0a24"),
+    dict(name="Candy Floss", event="spiky-week", o="#6a2a4a", s="#ff9ad8", b="#fff0f8", p="#ff6ab0", n="#6a2a4a", e="#3a0a24"),
+ ]),
+ "Echidna": dict(eyes=5, body=["t.t..t.tt.t..t.t", "ss.tss.ss.sst.ss", "ssssssssssssssss", "sssobbbbbbbbosss", "ssobbbbbbbbbboss", "sobbbbbbbbbbbbos",
+                              "sobbbbbbbbbbbbos", "sobpbbbnnbbbpbos", "sobbbbbnnbbbbbos", "ssobbbbnnbbbboss", ".ssooooonnoooss.", "..ssssssssssss.."], colors=[
+    dict(name="Earthy", o="#2a1a0e", s="#3a2a1a", t="#f0e0c0", b="#b8865a", p="#e8907a", n="#2a1a12", e="#0a0604"),
+    dict(name="Sandstone", o="#3a2210", s="#8a5a3a", t="#fff4e0", b="#e8c89a", p="#ff9f8a", n="#3a2210", e="#1a0e06"),
+    dict(name="Night", o="#0a0a14", s="#1a1a2a", t="#c8d0ff", b="#6a6a8a", p="#c8a0d8", n="#0a0a14", e="#e8e8ff"),
+    dict(name="Opal", event="spiky-week", o="#1a3a4a", s="#5ad8c8", t="#ffffff", b="#e8f4ff", p="#ffb0d8", n="#1a3a4a", e="#1a3a4a"),
+    dict(name="Golden Spines", event="spiky-week", o="#3a2404", s="#c8901a", t="#fff27a", b="#fff0c8", p="#ff9f7a", n="#3a2404", e="#2a1404"),
  ]),
  "Duck": dict(eyes=5, mouth=False, body=[
     "....oooooooo....",
@@ -828,6 +842,7 @@ ANIMAL_TRAITS = {   # how each animal moves + what it says
     "Lion":    ("walk", ["ROAR. (hello)", "i'm the king of this desktop", "*majestic mane flip*", "rawr"]),
     "Tiger":   ("walk", ["*pounces*", "grr!", "my stripes are unique", "stealth mode"]),
     "Bat":     ("flutter", ["*echolocates*", "is it night yet?", "squeak!", "hanging out"]),
+    "Echidna": ("walk", ["*snuffle snuffle*", "i lay eggs AND i'm a mammal", "spiky but sweet", "ants? where?!", "my snout is my best feature"]),
     "Hedgehog": ("walk", ["*curls into a ball*", "careful, i'm spiky", "huff huff", "gotta go fast"]),
     "Duck":    ("walk", ["quack!", "quack quack", "*waddles*", "got any bread?"]),
     "Seal":    ("walk", ["arf arf!", "*claps flippers*", "where's the ocean?", "*boops*"]),
@@ -860,7 +875,7 @@ ANIMAL_TRAITS = {   # how each animal moves + what it says
     "Robo Bunny": ("hop",  ["*boing* *clank*", "battery at 12%...", "who turned off the lights?", "*ears twitch mechanically*"]),
     "Robo Hen":   ("walk", ["*mechanical clucking*", "bawk. boop.", "my jaw squeaks", "still on the night shift"]),
 }
-SPEED = {"Sloth": 0.35, "Seal": 0.7, "Hedgehog": 1.3, "Mouse": 1.4, "Hamster": 1.2, "Cow": 0.8, "Koala": 0.6,
+SPEED = {"Echidna": 0.9, "Sloth": 0.35, "Seal": 0.7, "Hedgehog": 1.3, "Mouse": 1.4, "Hamster": 1.2, "Cow": 0.8, "Koala": 0.6,
          "Capybara": 0.6, "Elephant": 0.7, "Hippo": 0.7, "Ladybug": 0.5, "Squirrel": 1.4, "Horse": 1.4, "Zebra": 1.4,
          "Wolf": 1.3, "Jellyfish": 0.5, "Whale": 0.6}
 for _name, _a in ANIMALS.items():
@@ -3690,6 +3705,26 @@ def is_night():
     return h >= 22 or h < 6
 
 
+# Events 🎉: for a few days, caring for certain Blips earns event points, and every so many points unlocks an event skin
+# (a color marked event=<id>). Skins you earn stay yours after the event; the rest stay locked.
+EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "2026-11-18", "until": "2026-11-29",
+         "until_text": "Sunday, November 29", "kinds": ["Hedgehog", "Fox", "Echidna"], "per_skin": 10,
+         "rewards": [["Hedgehog", "Pinecone"], ["Fox", "Ember"], ["Echidna", "Opal"], ["Hedgehog", "Midnight"],
+                     ["Fox", "Aurora"], ["Hedgehog", "Candy Floss"], ["Fox", "Maple"], ["Echidna", "Golden Spines"]]}
+
+
+def event_on():
+    today = time.strftime("%Y-%m-%d")
+    return EVENT["start"] <= today <= EVENT["until"]
+
+
+def skin_locked(save, kind, idx):
+    """Event skins stay locked until you earn them."""
+    cols = kind_colors(kind)
+    col = cols[idx % len(cols)]
+    return bool(col.get("event")) and f"{kind}:{col['name']}" not in save.get("skins", [])
+
+
 def kind_colors(kind):
     """Color choices for a kind: animals have their own, critters can use any fun color."""
     return VARIANTS[kind].get("colors") or PALETTES
@@ -4506,6 +4541,8 @@ class Blip:
         upd.add_checkbutton(label="Update automatically (asks first)", variable=app.updater.auto, command=app.updater.set_auto)
         upd.add_command(label=f"You have {version_label()}", state="disabled")
         self.menu.add_cascade(label="🔄 Updates", menu=upd)
+        self.menu.add_command(label=f"{EVENT['icon']} {EVENT['name']}…", command=lambda: EventWindow(app))
+        self.event_entry = self.menu.index("end")
         self.menu.add_command(label="💾 Save code (move your town)…", command=lambda: SaveCodeWindow(app))
         talk = tk.Menu(self.menu, tearoff=0)
         talk.add_command(label="💬 Join the Blipville Discord…", command=lambda: self.open_link(DISCORD_URL, "come say hi on discord!"))
@@ -4712,6 +4749,7 @@ class Blip:
         if now - self.last_pet_reward > 6:          # petting earns a heart (not by spam-clicking)
             self.last_pet_reward = now
             self.app.add_hearts(1, self)
+            self.app.event_point(self, 1)
         self.say(random.choice(LINES_PET), 2)
         self.set_face("happy", 1.5)
         self.burst("heart", 4)
@@ -5012,7 +5050,12 @@ class Blip:
         self.menu.entryconfigure(self.trophy_entry, label=f"🏆 Trophies ({len(self.app.save.get('trophies', []))}/{len(TROPHIES)})…")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
-            self.color_menu.add_radiobutton(label=col["name"], value=i, variable=self.color_var, command=self.pick_color)
+            if skin_locked(self.app.save, self.kind, i):
+                self.color_menu.add_command(label=f"🔒 {col['name']}  ({EVENT['icon']} {EVENT['name']} skin)", state="disabled")
+            else:
+                self.color_menu.add_radiobutton(label=col["name"] + ("  ✨" if col.get("event") else ""), value=i,
+                                                variable=self.color_var, command=self.pick_color)
+        self.menu.entryconfigure(self.event_entry, label=self.app.event_label())
         self.menu.entryconfigure(2, label="Wake up" if self.state == "sleep" else "Nap time")
         # While a menu is open, Windows pauses the app, so windows can't repaint (a see-through window that needs a
         # repaint then shows black). Hold this pet still while its menu is open, and repaint everything right after.
@@ -5151,7 +5194,8 @@ class Blip:
             return
         if st == "eat":
             if now > self.state_until:
-                self.app.add_hearts(5 if self.hunger > 60 else 3, self)   # feeding a hungry pet is worth more
+                self.app.add_hearts(5 if self.hunger > 60 else 3, self)
+                self.app.event_point(self, 3)   # feeding a hungry pet is worth more
                 self.hunger = 0
                 self.energy = min(100, self.energy + 15)
                 self.cookie = None
@@ -6525,7 +6569,7 @@ SAVE_CODE_PREFIX = "BLIPVILLE1:"
 SAVE_CODE_KEYS = {"hearts": "hearts", "hatched": "hatched", "hats_owned": "hatsOwned", "peeked": "peeked", "nights_won": "nightsWon",
                   "cryptids": "cryptids", "kaiju": "kaiju", "gifts": "gifts", "worlds": "worlds", "world": "world", "legends": "legends",
                   "ghosts": "ghosts", "trophies": "trophies", "stats": "stats", "awakened": "awakened", "awaken_level": "awakenLevel",
-                  "rivals_beaten": "rivalsBeaten", "slot2": "slot2"}
+                  "rivals_beaten": "rivalsBeaten", "slot2": "slot2", "skins": "skins", "event_points": "eventPoints"}
 
 
 def make_save_code(save, town):
@@ -6555,7 +6599,7 @@ def read_save_code(text):
                 continue
             if k in ("hearts", "nights_won"):
                 v = max(0, int(v))
-            elif k in ("stats", "awaken_level"):
+            elif k in ("stats", "awaken_level", "event_points"):
                 v = {str(a): int(b) for a, b in dict(v).items()}
             elif k == "world":
                 v = str(v) if v else None
@@ -7268,6 +7312,75 @@ class TrophyShelf:
                           width=self.CELL_W - 18)
             c.create_text(mid, y0 + 99, text=how + ("" if have else f"  (+{bonus} 💖)"), fill="#9ad8a8" if have else "#c8c0e0",
                           font=("Segoe UI", 8), width=self.CELL_W - 18, justify="center")
+
+
+
+class EventWindow:
+    """The current event: how it works, your points, and the skins you've earned (or can still earn)."""
+    W, H = 620, 470
+
+    def __init__(self, app):
+        self.app = app
+        self.win = tk.Toplevel(app.root)
+        self.win.title(f"Blipville: {EVENT['name']}")
+        self.win.configure(bg="#1d1a2e")
+        self.win.resizable(False, False)
+        self.win.attributes("-topmost", True)
+        self.c = tk.Canvas(self.win, width=self.W, height=self.H, bg="#1d1a2e", highlightthickness=0)
+        self.c.pack(padx=6, pady=6)
+        self.c.bind("<Button-1>", self.click)
+        self.buttons = []
+        self.draw()
+
+    def click(self, e):
+        for x0, y0, x1, y1, fn in self.buttons:
+            if x0 <= e.x <= x1 and y0 <= e.y <= y1:
+                fn()
+                return
+
+    def draw(self):
+        c, app = self.c, self.app
+        c.delete("all")
+        self.buttons = []
+        pts, per, n = app.event_points(), EVENT["per_skin"], len(EVENT["rewards"])
+        got = app.save.get("skins", [])
+        c.create_text(18, 26, anchor="w", text=f"{EVENT['icon']} {EVENT['name']}", fill="#ffd23a", font=("Segoe UI", 18, "bold"))
+        c.create_text(self.W - 18, 26, anchor="e", fill="#ff9fc0", font=("Segoe UI", 10, "bold"),
+                      text=f"until {EVENT['until_text']}" if event_on() else "this event is over")
+        c.create_text(18, 62, anchor="w", width=self.W - 36, fill="#e8e4ff", font=("Segoe UI", 10),
+                      text="Pet and feed your Hedgehogs, Foxes and Echidnas! Every pet is 1 point (once every few seconds) and "
+                           f"every cookie is 3. Every {per} points unlocks a new event skin. Skins you earn are yours forever.")
+        bx, by, bw = 18, 100, self.W - 36
+        c.create_rectangle(bx, by, bx + bw, by + 18, fill="#2b2547", outline="")
+        c.create_rectangle(bx, by, bx + bw * min(1, pts / (per * n)), by + 18, fill="#ffd23a", outline="")
+        c.create_text(bx + bw / 2, by + 9, text=f"{min(pts, per * n)} / {per * n} points", fill="#14121e" if pts > per * n * 0.45 else "#ffffff",
+                      font=("Segoe UI", 9, "bold"))
+        for i, (kind, skin) in enumerate(EVENT["rewards"]):
+            x, y = 18 + (i % 4) * 148, 132 + (i // 4) * 148
+            have = f"{kind}:{skin}" in got
+            c.create_rectangle(x, y, x + 138, y + 138, fill="#2b2547", outline="#ffd23a" if have else "#3a3360", width=2)
+            idx = next(j for j, col in enumerate(kind_colors(kind)) if col["name"] == skin)
+            draw_sprite(c, kind, idx, x + 21, y + 12, 6)
+            c.create_text(x + 69, y + 104, text=f"{skin}", fill="#ffd23a" if have else "#c8c0e8", font=("Segoe UI", 10, "bold"))
+            c.create_text(x + 69, y + 122, text=(f"✓ {kind} skin" if have else f"🔒 {kind} · {(i + 1) * per} pts"),
+                          fill="#9ad8a8" if have else "#9a92c0", font=("Segoe UI", 9))
+        has = {globals().get("AWAKEN_BASE", {}).get(p.kind, p.kind) for p in app.pets}
+        y = 432
+        for kind in EVENT["kinds"]:
+            if kind not in has:
+                x = 18 + EVENT["kinds"].index(kind) * 200
+                c.create_rectangle(x, y, x + 188, y + 32, fill="#5a4ae0", outline="")
+                c.create_text(x + 94, y + 16, text=f"➕ Add {'an' if kind[0] in 'AEIOU' else 'a'} {kind}", fill="#ffffff", font=("Segoe UI", 10, "bold"))
+                self.buttons.append((x, y, x + 188, y + 32, lambda k=kind: self.add(k)))
+        if has >= set(EVENT["kinds"]):
+            c.create_text(18, y + 16, anchor="w", text="Your town has all three spiky friends. Go give them some love! 💖",
+                          fill="#9ad8a8", font=("Segoe UI", 10, "bold"))
+
+    def add(self, kind):
+        pet = self.app.add_pet(kind)
+        if pet:
+            pet.say("spiky week, let's go!", 3)
+        self.draw()
 
 
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)
@@ -8088,6 +8201,7 @@ class App:
         if not self.restore_town():
             self.add_pet("Blip", "Blip")
         self.daily_treat()
+        self.root.after(6000, self.event_hello)
         self.last_topmost = self.last_town_save = time.monotonic()
         if SELFTEST:
             self.root.after(8000, self.selftest_report)
@@ -8393,6 +8507,42 @@ class App:
         write_save(self.save)
         if pet is not None:
             pet.show_reward(f"+{n} 💖")
+
+    # ----- events
+    def event_points(self):
+        return int(self.save.get("event_points", {}).get(EVENT["id"], 0))
+
+    def event_label(self):
+        total = len(EVENT["rewards"]) * EVENT["per_skin"]
+        if event_on():
+            return f"{EVENT['icon']} {EVENT['name']} event ({min(self.event_points(), total)}/{total})…"
+        return f"{EVENT['icon']} {EVENT['name']} (event over)…"
+
+    def event_hello(self):
+        if SELFTEST or not event_on() or not self.pets or self.save.get("event_seen") == EVENT["id"]:
+            return
+        self.save["event_seen"] = EVENT["id"]
+        write_save(self.save)
+        self.pets[0].say(f"{EVENT['icon']} {EVENT['name']} is on! Pet & feed Hedgehogs, Foxes and Echidnas for event skins! "
+                         "(right-click me → " + EVENT["icon"] + ")", 7)
+
+    def event_point(self, pet, n):
+        if not event_on() or globals().get("AWAKEN_BASE", {}).get(pet.kind, pet.kind) not in EVENT["kinds"]:
+            return
+        pts = self.save.setdefault("event_points", {})
+        before = int(pts.get(EVENT["id"], 0))
+        pts[EVENT["id"]] = before + n
+        got = self.save.setdefault("skins", [])
+        for i, (kind, skin) in enumerate(EVENT["rewards"]):
+            key = f"{kind}:{skin}"
+            if before + n >= (i + 1) * EVENT["per_skin"] and key not in got:
+                got.append(key)
+                self.sound.play("fanfare")
+                pet.say(f"🎁 new skin unlocked: {skin} {kind}! ✨", 4)
+                pet.set_face("happy", 2)
+                pet.burst("heart", 6)
+                break
+        write_save(self.save)
 
     def daily_treat(self):
         today = time.strftime("%Y-%m-%d")

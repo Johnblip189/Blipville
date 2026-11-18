@@ -33,6 +33,7 @@ data = {
     "lureCost": bl.LURE_COST,
     "beaconCost": bl.BEACON_COST,
     "candleCost": bl.CANDLE_COST,
+    "event": getattr(bl, "EVENT", None),
     "arenaBgs": bl.ARENA_BGS, "arenaPix": bl.ARENA_PIX, "rivalBgs": bl.RIVAL_BGS, "friendBgs": bl.FRIEND_BGS,
         "awakenForm": bl.AWAKEN_FORM, "awakenChain": bl.AWAKEN_CHAIN, "stageCosts": bl.STAGE_COSTS,
     "crystalCost": bl.CRYSTAL_COST,

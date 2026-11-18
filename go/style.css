@@ -272,3 +272,15 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 #installBtn.nudge { animation: nudge 1.2s ease-in-out 4; }
 @keyframes nudge { 50% { transform: scale(1.12); box-shadow: 0 0 0 4px rgba(255, 210, 58, .25); } }
 @media (max-width: 520px) { #installBtn span { display: none; } }
+
+/* events */
+#eventBtn[hidden] { display: none; }
+.eventBar { position: relative; height: 20px; border-radius: 10px; background: var(--card2); overflow: hidden; margin: 10px 0 4px; }
+#eventFill { height: 100%; width: 0; background: #ffd23a; }
+#eventPts { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 800 11px var(--font); color: #fff;
+  text-shadow: 0 1px 2px #000; }
+#eventGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 10px; }
+#eventGrid canvas { width: 64px; height: 52px; image-rendering: pixelated; }
+#eventAdd { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+#eventAdd button { flex: 1; min-height: 40px; border: 0; border-radius: 12px; background: #5a4ae0; color: #fff; font: 800 13px var(--font); }
+#colorChips button.locked { opacity: .55; }

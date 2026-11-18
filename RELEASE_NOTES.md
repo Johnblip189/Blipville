@@ -51,7 +51,7 @@ make Blipville what it is. This is the real thing.
   strings (👻 Phantom + 🍬 Sweet). When it awakens in the Arena, the battle moves to **The Puppet Theater**.
   Its **Pull the Strings** move brings 2 **Shadow** Night Shift Blips into your team (once per battle). Beat the new
   rival, **The Puppet Master**, to unlock the Shadow colors for Robo Bear, Robo Bunny and Robo Hen.
-- 🎵 **Stage music:** The Puppet Theater, The Haunted Keep and The Dam each have their own tune that plays during the battle
+- 🎵 **Battle music:** every Arena stage has its own tune (9 in all: Sunny Showdown, Magma Rush, Skyscraper Smash, Music Box Waltz…) that plays during the battle
   (with sound on).
 - 👻 **Ghosts, a brand-new tier:** 24 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a

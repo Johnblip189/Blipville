@@ -6729,7 +6729,8 @@ def fetch_status(app_key):
 
 
 def maintenance_skipped():
-    return APP_VERSION == "dev" or bool(os.environ.get("BLIPVILLE_NO_MAINTENANCE"))
+    # dev copies, test builds (v1.0.0-test) and the build's own test never close, so testing can go on during maintenance
+    return APP_VERSION == "dev" or APP_VERSION.endswith("-test") or bool(os.environ.get("BLIPVILLE_NO_MAINTENANCE"))
 
 # ----------------------------------------------------------------------------- save codes
 # The same codes as the website version ("BLIPVILLE1:" + the save as base64 JSON), so a town can move between the Windows

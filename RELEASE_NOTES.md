@@ -13,7 +13,7 @@ make Blipville what it is. This is the real thing.
   Buddy, Best friend and **Soulmate**. Each level-up gives hearts, and your closest friends get a heart on their name tag.
 - 🍪 **Cookie Catch:** a new minigame. Move your Blip to catch falling cookies (golden ones are worth 5, burnt ones cost a
   heart). Earns hearts, friendship and event points. Right-click a pet → 🍪 Cookie Catch.
-- 🦔 **Spiky Week (event, until November 29):** pet and feed Hedgehogs, Foxes and the brand-new **Echidna** to earn
+- 🦔 **Spiky Week (event, until December 3):** pet and feed Hedgehogs, Foxes and the brand-new **Echidna** to earn
   8 event skins. Right-click a pet → 🦔 Spiky Week to see your progress.
 - 📅 **Daily quests:** 3 new ones every day (the same on Windows and the website), each worth 10 💖, plus event
   points during events.

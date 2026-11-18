@@ -284,3 +284,9 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 #eventAdd { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 #eventAdd button { flex: 1; min-height: 40px; border: 0; border-radius: 12px; background: #5a4ae0; color: #fff; font: 800 13px var(--font); }
 #colorChips button.locked { opacity: .55; }
+
+/* daily quests */
+#questList { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.quest { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 12px;
+  background: var(--card2); font-size: 13px; border: 2px solid transparent; }
+.quest.done { border-color: #9ad8a855; color: #9ad8a8; font-weight: 800; }

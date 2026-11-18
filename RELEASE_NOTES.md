@@ -6,6 +6,8 @@ make Blipville what it is. This is the real thing.
 **New in 1.0:**
 - 🦔 **Spiky Week (event, until November 29):** pet and feed Hedgehogs, Foxes and the brand-new **Echidna** to earn
   8 event skins. Right-click a pet → 🦔 Spiky Week to see your progress.
+- 📅 **Daily quests:** 3 new ones every day (the same on Windows and the website), each worth 10 💖, plus event
+  points during events.
 - 🪟 **Only on Windows: Blips climb your windows!** Now and then a Blip jumps up onto the top edge of an open window,
   walks along it and naps there. Drag the window and they ride along (wheee!); close or minimize it and they tumble back
   down. You can even toss a Blip onto a window. Turn it off with right-click → 🪟 Climb on my windows.

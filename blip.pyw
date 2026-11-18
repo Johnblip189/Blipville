@@ -3713,6 +3713,29 @@ EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "202
                      ["Fox", "Aurora"], ["Hedgehog", "Candy Floss"], ["Fox", "Maple"], ["Echidna", "Golden Spines"]]}
 
 
+# Daily quests 📅: 3 a day, the same for everyone that day (picked from the date). Each one gives hearts, and event
+# points while an event is on.
+QUESTS = [{"id": "pet_spiky", "text": "Pet a Hedgehog, Fox or Echidna 8 times", "goal": 8},
+          {"id": "feed_hungry", "text": "Feed 3 hungry Blips", "goal": 3},
+          {"id": "pet_any", "text": "Pet your Blips 20 times", "goal": 20},
+          {"id": "naps", "text": "Let 2 Blips finish a nap", "goal": 2},
+          {"id": "plays", "text": "Watch your Blips play 2 games together", "goal": 2},
+          {"id": "arena_win", "text": "Win a battle in the Arena", "goal": 1}]
+QUEST_HEARTS, QUEST_POINTS, QUEST_BONUS = 10, 5, 5     # per quest; the bonus is for finishing all 3
+
+
+def quest_hash(text):
+    h = 2166136261
+    for b in text.encode("utf-8"):
+        h = ((h ^ b) * 16777619) & 0xFFFFFFFF
+    return h
+
+
+def todays_quests(day=None):
+    day = day or time.strftime("%Y-%m-%d")
+    return sorted(QUESTS, key=lambda q: quest_hash(day + q["id"]))[:3]
+
+
 def event_on():
     today = time.strftime("%Y-%m-%d")
     return EVENT["start"] <= today <= EVENT["until"]
@@ -4750,6 +4773,9 @@ class Blip:
             self.last_pet_reward = now
             self.app.add_hearts(1, self)
             self.app.event_point(self, 1)
+            self.app.quest_tick("pet_any")
+            if self.kind in EVENT["kinds"]:
+                self.app.quest_tick("pet_spiky")
         self.say(random.choice(LINES_PET), 2)
         self.set_face("happy", 1.5)
         self.burst("heart", 4)
@@ -5191,15 +5217,20 @@ class Blip:
             if self.energy >= 100 and now > self.state_until:   # nap at least 20 s, wake when rested
                 self.wake()
                 self.app.add_hearts(2, self)                      # a well-rested pet is a happy pet
+                self.app.quest_tick("naps")
             return
         if st == "eat":
             if now > self.state_until:
-                self.app.add_hearts(5 if self.hunger > 60 else 3, self)
-                self.app.event_point(self, 3)   # feeding a hungry pet is worth more
+                hungry = self.hunger                      # feeding a hungry pet is worth more; a full one, nothing
+                gain = 5 if hungry > 60 else 2 if hungry >= 25 else 0
+                if gain:
+                    self.app.add_hearts(gain, self)
+                    self.app.event_point(self, 3 if hungry > 60 else 1)
+                    self.app.quest_tick("feed_hungry")
                 self.hunger = 0
                 self.energy = min(100, self.energy + 15)
                 self.cookie = None
-                self.say(random.choice(LINES_EAT), 2.5)
+                self.say(random.choice(LINES_EAT) if gain else random.choice(["i'm stuffed!", "*too full to move*", "maybe later…"]), 2.5)
                 self.set_face("happy", 2)
                 self.burst("heart", 5)
                 self.set_state("idle", 2)
@@ -7198,6 +7229,7 @@ class Arena:
         won = self.battle.winner == 0
         if won:
             self.app.bump("arena_wins")
+            self.app.quest_tick("arena_win")
             if self.foe in [r[0] for r in ARENA_RIVALS] and self.foe not in self.app.save.setdefault("rivals_beaten", []):
                 self.app.save["rivals_beaten"].append(self.foe)
             self.app.add_hearts(self.reward, self.app.pets[0] if self.app.pets else None)
@@ -7317,7 +7349,7 @@ class TrophyShelf:
 
 class EventWindow:
     """The current event: how it works, your points, and the skins you've earned (or can still earn)."""
-    W, H = 620, 470
+    W, H = 620, 596
 
     def __init__(self, app):
         self.app = app
@@ -7349,8 +7381,8 @@ class EventWindow:
                       text=f"until {EVENT['until_text']}" if event_on() else
                       "starts soon!" if time.strftime("%Y-%m-%d") < EVENT["start"] else "this event is over")
         c.create_text(18, 62, anchor="w", width=self.W - 36, fill="#e8e4ff", font=("Segoe UI", 10),
-                      text="Pet and feed your Hedgehogs, Foxes and Echidnas! Every pet is 1 point (once every few seconds) and "
-                           f"every cookie is 3. Every {per} points unlocks a new event skin. Skins you earn are yours forever.")
+                      text="Pet and feed your Hedgehogs, Foxes and Echidnas, and do today's quests! A pet is 1 point (once every few "
+                           f"seconds), a cookie for a hungry Blip up to 3 (full ones give nothing). Every {per} points unlocks a skin, yours forever.")
         bx, by, bw = 18, 100, self.W - 36
         c.create_rectangle(bx, by, bx + bw, by + 18, fill="#2b2547", outline="")
         c.create_rectangle(bx, by, bx + bw * min(1, pts / (per * n)), by + 18, fill="#ffd23a", outline="")
@@ -7365,8 +7397,20 @@ class EventWindow:
             c.create_text(x + 69, y + 104, text=f"{skin}", fill="#ffd23a" if have else "#c8c0e8", font=("Segoe UI", 10, "bold"))
             c.create_text(x + 69, y + 122, text=(f"✓ {kind} skin" if have else f"🔒 {kind} · {(i + 1) * per} pts"),
                           fill="#9ad8a8" if have else "#9a92c0", font=("Segoe UI", 9))
+        q = app.quest_state()
+        c.create_text(18, 438, anchor="w", text="📅 Today's quests", fill="#ffd23a", font=("Segoe UI", 12, "bold"))
+        c.create_text(self.W - 18, 438, anchor="e", fill="#9a92c0", font=("Segoe UI", 9),
+                      text=f"each: +{QUEST_HEARTS} 💖" + (f" +{QUEST_POINTS} {EVENT['icon']}  (all 3: +{QUEST_BONUS} more)" if event_on() else "") + " · new ones every day")
+        for i, quest in enumerate(todays_quests(q["day"])):
+            y = 460 + i * 30
+            done = quest["id"] in q["done"]
+            prog = min(q["progress"].get(quest["id"], 0), quest["goal"])
+            c.create_rectangle(18, y, self.W - 18, y + 24, fill="#2b2547", outline="#9ad8a8" if done else "#3a3360")
+            c.create_text(30, y + 12, anchor="w", text=("✅ " if done else "⬜ ") + quest["text"], fill="#9ad8a8" if done else "#e8e4ff",
+                          font=("Segoe UI", 10, "bold" if done else "normal"))
+            c.create_text(self.W - 30, y + 12, anchor="e", text=f"{prog}/{quest['goal']}", fill="#c8c0e8", font=("Segoe UI", 10, "bold"))
         has = {globals().get("AWAKEN_BASE", {}).get(p.kind, p.kind) for p in app.pets}
-        y = 432
+        y = 556
         for kind in EVENT["kinds"]:
             if kind not in has:
                 x = 18 + EVENT["kinds"].index(kind) * 200
@@ -8529,8 +8573,34 @@ class App:
         self.pets[0].say(f"{EVENT['icon']} {EVENT['name']} is on! Pet & feed Hedgehogs, Foxes and Echidnas for event skins! "
                          "(right-click me → " + EVENT["icon"] + ")", 7)
 
-    def event_point(self, pet, n):
-        if not event_on() or globals().get("AWAKEN_BASE", {}).get(pet.kind, pet.kind) not in EVENT["kinds"]:
+    def quest_state(self):
+        day = time.strftime("%Y-%m-%d")
+        q = self.save.get("quests")
+        if not isinstance(q, dict) or q.get("day") != day:
+            q = self.save["quests"] = {"day": day, "progress": {}, "done": []}
+        return q
+
+    def quest_tick(self, what, n=1):
+        q = self.quest_state()
+        for quest in todays_quests(q["day"]):
+            if quest["id"] != what or quest["id"] in q["done"]:
+                continue
+            q["progress"][what] = q["progress"].get(what, 0) + n
+            if q["progress"][what] >= quest["goal"]:
+                q["done"].append(what)
+                pet = self.pets[0] if self.pets else None
+                self.add_hearts(QUEST_HEARTS, pet)
+                extra = ""
+                if event_on():
+                    self.event_point(pet, QUEST_POINTS + (QUEST_BONUS if len(q["done"]) == 3 else 0), any_kind=True)
+                    extra = f" +{QUEST_POINTS + (QUEST_BONUS if len(q['done']) == 3 else 0)} {EVENT['icon']}"
+                self.sound.play("fanfare")
+                if pet:
+                    pet.say(f"📅 quest done: {quest['text'].lower()}! +{QUEST_HEARTS} 💖{extra}", 4.5)
+            write_save(self.save)
+
+    def event_point(self, pet, n, any_kind=False):
+        if n <= 0 or not event_on() or not pet or (not any_kind and globals().get("AWAKEN_BASE", {}).get(pet.kind, pet.kind) not in EVENT["kinds"]):
             return
         pts = self.save.setdefault("event_points", {})
         before = int(pts.get(EVENT["id"], 0))
@@ -8704,6 +8774,8 @@ class App:
         return pet.wx + W / 2, pet.wy + H - ART_H * SCALE + 6
 
     def end_play(self, play, now, happy=True):
+        if happy:
+            self.quest_tick("plays")
         for pet in play["pets"]:
             pet.playing = False
             pet.last_play = now

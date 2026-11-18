@@ -176,7 +176,10 @@
     if (p.state === "sleep") { wake(p); return; }
     sfx("boop"); bump("pets");
     const t = now();
-    if (t - p.lastPetReward > 6) { p.lastPetReward = t; reward(p, 1); eventPoint(p, 1); }
+    if (t - p.lastPetReward > 6) {
+      p.lastPetReward = t; reward(p, 1); eventPoint(p, 1); questTick("pet_any");
+      if (EVENT.kinds.includes(p.kind)) questTick("pet_spiky");
+    }
     say(p, pick(D.lines.pet), 2); setFace(p, "happy", 1.5); burst(p, "heart", 4);
     if (p.state !== "fall" && p.state !== "held") { p.vy = 260; p.vx = 0; setState(p, "fall"); }
     vibrate(10);
@@ -245,14 +248,15 @@
       case "sleep":
         p.energy = Math.min(100, p.energy + dt * 2);
         if (Math.random() < dt * 0.8) p.particles.push({ kind: "z", x: 18 * S / 4, y: 13 * S, vx: 14, vy: -22, life: 2.5, born: t });
-        if (p.energy >= 100 && t > p.until) { wake(p); reward(p, 2); }
+        if (p.energy >= 100 && t > p.until) { wake(p); reward(p, 2); questTick("naps"); }
         return;
       case "eat":
         if (t > p.until) {
-          reward(p, p.hunger > 60 ? 5 : 3); eventPoint(p, 3);
+          const hungry = p.hunger, gain = hungry > 60 ? 5 : hungry >= 25 ? 2 : 0;   // a full Blip still eats, but gives nothing
+          if (gain) { reward(p, gain); eventPoint(p, hungry > 60 ? 3 : 1); questTick("feed_hungry"); }
           p.hunger = 0; p.energy = Math.min(100, p.energy + 15);
           cookies = cookies.filter((c) => c !== p.eating); p.eating = null;
-          say(p, pick(D.lines.eat), 2.5); setFace(p, "happy", 2); burst(p, "heart", 5); setState(p, "idle", 2);
+          say(p, gain ? pick(D.lines.eat) : pick(["i'm stuffed!", "*too full to move*", "maybe later…"]), 2.5); setFace(p, "happy", 2); burst(p, "heart", 5); setState(p, "idle", 2);
         } else if (Math.random() < 0.3) {
           p.particles.push({ kind: "crumb", x: rnd(-6, 6), y: 6 * S, vx: rnd(-40, 40), vy: rnd(40, 90), life: 0.6, born: t });
         }
@@ -278,6 +282,7 @@
   const BALL = [".ooo.", "owwro", "owrro", "orrwo", ".ooo."];
   const headPos = (p) => [p.x, GROUND - p.y - 13 * S + 6];
   function endPlay(play, t, happy = true) {
+    if (happy) questTick("plays");
     for (const p of play.pets) {
       p.playing = false; p.lastPlay = t;
       if (happy && !["held", "fall", "sleep"].includes(p.state)) { setState(p, "idle", rnd(1.5, 3)); setFace(p, "happy", 1.5); burst(p, "heart", 2); }
@@ -1179,7 +1184,7 @@
   }
   function finishBattle(b) {
     if (b.winner === 0) {
-      bump("arena_wins");
+      bump("arena_wins"); questTick("arena_win");
       if (AR.rivals.some((r) => r.name === b.foe) && !save.rivalsBeaten.includes(b.foe)) save.rivalsBeaten.push(b.foe);
       reward(pets[0], b.reward); b.log.push(`🏆 You win! +${b.reward} 💖`); sfx("fanfare"); vibrate([30, 40, 30]);
       const w = stat("arena_wins"); $("arenaWins").textContent = `🏆 ${w} win${w === 1 ? "" : "s"}`;
@@ -1468,10 +1473,15 @@
     toast("📸 Saved a picture of your town!");
   }
 
+  let nextFeed = 0;
   $("feedBtn").onclick = () => {
     const awake = pets.filter((p) => p.state !== "held");
     if (!awake.length) return;
+    const t = now();
+    if (t < nextFeed) { toast(`🍪 The cookie jar needs a moment… (${Math.ceil(nextFeed - t)} s)`, 1.5); return; }
     const p = awake.reduce((a, b) => (b.hunger > a.hunger ? b : a));
+    if (p.hunger < 25) { toast("Everyone's full! 🍪 Try again in a few minutes. (Full Blips don't give hearts.)", 3); return; }
+    nextFeed = t + 8;
     feed(p); toast(`🍪 Fed ${p.name}!`, 1.8);
   };
   $("friendBtn").onclick = () => {
@@ -1490,8 +1500,8 @@
     return !!col.event && !(save.skins || []).includes(`${kind}:${col.name}`);
   }
   const eventPts = () => +((save.eventPoints || {})[EVENT.id] || 0);
-  function eventPoint(p, n) {
-    if (!eventOn() || !EVENT.kinds.includes(AWAKEN_BASE[p.kind] || p.kind)) return;
+  function eventPoint(p, n, anyKind = false) {
+    if (n <= 0 || !eventOn() || !p || (!anyKind && !EVENT.kinds.includes(AWAKEN_BASE[p.kind] || p.kind))) return;
     save.eventPoints = save.eventPoints || {}; save.skins = save.skins || [];
     const before = eventPts(); save.eventPoints[EVENT.id] = before + n;
     for (let i = 0; i < EVENT.rewards.length; i++) {
@@ -1506,7 +1516,44 @@
     persist(true);
     if (!$("eventSheet").hidden) openEvent();
   }
+
+  // daily quests 📅 (the same 3 for everyone each day, like the desktop app)
+  const QUESTS = D.quests || [], QR = D.questRewards || { hearts: 10, points: 5, bonus: 5 };
+  const todaysQuests = (day) => [...QUESTS].sort((a, b) => fnvQ(day + a.id) - fnvQ(day + b.id)).slice(0, 3);
+  function fnvQ(t) { let h = 2166136261; for (const b of new TextEncoder().encode(t)) h = Math.imul(h ^ b, 16777619) >>> 0; return h; }
+  function questState() {
+    const day = todayStr();
+    if (!save.quests || save.quests.day !== day) save.quests = { day, progress: {}, done: [] };
+    return save.quests;
+  }
+  function questTick(what, n = 1) {
+    const q = questState();
+    for (const quest of todaysQuests(q.day)) {
+      if (quest.id !== what || q.done.includes(what)) continue;
+      q.progress[what] = (q.progress[what] || 0) + n;
+      if (q.progress[what] >= quest.goal) {
+        q.done.push(what);
+        const p = pets[0], pts = QR.points + (q.done.length === 3 ? QR.bonus : 0);
+        reward(p, QR.hearts); if (eventOn()) eventPoint(p, pts, true);
+        sfx("fanfare");
+        toast(`📅 Quest done: ${quest.text}! +${QR.hearts} 💖${eventOn() ? ` +${pts} ${EVENT.icon}` : ""}`, 4);
+      }
+      persist();
+      if (!$("eventSheet").hidden) openEvent();
+    }
+  }
+  function drawQuests() {
+    const q = questState(), box = $("questList"); box.innerHTML = "";
+    $("questNote").textContent = `each: +${QR.hearts} 💖` + (eventOn() ? ` +${QR.points} ${EVENT.icon} (all 3: +${QR.bonus} more)` : "") + " · new ones every day";
+    for (const quest of todaysQuests(q.day)) {
+      const done = q.done.includes(quest.id), row = doc().createElement("div"); row.className = "quest" + (done ? " done" : "");
+      const t = doc().createElement("span"); t.textContent = (done ? "✅ " : "⬜ ") + quest.text;
+      const n = doc().createElement("b"); n.textContent = `${Math.min(q.progress[quest.id] || 0, quest.goal)}/${quest.goal}`;
+      row.append(t, n); box.appendChild(row);
+    }
+  }
   function openEvent() {
+    drawQuests();
     const per = EVENT.per_skin, total = per * EVENT.rewards.length, pts = Math.min(eventPts(), total), got = save.skins || [];
     $("eventTitle").textContent = `${EVENT.icon} ${EVENT.name}`;
     $("eventWhen").textContent = eventOn() ? `until ${EVENT.until_text}` : todayStr() < EVENT.start ? "starts soon!" : "this event is over";
@@ -1529,7 +1576,7 @@
     });
     openSheet("eventSheet");
   }
-  $("eventBtn").hidden = !eventOn() && !(save.skins || []).length;
+  $("eventBtn").hidden = false;           // events and daily quests
   $("eventBtn").onclick = openEvent;
   if (eventOn() && save.eventSeen !== EVENT.id) {
     setTimeout(() => { save.eventSeen = EVENT.id; persist(true);

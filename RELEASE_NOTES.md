@@ -4,6 +4,8 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
+- 🐾 **12 new Blips:** Red Panda, Polar Bear, Puffin, Beluga, Gorilla, Sugar Glider, Highland Cow, Shoebill, Tarsier,
+  Marmot, Mantis Shrimp and Frilled Lizard (plus the Echidna), each with its own colors and lines.
 - 💞 **Friendship levels:** every Blip bonds with you as you pet, feed and play with it, from New friend to Pal,
   Buddy, Best friend and **Soulmate**. Each level-up gives hearts, and your closest friends get a heart on their name tag.
 - 🍪 **Cookie Catch:** a new minigame. Move your Blip to catch falling cookies (golden ones are worth 5, burnt ones cost a

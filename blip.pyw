@@ -3577,7 +3577,10 @@ GHOSTS['Phantom Knight'] = {"eyes": 5, "move": "float", "speed": 1.0, "feet": Fa
 # ⭐ Creator Blips: only the people who make Blipville can get these (with the secret creator code). They never show up for anyone
 # else, and save codes don't carry them.
 CREATOR = {"Blipmaker": {"eyes": 5, "move": "hop", "speed": 1.2, "lines": ["i made all of this! 💜", "*adjusts crown*", "welcome to MY Blipville", "the creator has arrived", "every Blip started as my idea"], "body": ["....y..yy..y....", "....yyyyyyyy....", "..oooyyyyyyooo..", ".obbbbbbbbbbbbo.", "cobbbbbbbbbbbboc", "cobbbbbbbbbbbboc", "cobbbbbbbbbbbboc", "cobpbbbbbbbbpboc", "cobbbbbssbbbbboc", "cobbbbssssbbbboc", "cc.obbbssbbbo.cc", "cc..oooooooo..cc"], "colors": [{"name": "Founder", "o": "#2a1a4a", "b": "#8a6aff", "y": "#ffd23a", "c": "#e83a5a", "s": "#ffd23a", "p": "#ff9ad8", "e": "#1a0a3a"}, {"name": "Night Shift", "o": "#0a0a1a", "b": "#3a3a6a", "y": "#ffd23a", "c": "#5affd8", "s": "#5affd8", "p": "#c8a0ff", "e": "#fff27a"}]}, "Byte": {"eyes": 5, "move": "hop", "speed": 1.4, "mouth": False, "lines": ["*beep* i helped build this!", "compiling cuteness…", "0 bugs found (today)", "ship it! 🚀", "i wrote 10,000 lines of Blip"], "body": ["........y.......", "........a.......", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", "..oggggggggggo..", "..oggggggggggo..", "..oggggmmggggo..", "..obbbbbbbbbbo..", "..obkbbbbbbkbo..", "...obbbbbbbbo...", "....oo....oo...."], "colors": [{"name": "Terminal", "o": "#0a1a1a", "b": "#5ad8c8", "g": "#0a2a2a", "m": "#5aff8a", "k": "#c8fff0", "a": "#2a4a4a", "y": "#ffd23a", "e": "#5aff8a"}, {"name": "Sunset", "o": "#2a0a0a", "b": "#ff9a6a", "g": "#2a0a14", "m": "#ffd23a", "k": "#fff0d0", "a": "#5a2a1a", "y": "#5affd8", "e": "#ffd23a"}]}}
+CREATOR["Guardian"] = {"eyes": 5, "move": "walk", "speed": 1.1, "mouth": True, "lines": ["🛡️ keeping Blipville safe", "be nice in the Discord!", "*polishes shield*", "mod squad, reporting in", "no spam on my watch"], "body": ["......aaaa......", ".....aa..aa.....", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbsssso.", "obbbbbbbbbswwso.", ".obbbbbbbbsswso.", "..ooooooooosso.."], "colors": [{"name": "Guardian", "o": "#0a1a3a", "b": "#5a9aff", "a": "#ffd23a", "s": "#c8d0e8", "w": "#3a6aff", "p": "#ff9ab0", "e": "#0a0a2a"}, {"name": "Night Watch", "o": "#0a0a14", "b": "#3a3a5a", "a": "#5affd8", "s": "#8a90a8", "w": "#5affd8", "p": "#c8a0ff", "e": "#5affd8"}]}   # 🛡️ the moderators' Blip (creators get it too)
+MOD_KINDS = ["Guardian"]
 CREATOR_KINDS = list(CREATOR)
+MOD_HASHES = ["6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0"]   # SHA-256 of each moderator code
 CREATOR_HASH = "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56"   # SHA-256 of the creator code (the code itself is never in here)
 CREATOR_TIER = {"Blipmaker": 2.0, "Byte": 1.3}
 CREATOR_BOSS = ["The Blipmaker (boss)", [["Blipmaker", 0, 0], ["Lurker", 0, 3], ["Phantom Knight", 0, 3]]]
@@ -5250,6 +5253,15 @@ class Blip:
                 self.color_menu.add_radiobutton(label=col["name"] + ("  ✨" if col.get("event") else ""), value=i,
                                                 variable=self.color_var, command=self.pick_color)
         self.menu.entryconfigure(self.event_entry, label=self.app.event_label())
+        if self.app.save.get("mod") and not self.app.save.get("creator") and not getattr(self, "mod_added", False):
+            self.mod_added = True
+            mod = tk.Menu(self.menu, tearoff=0)
+            for label, group in (("👣 Spawn a cryptid", "cryptid"), ("🦖 Spawn a kaiju", "kaiju"), ("👻 Spawn a ghost", "ghost"),
+                                 ("✨ Spawn a World Legend", "legend")):
+                mod.add_command(label=label, command=lambda g=group: self.app.dev_spawn(g))
+            mod.add_command(label="📅 Fresh daily quests", command=self.app.dev_reset_quests)
+            mod.add_command(label="🥊 Copy the Blipmaker boss code", command=lambda: self.app.dev_boss_code(self.root))
+            self.menu.add_cascade(label="🛡️ Mod menu", menu=mod)
         if self.app.save.get("creator") and not getattr(self, "dev_added", False):
             self.dev_added = True
             dev = tk.Menu(self.menu, tearoff=0)
@@ -6930,6 +6942,8 @@ class Maintenance:
         if result is None:
             return
         closed, message, link, link_text = result
+        if self.app.save.get("creator") or self.app.save.get("mod"):
+            closed = False                                   # creators and moderators can always play
         if closed and not self.closed:
             self.close(message, link, link_text)
         elif closed:
@@ -6975,6 +6989,7 @@ class Maintenance:
                       cursor="hand2").pack(side="left", padx=5)
         if link:
             button(link_text or "More info", lambda: webbrowser.open(link), primary=True)
+        button("🔑 Code", lambda: app.enter_secret_code(win))
         button("Check for updates", lambda: app.updater.check(quiet=False))
         button("Check again", lambda: self.check(again=False))
         button("Quit", app.quit_all)
@@ -8780,7 +8795,7 @@ class App:
             kind = drop["kind"]
             if kind in self.save.get("gifts", []) or today > drop["until"] or today < drop.get("start", ""):
                 continue
-            if drop.get("testers") and not (APP_VERSION.endswith("-test") or self.save.get("tester")):
+            if drop.get("testers") and not (APP_VERSION.endswith("-test") or self.save.get("tester") or self.save.get("mod") or self.save.get("creator")):
                 continue                                  # only for people testing 1.0 early
             self.save.setdefault("gifts", []).append(kind)
             given.append(drop)
@@ -8877,6 +8892,8 @@ class App:
                             parent=parent)
 
     def is_unlocked(self, kind):
+        if kind in MOD_KINDS:
+            return bool(self.save.get("creator") or self.save.get("mod"))
         if kind in CREATOR:
             return bool(self.save.get("creator"))
         if kind in AWAKEN_BASE:
@@ -9091,20 +9108,38 @@ class App:
         code = "".join(ch for ch in text.upper() if ch.isalnum())
         if not code:
             return
-        if hashlib.sha256(code.encode()).hexdigest() != CREATOR_HASH:
+        digest = hashlib.sha256(code.encode()).hexdigest()
+        if digest in MOD_HASHES:
+            self.save["mod"] = True
+            write_save(self.save)
+            self.sound.play("fanfare")
+            if not any(p.kind == "Guardian" for p in self.pets):
+                pet = self.add_pet("Guardian", "Guardian", greet=False)
+                if pet:
+                    pet.say("🛡️ mod squad, reporting in!", 4)
+            if self.maintenance.closed:
+                self.maintenance.reopen()
+            messagebox.showinfo("🛡️ Moderator mode", "Welcome to the mod squad! 🛡️\n\nGuardian is yours, you can play during maintenance, "
+                                "and every pet's right-click menu has a 🛡️ Mod menu: spawn sightings, fresh quests and the creator's boss code.",
+                                parent=parent)
+            return
+        if digest != CREATOR_HASH:
             messagebox.showinfo("Secret code", "Hmm, that code doesn't do anything.", parent=parent)
             return
         self.save["creator"] = True
         write_save(self.save)
         self.sound.play("fanfare")
         self.dev_add_creators()
+        if self.maintenance.closed:
+            self.maintenance.reopen()
         messagebox.showinfo("⭐ Creator mode", "Welcome back, creator! 💜\n\nBlipmaker and Byte are yours (only yours), and every pet's "
                             "right-click menu now has a 🛠️ Creator menu: hearts, spawns, unlock everything and your boss battle code.",
                             parent=parent)
 
     def dev_add_creators(self):
         have = {p.kind for p in self.pets}
-        for kind, name, line in (("Blipmaker", "Blipmaker", "the creator has arrived! 👑"), ("Byte", "Byte", "*beep* ready to ship!")):
+        for kind, name, line in (("Blipmaker", "Blipmaker", "the creator has arrived! 👑"), ("Byte", "Byte", "*beep* ready to ship!"),
+                                 ("Guardian", "Guardian", "🛡️ on duty!")):
             if kind not in have:
                 pet = self.add_pet(kind, name, greet=False)
                 if pet:

@@ -306,3 +306,4 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 #devBtn[hidden] { display: none; }
 .devGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
 .devGrid button { min-height: 44px; border: 0; border-radius: 12px; background: var(--card2); color: var(--text); font: 800 13px var(--font); }
+.devGrid button[hidden] { display: none; }

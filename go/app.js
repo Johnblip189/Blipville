@@ -118,7 +118,9 @@
   // ⭐ creator perks: the secret creator code is remembered on this device (never in the save, so save codes don't pass it on)
   const CREATOR = new Set(D.groups.creator || []);
   const isCreator = () => { try { return localStorage.getItem("blipville-creator") === (D.creator || {}).hash; } catch (e) { return false; } };
-  const isUnlocked = (k) => CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const isMod = () => { try { return (D.modHashes || []).includes(localStorage.getItem("blipville-mod")); } catch (e) { return false; } };
+  const MODK = new Set(D.modKinds || []);
+  const isUnlocked = (k) => MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -1610,13 +1612,19 @@
       try { localStorage.setItem("blipville-creator", h); } catch (e) { /* private mode */ }
       sfx("fanfare"); $("secretMsg").textContent = "⭐ Welcome back, creator! Blipmaker and Byte are yours. Tap 🛠️ at the top.";
       $("devBtn").hidden = false; devAddCreators(); persist(true);
+    } else if ((D.modHashes || []).includes(h)) {
+      try { localStorage.setItem("blipville-mod", h); } catch (e) { /* private mode */ }
+      sfx("fanfare"); $("secretMsg").textContent = "🛡️ Welcome to the mod squad! Guardian is yours. Tap 🛠️ at the top.";
+      $("devBtn").hidden = false; modMode();
+      if (!pets.some((p) => p.kind === "Guardian")) { const p = addPet("Guardian", { name: "Guardian", quiet: true }); if (p) say(p, "🛡️ mod squad, reporting in!", 4); }
+      persist(true);
     } else if (EARLY_HASHES.includes(h)) {
       try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode */ }
       $("secretMsg").textContent = "🎟️ Early access code saved on this device!";
     } else $("secretMsg").textContent = "Hmm, that code doesn't do anything.";
   };
   function devAddCreators() {
-    for (const [k, line] of [["Blipmaker", "the creator has arrived! 👑"], ["Byte", "*beep* ready to ship!"]]) {
+    for (const [k, line] of [["Blipmaker", "the creator has arrived! 👑"], ["Byte", "*beep* ready to ship!"], ["Guardian", "🛡️ on duty!"]]) {
       if (!pets.some((p) => p.kind === k)) { const p = addPet(k, { name: k, quiet: true }); if (p) { say(p, line, 4); burst(p, "heart", 8); } }
     }
   }
@@ -1627,7 +1635,13 @@
     const locked = pool.filter((k) => !isUnlocked(k)); closeSheets();
     startSighting(pick(locked.length ? locked : pool));
   }
-  $("devBtn").hidden = !isCreator();
+  function modMode() {                                    // moderators get a smaller menu
+    if (isCreator()) return;
+    ["devHearts", "devEvent", "devUnlock", "devCreators"].forEach((id) => { $(id).hidden = true; });
+    $("devTitle").textContent = "🛡️ Mod menu"; $("devNote").textContent = "For checking reports and running events. Thanks for modding! 🛡️";
+  }
+  $("devBtn").hidden = !(isCreator() || isMod());
+  if (isMod()) modMode();
   $("devBtn").onclick = () => openSheet("devSheet");
   $("devHearts").onclick = () => { reward(pets[0], 100); toast("💖 +100 hearts", 1.5); };
   $("devCryptid").onclick = () => devSpawn("cryptids");
@@ -1848,7 +1862,7 @@
   // Limited-time thank-you Blips. A gift only counts as delivered once it has actually walked into town (or, with a full
   // town, once the player was told it's in the Zoo), so reloading or closing the page early can't lose it.
   if (!save.giftsDelivered) save.giftsDelivered = save.gifts.filter((k) => k !== "Patch");   // older saves: those already arrived
-  const isTester = (() => { try { return !!localStorage.getItem("blipville-early-code"); } catch (e) { return false; } })();   // used an early access code
+  const isTester = (() => { try { return !!localStorage.getItem("blipville-early-code") || isMod() || isCreator(); } catch (e) { return false; } })();   // used an early access code
   const drops = (D.giftDrops || (D.giftNow ? [{ kind: D.giftNow, until: D.giftUntil, why: "" }] : []))
     .filter((d) => !save.giftsDelivered.includes(d.kind) && (!d.until || localDay() <= d.until || save.gifts.includes(d.kind))
                    && (!d.start || localDay() >= d.start || save.gifts.includes(d.kind))
@@ -2104,6 +2118,7 @@
     return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
   }
   async function earlyOk() {
+    if (isCreator() || isMod()) return true;               // creators and moderators can always play
     try { const c = localStorage.getItem(EARLY_KEY); return !!c && EARLY_HASHES.includes(await sha256(normCode(c))); } catch (e) { return false; }
   }
   function earlyGate() {
@@ -2112,9 +2127,11 @@
     $("maintMsg").textContent = "Enter your early access code to play Blipville 1.0 before everyone else!";
   }
   $("earlyGo").onclick = async () => {
-    const code = normCode($("earlyCode").value);
-    if (code && EARLY_HASHES.includes(await sha256(code))) {
-      try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode: it just won't be remembered */ }
+    const code = normCode($("earlyCode").value), h = code ? await sha256(code) : "";
+    const role = (D.creator && h === D.creator.hash) ? "blipville-creator" : (D.modHashes || []).includes(h) ? "blipville-mod" : null;
+    if (role) { try { localStorage.setItem(role, h); } catch (e) { /* private mode */ } }      // creators and mods can always play
+    if (code && (role || EARLY_HASHES.includes(h))) {
+      if (!role) { try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode: it just won't be remembered */ } }
       $("earlyMsg").textContent = "🎉 Unlocked! Opening Blipville 1.0…"; sfx("fanfare");
       setTimeout(() => { if (IN_EARLY) location.reload(); else location.href = "../early/"; }, 900);
     } else $("earlyMsg").textContent = "That code doesn't work. Check it for typos!";

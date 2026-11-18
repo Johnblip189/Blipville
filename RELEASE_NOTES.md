@@ -4,8 +4,8 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
-- 🌟 **60 new special Blips, 12 in every tier:** new Rare egg Blips (Qilin, Pixie, Wyvern, Rainbow Blip…), Cryptids
-  (Yowie, Ogopogo, Squonk, Fur-bearing Trout…), Kaiju (Boulderback, Stormcrab, Clockwork Rex, Coralgon…), Ghosts (Wick,
+- 🌟 **72 new special Blips, at least 12 in every tier:** new Rare egg Blips (Qilin, Pixie, Wyvern, Rainbow Blip…), Cryptids
+  (Ningen, Van Meter Visitor, Lusca, Beast of Gévaudan, Yowie, Ogopogo, Squonk…: 24 new ones!), Kaiju (Boulderback, Stormcrab, Clockwork Rex, Coralgon…), Ghosts (Wick,
   Phantom Knight, Jack-o'-Ghost, Haunted Teacup…) and World Legends (Elder Treant, Candy Dragon, Star Whale, Comet Fox…).
 - 🐾 **12 new Blips:** Red Panda, Polar Bear, Puffin, Beluga, Gorilla, Sugar Glider, Highland Cow, Shoebill, Tarsier,
   Marmot, Mantis Shrimp and Frilled Lizard (plus the Echidna), each with its own colors and lines.
@@ -52,7 +52,7 @@ make Blipville what it is. This is the real thing.
   opens again by itself.
 - 🎁 Gifts can't get lost on the website version any more.
 
-**Everything in Blipville:** 334 Blips and 980+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 37 cryptids,
+**Everything in Blipville:** 346 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
 17 kaiju, 23 ghosts, 5 worlds with 22 World Legends, 31 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 

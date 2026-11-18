@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=23">
+<link rel="stylesheet" href="style.css?v=24">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -139,11 +139,14 @@
 <div class="sheet" id="eventSheet" hidden>
   <div class="card tall">
     <div class="sheetTitle"><span id="eventTitle"></span> <span class="muted small" id="eventWhen"></span></div>
-    <div class="muted small">Pet and feed your Hedgehogs, Foxes and Echidnas! Every pet is 1 point (once every few seconds) and every cookie is 3.
+    <div class="muted small">Pet and feed your Hedgehogs, Foxes and Echidnas, and do today's quests! A pet is 1 point (once every few seconds) and a cookie for a hungry Blip up to 3 (full Blips give nothing).
       Every 10 points unlocks a new event skin. Skins you earn are yours forever (the Windows app has them too).</div>
     <div class="eventBar"><div id="eventFill"></div><span id="eventPts"></span></div>
     <div id="eventGrid"></div>
     <div id="eventAdd"></div>
+    <div class="sheetTitle small" style="margin-top:14px">📅 Today's quests</div>
+    <div class="muted small" id="questNote"></div>
+    <div id="questList"></div>
     <button class="close" data-close>Close</button>
   </div>
 </div>
@@ -238,7 +241,7 @@
   </div>
 </div>
 
-<script src="data.js?v=23"></script>
-<script src="app.js?v=23"></script>
+<script src="data.js?v=24"></script>
+<script src="app.js?v=24"></script>
 </body>
 </html>

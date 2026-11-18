@@ -1,0 +1,4 @@
+still running after start-up: True (exit code )
+clicking a pet at 674,52
+still running at the end: True
+size: 15311331

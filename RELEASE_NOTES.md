@@ -4,6 +4,9 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
+- 🌟 **60 new special Blips, 12 in every tier:** new Rare egg Blips (Qilin, Pixie, Wyvern, Rainbow Blip…), Cryptids
+  (Yowie, Ogopogo, Squonk, Fur-bearing Trout…), Kaiju (Boulderback, Stormcrab, Clockwork Rex, Coralgon…), Ghosts (Wick,
+  Phantom Knight, Jack-o'-Ghost, Haunted Teacup…) and World Legends (Elder Treant, Candy Dragon, Star Whale, Comet Fox…).
 - 🐾 **12 new Blips:** Red Panda, Polar Bear, Puffin, Beluga, Gorilla, Sugar Glider, Highland Cow, Shoebill, Tarsier,
   Marmot, Mantis Shrimp and Frilled Lizard (plus the Echidna), each with its own colors and lines.
 - 💞 **Friendship levels:** every Blip bonds with you as you pet, feed and play with it, from New friend to Pal,
@@ -35,7 +38,7 @@ make Blipville what it is. This is the real thing.
   only Blip that **Awakens 3 times**: Wide-Eyed Lurker → Shadow Lurker → **Lurker Eternal**. Each Awakening needs a
   bigger crystal (75, 150, 250 💖), and in the Arena it can awaken all three times in one battle. When it reaches Lurker Eternal, the battle
   moves to **The Dam**: a giant cracked dam held up by a whole wall of Lurkers.
-- 👻 **Ghosts, a brand-new tier:** 11 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
+- 👻 **Ghosts, a brand-new tier:** 23 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
   🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.
 - 🏆 **Trophies:** 31 to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.
@@ -49,8 +52,8 @@ make Blipville what it is. This is the real thing.
   opens again by itself.
 - 🎁 Gifts can't get lost on the website version any more.
 
-**Everything in Blipville:** 260 Blips and 790+ colors, hats, hearts and Mystery Eggs (20 rare Blips), 25 cryptids,
-5 kaiju, 11 ghosts, 5 worlds with 10 World Legends, 31 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
+**Everything in Blipville:** 334 Blips and 980+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 37 cryptids,
+17 kaiju, 23 ghosts, 5 worlds with 22 World Legends, 31 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 
 **Updating?** Blipville (and Blipville Redux) will offer this update by itself: just say yes. Your pets, hearts,

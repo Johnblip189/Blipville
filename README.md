@@ -10,7 +10,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**274 kinds of pets · 860+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
+**334 kinds of pets · 980+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
 
 ## ✨ New in 1.0
 
@@ -27,7 +27,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - ✨ **20 Awakened forms**, including every kaiju, ghosts like King Sheetie and cryptids like Lunar Mothman, with one Awaken per Arena battle.
 - 🎨 **Accessory colors** and a **2nd accessory slot**.
 - 👁️ **The Lurker:** a many-eyed shadow ghost that Awakens **3 times**, up to Lurker Eternal.
-- 👻 **Ghosts:** a new tier of 11 ghosts that drift by at night. Click one while it glows! (Or light a 🕯️ Spirit Candle.)
+- 👻 **Ghosts:** a new tier of 23 ghosts that drift by at night. Click one while it glows! (Or light a 🕯️ Spirit Candle.)
 - 🏆 **Trophies:** 31 of them, each worth bonus hearts. Right-click a pet → 🏆 Trophies.
 - 🎨 **Redraws** of the 10 roughest Blips.
 - 🔧 **Patch**, a free thank-you gift for waiting out the maintenance (until Tuesday, November 24).
@@ -169,7 +169,7 @@ Taking care of your Blips earns **hearts**:
 | 🎁 Open Blipville on a new day | +10 daily treat |
 | 🌙 Survive a night in Night Shift | +10 (+25 the first time) |
 
-Spend **30 hearts** on a **🥚 Mystery Egg** (right-click any pet). It wobbles, cracks, and hatches one of the 20 rare Blips, which then joins you on the desktop. Collect them all!
+Spend **30 hearts** on a **🥚 Mystery Egg** (right-click any pet). It wobbles, cracks, and hatches one of the 32 rare Blips, which then joins you on the desktop. Collect them all!
 
 You can also spend hearts in the **🎩 Hats & outfits** shop: party hats, bows, crowns, wizard hats and more, from 💖 15 to 💖 50. Some only appear in their season, like the Santa Hat in winter or the Witch Hat around Halloween.
 

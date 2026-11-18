@@ -115,7 +115,10 @@
   }
 
   const awLevel = (b) => Math.max(+((save.awakenLevel || {})[b]) || 0, save.awakened.includes(b) ? 1 : 0);
-  const isUnlocked = (k) => AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  // ⭐ creator perks: the secret creator code is remembered on this device (never in the save, so save codes don't pass it on)
+  const CREATOR = new Set(D.groups.creator || []);
+  const isCreator = () => { try { return localStorage.getItem("blipville-creator") === (D.creator || {}).hash; } catch (e) { return false; } };
+  const isUnlocked = (k) => CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -920,7 +923,7 @@
     "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts),
     "world-1": () => save.worlds.length >= 1, "world-all": () => save.worlds.length >= WORLDS.length,
     "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
-    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "knight-3": () => awLevel("Phantom Knight") >= 3, "bond-5": () => pets.some((q) => bondLevel(q.bond || 0) >= 5), "catch-40": () => stat("catch_best") >= 40, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
+    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "knight-3": () => awLevel("Phantom Knight") >= 3, "boss-1": () => !!save.beatCreator, "bond-5": () => pets.some((q) => bondLevel(q.bond || 0) >= 5), "catch-40": () => stat("catch_best") >= 40, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
   };
   function checkTrophies() {
     for (const tr of D.trophies || []) {
@@ -1201,7 +1204,8 @@
   }
   function finishBattle(b) {
     if (b.winner === 0) {
-      bump("arena_wins"); questTick("arena_win"); arenaTeam.forEach((q) => pets.includes(q) && bondUp(q, "arena"));
+      bump("arena_wins"); questTick("arena_win");
+      if (b.sides[1].some((f) => f.base === "Blipmaker")) { b.reward = (b.reward || 0) + ((D.creator || {}).bossReward || 50); save.beatCreator = true; b.log.push("You beat the Blipmaker! 👑"); } arenaTeam.forEach((q) => pets.includes(q) && bondUp(q, "arena"));
       if (AR.rivals.some((r) => r.name === b.foe) && !save.rivalsBeaten.includes(b.foe)) save.rivalsBeaten.push(b.foe);
       reward(pets[0], b.reward); b.log.push(`🏆 You win! +${b.reward} 💖`); sfx("fanfare"); vibrate([30, 40, 30]);
       const w = stat("arena_wins"); $("arenaWins").textContent = `🏆 ${w} win${w === 1 ? "" : "s"}`;
@@ -1597,6 +1601,55 @@
     });
   }
   $("sheetCatch").onclick = () => sheetPet && openCatch(sheetPet);
+  // ⭐ secret codes (creator code; early access codes work here too) and the creator's dev sheet
+  $("secretGo").onclick = async () => {
+    const code = normCode($("secretCode").value);
+    if (!code) return;
+    const h = await sha256(code);
+    if (D.creator && h === D.creator.hash) {
+      try { localStorage.setItem("blipville-creator", h); } catch (e) { /* private mode */ }
+      sfx("fanfare"); $("secretMsg").textContent = "⭐ Welcome back, creator! Blipmaker and Byte are yours. Tap 🛠️ at the top.";
+      $("devBtn").hidden = false; devAddCreators(); persist(true);
+    } else if (EARLY_HASHES.includes(h)) {
+      try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode */ }
+      $("secretMsg").textContent = "🎟️ Early access code saved on this device!";
+    } else $("secretMsg").textContent = "Hmm, that code doesn't do anything.";
+  };
+  function devAddCreators() {
+    for (const [k, line] of [["Blipmaker", "the creator has arrived! 👑"], ["Byte", "*beep* ready to ship!"]]) {
+      if (!pets.some((p) => p.kind === k)) { const p = addPet(k, { name: k, quiet: true }); if (p) { say(p, line, 4); burst(p, "heart", 8); } }
+    }
+  }
+  function devSpawn(group) {
+    let pool = (D.groups[group] || []).slice();
+    if (group === "legends") pool = pool.filter((k) => save.world && LEGEND_WORLD[k] === save.world);
+    if (!pool.length) { toast("Legends only show up while you're visiting a world! 🌍", 3); return; }
+    const locked = pool.filter((k) => !isUnlocked(k)); closeSheets();
+    startSighting(pick(locked.length ? locked : pool));
+  }
+  $("devBtn").hidden = !isCreator();
+  $("devBtn").onclick = () => openSheet("devSheet");
+  $("devHearts").onclick = () => { reward(pets[0], 100); toast("💖 +100 hearts", 1.5); };
+  $("devCryptid").onclick = () => devSpawn("cryptids");
+  $("devKaiju").onclick = () => devSpawn("kaiju");
+  $("devGhost").onclick = () => devSpawn("ghosts");
+  $("devLegend").onclick = () => devSpawn("legends");
+  $("devEvent").onclick = () => { eventPoint(pets[0], 10, true); toast(`${EVENT.icon} +10 event points`, 1.5); };
+  $("devQuests").onclick = () => { save.quests = null; persist(true); toast("📅 Fresh quests: " + todaysQuests(todayStr()).map((q) => q.text).join(" · "), 5); };
+  $("devUnlock").onclick = () => {
+    save.hatched = [...D.groups.rare]; save.cryptids = [...D.groups.cryptids]; save.kaiju = [...D.groups.kaiju];
+    save.ghosts = [...D.groups.ghosts]; save.legends = [...D.groups.legends]; save.worlds = WORLDS.map((w) => w.name);
+    save.nightsWon = Math.max(3, save.nightsWon); save.awakened = Object.keys(AWAKEN_CHAIN);
+    save.awakenLevel = Object.fromEntries(Object.entries(AWAKEN_CHAIN).map(([b, ch]) => [b, ch.length]));
+    persist(true); sfx("fanfare"); toast("🔓 Everything's unlocked!", 2.5);
+  };
+  $("devCreators").onclick = () => { devAddCreators(); closeSheets(); };
+  $("devBoss").onclick = async () => {
+    const code = battleCodeFor(D.creator.boss[0], D.creator.boss[1]);
+    try { await navigator.clipboard.writeText(code); toast("🥊 Boss battle code copied! Share it on the Discord.", 4); }
+    catch (e) { prompt("Your boss battle code:", code); }
+  };
+
 
   // ------------------------------------------------------------------ events 🎉 (the same event as the desktop app)
   const EVENT = D.event || { id: "", name: "", icon: "🎉", kinds: [], rewards: [], per_skin: 10, start: "9999", until: "0000" };

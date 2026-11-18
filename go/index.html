@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=35">
+<link rel="stylesheet" href="style.css?v=36">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -24,6 +24,7 @@
   <div class="right">
     <button class="pill" id="installBtn" title="Install Blipville as an app on this laptop or phone" hidden><img class="px" src="icons/px/download.png" alt=""> <span>Install app</span></button>
     <button class="pill icon" id="arenaBtn" aria-label="Arena" title="Arena"><img class="px" src="icons/px/arena.png" alt=""></button>
+    <button class="pill icon" id="devBtn" aria-label="Creator menu" title="Creator menu" hidden>🛠️</button>
     <button class="pill icon" id="eventBtn" aria-label="Event" title="Spiky Week event" hidden>🦔</button>
     <button class="pill icon" id="trophyBtn" aria-label="Trophies" title="Trophies"><img class="px" src="icons/px/trophy.png" alt=""></button>
     <button class="pill icon" id="soundBtn" aria-label="Sound off"><img class="px" src="icons/px/mute.png" alt=""></button>
@@ -120,6 +121,21 @@
     <div class="sheetTitle small" style="margin-top:14px">📅 Today's quests</div>
     <div class="muted small" id="questNote"></div>
     <div id="questList"></div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="devSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle">🛠️ Creator menu</div>
+    <div class="muted small">Only you have this. 💜</div>
+    <div class="devGrid">
+      <button id="devHearts">💖 +100 hearts</button><button id="devEvent">🦔 +10 event points</button>
+      <button id="devCryptid">👣 Spawn a cryptid</button><button id="devKaiju">🦖 Spawn a kaiju</button>
+      <button id="devGhost">👻 Spawn a ghost</button><button id="devLegend">✨ Spawn a legend</button>
+      <button id="devQuests">📅 Fresh quests</button><button id="devUnlock">🔓 Unlock everything</button>
+      <button id="devCreators">⭐ Add my Creator Blips</button><button id="devBoss">🥊 Copy my boss code</button>
+    </div>
     <button class="close" data-close>Close</button>
   </div>
 </div>
@@ -237,6 +253,8 @@
       <div class="muted small">Your town saves on this device automatically. To back it up or move it to another phone, browser or the Windows app (right-click a pet → 💾 Save code), copy your save code, then paste it there and tap Load.</div>
       <textarea id="saveCode" rows="2" placeholder="Paste a save code here…" spellcheck="false" autocomplete="off"></textarea>
       <div class="saveRow"><button id="copySave">Copy my save code</button><button id="loadSave">Load this code</button></div>
+      <div class="earlyRow"><input id="secretCode" placeholder="🔑 Secret code" autocomplete="off" spellcheck="false" maxlength="24"><button id="secretGo">Enter</button></div>
+      <div id="secretMsg" class="small gold"></div>
     </div>
     <div class="linkRow">
       <a class="linkBtn" href="https://github.com/Johnblip189/blipville/issues/new?template=idea.yml" target="_blank" rel="noopener">💡 Suggest</a>
@@ -257,7 +275,7 @@
   </div>
 </div>
 
-<script src="data.js?v=35"></script>
-<script src="app.js?v=35"></script>
+<script src="data.js?v=36"></script>
+<script src="app.js?v=36"></script>
 </body>
 </html>

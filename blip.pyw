@@ -3574,7 +3574,15 @@ LEGEND_WORLD.update({"Elder Treant": "Plant World", "Petal Sprite": "Plant World
 
 CRYPTIDS.update({"Ningen": {"eyes": 4, "move": "float", "speed": 0.7, "feet": False, "mouth": True, "lines": ["*glides under the ice*", "i'm big, pale and polite", "antarctica says hi", "*slow blink*"], "body": ["...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", "a.obbbbbbbbbbo.a", "aa.obbbbbbbbo.aa", "a...obbbbbbo...a", ".....oooooo....."], "colors": [{"name": "Antarctic", "o": "#6a7a8a", "b": "#f4f8ff", "a": "#c8d8e8", "e": "#1a2030"}, {"name": "Deep Ice", "o": "#3a5a7a", "b": "#d0e8ff", "a": "#8ab0d8", "e": "#0a1a2a"}]}, "Van Meter Visitor": {"eyes": 5, "move": "flutter", "speed": 1.2, "feet": True, "mouth": False, "lines": ["*my horn glows at night*", "i scared a whole town in 1903", "the mine is my home", "*flaps bat wings*"], "body": [".......yy.......", "w......yy......w", "wo....oyyo....ow", "wwooooooooooooww", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wobbbbbbbbbbbbow", "w.obbbbbbbbbbo.w", "..obbbbbbbbbbo..", "...obbbbbbbbo...", "....obbbbbbo....", "....oooooooo...."], "colors": [{"name": "Iowa Night", "o": "#0e0a14", "b": "#5a4a6a", "w": "#2a2236", "y": "#fff27a", "e": "#fff27a", "f": "#0e0a14"}, {"name": "Mine Glow", "o": "#0a140e", "b": "#3a6a4a", "w": "#1a3a24", "y": "#a8ff7a", "e": "#a8ff7a", "f": "#0a140e"}]}, "Tatzelwurm": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True, "lines": ["mrrrow-hiss", "cat head, lizard body, alpine views", "i hide in the mountain caves", "the yodeling scares me"], "body": [".o............o.", ".oao........oao.", ".oaboooooooobao.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", ".osssssssssssso.", ".osssssssssssso.", "..osssssssssso..", "...oooooooooo..."], "colors": [{"name": "Alpine", "o": "#1a140a", "b": "#c8985a", "a": "#e8b088", "s": "#5a8a3a", "p": "#ff9a7a", "e": "#2a8a3a", "f": "#1a140a"}, {"name": "Snowcap", "o": "#2a2a3a", "b": "#e8e8f0", "a": "#ffc0c8", "s": "#8aa8c8", "p": "#ffb0c0", "e": "#4a8aff", "f": "#2a2a3a"}]}, "Dobhar-chú": {"eyes": 5, "move": "walk", "speed": 1.3, "feet": True, "mouth": True, "lines": ["*splash* i'm the king otter!", "the lakes of Ireland are mine", "bow to your otter overlord", "*holds hands with you*"], "body": ["...yyyyyyyyyy...", "...ryyyrryyyr...", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpllllllllllpbo", "obbllllllllllbbo", "obbllllllllllbbo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Lough", "o": "#1a0e06", "b": "#6a4a2a", "l": "#d8b890", "y": "#ffd23a", "r": "#3ac85a", "p": "#e89a7a", "e": "#0a0604", "f": "#1a0e06"}, {"name": "Silver Lake", "o": "#1a1a24", "b": "#5a6070", "l": "#c8d0d8", "y": "#e8e8f0", "r": "#5ab8ff", "p": "#d8a0a8", "e": "#0a0a10", "f": "#1a1a24"}]}, "Lusca": {"eyes": 4, "move": "float", "speed": 0.9, "feet": False, "mouth": False, "lines": ["*bubbles from the blue hole*", "half shark, half octopus, all hugs", "8 arms AND a fin!", "*swirls in the deep*"], "body": [".......ff.......", "......ffff......", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "owwwwwwwwwwwwwwo", ".oooooooooooooo.", ".t.t.t.tt.t.t.t.", "t..t..t..t..t..t", ".t..t..tt..t..t.", "t.....t..t.....t"], "colors": [{"name": "Blue Hole", "o": "#0a1a3a", "b": "#3a6aa8", "w": "#e8f4ff", "f": "#2a4a8a", "t": "#ff7a6a", "e": "#fff27a"}, {"name": "Reef Glow", "o": "#0a2a2a", "b": "#2a8a7a", "w": "#e8fff8", "f": "#1a6a5a", "t": "#ffd23a", "e": "#ff5a8a"}]}, "Beast of Gévaudan": {"eyes": 5, "move": "walk", "speed": 1.4, "feet": True, "mouth": True, "lines": ["*low growl in french*", "the forests of France fear me", "bonjour! (scary)", "i'm a very big good boy"], "body": ["o..............o", "oo............oo", "oao.oooooooo.oao", "oaaobbbbbbbboaao", "obbbbbbbbbbbbbbo", "obsbbbbbbbbbbsbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbllllllllllbbo", "osblllnnnnlllbso", ".osbllllllllbso.", "..oooooooooooo.."], "colors": [{"name": "Gévaudan", "o": "#1a0a04", "b": "#8a3a1a", "a": "#c86a3a", "s": "#3a1a0a", "l": "#d8a070", "n": "#1a0a04", "e": "#ffd23a", "f": "#1a0a04"}, {"name": "Moonlit", "o": "#0a0a14", "b": "#4a4a5a", "a": "#8a8a9a", "s": "#1a1a24", "l": "#a8a8b8", "n": "#0a0a14", "e": "#ff3a3a", "f": "#0a0a14"}]}, "Goatman": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": False, "lines": ["baaa… (spookily)", "Maryland's woods are my home", "i'm half goat. the cool half", "*clip clop in the dark*"], "body": ["h..............h", "hh............hh", ".hhoooooooooohh.", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "aobbbbbbbbbbbboa", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbnnbbbbnnbbo.", "..obbbbbbbbbbo..", "..obbgbbbbgbbo..", "...oogoooogoo..."], "colors": [{"name": "Woods", "o": "#1a140a", "b": "#7a6a4a", "h": "#e8d8b0", "a": "#5a4a2a", "n": "#1a140a", "g": "#e8d8b0", "e": "#ffd23a", "f": "#1a140a"}, {"name": "Ghostly", "o": "#2a2a3a", "b": "#c8c8d8", "h": "#ffffff", "a": "#8a8aa8", "n": "#2a2a3a", "g": "#ffffff", "e": "#ff3a5a", "f": "#2a2a3a"}]}, "Ropen": {"eyes": 5, "move": "flutter", "speed": 1.2, "feet": False, "mouth": False, "lines": ["*glows over the island at night*", "my tail has a diamond tip", "i light up like a lantern", "SKREE! (glowing)"], "body": ["....h......h....", "...hh......hh...", "w.hooooooooooh.w", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wobbbbbbbbbbbbow", "w.obbkkkkkkbbo.w", "...obkkkkkkbo...", "....okkkkkko....", ".....oyyyyo.....", "......yyyy......"], "colors": [{"name": "Glowing", "o": "#0a0a14", "b": "#3a2a5a", "w": "#1a1430", "h": "#ff7a3a", "k": "#ffd23a", "y": "#ffe66a", "e": "#ffe66a"}, {"name": "Jungle", "o": "#0a140a", "b": "#3a5a2a", "w": "#1a2a14", "h": "#ff5a3a", "k": "#e8c86a", "y": "#a8ff7a", "e": "#a8ff7a"}]}, "Emela-ntouka": {"eyes": 5, "move": "walk", "speed": 0.7, "feet": True, "mouth": True, "lines": ["*splashes through the swamp*", "one horn, many legends", "i'm a gentle giant (mostly)", "the Congo river is my bath"], "body": [".......hh.......", "......hhhh......", ".....oohhoo.....", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "wwwwwwwwwwwwwwww", "w.ww..wwww..ww.w"], "colors": [{"name": "Swamp", "o": "#14140a", "b": "#5a5a3a", "h": "#e8e0c0", "p": "#a89a7a", "w": "#3a6a5a", "e": "#ffd23a", "f": "#14140a"}, {"name": "River Mud", "o": "#1a0e06", "b": "#7a5a3a", "h": "#fff0d0", "p": "#c89a7a", "w": "#4a5a3a", "e": "#1a0a02", "f": "#1a0e06"}]}, "Caddy": {"eyes": 3, "move": "float", "speed": 1.0, "feet": False, "mouth": False, "lines": ["*horse-like whinny… from the sea*", "the BC coast is my home", "i'm a sea serpent with a horse face", "humps ahoy!"], "body": ["..oo.oooooo.oo..", ".obboobbbboobbo.", ".obbbbbbbbbbbbo.", ".obpbbbbbbbbpbo.", "..obbbbbbbbbbo..", "...oobbbbbboo...", ".....obbbbo.....", ".ooo..obbo..ooo.", "obbbo.obbo.obbbo", "wwwwwwwwwwwwwwww", "w.ww..wwww..ww.w", "................"], "colors": [{"name": "Pacific", "o": "#0a1a2a", "b": "#5a7a6a", "p": "#a8c8b0", "w": "#2a5a8a", "e": "#0a1a10"}, {"name": "Kelp", "o": "#1a1a0a", "b": "#8a7a3a", "p": "#d8c890", "w": "#2a6a5a", "e": "#1a1004"}]}, "Orang Pendek": {"eyes": 5, "move": "walk", "speed": 1.1, "feet": True, "mouth": True, "lines": ["*shy little wave*", "i'm short, so what?", "the Sumatran forest is cozy", "you'll never get a photo"], "body": ["................", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbffffffffbbo.", "obbffffffffffbbo", "obbffffffffffbbo", "obbffffffffffbbo", ".obbffffffffbbo.", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Sumatra", "o": "#1a0a04", "b": "#8a4a1a", "f": "#e8b088", "e": "#1a0a04"}, {"name": "Shadow", "o": "#0a0a0a", "b": "#3a2a24", "f": "#a8806a", "e": "#ffd23a"}]}, "Montauk Monster": {"eyes": 5, "move": "walk", "speed": 0.8, "feet": True, "mouth": True, "lines": ["*washed up on the beach*", "nobody knows what i am", "not even me!", "i'm a mystery from 2008"], "body": ["................", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbkkkkbbbbbo", "obpbbkkkkkkbbpbo", "obbbbkkkkkkbbbbo", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Beach Find", "o": "#4a3a3a", "b": "#e8c8b8", "k": "#c8a090", "p": "#ff9ab0", "e": "#1a1010"}, {"name": "Weird Green", "o": "#2a3a2a", "b": "#b8d8a8", "k": "#8ab07a", "p": "#ffb0c0", "e": "#0a1a0a"}]}})
 GHOSTS['Phantom Knight'] = {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False, "lines": ["*clank… clank…*", "i guard this castle forever", "my armor is empty. and spooky", "halt! who goes there? (a friend)", "for the realm!"], "body": [".......rr.......", "......rrrr......", "....oooooooo....", "...ohhhhhhhho...", "..ohhhhhhhhhho..", "..ohvvvvvvvvho..", "..ohhhhhhhhhho..", ".oossssssssssoo.", "oaossssbbssssoao", ".osssssssssssso.", "..wwwwwwwwwwww..", "...w.ww..ww.w..."], "colors": [{"name": "Iron", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8"}, {"name": "Gilded", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a"}]}   # redrawn for 1.0, with his own Phantom type and 3 Awakenings
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS}.items():
+# ⭐ Creator Blips: only the people who make Blipville can get these (with the secret creator code). They never show up for anyone
+# else, and save codes don't carry them.
+CREATOR = {"Blipmaker": {"eyes": 5, "move": "hop", "speed": 1.2, "lines": ["i made all of this! 💜", "*adjusts crown*", "welcome to MY Blipville", "the creator has arrived", "every Blip started as my idea"], "body": ["....y..yy..y....", "....yyyyyyyy....", "..oooyyyyyyooo..", ".obbbbbbbbbbbbo.", "cobbbbbbbbbbbboc", "cobbbbbbbbbbbboc", "cobbbbbbbbbbbboc", "cobpbbbbbbbbpboc", "cobbbbbssbbbbboc", "cobbbbssssbbbboc", "cc.obbbssbbbo.cc", "cc..oooooooo..cc"], "colors": [{"name": "Founder", "o": "#2a1a4a", "b": "#8a6aff", "y": "#ffd23a", "c": "#e83a5a", "s": "#ffd23a", "p": "#ff9ad8", "e": "#1a0a3a"}, {"name": "Night Shift", "o": "#0a0a1a", "b": "#3a3a6a", "y": "#ffd23a", "c": "#5affd8", "s": "#5affd8", "p": "#c8a0ff", "e": "#fff27a"}]}, "Byte": {"eyes": 5, "move": "hop", "speed": 1.4, "mouth": False, "lines": ["*beep* i helped build this!", "compiling cuteness…", "0 bugs found (today)", "ship it! 🚀", "i wrote 10,000 lines of Blip"], "body": ["........y.......", "........a.......", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", "..oggggggggggo..", "..oggggggggggo..", "..oggggmmggggo..", "..obbbbbbbbbbo..", "..obkbbbbbbkbo..", "...obbbbbbbbo...", "....oo....oo...."], "colors": [{"name": "Terminal", "o": "#0a1a1a", "b": "#5ad8c8", "g": "#0a2a2a", "m": "#5aff8a", "k": "#c8fff0", "a": "#2a4a4a", "y": "#ffd23a", "e": "#5aff8a"}, {"name": "Sunset", "o": "#2a0a0a", "b": "#ff9a6a", "g": "#2a0a14", "m": "#ffd23a", "k": "#fff0d0", "a": "#5a2a1a", "y": "#5affd8", "e": "#ffd23a"}]}}
+CREATOR_KINDS = list(CREATOR)
+CREATOR_HASH = "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56"   # SHA-256 of the creator code (the code itself is never in here)
+CREATOR_TIER = {"Blipmaker": 2.0, "Byte": 1.3}
+CREATOR_BOSS = ["The Blipmaker (boss)", [["Blipmaker", 0, 0], ["Lurker", 0, 3], ["Phantom Knight", 0, 3]]]
+CREATOR_BOSS_REWARD = 50
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
@@ -3649,6 +3657,7 @@ TROPHIES = [
     ("knight-3", "⚔️", "The Final Oath", "Awaken the Phantom Knight all 3 times", lambda a: a.awaken_level("Phantom Knight") >= 3, 40),
     ("bond-5", "💞", "Soulmates", "Reach max friendship (Soulmate) with a Blip", lambda a: any(bond_level(p.bond) >= 5 for p in a.pets), 30),
     ("catch-40", "🍪", "Cookie Pro", "Score 40 in one game of Cookie Catch", lambda a: a.stat("catch_best") >= 40, 20),
+    ("boss-1", "👑", "Beat the Blipmaker", "Beat the creator's boss team in the Arena", lambda a: bool(a.save.get("beat_creator")), 50),
     ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
     ("mouse-10", "🖱️", "Cat and Mouse", "Your Blips catch your mouse pointer 10 times", lambda a: a.stat("cursor_catches") >= 10, 15),
 ]
@@ -4713,6 +4722,7 @@ class Blip:
         talk.add_command(label="💡 Suggest an idea…", command=lambda: self.open_link(IDEA_URL, "ooh, what's your idea?"))
         talk.add_command(label="🆘 Get help / report a problem…", command=lambda: self.open_link(HELP_URL, "let's get you some help!"))
         talk.add_command(label="📋 Copy error log (for bug reports)", command=self.copy_log)
+        talk.add_command(label="🔑 Enter a secret code…", command=lambda: app.enter_secret_code(self.root))
         self.menu.add_cascade(label="💬 Suggestions & help", menu=talk)
         self.menu.add_command(label="💖 Donate / support Blipville…", command=self.support)
         self.menu.add_separator()
@@ -5240,6 +5250,19 @@ class Blip:
                 self.color_menu.add_radiobutton(label=col["name"] + ("  ✨" if col.get("event") else ""), value=i,
                                                 variable=self.color_var, command=self.pick_color)
         self.menu.entryconfigure(self.event_entry, label=self.app.event_label())
+        if self.app.save.get("creator") and not getattr(self, "dev_added", False):
+            self.dev_added = True
+            dev = tk.Menu(self.menu, tearoff=0)
+            dev.add_command(label="💖 +100 hearts", command=lambda: self.app.add_hearts(100, self))
+            for label, group in (("👣 Spawn a cryptid", "cryptid"), ("🦖 Spawn a kaiju", "kaiju"), ("👻 Spawn a ghost", "ghost"),
+                                 ("✨ Spawn a World Legend", "legend")):
+                dev.add_command(label=label, command=lambda g=group: self.app.dev_spawn(g))
+            dev.add_command(label=f"{EVENT['icon']} +10 event points", command=lambda: self.app.event_point(self, 10, any_kind=True))
+            dev.add_command(label="📅 Fresh daily quests", command=self.app.dev_reset_quests)
+            dev.add_command(label="🔓 Unlock everything", command=self.app.dev_unlock_all)
+            dev.add_command(label="⭐ Add my Creator Blips", command=self.app.dev_add_creators)
+            dev.add_command(label="🥊 Copy my boss battle code", command=lambda: self.app.dev_boss_code(self.root))
+            self.menu.add_cascade(label="🛠️ Creator menu", menu=dev)
         self.menu.entryconfigure(2, label="Wake up" if self.state == "sleep" else "Nap time")
         # While a menu is open, Windows pauses the app, so windows can't repaint (a see-through window that needs a
         # repaint then shows black). Hold this pet still while its menu is open, and repaint everything right after.
@@ -6991,7 +7014,7 @@ ARENA_BEATS = {"spark": "sprout", "sprout": "splash", "splash": "spark", "phanto
 # 👻 Phantom (the Phantom Knight's very own type): never super effective and never resisted, but 1 in 5 hits passes right through it
 PHANTOM_DODGE = 0.2
 TYPE_OF = {"Phantom Knight": "phantom"}
-FORM_MOVES = {"Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
+FORM_MOVES = {"Blipmaker": "Creator's Spark", "Byte": "Bug Fix", "Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
               "Phantom Sovereign": "Sovereign's Judgment"}
 ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash": ["Bubble Burst", "Splash Slam", "Tidal Hug"],
                "sprout": ["Leaf Whirl", "Vine Bop", "Petal Storm"], "phantom": ["Phantom Slash", "Soul Strike", "Spectral Lance"]}
@@ -7020,7 +7043,7 @@ def _arena_stats(kind):
     tab = next((n for n, ks in TAB_GROUPS if base in ks), "")
     kind_type = TYPE_OF.get(base) or ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
                  "sprout" if base in _SPROUT or tab.startswith("Plants") else ["spark", "splash", "sprout"][h % 3])
-    tier = (1.2 if base in LEGENDS or base in KAIJU else 1.12 if base in RARE or base in CRYPTIDS or base in GHOSTS
+    tier = CREATOR_TIER.get(base) or (1.2 if base in LEGENDS or base in KAIJU else 1.12 if base in RARE or base in CRYPTIDS or base in GHOSTS
             else 1.1 if base in ROBOTS else 1.05 if base in GIFTS else 1.0)
     if kind in AWAKEN_BASE:
         tier *= 1.25 * 1.18 ** (awaken_stage(kind) - 1)
@@ -7428,8 +7451,12 @@ class Arena:
                     p.befriend("arena")
             if self.foe in [r[0] for r in ARENA_RIVALS] and self.foe not in self.app.save.setdefault("rivals_beaten", []):
                 self.app.save["rivals_beaten"].append(self.foe)
-            self.app.add_hearts(self.reward, self.app.pets[0] if self.app.pets else None)
-            self.log.append(f"🏆 You win! +{self.reward} 💖")
+            reward = self.reward
+            if any(f.base == "Blipmaker" for f in self.battle.sides[1]):          # beat the creator's boss team!
+                reward += CREATOR_BOSS_REWARD
+                self.app.save["beat_creator"] = True
+            self.app.add_hearts(reward, self.app.pets[0] if self.app.pets else None)
+            self.log.append(f"🏆 You win! +{reward} 💖" + ("  You beat the Blipmaker! 👑" if reward > self.reward else ""))
             self.app.sound.play("fanfare")
         else:
             self.log.append("💤 Your team needs a nap… try again!")
@@ -7496,7 +7523,7 @@ TROPHY_CUP = ["..cccccccc..", "hhcccccccchh", "h.cccccccc.h", "h.cccccccc.h", ".
 
 class TrophyShelf:
     """Every trophy on wooden shelves: gold when you've earned it, a shadow with a hint when you haven't."""
-    COLS, CELL_W, CELL_H = 6, 150, 128
+    COLS, CELL_W, CELL_H = 7, 150, 128
 
     def __init__(self, app):
         self.app = app
@@ -8850,6 +8877,8 @@ class App:
                             parent=parent)
 
     def is_unlocked(self, kind):
+        if kind in CREATOR:
+            return bool(self.save.get("creator"))
         if kind in AWAKEN_BASE:
             return self.awaken_level(AWAKEN_BASE[kind]) >= awaken_stage(kind) and self.is_unlocked(AWAKEN_BASE[kind])
         if kind in LEGENDS:
@@ -9054,6 +9083,79 @@ class App:
         self.root.destroy()
 
     # ----- desktop-only fun: climbing windows, playing with the mouse pointer
+    # ----- ⭐ creator perks (the secret creator code)
+    def enter_secret_code(self, parent):
+        import hashlib
+        from tkinter import simpledialog, messagebox
+        text = simpledialog.askstring("Secret code", "Enter a secret code:", parent=parent) or ""
+        code = "".join(ch for ch in text.upper() if ch.isalnum())
+        if not code:
+            return
+        if hashlib.sha256(code.encode()).hexdigest() != CREATOR_HASH:
+            messagebox.showinfo("Secret code", "Hmm, that code doesn't do anything.", parent=parent)
+            return
+        self.save["creator"] = True
+        write_save(self.save)
+        self.sound.play("fanfare")
+        self.dev_add_creators()
+        messagebox.showinfo("⭐ Creator mode", "Welcome back, creator! 💜\n\nBlipmaker and Byte are yours (only yours), and every pet's "
+                            "right-click menu now has a 🛠️ Creator menu: hearts, spawns, unlock everything and your boss battle code.",
+                            parent=parent)
+
+    def dev_add_creators(self):
+        have = {p.kind for p in self.pets}
+        for kind, name, line in (("Blipmaker", "Blipmaker", "the creator has arrived! 👑"), ("Byte", "Byte", "*beep* ready to ship!")):
+            if kind not in have:
+                pet = self.add_pet(kind, name, greet=False)
+                if pet:
+                    pet.say(line, 4)
+                    pet.burst("heart", 8)
+
+    def dev_spawn(self, group):
+        pool = {"cryptid": CRYPTID_KINDS, "kaiju": KAIJU_KINDS, "ghost": GHOST_KINDS}.get(group)
+        if group == "legend":
+            w = self.world()
+            pool = [k for k, wn in LEGEND_WORLD.items() if w and wn == w["name"]]
+            if not pool:
+                if self.pets:
+                    self.pets[0].say("legends only show up while visiting a world! 🌍", 3)
+                return
+        locked = [k for k in pool if not self.is_unlocked(k)] or pool
+        for sg in list(self.sightings):
+            sg.leave()
+        self.sightings.append(Sighting(self, random.choice(locked)))
+        self.sound.play("whoosh")
+
+    def dev_reset_quests(self):
+        self.save.pop("quests", None)
+        write_save(self.save)
+        if self.pets:
+            self.pets[0].say("📅 fresh quests: " + ", ".join(q["text"].lower() for q in todays_quests()), 5)
+
+    def dev_unlock_all(self):
+        sv = self.save
+        sv["hatched"] = list(RARE_KINDS)
+        for key, kinds in (("cryptids", CRYPTID_KINDS), ("kaiju", KAIJU_KINDS), ("ghosts", GHOST_KINDS), ("legends", LEGEND_KINDS)):
+            sv[key] = list(kinds)
+        sv["worlds"] = [w["name"] for w in WORLDS]
+        sv["nights_won"] = max(3, int(sv.get("nights_won", 0)))
+        sv["unlocked"] = list(UNLOCKS)
+        sv["awakened"] = list(AWAKEN_CHAIN)
+        sv["awaken_level"] = {b: len(ch) for b, ch in AWAKEN_CHAIN.items()}
+        write_save(sv)
+        self.sound.play("fanfare")
+        if self.pets:
+            self.pets[0].say("🔓 everything's unlocked!", 3)
+
+    def dev_boss_code(self, parent):
+        from tkinter import messagebox
+        code = battle_code(CREATOR_BOSS[0], CREATOR_BOSS[1])
+        self.root.clipboard_clear()
+        self.root.clipboard_append(code)
+        messagebox.showinfo("🥊 Your boss battle code", "Copied! Share it on the Discord: anyone can paste it in the Arena "
+                            f"(📥 Battle a friend's code) to fight your team: Blipmaker, Lurker Eternal and Phantom Sovereign.\n\n"
+                            f"Beating it gives {CREATOR_BOSS_REWARD} 💖 and the 'Beat the Blipmaker' trophy.\n\n{code}", parent=parent)
+
     def awaken_level(self, base):
         """How many times this kind of Blip has been awakened (0-3): each needs its own Awakening Crystal."""
         lv = self.save.get("awaken_level", {}).get(base, 0)

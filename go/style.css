@@ -301,3 +301,8 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
   color: #fff; font: 700 14px var(--font); letter-spacing: .06em; text-transform: uppercase; }
 .earlyRow button { padding: 0 16px; border: 0; border-radius: 12px; background: #ffd23a; color: #14121e; font: 800 14px var(--font); }
 #earlyMsg { min-height: 18px; margin-top: 6px; }
+
+/* creator menu */
+#devBtn[hidden] { display: none; }
+.devGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.devGrid button { min-height: 44px; border: 0; border-radius: 12px; background: var(--card2); color: var(--text); font: 800 13px var(--font); }

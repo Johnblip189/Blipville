@@ -14,7 +14,7 @@ bl = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(bl)
 
 kinds = {}
-for k in list(bl.KINDS) + list(bl.AWAKEN_BASE):
+for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS", [])):
     v = bl.VARIANTS[k]
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
@@ -25,7 +25,7 @@ for k in list(bl.KINDS) + list(bl.AWAKEN_BASE):
     }
 data = {
     "kinds": kinds,
-    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS},
+    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS, "creator": getattr(bl, "CREATOR_KINDS", [])},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,
@@ -51,6 +51,7 @@ data = {
     "trophyCup": bl.TROPHY_CUP,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,
+    "creator": {"hash": bl.CREATOR_HASH, "boss": bl.CREATOR_BOSS, "bossReward": bl.CREATOR_BOSS_REWARD},
     "giftDrops": [{k: d[k] for k in ("kind", "until", "why", "start", "testers") if k in d} for d in bl.GIFT_DROPS],
     "legendWorld": bl.LEGEND_WORLD,
     "worlds": [{k: w[k] for k in ("name", "icon", "tab", "cost")} for w in bl.WORLDS],

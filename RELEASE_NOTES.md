@@ -46,7 +46,10 @@ make Blipville what it is. This is the real thing.
 - ⚔️ **The Phantom Knight** got a full redraw, his very own 👻 **Phantom** type (hits can pass right through him), and
   the Lurker treatment: 3 Awakenings, Spectral Knight → Phantom Champion → **Phantom Sovereign**, who calls a ghostly
   army into **The Haunted Keep**.
-- 👻 **Ghosts, a brand-new tier:** 23 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
+- 🎭 **The Puppet Box:** an old toy chest that creaks open by itself at night, with red eyes peeking out of the gap.
+  Awaken it and it opens into the **Puppet Master**: a cracked porcelain mask with red tears, a little top hat and puppet
+  strings (👻 Phantom + 🍬 Sweet). When it awakens in the Arena, the battle moves to **The Puppet Theater**.
+- 👻 **Ghosts, a brand-new tier:** 24 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
   🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.
 - 🏆 **Trophies:** 31 to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.
@@ -60,8 +63,8 @@ make Blipville what it is. This is the real thing.
   opens again by itself.
 - 🎁 Gifts can't get lost on the website version any more.
 
-**Everything in Blipville:** 347 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
-17 kaiju, 23 ghosts, 5 worlds with 22 World Legends, 31 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
+**Everything in Blipville:** 348 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
+17 kaiju, 24 ghosts, 5 worlds with 22 World Legends, 33 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 
 **Updating?** Blipville (and Blipville Redux) will offer this update by itself: just say yes. Your pets, hearts,

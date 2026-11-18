@@ -478,13 +478,13 @@ ANIMALS.update({
     dict(name="Midnight", event="spiky-week", o="#0e0a24", s="#3a2a6a", b="#d8d0ff", p="#ff9ad8", n="#0e0a24", e="#0e0a24"),
     dict(name="Candy Floss", event="spiky-week", o="#6a2a4a", s="#ff9ad8", b="#fff0f8", p="#ff6ab0", n="#6a2a4a", e="#3a0a24"),
  ]),
- "Echidna": dict(eyes=5, body=["t.t..t.tt.t..t.t", "ss.tss.ss.sst.ss", "ssssssssssssssss", "sssobbbbbbbbosss", "ssobbbbbbbbbboss", "sobbbbbbbbbbbbos",
-                              "sobbbbbbbbbbbbos", "sobpbbbnnbbbpbos", "sobbbbbnnbbbbbos", "ssobbbbnnbbbboss", ".ssooooonnoooss.", "..ssssssssssss.."], colors=[
-    dict(name="Earthy", o="#2a1a0e", s="#3a2a1a", t="#f0e0c0", b="#b8865a", p="#e8907a", n="#2a1a12", e="#0a0604"),
-    dict(name="Sandstone", o="#3a2210", s="#8a5a3a", t="#fff4e0", b="#e8c89a", p="#ff9f8a", n="#3a2210", e="#1a0e06"),
-    dict(name="Night", o="#0a0a14", s="#1a1a2a", t="#c8d0ff", b="#6a6a8a", p="#c8a0d8", n="#0a0a14", e="#e8e8ff"),
-    dict(name="Opal", event="spiky-week", o="#1a3a4a", s="#5ad8c8", t="#ffffff", b="#e8f4ff", p="#ffb0d8", n="#1a3a4a", e="#1a3a4a"),
-    dict(name="Golden Spines", event="spiky-week", o="#3a2404", s="#c8901a", t="#fff27a", b="#fff0c8", p="#ff9f7a", n="#3a2404", e="#2a1404"),
+ "Echidna": dict(eyes=5, body=["...t..t..t..t...", "t..s.ts..st.s..t", ".ssssssssssssss.", "tssoooooooooosst", ".sobbbbbbbbbbos.", "sobbbbbbbbbbbbos",
+                              "sobbbbbbbbbbbbos", ".obbbbbnnbbbbbo.", ".obbbbbnnbbbbbo.", "..obbbbnnbbbbo..", "..ookoonnookoo..", ".......nn......."], colors=[
+    dict(name="Earthy", o="#1a0e06", s="#3a2a1a", t="#f0e0c0", b="#6a4a2e", n="#c8a080", k="#f0e0c0", p="#e8907a", e="#120804"),
+    dict(name="Sandstone", o="#3a2210", s="#8a5a3a", t="#fff4e0", b="#b8865a", n="#ecd0a8", k="#fff4e0", p="#ff9f8a", e="#1a0e06"),
+    dict(name="Night", o="#06060e", s="#1a1a2a", t="#c8d0ff", b="#3a3a5a", n="#8a8ab0", k="#c8d0ff", p="#c8a0d8", e="#e8e8ff"),
+    dict(name="Opal", event="spiky-week", o="#1a3a4a", s="#5ad8c8", t="#ffffff", b="#9ad8e8", n="#ffd0e8", k="#ffffff", p="#ffb0d8", e="#1a3a4a"),
+    dict(name="Golden Spines", event="spiky-week", o="#3a2404", s="#c8901a", t="#fff27a", b="#8a5a1a", n="#f0c890", k="#fff27a", p="#ff9f7a", e="#1a0e02"),
  ]),
  "Duck": dict(eyes=5, mouth=False, body=[
     "....oooooooo....",

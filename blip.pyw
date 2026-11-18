@@ -3707,7 +3707,7 @@ def is_night():
 
 # Events 🎉: for a few days, caring for certain Blips earns event points, and every so many points unlocks an event skin
 # (a color marked event=<id>). Skins you earn stay yours after the event; the rest stay locked.
-EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "2026-11-18", "until": "2026-11-29",
+EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "2026-11-17", "until": "2026-11-29",
          "until_text": "Sunday, November 29", "kinds": ["Hedgehog", "Fox", "Echidna"], "per_skin": 10,
          "rewards": [["Hedgehog", "Pinecone"], ["Fox", "Ember"], ["Echidna", "Opal"], ["Hedgehog", "Midnight"],
                      ["Fox", "Aurora"], ["Hedgehog", "Candy Floss"], ["Fox", "Maple"], ["Echidna", "Golden Spines"]]}
@@ -7346,7 +7346,8 @@ class EventWindow:
         got = app.save.get("skins", [])
         c.create_text(18, 26, anchor="w", text=f"{EVENT['icon']} {EVENT['name']}", fill="#ffd23a", font=("Segoe UI", 18, "bold"))
         c.create_text(self.W - 18, 26, anchor="e", fill="#ff9fc0", font=("Segoe UI", 10, "bold"),
-                      text=f"until {EVENT['until_text']}" if event_on() else "this event is over")
+                      text=f"until {EVENT['until_text']}" if event_on() else
+                      "starts soon!" if time.strftime("%Y-%m-%d") < EVENT["start"] else "this event is over")
         c.create_text(18, 62, anchor="w", width=self.W - 36, fill="#e8e4ff", font=("Segoe UI", 10),
                       text="Pet and feed your Hedgehogs, Foxes and Echidnas! Every pet is 1 point (once every few seconds) and "
                            f"every cookie is 3. Every {per} points unlocks a new event skin. Skins you earn are yours forever.")
@@ -8516,6 +8517,8 @@ class App:
         total = len(EVENT["rewards"]) * EVENT["per_skin"]
         if event_on():
             return f"{EVENT['icon']} {EVENT['name']} event ({min(self.event_points(), total)}/{total})…"
+        if time.strftime("%Y-%m-%d") < EVENT["start"]:
+            return f"{EVENT['icon']} {EVENT['name']} (starts soon)…"
         return f"{EVENT['icon']} {EVENT['name']} (event over)…"
 
     def event_hello(self):

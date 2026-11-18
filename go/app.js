@@ -1462,7 +1462,7 @@
   function openEvent() {
     const per = EVENT.per_skin, total = per * EVENT.rewards.length, pts = Math.min(eventPts(), total), got = save.skins || [];
     $("eventTitle").textContent = `${EVENT.icon} ${EVENT.name}`;
-    $("eventWhen").textContent = eventOn() ? `until ${EVENT.until_text}` : "this event is over";
+    $("eventWhen").textContent = eventOn() ? `until ${EVENT.until_text}` : todayStr() < EVENT.start ? "starts soon!" : "this event is over";
     $("eventFill").style.width = `${(100 * pts) / total}%`; $("eventPts").textContent = `${pts} / ${total} points`;
     const g = $("eventGrid"); g.innerHTML = "";
     EVENT.rewards.forEach(([kind, skin], i) => {

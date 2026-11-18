@@ -313,3 +313,11 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 .typeRow { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.08); color: var(--muted); }
 .typeRow > .typed:first-child { color: #fff; font-weight: 800; min-width: 84px; }
 .typeRow .typed img.px { width: 16px; height: 16px; }
+#arenaMoves { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 4px; }
+#arenaMoves .move { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 56px; padding: 6px;
+  border: 0; border-radius: 14px; color: #fff; font: 800 14px var(--font); cursor: pointer; }
+#arenaMoves .move small { font-size: 11px; font-weight: 600; opacity: .85; }
+#arenaMoves .move img.px { width: 16px; height: 16px; }
+#arenaMoves .m0 { background: #5a4ae0; } #arenaMoves .m1 { background: #3a8a6a; } #arenaMoves .m2 { background: #c8454a; } #arenaMoves .m3 { background: #a8742a; }
+#arenaMoves .move:disabled { background: #2b2547; color: #6a6290; cursor: default; }
+#arenaMoves .move:disabled img.px { opacity: .4; }

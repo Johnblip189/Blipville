@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=41">
+<link rel="stylesheet" href="style.css?v=42">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -154,7 +154,7 @@
   <div class="card tall">
     <div class="sheetTitle">⚔️ Arena <span class="muted" id="arenaWins"></span></div>
     <div id="arenaLobby">
-      <div class="muted small">10 types: each element is strong against 2 others (x1.5 damage) · ✨ one Awaken per battle</div>
+      <div class="muted small">Pick a move each turn · 10 types, each element strong against 2 (x1.5 damage) · ✨ one Awaken per battle</div>
       <details class="typeChart"><summary><img class="px" src="icons/px/arena.png" alt=""> Type chart</summary><div id="typeChart"></div></details>
       <div class="label">Your team <span class="muted small">(tap your Blips to pick 3)</span></div>
       <div class="chips" id="arenaTeam"></div>
@@ -167,6 +167,7 @@
     <div id="arenaFight" hidden>
       <canvas id="arenaCanvas" width="360" height="200"></canvas>
       <div id="arenaLog"></div>
+      <div id="arenaMoves"></div>
       <div class="row">
         <button id="arenaAwaken" hidden>✨ Awaken!</button>
         <button id="arenaBack">🏳️ Give up</button>
@@ -277,8 +278,8 @@
   </div>
 </div>
 
-<script src="data.js?v=41"></script>
-<script src="countdown.js?v=41"></script>
-<script src="app.js?v=41"></script>
+<script src="data.js?v=42"></script>
+<script src="countdown.js?v=42"></script>
+<script src="app.js?v=42"></script>
 </body>
 </html>

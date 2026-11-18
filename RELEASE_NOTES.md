@@ -24,7 +24,9 @@ make Blipville what it is. This is the real thing.
   down. You can even toss a Blip onto a window. Turn it off with right-click → 🪟 Climb on my windows.
 - 🖱️ **Only on Windows: they play with your mouse.** Wiggle the pointer near a Blip and it chases it and pounces. Sometimes
   it catches it and "steals" it for a second. Right-click → 🖱️ Play with my mouse to turn it off.
-- ⚔️ **The Arena:** pick a team of 3 and battle! Every Blip has one of **10 types** (🔥 Spark, 💧 Splash, 🌿 Sprout, ⚡ Volt, 🪨 Stone, 🌪️ Gust, ❄️ Frost, 🍬 Sweet, plus the
+- ⚔️ **The Arena:** pick a team of 3 and battle, turn by turn! Each turn you pick one of 4 moves: your Blip's signature
+  move, a second move (its 2nd type, or a quick move that goes first), a big move that hits hard but can miss, or a 🍪 Snack
+  to heal (once per Blip). Every Blip has one of **10 types** (🔥 Spark, 💧 Splash, 🌿 Sprout, ⚡ Volt, 🪨 Stone, 🌪️ Gust, ❄️ Frost, 🍬 Sweet, plus the
   rule-breakers 👻 Phantom and 🪐 Cosmic; each element is strong against 2 others, see the 📖 Type chart; about 50 Blips, like Magmaw 🔥🪨 and Phoenix 🔥🌪️, have **2 types**),
   stats and a move. Copy your **battle code** and send it to a friend (or post it on the Discord) so they can battle your
   team, or take on five practice rivals, up to Nyx the Night Queen and Kaiju King Kai. Every battle has a **background**: Sunny Meadow, Sunset Beach, Volcano Rim, Moonlit

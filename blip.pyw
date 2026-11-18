@@ -7168,7 +7168,31 @@ def _arena_stats(kind):
             "move": FORM_MOVES.get(kind) or (f"{kind.split()[0]} Nova" if kind in AWAKEN_BASE else ARENA_MOVES[kind_type][(h >> 4) % 3])}
 
 
+# Every Blip has 4 moves you pick from on your turn:
+#   1. its signature move (its own type)
+#   2. a move of its 2nd type, or a ⚡ quick move (weaker, but always goes first) if it only has 1 type
+#   3. a 💥 big move: hits hard, but can miss
+#   4. 🍪 Snack: heals 35% of its HP, once per Blip per battle
+BIG_MOVES = {"spark": "Blaze Burst", "splash": "Tidal Wave", "sprout": "Bloom Blast", "volt": "Thunder Crash", "stone": "Avalanche",
+             "gust": "Cyclone", "frost": "Blizzard", "sweet": "Sugar Storm", "phantom": "Nightmare", "cosmic": "Supernova"}
+QUICK_MOVES = {"spark": "Flicker Dash", "splash": "Splish Dash", "sprout": "Seed Flick", "volt": "Zip Zap", "stone": "Pebble Flick",
+               "gust": "Swoosh", "frost": "Frost Flick", "sweet": "Sprinkle Flick", "phantom": "Shadow Blink", "cosmic": "Star Dart"}
+MOVE_POWER, QUICK_POWER, BIG_POWER, BIG_ACC, SNACK_HEAL = 1.2, 0.8, 1.9, 0.75, 0.35
+
+
+def _arena_moves(kind, st):
+    h = _fnv(AWAKEN_BASE.get(kind, kind))
+    t1, t2 = st["type"], st.get("type2")
+    first = {"name": st["move"], "type": t1, "power": MOVE_POWER, "acc": 1.0}
+    second = ({"name": ARENA_MOVES[t2][(h >> 6) % 3], "type": t2, "power": MOVE_POWER, "acc": 1.0} if t2 else
+              {"name": QUICK_MOVES[t1], "type": t1, "power": QUICK_POWER, "acc": 1.0, "fast": True})
+    big = {"name": BIG_MOVES[t1], "type": t1, "power": BIG_POWER, "acc": BIG_ACC}
+    return [first, second, big, {"name": "Snack", "type": "", "power": 0, "acc": 1.0, "heal": SNACK_HEAL}]
+
+
 ARENA_STATS = {k: _arena_stats(k) for k in VARIANTS}
+for _k, _st in ARENA_STATS.items():
+    _st["moves"] = _arena_moves(_k, _st)
 
 # Arena backgrounds: little scenes 120 x 40 "units" (y down), drawn behind the battle. Shapes: ["rect", color, x, y, w, h],
 # ["poly", color, [x, y, x, y, ...]], ["circ", color, cx, cy, r], ["pix", sprite, x, y, unit] (a sprite from ARENA_PIX).
@@ -7318,6 +7342,7 @@ class Fighter:
         self.stage = 0
         st = ARENA_STATS[self.kind]
         self.max_hp = self.hp = st["hp"]
+        self.snacked = False                              # 🍪 one Snack per Blip per battle
 
     @property
     def awakened(self):
@@ -7370,31 +7395,85 @@ class Battle:
             line += " " + msg
         return line
 
-    def step(self):
+    # ---- turns: each round, you pick a move, the other side picks one, and the faster one goes first
+    def moves(self, side):
+        f = self.active(side)
+        return f.st["moves"] if f else []
+
+    def usable(self, side, i):
+        f = self.active(side)
+        return bool(f) and not (self.moves(side)[i].get("heal") and (f.snacked or f.hp >= f.max_hp))
+
+    def ai_move(self, side=1):
+        """The computer's pick: snack when it's low, otherwise the move that should hurt most (with a little randomness)."""
+        f, foe = self.active(side), self.active(1 - side)
+        ms = self.moves(side)
+        if f.hp < f.max_hp * 0.35 and self.usable(side, 3) and self.rng.random() < 0.6:
+            return 3
+        score = [(m["power"] * m["acc"] * type_mult(m["type"], arena_types(foe.st)) * self.rng.uniform(0.8, 1.2), i)
+                 for i, m in enumerate(ms) if not m.get("heal")]
+        return max(score)[1]
+
+    def plan(self, my_move):
+        """The order this round's moves happen in: [(side, move index, fighter), ...]. The computer may awaken first (a free action)."""
+        pre = []
+        b = self.active(1)
+        if self.can_awaken(1) and b.hp < b.max_hp * 0.5:
+            pre.append((1, "awaken", None))
+        their = self.ai_move(1)
+        def key(side, i):
+            f, m = self.active(side), self.moves(side)[i]
+            return (1 if m.get("fast") else 0, f.st["spd"], self.rng.random())
+        order = sorted([(0, my_move), (1, their)], key=lambda a: key(*a), reverse=True)
+        return pre + [(side, i, self.active(side)) for side, i in order]
+
+    def act(self, side, i, fighter=None):
+        """Do one move. fighter: who picked it (if that Blip is knocked out first, its move doesn't happen)."""
         if self.winner is not None:
             return None
-        a, b = self.active(0), self.active(1)
-        if self.can_awaken(1) and b.hp < b.max_hp * 0.5:        # the other team awakens when it's in trouble
-            return self.awaken(1)
-        first = 0 if (a.st["spd"], self.rng.random()) >= (b.st["spd"], self.rng.random()) else 1
-        side = first if self.turn % 2 == 0 else 1 - first
-        self.turn += 1
+        if i == "awaken":
+            return self.awaken(side)
         att, dfn = self.active(side), self.active(1 - side)
+        if att is None or dfn is None or (fighter is not None and att is not fighter):
+            return None
+        m = att.st["moves"][i]
+        if m.get("heal"):
+            if att.snacked:
+                return None
+            att.snacked = True
+            gain = min(att.max_hp - att.hp, round(att.max_hp * m["heal"]))
+            att.hp += gain
+            self.last = (side, -gain, 1.0)
+            return f"🍪 {att.kind} had a snack and got {gain} HP back!"
+        if self.rng.random() > m["acc"]:
+            self.last = (side, 0, 1.0)
+            return f"{att.kind} used {m['name']}… but it missed!"
         if "phantom" in arena_types(dfn.st) and self.rng.random() < PHANTOM_DODGE:
             self.last = (side, 0, 1.0)
-            return f"{att.kind} used {att.st['move']}… but it passed right through {dfn.kind}! 👻"
-        mult = max(type_mult(t, arena_types(dfn.st)) for t in arena_types(att.st))   # attacks with its best type
+            return f"{att.kind} used {m['name']}… but it passed right through {dfn.kind}! 👻"
+        mult = type_mult(m["type"], arena_types(dfn.st))
         crit = self.rng.random() < (COSMIC_CRIT if "cosmic" in arena_types(att.st) else 0.1)
-        dmg = max(1, round(att.st["atk"] * mult * self.rng.uniform(0.85, 1.15) * (1.5 if crit else 1)))
+        dmg = max(1, round(att.st["atk"] * m["power"] * mult * self.rng.uniform(0.85, 1.15) * (1.5 if crit else 1)))
         dfn.hp = max(0, dfn.hp - dmg)
         self.last = (side, dmg, mult)
-        line = f"{att.kind} used {att.st['move']}! {dmg} damage" + effect_text(mult) + (" · critical!" if crit else "")
+        line = f"{att.kind} used {m['name']}! {dmg} damage" + effect_text(mult) + (" · critical!" if crit else "")
         if dfn.hp == 0:
             self.idx[1 - side] += 1
             line += f" · {dfn.kind} is out!"
             if self.active(1 - side) is None:
                 self.winner = side
+            else:
+                line += f" {self.active(1 - side).kind} jumps in!"
         return line
+
+    def round(self, my_move):
+        """A whole round at once (for tests and quick play): returns the log lines."""
+        lines = []
+        for side, i, f in self.plan(my_move):
+            line = self.act(side, i, f)
+            if line:
+                lines.append(line)
+        return lines
 
 
 class Arena:
@@ -7412,7 +7491,7 @@ class Arena:
         self.c = tk.Canvas(self.win, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0)
         self.c.pack(padx=6, pady=6)
         self.c.bind("<Button-1>", self.on_click)
-        self.buttons, self.battle, self.log, self.after_id = [], None, [], None
+        self.buttons, self.battle, self.log, self.after_id, self.queue = [], None, [], None, []
         self.team = [p for p in app.pets][:3]
         self.lobby()
 
@@ -7448,7 +7527,7 @@ class Arena:
         c.create_text(16, 24, anchor="w", text="⚔️ Arena", fill="#ffffff", font=("Segoe UI", 16, "bold"))
         c.create_text(self.CW - 16, 24, anchor="e", text=f"🏆 {wins} win{'s' if wins != 1 else ''}", fill=self.GOLD, font=("Segoe UI", 12, "bold"))
         c.create_text(16, 52, anchor="w", fill="#c8c0e0", font=("Segoe UI", 9),
-                      text="10 types: each element is strong against 2 others · ✨ one Awaken per battle")
+                      text="Pick a move each turn · 10 types, each element strong against 2 · ✨ one Awaken per battle")
         self.button(self.CW - 166, 40, 150, 26, "📖 Type chart", self.type_chart, "#3a3360")
         c.create_text(16, 82, anchor="w", text="Your team (click your Blips below to pick 3)", fill=self.GOLD, font=("Segoe UI", 10, "bold"))
         for i in range(3):
@@ -7541,27 +7620,42 @@ class Arena:
             return
         self.battle, self.foe, self.reward, self.log, self.done = Battle(mine, theirs), name, reward, [], False
         self.battle.bg = arena_bg_for(name)
-        self.log.append(f"⚔️ {name} wants to battle!")
+        self.log.append(f"⚔️ {name} wants to battle! Pick a move.")
+        self.queue = []
         self.app.sound.play("whoosh")
         self.draw_battle()
-        self.after_id = self.win.after(900, self.tick)
+
+    def pick(self, i):
+        """You picked move i: play out the round one move at a time."""
+        b = self.battle
+        if b is None or b.winner is not None or self.queue or not b.usable(0, i):
+            return
+        self.queue = b.plan(i)
+        self.tick()
 
     def tick(self):
         self.after_id = None
         b = self.battle
-        if b is None or b.winner is not None:
+        if b is None:
             return
-        line = b.step()
-        if line:
-            self.log.append(line)
-            self.app.sound.play("thud" if b.last and b.last[1] > 30 else "boop")
+        while self.queue:
+            side, i, f = self.queue.pop(0)
+            line = b.act(side, i, f)
+            if line:
+                self.log.append(line)
+                self.app.sound.play("fanfare" if i == "awaken" else "munch" if line.startswith("🍪") else
+                                    "thud" if b.last and b.last[1] > 30 else "boop")
+                break
         if b.winner is not None:
+            self.queue = []
             self.finish()
         self.draw_battle()
-        if b.winner is None:
-            self.after_id = self.win.after(900, self.tick)
+        if self.queue:
+            self.after_id = self.win.after(850, self.tick)
 
     def awaken(self):
+        if self.queue:
+            return
         line = self.battle.awaken(0)
         if line:
             self.log.append(line)
@@ -7622,22 +7716,45 @@ class Arena:
                 draw_sprite(c, g.kind, g.color, gx, 50, 2, silhouette="#3a3360" if g.hp == 0 else None)
         if b.last and b.winner is None:
             side, dmg, mult = b.last
-            tx = 560 if side == 0 else 170
-            c.create_text(tx, 110, text=f"-{dmg}", fill="#ff5a7a" if mult >= 1 else "#c8c0e0", font=("Segoe UI", 18, "bold"))
+            if dmg < 0:                                           # a snack
+                c.create_text(170 if side == 0 else 560, 110, text=f"+{-dmg}", fill=self.GREEN, font=("Segoe UI", 18, "bold"))
+            else:
+                c.create_text(560 if side == 0 else 170, 110, text=f"-{dmg}" if dmg else "miss!", fill="#ff5a7a" if mult >= 1 else "#c8c0e0",
+                              font=("Segoe UI", 18, "bold"))
         for i, line in enumerate(self.log[-5:]):
-            c.create_text(16, 284 + i * 22, anchor="w", text=line, fill="#ffffff" if i == len(self.log[-5:]) - 1 else "#a8a0c8",
+            c.create_text(16, 278 + i * 21, anchor="w", text=line, fill="#ffffff" if i == len(self.log[-5:]) - 1 else "#a8a0c8",
                           font=("Segoe UI", 10, "bold" if i == len(self.log[-5:]) - 1 else "normal"), width=self.CW - 32)
         if b.winner is None:
-            if b.can_awaken(0):
-                self.button(16, 410, 220, 44, f"✨ Awaken {b.active(0).base}!", self.awaken, "#c86aff")
-            self.button(self.CW - 136, 410, 120, 44, "🏳️ Give up", self.give_up, "#3a3360")
+            me, foe = b.active(0), b.active(1)
+            busy = bool(self.queue)
+            for i, m in enumerate(b.moves(0)):                    # your 4 moves
+                x, w = 16 + i * 190, 178
+                if m.get("heal"):
+                    top, info = "🍪 Snack", "used" if me.snacked else f"heal {round(m['heal'] * 100)}% · once"
+                else:
+                    mult = type_mult(m["type"], arena_types(foe.st))
+                    top = f"{ARENA_TYPES[m['type']][0]} {m['name']}"
+                    info = " · ".join(x for x in ["goes first" if m.get("fast") else "",
+                                                  f"{round(m['acc'] * 100)}% hit" if m["acc"] < 1 else "",
+                                                  "strong!" if mult > 1.1 else "weak" if mult < 0.9 else ""] if x) or "normal"
+                ok = b.usable(0, i) and not busy
+                color = ("#5a4ae0" if i == 0 else "#3a8a6a" if i == 1 else "#c8454a" if i == 2 else "#a8742a") if ok else "#2b2547"
+                c.create_rectangle(x, 386, x + w, 440, fill=color, outline="")
+                c.create_text(x + w / 2, 404, text=top, fill="#ffffff" if ok else "#6a6290", font=("Segoe UI", 10, "bold"), width=w - 8)
+                c.create_text(x + w / 2, 426, text=info, fill="#e8e4ff" if ok else "#6a6290", font=("Segoe UI", 8))
+                if ok:
+                    self.buttons.append((x, 386, x + w, 440, lambda i=i: self.pick(i)))
+            if b.can_awaken(0) and not busy:
+                self.button(16, 456, 220, 44, f"✨ Awaken {b.active(0).base}!", self.awaken, "#c86aff")
+            self.button(self.CW - 136, 456, 120, 44, "🏳️ Give up", self.give_up, "#3a3360")
         else:
-            self.button(16, 410, 200, 44, "↩ Back to the Arena", self.lobby, "#5a4ae0")
-            self.button(226, 410, 160, 44, "🔁 Rematch", lambda: self.start([[f.base, f.color, f.level] for f in b.sides[1]],
+            self.button(16, 420, 200, 44, "↩ Back to the Arena", self.lobby, "#5a4ae0")
+            self.button(226, 420, 160, 44, "🔁 Rematch", lambda: self.start([[f.base, f.color, f.level] for f in b.sides[1]],
                                                                         self.foe, self.reward), "#e8457a")
 
     def give_up(self):
         if self.battle and self.battle.winner is None:
+            self.queue = []
             self.battle.winner = 1
             self.log.append("🏳️ You gave up. Next time!")
             self.draw_battle()

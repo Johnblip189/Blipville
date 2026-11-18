@@ -1101,7 +1101,7 @@
   function fighter([kind, color, canAw]) {
     const base = AWAKEN_BASE[kind] || kind, st = AR.stats[base];
     const lvl = Math.min(+canAw || 0, (AWAKEN_CHAIN[base] || []).length);
-    return { base, kind: base, color: +color, lvl, stage: 0, canAw: lvl > 0, hp: st.hp, max: st.hp, aw: false };
+    return { base, kind: base, color: +color, lvl, stage: 0, canAw: lvl > 0, hp: st.hp, max: st.hp, aw: false, snacked: false };
   }
   const fst = (f) => AR.stats[f.kind];
   // backgrounds: little scenes 120 x 40 units, the same as the desktop app's (from blip.pyw)
@@ -1128,7 +1128,7 @@
   }
   function newBattle(mine, theirs, foe, reward) {
     return { sides: [mine.map(fighter), theirs.map(fighter)], idx: [0, 0], awLeft: [1, 1], turn: 0, winner: null, last: null, foe, reward,
-             bg: arenaBgFor(foe), log: [`⚔️ ${foe} wants to battle!`] };
+             bg: arenaBgFor(foe), queue: [], log: [`⚔️ ${foe} wants to battle! Pick a move.`] };
   }
   const active = (b, s) => b.sides[s][b.idx[s]] || null;
   // one Awaken per battle, but a Blip that can awaken more than once may keep going (the Lurker!)
@@ -1142,22 +1142,53 @@
     if (fin && b.bg !== fin[0]) { b.bg = fin[0]; return `✨ ${was} awakens into ${f.kind}! ${fin[1]}`; }
     return `✨ ${was} awakens into ${f.kind}!`;
   }
-  function stepBattle(b) {
+  // ---- turns: each round you pick a move, the other side picks one, and the faster one goes first (same rules as blip.pyw)
+  const movesOf = (b, s) => { const f = active(b, s); return f ? fst(f).moves : []; };
+  const usable = (b, s, i) => { const f = active(b, s), m = movesOf(b, s)[i]; return !!(f && m && !(m.heal && (f.snacked || f.hp >= f.max))); };
+  function aiMove(b, s) {
+    const f = active(b, s), foe = active(b, 1 - s), ms = movesOf(b, s);
+    if (f.hp < f.max * 0.35 && usable(b, s, 3) && Math.random() < 0.6) return 3;
+    let best = 0, top = -1;
+    ms.forEach((m, i) => { if (m.heal) return; const v = m.power * m.acc * typeMult(m.type, typesOf(fst(foe))) * rnd(0.8, 1.2); if (v > top) { top = v; best = i; } });
+    return best;
+  }
+  function planRound(b, mine) {
+    const pre = [], B = active(b, 1);
+    if (canAwaken(b, 1) && B.hp < B.max * 0.5) pre.push([1, "awaken", null]);
+    const theirs = aiMove(b, 1);
+    const key = (s, i) => [movesOf(b, s)[i].fast ? 1 : 0, fst(active(b, s)).spd, Math.random()];
+    const order = [[0, mine], [1, theirs]].sort((x, y) => { const p = key(...x), q = key(...y); return q[0] - p[0] || q[1] - p[1] || q[2] - p[2]; });
+    return pre.concat(order.map(([s, i]) => [s, i, active(b, s)]));
+  }
+  function actMove(b, side, i, who) {
     if (b.winner !== null) return null;
-    const A = active(b, 0), B = active(b, 1);
-    if (canAwaken(b, 1) && B.hp < B.max * 0.5) return awakenF(b, 1);
-    const first = (fst(A).spd + Math.random() * 0.5) >= (fst(B).spd + Math.random() * 0.5) ? 0 : 1;
-    const side = b.turn % 2 === 0 ? first : 1 - first; b.turn++;
-    const att = active(b, side), dfn = active(b, 1 - side), sa = fst(att), sd = fst(dfn);
-    if (typesOf(sd).includes("phantom") && Math.random() < (D.phantomDodge || 0.2)) {   // 👻 hits can pass right through a Phantom
-      b.last = [side, 0, 1]; return `${att.kind} used ${sa.move}… but it passed right through ${dfn.kind}! 👻`;
+    if (i === "awaken") return awakenF(b, side);
+    const att = active(b, side), dfn = active(b, 1 - side);
+    if (!att || !dfn || (who && att !== who)) return null;   // knocked out before its turn
+    const m = fst(att).moves[i];
+    if (m.heal) {
+      if (att.snacked) return null;
+      att.snacked = true; const gain = Math.min(att.max - att.hp, Math.round(att.max * m.heal)); att.hp += gain;
+      b.last = [side, -gain, 1]; return `🍪 ${att.kind} had a snack and got ${gain} HP back!`;
     }
-    const mult = Math.max(...typesOf(sa).map((t) => typeMult(t, typesOf(sd))));   // attacks with its best type
-    const crit = Math.random() < (typesOf(sa).includes("cosmic") ? D.cosmicCrit || 0.25 : 0.1), dmg = Math.max(1, Math.round(sa.atk * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
+    if (Math.random() > m.acc) { b.last = [side, 0, 1]; return `${att.kind} used ${m.name}… but it missed!`; }
+    if (typesOf(fst(dfn)).includes("phantom") && Math.random() < (D.phantomDodge || 0.2)) {   // 👻 hits can pass right through a Phantom
+      b.last = [side, 0, 1]; return `${att.kind} used ${m.name}… but it passed right through ${dfn.kind}! 👻`;
+    }
+    const mult = typeMult(m.type, typesOf(fst(dfn)));
+    const crit = Math.random() < (typesOf(fst(att)).includes("cosmic") ? D.cosmicCrit || 0.25 : 0.1);
+    const dmg = Math.max(1, Math.round(fst(att).atk * m.power * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
     dfn.hp = Math.max(0, dfn.hp - dmg); b.last = [side, dmg, mult];
-    let line = `${att.kind} used ${sa.move}! ${dmg} damage` + effectText(mult) + (crit ? " · critical!" : "");
-    if (dfn.hp === 0) { b.idx[1 - side]++; line += ` · ${dfn.kind} is out!`; if (!active(b, 1 - side)) b.winner = side; }
+    let line = `${att.kind} used ${m.name}! ${dmg} damage` + effectText(mult) + (crit ? " · critical!" : "");
+    if (dfn.hp === 0) {
+      b.idx[1 - side]++; line += ` · ${dfn.kind} is out!`;
+      if (!active(b, 1 - side)) b.winner = side; else line += ` ${active(b, 1 - side).kind} jumps in!`;
+    }
     return line;
+  }
+  function arenaPick(i) {
+    const b = arenaBattle; if (!b || b.winner !== null || b.queue.length || !usable(b, 0, i)) return;
+    b.queue = planRound(b, i); arenaTick();
   }
   function openArena() {
     clearTimeout(arenaTimer); arenaBattle = null;
@@ -1212,15 +1243,17 @@
     if (!arenaTeam.length) { toast("Pick at least one Blip for your team!", 2.5); return; }
     arenaBattle = newBattle(arenaTeam.map(arenaEntry), theirs, foe, reward);
     $("arenaLobby").hidden = true; $("arenaFight").hidden = false; sfx("whoosh");
-    drawBattle(); arenaTimer = setTimeout(arenaTick, 900);
+    drawBattle();
   }
   function arenaTick() {
-    const b = arenaBattle; if (!b || b.winner !== null) return;
-    const line = stepBattle(b);
-    if (line) { b.log.push(line); sfx(b.last && b.last[1] > 30 ? "thud" : "boop"); }
-    if (b.winner !== null) finishBattle(b);
+    const b = arenaBattle; if (!b) return;
+    while (b.queue.length) {                                // one move at a time, so you can see what happened
+      const [s, i, who] = b.queue.shift(), line = actMove(b, s, i, who);
+      if (line) { b.log.push(line); sfx(i === "awaken" ? "fanfare" : line.startsWith("🍪") ? "munch" : b.last && b.last[1] > 30 ? "thud" : "boop"); break; }
+    }
+    if (b.winner !== null) { b.queue = []; finishBattle(b); }
     drawBattle();
-    if (b.winner === null) arenaTimer = setTimeout(arenaTick, 900);
+    if (b.queue.length) arenaTimer = setTimeout(arenaTick, 850);
   }
   function finishBattle(b) {
     if (b.winner === 0) {
@@ -1250,14 +1283,33 @@
       const fr = f.hp / f.max; c.fillStyle = fr > 0.5 ? "#9ad8a8" : fr > 0.2 ? "#ffd23a" : "#ff5a7a"; c.fillRect(x0, 150, 136 * fr, 12);
       c.fillStyle = "#ffffff"; c.font = "800 10px " + FONT; c.fillText(`${f.hp} / ${f.max}`, x0 + 68, 160);
     });
-    if (b.last && b.winner === null) { c.fillStyle = "#ff5a7a"; c.font = "800 18px " + FONT; c.fillText(`-${b.last[1]}`, b.last[0] === 0 ? 280 : 90, 70); }
+    if (b.last && b.winner === null) {
+      const [ls, d] = b.last; c.font = "800 18px " + FONT;
+      if (d < 0) { c.fillStyle = "#9ad8a8"; c.fillText(`+${-d}`, ls === 0 ? 90 : 280, 70); }
+      else { c.fillStyle = "#ff5a7a"; c.fillText(d ? `-${d}` : "miss!", ls === 0 ? 280 : 90, 70); }
+    }
+    const mv = $("arenaMoves"); mv.innerHTML = ""; mv.hidden = b.winner !== null;
+    if (b.winner === null) {
+      const me = active(b, 0), foe = active(b, 1), busy = b.queue.length > 0;
+      movesOf(b, 0).forEach((m, i) => {
+        const bt = doc().createElement("button"); bt.className = "move m" + i; bt.disabled = busy || !usable(b, 0, i);
+        const top = doc().createElement("b"), info = doc().createElement("small");
+        if (m.heal) { top.textContent = "🍪 Snack"; info.textContent = me.snacked ? "used" : `heal ${Math.round(m.heal * 100)}% · once`; }
+        else {
+          top.append(pxImg(m.type), ` ${m.name}`);
+          const mult = typeMult(m.type, typesOf(fst(foe)));
+          info.textContent = [m.fast ? "goes first" : "", m.acc < 1 ? `${Math.round(m.acc * 100)}% hit` : "", mult > 1.1 ? "strong!" : mult < 0.9 ? "weak" : ""].filter(Boolean).join(" · ") || "normal";
+        }
+        bt.append(top, info); bt.onclick = () => arenaPick(i); mv.appendChild(bt);
+      });
+    }
     $("arenaLog").innerHTML = ""; for (const l of b.log.slice(-4)) { const d = doc().createElement("div"); d.textContent = l; $("arenaLog").appendChild(d); }
-    const aw = $("arenaAwaken"); aw.hidden = !(b.winner === null && canAwaken(b, 0));
+    const aw = $("arenaAwaken"); aw.hidden = !(b.winner === null && canAwaken(b, 0) && !b.queue.length);
     if (!aw.hidden) aw.textContent = `✨ Awaken ${active(b, 0).base}!`;
     aw.onclick = () => { const l = awakenF(b, 0); if (l) { b.log.push(l); sfx("fanfare"); drawBattle(); } };
     const back = $("arenaBack");
     back.textContent = b.winner === null ? "🏳️ Give up" : "↩ Back to the Arena";
-    back.onclick = () => { if (b.winner === null) { b.winner = 1; b.log.push("🏳️ You gave up. Next time!"); clearTimeout(arenaTimer); drawBattle(); } else openArena(); };
+    back.onclick = () => { if (b.winner === null) { b.queue = []; b.winner = 1; b.log.push("🏳️ You gave up. Next time!"); clearTimeout(arenaTimer); drawBattle(); } else openArena(); };
   }
   $("arenaBtn").onclick = openArena;
 
@@ -2189,7 +2241,7 @@
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
   window.blipvilleGo = { pets, save, addPet, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
-                         nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
+                         nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;
                            plays.push(type === "ball" ? { type, pets: [a, b], from: a, to: b, t0: t, throws: 0, n: 4 }

@@ -40,6 +40,9 @@ make Blipville what it is. This is the real thing.
   only Blip that **Awakens 3 times**: Wide-Eyed Lurker → Shadow Lurker → **Lurker Eternal**. Each Awakening needs a
   bigger crystal (75, 150, 250 💖), and in the Arena it can awaken all three times in one battle. When it reaches Lurker Eternal, the battle
   moves to **The Dam**: a giant cracked dam held up by a whole wall of Lurkers.
+- ⚔️ **The Phantom Knight** got a full redraw, his very own 👻 **Phantom** type (hits can pass right through him), and
+  the Lurker treatment: 3 Awakenings, Spectral Knight → Phantom Champion → **Phantom Sovereign**, who calls a ghostly
+  army into **The Haunted Keep**.
 - 👻 **Ghosts, a brand-new tier:** 23 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
   🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.

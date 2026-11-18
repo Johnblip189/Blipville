@@ -3408,6 +3408,8 @@ AWAKEN_STAGES = {
               {"name": "Abyss", "o": "#000006", "b": "#080e26", "a": "#14285a", "y": "#7affea", "c": "#3a8aff", "m": "#06203a", "w": "#c8fff4", "d": "#0e2244", "e": "#7affea"}]},
  ],
 }
+AWAKENED['Phantom Knight'] = {"name": "Spectral Knight", "eyes": 5, "move": "float", "speed": 1.15, "feet": False, "mouth": False, "ghost": True, "lines": ["*my armor glows with spirit fire*", "the oath awakens", "en garde!", "i am the castle's shield"], "body": ["......rrrr......", ".....rrrrrr.....", "...oooooooooo...", "..ohhhhhhhhhho..", ".ohhghhhhhhghho.", ".ohvvvvvvvvvvho.", ".ohhhhhhhhhhhho.", "oossssssssssssoo", "aaosgssssssgsoaa", ".osssssssssssso.", ".wwwwwwwwwwwwww.", "w.ww.ww..ww.ww.w"], "colors": [{"name": "Iron", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8", "g": "#5affd8"}, {"name": "Gilded", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a", "g": "#ff8a3a"}]}
+AWAKEN_STAGES['Phantom Knight'] = [{"name": "Phantom Champion", "eyes": 5, "move": "float", "speed": 1.3, "feet": False, "mouth": False, "ghost": True, "lines": ["*spectral flames roar*", "a hundred battles, never lost", "my blade cuts through worlds", "CHAAARGE!"], "body": ["f.....rrrr.....f", "ff..o.rrrr.o..ff", "ff.ohooooooho.ff", "f.ohhhhhhhhhho.f", "ffohhghhhhghhoff", "fohvvvvvvvvvvhof", "fohhhhhhhhhhhhof", "oossssssssssssoo", "aaosgssssssgsoaa", "aaossssssssssoaa", ".fwwwwwwwwwwwwf.", "f.ww.ww..ww.ww.f"], "colors": [{"name": "Iron", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8", "g": "#5affd8", "f": "#5affd8"}, {"name": "Gilded", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a", "g": "#ff8a3a", "f": "#ff8a3a"}]}, {"name": "Phantom Sovereign", "eyes": 5, "move": "float", "speed": 1.45, "feet": False, "mouth": False, "ghost": True, "lines": ["KNEEL BEFORE THE PHANTOM CROWN", "*every armor in the castle salutes*", "the realm of ghosts is mine", "the final oath is sworn."], "body": ["y.y.y..yy..y.y.y", "yyyyyyyyyyyyyyyy", "cyyyyyyyyyyyyyyc", "cooooooooooooooc", "cohhghhhhhhghhoc", "cohvvvvvvvvvvhoc", "cohhhhhhhhhhhhoc", "coossssssssssooc", "caaosgssssgsoaac", "caosssgssgsssoac", "cwwwwwwwwwwwwwwc", ".w.ww.wwww.ww.w."], "colors": [{"name": "Sovereign", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8", "g": "#5affd8", "y": "#ffd23a", "c": "#3a1a6a"}, {"name": "Golden Age", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a", "g": "#ff8a3a", "y": "#ffffff", "c": "#8a1a2a"}]}]
 AWAKEN_FORM = {base: a["name"] for base, a in AWAKENED.items()}
 AWAKEN_CHAIN = {base: [a["name"]] + [st["name"] for st in AWAKEN_STAGES.get(base, [])] for base, a in AWAKENED.items()}
 AWAKEN_BASE = {form: base for base, chain in AWAKEN_CHAIN.items() for form in chain}
@@ -3571,6 +3573,7 @@ LEGENDS.update({"Elder Treant": {"eyes": 5, "move": "walk", "feet": True, "mouth
 LEGEND_WORLD.update({"Elder Treant": "Plant World", "Petal Sprite": "Plant World", "Fungus Sage": "Plant World", "Candy Dragon": "Sweets World", "Sprinkle Unicorn": "Sweets World", "Licorice Serpent": "Sweets World", "Coral Queen": "Ocean World", "Tide Leviathan": "Ocean World", "Crystal Stego": "Dino World", "Ember Raptor": "Dino World", "Star Whale": "Space World", "Comet Fox": "Space World"})
 
 CRYPTIDS.update({"Ningen": {"eyes": 4, "move": "float", "speed": 0.7, "feet": False, "mouth": True, "lines": ["*glides under the ice*", "i'm big, pale and polite", "antarctica says hi", "*slow blink*"], "body": ["...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", "a.obbbbbbbbbbo.a", "aa.obbbbbbbbo.aa", "a...obbbbbbo...a", ".....oooooo....."], "colors": [{"name": "Antarctic", "o": "#6a7a8a", "b": "#f4f8ff", "a": "#c8d8e8", "e": "#1a2030"}, {"name": "Deep Ice", "o": "#3a5a7a", "b": "#d0e8ff", "a": "#8ab0d8", "e": "#0a1a2a"}]}, "Van Meter Visitor": {"eyes": 5, "move": "flutter", "speed": 1.2, "feet": True, "mouth": False, "lines": ["*my horn glows at night*", "i scared a whole town in 1903", "the mine is my home", "*flaps bat wings*"], "body": [".......yy.......", "w......yy......w", "wo....oyyo....ow", "wwooooooooooooww", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wobbbbbbbbbbbbow", "w.obbbbbbbbbbo.w", "..obbbbbbbbbbo..", "...obbbbbbbbo...", "....obbbbbbo....", "....oooooooo...."], "colors": [{"name": "Iowa Night", "o": "#0e0a14", "b": "#5a4a6a", "w": "#2a2236", "y": "#fff27a", "e": "#fff27a", "f": "#0e0a14"}, {"name": "Mine Glow", "o": "#0a140e", "b": "#3a6a4a", "w": "#1a3a24", "y": "#a8ff7a", "e": "#a8ff7a", "f": "#0a140e"}]}, "Tatzelwurm": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True, "lines": ["mrrrow-hiss", "cat head, lizard body, alpine views", "i hide in the mountain caves", "the yodeling scares me"], "body": [".o............o.", ".oao........oao.", ".oaboooooooobao.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", ".osssssssssssso.", ".osssssssssssso.", "..osssssssssso..", "...oooooooooo..."], "colors": [{"name": "Alpine", "o": "#1a140a", "b": "#c8985a", "a": "#e8b088", "s": "#5a8a3a", "p": "#ff9a7a", "e": "#2a8a3a", "f": "#1a140a"}, {"name": "Snowcap", "o": "#2a2a3a", "b": "#e8e8f0", "a": "#ffc0c8", "s": "#8aa8c8", "p": "#ffb0c0", "e": "#4a8aff", "f": "#2a2a3a"}]}, "Dobhar-chú": {"eyes": 5, "move": "walk", "speed": 1.3, "feet": True, "mouth": True, "lines": ["*splash* i'm the king otter!", "the lakes of Ireland are mine", "bow to your otter overlord", "*holds hands with you*"], "body": ["...yyyyyyyyyy...", "...ryyyrryyyr...", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpllllllllllpbo", "obbllllllllllbbo", "obbllllllllllbbo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Lough", "o": "#1a0e06", "b": "#6a4a2a", "l": "#d8b890", "y": "#ffd23a", "r": "#3ac85a", "p": "#e89a7a", "e": "#0a0604", "f": "#1a0e06"}, {"name": "Silver Lake", "o": "#1a1a24", "b": "#5a6070", "l": "#c8d0d8", "y": "#e8e8f0", "r": "#5ab8ff", "p": "#d8a0a8", "e": "#0a0a10", "f": "#1a1a24"}]}, "Lusca": {"eyes": 4, "move": "float", "speed": 0.9, "feet": False, "mouth": False, "lines": ["*bubbles from the blue hole*", "half shark, half octopus, all hugs", "8 arms AND a fin!", "*swirls in the deep*"], "body": [".......ff.......", "......ffff......", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "owwwwwwwwwwwwwwo", ".oooooooooooooo.", ".t.t.t.tt.t.t.t.", "t..t..t..t..t..t", ".t..t..tt..t..t.", "t.....t..t.....t"], "colors": [{"name": "Blue Hole", "o": "#0a1a3a", "b": "#3a6aa8", "w": "#e8f4ff", "f": "#2a4a8a", "t": "#ff7a6a", "e": "#fff27a"}, {"name": "Reef Glow", "o": "#0a2a2a", "b": "#2a8a7a", "w": "#e8fff8", "f": "#1a6a5a", "t": "#ffd23a", "e": "#ff5a8a"}]}, "Beast of Gévaudan": {"eyes": 5, "move": "walk", "speed": 1.4, "feet": True, "mouth": True, "lines": ["*low growl in french*", "the forests of France fear me", "bonjour! (scary)", "i'm a very big good boy"], "body": ["o..............o", "oo............oo", "oao.oooooooo.oao", "oaaobbbbbbbboaao", "obbbbbbbbbbbbbbo", "obsbbbbbbbbbbsbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbllllllllllbbo", "osblllnnnnlllbso", ".osbllllllllbso.", "..oooooooooooo.."], "colors": [{"name": "Gévaudan", "o": "#1a0a04", "b": "#8a3a1a", "a": "#c86a3a", "s": "#3a1a0a", "l": "#d8a070", "n": "#1a0a04", "e": "#ffd23a", "f": "#1a0a04"}, {"name": "Moonlit", "o": "#0a0a14", "b": "#4a4a5a", "a": "#8a8a9a", "s": "#1a1a24", "l": "#a8a8b8", "n": "#0a0a14", "e": "#ff3a3a", "f": "#0a0a14"}]}, "Goatman": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": False, "lines": ["baaa… (spookily)", "Maryland's woods are my home", "i'm half goat. the cool half", "*clip clop in the dark*"], "body": ["h..............h", "hh............hh", ".hhoooooooooohh.", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "aobbbbbbbbbbbboa", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbnnbbbbnnbbo.", "..obbbbbbbbbbo..", "..obbgbbbbgbbo..", "...oogoooogoo..."], "colors": [{"name": "Woods", "o": "#1a140a", "b": "#7a6a4a", "h": "#e8d8b0", "a": "#5a4a2a", "n": "#1a140a", "g": "#e8d8b0", "e": "#ffd23a", "f": "#1a140a"}, {"name": "Ghostly", "o": "#2a2a3a", "b": "#c8c8d8", "h": "#ffffff", "a": "#8a8aa8", "n": "#2a2a3a", "g": "#ffffff", "e": "#ff3a5a", "f": "#2a2a3a"}]}, "Ropen": {"eyes": 5, "move": "flutter", "speed": 1.2, "feet": False, "mouth": False, "lines": ["*glows over the island at night*", "my tail has a diamond tip", "i light up like a lantern", "SKREE! (glowing)"], "body": ["....h......h....", "...hh......hh...", "w.hooooooooooh.w", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wobbbbbbbbbbbbow", "w.obbkkkkkkbbo.w", "...obkkkkkkbo...", "....okkkkkko....", ".....oyyyyo.....", "......yyyy......"], "colors": [{"name": "Glowing", "o": "#0a0a14", "b": "#3a2a5a", "w": "#1a1430", "h": "#ff7a3a", "k": "#ffd23a", "y": "#ffe66a", "e": "#ffe66a"}, {"name": "Jungle", "o": "#0a140a", "b": "#3a5a2a", "w": "#1a2a14", "h": "#ff5a3a", "k": "#e8c86a", "y": "#a8ff7a", "e": "#a8ff7a"}]}, "Emela-ntouka": {"eyes": 5, "move": "walk", "speed": 0.7, "feet": True, "mouth": True, "lines": ["*splashes through the swamp*", "one horn, many legends", "i'm a gentle giant (mostly)", "the Congo river is my bath"], "body": [".......hh.......", "......hhhh......", ".....oohhoo.....", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "wwwwwwwwwwwwwwww", "w.ww..wwww..ww.w"], "colors": [{"name": "Swamp", "o": "#14140a", "b": "#5a5a3a", "h": "#e8e0c0", "p": "#a89a7a", "w": "#3a6a5a", "e": "#ffd23a", "f": "#14140a"}, {"name": "River Mud", "o": "#1a0e06", "b": "#7a5a3a", "h": "#fff0d0", "p": "#c89a7a", "w": "#4a5a3a", "e": "#1a0a02", "f": "#1a0e06"}]}, "Caddy": {"eyes": 3, "move": "float", "speed": 1.0, "feet": False, "mouth": False, "lines": ["*horse-like whinny… from the sea*", "the BC coast is my home", "i'm a sea serpent with a horse face", "humps ahoy!"], "body": ["..oo.oooooo.oo..", ".obboobbbboobbo.", ".obbbbbbbbbbbbo.", ".obpbbbbbbbbpbo.", "..obbbbbbbbbbo..", "...oobbbbbboo...", ".....obbbbo.....", ".ooo..obbo..ooo.", "obbbo.obbo.obbbo", "wwwwwwwwwwwwwwww", "w.ww..wwww..ww.w", "................"], "colors": [{"name": "Pacific", "o": "#0a1a2a", "b": "#5a7a6a", "p": "#a8c8b0", "w": "#2a5a8a", "e": "#0a1a10"}, {"name": "Kelp", "o": "#1a1a0a", "b": "#8a7a3a", "p": "#d8c890", "w": "#2a6a5a", "e": "#1a1004"}]}, "Orang Pendek": {"eyes": 5, "move": "walk", "speed": 1.1, "feet": True, "mouth": True, "lines": ["*shy little wave*", "i'm short, so what?", "the Sumatran forest is cozy", "you'll never get a photo"], "body": ["................", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbffffffffbbo.", "obbffffffffffbbo", "obbffffffffffbbo", "obbffffffffffbbo", ".obbffffffffbbo.", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Sumatra", "o": "#1a0a04", "b": "#8a4a1a", "f": "#e8b088", "e": "#1a0a04"}, {"name": "Shadow", "o": "#0a0a0a", "b": "#3a2a24", "f": "#a8806a", "e": "#ffd23a"}]}, "Montauk Monster": {"eyes": 5, "move": "walk", "speed": 0.8, "feet": True, "mouth": True, "lines": ["*washed up on the beach*", "nobody knows what i am", "not even me!", "i'm a mystery from 2008"], "body": ["................", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbkkkkbbbbbo", "obpbbkkkkkkbbpbo", "obbbbkkkkkkbbbbo", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Beach Find", "o": "#4a3a3a", "b": "#e8c8b8", "k": "#c8a090", "p": "#ff9ab0", "e": "#1a1010"}, {"name": "Weird Green", "o": "#2a3a2a", "b": "#b8d8a8", "k": "#8ab07a", "p": "#ffb0c0", "e": "#0a1a0a"}]}})
+GHOSTS['Phantom Knight'] = {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False, "lines": ["*clank… clank…*", "i guard this castle forever", "my armor is empty. and spooky", "halt! who goes there? (a friend)", "for the realm!"], "body": [".......rr.......", "......rrrr......", "....oooooooo....", "...ohhhhhhhho...", "..ohhhhhhhhhho..", "..ohvvvvvvvvho..", "..ohhhhhhhhhho..", ".oossssssssssoo.", "oaossssbbssssoao", ".osssssssssssso.", "..wwwwwwwwwwww..", "...w.ww..ww.w..."], "colors": [{"name": "Iron", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8"}, {"name": "Gilded", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a"}]}   # redrawn for 1.0, with his own Phantom type and 3 Awakenings
 for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
@@ -3643,6 +3646,7 @@ TROPHIES = [
     ("awaken-5", "🌠", "Fully Charged", "Awaken 5 different Blips", lambda a: len(a.save.get("awakened", [])) >= 5, 30),
     ("arena-kaiju", "👑", "Kaiju Slayer", "Beat Kaiju King Kai", lambda a: "Kaiju King Kai" in a.save.get("rivals_beaten", []), 50),
     ("lurker-3", "👁️", "Lights Out", "Awaken the Lurker all 3 times", lambda a: a.awaken_level("Lurker") >= 3, 40),
+    ("knight-3", "⚔️", "The Final Oath", "Awaken the Phantom Knight all 3 times", lambda a: a.awaken_level("Phantom Knight") >= 3, 40),
     ("bond-5", "💞", "Soulmates", "Reach max friendship (Soulmate) with a Blip", lambda a: any(bond_level(p.bond) >= 5 for p in a.pets), 30),
     ("catch-40", "🍪", "Cookie Pro", "Score 40 in one game of Cookie Catch", lambda a: a.stat("catch_best") >= 40, 20),
     ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
@@ -6982,10 +6986,15 @@ class Maintenance:
 # beats 🔥 Spark. Every Blip's type and stats come from here (the website version gets the same table).
 # A battle code is "BLIP1-" + base64 of {"n": name, "t": [[kind, color, can_awaken], ...]}: send it to a friend and
 # they battle your team (the computer plays it).
-ARENA_TYPES = {"spark": ("🔥", "Spark"), "splash": ("💧", "Splash"), "sprout": ("🌿", "Sprout")}
-ARENA_BEATS = {"spark": "sprout", "sprout": "splash", "splash": "spark"}
+ARENA_TYPES = {"spark": ("🔥", "Spark"), "splash": ("💧", "Splash"), "sprout": ("🌿", "Sprout"), "phantom": ("👻", "Phantom")}
+ARENA_BEATS = {"spark": "sprout", "sprout": "splash", "splash": "spark", "phantom": None}
+# 👻 Phantom (the Phantom Knight's very own type): never super effective and never resisted, but 1 in 5 hits passes right through it
+PHANTOM_DODGE = 0.2
+TYPE_OF = {"Phantom Knight": "phantom"}
+FORM_MOVES = {"Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
+              "Phantom Sovereign": "Sovereign's Judgment"}
 ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash": ["Bubble Burst", "Splash Slam", "Tidal Hug"],
-               "sprout": ["Leaf Whirl", "Vine Bop", "Petal Storm"]}
+               "sprout": ["Leaf Whirl", "Vine Bop", "Petal Storm"], "phantom": ["Phantom Slash", "Soul Strike", "Spectral Lance"]}
 _SPARK = {"Phoenix", "Dragon", "Magmaw", "Will-o'-Wisp", "Jersey Devil", "Fox", "Kitsune", "Chochin", "Amber Raptor", "Comet",
           "Rocket", "Black Hole", "Star", "Moon", "Fennec", "Tiger", "Lion", "Cheetah", "Gigabot", "Robo Bear", "Robo Bunny",
           "Robo Hen", "Golden Blip", "Bee", "Pumpkin", "Thunderbird", "Snallygaster", "Hodag", "Taco", "Toast", "Poltergeist"}
@@ -7009,7 +7018,7 @@ def _arena_stats(kind):
     base = AWAKEN_BASE.get(kind, kind)
     h = _fnv(base)
     tab = next((n for n, ks in TAB_GROUPS if base in ks), "")
-    kind_type = ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
+    kind_type = TYPE_OF.get(base) or ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
                  "sprout" if base in _SPROUT or tab.startswith("Plants") else ["spark", "splash", "sprout"][h % 3])
     tier = (1.2 if base in LEGENDS or base in KAIJU else 1.12 if base in RARE or base in CRYPTIDS or base in GHOSTS
             else 1.1 if base in ROBOTS else 1.05 if base in GIFTS else 1.0)
@@ -7018,7 +7027,7 @@ def _arena_stats(kind):
     v = VARIANTS[base]
     return {"type": kind_type, "hp": round((70 + h % 41) * tier), "atk": round((15 + (h >> 8) % 9) * tier),
             "spd": round((6 + (h >> 16) % 10) * v.get("speed", 1.0) * (1.1 if kind in AWAKEN_BASE else 1)),
-            "move": f"{kind.split()[0]} Nova" if kind in AWAKEN_BASE else ARENA_MOVES[kind_type][(h >> 4) % 3]}
+            "move": FORM_MOVES.get(kind) or (f"{kind.split()[0]} Nova" if kind in AWAKEN_BASE else ARENA_MOVES[kind_type][(h >> 4) % 3])}
 
 
 ARENA_STATS = {k: _arena_stats(k) for k in VARIANTS}
@@ -7026,6 +7035,10 @@ ARENA_STATS = {k: _arena_stats(k) for k in VARIANTS}
 # Arena backgrounds: little scenes 120 x 40 "units" (y down), drawn behind the battle. Shapes: ["rect", color, x, y, w, h],
 # ["poly", color, [x, y, x, y, ...]], ["circ", color, cx, cy, r], ["pix", sprite, x, y, unit] (a sprite from ARENA_PIX).
 ARENA_PIX = {
+ "knight_salute": {"rows": ["...k......k.", "...k......k.", "..kk.oooo.kk", "..ok.ohho.ko", "...oohhhhoo.", "...ohvvvvho.", "...ohhhhhho.",
+                            "..oossssssoo", "..oossssssoo", "...ossssss..", "...wwwwwwww.", "....w.ww.w.."],
+                   "pal": {"o": "#14141e", "h": "#6a7088", "v": "#0a0a12", "s": "#4a5068", "k": "#c8d8ff", "w": "#5a6a8a"},
+                   "dim": {"o": "#0a0a12", "h": "#2e3244", "v": "#06060a", "s": "#242838", "k": "#5a6a8a", "w": "#2a3048"}},
  "lurker_hold": {"rows": ["ow........wo", "ao........oa", "ao..oooo..oa", "aoobbbbbbooa", ".abbybbybba.", ".obbbbbbbbo.", ".obmwmwmwbo.",
                           ".obbbccbbbo.", ".obbccccbbo.", ".obbbccbbbo.", "..obbbbbbo..", "..obbbbbbo..", ".dddddddddd."],
                  "pal": {"o": "#000000", "b": "#0c0816", "a": "#1c1430", "y": "#c8b84a", "w": "#6a6088", "m": "#2a0a20", "c": "#5a1a80", "d": "#1a1030"},
@@ -7078,6 +7091,18 @@ ARENA_BGS = {
     ["pix", "lurker_hold", -9, 14, 2], ["pix", "lurker_hold", 105, 14, 2],
     ["rect", "#14284a", 0, 37, 120, 3], ["rect", "#3a6aa8", 20, 38, 10, 1], ["rect", "#3a6aa8", 50, 38, 14, 1], ["rect", "#3a6aa8", 86, 38, 12, 1]]},
 }
+FINAL_FORM_BGS = {"Lurker Eternal": ("dam", "The ground shakes… a wall of Lurkers rises, holding up a giant dam! 🌊"),
+                  "Phantom Sovereign": ("keep", "The lights go out… a ghostly army of knights raises its swords in the Haunted Keep! ⚔️")}
+ARENA_BGS["keep"] = {"name": "The Haunted Keep", "sky": ["#06060e", "#1e1a30"], "shapes": [
+    ["rect", "#24203a", 0, 0, 120, 31], ["rect", "#2c2846", 0, 0, 120, 3],
+    ["rect", "#1a1630", 8, 3, 6, 28], ["rect", "#1a1630", 106, 3, 6, 28], ["rect", "#1a1630", 57, 3, 6, 28],
+    ["rect", "#6a1a2a", 22, 3, 7, 12], ["poly", "#6a1a2a", [22, 15, 25.5, 18, 29, 15]], ["rect", "#ffd23a", 25, 7, 1, 3],
+    ["rect", "#6a1a2a", 91, 3, 7, 12], ["poly", "#6a1a2a", [91, 15, 94.5, 18, 98, 15]], ["rect", "#ffd23a", 94, 7, 1, 3],
+    ["circ", "#5affd8", 42, 8, 1.2], ["circ", "#5affd8", 78, 8, 1.2],
+    ["pix", "knight_salute", 14, 14, 1.4, "dim"], ["pix", "knight_salute", 34, 14, 1.4, "dim"], ["pix", "knight_salute", 70, 14, 1.4, "dim"],
+    ["pix", "knight_salute", 90, 14, 1.4, "dim"], ["rect", "#14121e", 0, 31, 120, 9], ["rect", "#2a2440", 0, 31, 120, 1],
+    ["pix", "knight_salute", -4, 15, 2], ["pix", "knight_salute", 100, 15, 2],
+    ["rect", "#3a1a4a", 30, 34, 60, 6], ["rect", "#5a2a6a", 30, 34, 60, 1]]}
 RIVAL_BGS = {"Rival Rae": "meadow", "Rival Rex": "volcano", "Champion Coco": "beach", "Nyx the Night Queen": "graveyard", "Kaiju King Kai": "city"}
 FRIEND_BGS = ["meadow", "beach", "volcano", "graveyard", "city", "cave"]
 
@@ -7201,9 +7226,10 @@ class Battle:
         was = f.kind
         f.awaken()
         line = f"✨ {was} awakens into {f.kind}!"
-        if f.kind == "Lurker Eternal" and self.bg != "dam":
-            self.bg = "dam"
-            line += " The ground shakes… a wall of Lurkers rises, holding up a giant dam! 🌊"
+        bg, msg = FINAL_FORM_BGS.get(f.kind, (None, ""))
+        if bg and self.bg != bg:
+            self.bg = bg
+            line += " " + msg
         return line
 
     def step(self):
@@ -7216,6 +7242,9 @@ class Battle:
         side = first if self.turn % 2 == 0 else 1 - first
         self.turn += 1
         att, dfn = self.active(side), self.active(1 - side)
+        if dfn.st["type"] == "phantom" and self.rng.random() < PHANTOM_DODGE:
+            self.last = (side, 0, 1.0)
+            return f"{att.kind} used {att.st['move']}… but it passed right through {dfn.kind}! 👻"
         mult = 1.5 if ARENA_BEATS[att.st["type"]] == dfn.st["type"] else 0.7 if ARENA_BEATS[dfn.st["type"]] == att.st["type"] else 1.0
         crit = self.rng.random() < 0.1
         dmg = max(1, round(att.st["atk"] * mult * self.rng.uniform(0.85, 1.15) * (1.5 if crit else 1)))

@@ -920,7 +920,7 @@
     "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts),
     "world-1": () => save.worlds.length >= 1, "world-all": () => save.worlds.length >= WORLDS.length,
     "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
-    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "bond-5": () => pets.some((q) => bondLevel(q.bond || 0) >= 5), "catch-40": () => stat("catch_best") >= 40, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
+    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "knight-3": () => awLevel("Phantom Knight") >= 3, "bond-5": () => pets.some((q) => bondLevel(q.bond || 0) >= 5), "catch-40": () => stat("catch_best") >= 40, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
   };
   function checkTrophies() {
     for (const tr of D.trophies || []) {
@@ -1069,7 +1069,7 @@
   const PXI = {};                                         // pixel icons for drawing on canvases
   const pxIcon = (n) => { if (!PXI[n]) { PXI[n] = new Image(); PXI[n].src = `icons/px/${n}.png`; } return PXI[n]; };
   const pxImg = (n) => { const i = doc().createElement("img"); i.className = "px"; i.src = `icons/px/${n}.png`; i.alt = ""; return i; };
-  ["spark", "splash", "sprout", "awaken"].forEach(pxIcon);
+  ["spark", "splash", "sprout", "phantom", "awaken"].forEach(pxIcon);
   let arenaTeam = [], arenaBattle = null, arenaTimer = null;
   const arenaEntry = (p) => { const b = AWAKEN_BASE[p.kind] || p.kind; return [b, p.color % KINDS[b].colors.length, Math.min(awLevel(b), (AWAKEN_CHAIN[b] || []).length)]; };
   function battleCodeFor(name, team) {
@@ -1129,10 +1129,8 @@
     b.awLeft[s] = 0; const f = active(b, s), frac = f.hp / f.max, was = f.kind;
     f.stage += 1; f.kind = AWAKEN_CHAIN[f.base][f.stage - 1]; f.aw = true; f.color %= KINDS[f.kind].colors.length;
     f.max = fst(f).hp; f.hp = Math.min(f.max, Math.round(f.max * frac + f.max * 0.25));
-    if (f.kind === "Lurker Eternal" && b.bg !== "dam") {
-      b.bg = "dam";
-      return `✨ ${was} awakens into ${f.kind}! The ground shakes… a wall of Lurkers rises, holding up a giant dam! 🌊`;
-    }
+    const fin = (D.finalFormBgs || {})[f.kind];
+    if (fin && b.bg !== fin[0]) { b.bg = fin[0]; return `✨ ${was} awakens into ${f.kind}! ${fin[1]}`; }
     return `✨ ${was} awakens into ${f.kind}!`;
   }
   function stepBattle(b) {
@@ -1142,6 +1140,9 @@
     const first = (fst(A).spd + Math.random() * 0.5) >= (fst(B).spd + Math.random() * 0.5) ? 0 : 1;
     const side = b.turn % 2 === 0 ? first : 1 - first; b.turn++;
     const att = active(b, side), dfn = active(b, 1 - side), sa = fst(att), sd = fst(dfn);
+    if (sd.type === "phantom" && Math.random() < (D.phantomDodge || 0.2)) {   // 👻 hits can pass right through a Phantom
+      b.last = [side, 0, 1]; return `${att.kind} used ${sa.move}… but it passed right through ${dfn.kind}! 👻`;
+    }
     const mult = AR.beats[sa.type] === sd.type ? 1.5 : AR.beats[sd.type] === sa.type ? 0.7 : 1;
     const crit = Math.random() < 0.1, dmg = Math.max(1, Math.round(sa.atk * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
     dfn.hp = Math.max(0, dfn.hp - dmg); b.last = [side, dmg, mult];

@@ -2037,14 +2037,45 @@
   // One switch for every version of Blipville: status.json in the repo ("web" is this one). Turned on/off with the
   // "Maintenance mode" button on GitHub. We read it straight from GitHub (fresh within a few minutes), then from this site.
   const STATUS_URLS = ["https://raw.githubusercontent.com/Johnblip189/Blipville/main/status.json", "../status.json"];
+  // 🎟️ early access codes: a valid code is remembered on this device and opens the 1.0 early access (in /early/) during
+  // maintenance. Only the codes' fingerprints (SHA-256) are stored here, never the codes themselves.
+  const EARLY_HASHES = ["9912092ed34702febd9e54f7035b19ab72bf054cebbe38de1161286b863ac6c7", "6d90cbf3483607a667d8a787fcba2ffedbe5959b003a79797e882cf695880c07", "43a83ddfe51fc724ddab9b06adebdd9c1d67c5933546285eced02e943690b024", "25193bec0c0f2d4f89a05f82d4f5e170dd002fb410d6410c5da96c594447885a", "a1c3b063d196e3b16f60441189c069cecaa7500e6f66c75d76c3f61130708849"];
+  const EARLY_KEY = "blipville-early-code", IN_EARLY = /\/early\//.test(location.pathname);
+  const normCode = (t) => String(t || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  async function sha256(t) {
+    const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(t));
+    return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
+  }
+  async function earlyOk() {
+    try { const c = localStorage.getItem(EARLY_KEY); return !!c && EARLY_HASHES.includes(await sha256(normCode(c))); } catch (e) { return false; }
+  }
+  function earlyGate() {
+    $("maint").hidden = false;
+    $("maintTitle").textContent = "🎟️ Blipville 1.0 early access";
+    $("maintMsg").textContent = "Enter your early access code to play Blipville 1.0 before everyone else!";
+  }
+  $("earlyGo").onclick = async () => {
+    const code = normCode($("earlyCode").value);
+    if (code && EARLY_HASHES.includes(await sha256(code))) {
+      try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode: it just won't be remembered */ }
+      $("earlyMsg").textContent = "🎉 Unlocked! Opening Blipville 1.0…"; sfx("fanfare");
+      setTimeout(() => { if (IN_EARLY) location.reload(); else location.href = "../early/"; }, 900);
+    } else $("earlyMsg").textContent = "That code doesn't work. Check it for typos!";
+  };
+  if (IN_EARLY) earlyOk().then((ok) => { if (!ok) earlyGate(); });
   async function checkStatus() {
     for (const url of STATUS_URLS) {
       try {
         const res = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) continue;
         const st = await res.json();
-        const closed = typeof st.maintenance === "object" ? !!(st.maintenance && st.maintenance.web) : !!st.maintenance;
+        let closed = typeof st.maintenance === "object" ? !!(st.maintenance && st.maintenance.web) : !!st.maintenance;
+        if (IN_EARLY) {                              // early access ignores maintenance, but needs a code
+          if (!(await earlyOk())) { earlyGate(); return st; }
+          closed = !!(st.maintenance && st.maintenance.early);
+        }
         $("maint").hidden = !closed;
+        if (closed && !IN_EARLY && await earlyOk()) { location.href = "../early/"; return st; }   // this device has a code
         if (closed) {
           $("maintMsg").textContent = st.message || "We're fixing things up. Back soon!";
           $("maintLink").hidden = !st.link;

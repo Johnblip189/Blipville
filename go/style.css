@@ -293,3 +293,11 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 
 /* Cookie Catch */
 #catchCanvas { width: 100%; aspect-ratio: 360 / 320; display: block; border-radius: 14px; image-rendering: pixelated; touch-action: none; }
+
+/* early access codes */
+.earlyBox { margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.12); }
+.earlyRow { display: flex; gap: 8px; margin-top: 6px; }
+.earlyRow input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: 12px; border: 2px solid rgba(255,255,255,.15); background: #14121e;
+  color: #fff; font: 700 14px var(--font); letter-spacing: .06em; text-transform: uppercase; }
+.earlyRow button { padding: 0 16px; border: 0; border-radius: 12px; background: #ffd23a; color: #14121e; font: 800 14px var(--font); }
+#earlyMsg { min-height: 18px; margin-top: 6px; }

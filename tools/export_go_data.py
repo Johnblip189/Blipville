@@ -53,7 +53,7 @@ data = {
     "giftNow": bl.GIFT_NOW,
     "modHashes": bl.MOD_HASHES, "modKinds": bl.MOD_KINDS,
     "creator": {"hash": bl.CREATOR_HASH, "boss": bl.CREATOR_BOSS, "bossReward": bl.CREATOR_BOSS_REWARD},
-    "giftDrops": [{k: d[k] for k in ("kind", "until", "why", "start", "testers") if k in d} for d in bl.GIFT_DROPS],
+    "giftDrops": [{k: d[k] for k in ("kind", "until", "why", "start", "testers", "countdown") if k in d} for d in bl.GIFT_DROPS],
     "legendWorld": bl.LEGEND_WORLD,
     "worlds": [{k: w[k] for k in ("name", "icon", "tab", "cost")} for w in bl.WORLDS],
     "giftUntil": bl.GIFT_UNTIL,

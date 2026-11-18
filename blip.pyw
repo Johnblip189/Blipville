@@ -3445,6 +3445,12 @@ GIFTS = {
            "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbmmm.", "obbbbbbbbbbmgggm", ".obbbbbbbbbmgggm", "..oooooooookmmm."],
   "colors": [{"name": "Explorer", "o": "#1a2a1a", "b": "#8ac8ff", "h": "#c8a86a", "m": "#5a4a3a", "g": "#c8f0ff", "k": "#8a5a2a", "p": "#ff9ab0", "e": "#1a1a2a"},
              {"name": "Night Bug", "o": "#1a1a2a", "b": "#b8a0ff", "h": "#3a6a3a", "m": "#2a2a3a", "g": "#d8fff0", "k": "#5a3a1a", "p": "#ff9ad8", "e": "#1a1a2a"}]},
+ "Liftoff": {"eyes": 5, "move": "float", "speed": 1.2,
+  "lines": ["3… 2… 1… LIFTOFF! 🚀", "i caught 200 stars for this", "countdown crew, represent", "*rocket noises*", "next stop: blipville 1.0"],
+  "body": ["......rrrr......", ".....rwwwwr.....", "....rwwccwwr....", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "fobbbbbbbbbbbbof",
+           "fobbbbbbbbbbbbof", "fobpbbbbbbbbpbof", ".obbbbbbbbbbbbo.", "..oooooooooooo..", "....yyllllyy....", ".....yyllyy....."],
+  "colors": [{"name": "Launch", "o": "#2a1a3a", "b": "#c8d8ff", "r": "#ff4a6a", "w": "#ffffff", "c": "#5ad8ff", "f": "#ff4a6a", "p": "#ff9ac0", "y": "#ffd23a", "l": "#ff8a2a", "e": "#1a1030"},
+             {"name": "Starlight", "o": "#1a1a3a", "b": "#ffe8a0", "r": "#7a5ad8", "w": "#ffffff", "c": "#ffd23a", "f": "#7a5ad8", "p": "#ff9a7a", "y": "#ffffff", "l": "#5ad8ff", "e": "#1a1030"}]},
  "Confetti": {"eyes": 5, "move": "hop", "speed": 1.2,
   "lines": ["IT'S RELEASE DAY!! 🎉", "*throws confetti everywhere*", "blipville 1.0, baby!", "i was there on day one!", "party party party"],
   "body": ["r......yy.....g.", "......hhhh......", ".g...hhsshh...r.", "....hhhhhhhh....", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
@@ -3477,6 +3483,8 @@ GIFT_DROPS = [
      "why": "Thanks for waiting while we fixed things up! 🔧"},
     {"kind": "Bug Hunter", "until": "2026-12-31", "until_text": "the end of the year", "testers": True,   # early access + test builds only
      "why": "Thanks for testing Blipville 1.0 early! 🔍"},
+    {"kind": "Liftoff", "until": "2026-11-21", "until_text": "Saturday, November 21", "countdown": True,   # website only: Countdown Stars
+     "why": "You caught 200 Countdown Stars and helped launch Blipville 1.0! 🚀"},
     {"kind": "Confetti", "start": "2026-11-22", "until": "2026-11-22", "until_text": "release day (Sunday, November 22)",
      "why": "Happy release day! Thanks for playing Blipville 1.0 on day one! 🎉"},
 ]
@@ -8795,6 +8803,8 @@ class App:
             kind = drop["kind"]
             if kind in self.save.get("gifts", []) or today > drop["until"] or today < drop.get("start", ""):
                 continue
+            if drop.get("countdown"):
+                continue                                  # earned in Countdown Stars on the website (it comes over with a save code)
             if drop.get("testers") and not (APP_VERSION.endswith("-test") or self.save.get("tester") or self.save.get("mod") or self.save.get("creator")):
                 continue                                  # only for people testing 1.0 early
             self.save.setdefault("gifts", []).append(kind)

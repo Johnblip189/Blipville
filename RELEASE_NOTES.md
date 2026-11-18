@@ -57,7 +57,7 @@ make Blipville what it is. This is the real thing.
   opens again by itself.
 - 🎁 Gifts can't get lost on the website version any more.
 
-**Everything in Blipville:** 346 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
+**Everything in Blipville:** 347 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
 17 kaiju, 23 ghosts, 5 worlds with 22 World Legends, 31 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 

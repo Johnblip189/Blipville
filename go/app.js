@@ -1732,6 +1732,7 @@
     drawQuests();
     const per = EVENT.per_skin, total = per * EVENT.rewards.length, pts = Math.min(eventPts(), total), got = save.skins || [];
     $("eventTitle").textContent = `${EVENT.icon} ${EVENT.name}`;
+    if (eventPaused() && window.CountdownStars && CountdownStars.live()) CountdownStars.mount($("cdHost"));   // while Spiky Week is paused
     $("eventWhen").textContent = eventOn() ? `until ${EVENT.until_text}` : eventPaused() ? `paused until ${EVENT.paused_text}` : todayStr() < EVENT.start ? "starts soon!" : "this event is over";
     $("eventFill").style.width = `${(100 * pts) / total}%`; $("eventPts").textContent = `${pts} / ${total} points`;
     const g = $("eventGrid"); g.innerHTML = "";
@@ -1862,13 +1863,15 @@
   // Limited-time thank-you Blips. A gift only counts as delivered once it has actually walked into town (or, with a full
   // town, once the player was told it's in the Zoo), so reloading or closing the page early can't lose it.
   if (!save.giftsDelivered) save.giftsDelivered = save.gifts.filter((k) => k !== "Patch");   // older saves: those already arrived
+  const cdDone = () => !!(window.CountdownStars && CountdownStars.done());   // ⭐ Countdown Stars (the maintenance event)
   const isTester = (() => { try { return !!localStorage.getItem("blipville-early-code") || isMod() || isCreator(); } catch (e) { return false; } })();   // used an early access code
   const drops = (D.giftDrops || (D.giftNow ? [{ kind: D.giftNow, until: D.giftUntil, why: "" }] : []))
-    .filter((d) => !save.giftsDelivered.includes(d.kind) && (!d.until || localDay() <= d.until || save.gifts.includes(d.kind))
+    .filter((d) => !save.giftsDelivered.includes(d.kind) && (!d.until || localDay() <= d.until || save.gifts.includes(d.kind) || (d.countdown && cdDone()))
                    && (!d.start || localDay() >= d.start || save.gifts.includes(d.kind))
-                   && (!d.testers || isTester || save.gifts.includes(d.kind)));
-  drops.forEach((d, i) => {
-    setTimeout(() => {
+                   && (!d.testers || isTester || save.gifts.includes(d.kind))
+                   && (!d.countdown || cdDone() || save.gifts.includes(d.kind)));
+  const deliverGift = (d) => {
+      if (save.giftsDelivered.includes(d.kind)) return;
       if (!save.gifts.includes(d.kind)) save.gifts.push(d.kind);
       save.giftsDelivered.push(d.kind);
       const here = pets.some((p) => p.kind === d.kind);
@@ -1877,8 +1880,12 @@
       toast(`🎁 ${d.why ? d.why + " " : ""}Here's ${d.kind}, a limited-edition Blip! ` +
             (g || here ? "It's in your 📖 Zoo under Gifts too." : "Your town is full, so it's waiting in your 📖 Zoo under Gifts."), 7);
       persist(true);
-    }, 2600 + i * 7500);
-  });
+  };
+  drops.forEach((d, i) => setTimeout(() => deliverGift(d), 2600 + i * 7500));
+  if (window.CountdownStars) CountdownStars.onDone = () => {         // ⭐ finished Countdown Stars right here: Liftoff now
+    const d = (D.giftDrops || []).find((x) => x.countdown);
+    if (d) setTimeout(() => deliverGift(d), 600);
+  };
   const today = new Date().toISOString().slice(0, 10);
   if (save.lastDay !== today) {
     save.lastDay = today; bump("days");

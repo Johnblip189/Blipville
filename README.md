@@ -10,7 +10,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**346 kinds of pets · 1,000+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
+**347 kinds of pets · 1,000+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
 
 ## ✨ New in 1.0
 

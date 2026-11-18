@@ -1927,6 +1927,7 @@
         $("maint").hidden = !closed;
         if (closed && !IN_EARLY && await earlyOk()) { location.href = "../early/"; return st; }   // this device has a code
         if (closed) {
+          if (!IN_EARLY && window.CountdownStars) CountdownStars.mount($("cdHost"));   // ⭐ the maintenance event
           $("maintMsg").textContent = st.message || "We're fixing things up. Back soon!";
           $("maintLink").hidden = !st.link;
           if (st.link) { $("maintLink").href = st.link; $("maintLink").textContent = st.link_text || "More info"; }

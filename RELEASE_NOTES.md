@@ -56,8 +56,8 @@ make Blipville what it is. This is the real thing.
 - 🌙 **Night Shift Night 4:** a new, harder night where the **Robo Fox** joins the crew (it moves faster than the
   others). Survive it to unlock the fox. After that, keep an eye out at night: the **Wind-Up Hare**, an old forgotten
   wind-up toy with a brass key in its head, sometimes turns up in the old workshop. Both join Pull the Strings and get
-  Shadow colors from The Puppet Master. The hare's 🧪 **Prime** color shows it in its prime: fully wound, both ears
-  up, with a little marching drum.
+  Shadow colors from The Puppet Master. The hare's 🧪 **Prime** color shows it in its prime: polished gold, both ears
+  up, flexing in a red showman's cape and bow tie.
 - 🍬🧪 **Color Candy and Color Potions:** changing a Blip's color now takes a treat. A 🍬 Color Candy (10 💖) for
   everyday colors, a 🧪 Color Potion (40 💖) for the rare and special ones (Midnight, Black Light, Shadow, event skins…).
 - 🎭 **Don't feel like playing Night Shift?** Keep a **Puppet Master** in your town and the Night Shift robos

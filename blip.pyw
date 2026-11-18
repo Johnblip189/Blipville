@@ -3594,11 +3594,14 @@ GHOSTS['Puppet Box']["colors"].append({"name": "Black Light", "o": "#000000", "b
 # else, and save codes don't carry them.
 CREATOR = {"Blipmaker": {"eyes": 5, "move": "hop", "speed": 1.2, "lines": ["i made all of this! 💜", "*adjusts crown*", "welcome to MY Blipville", "the creator has arrived", "every Blip started as my idea"], "body": ["....y..yy..y....", "....yyyyyyyy....", "..oooyyyyyyooo..", ".obbbbbbbbbbbbo.", "cobbbbbbbbbbbboc", "cobbbbbbbbbbbboc", "cobbbbbbbbbbbboc", "cobpbbbbbbbbpboc", "cobbbbbssbbbbboc", "cobbbbssssbbbboc", "cc.obbbssbbbo.cc", "cc..oooooooo..cc"], "colors": [{"name": "Founder", "o": "#2a1a4a", "b": "#8a6aff", "y": "#ffd23a", "c": "#e83a5a", "s": "#ffd23a", "p": "#ff9ad8", "e": "#1a0a3a"}, {"name": "Night Shift", "o": "#0a0a1a", "b": "#3a3a6a", "y": "#ffd23a", "c": "#5affd8", "s": "#5affd8", "p": "#c8a0ff", "e": "#fff27a"}]}, "Byte": {"eyes": 5, "move": "hop", "speed": 1.4, "mouth": False, "lines": ["*beep* i helped build this!", "compiling cuteness…", "0 bugs found (today)", "ship it! 🚀", "i wrote 10,000 lines of Blip"], "body": ["........y.......", "........a.......", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", "..oggggggggggo..", "..oggggggggggo..", "..oggggmmggggo..", "..obbbbbbbbbbo..", "..obkbbbbbbkbo..", "...obbbbbbbbo...", "....oo....oo...."], "colors": [{"name": "Terminal", "o": "#0a1a1a", "b": "#5ad8c8", "g": "#0a2a2a", "m": "#5aff8a", "k": "#c8fff0", "a": "#2a4a4a", "y": "#ffd23a", "e": "#5aff8a"}, {"name": "Sunset", "o": "#2a0a0a", "b": "#ff9a6a", "g": "#2a0a14", "m": "#ffd23a", "k": "#fff0d0", "a": "#5a2a1a", "y": "#5affd8", "e": "#ffd23a"}]}}
 CREATOR["Guardian"] = {"eyes": 5, "move": "walk", "speed": 1.1, "mouth": True, "lines": ["🛡️ keeping Blipville safe", "be nice in the Discord!", "*polishes shield*", "mod squad, reporting in", "no spam on my watch"], "body": ["......aaaa......", ".....aa..aa.....", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbsssso.", "obbbbbbbbbswwso.", ".obbbbbbbbsswso.", "..ooooooooosso.."], "colors": [{"name": "Guardian", "o": "#0a1a3a", "b": "#5a9aff", "a": "#ffd23a", "s": "#c8d0e8", "w": "#3a6aff", "p": "#ff9ab0", "e": "#0a0a2a"}, {"name": "Night Watch", "o": "#0a0a14", "b": "#3a3a5a", "a": "#5affd8", "s": "#8a90a8", "w": "#5affd8", "p": "#c8a0ff", "e": "#5affd8"}]}   # 🛡️ the moderators' Blip (creators get it too)
+CREATOR["Diamond Ladybug"] = {"eyes": 4, "move": "walk", "speed": 1.1, "mouth": False, "body": ["....a......a....", ".....a....a.....", "....oooooooo....", "...okkkkkkkko...", "..okkkkkkkkkko..", "..okkkkkkkkkko..", "occwccdmmdccwcco", "ocsscccmmcccssco", "ocsscwdmmdwcssco", "occccddmmddcccco", ".ocwcddmmddcwco.", "..oooooooooooo.."], "colors": [{"name": "Diamond", "o": "#1a2a4a", "k": "#22283a", "a": "#5ad8ff", "c": "#bfefff", "d": "#7ac8f0", "w": "#ffffff", "s": "#1a2a4a", "m": "#3a6aa8", "e": "#bff4ff"}, {"name": "Ruby", "o": "#2a0a14", "k": "#1a0a10", "a": "#ff5a7a", "c": "#ff8aa8", "d": "#e83a5a", "w": "#ffffff", "s": "#2a0a14", "m": "#8a1a2a", "e": "#ffd8e0"}, {"name": "Black Diamond", "o": "#000000", "k": "#0a0a12", "a": "#c8c8ff", "c": "#5a5a7a", "d": "#3a3a5a", "w": "#e0e0ff", "s": "#0a0a14", "m": "#1a1a2a", "e": "#c8c8ff"}], "lines": ["✨ *sparkles*", "polished my spots today 💎", "lucky AND shiny", "mod squad, but make it sparkle", "diamonds are a Blip's best friend", "*catches the light*"]}   # 💎 only for one moderator code
 MOD_KINDS = ["Guardian"]
+# Blips that belong to one moderator code only (the code's SHA-256 → its Blips). Nobody else gets them, creators included.
+MOD_CODE_KINDS = {"f7442ad71cf1853b4834396505ec91f5cbba914d1e9c7f208351b22fd8f7f05a": ["Diamond Ladybug"]}
 CREATOR_KINDS = list(CREATOR)
 MOD_HASHES = ["6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0", "f7442ad71cf1853b4834396505ec91f5cbba914d1e9c7f208351b22fd8f7f05a"]   # SHA-256 of each moderator code
 CREATOR_HASH = "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56"   # SHA-256 of the creator code (the code itself is never in here)
-CREATOR_TIER = {"Blipmaker": 2.0, "Byte": 1.3}
+CREATOR_TIER = {"Blipmaker": 2.0, "Byte": 1.3, "Diamond Ladybug": 1.3}
 CREATOR_BOSS = ["The Blipmaker (boss)", [["Blipmaker", 0, 0], ["Lurker", 0, 3], ["Phantom Knight", 0, 3]]]
 CREATOR_BOSS_REWARD = 50
 for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
@@ -7074,7 +7077,7 @@ COSMIC_CRIT = 0.25
 # 👻 Phantom (the Phantom Knight's very own type): never super effective, but 1 in 5 hits passes right through it
 PHANTOM_DODGE = 0.2
 TYPE_OF = {"Phantom Knight": "phantom"}
-FORM_MOVES = {"Puppet Box": "Pull the Strings", "Puppet Master": "Final Curtain", "Blipmaker": "Creator's Spark", "Byte": "Bug Fix", "Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
+FORM_MOVES = {"Diamond Ladybug": "Diamond Dazzle", "Puppet Box": "Pull the Strings", "Puppet Master": "Final Curtain", "Blipmaker": "Creator's Spark", "Byte": "Bug Fix", "Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
               "Phantom Sovereign": "Sovereign's Judgment"}
 ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash": ["Bubble Burst", "Splash Slam", "Tidal Hug"],
                "sprout": ["Leaf Whirl", "Vine Bop", "Petal Storm"], "phantom": ["Phantom Slash", "Soul Strike", "Spectral Lance"],
@@ -7133,7 +7136,7 @@ DUAL_TYPES = {
  "Nessie": ("splash", "stone"), "Mothman": ("gust", "cosmic"), "Pegasus": ("gust", "cosmic"), "Ice Cream": ("sweet", "frost"),
  "Penguin": ("frost", "splash"), "Polar Bear": ("frost", "splash"), "Walrus": ("frost", "splash"),
  "Eel": ("volt", "splash"), "Jellyfish": ("volt", "splash"), "Bee": ("sweet", "gust"), "Death Worm": ("stone", "volt"),
- "Puppet Box": ("phantom", "sweet"), "Blipmaker": ("cosmic", "volt"), "Byte": ("volt", "cosmic"), "Guardian": ("stone", "cosmic"),
+ "Puppet Box": ("phantom", "sweet"), "Blipmaker": ("cosmic", "volt"), "Byte": ("volt", "cosmic"), "Guardian": ("stone", "cosmic"), "Diamond Ladybug": ("stone", "cosmic"),
 }
 
 
@@ -9399,6 +9402,9 @@ class App:
                             parent=parent)
 
     def is_unlocked(self, kind):
+        owners = [h for h, ks in MOD_CODE_KINDS.items() if kind in ks]
+        if owners:
+            return self.save.get("mod_code") in owners
         if kind in MOD_KINDS:
             return bool(self.save.get("creator") or self.save.get("mod"))
         if kind in CREATOR:
@@ -9618,8 +9624,15 @@ class App:
         digest = hashlib.sha256(code.encode()).hexdigest()
         if digest in MOD_HASHES:
             self.save["mod"] = True
+            self.save["mod_code"] = digest
             write_save(self.save)
             self.sound.play("fanfare")
+            for kind in MOD_CODE_KINDS.get(digest, []):         # 💎 this code's very own Blip
+                if not any(p.kind == kind for p in self.pets):
+                    pet = self.add_pet(kind, kind, greet=False)
+                    if pet:
+                        pet.say("✨ just for you! 💎", 5)
+                        pet.burst("heart", 8)
             if not any(p.kind == "Guardian" for p in self.pets):
                 pet = self.add_pet("Guardian", "Guardian", greet=False)
                 if pet:

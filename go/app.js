@@ -120,7 +120,9 @@
   const isCreator = () => { try { return localStorage.getItem("blipville-creator") === (D.creator || {}).hash; } catch (e) { return false; } };
   const isMod = () => { try { return (D.modHashes || []).includes(localStorage.getItem("blipville-mod")); } catch (e) { return false; } };
   const MODK = new Set(D.modKinds || []);
-  const isUnlocked = (k) => MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
+  const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
+  const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
+  const isUnlocked = (k) => codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -1738,6 +1740,7 @@
       sfx("fanfare"); $("secretMsg").textContent = "🛡️ Welcome to the mod squad! Guardian is yours. Tap 🛠️ at the top.";
       $("devBtn").hidden = false; modMode();
       if (!pets.some((p) => p.kind === "Guardian")) { const p = addPet("Guardian", { name: "Guardian", quiet: true }); if (p) say(p, "🛡️ mod squad, reporting in!", 4); }
+      giveCodeKinds();
       persist(true);
     } else if (EARLY_HASHES.includes(h)) {
       try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode */ }
@@ -2007,6 +2010,17 @@
     const d = (D.giftDrops || []).find((x) => x.countdown);
     if (d) setTimeout(() => deliverGift(d), 600);
   };
+  function giveCodeKinds() {                              // 💎 a moderator code's very own Blip arrives once
+    save.codeGifts = save.codeGifts || [];
+    for (const k of (D.modCodeKinds || {})[modCode()] || []) {
+      if (save.codeGifts.includes(k)) continue;
+      save.codeGifts.push(k);
+      const g = pets.some((p) => p.kind === k) ? null : addPet(k, { quiet: true });
+      if (g) { say(g, "✨ just for you! 💎", 5); setFace(g, "happy", 2); burst(g, "heart", 8); }
+      toast(`💎 ${k} is yours, and only yours! A thank-you for helping run Blipville.`, 6); persist(true);
+    }
+  }
+  setTimeout(giveCodeKinds, 2000);
   const today = new Date().toISOString().slice(0, 10);
   if (save.lastDay !== today) {
     save.lastDay = today; bump("days");

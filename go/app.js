@@ -1886,7 +1886,8 @@
   const STATUS_URLS = ["https://raw.githubusercontent.com/Johnblip189/Blipville/main/status.json", "../status.json"];
   // 🎟️ early access codes: a valid code is remembered on this device and opens the 1.0 early access (in /early/) during
   // maintenance. Only the codes' fingerprints (SHA-256) are stored here, never the codes themselves.
-  const EARLY_HASHES = ["9912092ed34702febd9e54f7035b19ab72bf054cebbe38de1161286b863ac6c7", "6d90cbf3483607a667d8a787fcba2ffedbe5959b003a79797e882cf695880c07", "43a83ddfe51fc724ddab9b06adebdd9c1d67c5933546285eced02e943690b024", "25193bec0c0f2d4f89a05f82d4f5e170dd002fb410d6410c5da96c594447885a", "a1c3b063d196e3b16f60441189c069cecaa7500e6f66c75d76c3f61130708849"];
+  const EARLY_HASHES = ["9912092ed34702febd9e54f7035b19ab72bf054cebbe38de1161286b863ac6c7", "6d90cbf3483607a667d8a787fcba2ffedbe5959b003a79797e882cf695880c07", "43a83ddfe51fc724ddab9b06adebdd9c1d67c5933546285eced02e943690b024", "25193bec0c0f2d4f89a05f82d4f5e170dd002fb410d6410c5da96c594447885a", "a1c3b063d196e3b16f60441189c069cecaa7500e6f66c75d76c3f61130708849", "804c9e2f83dbf465de9142c1d2f39705c47857c0c3db644f01242254e0172be8"   /* alpha tester */];
+  const MOD_HASHES = ["6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0", "7f39598c6a109047846098d066ab4734f2d4f17fdb93e73a008f8e6d26cfbfd5"];   // moderator codes
   const EARLY_KEY = "blipville-early-code", IN_EARLY = /\/early\//.test(location.pathname);
   const normCode = (t) => String(t || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
   async function sha256(t) {
@@ -1894,7 +1895,7 @@
     return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
   }
   async function earlyOk() {
-    try { if (localStorage.getItem("blipville-creator") === "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56" || localStorage.getItem("blipville-mod") === "6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0") return true; } catch (e) { /* private mode */ }
+    try { if (localStorage.getItem("blipville-creator") === "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56" || MOD_HASHES.includes(localStorage.getItem("blipville-mod"))) return true; } catch (e) { /* private mode */ }
     try { const c = localStorage.getItem(EARLY_KEY); return !!c && EARLY_HASHES.includes(await sha256(normCode(c))); } catch (e) { return false; }
   }
   function earlyGate() {
@@ -1904,7 +1905,7 @@
   }
   $("earlyGo").onclick = async () => {
     const code = normCode($("earlyCode").value), h = code ? await sha256(code) : "";
-    const role = h === "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56" ? "blipville-creator" : h === "6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0" ? "blipville-mod" : null;   // creator / moderator codes
+    const role = h === "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56" ? "blipville-creator" : MOD_HASHES.includes(h) ? "blipville-mod" : null;   // creator / moderator codes
     if (role) { try { localStorage.setItem(role, h); } catch (e) { /* private mode */ } }
     if (code && (role || EARLY_HASHES.includes(h))) {
       if (!role) { try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode: it just won't be remembered */ } }

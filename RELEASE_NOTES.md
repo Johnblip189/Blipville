@@ -25,7 +25,7 @@ make Blipville what it is. This is the real thing.
 - 🖱️ **Only on Windows: they play with your mouse.** Wiggle the pointer near a Blip and it chases it and pounces. Sometimes
   it catches it and "steals" it for a second. Right-click → 🖱️ Play with my mouse to turn it off.
 - ⚔️ **The Arena:** pick a team of 3 and battle! Every Blip has one of **10 types** (🔥 Spark, 💧 Splash, 🌿 Sprout, ⚡ Volt, 🪨 Stone, 🌪️ Gust, ❄️ Frost, 🍬 Sweet, plus the
-  rule-breakers 👻 Phantom and 🪐 Cosmic; each element is strong against 2 others, see the 📖 Type chart),
+  rule-breakers 👻 Phantom and 🪐 Cosmic; each element is strong against 2 others, see the 📖 Type chart; about 50 Blips, like Magmaw 🔥🪨 and Phoenix 🔥🌪️, have **2 types**),
   stats and a move. Copy your **battle code** and send it to a friend (or post it on the Discord) so they can battle your
   team, or take on five practice rivals, up to Nyx the Night Queen and Kaiju King Kai. Every battle has a **background**: Sunny Meadow, Sunset Beach, Volcano Rim, Moonlit
   Graveyard, Kaiju City or Crystal Cave. Battle codes work between Windows and the browser version.

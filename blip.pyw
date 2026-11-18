@@ -7097,6 +7097,50 @@ _NEW_TYPES = {
             "Golden Blip", "Unicorn", "Mirror Spirit"},
 }
 _NEW_TYPE_OF = {k: t for t, ks in _NEW_TYPES.items() for k in ks}
+# Dual types: these Blips have 2 types. They take both types' strengths and weaknesses when they're hit (so a hit can be
+# super effective twice, x2.25, or cancel out), and attack with whichever of their 2 types works best. Awakened forms keep them.
+DUAL_TYPES = {
+ # kaiju
+ "Magmaw": ("spark", "stone"), "Tidal Titan": ("splash", "stone"), "Gigabot": ("volt", "stone"), "Skyray": ("gust", "splash"),
+ "Frostback": ("frost", "stone"), "Stormcrab": ("volt", "splash"), "Volthorn": ("volt", "sprout"), "Tundrox": ("frost", "stone"),
+ "Nebulon": ("cosmic", "splash"), "Bramblebeast": ("sprout", "stone"), "Sandsnapper": ("stone", "spark"), "Clockwork Rex": ("volt", "stone"),
+ "Thunderwing": ("volt", "gust"), "Coralgon": ("splash", "sprout"), "Boulderback": ("stone", "sprout"),
+ # legends
+ "Candy Dragon": ("sweet", "spark"), "Cotton Candy Cloud": ("sweet", "gust"), "Gumdrop Golem": ("sweet", "stone"),
+ "Sprinkle Unicorn": ("sweet", "cosmic"), "Star Whale": ("cosmic", "splash"), "Comet Fox": ("cosmic", "spark"), "Crystal Stego": ("stone", "frost"),
+ "Ember Raptor": ("spark", "stone"), "Amber Raptor": ("stone", "spark"), "Mossling": ("sprout", "stone"), "Elder Treant": ("sprout", "stone"),
+ "Coral Queen": ("splash", "sprout"), "Tide Leviathan": ("splash", "gust"), "Licorice Serpent": ("sweet", "stone"),
+ # rare, cryptids, ghosts and friends
+ "Phoenix": ("spark", "gust"), "Dragon": ("spark", "gust"), "Wyvern": ("gust", "spark"), "Thunderbird": ("volt", "gust"),
+ "Yeti": ("frost", "stone"), "Narwhal": ("frost", "splash"), "Crystal Axolotl": ("frost", "splash"), "Sky Whale": ("gust", "splash"),
+ "Kitsune": ("spark", "cosmic"), "Qilin": ("cosmic", "spark"), "Mammoth": ("frost", "stone"), "Rock Golem": ("stone", "cosmic"),
+ "Nessie": ("splash", "stone"), "Mothman": ("gust", "cosmic"), "Pegasus": ("gust", "cosmic"), "Ice Cream": ("sweet", "frost"),
+ "Penguin": ("frost", "splash"), "Polar Bear": ("frost", "splash"), "Walrus": ("frost", "splash"),
+ "Eel": ("volt", "splash"), "Jellyfish": ("volt", "splash"), "Bee": ("sweet", "gust"), "Death Worm": ("stone", "volt"),
+ "Blipmaker": ("cosmic", "volt"), "Byte": ("volt", "cosmic"), "Guardian": ("stone", "cosmic"),
+}
+
+
+def arena_types(st):
+    """A Blip's 1 or 2 types."""
+    return [st["type"]] + ([st["type2"]] if st.get("type2") else [])
+
+
+def type_mult(att_type, dfn_types):
+    """How hard a hit of att_type lands on a Blip with these types (x1.5 per type it beats, x0.7 per type that beats it)."""
+    m = 1.0
+    for d in dfn_types:
+        m *= 1.5 if d in ARENA_BEATS[att_type] else 0.7 if att_type in ARENA_BEATS[d] else 1.0
+    return m
+
+
+def type_label(st):
+    return "".join(ARENA_TYPES[t][0] for t in arena_types(st))
+
+
+def effect_text(mult):
+    return (" · double super effective!!" if mult > 2 else " · super effective!" if mult > 1.1 else " · barely does anything…" if mult < 0.5
+            else " · not very effective…" if mult < 0.9 else "")
 
 
 def _fnv(text):
@@ -7110,14 +7154,14 @@ def _arena_stats(kind):
     base = AWAKEN_BASE.get(kind, kind)
     h = _fnv(base)
     tab = next((n for n, ks in TAB_GROUPS if base in ks), "")
-    kind_type = TYPE_OF.get(base) or _NEW_TYPE_OF.get(base) or ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
+    kind_type = TYPE_OF.get(base) or (DUAL_TYPES[base][0] if base in DUAL_TYPES else None) or _NEW_TYPE_OF.get(base) or ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
                  "sprout" if base in _SPROUT or tab.startswith("Plants") else ["spark", "splash", "sprout"][h % 3])
     tier = CREATOR_TIER.get(base) or (1.2 if base in LEGENDS or base in KAIJU else 1.12 if base in RARE or base in CRYPTIDS or base in GHOSTS
             else 1.1 if base in ROBOTS else 1.05 if base in GIFTS else 1.0)
     if kind in AWAKEN_BASE:
         tier *= 1.25 * 1.18 ** (awaken_stage(kind) - 1)
     v = VARIANTS[base]
-    return {"type": kind_type, "hp": round((70 + h % 41) * tier), "atk": round((15 + (h >> 8) % 9) * tier),
+    return {"type": kind_type, **({"type2": DUAL_TYPES[base][1]} if base in DUAL_TYPES else {}), "hp": round((70 + h % 41) * tier), "atk": round((15 + (h >> 8) % 9) * tier),
             "spd": round((6 + (h >> 16) % 10) * v.get("speed", 1.0) * (1.1 if kind in AWAKEN_BASE else 1)),
             "move": FORM_MOVES.get(kind) or (f"{kind.split()[0]} Nova" if kind in AWAKEN_BASE else ARENA_MOVES[kind_type][(h >> 4) % 3])}
 
@@ -7334,15 +7378,15 @@ class Battle:
         side = first if self.turn % 2 == 0 else 1 - first
         self.turn += 1
         att, dfn = self.active(side), self.active(1 - side)
-        if dfn.st["type"] == "phantom" and self.rng.random() < PHANTOM_DODGE:
+        if "phantom" in arena_types(dfn.st) and self.rng.random() < PHANTOM_DODGE:
             self.last = (side, 0, 1.0)
             return f"{att.kind} used {att.st['move']}… but it passed right through {dfn.kind}! 👻"
-        mult = 1.5 if dfn.st["type"] in ARENA_BEATS[att.st["type"]] else 0.7 if att.st["type"] in ARENA_BEATS[dfn.st["type"]] else 1.0
-        crit = self.rng.random() < (COSMIC_CRIT if att.st["type"] == "cosmic" else 0.1)
+        mult = max(type_mult(t, arena_types(dfn.st)) for t in arena_types(att.st))   # attacks with its best type
+        crit = self.rng.random() < (COSMIC_CRIT if "cosmic" in arena_types(att.st) else 0.1)
         dmg = max(1, round(att.st["atk"] * mult * self.rng.uniform(0.85, 1.15) * (1.5 if crit else 1)))
         dfn.hp = max(0, dfn.hp - dmg)
         self.last = (side, dmg, mult)
-        line = f"{att.kind} used {att.st['move']}! {dmg} damage" + (" · super effective!" if mult > 1 else " · not very effective…" if mult < 1 else "") + (" · critical!" if crit else "")
+        line = f"{att.kind} used {att.st['move']}! {dmg} damage" + effect_text(mult) + (" · critical!" if crit else "")
         if dfn.hp == 0:
             self.idx[1 - side] += 1
             line += f" · {dfn.kind} is out!"
@@ -7413,7 +7457,7 @@ class Arena:
                 base = AWAKEN_BASE.get(p.kind, p.kind)
                 st = ARENA_STATS[base]
                 draw_sprite(c, base, p.palette % len(kind_colors(base)), x + 30, y=104, scale=5)
-                c.create_text(x + 70, 174, text=f"{ARENA_TYPES[st['type']][0]} {base}", fill="#ffffff", font=("Segoe UI", 9, "bold"), width=132)
+                c.create_text(x + 70, 174, text=f"{type_label(st)} {base}", fill="#ffffff", font=("Segoe UI", 9, "bold"), width=132)
                 c.create_text(x + 70, 188, text=f"❤ {st['hp']}  ⚔ {st['atk']}  💨 {st['spd']}" + ("  ✨" if self.team_entry(p)[2] else ""),
                               fill="#c8c0e0", font=("Segoe UI", 8))
             else:
@@ -7444,7 +7488,9 @@ class Arena:
         name = lambda t: f"{ARENA_TYPES[t][0]} {ARENA_TYPES[t][1]}"
         lines = [f"{name(t)}  beats  " + " & ".join(name(x) for x in ARENA_BEATS[t]) for t in ARENA_TYPES if ARENA_BEATS[t]]
         lines += ["", f"{name('phantom')}: nothing beats it and it beats nothing, but 1 in 5 hits pass right through it.",
-                  f"{name('cosmic')}: nothing beats it and it beats nothing, but 1 in 4 of its hits are critical."]
+                  f"{name('cosmic')}: nothing beats it and it beats nothing, but 1 in 4 of its hits are critical.", "",
+                  "Some Blips have 2 types: they get both types' strengths and weaknesses (a hit can be super effective twice!)",
+                  "and attack with whichever type works best."]
         messagebox.showinfo("Type chart 📖", "Strong = x1.5 damage. The other way round it's x0.7.\n\n" + "\n".join(lines), parent=self.win)
 
     def toggle(self, pet):
@@ -7548,7 +7594,7 @@ class Arena:
             draw_sprite(c, f.kind, f.color, x, 120, scale, face="happy" if f.hp > f.max_hp * 0.5 else "normal")
             w = 220
             bx = x - (60 if flip else 0)
-            c.create_text(bx + w / 2, 96, text=f"{ARENA_TYPES[st['type']][0]} {f.kind}" + (" ✨" if f.awakened else ""), fill="#ffffff",
+            c.create_text(bx + w / 2, 96, text=f"{type_label(st)} {f.kind}" + (" ✨" if f.awakened else ""), fill="#ffffff",
                           font=("Segoe UI", 12, "bold"))
             c.create_rectangle(bx, 236, bx + w, 252, fill="#14121e", outline="")
             frac = f.hp / f.max_hp

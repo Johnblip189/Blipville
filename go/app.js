@@ -1076,6 +1076,9 @@
   const pxImg = (n) => { const i = doc().createElement("img"); i.className = "px"; i.src = `icons/px/${n}.png`; i.alt = ""; return i; };
   Object.keys(AR.types).concat("awaken").forEach(pxIcon);
   const beats = (a, d) => [].concat(AR.beats[a] || []).includes(d);   // a type is strong against a list of others
+  const typesOf = (st) => [st.type].concat(st.type2 ? [st.type2] : []);   // some Blips have 2 types
+  const typeMult = (a, ds) => ds.reduce((m, d) => m * (beats(a, d) ? 1.5 : beats(d, a) ? 0.7 : 1), 1);
+  const effectText = (m) => (m > 2 ? " · double super effective!!" : m > 1.1 ? " · super effective!" : m < 0.5 ? " · barely does anything…" : m < 0.9 ? " · not very effective…" : "");
   let arenaTeam = [], arenaBattle = null, arenaTimer = null;
   const arenaEntry = (p) => { const b = AWAKEN_BASE[p.kind] || p.kind; return [b, p.color % KINDS[b].colors.length, Math.min(awLevel(b), (AWAKEN_CHAIN[b] || []).length)]; };
   function battleCodeFor(name, team) {
@@ -1146,13 +1149,13 @@
     const first = (fst(A).spd + Math.random() * 0.5) >= (fst(B).spd + Math.random() * 0.5) ? 0 : 1;
     const side = b.turn % 2 === 0 ? first : 1 - first; b.turn++;
     const att = active(b, side), dfn = active(b, 1 - side), sa = fst(att), sd = fst(dfn);
-    if (sd.type === "phantom" && Math.random() < (D.phantomDodge || 0.2)) {   // 👻 hits can pass right through a Phantom
+    if (typesOf(sd).includes("phantom") && Math.random() < (D.phantomDodge || 0.2)) {   // 👻 hits can pass right through a Phantom
       b.last = [side, 0, 1]; return `${att.kind} used ${sa.move}… but it passed right through ${dfn.kind}! 👻`;
     }
-    const mult = beats(sa.type, sd.type) ? 1.5 : beats(sd.type, sa.type) ? 0.7 : 1;
-    const crit = Math.random() < (sa.type === "cosmic" ? D.cosmicCrit || 0.25 : 0.1), dmg = Math.max(1, Math.round(sa.atk * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
+    const mult = Math.max(...typesOf(sa).map((t) => typeMult(t, typesOf(sd))));   // attacks with its best type
+    const crit = Math.random() < (typesOf(sa).includes("cosmic") ? D.cosmicCrit || 0.25 : 0.1), dmg = Math.max(1, Math.round(sa.atk * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
     dfn.hp = Math.max(0, dfn.hp - dmg); b.last = [side, dmg, mult];
-    let line = `${att.kind} used ${sa.move}! ${dmg} damage` + (mult > 1 ? " · super effective!" : mult < 1 ? " · not very effective…" : "") + (crit ? " · critical!" : "");
+    let line = `${att.kind} used ${sa.move}! ${dmg} damage` + effectText(mult) + (crit ? " · critical!" : "");
     if (dfn.hp === 0) { b.idx[1 - side]++; line += ` · ${dfn.kind} is out!`; if (!active(b, 1 - side)) b.winner = side; }
     return line;
   }
@@ -1166,7 +1169,7 @@
       const e = arenaEntry(p), st = AR.stats[e[0]];
       const b = doc().createElement("button"); b.className = arenaTeam.includes(p) ? "on" : "";
       b.appendChild(thumb(e[0], e[1], false, 3));
-      const nm = doc().createElement("span"); nm.className = "typed"; nm.append(pxImg(st.type), ` ${e[0]}`); b.appendChild(nm);
+      const nm = doc().createElement("span"); nm.className = "typed"; nm.append(...typesOf(st).map(pxImg), ` ${e[0]}`); b.appendChild(nm);
       const sm = doc().createElement("small"); sm.textContent = `❤${st.hp} ⚔${st.atk} 💨${st.spd}${e[2] ? " ✨" : ""}`; b.appendChild(sm);
       b.onclick = () => { if (arenaTeam.includes(p)) arenaTeam = arenaTeam.filter((q) => q !== p); else { arenaTeam.push(p); if (arenaTeam.length > 3) arenaTeam.shift(); } openArena(); };
       box.appendChild(b);
@@ -1180,6 +1183,9 @@
       else r.textContent = t === "phantom" ? "1 in 5 hits pass right through it" : t === "cosmic" ? "1 in 4 of its hits are critical" : "";
       row.appendChild(r); tc.appendChild(row);
     }
+    const dual = doc().createElement("div"); dual.className = "typeRow";
+    dual.textContent = "Some Blips have 2 types: they get both types' strengths and weaknesses (a hit can be super effective twice!) and attack with whichever type works best.";
+    tc.appendChild(dual);
     const rv = $("arenaRivals"); rv.innerHTML = "";
     for (const r of AR.rivals) {
       const b = doc().createElement("button");
@@ -1234,10 +1240,10 @@
       if (!f) return;
       drawGrid(c, grid(f.kind, f.color, { t: now(), face: f.hp > f.max / 2 ? "happy" : "normal" }), x0 + 12, 52, 7);
       c.fillStyle = "#fff"; c.font = "700 11px " + FONT; c.textAlign = "center";
-      const label = `${f.kind}${f.aw ? " ✨" : ""}`, lw = c.measureText(label).width;
-      c.strokeStyle = "rgba(10, 8, 20, .85)"; c.lineWidth = 3; c.lineJoin = "round"; c.strokeText(label, x0 + 68 + 9, 48);
-      c.fillText(label, x0 + 68 + 9, 48);
-      const ic = pxIcon(fst(f).type); if (ic.complete) c.drawImage(ic, x0 + 68 - lw / 2 - 10, 37, 14, 14);
+      const label = `${f.kind}${f.aw ? " ✨" : ""}`, lw = c.measureText(label).width, tys = typesOf(fst(f)), lx = x0 + 68 + 9 + (tys.length - 1) * 7;
+      c.strokeStyle = "rgba(10, 8, 20, .85)"; c.lineWidth = 3; c.lineJoin = "round"; c.strokeText(label, lx, 48);
+      c.fillText(label, lx, 48);
+      tys.forEach((t, i) => { const ic = pxIcon(t); if (ic.complete) c.drawImage(ic, lx - lw / 2 - 19 - (tys.length - 1 - i) * 14, 37, 14, 14); });   // 1 or 2 type icons
       c.fillStyle = "#2b2547"; c.fillRect(x0, 150, 136, 12);
       const fr = f.hp / f.max; c.fillStyle = fr > 0.5 ? "#9ad8a8" : fr > 0.2 ? "#ffd23a" : "#ff5a7a"; c.fillRect(x0, 150, 136 * fr, 12);
       c.fillStyle = "#ffffff"; c.font = "800 10px " + FONT; c.fillText(`${f.hp} / ${f.max}`, x0 + 68, 160);

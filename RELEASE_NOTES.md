@@ -47,8 +47,8 @@ make Blipville what it is. This is the real thing.
   the Lurker treatment: 3 Awakenings, Spectral Knight → Phantom Champion → **Phantom Sovereign**, who calls a ghostly
   army into **The Haunted Keep**.
 - 🎭 **The Puppet Box:** an old toy chest that creaks open by itself at night, with red eyes peeking out of the gap.
-  Awaken it and it opens into the **Puppet Master**: a cracked porcelain mask with red tears, a little top hat and puppet
-  strings (👻 Phantom + 🍬 Sweet). When it awakens in the Arena, the battle moves to **The Puppet Theater**.
+  Awaken it and it opens into the **Puppet Master**: a cracked porcelain mask with red tears, a little top hat, and a
+  see-through, flickering little Blip soul dangling from its puppet strings (👻 Phantom + 🍬 Sweet). When it awakens in the Arena, the battle moves to **The Puppet Theater**.
   Its **Pull the Strings** move brings 2 **Shadow** Night Shift Blips into your team (once per battle). Beat the new
   rival, **The Puppet Master**, to unlock the Shadow colors for Robo Bear, Robo Bunny and Robo Hen.
 - 🎵 **Battle music:** every Arena stage has its own tune (9 in all: Sunny Showdown, Magma Rush, Skyscraper Smash, Music Box Waltz…) that plays during the battle

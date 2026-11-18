@@ -3420,6 +3420,9 @@ AWAKEN_FORM = {base: a["name"] for base, a in AWAKENED.items()}
 # 🎭 the Puppet Box opens into the Puppet Master (concept by the Blipville team)
 AWAKENED['Puppet Box'] = {"name": "Puppet Master", "eyes": 5, "move": "float", "speed": 0.8, "feet": False, "mouth": False, "ghost": True, "lines": ["the show must go on.", "*the strings tighten*", "every tear is part of the act", "take your seats… the curtain rises", "who's pulling whose strings?", "*a slow bow*"], "body": ["s....tttttt....s", "s....tttttt....s", "s..tttttttttt..s", "s..owwwwxwwwwo.s", "s.owwwwwwxwwwo.s", "s.owwwwwwwwwwo.s", "s.owwwwwwwwwwo.s", "s.owrwwwwwwrwo.s", "s.owrwmmmmwrwo.s", "s.rcrcrcrcrcrc.s", "hobbbbbbbbbbbboh", ".obkbbbbbbbbkbo."], "colors": [{"name": "Porcelain", "o": "#1a1020", "w": "#f4efe8", "x": "#a8a0b0", "r": "#d81e3a", "m": "#2a1020", "t": "#1a1020", "c": "#f4efe8", "b": "#2a1a3a", "k": "#d8a83a", "h": "#ffffff", "s": "#c8c0d8", "e": "#0a0610"}, {"name": "Gilded", "o": "#2a0a10", "w": "#fff4e0", "x": "#c8a878", "r": "#d81e3a", "m": "#3a0a14", "t": "#5a0a1a", "c": "#ffd23a", "b": "#5a0a1a", "k": "#ffd23a", "h": "#fff4e0", "s": "#e8d8b0", "e": "#0a0610"}]}
 AWAKENED['Puppet Box']["colors"].append({"name": "Black Light", "o": "#000000", "w": "#f4f0ff", "x": "#b8a8ff", "r": "#b05aff", "m": "#000000", "t": "#0a0a0a", "c": "#ffffff", "b": "#0a0a0a", "k": "#ffffff", "h": "#ffffff", "s": "#e0d8ff", "e": "#000000"})   # 🔦 Black Light: glows under UV
+# The Puppet Master is solid now; only the little Blip soul on its strings is see-through (the "soul" letters) and flickers.
+AWAKENED['Puppet Box'].update({"ghost": False, "dx": -2, "soul": "qz", "body": ["...tttttt.......", "...tttttt.......", ".tttttttttt.....", ".owwwwxwwwwo....", "owwwwwwxwwwwo...", "owwwwwwwwwwwo...", "owwwwwwwwwwwokkk", "owrwwwwwwrwwo.s.", "owrwmmmmwrwwo.s.", ".rcrcrcrcrcq.s.q", "obbbbbbbbboqzqzq", ".obkbbbbkbo.qqq."],
+    "colors": [{"name": "Porcelain", "o": "#1a1020", "w": "#f4efe8", "x": "#a8a0b0", "r": "#d81e3a", "m": "#2a1020", "t": "#1a1020", "c": "#f4efe8", "b": "#2a1a3a", "k": "#d8a83a", "h": "#ffffff", "s": "#c8c0d8", "e": "#0a0610", "q": "#bff4ff", "z": "#1a3a5a"}, {"name": "Gilded", "o": "#2a0a10", "w": "#fff4e0", "x": "#c8a878", "r": "#d81e3a", "m": "#3a0a14", "t": "#5a0a1a", "c": "#ffd23a", "b": "#5a0a1a", "k": "#ffd23a", "h": "#fff4e0", "s": "#e8d8b0", "e": "#0a0610", "q": "#ffe8b0", "z": "#5a3a0a"}, {"name": "Black Light", "o": "#000000", "w": "#f4f0ff", "x": "#b8a8ff", "r": "#b05aff", "m": "#000000", "t": "#0a0a0a", "c": "#ffffff", "b": "#0a0a0a", "k": "#ffffff", "h": "#ffffff", "s": "#e0d8ff", "e": "#000000", "q": "#e0c8ff", "z": "#3a0a6a"}]})
 AWAKEN_CHAIN = {base: [a["name"]] + [st["name"] for st in AWAKEN_STAGES.get(base, [])] for base, a in AWAKENED.items()}
 AWAKEN_BASE = {form: base for base, chain in AWAKEN_CHAIN.items() for form in chain}
 CRYSTAL_COST = 75
@@ -3620,9 +3623,9 @@ CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
 for _base, _a in [(b, a) for b, a in AWAKENED.items()] + [(b, st) for b, sts in AWAKEN_STAGES.items() for st in sts]:
     VARIANTS[_a["name"]] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
-                            "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
+                            "feet": FEET_STD if _a.get("feet", True) else None, "dx": _a.get("dx", 0), "move": _a["move"],
                             "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0), "shifty": False,
-                            "ghost": _a.get("ghost", False), "awakened": _base}
+                            "ghost": _a.get("ghost", False), "awakened": _base, "soul": _a.get("soul", "")}
 GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
 GHOST_KINDS = list(GHOSTS)        # met at night
 LEGEND_KINDS = list(LEGENDS)      # found only while visiting their world
@@ -5620,7 +5623,8 @@ class Blip:
             self.bubble = None
         key = (tuple(tuple(r) for r in art), oy, self.hat, self.hat2, tuple(sorted(self.tints.items())),
                self.state == "sleep" or now < self.squash_until,
-               self.kind, self.name if self.app.name_tags.get() else None, talking, bond_level(self.bond))
+               self.kind, self.name if self.app.name_tags.get() else None, talking, bond_level(self.bond),
+               int(now * 4) if VARIANTS[self.kind].get("soul") else 0)          # a flickering soul needs redrawing
         if key != getattr(self, "_drawn", None):
             self._drawn = key
             c.delete("pet")
@@ -5637,6 +5641,10 @@ class Blip:
         c = self.canvas
         # ghosts stay a little see-through in your town too (with the Redux engine)
         ghost = {"alpha": 0.8} if VARIANTS[self.kind].get("ghost") and isinstance(c, PixelCanvas) else {}
+        soul_chars = VARIANTS[self.kind].get("soul", "")
+        pal = kind_colors(self.kind)[self.palette % len(kind_colors(self.kind))] if soul_chars else {}
+        soul = {pal[ch] for ch in soul_chars if ch in pal}           # 🎭 only these colors are see-through
+        soul_alpha = {"alpha": ghost_alpha(now, 0.0) * 0.75} if soul and isinstance(c, PixelCanvas) else {}
         # pixel art, merging runs of the same color into one rectangle per row
         for y, row in enumerate(art):
             x = 0
@@ -5649,7 +5657,7 @@ class Blip:
                 while x2 + 1 < ART_W and row[x2 + 1] == color:
                     x2 += 1
                 c.create_rectangle(ox + x * SCALE, oy + y * SCALE, ox + (x2 + 1) * SCALE, oy + (y + 1) * SCALE,
-                                   fill=color, outline="", tags=("pet",), **ghost)
+                                   fill=color, outline="", tags=("pet",), **(soul_alpha if color in soul else ghost))
                 x = x2 + 1
 
         # hat / glasses / scarf

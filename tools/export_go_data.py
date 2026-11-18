@@ -19,7 +19,7 @@ for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
         "feet": v["feet"], "dx": v.get("dx", 0), "move": v["move"], "speed": v.get("speed", 1.0),
-        "shifty": bool(v.get("shifty")), "extra": v.get("extra", {}), "ghost": bool(v.get("ghost")),
+        "shifty": bool(v.get("shifty")), "extra": v.get("extra", {}), "ghost": bool(v.get("ghost")), "soul": v.get("soul", ""),
         "lines": v["lines"], "colors": bl.kind_colors(k),
         "default": bl.default_color(k),
     }

@@ -485,7 +485,8 @@
     return c;
   }
 
-  function drawGrid(c, g, x, y, s) {
+  function drawGrid(c, g, x, y, s, soul = null, soulA = 1) {   // soul: colors drawn see-through (the Puppet Master's soul)
+    const base = c.globalAlpha;
     for (let r = 0; r < g.length; r++) {
       let col = 0;
       while (col < 16) {
@@ -493,6 +494,7 @@
         if (!color) { col++; continue; }
         let end = col;
         while (end + 1 < 16 && g[r][end + 1] === color) end++;
+        c.globalAlpha = soul && soul.has(color) ? base * soulA : base;
         c.fillStyle = color; c.fillRect(x + col * s, y + r * s, (end - col + 1) * s, s);
         col = end + 1;
       }
@@ -645,7 +647,9 @@
     const look = Math.hypot(dx, dy) < 30 ? [0, 0] : [dx < -40 ? -1 : dx > 40 ? 1 : 0, dy < -80 ? -1 : dy > 40 ? 1 : 0];
     const face = t < p.faceUntil ? p.face : "normal";
     if (KINDS[p.kind].ghost) ctx.globalAlpha = 0.8;                // ghosts stay a little see-through
-    drawGrid(ctx, grid(p.kind, p.color, { t, state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S);
+    const K = KINDS[p.kind], soul = K.soul ? new Set([...K.soul].map((ch) => K.colors[p.color % K.colors.length][ch]).filter(Boolean)) : null;
+    drawGrid(ctx, grid(p.kind, p.color, { t, state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
+             soul, soul ? ghostAlpha(t, p.x * 0.01) * 0.75 : 1);
     ctx.globalAlpha = 1;
     const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;
     const hatTop = Math.min(0, ...worn(p).map(([n, tint]) => drawHat(ctx, p.kind, n, left, top, S, shiftH, tint)));

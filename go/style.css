@@ -307,3 +307,9 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 .devGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
 .devGrid button { min-height: 44px; border: 0; border-radius: 12px; background: var(--card2); color: var(--text); font: 800 13px var(--font); }
 .devGrid button[hidden] { display: none; }
+.typeChart { margin: 8px 0; font-size: 13px; }
+.typeChart summary { cursor: pointer; font-weight: 800; color: #ffd23a; list-style: none; display: inline-flex; align-items: center; gap: 6px; }
+.typeChart summary img.px { width: 18px; height: 18px; }
+.typeRow { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.08); color: var(--muted); }
+.typeRow > .typed:first-child { color: #fff; font-weight: 800; min-width: 84px; }
+.typeRow .typed img.px { width: 16px; height: 16px; }

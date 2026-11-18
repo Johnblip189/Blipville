@@ -23,7 +23,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 - 🍪 **Cookie Catch**, a new minigame.
 - 🪟 **Blips climb your windows** (Windows app only): they jump onto open windows, ride along when you drag them, and tumble down when you close them.
 - 🖱️ **They play with your mouse** (Windows app only): wiggle the pointer and they chase it, pounce, and sometimes steal it for a second.
-- ⚔️ **The Arena:** battle with a team of 3. Share your **battle code** so friends can battle your team (works between Windows and the browser).
+- ⚔️ **The Arena:** battle with a team of 3. 10 types (Spark, Splash, Sprout, Volt, Stone, Gust, Frost, Sweet, Phantom and Cosmic). Share your **battle code** so friends can battle your team (works between Windows and the browser).
 - ✨ **20 Awakened forms**, including every kaiju, ghosts like King Sheetie and cryptids like Lunar Mothman, with one Awaken per Arena battle.
 - 🎨 **Accessory colors** and a **2nd accessory slot**.
 - 👁️ **The Lurker:** a many-eyed shadow ghost that Awakens **3 times**, up to Lurker Eternal.

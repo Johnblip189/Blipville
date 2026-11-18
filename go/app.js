@@ -1074,7 +1074,8 @@
   const PXI = {};                                         // pixel icons for drawing on canvases
   const pxIcon = (n) => { if (!PXI[n]) { PXI[n] = new Image(); PXI[n].src = `icons/px/${n}.png`; } return PXI[n]; };
   const pxImg = (n) => { const i = doc().createElement("img"); i.className = "px"; i.src = `icons/px/${n}.png`; i.alt = ""; return i; };
-  ["spark", "splash", "sprout", "phantom", "awaken"].forEach(pxIcon);
+  Object.keys(AR.types).concat("awaken").forEach(pxIcon);
+  const beats = (a, d) => [].concat(AR.beats[a] || []).includes(d);   // a type is strong against a list of others
   let arenaTeam = [], arenaBattle = null, arenaTimer = null;
   const arenaEntry = (p) => { const b = AWAKEN_BASE[p.kind] || p.kind; return [b, p.color % KINDS[b].colors.length, Math.min(awLevel(b), (AWAKEN_CHAIN[b] || []).length)]; };
   function battleCodeFor(name, team) {
@@ -1148,8 +1149,8 @@
     if (sd.type === "phantom" && Math.random() < (D.phantomDodge || 0.2)) {   // 👻 hits can pass right through a Phantom
       b.last = [side, 0, 1]; return `${att.kind} used ${sa.move}… but it passed right through ${dfn.kind}! 👻`;
     }
-    const mult = AR.beats[sa.type] === sd.type ? 1.5 : AR.beats[sd.type] === sa.type ? 0.7 : 1;
-    const crit = Math.random() < 0.1, dmg = Math.max(1, Math.round(sa.atk * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
+    const mult = beats(sa.type, sd.type) ? 1.5 : beats(sd.type, sa.type) ? 0.7 : 1;
+    const crit = Math.random() < (sa.type === "cosmic" ? D.cosmicCrit || 0.25 : 0.1), dmg = Math.max(1, Math.round(sa.atk * mult * rnd(0.85, 1.15) * (crit ? 1.5 : 1)));
     dfn.hp = Math.max(0, dfn.hp - dmg); b.last = [side, dmg, mult];
     let line = `${att.kind} used ${sa.move}! ${dmg} damage` + (mult > 1 ? " · super effective!" : mult < 1 ? " · not very effective…" : "") + (crit ? " · critical!" : "");
     if (dfn.hp === 0) { b.idx[1 - side]++; line += ` · ${dfn.kind} is out!`; if (!active(b, 1 - side)) b.winner = side; }
@@ -1169,6 +1170,15 @@
       const sm = doc().createElement("small"); sm.textContent = `❤${st.hp} ⚔${st.atk} 💨${st.spd}${e[2] ? " ✨" : ""}`; b.appendChild(sm);
       b.onclick = () => { if (arenaTeam.includes(p)) arenaTeam = arenaTeam.filter((q) => q !== p); else { arenaTeam.push(p); if (arenaTeam.length > 3) arenaTeam.shift(); } openArena(); };
       box.appendChild(b);
+    }
+    const tc = $("typeChart"); tc.innerHTML = "";                      // 📖 the type chart
+    const tname = (t) => { const s = doc().createElement("span"); s.className = "typed"; s.append(pxImg(t), ` ${AR.types[t][1]}`); return s; };
+    for (const t of Object.keys(AR.types)) {
+      const row = doc().createElement("div"); row.className = "typeRow"; row.appendChild(tname(t));
+      const list = [].concat(AR.beats[t] || []), r = doc().createElement("span");
+      if (list.length) { r.append("beats "); list.forEach((x, i) => { if (i) r.append(" & "); r.appendChild(tname(x)); }); }
+      else r.textContent = t === "phantom" ? "1 in 5 hits pass right through it" : t === "cosmic" ? "1 in 4 of its hits are critical" : "";
+      row.appendChild(r); tc.appendChild(row);
     }
     const rv = $("arenaRivals"); rv.innerHTML = "";
     for (const r of AR.rivals) {

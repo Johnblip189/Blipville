@@ -4000,6 +4000,13 @@ PX_ICONS = {  # Blipville's pixel icons (14x14 PNGs, made from the masks in go/i
     "trophy": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAvElEQVR4nGNgIBMwwhhSImr/idHw7M0tRgYGBgYWmKan+0SIsknaieH/sze3GJmkRNT+n5vyBSr4Bo8GiNy5KV8YpETU/jMhS+Cz9ek+ERSDGWFOPTflC4O4lgJeZ7689oDBKIeH4dmbW4wYgYPLVphtsMBhRFeALaCknd7ANeAFUiJq//9fsvr//5LVf1zRxIRNEzFijOgKCtxYsLpiwq4/KM5lIkYTAwMDQ4EbC4rNGDbi1MnAQFwAEQIAVHRNhJrnjGYAAAAASUVORK5CYII=",
     "worlds": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAfElEQVR4nGNgIBMwYhOUElH7j8x/9uYWhjoUAZgGhyk3URQdyFHHMIARWRNcg0I2hH4wFcMAmGYmnJrQ2VCXwFzFhM2PcACzUSEbwxBMjTDFaM5EB9htxKYJTQxTIxZnYTOIiYEBEsywIEcxAA0ghyrl8YjNABjAlnLoDwDvZzmd2TTfWwAAAABJRU5ErkJggg==",
     "zoo": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAdElEQVR4nGNgIBMwwhhSImr/0SWfvbnFiEucBaZJwG0SprG78nCKsyDzry51R5GXFsUU047eycDAwMDAhG6YtKg6g7SoOkExFBsZGBgYnr6+ieEybGLDxUZYVGCzEUUjLKgJiTEwEEg5uMCzN7cYCauiNgAAmw0v8y0PAn0AAAAASUVORK5CYII=",
+    "volt": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAeElEQVR4nGNgoBWQElH7LyWi9h9dnIWQpqf7RBgYGBgYpJ0Y/j97c4sRJsdEjKaX1x4Q77z/l6z+/79k9f/FCimsTsWwEd0moxweuDiyOkZcmtABzBCYP1FsfPbmFqO00xsMP6FrosiP9NeENR6J9hO6rUQ5j1wAAIHPYsn+ySWAAAAAAElFTkSuQmCC",
+    "stone": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAkklEQVR4nGNgoDdgxCYoJaL2H5n/7M0tDHUYAlIiav/7pkxCESvKycMwgAmXpvBwd7h435RJDA5uLiguYcKlaeXKnRheQNbMhM15ME2bNm2Ci/n5+aEYguJUfIqRxbFqRDcZmyYUjdgkN23ahFWcgYGBgYWBARLMB3Yx/MeqAgkc2LUHHiUo8Yge8egAW0KgHwAAcME/eBZIBmgAAAAASUVORK5CYII=",
+    "gust": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAaUlEQVR4nGNgIBMwInOkRNT+41L47M0tRqwSUiJq//EBdEOJtvHp65sM0qLq2G3GZytMDmY4C7pt0qLquCxFASwwTU9f3yRKAwzA3YvPf8gAw48DE6q4bEYPUQwbcdlM0DZcgNiAIwoAAChUmN2Wr14KAAAAAElFTkSuQmCC",
+    "frost": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAeUlEQVR4nGNgoDaQElH7T7IGKRG1/1U3/v+HsbGpY0LXlHDkJoqChCM38dsOk4TZBsPI4hg2wmxCloyTwXQJsjwjNmcia1r0BEIvsFFnePbmFiMDMkAPjKob///f+PIfQwyrX0n1I06b0WmcmpA1ExOPeA0gSQPNAQAbPXP0z7fL1wAAAABJRU5ErkJggg==",
+    "sweet": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAg0lEQVR4nGNgGBAgJaL2n2R1UiJq///PuvEfWVBKRO0/MsamjgWm+GnbJgbpKr//MDYygIkjq2NBVgDXkKrOwDD7JsPDAxcY5B0MMAxiYGBgYMLqGSRNDw9cwKoEq0ZkTfIOBlg1ojhVusoPxckwTejiDAwM5IcqXCFW96ABYtUNMgAAYJ1Q+Osb2IkAAAAASUVORK5CYII=",
+    "cosmic": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAqElEQVR4nGNgIAFIiaj9J0U9XNP/S1b/YZoZiTX56T4ROFva6Q2mRikRtf/T0m6iiGXNUodrlnZ6w/DszS1GJlya/GsOwsVhYjBNDAwMDEwwDeiaNrbYwzXuOrATrhnuRykRtf/I7icGwP0IMwXdbzDbGBgYGNwc3OF+ffbmFiNK4CA7F6YBWRPMfwwMDAgbYYK4QhVZE4ofkUMMPR7RNaE4EUc4DCIAAGwHXF20RBkvAAAAAElFTkSuQmCC",
+    "phantom": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAb0lEQVR4nGNgIBMwYhOUElH7j8x/9uYWVnUYmtABukFEaSKoGZ8mbJqZ0A2QFlXHMBSbGIZGYgGGxqevb2IowiaG00ZpUXWsToQBFlwS2GwhykZCAG+oorOfvr6JkaoYGBgQSU1KRO0/Lja5LoQDAHAeagZP/muxAAAAAElFTkSuQmCC",
 }
 _PX_CACHE = {}
 MENU_ICONS = [("💬 Join", "discord"), ("💖", "heart"), ("🎩", "hat"), ("🥚", "egg"), ("🔦", "lure"), ("📡", "beacon"), ("🕯️", "candle"),
@@ -7028,19 +7035,36 @@ class Maintenance:
 
 
 # ----------------------------------------------------------------------------- the Arena ⚔️
-# Teams of 3 battle automatically; you get one ✨ Awaken per battle. Types: 🔥 Spark beats 🌿 Sprout beats 💧 Splash
-# beats 🔥 Spark. Every Blip's type and stats come from here (the website version gets the same table).
+# Teams of 3 battle automatically; you get one ✨ Awaken per battle. There are 10 types: 8 elements that are each strong
+# against 2 others (ARENA_BEATS), plus 👻 Phantom and 🪐 Cosmic, which play by their own rules. Every Blip's type and stats
+# come from here (the website version gets the same table).
 # A battle code is "BLIP1-" + base64 of {"n": name, "t": [[kind, color, can_awaken], ...]}: send it to a friend and
 # they battle your team (the computer plays it).
-ARENA_TYPES = {"spark": ("🔥", "Spark"), "splash": ("💧", "Splash"), "sprout": ("🌿", "Sprout"), "phantom": ("👻", "Phantom")}
-ARENA_BEATS = {"spark": "sprout", "sprout": "splash", "splash": "spark", "phantom": None}
+ARENA_TYPES = {"spark": ("🔥", "Spark"), "splash": ("💧", "Splash"), "sprout": ("🌿", "Sprout"), "volt": ("⚡", "Volt"),
+               "stone": ("🪨", "Stone"), "gust": ("🌪️", "Gust"), "frost": ("❄️", "Frost"), "sweet": ("🍬", "Sweet"),
+               "phantom": ("👻", "Phantom"), "cosmic": ("🪐", "Cosmic")}
+# Who's strong against whom (x1.5 damage; the other way round it's x0.7). Every element beats 2 and loses to 2.
+ARENA_BEATS = {"spark": ["sprout", "frost"],    # burns leaves, melts ice
+               "splash": ["spark", "stone"],    # puts out fires, wears down rock
+               "sprout": ["splash", "stone"],   # drinks water, roots crack rock
+               "volt": ["splash", "gust"],      # zaps water, charges up storms
+               "stone": ["spark", "sweet"],     # smothers fire, crunches candy
+               "gust": ["sprout", "sweet"],     # blows away leaves and sprinkles
+               "frost": ["gust", "volt"],       # freezes the wind, jams the circuits
+               "sweet": ["frost", "volt"],      # warm cocoa melts frost, sticky syrup gums up gadgets
+               "phantom": [], "cosmic": []}
+# 🪐 Cosmic: never super effective and never resisted, but its hits land as critical hits 1 in 4 times (others: 1 in 10)
+COSMIC_CRIT = 0.25
 # 👻 Phantom (the Phantom Knight's very own type): never super effective and never resisted, but 1 in 5 hits passes right through it
 PHANTOM_DODGE = 0.2
 TYPE_OF = {"Phantom Knight": "phantom"}
 FORM_MOVES = {"Blipmaker": "Creator's Spark", "Byte": "Bug Fix", "Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
               "Phantom Sovereign": "Sovereign's Judgment"}
 ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash": ["Bubble Burst", "Splash Slam", "Tidal Hug"],
-               "sprout": ["Leaf Whirl", "Vine Bop", "Petal Storm"], "phantom": ["Phantom Slash", "Soul Strike", "Spectral Lance"]}
+               "sprout": ["Leaf Whirl", "Vine Bop", "Petal Storm"], "phantom": ["Phantom Slash", "Soul Strike", "Spectral Lance"],
+               "volt": ["Zap Bop", "Static Hug", "Thunder Tap"], "stone": ["Pebble Toss", "Boulder Bump", "Rockslide"],
+               "gust": ["Breeze Slap", "Twister Twirl", "Gale Puff"], "frost": ["Snowball", "Icicle Poke", "Frost Nip"],
+               "sweet": ["Sprinkle Shot", "Sugar Rush", "Taffy Tangle"], "cosmic": ["Star Beam", "Meteor Boop", "Moon Drop"]}
 _SPARK = {"Phoenix", "Dragon", "Magmaw", "Will-o'-Wisp", "Jersey Devil", "Fox", "Kitsune", "Chochin", "Amber Raptor", "Comet",
           "Rocket", "Black Hole", "Star", "Moon", "Fennec", "Tiger", "Lion", "Cheetah", "Gigabot", "Robo Bear", "Robo Bunny",
           "Robo Hen", "Golden Blip", "Bee", "Pumpkin", "Thunderbird", "Snallygaster", "Hodag", "Taco", "Toast", "Poltergeist"}
@@ -7051,6 +7075,28 @@ _SPLASH = {"Axolotl", "Clownfish", "Crab", "Dolphin", "Frog", "Goldfish", "Jelly
 _SPROUT = {"Sprout", "Caterpillar", "Ladybug", "Butterfly", "Mantis", "Mossling", "Bloomkin", "Sloth", "Koala", "Panda",
            "Chameleon", "Gecko", "Iguana", "Snail", "Bigfoot", "Skunk Ape", "Shroomy", "Cactus Pal", "Deer", "Moose", "Rabbit",
            "Hedgehog", "Tortoise", "Moth", "Mothman", "Owlman", "Gumdrop Golem"}
+
+
+# The 6 newer types. These lists come first, so a Blip listed here keeps that type even if an older list names it too.
+_NEW_TYPES = {
+ "volt": {"Robo Bear", "Robo Bunny", "Robo Hen", "Gigabot", "Volthorn", "Thunderwing", "Stormcrab", "Clockwork Rex", "Eel", "Thunderbird",
+          "Byte", "Zorp", "UFO", "Flatwoods Monster", "Dover Demon", "Van Meter Visitor", "Bug Hunter", "Patch", "Jellyfish", "Anglerfish"},
+ "stone": {"Rock Golem", "Boulderback", "Tremorpede", "Sandsnapper", "Armadillo", "Pangolin", "Rhino", "Ankylosaurus",
+           "Triceratops", "Stegosaurus", "Brachiosaurus", "Crystal Stego", "Fossilbones", "Mole", "Death Worm", "Mokele-mbembe",
+           "Tardigrade", "T-Rex", "Echidna", "Porcupine", "Elephant", "Gorilla", "Bison", "Goat", "Guardian", "Grootslang", "Spike"},
+ "gust": {"Skyray", "Nimbus", "Sky Whale", "Pegasus", "Griffin", "Eagle", "Owl", "Crow", "Pigeon", "Parrot", "Toucan", "Hummingbird",
+          "Pterodactyl", "Ahool", "Kongamato", "Ropen", "Batsquatch", "Bat", "Wyvern", "Robin", "Puffin", "Flamingo", "Peacock",
+          "Sugar Glider", "Specter Owl", "Pixie", "Banshee"},
+ "frost": {"Yeti", "Frostback", "Tundrox", "Snow Leopard", "Polar Bear", "Penguin", "Walrus", "Mammoth", "Beluga", "Wendigo", "Yak",
+           "Saber Kitten", "Lemming", "Narwhal", "Grey Lady", "Crystal Axolotl"},
+ "sweet": {"Donut", "Cupcake", "Ice Cream", "Macaron", "Pudding", "Gummy Bear", "Dumpling", "Marshmallow", "Gumdrop Golem",
+           "Cotton Candy Cloud", "Candy Dragon", "Sprinkle Unicorn", "Licorice Serpent", "Bee", "Confetti", "Beta Buddy", "Bun",
+           "Rainbow Blip", "Haunted Teacup", "Lucky Cat"},
+ "cosmic": {"Star", "Moon", "Comet", "Ringed Planet", "Rocket", "Black Hole", "Space Jelly", "Astronaut", "Space Slug", "Nebulon",
+            "Nebula Cat", "Cosmo Pup", "Star Whale", "Comet Fox", "Moon Bunny", "Moon Moth", "Qilin", "Liftoff", "Blipmaker",
+            "Golden Blip", "Unicorn", "Mirror Spirit"},
+}
+_NEW_TYPE_OF = {k: t for t, ks in _NEW_TYPES.items() for k in ks}
 
 
 def _fnv(text):
@@ -7064,7 +7110,7 @@ def _arena_stats(kind):
     base = AWAKEN_BASE.get(kind, kind)
     h = _fnv(base)
     tab = next((n for n, ks in TAB_GROUPS if base in ks), "")
-    kind_type = TYPE_OF.get(base) or ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
+    kind_type = TYPE_OF.get(base) or _NEW_TYPE_OF.get(base) or ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
                  "sprout" if base in _SPROUT or tab.startswith("Plants") else ["spark", "splash", "sprout"][h % 3])
     tier = CREATOR_TIER.get(base) or (1.2 if base in LEGENDS or base in KAIJU else 1.12 if base in RARE or base in CRYPTIDS or base in GHOSTS
             else 1.1 if base in ROBOTS else 1.05 if base in GIFTS else 1.0)
@@ -7291,8 +7337,8 @@ class Battle:
         if dfn.st["type"] == "phantom" and self.rng.random() < PHANTOM_DODGE:
             self.last = (side, 0, 1.0)
             return f"{att.kind} used {att.st['move']}… but it passed right through {dfn.kind}! 👻"
-        mult = 1.5 if ARENA_BEATS[att.st["type"]] == dfn.st["type"] else 0.7 if ARENA_BEATS[dfn.st["type"]] == att.st["type"] else 1.0
-        crit = self.rng.random() < 0.1
+        mult = 1.5 if dfn.st["type"] in ARENA_BEATS[att.st["type"]] else 0.7 if att.st["type"] in ARENA_BEATS[dfn.st["type"]] else 1.0
+        crit = self.rng.random() < (COSMIC_CRIT if att.st["type"] == "cosmic" else 0.1)
         dmg = max(1, round(att.st["atk"] * mult * self.rng.uniform(0.85, 1.15) * (1.5 if crit else 1)))
         dfn.hp = max(0, dfn.hp - dmg)
         self.last = (side, dmg, mult)
@@ -7356,7 +7402,8 @@ class Arena:
         c.create_text(16, 24, anchor="w", text="⚔️ Arena", fill="#ffffff", font=("Segoe UI", 16, "bold"))
         c.create_text(self.CW - 16, 24, anchor="e", text=f"🏆 {wins} win{'s' if wins != 1 else ''}", fill=self.GOLD, font=("Segoe UI", 12, "bold"))
         c.create_text(16, 52, anchor="w", fill="#c8c0e0", font=("Segoe UI", 9),
-                      text="🔥 Spark beats 🌿 Sprout · 🌿 Sprout beats 💧 Splash · 💧 Splash beats 🔥 Spark · ✨ one Awaken per battle")
+                      text="10 types: each element is strong against 2 others · ✨ one Awaken per battle")
+        self.button(self.CW - 166, 40, 150, 26, "📖 Type chart", self.type_chart, "#3a3360")
         c.create_text(16, 82, anchor="w", text="Your team (click your Blips below to pick 3)", fill=self.GOLD, font=("Segoe UI", 10, "bold"))
         for i in range(3):
             x = 16 + i * 150
@@ -7391,6 +7438,14 @@ class Arena:
                         lambda r=(name, reward, team): self.start(r[2], r[0], r[1]), "#3a3360")
         c.create_text(16, 478, anchor="w", fill="#9a92c0", font=("Segoe UI", 9),
                       text="Share your code on the Blipville Discord and see who can beat your team!")
+
+    def type_chart(self):
+        from tkinter import messagebox
+        name = lambda t: f"{ARENA_TYPES[t][0]} {ARENA_TYPES[t][1]}"
+        lines = [f"{name(t)}  beats  " + " & ".join(name(x) for x in ARENA_BEATS[t]) for t in ARENA_TYPES if ARENA_BEATS[t]]
+        lines += ["", f"{name('phantom')}: nothing beats it and it beats nothing, but 1 in 5 hits pass right through it.",
+                  f"{name('cosmic')}: nothing beats it and it beats nothing, but 1 in 4 of its hits are critical."]
+        messagebox.showinfo("Type chart 📖", "Strong = x1.5 damage. The other way round it's x0.7.\n\n" + "\n".join(lines), parent=self.win)
 
     def toggle(self, pet):
         if pet in self.team:

@@ -3537,6 +3537,8 @@ TROPHIES = [
     ("awaken-5", "🌠", "Fully Charged", "Awaken 5 different Blips", lambda a: len(a.save.get("awakened", [])) >= 5, 30),
     ("arena-kaiju", "👑", "Kaiju Slayer", "Beat Kaiju King Kai", lambda a: "Kaiju King Kai" in a.save.get("rivals_beaten", []), 50),
     ("lurker-3", "👁️", "Lights Out", "Awaken the Lurker all 3 times", lambda a: a.awaken_level("Lurker") >= 3, 40),
+    ("bond-5", "💞", "Soulmates", "Reach max friendship (Soulmate) with a Blip", lambda a: any(bond_level(p.bond) >= 5 for p in a.pets), 30),
+    ("catch-40", "🍪", "Cookie Pro", "Score 40 in one game of Cookie Catch", lambda a: a.stat("catch_best") >= 40, 20),
     ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
     ("mouse-10", "🖱️", "Cat and Mouse", "Your Blips catch your mouse pointer 10 times", lambda a: a.stat("cursor_catches") >= 10, 15),
 ]
@@ -3713,6 +3715,16 @@ EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "202
                      ["Fox", "Aurora"], ["Hedgehog", "Candy Floss"], ["Fox", "Maple"], ["Echidna", "Golden Spines"]]}
 
 
+# Friendship 💞: every Blip bonds with you as you care for it. Points needed for each level, and its title.
+BOND_LEVELS = [0, 10, 30, 70, 150]
+BOND_TITLES = ["New friend", "Pal", "Buddy", "Best friend", "Soulmate"]
+BOND_GAIN = {"pet": 1, "feed": 3, "nap": 1, "play": 2, "arena": 3, "catch": 2}
+
+
+def bond_level(points):
+    return sum(1 for need in BOND_LEVELS if points >= need)          # 1-5
+
+
 # Daily quests 📅: 3 a day, the same for everyone that day (picked from the date). Each one gives hearts, and event
 # points while an event is on.
 QUESTS = [{"id": "pet_spiky", "text": "Pet a Hedgehog, Fox or Echidna 8 times", "goal": 8},
@@ -3720,7 +3732,13 @@ QUESTS = [{"id": "pet_spiky", "text": "Pet a Hedgehog, Fox or Echidna 8 times", 
           {"id": "pet_any", "text": "Pet your Blips 20 times", "goal": 20},
           {"id": "naps", "text": "Let 2 Blips finish a nap", "goal": 2},
           {"id": "plays", "text": "Watch your Blips play 2 games together", "goal": 2},
-          {"id": "arena_win", "text": "Win a battle in the Arena", "goal": 1}]
+          {"id": "arena_win", "text": "Win a battle in the Arena", "goal": 1},
+          {"id": "catch", "text": "Score 15 points in Cookie Catch", "goal": 15}]
+# Cookie Catch 🍪: your Blip catches falling cookies. Golden ones are worth 5; burnt ones cost a life.
+CATCH_SECONDS, CATCH_LIVES, CATCH_MAX_HEARTS = 45, 3, 25
+CATCH_COOKIE = ["..cccc..", ".ccdcccc", "cccccdcc", "cdcccccc", "ccccdccc", ".cccccc.", "..cccc.."]
+CATCH_KINDS = {"cookie": {"c": "#d8954a", "d": "#5a2a0a", "points": 1}, "golden": {"c": "#ffd23a", "d": "#fff6c0", "points": 5},
+               "burnt": {"c": "#3a2a2a", "d": "#140a0a", "points": 0}}
 QUEST_HEARTS, QUEST_POINTS, QUEST_BONUS = 10, 5, 5     # per quest; the bonus is for finishing all 3
 
 
@@ -4466,6 +4484,7 @@ class Blip:
         self.nap_buddy = False                     # walking over to nap next to a sleeping friend
         self.last_play = -99.0
         self.next_shift = time.monotonic() + random.uniform(6, 12)   # chameleons change color now and then
+        self.bond = 0.0                            # friendship points 💞
         self.perch = None                          # the window it's standing on (Windows app: Blips climb windows)
         self.perch_rect = None
         self.skip_perch = (None, 0.0)              # just hopped off this window: don't land right back on it
@@ -4532,6 +4551,7 @@ class Blip:
         self.menu.add_separator()
         self.menu.add_command(label="Add a friend", command=lambda: app.add_pet(x=self.wx))
         self.menu.add_command(label="Play Night Shift 🌙…", command=app.open_night_shift)
+        self.menu.add_command(label="🍪 Cookie Catch…", command=lambda: CookieCatch(app, self))
         self.menu.add_command(label="🎩 Hats & outfits…", command=lambda: HatShop(app, self))
         self.menu.add_command(label="✨ Awaken…", command=self.toggle_awaken)
         self.awaken_entry = self.menu.index("end")
@@ -4547,6 +4567,8 @@ class Blip:
         self.trophy_entry = self.menu.index("end")
         self.world_menu = tk.Menu(self.menu, tearoff=0)
         self.menu.add_cascade(label="🌍 Worlds", menu=self.world_menu)
+        self.menu.add_command(label="💞 New friend", state="disabled")
+        self.bond_entry = self.menu.index("end")
         self.menu.add_command(label="💖 0 hearts", state="disabled")
         self.hearts_entry = self.menu.index("end")
         self.menu.add_checkbutton(label="Show name tags", variable=app.name_tags)
@@ -4641,6 +4663,20 @@ class Blip:
     def show_reward(self, text):
         self.particles.append({"kind": "plus", "text": text, "x": W / 2 + 34, "y": H - ART_H * SCALE - 4,
                                "vx": 0, "vy": -0.6, "life": 1.6, "born": time.monotonic()})
+
+    def befriend(self, how):
+        """A little more friendship from caring for it; a level-up is celebrated (and gives hearts)."""
+        before = bond_level(self.bond)
+        self.bond += BOND_GAIN.get(how, 1)
+        now = bond_level(self.bond)
+        if now > before:
+            self.app.add_hearts(5 * now, self)
+            self.app.sound.play("fanfare")
+            self.say(f"💞 we're {BOND_TITLES[now - 1]}s now!" if now < 5 else "💞 SOULMATES! i'll never leave your side!", 4)
+            self.set_face("happy", 2.5)
+            self.burst("heart", 10)
+            self.app.bump("bond_ups")
+            self._drawn = None
 
     def walk_bounds(self):
         """Where it can walk: the whole taskbar, or the top of the window it's standing on."""
@@ -4772,6 +4808,7 @@ class Blip:
         if now - self.last_pet_reward > 6:          # petting earns a heart (not by spam-clicking)
             self.last_pet_reward = now
             self.app.add_hearts(1, self)
+            self.befriend("pet")
             self.app.event_point(self, 1)
             self.app.quest_tick("pet_any")
             if self.kind in EVENT["kinds"]:
@@ -5061,6 +5098,9 @@ class Blip:
             else:
                 self.gift_menu.add_command(label="🔒 ???  (a limited-time gift)", state="disabled")
         self.menu.entryconfigure(self.hearts_entry, label=f"💖 {self.app.hearts()} hearts")
+        lv = bond_level(self.bond)
+        self.menu.entryconfigure(self.bond_entry, label=f"💞 {self.name} is your {BOND_TITLES[lv - 1]}"
+                                 + (f"  ({int(self.bond)}/{BOND_LEVELS[lv]} to {BOND_TITLES[lv]})" if lv < 5 else "  (max!)"))
         base = AWAKEN_BASE.get(self.kind, self.kind)
         if base in AWAKEN_CHAIN:
             chain, stage = AWAKEN_CHAIN[base], awaken_stage(self.kind)
@@ -5217,6 +5257,7 @@ class Blip:
             if self.energy >= 100 and now > self.state_until:   # nap at least 20 s, wake when rested
                 self.wake()
                 self.app.add_hearts(2, self)                      # a well-rested pet is a happy pet
+                self.befriend("nap")
                 self.app.quest_tick("naps")
             return
         if st == "eat":
@@ -5225,6 +5266,7 @@ class Blip:
                 gain = 5 if hungry > 60 else 2 if hungry >= 25 else 0
                 if gain:
                     self.app.add_hearts(gain, self)
+                    self.befriend("feed")
                     self.app.event_point(self, 3 if hungry > 60 else 1)
                     self.app.quest_tick("feed_hungry")
                 self.hunger = 0
@@ -5390,7 +5432,7 @@ class Blip:
             self.bubble = None
         key = (tuple(tuple(r) for r in art), oy, self.hat, self.hat2, tuple(sorted(self.tints.items())),
                self.state == "sleep" or now < self.squash_until,
-               self.kind, self.name if self.app.name_tags.get() else None, talking)
+               self.kind, self.name if self.app.name_tags.get() else None, talking, bond_level(self.bond))
         if key != getattr(self, "_drawn", None):
             self._drawn = key
             c.delete("pet")
@@ -5434,7 +5476,9 @@ class Blip:
         # name tag
         tag_h = 0
         if self.app.name_tags.get():
-            t = c.create_text(W / 2, oy + hat_top - 6, text=self.name, font=("Segoe UI", 8, "bold"), fill="#ffffff", anchor="s", tags=("pet", "top"))
+            lv = bond_level(self.bond)
+            t = c.create_text(W / 2, oy + hat_top - 6, text=("💛 " if lv >= 5 else "♥ " if lv >= 4 else "") + self.name,
+                              font=("Segoe UI", 8, "bold"), fill="#ffd23a" if lv >= 5 else "#ffffff", anchor="s", tags=("pet", "top"))
             x1, y1, x2, y2 = c.bbox(t)
             c.create_rectangle(x1 - 4, y1 - 1, x2 + 4, y2 + 1, fill="#1d1b26", outline="#1d1b26", tags=("pet", "top"))
             c.tag_raise(t)
@@ -6646,7 +6690,8 @@ def read_save_code(text):
                 town.append({"kind": str(t["kind"]), "color": int(t.get("color") or 0), "name": str(t.get("name") or t["kind"])[:16],
                              "hat": t.get("hat") if t.get("hat") in HATS else None, "hat2": t.get("hat2") if t.get("hat2") in HATS else None,
                              "tints": {n: int(v) for n, v in (t.get("tints") or {}).items() if n in HATS},
-                             "hunger": float(t.get("hunger") or 10), "energy": float(t.get("energy") or 100)})
+                             "hunger": float(t.get("hunger") or 10), "energy": float(t.get("energy") or 100),
+                             "bond": float(t.get("bond") or 0)})
         new["town"], new["town_saved_at"] = town, time.time()
         new["unlocked"] = [k for k, night in UNLOCKS.items() if night <= new.get("nights_won", 0)]
         return new
@@ -7230,6 +7275,9 @@ class Arena:
         if won:
             self.app.bump("arena_wins")
             self.app.quest_tick("arena_win")
+            for p in self.team:
+                if p in self.app.pets:
+                    p.befriend("arena")
             if self.foe in [r[0] for r in ARENA_RIVALS] and self.foe not in self.app.save.setdefault("rivals_beaten", []):
                 self.app.save["rivals_beaten"].append(self.foe)
             self.app.add_hearts(self.reward, self.app.pets[0] if self.app.pets else None)
@@ -7426,6 +7474,154 @@ class EventWindow:
         if pet:
             pet.say("spiky week, let's go!", 3)
         self.draw()
+
+
+
+class CookieCatch:
+    """🍪 Cookie Catch: move your Blip with the mouse or the arrow keys and catch the falling cookies."""
+    CW, CH, S = 480, 440, 4
+    BG = "#1d1a2e"
+
+    def __init__(self, app, pet):
+        self.app, self.pet = app, pet
+        self.kind, self.color = pet.kind, pet.palette
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville: Cookie Catch")
+        self.win.configure(bg=self.BG)
+        self.win.resizable(False, False)
+        self.win.attributes("-topmost", True)
+        self.c = tk.Canvas(self.win, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0)
+        self.c.pack(padx=6, pady=6)
+        self.c.bind("<Motion>", lambda e: setattr(self, "aim", e.x))
+        self.c.bind("<Button-1>", lambda e: self.start() if not self.running else None)
+        for key, d in (("<Left>", -1), ("<Right>", 1), ("<a>", -1), ("<d>", 1)):
+            self.win.bind(key, lambda e, d=d: self.nudge(d))
+        self.win.bind("<space>", lambda e: self.start() if not self.running else None)
+        self.win.protocol("WM_DELETE_WINDOW", self.close)
+        self.running, self.after_id, self.aim = False, None, None
+        self.x = self.CW / 2
+        self.draw_title()
+        self.win.focus_force()
+
+    def nudge(self, d):
+        self.aim = None
+        self.x = min(max(self.x + d * 28, 32), self.CW - 32)
+
+    def start(self):
+        self.running, self.score, self.lives, self.items = True, 0, CATCH_LIVES, []
+        self.t0 = self.last = time.monotonic()
+        self.next_drop = self.t0 + 0.6
+        self.popups = []
+        self.app.sound.play("boop")
+        self.step()
+
+    def step(self):
+        if not self.running:
+            return
+        now = time.monotonic()
+        dt, self.last = min(0.05, now - self.last), now
+        left = CATCH_SECONDS - (now - self.t0)
+        if left <= 0 or self.lives <= 0:
+            self.finish()
+            return
+        if self.aim is not None:                                 # follow the mouse, a little smoothed
+            self.x += (min(max(self.aim, 32), self.CW - 32) - self.x) * min(1, dt * 14)
+        speed = 150 + (now - self.t0) * 5                       # falls faster and faster
+        if now >= self.next_drop:
+            r = random.random()
+            kind = "golden" if r < 0.06 else "burnt" if r < 0.30 else "cookie"
+            self.items.append({"kind": kind, "x": random.uniform(24, self.CW - 24), "y": 40.0, "v": speed * random.uniform(0.85, 1.2)})
+            self.next_drop = now + max(0.28, 0.75 - (now - self.t0) * 0.01)
+        top = self.CH - 30 - 13 * self.S
+        for it in list(self.items):
+            it["y"] += it["v"] * dt
+            if top - 10 <= it["y"] <= top + 26 and abs(it["x"] - self.x) < 36:
+                self.items.remove(it)
+                if it["kind"] == "burnt":
+                    self.lives -= 1
+                    self.app.sound.play("thud")
+                    self.popups.append([it["x"], top, "ouch!", "#ff5a7a", now])
+                else:
+                    pts = CATCH_KINDS[it["kind"]]["points"]
+                    self.score += pts
+                    self.app.sound.play("coin" if it["kind"] == "golden" else "pop")
+                    self.popups.append([it["x"], top, f"+{pts}", "#ffd23a" if pts > 1 else "#ffffff", now])
+            elif it["y"] > self.CH + 10:
+                self.items.remove(it)
+        self.draw(left, now)
+        self.after_id = self.win.after(16, self.step)
+
+    def cookie(self, x, y, kind, s=3):
+        pal = CATCH_KINDS[kind]
+        for r, row in enumerate(CATCH_COOKIE):
+            for i, ch in enumerate(row):
+                if ch != ".":
+                    self.c.create_rectangle(x + (i - 4) * s, y + (r - 3) * s, x + (i - 3) * s, y + (r - 2) * s, fill=pal[ch], outline="")
+
+    def draw(self, left, now):
+        c = self.c
+        c.delete("all")
+        c.create_rectangle(0, self.CH - 30, self.CW, self.CH, fill="#3a3360", outline="")
+        c.create_text(14, 18, anchor="w", text=f"🍪 {self.score}", fill="#ffd23a", font=("Segoe UI", 14, "bold"))
+        c.create_text(self.CW / 2, 18, text="💖" * self.lives + "🖤" * (CATCH_LIVES - self.lives), font=("Segoe UI", 12))
+        c.create_text(self.CW - 14, 18, anchor="e", text=f"⏱ {int(left) + 1}", fill="#ffffff", font=("Segoe UI", 14, "bold"))
+        for it in self.items:
+            self.cookie(it["x"], it["y"], it["kind"])
+        draw_sprite(c, self.kind, self.color, self.x - 8 * self.S, self.CH - 30 - 13 * self.S, self.S, face="happy")
+        for pop in list(self.popups):
+            age = now - pop[4]
+            if age > 0.7:
+                self.popups.remove(pop)
+                continue
+            c.create_text(pop[0], pop[1] - 20 - age * 40, text=pop[2], fill=pop[3], font=("Segoe UI", 12, "bold"))
+
+    def draw_title(self, result=None):
+        c = self.c
+        c.delete("all")
+        c.create_rectangle(0, self.CH - 30, self.CW, self.CH, fill="#3a3360", outline="")
+        c.create_text(self.CW / 2, 70, text="🍪 Cookie Catch", fill="#ffd23a", font=("Segoe UI", 22, "bold"))
+        self.cookie(self.CW / 2 - 70, 140, "cookie", 4)
+        self.cookie(self.CW / 2, 140, "golden", 4)
+        self.cookie(self.CW / 2 + 70, 140, "burnt", 4)
+        c.create_text(self.CW / 2 - 70, 175, text="+1", fill="#ffffff", font=("Segoe UI", 10, "bold"))
+        c.create_text(self.CW / 2, 175, text="+5", fill="#ffd23a", font=("Segoe UI", 10, "bold"))
+        c.create_text(self.CW / 2 + 70, 175, text="ouch!", fill="#ff5a7a", font=("Segoe UI", 10, "bold"))
+        c.create_text(self.CW / 2, 215, width=self.CW - 60, justify="center", fill="#e8e4ff", font=("Segoe UI", 10),
+                      text=f"Move {self.pet.name} with the mouse (or ← →) and catch the cookies! Burnt ones cost a heart, "
+                           f"and you have {CATCH_SECONDS} seconds.")
+        best = int(self.app.stat("catch_best"))
+        if result:
+            c.create_text(self.CW / 2, 262, text=result, fill="#9ad8a8", font=("Segoe UI", 12, "bold"), width=self.CW - 40, justify="center")
+        c.create_text(self.CW / 2, 300, text=f"Best: {best}" if best else "", fill="#c8c0e8", font=("Segoe UI", 10))
+        c.create_text(self.CW / 2, 340, text="Click (or press Space) to play" + (" again" if result else ""), fill="#ffffff",
+                      font=("Segoe UI", 12, "bold"))
+        draw_sprite(c, self.kind, self.color, self.CW / 2 - 8 * self.S, self.CH - 30 - 13 * self.S, self.S, face="happy")
+
+    def finish(self):
+        self.running = False
+        app, score = self.app, self.score
+        hearts = min(CATCH_MAX_HEARTS, score // 3)
+        if hearts:
+            app.add_hearts(hearts, self.pet if self.pet in app.pets else None)
+        pts = min(10, score // 5) if self.kind in EVENT["kinds"] or AWAKEN_BASE.get(self.kind) in EVENT["kinds"] else 0
+        if pts and self.pet in app.pets:
+            app.event_point(self.pet, pts)
+        if self.pet in app.pets:
+            self.pet.befriend("catch")
+        app.quest_tick("catch", score)
+        new_best = score > app.stat("catch_best")
+        if new_best:
+            app.save.setdefault("stats", {})["catch_best"] = score
+            write_save(app.save)
+        app.sound.play("fanfare" if new_best else "pop")
+        self.draw_title(f"You caught {score} point{'s' if score != 1 else ''}! +{hearts} 💖"
+                        + (f" +{pts} {EVENT['icon']}" if pts else "") + ("  🏆 New best!" if new_best else ""))
+
+    def close(self):
+        self.running = False
+        if self.after_id:
+            self.win.after_cancel(self.after_id)
+        self.win.destroy()
 
 
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)
@@ -8280,7 +8476,7 @@ class App:
     def town_snapshot(self):
         return [{"kind": p.kind, "color": p.palette, "name": p.name, "hat": getattr(p, "hat", None), "hat2": p.hat2,
                  "tints": {n: t for n, t in p.tints.items() if t},
-                 "hunger": round(p.hunger), "energy": round(p.energy)} for p in self.pets]
+                 "hunger": round(p.hunger), "energy": round(p.energy), "bond": round(p.bond)} for p in self.pets]
 
     def save_town(self):
         town = self.town_snapshot()
@@ -8307,6 +8503,7 @@ class App:
             pet.tints = {n: int(v) for n, v in (t.get("tints") or {}).items() if n in HATS}
             pet.hunger = min(100.0, float(t.get("hunger", 10)) + hours_away * 8)    # they got peckish while you were away
             pet.energy = float(t.get("energy", 100))
+            pet.bond = float(t.get("bond", 0))
             pet.say(random.choice(["i'm back!", "missed you!", "*stretches* hi again!", "good to see you!"]), 3)
             back += 1
         return back
@@ -8776,6 +8973,9 @@ class App:
     def end_play(self, play, now, happy=True):
         if happy:
             self.quest_tick("plays")
+            for p in play["pets"]:
+                if p in self.pets:
+                    p.befriend("play")
         for pet in play["pets"]:
             pet.playing = False
             pet.last_play = now

@@ -290,3 +290,6 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 .quest { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 12px;
   background: var(--card2); font-size: 13px; border: 2px solid transparent; }
 .quest.done { border-color: #9ad8a855; color: #9ad8a8; font-weight: 800; }
+
+/* Cookie Catch */
+#catchCanvas { width: 100%; aspect-ratio: 360 / 320; display: block; border-radius: 14px; image-rendering: pixelated; touch-action: none; }

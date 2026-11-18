@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=27">
+<link rel="stylesheet" href="style.css?v=28">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -65,12 +65,14 @@
       <div>
         <input id="petName" maxlength="16" aria-label="Pet name">
         <div class="muted" id="petKind"></div>
+        <div class="muted small" id="petBond"></div>
       </div>
     </div>
     <div class="row">
       <button id="sheetFeed">🍪 Feed</button>
       <button id="sheetNap">💤 Nap</button>
       <button id="sheetPet">💖 Pet</button>
+      <button id="sheetCatch">🍪 Catch</button>
     </div>
     <div class="label">Color</div>
     <div class="chips" id="colorChips"></div>
@@ -172,6 +174,13 @@
 </div>
 
 <!-- Night Shift minigame -->
+<div class="sheet" id="catchSheet" hidden>
+  <div class="card nsCard">
+    <canvas id="catchCanvas" width="360" height="320"></canvas>
+    <button class="close" data-close>Leave</button>
+  </div>
+</div>
+
 <div class="sheet" id="nsSheet" hidden>
   <div class="card nsCard">
     <canvas id="nsCanvas" width="360" height="300"></canvas>
@@ -243,7 +252,7 @@
   </div>
 </div>
 
-<script src="data.js?v=27"></script>
-<script src="app.js?v=27"></script>
+<script src="data.js?v=28"></script>
+<script src="app.js?v=28"></script>
 </body>
 </html>

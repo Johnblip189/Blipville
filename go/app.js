@@ -46,7 +46,7 @@
   function persist(now = false) {
     if (frozen) return;
     const write = () => {
-      save.pets = pets.map((p) => ({ kind: p.kind, color: p.color, name: p.name, hat: p.hat || null, hat2: p.hat2 || null, tints: p.tints || {}, hunger: Math.round(p.hunger), energy: Math.round(p.energy) }));
+      save.pets = pets.map((p) => ({ kind: p.kind, color: p.color, name: p.name, hat: p.hat || null, hat2: p.hat2 || null, tints: p.tints || {}, hunger: Math.round(p.hunger), energy: Math.round(p.energy), bond: Math.round(p.bond || 0) }));
       save.lastSeen = Date.now();
       try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* private mode: still playable */ }
     };
@@ -145,7 +145,7 @@
       kind, color: color ?? k.default ?? 0, name: name || pick(D.names), x: x ?? rnd(60, W - 60), y: rnd(140, 260), vx: 0, vy: 0,
       state: "fall", until: 0, target: null, facing: 1, energy: 100, hunger: 10, face: "normal", faceUntil: 0,
       bubble: null, blinkUntil: 0, nextBlink: now() + rnd(1, 4), lastPetReward: -99, nextShift: now() + rnd(6, 12),
-      playing: false, napBuddy: false, lastPlay: -99,
+      playing: false, napBuddy: false, lastPlay: -99, bond: 0,
       squashUntil: 0, particles: [],
     };
     return p;
@@ -172,12 +172,25 @@
     if (p) p.particles.push({ kind: "plus", text: `+${n} 💖`, x: 30 * S / 4, y: 13 * S + 4, vx: 0, vy: -26, life: 1.6, born: now() });
   }
 
+  // friendship 💞 (the same levels as the desktop app)
+  const BOND = D.bond || { levels: [0, 10, 30, 70, 150], titles: ["New friend", "Pal", "Buddy", "Best friend", "Soulmate"], gain: {} };
+  const bondLevel = (pts) => BOND.levels.filter((n) => pts >= n).length;
+  function bondUp(p, how) {
+    const before = bondLevel(p.bond || 0);
+    p.bond = (p.bond || 0) + (BOND.gain[how] || 1);
+    const lv = bondLevel(p.bond);
+    if (lv > before) {
+      reward(p, 5 * lv); sfx("fanfare"); vibrate([20, 30, 20]);
+      say(p, lv < 5 ? `💞 we're ${BOND.titles[lv - 1]}s now!` : "💞 SOULMATES! i'll never leave your side!", 4);
+      setFace(p, "happy", 2.5); burst(p, "heart", 10); bump("bond_ups");
+    }
+  }
   function petIt(p) {
     if (p.state === "sleep") { wake(p); return; }
     sfx("boop"); bump("pets");
     const t = now();
     if (t - p.lastPetReward > 6) {
-      p.lastPetReward = t; reward(p, 1); eventPoint(p, 1); questTick("pet_any");
+      p.lastPetReward = t; reward(p, 1); bondUp(p, "pet"); eventPoint(p, 1); questTick("pet_any");
       if (EVENT.kinds.includes(p.kind)) questTick("pet_spiky");
     }
     say(p, pick(D.lines.pet), 2); setFace(p, "happy", 1.5); burst(p, "heart", 4);
@@ -248,12 +261,12 @@
       case "sleep":
         p.energy = Math.min(100, p.energy + dt * 2);
         if (Math.random() < dt * 0.8) p.particles.push({ kind: "z", x: 18 * S / 4, y: 13 * S, vx: 14, vy: -22, life: 2.5, born: t });
-        if (p.energy >= 100 && t > p.until) { wake(p); reward(p, 2); questTick("naps"); }
+        if (p.energy >= 100 && t > p.until) { wake(p); reward(p, 2); bondUp(p, "nap"); questTick("naps"); }
         return;
       case "eat":
         if (t > p.until) {
           const hungry = p.hunger, gain = hungry > 60 ? 5 : hungry >= 25 ? 2 : 0;   // a full Blip still eats, but gives nothing
-          if (gain) { reward(p, gain); eventPoint(p, hungry > 60 ? 3 : 1); questTick("feed_hungry"); }
+          if (gain) { reward(p, gain); bondUp(p, "feed"); eventPoint(p, hungry > 60 ? 3 : 1); questTick("feed_hungry"); }
           p.hunger = 0; p.energy = Math.min(100, p.energy + 15);
           cookies = cookies.filter((c) => c !== p.eating); p.eating = null;
           say(p, gain ? pick(D.lines.eat) : pick(["i'm stuffed!", "*too full to move*", "maybe later…"]), 2.5); setFace(p, "happy", 2); burst(p, "heart", 5); setState(p, "idle", 2);
@@ -282,7 +295,7 @@
   const BALL = [".ooo.", "owwro", "owrro", "orrwo", ".ooo."];
   const headPos = (p) => [p.x, GROUND - p.y - 13 * S + 6];
   function endPlay(play, t, happy = true) {
-    if (happy) questTick("plays");
+    if (happy) { questTick("plays"); play.pets.forEach((q) => pets.includes(q) && bondUp(q, "play")); }
     for (const p of play.pets) {
       p.playing = false; p.lastPlay = t;
       if (happy && !["held", "fall", "sleep"].includes(p.state)) { setState(p, "idle", rnd(1.5, 3)); setFace(p, "happy", 1.5); burst(p, "heart", 2); }
@@ -645,7 +658,8 @@
       }
     }
     let above = top + hatTop - 4;
-    above -= nameTag(p.name, p.x, above);
+    const lv = bondLevel(p.bond || 0);
+    above -= nameTag((lv >= 5 ? "💛 " : lv >= 4 ? "♥ " : "") + p.name, p.x, above);
     if (p.bubble && t < p.bubble.until) bubble(p.bubble.text, p.x, above);
   }
   function drawMask(mask, x, y, s, color) {
@@ -906,7 +920,7 @@
     "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts),
     "world-1": () => save.worlds.length >= 1, "world-all": () => save.worlds.length >= WORLDS.length,
     "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
-    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
+    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "bond-5": () => pets.some((q) => bondLevel(q.bond || 0) >= 5), "catch-40": () => stat("catch_best") >= 40, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
   };
   function checkTrophies() {
     for (const tr of D.trophies || []) {
@@ -954,6 +968,8 @@
     sheetPet = p;
     $("petName").value = p.name;
     $("petKind").textContent = p.kind + (RARE.has(p.kind) ? " · rare ✨" : "");
+    const blv = bondLevel(p.bond || 0);
+    $("petBond").textContent = `💞 ${BOND.titles[blv - 1]}` + (blv < 5 ? ` · ${Math.floor(p.bond || 0)}/${BOND.levels[blv]} to ${BOND.titles[blv]}` : " · max friendship!");
     const pc = $("petPortrait").getContext("2d"); pc.clearRect(0, 0, 96, 100);
     drawGrid(pc, grid(p.kind, p.color, { t: 0, face: "happy" }), 8, 31, 5);
     for (const [n, tint] of worn(p)) drawHat(pc, p.kind, n, 8, 31, 5, 0, tint);
@@ -1184,7 +1200,7 @@
   }
   function finishBattle(b) {
     if (b.winner === 0) {
-      bump("arena_wins"); questTick("arena_win");
+      bump("arena_wins"); questTick("arena_win"); arenaTeam.forEach((q) => pets.includes(q) && bondUp(q, "arena"));
       if (AR.rivals.some((r) => r.name === b.foe) && !save.rivalsBeaten.includes(b.foe)) save.rivalsBeaten.push(b.foe);
       reward(pets[0], b.reward); b.log.push(`🏆 You win! +${b.reward} 💖`); sfx("fanfare"); vibrate([30, 40, 30]);
       const w = stat("arena_wins"); $("arenaWins").textContent = `🏆 ${w} win${w === 1 ? "" : "s"}`;
@@ -1491,6 +1507,96 @@
   $("eggBtn").onclick = openEgg;
   $("collectionBtn").onclick = () => openZoo(null);
   $("trophyBtn").onclick = () => openTrophies();
+  // ------------------------------------------------------------------ Cookie Catch 🍪 (the same rules as the desktop app)
+  const CC = D.cookieCatch || { seconds: 45, lives: 3, maxHearts: 25, cookie: [], kinds: {} };
+  let catchGame = null;
+  function ccCookie(c, x, y, kind, s = 3) {
+    const pal = CC.kinds[kind];
+    CC.cookie.forEach((row, r) => [...row].forEach((ch, i) => { if (ch !== ".") { c.fillStyle = pal[ch]; c.fillRect(x + (i - 4) * s, y + (r - 3) * s, s, s); } }));
+  }
+  function openCatch(p) {
+    closeSheets(); openSheet("catchSheet");
+    catchGame = { pet: p, kind: p.kind, color: p.color, running: false, x: 180, aim: null };
+    ccTitle();
+  }
+  function ccTitle(result) {
+    const g = catchGame, cv = $("catchCanvas"), c = cv.getContext("2d"), W = cv.width, H = cv.height;
+    c.fillStyle = "#1d1a2e"; c.fillRect(0, 0, W, H); c.fillStyle = "#3a3360"; c.fillRect(0, H - 24, W, 24);
+    c.textAlign = "center"; c.fillStyle = "#ffd23a"; c.font = "800 22px " + FONT; c.fillText("🍪 Cookie Catch", W / 2, 50);
+    ccCookie(c, W / 2 - 60, 100, "cookie", 4); ccCookie(c, W / 2, 100, "golden", 4); ccCookie(c, W / 2 + 60, 100, "burnt", 4);
+    c.font = "800 11px " + FONT; c.fillStyle = "#fff"; c.fillText("+1", W / 2 - 60, 134); c.fillStyle = "#ffd23a"; c.fillText("+5", W / 2, 134);
+    c.fillStyle = "#ff5a7a"; c.fillText("ouch!", W / 2 + 60, 134);
+    c.fillStyle = "#e8e4ff"; c.font = "600 12px " + FONT;
+    c.fillText(`Drag ${g.pet.name} (or use ← →) to catch cookies.`, W / 2, 158); c.fillText(`Burnt ones cost a heart. ${CC.seconds} seconds!`, W / 2, 175);
+    if (result) { c.fillStyle = "#9ad8a8"; c.font = "800 13px " + FONT; c.fillText(result, W / 2, 202); }
+    const best = stat("catch_best"); if (best) { c.fillStyle = "#c8c0e8"; c.font = "600 11px " + FONT; c.fillText(`Best: ${best}`, W / 2, 220); }
+    c.fillStyle = "#fff"; c.font = "800 14px " + FONT; c.fillText(`Tap to play${result ? " again" : ""}`, W / 2, 239);
+    drawGrid(c, grid(g.kind, g.color, { t: 0, face: "happy" }), W / 2 - 32, H - 24 - 52, 4);
+  }
+  function ccStart() {
+    const g = catchGame, t = now();
+    Object.assign(g, { running: true, score: 0, lives: CC.lives, items: [], t0: t, last: t, nextDrop: t + 0.6, pops: [] });
+    sfx("boop"); requestAnimationFrame(ccStep);
+  }
+  function ccStep() {
+    const g = catchGame; if (!g || !g.running) return;
+    if ($("catchSheet").hidden) { g.running = false; return; }
+    const cv = $("catchCanvas"), c = cv.getContext("2d"), W = cv.width, H = cv.height, t = now();
+    const dt = Math.min(0.05, t - g.last); g.last = t;
+    const left = CC.seconds - (t - g.t0);
+    if (left <= 0 || g.lives <= 0) { ccFinish(); return; }
+    if (g.aim !== null) g.x += (clamp(g.aim, 24, W - 24) - g.x) * Math.min(1, dt * 14);
+    const speed = 110 + (t - g.t0) * 4;
+    if (t >= g.nextDrop) {
+      const r = Math.random(), kind = r < 0.06 ? "golden" : r < 0.30 ? "burnt" : "cookie";
+      g.items.push({ kind, x: rnd(18, W - 18), y: 30, v: speed * rnd(0.85, 1.2) });
+      g.nextDrop = t + Math.max(0.3, 0.75 - (t - g.t0) * 0.01);
+    }
+    const top = H - 24 - 52;
+    for (const it of [...g.items]) {
+      it.y += it.v * dt;
+      if (it.y >= top - 8 && it.y <= top + 20 && Math.abs(it.x - g.x) < 28) {
+        g.items.splice(g.items.indexOf(it), 1);
+        if (it.kind === "burnt") { g.lives--; sfx("thud"); vibrate(30); g.pops.push([it.x, top, "ouch!", "#ff5a7a", t]); }
+        else { const pts = CC.kinds[it.kind].points; g.score += pts; sfx(it.kind === "golden" ? "coin" : "pop"); g.pops.push([it.x, top, `+${pts}`, pts > 1 ? "#ffd23a" : "#fff", t]); }
+      } else if (it.y > H + 10) g.items.splice(g.items.indexOf(it), 1);
+    }
+    c.fillStyle = "#1d1a2e"; c.fillRect(0, 0, W, H); c.fillStyle = "#3a3360"; c.fillRect(0, H - 24, W, 24);
+    c.font = "800 15px " + FONT; c.textAlign = "left"; c.fillStyle = "#ffd23a"; c.fillText(`🍪 ${g.score}`, 10, 22);
+    c.textAlign = "center"; c.fillText("💖".repeat(g.lives) + "🖤".repeat(CC.lives - g.lives), W / 2, 22);
+    c.textAlign = "right"; c.fillStyle = "#fff"; c.fillText(`⏱ ${Math.ceil(left)}`, W - 10, 22);
+    for (const it of g.items) ccCookie(c, it.x, it.y, it.kind);
+    drawGrid(c, grid(g.kind, g.color, { t, face: "happy" }), g.x - 32, top, 4);
+    c.textAlign = "center"; c.font = "800 13px " + FONT;
+    g.pops = g.pops.filter((q) => t - q[4] < 0.7);
+    for (const q of g.pops) { c.fillStyle = q[3]; c.fillText(q[2], q[0], q[1] - 16 - (t - q[4]) * 40); }
+    requestAnimationFrame(ccStep);
+  }
+  function ccFinish() {
+    const g = catchGame; g.running = false;
+    const p = pets.includes(g.pet) ? g.pet : null, hearts = Math.min(CC.maxHearts, Math.floor(g.score / 3));
+    if (hearts) reward(p, hearts);
+    const spiky = EVENT.kinds.includes(AWAKEN_BASE[g.kind] || g.kind), pts = spiky ? Math.min(10, Math.floor(g.score / 5)) : 0;
+    if (pts && p) eventPoint(p, pts);
+    if (p) bondUp(p, "catch");
+    questTick("catch", g.score);
+    const best = g.score > stat("catch_best"); if (best) save.stats.catch_best = g.score;
+    persist(true); sfx(best ? "fanfare" : "pop");
+    ccTitle(`You caught ${g.score}! +${hearts} 💖${pts ? ` +${pts} ${EVENT.icon}` : ""}${best ? "  🏆 New best!" : ""}`);
+  }
+  {
+    const cv = $("catchCanvas");
+    const aimAt = (e) => { if (!catchGame) return; const r = cv.getBoundingClientRect(); catchGame.aim = (e.clientX - r.left) * (cv.width / r.width); };
+    cv.addEventListener("pointerdown", (e) => { if (catchGame && !catchGame.running) ccStart(); aimAt(e); });
+    cv.addEventListener("pointermove", aimAt);
+    document.addEventListener("keydown", (e) => {
+      if (!catchGame || $("catchSheet").hidden) return;
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") { catchGame.aim = null; catchGame.x = clamp(catchGame.x + (e.key === "ArrowLeft" ? -24 : 24), 24, cv.width - 24); e.preventDefault(); }
+      if (e.key === " " && !catchGame.running) { ccStart(); e.preventDefault(); }
+    });
+  }
+  $("sheetCatch").onclick = () => sheetPet && openCatch(sheetPet);
+
   // ------------------------------------------------------------------ events 🎉 (the same event as the desktop app)
   const EVENT = D.event || { id: "", name: "", icon: "🎉", kinds: [], rewards: [], per_skin: 10, start: "9999", until: "0000" };
   const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
@@ -1672,7 +1778,7 @@
     for (const s of save.pets) {
       if (!KINDS[s.kind] || !(isUnlocked(s.kind) || WORLD_OF[s.kind])) continue;   // world Blips you had stay yours
       const p = makePet(s.kind, s.color, s.name);
-      p.hunger = Math.min(100, (s.hunger ?? 10) + away * 8); p.energy = s.energy ?? 100; p.hat = s.hat || null; p.hat2 = save.slot2 ? (s.hat2 || null) : null; p.tints = s.tints || {};
+      p.hunger = Math.min(100, (s.hunger ?? 10) + away * 8); p.energy = s.energy ?? 100; p.hat = s.hat || null; p.hat2 = save.slot2 ? (s.hat2 || null) : null; p.tints = s.tints || {}; p.bond = +s.bond || 0;
       pets.push(p);
     }
   }

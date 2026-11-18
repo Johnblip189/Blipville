@@ -4,6 +4,10 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
+- 💞 **Friendship levels:** every Blip bonds with you as you pet, feed and play with it, from New friend to Pal,
+  Buddy, Best friend and **Soulmate**. Each level-up gives hearts, and your closest friends get a heart on their name tag.
+- 🍪 **Cookie Catch:** a new minigame. Move your Blip to catch falling cookies (golden ones are worth 5, burnt ones cost a
+  heart). Earns hearts, friendship and event points. Right-click a pet → 🍪 Cookie Catch.
 - 🦔 **Spiky Week (event, until November 29):** pet and feed Hedgehogs, Foxes and the brand-new **Echidna** to earn
   8 event skins. Right-click a pet → 🦔 Spiky Week to see your progress.
 - 📅 **Daily quests:** 3 new ones every day (the same on Windows and the website), each worth 10 💖, plus event
@@ -32,7 +36,7 @@ make Blipville what it is. This is the real thing.
 - 👻 **Ghosts, a brand-new tier:** 11 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
   past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
   🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.
-- 🏆 **Trophies:** 28 to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.
+- 🏆 **Trophies:** 31 to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.
 - 🎨 **Redraws:** Anteater, Camel, Kiwi, Lemming, Platypus, Tapir, Walrus, Wombat, Ankylosaurus and Tsuchinoko.
 - ✨ **The Redux engine, for everyone:** every pet window is a real see-through picture now, handed straight to Windows.
   **No more black flashes** when you click your pets, drag them around or open a menu, and text and speech bubbles
@@ -44,7 +48,7 @@ make Blipville what it is. This is the real thing.
 - 🎁 Gifts can't get lost on the website version any more.
 
 **Everything in Blipville:** 260 Blips and 790+ colors, hats, hearts and Mystery Eggs (20 rare Blips), 25 cryptids,
-5 kaiju, 11 ghosts, 5 worlds with 10 World Legends, 28 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
+5 kaiju, 11 ghosts, 5 worlds with 10 World Legends, 31 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 
 **Updating?** Blipville (and Blipville Redux) will offer this update by itself: just say yes. Your pets, hearts,

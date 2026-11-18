@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=20">
+<link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -24,6 +24,7 @@
   <div class="right">
     <button class="pill" id="installBtn" title="Install Blipville as an app on this laptop or phone" hidden>⬇ <span>Install app</span></button>
     <button class="pill icon" id="arenaBtn" aria-label="Arena" title="Arena">⚔️</button>
+    <button class="pill icon" id="eventBtn" aria-label="Event" title="Spiky Week event" hidden>🦔</button>
     <button class="pill icon" id="trophyBtn" aria-label="Trophies" title="Trophies">🏆</button>
     <button class="pill icon" id="soundBtn" aria-label="Sound off">🔇</button>
     <button class="pill icon" id="helpBtn" aria-label="How to play">?</button>
@@ -135,6 +136,18 @@
   </div>
 </div>
 
+<div class="sheet" id="eventSheet" hidden>
+  <div class="card tall">
+    <div class="sheetTitle"><span id="eventTitle"></span> <span class="muted small" id="eventWhen"></span></div>
+    <div class="muted small">Pet and feed your Hedgehogs, Foxes and Echidnas! Every pet is 1 point (once every few seconds) and every cookie is 3.
+      Every 10 points unlocks a new event skin. Skins you earn are yours forever (the Windows app has them too).</div>
+    <div class="eventBar"><div id="eventFill"></div><span id="eventPts"></span></div>
+    <div id="eventGrid"></div>
+    <div id="eventAdd"></div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
 <div class="sheet" id="trophySheet" hidden>
   <div class="card tall">
     <div class="sheetTitle">🏆 Trophies <span class="muted" id="trophyCount"></span></div>
@@ -225,7 +238,7 @@
   </div>
 </div>
 
-<script src="data.js?v=20"></script>
-<script src="app.js?v=20"></script>
+<script src="data.js?v=21"></script>
+<script src="app.js?v=21"></script>
 </body>
 </html>

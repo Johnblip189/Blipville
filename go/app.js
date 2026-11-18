@@ -39,7 +39,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [] };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
@@ -176,7 +176,7 @@
     if (p.state === "sleep") { wake(p); return; }
     sfx("boop"); bump("pets");
     const t = now();
-    if (t - p.lastPetReward > 6) { p.lastPetReward = t; reward(p, 1); }
+    if (t - p.lastPetReward > 6) { p.lastPetReward = t; reward(p, 1); eventPoint(p, 1); }
     say(p, pick(D.lines.pet), 2); setFace(p, "happy", 1.5); burst(p, "heart", 4);
     if (p.state !== "fall" && p.state !== "held") { p.vy = 260; p.vx = 0; setState(p, "fall"); }
     vibrate(10);
@@ -249,7 +249,7 @@
         return;
       case "eat":
         if (t > p.until) {
-          reward(p, p.hunger > 60 ? 5 : 3);
+          reward(p, p.hunger > 60 ? 5 : 3); eventPoint(p, 3);
           p.hunger = 0; p.energy = Math.min(100, p.energy + 15);
           cookies = cookies.filter((c) => c !== p.eating); p.eating = null;
           say(p, pick(D.lines.eat), 2.5); setFace(p, "happy", 2); burst(p, "heart", 5); setState(p, "idle", 2);
@@ -934,9 +934,13 @@
     drawGrid(pc, grid(p.kind, p.color, { t: 0, face: "happy" }), 8, 31, 5); drawHat(pc, p.kind, p.hat, 8, 31, 5);
     const chips = $("colorChips"); chips.innerHTML = "";
     KINDS[p.kind].colors.forEach((col, i) => {
-      const b = document.createElement("button"); b.className = i === p.color ? "on" : "";
-      b.appendChild(thumb(p.kind, i, false, 3)); b.append(col.name);
-      b.onclick = () => { p.color = i; say(p, `${col.name.toLowerCase()}!`, 1.5); burst(p, "heart", 2); persist(); openPetSheet(p); };
+      const b = document.createElement("button"), locked = skinLocked(p.kind, i);
+      b.className = i === p.color ? "on" : locked ? "locked" : "";
+      b.appendChild(thumb(p.kind, i, false, 3)); b.append((locked ? "🔒 " : "") + col.name + (col.event && !locked ? " ✨" : ""));
+      b.onclick = () => {
+        if (locked) { toast(`🔒 ${col.name} is a ${EVENT.icon} ${EVENT.name} skin. Earn it in the event! (tap ${EVENT.icon} at the top)`, 4); return; }
+        p.color = i; say(p, `${col.name.toLowerCase()}!`, 1.5); burst(p, "heart", 2); persist(); openPetSheet(p);
+      };
       chips.appendChild(b);
     });
     $("sheetNap").textContent = p.state === "sleep" ? "☀️ Wake" : "💤 Nap";
@@ -1430,6 +1434,61 @@
   $("eggBtn").onclick = openEgg;
   $("collectionBtn").onclick = () => openZoo(null);
   $("trophyBtn").onclick = () => openTrophies();
+  // ------------------------------------------------------------------ events 🎉 (the same event as the desktop app)
+  const EVENT = D.event || { id: "", name: "", icon: "🎉", kinds: [], rewards: [], per_skin: 10, start: "9999", until: "0000" };
+  const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+  const eventOn = () => EVENT.start <= todayStr() && todayStr() <= EVENT.until;
+  function skinLocked(kind, i) {
+    const cols = KINDS[kind].colors, col = cols[i % cols.length];
+    return !!col.event && !(save.skins || []).includes(`${kind}:${col.name}`);
+  }
+  const eventPts = () => +((save.eventPoints || {})[EVENT.id] || 0);
+  function eventPoint(p, n) {
+    if (!eventOn() || !EVENT.kinds.includes(AWAKEN_BASE[p.kind] || p.kind)) return;
+    save.eventPoints = save.eventPoints || {}; save.skins = save.skins || [];
+    const before = eventPts(); save.eventPoints[EVENT.id] = before + n;
+    for (let i = 0; i < EVENT.rewards.length; i++) {
+      const [kind, skin] = EVENT.rewards[i], key = `${kind}:${skin}`;
+      if (before + n >= (i + 1) * EVENT.per_skin && !save.skins.includes(key)) {
+        save.skins.push(key); sfx("fanfare"); vibrate([20, 30, 20]);
+        say(p, `🎁 new skin unlocked: ${skin} ${kind}! ✨`, 4); setFace(p, "happy", 2); burst(p, "heart", 6);
+        toast(`${EVENT.icon} New skin: ${skin} ${kind}! Pick it in its color list. ✨`, 4);
+        break;
+      }
+    }
+    persist(true);
+    if (!$("eventSheet").hidden) openEvent();
+  }
+  function openEvent() {
+    const per = EVENT.per_skin, total = per * EVENT.rewards.length, pts = Math.min(eventPts(), total), got = save.skins || [];
+    $("eventTitle").textContent = `${EVENT.icon} ${EVENT.name}`;
+    $("eventWhen").textContent = eventOn() ? `until ${EVENT.until_text}` : "this event is over";
+    $("eventFill").style.width = `${(100 * pts) / total}%`; $("eventPts").textContent = `${pts} / ${total} points`;
+    const g = $("eventGrid"); g.innerHTML = "";
+    EVENT.rewards.forEach(([kind, skin], i) => {
+      const have = got.includes(`${kind}:${skin}`), idx = KINDS[kind].colors.findIndex((c) => c.name === skin);
+      const cell = doc().createElement("div"); cell.className = "trophy" + (have ? " earned" : "");
+      cell.appendChild(thumb(kind, idx, false, 4));
+      const b = doc().createElement("b"); b.textContent = skin; cell.appendChild(b);
+      const sm = doc().createElement("small"); sm.textContent = have ? `✓ ${kind} skin` : `🔒 ${kind} · ${(i + 1) * per} pts`; cell.appendChild(sm);
+      g.appendChild(cell);
+    });
+    const add = $("eventAdd"); add.innerHTML = "";
+    const has = new Set(pets.map((q) => AWAKEN_BASE[q.kind] || q.kind));
+    EVENT.kinds.filter((k) => !has.has(k)).forEach((k) => {
+      const b = doc().createElement("button"); b.textContent = `➕ Add ${/^[AEIOU]/.test(k) ? "an" : "a"} ${k}`;
+      b.onclick = () => { const q = addPet(k); if (q) say(q, "spiky week, let's go!", 3); openEvent(); };
+      add.appendChild(b);
+    });
+    openSheet("eventSheet");
+  }
+  $("eventBtn").hidden = !eventOn() && !(save.skins || []).length;
+  $("eventBtn").onclick = openEvent;
+  if (eventOn() && save.eventSeen !== EVENT.id) {
+    setTimeout(() => { save.eventSeen = EVENT.id; persist(true);
+      toast(`${EVENT.icon} ${EVENT.name} is on! Pet & feed Hedgehogs, Foxes and Echidnas to unlock event skins. Tap ${EVENT.icon} at the top!`, 7); }, 5000);
+  }
+
   $("shareBtn").onclick = share;
   $("helpBtn").onclick = () => openSheet("helpSheet");
   $("soundBtn").onclick = () => setSound(!save.sound);

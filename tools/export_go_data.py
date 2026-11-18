@@ -42,6 +42,7 @@ data = {
     "lureCost": bl.LURE_COST,
     "beaconCost": bl.BEACON_COST,
     "candleCost": bl.CANDLE_COST,
+    "event": getattr(bl, "EVENT", None),
     **({"trophies": [{"id": t[0], "icon": t[1], "name": t[2], "how": t[3], "bonus": t[5]} for t in bl.TROPHIES],
         "trophyCup": bl.TROPHY_CUP, "awakenForm": bl.AWAKEN_FORM, "crystalCost": bl.CRYSTAL_COST,
         "arena": {"stats": bl.ARENA_STATS, "types": bl.ARENA_TYPES, "beats": bl.ARENA_BEATS,

@@ -3923,6 +3923,20 @@ def skin_locked(save, kind, idx):
     return bool(col.get("event") or col.get("unlock")) and f"{kind}:{col['name']}" not in save.get("skins", [])
 
 
+# 🍬🧪 Changing a Blip's color costs a treat: a Color Candy for everyday colors, a Color Potion for the rare and special
+# ones (event skins, unlockable colors and the fancy looks below). Shifty Blips still change color on their own, for free.
+COLOR_CANDY_COST, COLOR_POTION_COST = 10, 40
+SPECIAL_COLORS = {"Midnight", "Black Light", "Shadow", "Holo", "Golden", "Gilded", "Golden Age", "Black Diamond", "Sovereign"}
+
+
+def color_cost(kind, idx):
+    """(icon, item name, hearts) to switch a Blip of this kind to color idx."""
+    col = kind_colors(kind)[idx % len(kind_colors(kind))]
+    if col.get("event") or col.get("unlock") or col["name"] in SPECIAL_COLORS:
+        return "🧪", "Color Potion", COLOR_POTION_COST
+    return "🍬", "Color Candy", COLOR_CANDY_COST
+
+
 def kind_colors(kind):
     """Color choices for a kind: animals have their own, critters can use any fun color."""
     return VARIANTS[kind].get("colors") or PALETTES
@@ -4026,6 +4040,8 @@ PX_ICONS = {  # Blipville's pixel icons (14x14 PNGs, made from the masks in go/i
     "sweet": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAg0lEQVR4nGNgGBAgJaL2n2R1UiJq///PuvEfWVBKRO0/MsamjgWm+GnbJgbpKr//MDYygIkjq2NBVgDXkKrOwDD7JsPDAxcY5B0MMAxiYGBgYMLqGSRNDw9cwKoEq0ZkTfIOBlg1ojhVusoPxckwTejiDAwM5IcqXCFW96ABYtUNMgAAYJ1Q+Osb2IkAAAAASUVORK5CYII=",
     "cosmic": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAqElEQVR4nGNgIAFIiaj9J0U9XNP/S1b/YZoZiTX56T4ROFva6Q2mRikRtf/T0m6iiGXNUodrlnZ6w/DszS1GJlya/GsOwsVhYjBNDAwMDEwwDeiaNrbYwzXuOrATrhnuRykRtf/I7icGwP0IMwXdbzDbGBgYGNwc3OF+ffbmFiNK4CA7F6YBWRPMfwwMDAgbYYK4QhVZE4ofkUMMPR7RNaE4EUc4DCIAAGwHXF20RBkvAAAAAElFTkSuQmCC",
     "phantom": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAb0lEQVR4nGNgIBMwYhOUElH7j8x/9uYWVnUYmtABukFEaSKoGZ8mbJqZ0A2QFlXHMBSbGIZGYgGGxqevb2IowiaG00ZpUXWsToQBFlwS2GwhykZCAG+oorOfvr6JkaoYGBgQSU1KRO0/Lja5LoQDAHAeagZP/muxAAAAAElFTkSuQmCC",
+    "candy": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAmklEQVR4nGNgGBAgJaL2n2R1UiJq///PuvEfWVBKRO0/MsamjgWm+GnbJgbpKr//DAwMDE/3iaDYJO3E8B9dHROygqdtmxCadI8ixPeJMDxt24RiGIpGFHDZmoGh1hGCsQAWrKIwxc37cZqLolG6yg/qNFQN0k5vGBgY/FCcy4Ks6dmbW4wQhQwo0fPszS1GWGgiqyMvHocOAABOLUKDJOxsuQAAAABJRU5ErkJggg==",
+    "potion": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAlklEQVR4nGNgIBMwYhOUElH7j8x/9uYWhjoMASkRtf8FbiwoYhN2/cGqGauNN778/3/jy///6LbDABNBU4gFyLbhs5UFXdO+BzcZbqShKtr34CaDk4L6f2R/MmHT5L8UVeONNIhmZJux+nFjNIK968JOrF7CGzi4NDEwoMUjzLmTzFA15J1yZ3BSUMcfl8SGKtlJjmwAABZSYzHQqFi3AAAAAElFTkSuQmCC",
 }
 _PX_CACHE = {}
 MENU_ICONS = [("💬 Join", "discord"), ("💖", "heart"), ("🎩", "hat"), ("🥚", "egg"), ("🔦", "lure"), ("📡", "beacon"), ("🕯️", "candle"),
@@ -5173,9 +5189,23 @@ class Blip:
         self.press = None
 
     def pick_color(self):
-        self.palette = self.color_var.get()
-        self.say(f"{kind_colors(self.kind)[self.palette]['name'].lower()}!", 1.5)
-        self.burst("heart", 2)
+        i = self.color_var.get()
+        if i == self.palette:
+            return
+        icon, item, cost = color_cost(self.kind, i)
+        if not self.app.save.get("creator"):                # creators change colors for free
+            if self.app.hearts() < cost:
+                self.color_var.set(self.palette)
+                from tkinter import messagebox
+                messagebox.showinfo(f"{icon} {item}", f"A {item} costs {cost} 💖. You have {self.app.hearts()}.\n\n"
+                                    "Pet, feed and play with your Blips to earn more hearts!")
+                return
+            self.app.save["hearts"] = self.app.hearts() - cost
+            write_save(self.app.save)
+        self.palette = i
+        self.say(f"*{'sip' if icon == '🧪' else 'munch'}* {kind_colors(self.kind)[i]['name'].lower()}!", 2)
+        self.burst("heart", 3)
+        self.app.sound.play("munch" if icon == "🍬" else "zap")
 
     def on_menu(self, e):
         if SELFTEST:
@@ -5286,9 +5316,12 @@ class Blip:
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
             if skin_locked(self.app.save, self.kind, i):
-                self.color_menu.add_command(label=f"🔒 {col['name']}  ({EVENT['icon']} {EVENT['name']} skin)", state="disabled")
+                why = "beat The Puppet Master" if col.get("unlock") == "puppet" else f"{EVENT['icon']} {EVENT['name']} skin"
+                self.color_menu.add_command(label=f"🔒 {col['name']}  ({why})", state="disabled")
             else:
-                self.color_menu.add_radiobutton(label=col["name"] + ("  ✨" if col.get("event") else ""), value=i,
+                icon, _, cost = color_cost(self.kind, i)
+                self.color_menu.add_radiobutton(label=col["name"] + ("  ✨" if col.get("event") else "") +
+                                                ("" if i == self.palette else f"   {icon} {cost} 💖"), value=i,
                                                 variable=self.color_var, command=self.pick_color)
         self.menu.entryconfigure(self.event_entry, label=self.app.event_label())
         if self.app.save.get("mod") and not self.app.save.get("creator") and not getattr(self, "mod_added", False):

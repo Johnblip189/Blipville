@@ -321,3 +321,5 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 #arenaMoves .m0 { background: #5a4ae0; } #arenaMoves .m1 { background: #3a8a6a; } #arenaMoves .m2 { background: #c8454a; } #arenaMoves .m3 { background: #a8742a; }
 #arenaMoves .move:disabled { background: #2b2547; color: #6a6290; cursor: default; }
 #arenaMoves .move:disabled img.px { opacity: .4; }
+#colorChips button small.price { display: inline-flex; align-items: center; gap: 2px; margin-left: 4px; font-size: 11px; font-weight: 800; color: #ffd23a; }
+#colorChips button small.price img.px { width: 14px; height: 14px; }

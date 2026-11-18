@@ -1,6 +1,6 @@
 // Offline support: keep the app files cached so Blipville: On the Go works without internet.
-const CACHE = "blipville-go-v53";
-const FILES = ["./", "index.html", "style.css?v=53", "app.js?v=53", "countdown.js?v=53", "data.js?v=53", "manifest.webmanifest",
+const CACHE = "blipville-go-v54";
+const FILES = ["./", "index.html", "style.css?v=54", "app.js?v=54", "countdown.js?v=54", "data.js?v=54", "manifest.webmanifest",
                "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
                "offline.html", "icons/server-down.png", "icons/maintenance.png"];
 self.addEventListener("install", (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting())));

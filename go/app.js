@@ -980,6 +980,9 @@
   document.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closeSheets));
   document.querySelectorAll(".sheet").forEach((s) => s.addEventListener("pointerdown", (e) => { if (e.target === s) closeSheets(); }));
 
+  // 🍬🧪 changing colors: a Color Candy for everyday colors, a Color Potion for rare and special ones (same as the Windows app)
+  const COLOR_COST = D.colorCost || { candy: 10, potion: 40, special: [] };
+  const colorCost = (col) => (col.event || col.unlock || COLOR_COST.special.includes(col.name) ? { icon: "potion", cost: COLOR_COST.potion } : { icon: "candy", cost: COLOR_COST.candy });
   let sheetPet = null;
   function openPetSheet(p) {
     sheetPet = p;
@@ -994,10 +997,18 @@
     KINDS[p.kind].colors.forEach((col, i) => {
       const b = document.createElement("button"), locked = skinLocked(p.kind, i);
       b.className = i === p.color ? "on" : locked ? "locked" : "";
+      const cc = colorCost(col);
       b.appendChild(thumb(p.kind, i, false, 3)); b.append((locked ? "🔒 " : "") + col.name + (col.event && !locked ? " ✨" : ""));
+      if (!locked && i !== p.color) { const pr = doc().createElement("small"); pr.className = "price"; pr.append(pxImg(cc.icon), ` ${cc.cost}`); b.appendChild(pr); }
       b.onclick = () => {
-        if (locked) { toast(`🔒 ${col.name} is a ${EVENT.icon} ${EVENT.name} skin. Earn it in the event! (tap ${EVENT.icon} at the top)`, 4); return; }
-        p.color = i; say(p, `${col.name.toLowerCase()}!`, 1.5); burst(p, "heart", 2); persist(); openPetSheet(p);
+        if (locked) { toast(col.unlock === "puppet" ? `🔒 ${col.name}: beat The Puppet Master in the ⚔️ Arena to unlock it!` : `🔒 ${col.name} is a ${EVENT.icon} ${EVENT.name} skin. Earn it in the event! (tap ${EVENT.icon} at the top)`, 4); return; }
+        if (i === p.color) return;
+        if (!isCreator()) {                                   // 🍬🧪 a treat changes the color
+          if (save.hearts < cc.cost) { toast(`${cc.icon === "potion" ? "🧪 A Color Potion" : "🍬 A Color Candy"} costs ${cc.cost} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 3.5); return; }
+          save.hearts -= cc.cost; updateHearts(true);
+        }
+        p.color = i; say(p, `*${cc.icon === "potion" ? "sip" : "munch"}* ${col.name.toLowerCase()}!`, 2); burst(p, "heart", 3);
+        sfx(cc.icon === "potion" ? "zap" : "munch"); persist(true); openPetSheet(p);
       };
       chips.appendChild(b);
     });

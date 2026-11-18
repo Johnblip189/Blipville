@@ -1179,8 +1179,10 @@
     for (const t of Object.keys(AR.types)) {
       const row = doc().createElement("div"); row.className = "typeRow"; row.appendChild(tname(t));
       const list = [].concat(AR.beats[t] || []), r = doc().createElement("span");
+      const perk = t === "phantom" ? "1 in 5 hits pass through it" : t === "cosmic" ? "1 in 4 hits are critical" : "";
       if (list.length) { r.append("beats "); list.forEach((x, i) => { if (i) r.append(" & "); r.appendChild(tname(x)); }); }
-      else r.textContent = t === "phantom" ? "1 in 5 hits pass right through it" : t === "cosmic" ? "1 in 4 of its hits are critical" : "";
+      if (perk) { const weak = Object.keys(AR.types).filter((x) => beats(x, t)), w = doc().createElement("div"); w.className = "muted";
+                  w.append(perk + (weak.length ? " · weak to " : "")); weak.forEach((x, i) => { if (i) w.append(" & "); w.appendChild(tname(x)); }); r.appendChild(w); }
       row.appendChild(r); tc.appendChild(row);
     }
     const dual = doc().createElement("div"); dual.className = "typeRow";

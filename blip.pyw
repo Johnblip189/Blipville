@@ -7043,19 +7043,21 @@ class Maintenance:
 ARENA_TYPES = {"spark": ("🔥", "Spark"), "splash": ("💧", "Splash"), "sprout": ("🌿", "Sprout"), "volt": ("⚡", "Volt"),
                "stone": ("🪨", "Stone"), "gust": ("🌪️", "Gust"), "frost": ("❄️", "Frost"), "sweet": ("🍬", "Sweet"),
                "phantom": ("👻", "Phantom"), "cosmic": ("🪐", "Cosmic")}
-# Who's strong against whom (x1.5 damage; the other way round it's x0.7). Every element beats 2 and loses to 2.
-ARENA_BEATS = {"spark": ["sprout", "frost"],    # burns leaves, melts ice
+# Who's strong against whom (x1.5 damage; the other way round it's x0.7). Every element beats 2 and loses to 2 (Spark,
+# Stone and Gust also beat one of the rule-breakers). 👻 Phantom is weak to 🔥 Spark and 🪐 Cosmic; 🪐 Cosmic is weak to
+# 🪨 Stone and 🌪️ Gust.
+ARENA_BEATS = {"spark": ["sprout", "frost", "phantom"],   # burns leaves, melts ice, lights up the dark ghosts hide in
                "splash": ["spark", "stone"],    # puts out fires, wears down rock
                "sprout": ["splash", "stone"],   # drinks water, roots crack rock
                "volt": ["splash", "gust"],      # zaps water, charges up storms
-               "stone": ["spark", "sweet"],     # smothers fire, crunches candy
-               "gust": ["sprout", "sweet"],     # blows away leaves and sprinkles
+               "stone": ["spark", "sweet", "cosmic"],     # smothers fire, crunches candy, asteroids knock planets about
+               "gust": ["sprout", "sweet", "cosmic"],     # blows away leaves and sprinkles; solar wind scatters stardust
                "frost": ["gust", "volt"],       # freezes the wind, jams the circuits
                "sweet": ["frost", "volt"],      # warm cocoa melts frost, sticky syrup gums up gadgets
-               "phantom": [], "cosmic": []}
-# 🪐 Cosmic: never super effective and never resisted, but its hits land as critical hits 1 in 4 times (others: 1 in 10)
+               "phantom": [], "cosmic": ["phantom"]}    # starlight banishes ghosts
+# 🪐 Cosmic: only strong against Phantom, but its hits land as critical hits 1 in 4 times (others: 1 in 10)
 COSMIC_CRIT = 0.25
-# 👻 Phantom (the Phantom Knight's very own type): never super effective and never resisted, but 1 in 5 hits passes right through it
+# 👻 Phantom (the Phantom Knight's very own type): never super effective, but 1 in 5 hits passes right through it
 PHANTOM_DODGE = 0.2
 TYPE_OF = {"Phantom Knight": "phantom"}
 FORM_MOVES = {"Blipmaker": "Creator's Spark", "Byte": "Bug Fix", "Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
@@ -7487,8 +7489,9 @@ class Arena:
         from tkinter import messagebox
         name = lambda t: f"{ARENA_TYPES[t][0]} {ARENA_TYPES[t][1]}"
         lines = [f"{name(t)}  beats  " + " & ".join(name(x) for x in ARENA_BEATS[t]) for t in ARENA_TYPES if ARENA_BEATS[t]]
-        lines += ["", f"{name('phantom')}: nothing beats it and it beats nothing, but 1 in 5 hits pass right through it.",
-                  f"{name('cosmic')}: nothing beats it and it beats nothing, but 1 in 4 of its hits are critical.", "",
+        weak = lambda t: " & ".join(name(x) for x in ARENA_TYPES if t in ARENA_BEATS[x])
+        lines += ["", f"{name('phantom')}: beats nothing, but 1 in 5 hits pass right through it. Weak to {weak('phantom')}.",
+                  f"{name('cosmic')}: 1 in 4 of its hits are critical. Weak to {weak('cosmic')}.", "",
                   "Some Blips have 2 types: they get both types' strengths and weaknesses (a hit can be super effective twice!)",
                   "and attack with whichever type works best."]
         messagebox.showinfo("Type chart 📖", "Strong = x1.5 damage. The other way round it's x0.7.\n\n" + "\n".join(lines), parent=self.win)

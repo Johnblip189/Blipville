@@ -1447,7 +1447,8 @@
   // ------------------------------------------------------------------ events 🎉 (the same event as the desktop app)
   const EVENT = D.event || { id: "", name: "", icon: "🎉", kinds: [], rewards: [], per_skin: 10, start: "9999", until: "0000" };
   const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
-  const eventOn = () => EVENT.start <= todayStr() && todayStr() <= EVENT.until;
+  const eventPaused = () => !!(EVENT.paused && EVENT.paused[0] <= todayStr() && todayStr() < EVENT.paused[1]);   // closed for maintenance
+  const eventOn = () => EVENT.start <= todayStr() && todayStr() <= EVENT.until && !eventPaused();
   function skinLocked(kind, i) {
     const cols = KINDS[kind].colors, col = cols[i % cols.length];
     return !!col.event && !(save.skins || []).includes(`${kind}:${col.name}`);
@@ -1480,6 +1481,7 @@
     return save.quests;
   }
   function questTick(what, n = 1) {
+    if (eventPaused()) return;                              // daily quests pause with the event
     const q = questState();
     for (const quest of todaysQuests(q.day)) {
       if (quest.id !== what || q.done.includes(what)) continue;
@@ -1509,7 +1511,7 @@
     drawQuests();
     const per = EVENT.per_skin, total = per * EVENT.rewards.length, pts = Math.min(eventPts(), total), got = save.skins || [];
     $("eventTitle").textContent = `${EVENT.icon} ${EVENT.name}`;
-    $("eventWhen").textContent = eventOn() ? `until ${EVENT.until_text}` : todayStr() < EVENT.start ? "starts soon!" : "this event is over";
+    $("eventWhen").textContent = eventOn() ? `until ${EVENT.until_text}` : eventPaused() ? `paused until ${EVENT.paused_text}` : todayStr() < EVENT.start ? "starts soon!" : "this event is over";
     $("eventFill").style.width = `${(100 * pts) / total}%`; $("eventPts").textContent = `${pts} / ${total} points`;
     const g = $("eventGrid"); g.innerHTML = "";
     EVENT.rewards.forEach(([kind, skin], i) => {

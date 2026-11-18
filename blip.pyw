@@ -3473,8 +3473,9 @@ def is_night():
 
 # Events 🎉: for a few days, caring for certain Blips earns event points, and every so many points unlocks an event skin
 # (a color marked event=<id>). Skins you earn stay yours after the event; the rest stay locked.
-EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "2026-11-17", "until": "2026-11-29",
-         "until_text": "Sunday, November 29", "kinds": ["Hedgehog", "Fox", "Echidna"], "per_skin": 10,
+EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "2026-11-17", "until": "2026-12-03",
+         "until_text": "Thursday, December 3", "paused": ["2026-11-18", "2026-11-22"],   # closed for the 1.0 drop: the clock stops
+         "paused_text": "Sunday, November 22", "kinds": ["Hedgehog", "Fox", "Echidna"], "per_skin": 10,
          "rewards": [["Hedgehog", "Pinecone"], ["Fox", "Ember"], ["Echidna", "Opal"], ["Hedgehog", "Midnight"],
                      ["Fox", "Aurora"], ["Hedgehog", "Candy Floss"], ["Fox", "Maple"], ["Echidna", "Golden Spines"]]}
 
@@ -3502,9 +3503,16 @@ def todays_quests(day=None):
     return sorted(QUESTS, key=lambda q: quest_hash(day + q["id"]))[:3]
 
 
+def event_paused():
+    """While the game is closed for maintenance the event (and daily quests) are paused, and the end date moves back."""
+    today = time.strftime("%Y-%m-%d")
+    a, b = EVENT.get("paused") or ["", ""]
+    return bool(a) and a <= today < b
+
+
 def event_on():
     today = time.strftime("%Y-%m-%d")
-    return EVENT["start"] <= today <= EVENT["until"]
+    return EVENT["start"] <= today <= EVENT["until"] and not event_paused()
 
 
 def skin_locked(save, kind, idx):
@@ -6006,6 +6014,7 @@ class EventWindow:
         c.create_text(18, 26, anchor="w", text=f"{EVENT['icon']} {EVENT['name']}", fill="#ffd23a", font=("Segoe UI", 18, "bold"))
         c.create_text(self.W - 18, 26, anchor="e", fill="#ff9fc0", font=("Segoe UI", 10, "bold"),
                       text=f"until {EVENT['until_text']}" if event_on() else
+                      f"paused until {EVENT['paused_text']}" if event_paused() else
                       "starts soon!" if time.strftime("%Y-%m-%d") < EVENT["start"] else "this event is over")
         c.create_text(18, 62, anchor="w", width=self.W - 36, fill="#e8e4ff", font=("Segoe UI", 10),
                       text="Pet and feed your Hedgehogs, Foxes and Echidnas, and do today's quests! A pet is 1 point (once every few "
@@ -7082,6 +7091,8 @@ class App:
         total = len(EVENT["rewards"]) * EVENT["per_skin"]
         if event_on():
             return f"{EVENT['icon']} {EVENT['name']} event ({min(self.event_points(), total)}/{total})…"
+        if event_paused():
+            return f"{EVENT['icon']} {EVENT['name']} (paused until {EVENT['paused_text']})…"
         if time.strftime("%Y-%m-%d") < EVENT["start"]:
             return f"{EVENT['icon']} {EVENT['name']} (starts soon)…"
         return f"{EVENT['icon']} {EVENT['name']} (event over)…"
@@ -7102,6 +7113,8 @@ class App:
         return q
 
     def quest_tick(self, what, n=1):
+        if event_paused():                               # daily quests pause with the event
+            return
         q = self.quest_state()
         for quest in todays_quests(q["day"]):
             if quest["id"] != what or quest["id"] in q["done"]:

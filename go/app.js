@@ -1887,7 +1887,7 @@
   // 🎟️ early access codes: a valid code is remembered on this device and opens the 1.0 early access (in /early/) during
   // maintenance. Only the codes' fingerprints (SHA-256) are stored here, never the codes themselves.
   const EARLY_HASHES = ["9912092ed34702febd9e54f7035b19ab72bf054cebbe38de1161286b863ac6c7", "6d90cbf3483607a667d8a787fcba2ffedbe5959b003a79797e882cf695880c07", "43a83ddfe51fc724ddab9b06adebdd9c1d67c5933546285eced02e943690b024", "25193bec0c0f2d4f89a05f82d4f5e170dd002fb410d6410c5da96c594447885a", "a1c3b063d196e3b16f60441189c069cecaa7500e6f66c75d76c3f61130708849", "804c9e2f83dbf465de9142c1d2f39705c47857c0c3db644f01242254e0172be8"   /* alpha tester */];
-  const MOD_HASHES = ["6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0", "7f39598c6a109047846098d066ab4734f2d4f17fdb93e73a008f8e6d26cfbfd5"];   // moderator codes
+  const MOD_HASHES = ["6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0", "f7442ad71cf1853b4834396505ec91f5cbba914d1e9c7f208351b22fd8f7f05a"];   // moderator codes
   const EARLY_KEY = "blipville-early-code", IN_EARLY = /\/early\//.test(location.pathname);
   const normCode = (t) => String(t || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
   async function sha256(t) {

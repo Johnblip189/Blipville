@@ -4,6 +4,8 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
+- 🎁 **Two new gift Blips:** **Confetti** for everyone who plays on release day (Sunday, November 22), and **Bug Hunter**
+  for the testers who helped get 1.0 ready. 🔍
 - 🌟 **72 new special Blips, at least 12 in every tier:** new Rare egg Blips (Qilin, Pixie, Wyvern, Rainbow Blip…), Cryptids
   (Ningen, Van Meter Visitor, Lusca, Beast of Gévaudan, Yowie, Ogopogo, Squonk…: 24 new ones!), Kaiju (Boulderback, Stormcrab, Clockwork Rex, Coralgon…), Ghosts (Wick,
   Phantom Knight, Jack-o'-Ghost, Haunted Teacup…) and World Legends (Elder Treant, Candy Dragon, Star Whale, Comet Fox…).

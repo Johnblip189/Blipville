@@ -3437,6 +3437,18 @@ GIFTS = {
   "colors": [{"name": "Hard Hat", "o": "#2a2a3a", "b": "#8ac8ff", "h": "#ffd23a", "s": "#ffffff", "k": "#d8a00a", "t": "#6a4a2a", "y": "#d8d8e8", "p": "#ff9ab0", "e": "#1a1a2a"},
              {"name": "Safety Orange", "o": "#3a1a06", "b": "#ffc490", "h": "#ff7a1a", "s": "#ffffff", "k": "#c8500a", "t": "#4a3a2a", "y": "#ffe04a", "p": "#ff8a8a", "e": "#2a1004"},
              {"name": "Night Crew", "o": "#14142a", "b": "#7a7ac0", "h": "#b8ff3a", "s": "#ffffff", "k": "#7ab80a", "t": "#2a2a3a", "y": "#ffd23a", "p": "#ff9ac8", "e": "#0a0a1a"}]},
+ "Bug Hunter": {"eyes": 5, "move": "hop", "speed": 1.1,
+  "lines": ["found one! (a bug)", "*squints through magnifying glass*", "thanks for testing 1.0! 🔍", "i'm on the case", "tester crew, represent"],
+  "body": [".....hhhhhh.....", "....hhhhhhhh....", "..hhhhhhhhhhhh..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbmmm.", "obbbbbbbbbbmgggm", ".obbbbbbbbbmgggm", "..oooooooookmmm."],
+  "colors": [{"name": "Explorer", "o": "#1a2a1a", "b": "#8ac8ff", "h": "#c8a86a", "m": "#5a4a3a", "g": "#c8f0ff", "k": "#8a5a2a", "p": "#ff9ab0", "e": "#1a1a2a"},
+             {"name": "Night Bug", "o": "#1a1a2a", "b": "#b8a0ff", "h": "#3a6a3a", "m": "#2a2a3a", "g": "#d8fff0", "k": "#5a3a1a", "p": "#ff9ad8", "e": "#1a1a2a"}]},
+ "Confetti": {"eyes": 5, "move": "hop", "speed": 1.2,
+  "lines": ["IT'S RELEASE DAY!! 🎉", "*throws confetti everywhere*", "blipville 1.0, baby!", "i was there on day one!", "party party party"],
+  "body": ["r......yy.....g.", "......hhhh......", ".g...hhsshh...r.", "....hhhhhhhh....", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obbrbbbbbbbbgbbo", "obpbbbbbbbbbbpbo", "obbbbgbbbbrbbbbo", "obbbbbbbbbbbbbbo", ".obbbybbbbbbbbo.", "..oooooooooooo.."],
+  "colors": [{"name": "Party", "o": "#3a1a3a", "b": "#ffd0e8", "h": "#5a8aff", "s": "#ffd23a", "y": "#ffd23a", "r": "#ff5a7a", "g": "#5ae07a", "p": "#ff8ab8", "e": "#2a0a2a"},
+             {"name": "Gold", "o": "#5a3a06", "b": "#ffe8a0", "h": "#ff5a8a", "s": "#ffffff", "y": "#ffffff", "r": "#ff5a7a", "g": "#5ab8ff", "p": "#ff9a7a", "e": "#2a1a04"}]}
 }
 # World Legends ✨: two legendary Blips per world. They only show up while you're visiting that world: they stroll
 # past in full color with sparkles, and you click them before they leave.
@@ -3461,6 +3473,10 @@ GIFT_DROPS = [
      "why": "Thanks for playing the Blipville beta!"},
     {"kind": "Patch", "until": "2026-11-24", "until_text": "Tuesday, November 24",
      "why": "Thanks for waiting while we fixed things up! 🔧"},
+    {"kind": "Bug Hunter", "until": "2026-12-31", "until_text": "the end of the year", "testers": True,   # early access + test builds only
+     "why": "Thanks for testing Blipville 1.0 early! 🔍"},
+    {"kind": "Confetti", "start": "2026-11-22", "until": "2026-11-22", "until_text": "release day (Sunday, November 22)",
+     "why": "Happy release day! Thanks for playing Blipville 1.0 on day one! 🎉"},
 ]
 GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest one (the website version reads these)
 GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
@@ -8706,8 +8722,10 @@ class App:
         today, given = time.strftime("%Y-%m-%d"), []
         for drop in GIFT_DROPS:
             kind = drop["kind"]
-            if kind in self.save.get("gifts", []) or today > drop["until"]:
+            if kind in self.save.get("gifts", []) or today > drop["until"] or today < drop.get("start", ""):
                 continue
+            if drop.get("testers") and not (APP_VERSION.endswith("-test") or self.save.get("tester")):
+                continue                                  # only for people testing 1.0 early
             self.save.setdefault("gifts", []).append(kind)
             given.append(drop)
             pet = self.add_pet(kind, greet=False)

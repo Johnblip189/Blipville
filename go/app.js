@@ -1794,8 +1794,11 @@
   // Limited-time thank-you Blips. A gift only counts as delivered once it has actually walked into town (or, with a full
   // town, once the player was told it's in the Zoo), so reloading or closing the page early can't lose it.
   if (!save.giftsDelivered) save.giftsDelivered = save.gifts.filter((k) => k !== "Patch");   // older saves: those already arrived
+  const isTester = (() => { try { return !!localStorage.getItem("blipville-early-code"); } catch (e) { return false; } })();   // used an early access code
   const drops = (D.giftDrops || (D.giftNow ? [{ kind: D.giftNow, until: D.giftUntil, why: "" }] : []))
-    .filter((d) => !save.giftsDelivered.includes(d.kind) && (!d.until || localDay() <= d.until || save.gifts.includes(d.kind)));
+    .filter((d) => !save.giftsDelivered.includes(d.kind) && (!d.until || localDay() <= d.until || save.gifts.includes(d.kind))
+                   && (!d.start || localDay() >= d.start || save.gifts.includes(d.kind))
+                   && (!d.testers || isTester || save.gifts.includes(d.kind)));
   drops.forEach((d, i) => {
     setTimeout(() => {
       if (!save.gifts.includes(d.kind)) save.gifts.push(d.kind);

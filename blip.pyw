@@ -3186,6 +3186,15 @@ EGYPT_GODS = {"Ra": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mou
 EGYPT_TYPES = {"Ra": ["spark", "cosmic"], "Anubis": ["phantom", "stone"], "Horus": ["gust", "cosmic"], "Bastet": ["sweet", "phantom"], "Thoth": ["cosmic", "gust"], "Sobek": ["splash", "stone"], "Isis": ["cosmic", "gust"], "Osiris": ["sprout", "phantom"], "Set": ["stone", "volt"], "Hathor": ["sweet", "cosmic"], "Khepri": ["spark", "stone"], "Ammit": ["phantom", "splash"], "Sekhmet": ["spark", "stone"], "Ptah": ["stone", "cosmic"], "Amun": ["gust", "cosmic"], "Khnum": ["splash", "stone"], "Bes": ["sweet", "spark"], "Taweret": ["splash", "sweet"], "Nut": ["cosmic"], "Geb": ["sprout", "stone"], "Shu": ["gust"], "Tefnut": ["splash", "spark"], "Ma'at": ["gust", "cosmic"], "Nephthys": ["phantom", "gust"], "Wadjet": ["sprout", "spark"], "Nekhbet": ["gust", "phantom"], "Apep": ["phantom", "splash"], "Khonsu": ["cosmic", "frost"], "Hapi": ["splash", "sprout"], "Serket": ["stone", "phantom"]}
 TAB_KINDS.update(EGYPT_GODS)
 TAB_GROUPS.append(('Egypt 🏺', list(EGYPT_GODS)))
+# 🏺 Dig Site: Egypt World is free to visit, but its gods have to be dug up. Each board is a grid of sand hiding one god you
+# haven't found yet, plus a few heart treasures. Every dig tells you how close the god is (hot/cold). New boards are free.
+DIG_COLS, DIG_ROWS, DIG_TRIES, DIG_TREASURES, DIG_HEARTS = 6, 5, 8, 4, 3
+
+
+def dig_hint(d):
+    """How close a dig was to the hidden god (Manhattan distance)."""
+    return ("🔥", "HOT!") if d == 1 else ("☀️", "warm") if d == 2 else ("🌤️", "lukewarm") if d == 3 else ("❄️", "cold")
+
 
 # Ghosts 👻: they drift past haunted scenes at night (or when you light a Spirit Candle). They fade in and out, and
 # you can only befriend one while it's glowing. With the Redux engine they're really see-through, even in your town.
@@ -4061,7 +4070,7 @@ WORLDS = [  # name, the tab it unlocks, cost in hearts, the air while you're vis
     {"name": "Ocean World", "icon": "🌊", "tab": "Ocean 🌊", "cost": 100, "fx": [("bubble", 2.6)]},
     {"name": "Dino World", "icon": "🦕", "tab": "Dinos 🦕", "cost": 125, "fx": [("ash", 2.4), ("leaf", 0.6)]},
     {"name": "Space World", "icon": "🚀", "tab": "Space 🚀", "cost": 150, "fx": [("star", 2.2)]},
-    {"name": "Egypt World", "icon": "🏺", "tab": "Egypt 🏺", "cost": 200, "fx": [("ash", 1.4), ("star", 0.3)]},
+    {"name": "Egypt World", "icon": "🏺", "tab": "Egypt 🏺", "cost": 0, "fx": [("ash", 1.4), ("star", 0.3)]},   # free: you dig for its gods
 ]
 WORLD_OF = {k: w["name"] for w in WORLDS for t, ks in TAB_GROUPS if t == w["tab"] for k in ks}   # kind -> world
 WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
@@ -4097,8 +4106,8 @@ TROPHIES = [
     ("kaiju-all", "🏙️", "Kaiju Keeper", f"Befriend all {len(KAIJU_KINDS)} kaiju", _all(KAIJU_KINDS), 50),
     ("ghost-1", "👻", "Ghost Whisperer", "Befriend a ghost", _any(GHOST_KINDS), 10),
     ("ghost-all", "🕯️", "Spirit Squad", f"Befriend all {len(GHOST_KINDS)} ghosts", _all(GHOST_KINDS), 50),
-    ("world-1", "🌍", "Explorer", "Unlock a world", lambda a: len(a.save.get("worlds", [])) >= 1, 10),
-    ("world-all", "🧭", "World Traveler", "Unlock all 5 worlds", lambda a: len(a.save.get("worlds", [])) >= len(WORLDS), 50),
+    ("world-1", "🌍", "Explorer", "Unlock a world", lambda a: sum(WORLD_BY_NAME[w]["cost"] > 0 for w in a.save.get("worlds", []) if w in WORLD_BY_NAME) >= 1, 10),
+    ("world-all", "🧭", "World Traveler", "Unlock all 5 worlds", lambda a: all(w["name"] in a.save.get("worlds", []) for w in WORLDS if w["cost"] > 0), 50),
     ("legend-1", "✨", "Legend Hunter", "Find a World Legend", _any(LEGEND_KINDS), 15),
     ("legend-all", "🌟", "Living Legend", f"Find all {len(LEGEND_KINDS)} World Legends", _all(LEGEND_KINDS), 50),
     ("night-1", "🌙", "Night Owl", "Survive Night 1 of Night Shift", lambda a: a.nights_won() >= 1, 10),
@@ -5164,6 +5173,7 @@ class Blip:
         self.menu.add_command(label="💤 Back to normal form", command=lambda: self.toggle_awaken(back=True))
         self.awaken_back_entry = self.menu.index("end")
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
+        self.menu.add_command(label="🏺 Dig for gods in Egypt World…", command=app.open_dig)
         self.menu.add_command(label=f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", command=lambda: app.set_lure(self.root))
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
         self.menu.add_command(label=f"🕯️ Light a Spirit Candle ({CANDLE_COST} 💖)…", command=lambda: app.light_candle(self.root))
@@ -5691,6 +5701,15 @@ class Blip:
         for group, (sub, members) in getattr(self, "tab_menus", {}).items():
             sub.delete(0, "end")
             w = WORLD_BY_NAME[WORLD_OF[members[0]]]
+            if members[0] in EGYPT_GODS:                   # 🏺 gods are dug up, not bought
+                sub.add_command(label="🏺 Dig for gods…", command=self.app.open_dig)
+                sub.add_separator()
+                for k in members:
+                    if self.app.is_unlocked(k):
+                        sub.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+                    else:
+                        sub.add_command(label="🔒 ???  (dig it up in Egypt World)", state="disabled")
+                continue
             if not self.app.is_unlocked(members[0]):
                 sub.add_command(label=f"🔒 Unlock {w['name']} {w['icon']} ({w['cost']} 💖)…",
                                 command=lambda n=w["name"]: self.app.unlock_world(n, self.root))
@@ -9629,6 +9648,90 @@ class NightShiftGame:
             self.button(W_ / 2, 310, "Menu", lambda: setattr(self, "state", "menu"))
 
 
+class DigSite:
+    """🏺 Dig for the gods of Egypt World: one hidden god per board, hot/cold hints, 8 digs, free new boards."""
+    CELL = 58
+
+    def __init__(self, app):
+        self.app = app
+        if app.world() is None or app.world()["name"] != "Egypt World":
+            app.visit_world("Egypt World")
+        self.win = tk.Toplevel(app.root)
+        self.win.title("🏺 Dig Site")
+        self.win.resizable(False, False)
+        self.win.configure(bg="#3a2a14")
+        self.win.attributes("-topmost", True)
+        self.msg = tk.Label(self.win, bg="#3a2a14", fg="#ffe8b0", font=("Segoe UI", 11, "bold"), wraplength=DIG_COLS * self.CELL)
+        self.msg.pack(padx=10, pady=(10, 4))
+        self.c = tk.Canvas(self.win, width=DIG_COLS * self.CELL, height=DIG_ROWS * self.CELL, bg="#c89a48", highlightthickness=0)
+        self.c.pack(padx=10, pady=4)
+        self.c.bind("<Button-1>", self.click)
+        self.btn = tk.Button(self.win, text="New dig site", command=self.new_board)
+        self.btn.pack(pady=(4, 10))
+        self.new_board()
+
+    def new_board(self):
+        left = [k for k in EGYPT_GODS if not self.app.is_unlocked(k)]
+        cells = [(x, y) for x in range(DIG_COLS) for y in range(DIG_ROWS)]
+        random.shuffle(cells)
+        self.god = random.choice(left) if left else None
+        self.god_at = cells[0]
+        self.treasure = set(cells[1:1 + DIG_TREASURES])
+        self.dug, self.tries, self.over = {}, DIG_TRIES, False
+        self.msg.config(text=(f"A god is hiding in the sand! {DIG_TRIES} digs. Every dig tells you how close you are."
+                              if self.god else "You've found every god! 🏆 Dig for treasure anyway."))
+        self.draw()
+
+    def draw(self):
+        c, s = self.c, self.CELL
+        c.delete("all")
+        for x in range(DIG_COLS):
+            for y in range(DIG_ROWS):
+                x0, y0 = x * s, y * s
+                got = self.dug.get((x, y))
+                c.create_rectangle(x0 + 2, y0 + 2, x0 + s - 2, y0 + s - 2, fill="#a87a30" if got else "#e8c878", outline="#8a6020", width=2)
+                if got == "god":
+                    draw_sprite(c, self.god, 0, x0 + 5, y0 + 4, 3, face="happy")
+                elif got:
+                    c.create_text(x0 + s / 2, y0 + s / 2, text=got, font=("Segoe UI Emoji", 18))
+        c.create_text(DIG_COLS * s - 6, DIG_ROWS * s - 6, anchor="se", text=f"⛏️ {self.tries}", fill="#3a2a14", font=("Segoe UI", 11, "bold"))
+
+    def click(self, e):
+        if self.over:
+            return
+        cell = (int(e.x // self.CELL), int(e.y // self.CELL))
+        if cell in self.dug or not (0 <= cell[0] < DIG_COLS and 0 <= cell[1] < DIG_ROWS):
+            return
+        self.tries -= 1
+        if self.god and cell == self.god_at:
+            self.dug[cell] = "god"
+            self.over = True
+            self.app.save.setdefault("gods", []).append(self.god)
+            self.app.sound.play("fanfare")
+            self.msg.config(text=f"You dug up {self.god}! 🏺✨ They're joining your town.")
+            pet = self.app.add_pet(self.god, greet=False)
+            if pet:
+                pet.say(f"i'm free! thank you! 🏺", 4)
+            self.app.check_trophies()
+            write_save(self.app.save)
+        elif cell in self.treasure:
+            self.dug[cell] = "💖"
+            pet = self.app.pets[0] if self.app.pets else None
+            self.app.add_hearts(DIG_HEARTS, pet)
+            self.msg.config(text=f"Treasure! +{DIG_HEARTS} 💖")
+        else:
+            d = abs(cell[0] - self.god_at[0]) + abs(cell[1] - self.god_at[1]) if self.god else 9
+            icon, word = dig_hint(d)
+            self.dug[cell] = icon
+            self.msg.config(text=f"{word}…" if self.god else "just sand…")
+        if not self.over and self.tries <= 0:
+            self.over = True
+            if self.god:
+                self.dug[self.god_at] = "👣"
+                self.msg.config(text=f"Out of digs! The god slipped away (they were where the 👣 are). Try a new dig site!")
+        self.draw()
+
+
 class App:
     """Runs every pet on screen."""
     MAX_PETS = 12
@@ -9640,6 +9743,8 @@ class App:
         self.name_tags = tk.BooleanVar(master=self.root, value=True)
         self.season = current_season()
         self.save = load_save()
+        if "Egypt World" not in self.save.setdefault("worlds", []):
+            self.save["worlds"].append("Egypt World")      # 🏺 free for everyone (its gods still have to be dug up)
         self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))
         self.sound_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("sound", False)))
         self.climb_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("climb", True)))
@@ -9894,6 +9999,12 @@ class App:
             self.pets[0].say(f"welcome to {name}! {w['icon']}" if w else "home sweet home!", 3)
             self.pets[0].set_face("happy", 1.5)
 
+    def open_dig(self):
+        if getattr(self, "dig_win", None) and self.dig_win.win.winfo_exists():
+            self.dig_win.win.lift()
+            return
+        self.dig_win = DigSite(self)
+
     def unlock_world(self, name, parent):
         from tkinter import messagebox
         w = WORLD_BY_NAME[name]
@@ -9947,6 +10058,8 @@ class App:
             return self.awaken_level(AWAKEN_BASE[kind]) >= awaken_stage(kind) and self.is_unlocked(AWAKEN_BASE[kind])
         if kind in LEGENDS:
             return kind in self.save.get("legends", [])
+        if kind in EGYPT_GODS:
+            return kind in self.save.get("gods", [])       # 🏺 dug up at the Dig Site
         if kind in WORLD_OF:
             return WORLD_OF[kind] in self.save.get("worlds", [])
         if kind in GIFTS:

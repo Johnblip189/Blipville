@@ -25,6 +25,8 @@ for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS
     }
 data = {
     "kinds": kinds,
+    "egyptGods": list(bl.EGYPT_GODS),
+    "dig": {"cols": bl.DIG_COLS, "rows": bl.DIG_ROWS, "tries": bl.DIG_TRIES, "treasures": bl.DIG_TREASURES, "hearts": bl.DIG_HEARTS},
     "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS, "creator": getattr(bl, "CREATOR_KINDS", [])},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},

@@ -11,6 +11,7 @@
   const GIFTS = new Set(D.groups.gifts || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
+  const EGYPT = new Set(D.egyptGods || []), DIG = D.dig || { cols: 6, rows: 5, tries: 8, treasures: 4, hearts: 3 };
   const AWAKEN_FORM = D.awakenForm || {};
   const AWAKEN_CHAIN = D.awakenChain || Object.fromEntries(Object.entries(AWAKEN_FORM).map(([b, f]) => [b, [f]]));   // some Blips awaken up to 3 times
   const AWAKEN_BASE = Object.fromEntries(Object.entries(AWAKEN_CHAIN).flatMap(([b, fs]) => fs.map((f) => [f, b])));
@@ -42,6 +43,8 @@
   // ------------------------------------------------------------------ save (per device)
   let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
   try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
+  if (!save.worlds.includes("Egypt World")) save.worlds.push("Egypt World");     // 🏺 free for everyone; its gods are dug up
+  save.gods = save.gods || [];
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
   function persist(now = false) {
@@ -123,7 +126,7 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const isUnlocked = (k) => EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -953,7 +956,7 @@
     "days-7": () => stat("days") >= 7, "full-town": () => pets.length >= maxPets(), "hats-5": () => save.hatsOwned.length >= 5,
     "egg-1": anyU(D.groups.rare), "egg-all": allU(D.groups.rare), "cryptid-1": anyU(D.groups.cryptids), "cryptid-all": allU(D.groups.cryptids),
     "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts),
-    "world-1": () => save.worlds.length >= 1, "world-all": () => save.worlds.length >= WORLDS.length,
+    "world-1": () => WORLDS.some((w) => w.cost > 0 && save.worlds.includes(w.name)), "world-all": () => WORLDS.every((w) => !w.cost || save.worlds.includes(w.name)),
     "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
     "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "knight-3": () => awLevel("Phantom Knight") >= 3, "boss-1": () => !!save.beatCreator, "bond-5": () => pets.some((q) => bondLevel(q.bond || 0) >= 5), "catch-40": () => stat("catch_best") >= 40, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
   };
@@ -1448,7 +1451,7 @@
                     ["Ghosts 👻 (they drift by at night: tap one while it glows!)", D.groups.ghosts || []],
                     ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (EGYPT.has(k) ? "🏺 dig it up in Egypt World" : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const world = WORLDS.find((w) => w.tab === title);
@@ -1577,12 +1580,64 @@
     row("🏠", "Home", "your town, with the seasons", here ? "Go home" : "You're here", here ? "" : "here", () => here && visitWorld(null));
     for (const w of WORLDS) {
       const n = Object.keys(WORLD_OF).filter((k) => WORLD_OF[k] === w.name).length;
-      if (save.worlds.includes(w.name)) row(w.icon, w.name, `${n} Blips unlocked`, here === w.name ? "You're here" : "Visit", here === w.name ? "here" : "", () => here !== w.name && visitWorld(w.name));
+      if (!w.cost) row(w.icon, w.name, `free! dig up its ${n} gods (${n - Object.keys(WORLD_OF).filter((k) => WORLD_OF[k] === w.name && !isUnlocked(k)).length} found)`, "🏺 Dig", "", () => openDig());
+      else if (save.worlds.includes(w.name)) row(w.icon, w.name, `${n} Blips unlocked`, here === w.name ? "You're here" : "Visit", here === w.name ? "here" : "", () => here !== w.name && visitWorld(w.name));
       else row(w.icon, w.name, `unlocks ${n} Blips in ${w.tab}`, `🔒 ${w.cost} 💖`, "locked", (b) => unlockWorld(w, b));
     }
     openSheet("worldSheet");
   }
   $("worldBtn").onclick = openWorlds;
+
+  // 🏺 Dig Site: one hidden god per board, hot/cold hints, a few heart treasures, free new boards
+  let dig = null;
+  const digHint = (d) => (d === 1 ? ["🔥", "HOT!"] : d === 2 ? ["☀️", "warm"] : d === 3 ? ["🌤️", "lukewarm"] : ["❄️", "cold"]);
+  function newDig() {
+    const left = [...EGYPT].filter((k) => !isUnlocked(k));
+    const cells = []; for (let y = 0; y < DIG.rows; y++) for (let x = 0; x < DIG.cols; x++) cells.push([x, y]);
+    for (let i = cells.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [cells[i], cells[j]] = [cells[j], cells[i]]; }
+    dig = { god: left.length ? pick(left) : null, at: cells[0], treasure: new Set(cells.slice(1, 1 + DIG.treasures).map((c) => c.join())), dug: {}, tries: DIG.tries, over: false };
+    $("digMsg").textContent = dig.god ? `A god is hiding in the sand! ${DIG.tries} digs. Every dig tells you how close you are.` : "You've found every god! 🏆 Dig for treasure anyway.";
+    drawDig();
+  }
+  function drawDig() {
+    const g = $("digGrid"); g.innerHTML = ""; g.style.gridTemplateColumns = `repeat(${DIG.cols}, 1fr)`;
+    for (let y = 0; y < DIG.rows; y++) for (let x = 0; x < DIG.cols; x++) {
+      const b = document.createElement("button"), got = dig.dug[x + "," + y];
+      if (got) b.classList.add("dug");
+      if (got === "god") { const c = document.createElement("canvas"); c.width = 64; c.height = 52; drawGrid(c.getContext("2d"), grid(dig.god, 0, { t: 0, face: "happy" }), 0, 0, 4); b.appendChild(c); }
+      else if (got) b.textContent = got;
+      b.onclick = () => digAt(x, y);
+      g.appendChild(b);
+    }
+    $("digNew").textContent = `New dig site · ⛏️ ${dig.tries} digs left`;
+  }
+  function digAt(x, y) {
+    const key = x + "," + y;
+    if (dig.over || dig.dug[key]) return;
+    dig.tries--;
+    if (dig.god && x === dig.at[0] && y === dig.at[1]) {
+      dig.dug[key] = "god"; dig.over = true; save.gods.push(dig.god); persist(true); sfx("fanfare"); vibrate([30, 40, 30]);
+      $("digMsg").textContent = `You dug up ${dig.god}! 🏺✨ They're joining your town.`;
+      const p = addPet(dig.god, { quiet: true }); if (p) say(p, "i'm free! thank you! 🏺", 4);
+      checkTrophies();
+    } else if (dig.treasure.has(key)) {
+      dig.dug[key] = "💖"; save.hearts += DIG.hearts; updateHearts(true); $("digMsg").textContent = `Treasure! +${DIG.hearts} 💖`;
+    } else {
+      const d = dig.god ? Math.abs(x - dig.at[0]) + Math.abs(y - dig.at[1]) : 9, [icon, word] = digHint(d);
+      dig.dug[key] = icon; $("digMsg").textContent = dig.god ? `${word}…` : "just sand…";
+    }
+    if (!dig.over && dig.tries <= 0) {
+      dig.over = true;
+      if (dig.god) { dig.dug[dig.at.join()] = "👣"; $("digMsg").textContent = "Out of digs! The god slipped away (they were where the 👣 are). Try a new dig site!"; }
+    }
+    drawDig();
+  }
+  function openDig() {
+    if (hereWorld() !== "Egypt World") visitWorld("Egypt World");
+    if (!dig || dig.over) newDig(); else drawDig();
+    openSheet("digSheet");
+  }
+  $("digNew").onclick = newDig;
 
   // eggs
   const EGG = ["....oooo....", "...oeeeeo...", "..oeesseeo..", ".oeeeeeeseo.", ".oeseeeeeeo.", "oeeeeeeeeseo",

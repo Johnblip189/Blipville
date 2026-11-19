@@ -7,7 +7,9 @@ make Blipville what it is. This is the real thing.
 - 🏺 **Egypt World: 30 Egyptian gods!** Ra, Anubis, Horus, Bastet, Thoth, Sobek, Isis, Osiris, Set, Hathor, Khepri, Ammit,
   Sekhmet, Ptah, Amun, Khnum, Bes, Taweret, Nut, Geb, Shu, Tefnut, Ma'at, Nephthys, Wadjet, Nekhbet, Apep, Khonsu, Hapi and
   Serket, each with their sacred animal, a gold collar and their crown or symbol, in Sacred, Moonlit and Sunset colors.
-  Unlock Egypt World (200 💖) to get them all and visit its golden desert. Gods hit a little harder in the Arena.
+  Egypt World is **free**, but the gods have to be **found**: open the 🏺 **Dig Site**, where each board of sand hides one god.
+  Every dig tells you how close you are (🔥 hot, ☀️ warm, ❄️ cold), you get 8 digs per board, and there's heart treasure
+  in the sand. New boards are free. Gods hit a little harder in the Arena.
 - 🖍️ **The Redraw: every Blip has a new look.** Rounder shapes, bigger features and new shading on all of them. Miss the
   old look? Every Blip has a 🍬 **Classic** color (called **Original** for the few that already had a Classic) that shows the
   new drawing but glitches back to its old one every few seconds. Your chosen colors stay the same.

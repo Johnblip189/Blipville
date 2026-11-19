@@ -323,3 +323,11 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 #arenaMoves .move:disabled img.px { opacity: .4; }
 #colorChips button small.price { display: inline-flex; align-items: center; gap: 2px; margin-left: 4px; font-size: 11px; font-weight: 800; color: #ffd23a; }
 #colorChips button small.price img.px { width: 14px; height: 14px; }
+
+/* 🏺 Dig Site */
+#digGrid { display: grid; gap: 4px; margin: 10px 0; padding: 6px; border-radius: 10px; background: #c89a48; }
+#digGrid button { aspect-ratio: 1; border: 2px solid #8a6020; border-radius: 6px; background: #e8c878; font-size: 20px; padding: 0; display: grid; place-items: center; }
+#digGrid button.dug { background: #a87a30; cursor: default; }
+#digGrid canvas { width: 90%; image-rendering: pixelated; }
+#digMsg { min-height: 2.6em; }
+#digNew { width: 100%; padding: 12px; border: 0; border-radius: 12px; background: #e8a020; color: #2a1406; font: inherit; font-weight: 700; cursor: pointer; }

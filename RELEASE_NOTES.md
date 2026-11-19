@@ -45,12 +45,12 @@ make Blipville what it is. This is the real thing.
   Awaken it and it opens into the **Puppet Master**: a cracked porcelain mask with red tears, a little top hat, and a
   see-through, flickering little Blip soul dangling from its puppet strings.
 - 🤖 **Silvertear, a new mecha kaiju:** silver plates over a charcoal frame, a sharp brow horn with swept-back fins,
-  a dark visor with wide pixel eyes, crimson tear ridges down its cheeks, a segmented chin guard and a segmented tail.
-  It powers up behind the city now and then: click it 3 times before it stomps off. Colors: Chrome, Gunmetal,
+  a dark visor with wide pixel eyes, crimson tear ridges down her cheeks, a segmented chin guard and a segmented tail.
+  She powers up behind the city now and then: click her 3 times before she stomps off. Colors: Chrome, Gunmetal,
   Gold Plated (with emerald eyes) and 📺 **Showa**, the boxy 1970s tin-robot model with its own drawing: bolt antennae,
   a riveted brow, amber eyes in a wide visor slot, clean riveted cheeks, a red/yellow/cyan chest strip and a stiff tail.
-- 💬 **Chat with your Blips (starting with Silvertear):** right-click Silvertear → 💬 Chat (or tap it → 💬 Chat on
-  the website) and talk by picking what to say. Ask about its tears, where it came from, or whether it wants to stomp
+- 💬 **Chat with your Blips (starting with Silvertear):** right-click Silvertear → 💬 Chat (or tap her → 💬 Chat on
+  the website) and talk by picking what to say. Ask about her tears, where she came from, or whether she wants to stomp
   something. Chatting builds friendship. More Blips will learn to chat after 1.0.
 - 🧸 **Bad Dreams:** plush versions of the Night Shift crew: Bear, Bunny, Hen, Fox, the Wind-Up Hare and the Puppet
   Master. All day they're harmless plushies that just sit there… but from **midnight to 6 AM** (your clock) they burst

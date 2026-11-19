@@ -3637,7 +3637,7 @@ CREATOR_HASH = "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56
 CREATOR_TIER = {"Blipmaker": 2.0, "Byte": 1.3, "Diamond Ladybug": 1.3}
 CREATOR_BOSS = ["The Blipmaker (boss)", [["Blipmaker", 0, 0], ["Lurker", 0, 3], ["Phantom Knight", 0, 3]]]
 CREATOR_BOSS_REWARD = 50
-# 🤖 Silvertear: a mecha kaiju (silver plates over a charcoal frame, a brow horn, swept-back fins, a dark visor with wide
+# 🤖 Silvertear (she/her): a mecha kaiju (silver plates over a charcoal frame, a brow horn, swept-back fins, a dark visor with wide
 # pixel eyes, crimson tear ridges, a segmented chin guard and a segmented tail sticking out the back).
 KAIJU["Silvertear"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "mouth": False,
     "lines": ["*servos whirr*", "systems online. hello, tiny town.", "*a single crimson tear rolls down*",

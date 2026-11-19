@@ -6365,29 +6365,65 @@ def app_dir():
     return os.path.dirname(sys.executable if getattr(sys, "frozen", False) else os.path.abspath(__file__))
 
 
+CUSTOM_MOVES = ("walk", "hop", "float", "flutter")
+
+
+def _hex_color(c):
+    import re
+    return isinstance(c, str) and re.fullmatch(r"#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})", c) is not None
+
+
 def load_custom_blips():
-    """Read my_blips.json (next to the app, or in the save folder) and register each Blip as a kind."""
+    """Read my_blips.json (next to the app, or in the save folder) and register each Blip as a kind.
+    Everything is checked first: a bad file or a bad Blip is skipped (with a note in blipville.log) and the rest still
+    load. Custom Blips can't replace built-in ones, and the file itself is never changed."""
     for path in (os.path.join(app_dir(), "my_blips.json"), os.path.join(os.path.dirname(save_path()), "my_blips.json")):
+        if not os.path.exists(path):
+            continue
         try:
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-        except Exception:  # noqa: BLE001  (no file, or a typo in it: just skip)
+        except Exception as e:  # noqa: BLE001
+            log(f"my_blips.json: couldn't read {path} ({e})")
             continue
-        for b in data.get("blips", []):
-            try:
-                name, body, colors = str(b["name"])[:20], list(b["body"]), dict(b["colors"])
-                eyes = int(b.get("eyes", 5))
-                if len(body) != 12 or any(len(r) != 16 for r in body) or "o" not in colors or not 0 <= eyes <= 10:
-                    continue
-                colors.setdefault("e", "#1a1024")
-                VARIANTS[name] = {"body": body, "eyes": eyes, "mouth": bool(b.get("mouth", True)), "feet": FEET_STD,
-                                  "dx": 0, "move": b.get("move", "walk"), "lines": list(b.get("lines", [])) or ["hi!"],
-                                  "colors": [{"name": "Original", **colors}], "speed": 1.0}
-                if name not in CUSTOM_KINDS:
-                    CUSTOM_KINDS.append(name)
-                    KINDS.append(name)
-            except Exception:  # noqa: BLE001
+        blips = data.get("blips") if isinstance(data, dict) else None
+        if not isinstance(blips, list):
+            log(f"my_blips.json: {path} needs a \"blips\": [ ... ] list; skipped")
+            continue
+        for i, b in enumerate(blips):
+            why = None
+            if not isinstance(b, dict):
+                why = "not a Blip (should be { ... })"
+            else:
+                name, body, colors = b.get("name"), b.get("body"), b.get("colors")
+                eyes = b.get("eyes", 5)
+                if not isinstance(name, str) or not name.strip():
+                    why = "needs a name"
+                elif name.strip()[:20] in VARIANTS and name.strip()[:20] not in CUSTOM_KINDS:
+                    why = f"the name {name!r} is already a Blipville Blip"
+                elif not isinstance(body, list) or len(body) != 12 or any(not isinstance(r, str) or len(r) != 16 for r in body):
+                    why = "the body must be 12 rows of 16 characters"
+                elif not isinstance(colors, dict) or "o" not in colors:
+                    why = "needs colors, including \"o\" (the outline)"
+                elif any(not isinstance(k, str) or len(k) != 1 or not _hex_color(v) for k, v in colors.items() if k != "name"):
+                    why = "every color must be one letter mapped to a color like \"#ff8800\""
+                elif any(ch != "." and ch not in colors for r in body for ch in r):
+                    why = "the body uses a letter that has no color"
+                elif isinstance(eyes, bool) or not isinstance(eyes, int) or not 0 <= eyes <= 10:
+                    why = "eyes must be a row number from 0 to 10"
+            if why:
+                log(f"my_blips.json: Blip #{i + 1} skipped: {why}")
                 continue
+            name = name.strip()[:20]
+            move = b.get("move") if b.get("move") in CUSTOM_MOVES else "walk"
+            lines = [str(t)[:80] for t in b.get("lines", []) if isinstance(t, (str, int, float))] if isinstance(b.get("lines"), list) else []
+            cols = {k: v for k, v in colors.items() if k != "name"}
+            cols.setdefault("e", "#1a1024")
+            VARIANTS[name] = {"body": list(body), "eyes": eyes, "mouth": bool(b.get("mouth", True)), "feet": FEET_STD,
+                              "dx": 0, "move": move, "lines": lines or ["hi!"], "colors": [{"name": "Original", **cols}], "speed": 1.0}
+            if name not in CUSTOM_KINDS:
+                CUSTOM_KINDS.append(name)
+                KINDS.append(name)
 
 
 # 💾 Save safety: every load is checked field by field (a wrong type is fixed instead of crashing later), the last good

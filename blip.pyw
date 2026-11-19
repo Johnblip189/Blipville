@@ -3636,6 +3636,57 @@ for _base, _a in [(b, a) for b, a in AWAKENED.items()] + [(b, st) for b, sts in 
                             "feet": FEET_STD if _a.get("feet", True) else None, "dx": _a.get("dx", 0), "move": _a["move"],
                             "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0), "shifty": False,
                             "ghost": _a.get("ghost", False), "awakened": _base, "soul": _a.get("soul", "")}
+# 🖍️ The 1.0 Redraw: every Blip gets a new drawing. The old one lives on in a "Classic" color (added at the end, so
+# nobody's chosen color changes) that shows the new drawing but glitches back to the old one every few seconds.
+# >>> REDRAW DATA (kind: 12 rows of 16; written by tools/redraw_merge.py)
+REDRAW = {
+ "Blip": [".oo..........oo.", ".obo........obo.", ".obpo.oooo.opBo.", ".obbBo*bbBobbBo.", "obbbbb*bbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbllbbbbbBo", ".obbbbllllbbbBo.", ".oBBbllllllbBBo.", "..ooBBBBBBBBoo.."],
+ "Bun": ["..oo........oo..", ".o*Bo......obBo.", ".o*po......opBo.", ".obpo......opBo.", "..oboooooooobo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbllbbbbbBo", ".oBBbbllllbbBBo.", "..ooBBLLLLBBoo.."],
+ "Sprout": [".ooo........ooo.", "oggGo......oggGo", "ogggGoo..oogggGo", ".oggggTootgggGo.", "..oooootTooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbllbbbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Boo": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbBBBbbbbBBBbBo", ".obo.oBBBBo.obo."],
+ "Fuzz": ["...o........o...", "....o......o....", ".oo..oooooo..oo.", "owWoo*bbbbBoowWo", "owlWo*bbbbBowlWo", "owWobbbbbbbbowWo", "oWWobbbbbbbbowWo", ".owopbbbbbbpowo.", "..oobbbllbbBoo..", "...obbllllbBo...", "...oBBllllBBo...", "....ooBBBBoo...."],
+ "Spike": ["..s....sS....s..", "..sS..sssS..sS..", ".ossSosssSossSo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbllbbbbbBo", "oBbbbbllllbbbbBo", ".oBBbllllllbBBo.", "..ooBBBBBBBBoo.."],
+ "Aardvark": [".oo..........oo.", ".oao........oao.", ".oaAo......oaAo.", "..oaooooooooao..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllllllbbbBo", "oBbbblllllllbbBo", ".oBBblLllLllBBo.", "..ooBBoNNoBBoo.."],
+ "Ant": [".o............o.", "..o..........o..", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBpBBbbbbBBpBo.", "..oooobbbBoooo..", "k..obbbbbbbBo..k", "kk.oBBBBBBBBo.kk", "..k.oooooooo.k.."],
+ "Anteater": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbllllbbbbBo", "obpbbbLllLbbbpBo", "obbbbBolLobbbbBo", "oWbbbBolLobbbbWo", ".oWWBBolLoBBWWo.", "..oooooNNooooo.."],
+ "Antelope": [".h............h.", "hH............hH", ".hH..........hH.", "..hooooooooooh..", ".obbbbbbbbbbbBo.", "oabbbbbbbbbbbbAo", "obwbbbbbbbbbbwBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Armadillo": ["..oo........oo..", ".oao.oooooo.oao.", ".oaoosbsbsbSoao.", "..osbsbsbsbsBo..", ".osbsbsbsbsbsBo.", "olllllllllllllLo", "olllllllllllllLo", "olllllllllllllLo", "olpllllllllllpLo", "oLlllllnnlllllLo", ".oLLllllllllLLo.", "..ooLLLLLLLLoo.."],
+ "Axolotl": ["a..............a", ".a.oooooooooo.a.", "aAo*bbbbbbbbBoaA", ".ao*bbbbbbbbBoa.", "aAobbbbbbbbbBoaA", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbbbllllbbbbBo", ".oBBllllllllBBo.", "..ooBBBBBBBBoo.."],
+ "Badger": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbwwbbbbBo.", "o*wbbbbwwbbbbwBo", "o*wbbbbwwbbbbwBo", "obpbbblwwlbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Bat": ["..o..........o..", "..oo........oo..", "..obo.oooo.obo..", "o.obBo*bbBobBo.o", "owobbb*bbbbbBowo", "owWobbbbbbbbowWo", "owWobbbbbbbbowWo", "owWWobbbbbBowWWo", "owowobbllbBowowo", "o.o.oBbllbBo.o.o", ".....oBLBLo.....", "......oooo......"],
+ "Beagle": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", ".oao*bbbbbbBoao.", "oaAobbbbbbbBoaAo", "oaAobbbbbbbboaAo", "oaAobbbbbbbboaAo", "oAAopbbllbbpoaAo", ".oaobllnnllBoao.", ".ooobllllllBooo.", "...oBBLLLLBBo...", "....oooooooo...."],
+ "Bear": [".ooo........ooo.", "oaaAo......oaaAo", "oaaAooooooooaaAo", ".oobbbbbbbbbBoo.", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Beaver": ["................", ".oo..........oo.", "oaAo.oooooo.oaAo", ".oo*bbbbbbbbBoo.", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbblddddlbbbBo", ".oBBbbbkkbbbBBo.", "..ooBBBkkBBBoo.."],
+ "Bee": ["...o........o...", "wW..o......o..wW", "wwwWoooooooowwwW", ".wWo*bbbbbbBowwW", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "osssssssssssssSo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oSSssssssssSSo.", "..ooBBBSSBBBoo.."],
+ "Beluga": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbmbbbbmbbbBo", ".oBBbbmmmmbbBBo.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Bison": ["h..............h", "hH............hH", ".hH.oooooooo.hH.", "..hoaaaaaaaAoh..", ".oaaaaaaaaaaaAo.", "oaabbbbbbbbbbaAo", "oaabbbbbbbbbbaAo", "oabpbbllllbbpbAo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Bulldog": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbaaaaaaaabpBo", "obaaaannnnaaaaBo", "oaaaaaaaaaaaaaAo", "oAWAwaaaaaawAWAo", ".oooAAAAAAAAooo."],
+ "Butterfly": ["...o........o...", "oo..o......o..oo", "owwWoooooooowwWo", "owkWo*bbbbBowkWo", "owwWo*bbbbBowwWo", "oswWobbbbbbowwSo", ".oSWobbbbbboWSo.", "..ooobbbbbBooo..", ".owWobpbbpBowWo.", "oWkWoBbbbbBowkWo", ".oWWooBBBBooWWo.", "..oo..oooo..oo.."],
+ "Camel": ["................", "......oooo......", ".....oaaaAo.....", ".oo.ooaaaAoo.oo.", "oaAo*bbbbbbBoaAo", ".oobbbbbbbbbBoo.", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbbblkllklbbbBo", "oBbbbllllllbbbBo", ".oBBBLlkklLBBBo.", "..ooooBBBBoooo.."],
+ "Capybara": [".......g........", "......rrrR......", ".oo..orrrRo..oo.", ".oaooooooooooao.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbnnnnnnnnbbBo", "obbnndnnnndnnbBo", "oBbnnnnnnnnnnbBo", ".oBBnnnnnnnnBBo.", "..ooBBBBBBBBoo.."],
+}
+# <<< REDRAW DATA
+
+
+def _apply_redraws():
+    for kind, rows in REDRAW.items():
+        v = VARIANTS.get(kind)
+        if not v or v["body"] == rows:
+            continue
+        old = v["body"]
+        v["body"] = rows
+        v.pop("alt", None)                      # the old wing-flap frame belongs to the old drawing
+        cols = v.get("colors") or PALETTES
+        base = cols[PALETTE_INDEX[v["palette"]]] if "palette" in v and not v.get("colors") else cols[0]
+        if not v.get("colors"):
+            v["shared_palettes"] = True         # critters keep their usual starting color
+        names = {c.get("name") for c in cols}
+        classic = {k: c for k, c in base.items() if k not in ("art", "unlock", "glitch", "glitch_art", "solid")}
+        classic.update(name="Classic" if "Classic" not in names else "Original", glitch_art=old)
+        v["colors"] = list(cols) + [classic]
+
+
+_apply_redraws()
 GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
 GHOST_KINDS = list(GHOSTS)        # met at night
 LEGEND_KINDS = list(LEGENDS)      # found only while visiting their world
@@ -3954,7 +4005,7 @@ def kind_colors(kind):
 
 def default_color(kind):
     v = VARIANTS[kind]
-    return PALETTE_INDEX[v["palette"]] if "palette" in v and not v.get("colors") else 0
+    return PALETTE_INDEX[v["palette"]] if "palette" in v and (not v.get("colors") or v.get("shared_palettes")) else 0
 SUGGEST_URL = "https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml"
 SUPPORT_URL = "https://github.com/Johnblip189/blipville#support-blipville"
 NOTICE_ID = "1.0"
@@ -5582,6 +5633,8 @@ class Blip:
             pal = {**colors[pal["glitch"]], **v.get("extra", {})}   # ⚡ a split-second flicker back to an old look
         g = [[None] * ART_W for _ in range(ART_H)]
         body = pal.get("art") or v["body"]          # some colors come with their own markings
+        if pal.get("glitch_art") and glitching(now + id(self) % 50 / 10):
+            body = pal["glitch_art"]                 # 📼 Classic: a split-second flicker back to the old drawing
         if v.get("alt") and self.state in ("walk", "fall", "held") and int(now * 10) % 2:
             body = v["alt"]                        # wing flap
         squash = now < self.squash_until
@@ -5590,7 +5643,7 @@ class Blip:
         for y, row in enumerate(body):
             for x, ch in enumerate(row):
                 if ch != "." and y + shift < ART_H:
-                    g[y + shift][x] = pal.get(ch, pal["o"])
+                    g[y + shift][x] = px_color(pal, ch)
         if not lying and v["feet"]:
             feet_set = v["feet"]
             if self.state in ("fall", "held", "jump") or self.lift(now) > 3:
@@ -5983,7 +6036,7 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
     for yy, row in enumerate(body):
         for xx, ch in enumerate(row):
             if ch != ".":
-                g[yy][xx] = pal.get(ch, pal["o"])
+                g[yy][xx] = px_color(pal, ch)
     if v["feet"]:
         for xx, ch in enumerate(v["feet"]["stand"]):
             if ch != "." and 0 <= xx + v.get("dx", 0) < ART_W:
@@ -6320,6 +6373,31 @@ def ghost_hours():
     return h >= 19 or h < 7
 
 
+def _mix(c1, c2, f):
+    a, b = int(c1[1:], 16), int(c2[1:], 16)
+    return "#%02x%02x%02x" % tuple(round(((a >> sh) & 255) * (1 - f) + ((b >> sh) & 255) * f) for sh in (16, 8, 0))
+
+
+_PX = {}
+
+
+def px_color(pal, ch):
+    """Sprite letter -> color. A capital letter is a darker shade of its small letter, and * is a shine on the body color
+    (the 1.0 redraws use these for shading, so no palette needs extra colors)."""
+    c = pal.get(ch)
+    if c:
+        return c
+    key = (ch, pal.get(ch.lower()), pal.get("b"), pal["o"])
+    if key not in _PX:
+        if ch == "*":
+            _PX[key] = _mix(pal.get("b", pal["o"]), "#ffffff", 0.5)
+        elif ch.isupper() and ch.lower() in pal:
+            _PX[key] = _mix(pal[ch.lower()], "#000000", 0.25)
+        else:
+            _PX[key] = pal["o"]
+    return _PX[key]
+
+
 def glitching(t):
     """⚡ Glitchy colors flicker to another look twice, very briefly, every 5 seconds."""
     p = t % 5.0
@@ -6422,7 +6500,7 @@ class Sighting:
         v = VARIANTS[self.kind]
         if self.kind in LEGENDS or self.kind in GHOSTS:   # legends and ghosts show up in full color
             pal = {**kind_colors(self.kind)[0], **v.get("extra", {})}
-            g = [[pal.get(ch, pal["o"]) if ch != "." else None for ch in row] + [None] * (ART_W - len(row)) for row in v["body"]]
+            g = [[px_color(pal, ch) if ch != "." else None for ch in row] + [None] * (ART_W - len(row)) for row in v["body"]]
             g.append([None] * ART_W)
             if v.get("feet"):
                 step = v["feet"]["walk1"] if int(now * 6) % 2 else v["feet"]["walk2"]

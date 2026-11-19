@@ -388,6 +388,19 @@
   }
 
   // ------------------------------------------------------------------ pixel art (same rules as the desktop app)
+  // sprite letter -> color: a capital letter is a darker shade of its small letter, * is a shine on the body color (1.0 redraws)
+  const mixHex = (c1, c2, f) => "#" + [1, 3, 5].map((i) => Math.round(parseInt(c1.slice(i, i + 2), 16) * (1 - f) + parseInt(c2.slice(i, i + 2), 16) * f).toString(16).padStart(2, "0")).join("");
+  const pxCache = new Map();
+  function pxColor(pal, ch) {
+    if (pal[ch]) return pal[ch];
+    const lo = ch.toLowerCase(), key = ch + (pal[lo] || "") + (pal.b || "") + pal.o;
+    let c = pxCache.get(key);
+    if (!c) {
+      c = ch === "*" ? mixHex(pal.b || pal.o, "#ffffff", 0.5) : ch !== lo && pal[lo] ? mixHex(pal[lo], "#000000", 0.25) : pal.o;
+      pxCache.set(key, c);
+    }
+    return c;
+  }
   const glitching = (t) => { const p = ((t % 5) + 5) % 5; return p < 0.12 || (p >= 0.24 && p < 0.34); };   // twice, briefly, every 5 s
   const isNight = () => { const h = new Date().getHours(); return h >= 22 || h < 6; };
   function grid(kind, colorIdx, opt = {}) {
@@ -396,10 +409,11 @@
     let pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
     if (opt.live && pal.glitch != null && glitching(t + (opt.phase || 0))) pal = Object.assign({}, cols[pal.glitch], k.extra || {});   // ⚡ flicker to an old look
     let body = pal.art || k.body;
+    if (opt.live && pal.glitch_art && glitching(t)) body = pal.glitch_art;      // 📼 Classic: flicker back to the old drawing
     if (k.alt && ["walk", "fall", "held"].includes(st) && Math.floor(t * 10) % 2) body = k.alt;
     const g = Array.from({ length: 13 }, () => Array(16).fill(null));
     const lying = st === "sleep" || opt.squash, shift = lying ? 1 : 0;
-    body.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== "." && y + shift < 13) g[y + shift][x] = pal[ch] || pal.o; }));
+    body.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== "." && y + shift < 13) g[y + shift][x] = pxColor(pal, ch); }));
     if (!lying && k.feet) {
       const f = k.feet;
       const feet = st === "fall" || st === "held" || (opt.lift || 0) > 3 ? f.air : st === "walk" ? (Math.floor(t * 6) % 2 ? f.walk1 : f.walk2) : f.stand;

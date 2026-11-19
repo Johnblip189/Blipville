@@ -1,0 +1,2 @@
+version v1.0.0-test, commit 32f54f96c5bcacefc1f53179f59182b5f4d61061, ref refs/heads/release-1.0, publish false
+result: success

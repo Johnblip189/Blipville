@@ -3637,9 +3637,9 @@ CREATOR_HASH = "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56
 CREATOR_TIER = {"Blipmaker": 2.0, "Byte": 1.3, "Diamond Ladybug": 1.3}
 CREATOR_BOSS = ["The Blipmaker (boss)", [["Blipmaker", 0, 0], ["Lurker", 0, 3], ["Phantom Knight", 0, 3]]]
 CREATOR_BOSS_REWARD = 50
-# 🤖 Silvertear (she/her): a mecha kaiju (silver plates over a charcoal frame, a brow horn, swept-back fins, a dark visor with wide
+# 🤖 Silvertear-03 (she/her): a mecha kaiju (silver plates over a charcoal frame, a brow horn, swept-back fins, a dark visor with wide
 # pixel eyes, crimson tear ridges, a segmented chin guard and a segmented tail sticking out the back).
-KAIJU["Silvertear"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "mouth": False,
+KAIJU["Silvertear-03"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "mouth": False,
     # Personality: outside, a hyper-serious tactical bodyguard who talks in clipped mission logs, scans cookies for
     # "threat levels" and stands guard from 7 PM to 7 AM. Inside: fiercely loyal to her keeper, secretly loves nap time,
     # and short-circuits (her whole faceplate flushes pink) whenever anyone calls her cute.
@@ -3673,7 +3673,7 @@ KAIJU["Silvertear"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "
 # 💬 Chats: talk to a Blip by picking ready-made lines. Each node is what the Blip says plus your choices
 # [what you say, next node]; "end" closes the chat. Add a Blip here (and nothing else) to let it chat.
 CHATS = {
-    "Silvertear": {
+    "Silvertear-03": {
         "start": {"say": "LOG: keeper approaching. *visor brightens* state your request.",
                   "options": [["you're so cute!", "cute"], ["why are you crying?", "tears"], ["are you sleepy?", "nap"],
                               ["what are you?", "origin"], ["wanna stomp something?", "stomp"], ["bye!", "bye"]]},
@@ -3830,7 +3830,7 @@ for _k, _p in PERSONALITIES.items():
 # and tier: robots and mechs are square and beepy, ghosts are soft sine waves, kaiju are deep, the rest are triangle.
 VOICES = {"Blip": (520, "tri"), "Bun": (640, "sine"), "Sprout": (480, "tri"), "Boo": (560, "sine"), "Fuzz": (420, "tri"),
           "Spike": (360, "square"), "Robo Bear": (220, "square"), "Robo Bunny": (440, "square"), "Robo Hen": (380, "square"),
-          "Robo Fox": (500, "square"), "Silvertear": (300, "square")}
+          "Robo Fox": (500, "square"), "Silvertear-03": (300, "square")}
 TYPE_CPS = 32                     # letters per second a speech bubble types out
 
 
@@ -5917,7 +5917,7 @@ class Blip:
             log(f"selftest: menu for {self.name}")
         can_chat = AWAKEN_BASE.get(self.kind, self.kind) in CHATS
         self.menu.entryconfigure(self.chat_entry, state="normal" if can_chat else "disabled",
-                                 label="💬 Chat…" if can_chat else "💬 Chat (only Silvertear can chat so far)")
+                                 label="💬 Chat…" if can_chat else "💬 Chat (only Silvertear-03 can chat so far)")
         self.night_menu.delete(0, "end")
         for k in NIGHT_SHIFT:
             if self.app.is_unlocked(k):
@@ -6762,13 +6762,34 @@ def _num(v, default=0.0, lo=None, hi=None):
     return v
 
 
+KIND_RENAMES = {"Silvertear": "Silvertear-03"}     # old kind name -> new one; saves are updated when they load
+
+
+def rename_kinds(d):
+    """Move a save over to renamed Blips (in the town, every unlock list, skins, friendship and awakening records)."""
+    def ren(name):
+        if not isinstance(name, str):
+            return name
+        base, sep, rest = name.partition(":")                       # skins look like "Kind:Color"
+        return KIND_RENAMES.get(base, base) + sep + rest if sep else KIND_RENAMES.get(name, name)
+    for k, v in list(d.items()):
+        if isinstance(v, list):
+            d[k] = [ren(x) for x in v]
+    for t in d.get("town", []) if isinstance(d.get("town"), list) else []:
+        if isinstance(t, dict) and "kind" in t:
+            t["kind"] = ren(t["kind"])
+    if isinstance(d.get("awaken_level"), dict):
+        d["awaken_level"] = {ren(k): v for k, v in d["awaken_level"].items()}
+    return d
+
+
 def sanitize_save(data):
     """Return (clean save, list of things that had to be fixed). Missing fields are fine (older saves): the game
     fills in defaults. Only fields of the wrong type are fixed; everything valid is kept exactly as it was."""
     fixed = []
     if not isinstance(data, dict):
         return {}, ["the save wasn't a list of settings"]
-    d = dict(data)
+    d = rename_kinds(dict(data))
     for k in SAVE_COUNTS:
         if k in d and (isinstance(d[k], bool) or not isinstance(d[k], int) or d[k] < 0):
             d[k] = int(_num(d[k], 0, 0)); fixed.append(k)
@@ -7215,7 +7236,7 @@ KAIJU_SCENES = {
                   "scale": 3, "keys": [[0, -30, 0], [6, 50, 0], [7.5, 50, 0], [12, 130, 0]]},
 }
 CRYPTID_SCENES.update({"Yowie": {"hint": "something hairy is crossing the outback…", "props": [["cactus", 20, 0, "back"], ["sand", 50, 0, "front"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Ogopogo": {"hint": "three humps in the lake… or is it one?", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [6, 40, -1], [7.5, 44, -14], [10, 66, -14], [11.5, 70, 0], [16, 86, 0], [17.5, 90, -14]]}, "Ahool": {"hint": "AHOOOL! something is calling over the jungle…", "props": [["pine", 20, 0, "back"], ["bush", 70, 0, "front"]], "keys": [[0, -12, 30], [5, 34, 40], [9, 54, 28], [13, 78, 42], [17, 115, 32]]}, "Grootslang": {"hint": "a rumble from the cave… and a trumpet?", "props": [["wall", 50, 0, "back"], ["orb", 80, 6, "back"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}, "Teakettler": {"hint": "is that… a kettle whistling in the woods?", "props": [["pine", 70, 0, "back"], ["grass", 50, 0, "front"]], "keys": [[0, 112, 0], [7, 50, 0], [10.5, 50, 0], [19, -12, 0]]}, "Squonk": {"hint": "someone is sniffling in the hemlocks…", "props": [["pine", 24, 0, "back"], ["pine", 78, 0, "back"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Hidebehind": {"hint": "you feel like something is right behind you…", "props": [["pine", 40, 0, "front"], ["pine", 70, 0, "back"]], "keys": [[0, -12, 0], [5, 38, 0], [11, 40, 0], [19, 112, 0]]}, "Fur-bearing Trout": {"hint": "a fuzzy fin just poked out of the water…", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 20, -14], [2, 24, -1], [8, 52, -1], [9.5, 56, -14], [12, 70, -14], [13.5, 74, 0], [17, 84, 0], [18.5, 88, -14]]}, "Wampus Cat": {"hint": "glowing eyes up on the mountain ridge…", "props": [["moon", 84, 40, "back"], ["fence", 50, 0, "front"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}, "Kongamato": {"hint": "a huge beaked shadow over the river!", "props": [["reeds", 50, 0, "front"], ["water", 50, 0, "front"]], "keys": [[0, -12, 30], [5, 34, 40], [9, 54, 28], [13, 78, 42], [17, 115, 32]]}, "Altamaha-ha": {"hint": "bubbles in the river delta…", "props": [["reeds", 50, 0, "front"], ["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Globster": {"hint": "a strange blob washed up on the beach…", "props": [["sand", 50, 0, "front"], ["water", 82, 0, "back"]], "keys": [[0, -12, 0], [9, 46, 0], [13, 48, 0], [22, 112, 0]]}})
-KAIJU_SCENES.update({"Boulderback": {"hint": "the mountain… is moving?!", "props": [["pine", 14, 0, "back"], ["city", 50, 0, "front"]], "scale": 3, "keys": [[0, -30, 0], [6, 46, 0], [8, 46, 0], [14, 130, 0]]}, "Stormcrab": {"hint": "thunder over the harbor… and clacking?!", "props": [["city", 50, 0, "back"], ["water", 50, 0, "front"]], "clip": 3, "scale": 3, "keys": [[0, 24, -40], [2.5, 30, -6], [8, 56, -6], [10.5, 62, -42]]}, "Tremorpede": {"hint": "the street is cracking… something's under it!", "props": [["city", 50, 0, "back"]], "scale": 3, "keys": [[0, 130, 0], [5, 60, 0], [7, 60, 0], [12, -30, 0]]}, "Volthorn": {"hint": "the power just flickered all over town…", "props": [["city", 50, 0, "front"]], "scale": 3, "keys": [[0, -30, 0], [5, 40, 0], [6.5, 40, 0], [11.5, 130, 0]]}, "Tundrox": {"hint": "a blizzard is rolling in… with horns?!", "props": [["pine", 84, 0, "back"], ["city", 50, 0, "front"]], "scale": 3, "keys": [[0, 130, 0], [6, 54, 0], [7.5, 54, 0], [12, -30, 0]]}, "Nebulon": {"hint": "the night sky is… coming closer?", "props": [["city", 50, 0, "back"]], "scale": 3, "keys": [[0, -30, 14], [4, 30, 10], [7, 60, 14], [11, 130, 10]]}, "Bramblebeast": {"hint": "the forest is walking toward town!", "props": [["pine", 20, 0, "back"], ["pine", 80, 0, "back"], ["city", 50, 0, "front"]], "scale": 3, "keys": [[0, -30, 0], [6, 50, 0], [7.5, 50, 0], [12, 130, 0]]}, "Sandsnapper": {"hint": "the sand is swirling into a giant pit…", "props": [["sand", 50, 0, "front"], ["cactus", 84, 0, "back"]], "clip": 3, "scale": 3, "keys": [[0, 30, -40], [2.5, 34, -6], [8, 58, -6], [10.5, 62, -42]]}, "Clockwork Rex": {"hint": "TICK… TOCK… a giant wind-up roar!", "props": [["city", 50, 0, "front"]], "scale": 3, "keys": [[0, 130, 0], [5, 60, 0], [7, 60, 0], [12, -30, 0]]}, "Deepjaw": {"hint": "a light is glowing far out in the sea…", "props": [["city", 50, 0, "back"], ["water", 50, 0, "front"]], "clip": 3, "scale": 3, "keys": [[0, 24, -40], [2.5, 30, -6], [8, 56, -6], [10.5, 62, -42]]}, "Thunderwing": {"hint": "a storm cloud with wings is coming!", "props": [["city", 50, 0, "back"]], "scale": 3, "keys": [[0, -30, 10], [4, 30, 6], [7, 64, 12], [10, 130, 8]]}, "Silvertear": {"hint": "something metal is powering up behind the city…", "props": [["city", 50, 0, "back"]], "scale": 3,
+KAIJU_SCENES.update({"Boulderback": {"hint": "the mountain… is moving?!", "props": [["pine", 14, 0, "back"], ["city", 50, 0, "front"]], "scale": 3, "keys": [[0, -30, 0], [6, 46, 0], [8, 46, 0], [14, 130, 0]]}, "Stormcrab": {"hint": "thunder over the harbor… and clacking?!", "props": [["city", 50, 0, "back"], ["water", 50, 0, "front"]], "clip": 3, "scale": 3, "keys": [[0, 24, -40], [2.5, 30, -6], [8, 56, -6], [10.5, 62, -42]]}, "Tremorpede": {"hint": "the street is cracking… something's under it!", "props": [["city", 50, 0, "back"]], "scale": 3, "keys": [[0, 130, 0], [5, 60, 0], [7, 60, 0], [12, -30, 0]]}, "Volthorn": {"hint": "the power just flickered all over town…", "props": [["city", 50, 0, "front"]], "scale": 3, "keys": [[0, -30, 0], [5, 40, 0], [6.5, 40, 0], [11.5, 130, 0]]}, "Tundrox": {"hint": "a blizzard is rolling in… with horns?!", "props": [["pine", 84, 0, "back"], ["city", 50, 0, "front"]], "scale": 3, "keys": [[0, 130, 0], [6, 54, 0], [7.5, 54, 0], [12, -30, 0]]}, "Nebulon": {"hint": "the night sky is… coming closer?", "props": [["city", 50, 0, "back"]], "scale": 3, "keys": [[0, -30, 14], [4, 30, 10], [7, 60, 14], [11, 130, 10]]}, "Bramblebeast": {"hint": "the forest is walking toward town!", "props": [["pine", 20, 0, "back"], ["pine", 80, 0, "back"], ["city", 50, 0, "front"]], "scale": 3, "keys": [[0, -30, 0], [6, 50, 0], [7.5, 50, 0], [12, 130, 0]]}, "Sandsnapper": {"hint": "the sand is swirling into a giant pit…", "props": [["sand", 50, 0, "front"], ["cactus", 84, 0, "back"]], "clip": 3, "scale": 3, "keys": [[0, 30, -40], [2.5, 34, -6], [8, 58, -6], [10.5, 62, -42]]}, "Clockwork Rex": {"hint": "TICK… TOCK… a giant wind-up roar!", "props": [["city", 50, 0, "front"]], "scale": 3, "keys": [[0, 130, 0], [5, 60, 0], [7, 60, 0], [12, -30, 0]]}, "Deepjaw": {"hint": "a light is glowing far out in the sea…", "props": [["city", 50, 0, "back"], ["water", 50, 0, "front"]], "clip": 3, "scale": 3, "keys": [[0, 24, -40], [2.5, 30, -6], [8, 56, -6], [10.5, 62, -42]]}, "Thunderwing": {"hint": "a storm cloud with wings is coming!", "props": [["city", 50, 0, "back"]], "scale": 3, "keys": [[0, -30, 10], [4, 30, 6], [7, 64, 12], [10, 130, 8]]}, "Silvertear-03": {"hint": "something metal is powering up behind the city…", "props": [["city", 50, 0, "back"]], "scale": 3,
                "keys": [[0, -30, 0], [6, 46, 0], [8, 46, 0], [14, 130, 0]]},
  "Coralgon": {"hint": "a whole reef is rising from the bay…", "props": [["city", 50, 0, "back"], ["water", 50, 0, "front"]], "clip": 3, "scale": 3, "keys": [[0, 24, -40], [2.5, 30, -6], [8, 56, -6], [10.5, 62, -42]]}})
 CRYPTID_SCENES.update({"Ningen": {"hint": "something huge and pale is under the ice…", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Van Meter Visitor": {"hint": "a glowing horn is flying over the town!", "props": [["lamp", 30, 0, "back"], ["city", 50, 0, "back"]], "keys": [[0, -12, 30], [5, 34, 40], [9, 54, 28], [13, 78, 42], [17, 115, 32]]}, "Tatzelwurm": {"hint": "something hissed from the mountain cave…", "props": [["wall", 50, 0, "back"], ["pine", 86, 0, "back"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Dobhar-chú": {"hint": "a giant otter is swimming across the lough!", "props": [["reeds", 50, 0, "front"], ["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Lusca": {"hint": "the blue hole is bubbling…", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Beast of Gévaudan": {"hint": "a howl from the old forest… in french?", "props": [["pine", 20, 0, "back"], ["pine", 82, 0, "front"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}, "Goatman": {"hint": "clip… clop… something is on the old bridge", "props": [["bridge", 50, 0, "back"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Ropen": {"hint": "a light is gliding over the island…", "props": [["bush", 30, 0, "front"], ["moon", 84, 40, "back"]], "keys": [[0, -12, 30], [5, 34, 40], [9, 54, 28], [13, 78, 42], [17, 115, 32]]}, "Emela-ntouka": {"hint": "something with a horn is wading through the swamp…", "props": [["reeds", 50, 0, "front"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}, "Caddy": {"hint": "humps out in the bay… and a horse face?!", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Orang Pendek": {"hint": "a little ape just ducked behind the bushes…", "props": [["bush", 40, 0, "front"], ["pine", 80, 0, "back"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Montauk Monster": {"hint": "something strange washed up on the beach…", "props": [["sand", 50, 0, "front"], ["water", 82, 0, "back"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}})
@@ -8172,7 +8193,7 @@ DUAL_TYPES = {
  "Magmaw": ("spark", "stone"), "Tidal Titan": ("splash", "stone"), "Gigabot": ("volt", "stone"), "Skyray": ("gust", "splash"),
  "Frostback": ("frost", "stone"), "Stormcrab": ("volt", "splash"), "Volthorn": ("volt", "sprout"), "Tundrox": ("frost", "stone"),
  "Nebulon": ("cosmic", "splash"), "Bramblebeast": ("sprout", "stone"), "Sandsnapper": ("stone", "spark"), "Clockwork Rex": ("volt", "stone"),
- "Thunderwing": ("volt", "gust"), "Coralgon": ("splash", "sprout"), "Silvertear": ("volt", "stone"), "Boulderback": ("stone", "sprout"),
+ "Thunderwing": ("volt", "gust"), "Coralgon": ("splash", "sprout"), "Silvertear-03": ("volt", "stone"), "Boulderback": ("stone", "sprout"),
  # legends
  "Candy Dragon": ("sweet", "spark"), "Cotton Candy Cloud": ("sweet", "gust"), "Gumdrop Golem": ("sweet", "stone"),
  "Sprinkle Unicorn": ("sweet", "cosmic"), "Star Whale": ("cosmic", "splash"), "Comet Fox": ("cosmic", "spark"), "Crystal Stego": ("stone", "frost"),

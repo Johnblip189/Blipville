@@ -54,9 +54,13 @@
   function sanitizeSave(raw) {
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
     const out = { ...raw };
+    const RN = D.kindRenames || {}, ren = (n) => { if (typeof n !== "string") return n; const i = n.indexOf(":"); return i > 0 ? (RN[n.slice(0, i)] || n.slice(0, i)) + n.slice(i) : (RN[n] || n); };
+    for (const [k, v] of Object.entries(out)) if (Array.isArray(v) && k !== "pets") out[k] = v.map(ren);     // renamed Blips keep their place in old saves
+    if (Array.isArray(out.pets)) out.pets = out.pets.map((p) => (p && typeof p === "object" && typeof p.kind === "string" ? { ...p, kind: ren(p.kind) } : p));
+    if (out.awakenLevel && typeof out.awakenLevel === "object") out.awakenLevel = Object.fromEntries(Object.entries(out.awakenLevel).map(([k, v]) => [ren(k), v]));
     for (const [k, def] of Object.entries(SAVE_DEFAULTS)) {
       if (!(k in raw)) continue;                                   // older saves: missing fields keep their defaults
-      const v = raw[k];
+      const v = out[k];
       if (Array.isArray(def)) out[k] = Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
       else if (typeof def === "number") out[k] = numOr(v, def);
       else if (typeof def === "boolean") out[k] = typeof v === "boolean" ? v : def;

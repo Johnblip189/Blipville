@@ -44,7 +44,7 @@ make Blipville what it is. This is the real thing.
 - 🎭 **The Puppet Box:** an old toy chest that creaks open by itself at night, with red eyes peeking out of the gap.
   Awaken it and it opens into the **Puppet Master**: a cracked porcelain mask with red tears, a little top hat, and a
   see-through, flickering little Blip soul dangling from its puppet strings.
-- 🤖 **Silvertear, a new mecha kaiju:** silver plates over a charcoal frame, a sharp brow horn with swept-back fins,
+- 🤖 **Silvertear-03, a new mecha kaiju:** silver plates over a charcoal frame, a sharp brow horn with swept-back fins,
   a dark visor with wide pixel eyes, crimson tear ridges down her cheeks, a segmented chin guard and a segmented tail.
   She powers up behind the city now and then: click her 3 times before she stomps off. She has a personality all her
   own: a hyper-serious tactical bodyguard who talks in mission logs, scans every cookie for its "threat level" and
@@ -59,7 +59,7 @@ make Blipville what it is. This is the real thing.
 - 🗣️ **Personalities:** Blip, Bun, Sprout, Boo, Fuzz, Spike and the Night Shift crew have their own things to say when
   you pet them, feed them, put them to bed or wake them up (and some have night-time lines too). Bun is shy, Spike
   is "not cute, SHARP", Boo really wants you to be scared, and Sunny calls you "hon".
-- 💬 **Chat with your Blips (starting with Silvertear):** right-click Silvertear → 💬 Chat (or tap her → 💬 Chat on
+- 💬 **Chat with your Blips (starting with Silvertear-03):** right-click Silvertear-03 → 💬 Chat (or tap her → 💬 Chat on
   the website) and talk by picking what to say. Ask about her tears, where she came from, or whether she wants to stomp
   something. Chatting builds friendship. More Blips will learn to chat after 1.0.
 - 🧸 **Bad Dreams:** plush versions of the Night Shift crew: Bear, Bunny, Hen, Fox, the Wind-Up Hare and the Puppet

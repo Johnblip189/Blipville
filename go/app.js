@@ -1963,6 +1963,7 @@
     const pal = Object.assign({}, k.colors[p.color % k.colors.length], k.extra || {});
     let g;
     if (k.portrait && !pal.art && !plushNow(p.kind)) {
+      if (!pal.b) pal.b = pal.s || pal.o;            // "*" shines are a light version of the plating
       const bpal = blushing && k.blush ? Object.assign({}, pal, k.blush.pal) : pal, [r0, r1] = k.portrait.rows;
       g = k.portrait.art.map((row, y) => [...row].map((ch) => (ch === "." ? null : pxColor(blushing && y >= r0 && y <= r1 ? bpal : pal, ch))));
     } else g = scale2x(grid(p.kind, p.color, { t, face: "happy", blush: blushing }));

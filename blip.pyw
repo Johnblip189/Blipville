@@ -10628,15 +10628,17 @@ class App:
             for p in play["pets"]:
                 if p in self.pets:
                     p.befriend("play")
+        if play in self.plays:
+            self.plays.remove(play)
         for pet in play["pets"]:
+            if any(pet in other["pets"] for other in self.plays):
+                continue                        # still in another game: that game owns the flag
             pet.playing = False
             pet.last_play = now
             if happy and pet.state not in ("held", "fall", "sleep"):
                 pet.set_state("idle", random.uniform(1.5, 3))
                 pet.set_face("happy", 1.5)
                 pet.burst("heart", 2)
-        if play in self.plays:
-            self.plays.remove(play)
 
     def play_step(self, now):
         dt = 1 / FPS
@@ -10645,6 +10647,8 @@ class App:
         # start a game now and then
         for i, a in enumerate(free):
             for b in free[i + 1:]:
+                if a.playing or b.playing:      # each pet is in one game at a time
+                    continue
                 d = abs(a.wx - b.wx)
                 if 60 < d < 190 and random.random() < dt * 0.04:
                     a.playing = b.playing = True

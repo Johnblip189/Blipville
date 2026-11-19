@@ -1158,7 +1158,7 @@
     if (awLevel(base) <= stg) {
       const cost = STAGE_COSTS[stg], again = ["", "again ", "a third time "][stg];
       if (save.hearts < cost) { toast(`Awakening ${p.kind} ${again}into ${form} takes an Awakening Crystal (${cost} 💖). You have ${save.hearts}.`, 4); return; }
-      if (!confirm(`Use an Awakening Crystal (${cost} 💖) to awaken ${p.kind} ${again}into ${form}?\n\nIt works for every ${base} you have, forever, and you can switch back any time. In the Arena, Awakened Blips hit harder!`)) return;
+      if (!confirm(`Use an Awakening Crystal (${cost} 💖) to awaken ${p.kind} ${again}into ${form}?\n\nIt works for every ${base} you have, forever, and you can switch back any time.${(D.features || {}).arena ? " In the Arena, Awakened Blips hit harder!" : ""}`)) return;
       save.hearts -= cost; updateHearts(true);
       if (stg === 0) save.awakened.push(base); else (save.awakenLevel = save.awakenLevel || {})[base] = stg + 1;
     }
@@ -1460,6 +1460,7 @@
     back.onclick = () => { if (b.winner === null) { b.queue = []; b.winner = 1; b.log.push("🏳️ You gave up. Next time!"); clearTimeout(arenaTimer); drawBattle(); } else openArena(); };
   }
   $("arenaBtn").onclick = openArena;
+  if (!(D.features || {}).arena) $("arenaBtn").hidden = true;      // 🚧 parked for after 1.0 (blip.pyw FEATURES)
 
   // ghosts 👻
   function lightCandle() {

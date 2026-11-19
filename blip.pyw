@@ -4082,6 +4082,15 @@ EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, even in the daytime)
 
+# 🚧 Parked for after 1.0: the code stays, nothing is removed from anyone's save, and flipping one to True brings it back
+# (menus, trophies and quests included). Keep tools/export_go_data.py in step so the website matches.
+FEATURES = {"arena": False,           # ⚔️ Arena battles, battle codes, rivals, battle music, Pull the Strings
+            "climb": False,           # 🪟 Blips climbing onto your windows (Windows only)
+            "cursor_play": False}     # 🖱️ Blips chasing and "stealing" the mouse pointer (Windows only)
+PARKED_TROPHIES = {"arena-1": "arena", "arena-champ": "arena", "arena-kaiju": "arena", "boss-1": "arena",
+                   "climb-1": "climb", "mouse-10": "cursor_play"}
+PARKED_QUESTS = {"arena_win": "arena"}
+
 # Trophies 🏆: (id, icon, name, how to get it, check, bonus hearts). Checked every few seconds; earned once, kept forever.
 def _all(group):
     return lambda a: all(a.is_unlocked(k) for k in group)
@@ -4126,6 +4135,7 @@ TROPHIES = [
     ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
     ("mouse-10", "🖱️", "Cat and Mouse", "Your Blips catch your mouse pointer 10 times", lambda a: a.stat("cursor_catches") >= 10, 15),
 ]
+TROPHIES = [t for t in TROPHIES if FEATURES.get(PARKED_TROPHIES.get(t[0]), True)]
 DESKTOP_TROPHIES = {"climb-1", "mouse-10"}     # only the Windows app can earn these (the website leaves them out)
 BEACON_COST = 100                 # hearts per Kaiju Beacon
 KAIJU_HITS = 3                    # clicks it takes to befriend a kaiju
@@ -4319,6 +4329,7 @@ QUESTS = [{"id": "pet_spiky", "text": "Pet a Hedgehog, Fox or Echidna 8 times", 
           {"id": "plays", "text": "Watch your Blips play 2 games together", "goal": 2},
           {"id": "arena_win", "text": "Win a battle in the Arena", "goal": 1},
           {"id": "catch", "text": "Score 15 points in Cookie Catch", "goal": 15}]
+QUESTS = [q for q in QUESTS if FEATURES.get(PARKED_QUESTS.get(q["id"]), True)]
 # Cookie Catch 🍪: your Blip catches falling cookies. Golden ones are worth 5; burnt ones cost a life.
 CATCH_SECONDS, CATCH_LIVES, CATCH_MAX_HEARTS = 45, 3, 25
 CATCH_COOKIE = ["..cccc..", ".ccdcccc", "cccccdcc", "cdcccccc", "ccccdccc", ".cccccc.", "..cccc.."]
@@ -5178,7 +5189,8 @@ class Blip:
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
         self.menu.add_command(label=f"🕯️ Light a Spirit Candle ({CANDLE_COST} 💖)…", command=lambda: app.light_candle(self.root))
         self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
-        self.menu.add_command(label="⚔️ Arena…", command=lambda: Arena(app))
+        if FEATURES["arena"]:
+            self.menu.add_command(label="⚔️ Arena…", command=lambda: Arena(app))
         self.menu.add_command(label="🏆 Trophies…", command=lambda: TrophyShelf(app))
         self.trophy_entry = self.menu.index("end")
         self.world_menu = tk.Menu(self.menu, tearoff=0)
@@ -5193,10 +5205,11 @@ class Blip:
                                                    app.sound.play("boop")))
         self.menu.add_checkbutton(label="Weather effects", variable=app.weather,
                                   command=lambda: app.save.update(weather=app.weather.get()) or write_save(app.save))
-        if app.desk.ok:
+        if app.desk.ok and FEATURES["climb"]:
             self.menu.add_checkbutton(label="🪟 Climb on my windows", variable=app.climb_on, command=app.set_climb)
-        self.menu.add_checkbutton(label="🖱️ Play with my mouse (they might steal it!)", variable=app.cursor_play,
-                                  command=lambda: app.save.update(cursor_play=app.cursor_play.get()) or write_save(app.save))
+        if FEATURES["cursor_play"]:
+            self.menu.add_checkbutton(label="🖱️ Play with my mouse (they might steal it!)", variable=app.cursor_play,
+                                      command=lambda: app.save.update(cursor_play=app.cursor_play.get()) or write_save(app.save))
         upd = tk.Menu(self.menu, tearoff=0)
         upd.add_command(label="🔄 Check for updates now", command=lambda: app.updater.check(quiet=False))
         upd.add_checkbutton(label="Update automatically (asks first)", variable=app.updater.auto, command=app.updater.set_auto)
@@ -5508,8 +5521,8 @@ class Blip:
                                     f"You have {app.hearts()}.", parent=self.root)
                 return
             if not messagebox.askyesno("Awakening Crystal ✨", f"Use an Awakening Crystal ({cost} 💖) to awaken {self.kind} {nth}into {form}?\n\n"
-                                       "It works for every " + base + " you have, forever, and you can switch back any time. "
-                                       "In the Arena, Awakened Blips hit harder!", parent=self.root):
+                                       "It works for every " + base + " you have, forever, and you can switch back any time."
+                                       + (" In the Arena, Awakened Blips hit harder!" if FEATURES["arena"] else ""), parent=self.root):
                 return
             app.save["hearts"] = app.hearts() - cost
             if stage == 0:
@@ -5781,7 +5794,8 @@ class Blip:
                                  ("✨ Spawn a World Legend", "legend")):
                 mod.add_command(label=label, command=lambda g=group: self.app.dev_spawn(g))
             mod.add_command(label="📅 Fresh daily quests", command=self.app.dev_reset_quests)
-            mod.add_command(label="🥊 Copy the Blipmaker boss code", command=lambda: self.app.dev_boss_code(self.root))
+            if FEATURES["arena"]:
+                mod.add_command(label="🥊 Copy the Blipmaker boss code", command=lambda: self.app.dev_boss_code(self.root))
             self.menu.add_cascade(label="🛡️ Mod menu", menu=mod)
         if self.app.save.get("creator") and not getattr(self, "dev_added", False):
             self.dev_added = True
@@ -5794,7 +5808,8 @@ class Blip:
             dev.add_command(label="📅 Fresh daily quests", command=self.app.dev_reset_quests)
             dev.add_command(label="🔓 Unlock everything", command=self.app.dev_unlock_all)
             dev.add_command(label="⭐ Add my Creator Blips", command=self.app.dev_add_creators)
-            dev.add_command(label="🥊 Copy my boss battle code", command=lambda: self.app.dev_boss_code(self.root))
+            if FEATURES["arena"]:
+                dev.add_command(label="🥊 Copy my boss battle code", command=lambda: self.app.dev_boss_code(self.root))
             self.menu.add_cascade(label="🛠️ Creator menu", menu=dev)
         self.menu.entryconfigure(2, label="Wake up" if self.state == "sleep" else "Nap time")
         # While a menu is open, Windows pauses the app, so windows can't repaint (a see-through window that needs a
@@ -9970,8 +9985,8 @@ class App:
             self.save["worlds"].append("Egypt World")      # 🏺 free for everyone (its gods still have to be dug up)
         self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))
         self.sound_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("sound", False)))
-        self.climb_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("climb", True)))
-        self.cursor_play = tk.BooleanVar(master=self.root, value=bool(self.save.get("cursor_play", True)))
+        self.climb_on = tk.BooleanVar(master=self.root, value=FEATURES["climb"] and bool(self.save.get("climb", True)))
+        self.cursor_play = tk.BooleanVar(master=self.root, value=FEATURES["cursor_play"] and bool(self.save.get("cursor_play", True)))
         self.desk = DesktopWindows()
         self.mouse_hist, self.next_chase, self.steal = [], 0.0, None
         self.last_steal = self.last_cursor_heart = -99.0
@@ -10515,7 +10530,7 @@ class App:
             if self.maintenance.closed:
                 self.maintenance.reopen()
             messagebox.showinfo("🛡️ Moderator mode", "Welcome to the mod squad! 🛡️\n\nGuardian is yours, you can play during maintenance, "
-                                "and every pet's right-click menu has a 🛡️ Mod menu: spawn sightings, fresh quests and the creator's boss code.",
+                                "and every pet's right-click menu has a 🛡️ Mod menu: spawn sightings and fresh quests" + (" and the creator's boss code." if FEATURES["arena"] else "."),
                                 parent=parent)
             return
         if digest != CREATOR_HASH:
@@ -10528,7 +10543,7 @@ class App:
         if self.maintenance.closed:
             self.maintenance.reopen()
         messagebox.showinfo("⭐ Creator mode", "Welcome back, creator! 💜\n\nBlipmaker and Byte are yours (only yours), and every pet's "
-                            "right-click menu now has a 🛠️ Creator menu: hearts, spawns, unlock everything and your boss battle code.",
+                            "right-click menu now has a 🛠️ Creator menu: hearts, spawns and unlock everything" + (" and your boss battle code." if FEATURES["arena"] else "."),
                             parent=parent)
 
     def dev_add_creators(self):

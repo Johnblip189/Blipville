@@ -21,10 +21,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
   draws every pet as a real see-through picture and hands it straight to Windows, so nothing gets repainted.
 - 💞 **Friendship levels** for every Blip, up to Soulmate.
 - 🍪 **Cookie Catch**, a new minigame.
-- 🪟 **Blips climb your windows** (Windows app only): they jump onto open windows, ride along when you drag them, and tumble down when you close them.
-- 🖱️ **They play with your mouse** (Windows app only): wiggle the pointer and they chase it, pounce, and sometimes steal it for a second.
-- ⚔️ **The Arena:** turn-based battles with a team of 3: pick from 4 moves each turn. 10 types (Spark, Splash, Sprout, Volt, Stone, Gust, Frost, Sweet, Phantom and Cosmic), and some Blips have 2. Share your **battle code** so friends can battle your team (works between Windows and the browser).
-- ✨ **20 Awakened forms**, including every kaiju, ghosts like King Sheetie and cryptids like Lunar Mothman, with one Awaken per Arena battle.
+- ✨ **20 Awakened forms**, including every kaiju, ghosts like King Sheetie and cryptids like Lunar Mothman.
 - 🎨 **Accessory colors** and a **2nd accessory slot**.
 - 👁️ **The Lurker:** a many-eyed shadow ghost that Awakens **3 times**, up to Lurker Eternal.
 - 👻 **Ghosts:** a new tier of 25 ghosts that drift by at night. Click one while it glows! (Or light a 🕯️ Spirit Candle.)

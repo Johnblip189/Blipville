@@ -117,6 +117,18 @@
     if (actx.state === "suspended") actx.resume();
     return actx;
   }
+  let lastVoice = 0;
+  function voiceBlip(kind) {                     // 🔊 one talking blip in this Blip's voice (same voices as the desktop app)
+    if (!save.sound || save.voices === false) return;
+    const a = audio(); if (!a) return;
+    const t = performance.now() / 1000; if (t - lastVoice < 0.07) return; lastVoice = t;
+    const [pitch, wave] = (KINDS[kind] && KINDS[kind].voice) || [440, "tri"];
+    const f = pitch * pick([0.94, 1, 1.07]), at = a.currentTime + 0.005;
+    const o = a.createOscillator(), g = a.createGain();
+    o.type = wave === "tri" ? "triangle" : wave; o.frequency.setValueAtTime(f, at); o.frequency.linearRampToValueAtTime(f * 1.02, at + 0.045);
+    g.gain.setValueAtTime(0.0001, at); g.gain.linearRampToValueAtTime(wave === "square" ? 0.06 : 0.12, at + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, at + 0.045);
+    o.connect(g).connect(a.destination); o.start(at); o.stop(at + 0.06);
+  }
   function sfx(name) {
     if (!save.sound) return;
     const a = audio(); if (!a) return;
@@ -217,7 +229,9 @@
     persist();
     return p;
   }
-  const say = (p, text, secs = 3) => { p.bubble = { text, until: now() + secs }; };
+  const TYPE_CPS = D.typeCps || 32;              // speech bubbles type themselves out, and the Blip "talks" (see voiceBlip)
+  const say = (p, text, secs = 3) => { const t = now(); p.bubble = { text, t0: t, voiced: 0, until: Math.max(t + secs, t + text.length / TYPE_CPS + 1.2) }; };
+  const typed = (b, t) => Math.min(b.text.length, 1 + Math.floor((t - b.t0) * TYPE_CPS));
   const setFace = (p, face, secs) => { p.face = face; p.faceUntil = now() + secs; };
   const setState = (p, st, secs = 0) => { p.state = st; p.until = now() + secs; };
   const voice = (p, key, fallback) => { const own = (KINDS[p.kind] || {})[key]; return own && own.length ? pick(own) : fallback; };   // 🗣️ a Blip's own line
@@ -758,7 +772,11 @@
     let above = top + hatTop - 4;
     const lv = bondLevel(p.bond || 0);
     above -= nameTag((lv >= 5 ? "💛 " : lv >= 4 ? "♥ " : "") + p.name, p.x, above);
-    if (p.bubble && t < p.bubble.until) bubble(p.bubble.text, p.x, above);
+    if (p.bubble && t < p.bubble.until) {
+      const n = typed(p.bubble, t);
+      if (n > p.bubble.voiced) { const fresh = p.bubble.text.slice(p.bubble.voiced, n); p.bubble.voiced = n; if (/[a-z0-9]/i.test(fresh)) voiceBlip(p.kind); }
+      bubble(p.bubble.text.slice(0, n), p.x, above);
+    }
   }
   function drawMask(mask, x, y, s, color) {
     ctx.fillStyle = color;

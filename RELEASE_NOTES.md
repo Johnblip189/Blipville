@@ -52,6 +52,13 @@ make Blipville what it is. This is the real thing.
   (her whole faceplate flushes pink) if you call her cute. Colors: Chrome, Gunmetal,
   Gold Plated (with emerald eyes) and 📺 **Showa**, the boxy 1970s tin-robot model with its own drawing: bolt antennae,
   a riveted brow, amber eyes in a wide visor slot, clean riveted cheeks, a red/yellow/cyan chest strip and a stiff tail.
+- 🔊 **Blip voices:** speech bubbles now type themselves out, and each Blip "talks" in little blips with its own
+  voice: robots and mechs beep, ghosts hum softly, kaiju rumble low, and every Blip has its own pitch. Turn sound on
+  (🔇 at the top on the website, right-click → Sound effects on Windows) to hear them; on Windows, right-click →
+  🔊 Blip voices turns just the voices off.
+- 🗣️ **Personalities:** Blip, Bun, Sprout, Boo, Fuzz, Spike and the Night Shift crew have their own things to say when
+  you pet them, feed them, put them to bed or wake them up (and some have night-time lines too). Bun is shy, Spike
+  is "not cute, SHARP", Boo really wants you to be scared, and Sunny calls you "hon".
 - 💬 **Chat with your Blips (starting with Silvertear):** right-click Silvertear → 💬 Chat (or tap her → 💬 Chat on
   the website) and talk by picking what to say. Ask about her tears, where she came from, or whether she wants to stomp
   something. Chatting builds friendship. More Blips will learn to chat after 1.0.

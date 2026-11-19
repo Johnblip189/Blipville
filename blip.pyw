@@ -3764,6 +3764,93 @@ def draw_xeye(px, pal):
         px(6 - i, 4 + i, pal.get("x", pal["o"]))
 
 
+# 🗣️ Personalities for the Blips you meet first: extra idle lines plus their own pet / feed / nap / wake / night lines
+# (see VOICE_KEYS). "more" lines are added to the ones the Blip already has.
+PERSONALITIES = {
+    "Blip": {"more": ["hi hi hi! did you miss me?", "this is the best desktop in the whole world", "*bounces happily*"],
+             "pet_lines": ["eee! more please!", "*happy wiggle* you're the best!", "*melts into a puddle of joy*"],
+             "feed_lines": ["a cookie?! for ME?!", "*nom* best. day. ever."],
+             "nap_lines": ["*curls into a ball* night night…", "just resting my eyes… *snore*"],
+             "wake_lines": ["i'm up! i'm up! what did i miss?", "*stretches* good morning, buddy!"],
+             "night_lines": ["*whispers* it's late… are you still working?", "the stars are out! *gasp*"]},
+    "Bun": {"more": ["*twitches nose*", "um… hi.", "*peeks out from behind your window*"],
+            "pet_lines": ["*ears go pink*", "o-oh! thank you…", "*soft happy thump*"],
+            "feed_lines": ["*nibble nibble* …it's good.", "is this… for me? *tiny nibble*"],
+            "nap_lines": ["*tucks ears down* …g'night", "*flop*"],
+            "wake_lines": ["*ears pop up* oh! sorry, i dozed off", "*nose twitch* …morning?"],
+            "night_lines": ["*ears perk up* did you hear that?", "it's dark… can i sit next to you?"]},
+    "Sprout": {"more": ["*leaves rustle in the sun*", "photosynthesizing… please hold", "i grew a millimeter today!"],
+               "pet_lines": ["*leaves flutter happily*", "careful, my sprout is sensitive!", "hehe, that tickles my roots"],
+               "feed_lines": ["cookies aren't sunlight but i'll allow it", "*nom* mmm, crunchy fertilizer"],
+               "nap_lines": ["*folds leaves* closing for the night", "zzz… dreaming of rain"],
+               "wake_lines": ["*unfurls* good morning, sun!", "i grew while i slept!"],
+               "night_lines": ["no sun… *droops a little*", "the moon is just a nightlight for plants"]},
+    "Boo": {"more": ["boo! …did i scare you? please say yes", "*floats through your folders*", "i'm VERY spooky. very."],
+            "pet_lines": ["hey! ghosts aren't supposed to be pettable! …do it again", "*glows a little*",
+                          "your hand went right through me! hehe"],
+            "feed_lines": ["ghosts can eat cookies?? i can eat cookies!!", "*the cookie floats away mysteriously*"],
+            "nap_lines": ["*fades out for a nap*", "even ghosts need beauty sleep"],
+            "wake_lines": ["*fades back in* BOO! …i'm awake", "did i haunt anything while i was out?"],
+            "night_lines": ["it's spooky o'clock!!", "*wooOOOoo* (that was my best one)"]},
+    "Fuzz": {"more": ["*fluffs up*", "everything is so soft today", "*sneezes a tiny fluffball*"],
+             "pet_lines": ["*purrs like a tiny engine*", "mmm… softer…", "*becomes 20% fluffier*"],
+             "feed_lines": ["*munch* cozy snack", "a cookie and a nap? perfect day"],
+             "nap_lines": ["*already asleep*", "naptime is my favorite time"],
+             "wake_lines": ["five… more… minutes…", "*fluffed up from sleep*"],
+             "night_lines": ["it's blanket weather", "*yawn* is it bedtime yet?"]},
+    "Spike": {"more": ["don't touch the spikes. …unless you want to.", "*tries to look tough*", "i'm not cute. i'm SHARP."],
+              "pet_lines": ["watch the spikes! …okay, that was nice", "hmph. *spikes soften*", "…don't tell anyone i liked that"],
+              "feed_lines": ["cookie acquired. respect.", "*crunch* tough snack for a tough guy"],
+              "nap_lines": ["i'm not tired. *falls asleep instantly*", "guard my spikes while i rest"],
+              "wake_lines": ["i was NOT asleep.", "*spikes stand up* ready!"],
+              "night_lines": ["the night is when spikes are spikiest", "i'm not scared of the dark. you are."]},
+    "Robo Bear": {"pet_lines": ["*creak* the captain appreciates the morale boost", "affection logged. crew morale: high"],
+                  "feed_lines": ["rations received. carry on, crew!", "*whirr* a captain never refuses a cookie"],
+                  "nap_lines": ["captain's log: taking five", "*powers down at the helm*"],
+                  "wake_lines": ["all hands on deck!", "*whirr* captain back on duty"]},
+    "Robo Bunny": {"pet_lines": ["*string lights flicker happily*", "*bzzt* lights at full brightness!"],
+                   "feed_lines": ["fuel for the light show!", "*munch* *the bulbs glow brighter*"],
+                   "nap_lines": ["lights… dimming…", "*powers down the light rig*"],
+                   "wake_lines": ["and… lights UP!", "*flicker flicker* back online!"]},
+    "Robo Hen": {"pet_lines": ["aw, shucks, hon", "*clucks warmly* you're sweet as pie"],
+                 "feed_lines": ["a cookie? who's cookin' for who here?!", "*taste-tests* needs a pinch of salt. kidding!"],
+                 "nap_lines": ["kitchen's closed, hon", "*hangs up the apron* g'night"],
+                 "wake_lines": ["order up! breakfast's on!", "rise and shine, sugar!"]},
+    "Robo Fox": {"pet_lines": ["pit stop! okay, back to it!", "*engine revs happily*"],
+                 "feed_lines": ["refuel complete! zoom!", "*eats it at top speed*"],
+                 "nap_lines": ["*idles at the starting line*", "resting the engine…"],
+                 "wake_lines": ["green light! go go go!", "*vroom* who's ready to race?"]},
+}
+for _k, _p in PERSONALITIES.items():
+    VARIANTS[_k]["lines"] = list(VARIANTS[_k]["lines"]) + _p.get("more", [])
+    VARIANTS[_k].update({k: v for k, v in _p.items() if k in VOICE_KEYS})
+
+# 🔊 Voices: while a speech bubble types itself out, the Blip "talks" in little synthesized blips (sound on only).
+# Each Blip has its own pitch (Hz) and tone; set "voice" on a Blip to pick one, otherwise it is worked out from its name
+# and tier: robots and mechs are square and beepy, ghosts are soft sine waves, kaiju are deep, the rest are triangle.
+VOICES = {"Blip": (520, "tri"), "Bun": (640, "sine"), "Sprout": (480, "tri"), "Boo": (560, "sine"), "Fuzz": (420, "tri"),
+          "Spike": (360, "square"), "Robo Bear": (220, "square"), "Robo Bunny": (440, "square"), "Robo Hen": (380, "square"),
+          "Robo Fox": (500, "square"), "Silvertear": (300, "square")}
+TYPE_CPS = 32                     # letters per second a speech bubble types out
+
+
+def voice_of(kind):
+    if kind in VOICES:
+        return VOICES[kind]
+    base = AWAKEN_BASE.get(kind, kind) if "AWAKEN_BASE" in globals() else kind
+    h = 2166136261
+    for b in base.encode("utf-8"):
+        h = ((h ^ b) * 16777619) & 0xFFFFFFFF
+    pitch = 300 + h % 320
+    if base in ROBOTS or base in BAD_DREAMS:
+        return (pitch * 0.8 // 10 * 10, "square")
+    if base in GHOSTS:
+        return (pitch // 10 * 10, "sine")
+    if base in KAIJU:
+        return (pitch * 0.55 // 10 * 10, "square")
+    return (pitch // 10 * 10, "tri")
+
+
 NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
@@ -5329,6 +5416,8 @@ class Blip:
         self.menu.add_checkbutton(label="Sound effects", variable=app.sound_on,
                                   command=lambda: (app.save.update(sound=app.sound_on.get()), write_save(app.save),
                                                    app.sound.play("boop")))
+        self.menu.add_checkbutton(label="🔊 Blip voices (with sound on)", variable=app.voices_on,
+                                  command=lambda: app.save.update(voices=app.voices_on.get()) or write_save(app.save))
         self.menu.add_checkbutton(label="Weather effects", variable=app.weather,
                                   command=lambda: app.save.update(weather=app.weather.get()) or write_save(app.save))
         if app.desk.ok and FEATURES["climb"]:
@@ -5403,7 +5492,12 @@ class Blip:
         self.state_until = time.monotonic() + seconds
 
     def say(self, text, seconds=3.0):
-        self.bubble = (text, time.monotonic() + seconds)
+        now = time.monotonic()                     # the bubble types itself out; it stays up until it's readable
+        self.bubble = (text, max(now + seconds, now + len(text) / TYPE_CPS + 1.2))
+        self.bubble_t0, self.voiced = now, 0
+
+    def typed(self, now):
+        return min(len(self.bubble[0]), 1 + int((now - getattr(self, "bubble_t0", 0)) * TYPE_CPS)) if self.bubble else 0
 
     def set_face(self, face, seconds):
         self.face, self.face_until = face, time.monotonic() + seconds
@@ -6303,7 +6397,7 @@ class Blip:
         ox = (W - ART_W * SCALE) // 2
         oy = H - ART_H * SCALE - self.lift(now)
         art = self.build_art(now)
-        talking = self.bubble[0] if self.bubble and now < self.bubble[1] else None
+        talking = self.bubble[0][:self.typed(now)] if self.bubble and now < self.bubble[1] else None
         if not talking:
             self.bubble = None
         key = (tuple(tuple(r) for r in art), oy, self.hat, self.hat2, tuple(sorted(self.tints.items())),
@@ -6368,7 +6462,7 @@ class Blip:
 
         # speech bubble
         if self.bubble and now < self.bubble[1]:
-            t = c.create_text(W / 2, 0, text=self.bubble[0], font=("Segoe UI", 10, "bold"),
+            t = c.create_text(W / 2, 0, text=self.bubble[0][:self.typed(now)], font=("Segoe UI", 10, "bold"),
                               fill="#222222", width=W - 30, justify="center", anchor="s", tags=("pet", "bubble"))
             x1, y1, x2, y2 = c.bbox(t)
             top_of_pet = oy + hat_top - (6 if self.state != "sleep" else 2) - tag_h
@@ -6483,6 +6577,12 @@ class Blip:
 
     # ------------------------------------------------------------------ loop
     def step(self, now):
+        if self.bubble and now < self.bubble[1]:            # 🔊 talk while the bubble types out
+            n = self.typed(now)
+            if n > getattr(self, "voiced", 0):
+                new, self.voiced = self.bubble[0][self.voiced:n], n
+                if any(ch.isalnum() for ch in new):
+                    self.app.sound.voice(self.kind)
         if VARIANTS[self.kind].get("plush"):              # 🧸 midnight: the plushie bursts out as its Bad Dream
             mode = plush_now(self.kind)
             if getattr(self, "plush_mode", mode) != mode:
@@ -6642,7 +6742,7 @@ def load_custom_blips():
 SAVE_LISTS = ("awakened", "bad_dreams", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
               "rivals_beaten", "skins", "trophies", "unlocked", "worlds")
 SAVE_COUNTS = ("hearts", "nights_won")
-SAVE_FLAGS = ("auto_update", "climb", "cursor_play", "sound", "weather", "slot2")
+SAVE_FLAGS = ("auto_update", "climb", "cursor_play", "sound", "voices", "weather", "slot2")
 SAVE_DICTS = ("awaken_level", "event_points", "stats", "quests")
 SAVE_NOTES = []                     # what happened while loading, shown to the player once
 SAVE_STATE = {"failed": 0.0, "warned": 0.0, "backed_up": 0.0}
@@ -9467,7 +9567,11 @@ def _synth(name):
         out.extend([0.0] * int(rate * dur))
 
     random.seed(name)                                                   # same sound every time
-    if name == "boop":
+    if name.startswith("voice-"):                                       # 🔊 a talking blip: voice-<pitch>-<wave>-<0..2>
+        _, pitch, wave, j = name.split("-")
+        f = float(pitch) * (0.94, 1.0, 1.07)[int(j)]
+        tone(f, f * 1.02, 0.045, 0.22, {"tri": "tri", "square": "square", "sine": "sine"}[wave])
+    elif name == "boop":
         tone(520, 820, 0.12)
     elif name == "pop":
         tone(900, 1400, 0.06, 0.3)
@@ -9723,6 +9827,26 @@ class Sound:
                 return None
         return p
 
+    def voice(self, kind):
+        """One talking blip in this Blip's voice. Kept light: one at a time, and never over another sound effect."""
+        if not (self.app.sound_on.get() and self.app.voices_on.get()):
+            return
+        now = time.monotonic()
+        if now - self.last.get("_voice", 0) < 0.07 or now - max([t for k, t in self.last.items() if k != "_voice"] or [0]) < 0.7:
+            return
+        self.last["_voice"] = now
+        pitch, wave = voice_of(kind)
+        name = f"voice-{int(pitch)}-{wave}-{random.randrange(3)}"
+        p = os.path.join(self.dir, name + ".wav")
+        if not os.path.isfile(p):
+            try:
+                os.makedirs(self.dir, exist_ok=True)
+                with open(p, "wb") as f:
+                    f.write(_synth(name))
+            except OSError:
+                return
+        self._play_file(p)
+
     def play(self, name):
         if not self.app.sound_on.get():
             return
@@ -9733,6 +9857,9 @@ class Sound:
         p = self.path(name)
         if not p:
             return
+        self._play_file(p)
+
+    def _play_file(self, p):
         try:
             if sys.platform == "win32":
                 import winsound
@@ -10442,6 +10569,7 @@ class App:
             self.save["worlds"].append("Egypt World")      # 🏺 free for everyone (its gods still have to be dug up)
         self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))
         self.sound_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("sound", False)))
+        self.voices_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("voices", True)))
         self.climb_on = tk.BooleanVar(master=self.root, value=FEATURES["climb"] and bool(self.save.get("climb", True)))
         self.cursor_play = tk.BooleanVar(master=self.root, value=FEATURES["cursor_play"] and bool(self.save.get("cursor_play", True)))
         self.desk = DesktopWindows()
@@ -10964,7 +11092,7 @@ class App:
 
     def load_save_data(self, new):
         """Replace this town with one from a save code (keeping this PC's own settings)."""
-        keep = {k: self.save[k] for k in ("auto_update", "climb", "cursor_play", "weather", "sound", "notice_seen", "arena_name",
+        keep = {k: self.save[k] for k in ("auto_update", "climb", "cursor_play", "weather", "sound", "voices", "notice_seen", "arena_name",
                                           "last_day") if k in self.save}
         for p in list(self.pets):
             self.pets.remove(p)

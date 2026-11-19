@@ -26,6 +26,7 @@ for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS
     for vk in getattr(bl, "VOICE_KEYS", ()):
         if v.get(vk):
             kinds[k][vk] = v[vk]
+    kinds[k]["voice"] = list(bl.voice_of(k)) if hasattr(bl, "voice_of") else None
     if v.get("plush"):
         kinds[k].update(plush=v["plush"], xeye=bool(v.get("xeye")))
 data = {
@@ -45,6 +46,7 @@ data = {
     "quests": getattr(bl, "QUESTS", []),
     "features": getattr(bl, "FEATURES", {}),
     "chats": getattr(bl, "CHATS", {}),
+    "typeCps": getattr(bl, "TYPE_CPS", 32),
     "cookieCatch": {"seconds": bl.CATCH_SECONDS, "lives": bl.CATCH_LIVES, "maxHearts": bl.CATCH_MAX_HEARTS, "cookie": bl.CATCH_COOKIE,
                     "kinds": bl.CATCH_KINDS},
     "bond": {"levels": bl.BOND_LEVELS, "titles": bl.BOND_TITLES, "gain": bl.BOND_GAIN},

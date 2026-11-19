@@ -6399,10 +6399,45 @@ def load_save():
         return {}
 
 
+_INSTANCE_LOCK = None
+
+
+def acquire_instance_lock(wait=5.0):
+    """🔒 Only one Blipville at a time. Two copies would each keep their own town and overwrite each other's save.
+    The lock is a file lock the OS drops when the process ends, even after a crash, so it can never get stuck.
+    Waits a few seconds first, so a copy that's restarting after an update can finish closing."""
+    global _INSTANCE_LOCK
+    path = os.path.join(os.path.dirname(save_path()), "blipville.lock")
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        f = open(path, "a+")
+    except Exception:  # noqa: BLE001  (can't even make the file: don't block playing over it)
+        return True
+    deadline = time.monotonic() + wait
+    while True:
+        try:
+            if sys.platform == "win32":
+                import msvcrt
+                f.seek(0)
+                msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            _INSTANCE_LOCK = f                      # keep the handle open for as long as we run
+            return True
+        except OSError:
+            if time.monotonic() >= deadline:
+                f.close()
+                return False
+            time.sleep(0.5)
+        except Exception:  # noqa: BLE001  (no locking on this system)
+            return True
+
+
 def write_save(data):
     try:
         os.makedirs(os.path.dirname(save_path()), exist_ok=True)
-        tmp = save_path() + ".tmp"
+        tmp = f"{save_path()}.{os.getpid()}.tmp"           # unique per process, so writers can never share a temp file
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
         os.replace(tmp, save_path())
@@ -10624,4 +10659,15 @@ class App:
 
 
 if __name__ == "__main__":
+    if not acquire_instance_lock():
+        try:
+            from tkinter import messagebox
+            _r = tk.Tk()
+            _r.withdraw()
+            messagebox.showinfo("Blipville", "Blipville is already running! 🏡\n\nYour Blips are already on your screen. "
+                                "(Only one Blipville can run at a time, so your progress stays safe.)", parent=_r)
+            _r.destroy()
+        except Exception:  # noqa: BLE001
+            pass
+        sys.exit(0)
     App().run()

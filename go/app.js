@@ -42,7 +42,40 @@
 
   // ------------------------------------------------------------------ save (per device)
   let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
-  try { Object.assign(save, JSON.parse(localStorage.getItem(SAVE_KEY)) || {}); } catch (e) { /* fresh start */ }
+  // 💾 save safety: check every field when loading, keep the last good save as a backup, never throw away a damaged save,
+  // and tell the player when saving fails instead of failing silently
+  const SAVE_DEFAULTS = JSON.parse(JSON.stringify(save)), BAK_KEY = SAVE_KEY + "-backup", BROKEN_KEY = SAVE_KEY + "-broken";
+  let saveNote = null, saveFailedAt = 0, saveWarnedAt = 0, lastBackup = 0;
+  const numOr = (v, d, lo = 0, hi = Infinity) => (Number.isFinite(+v) && v !== null && v !== "" && typeof v !== "boolean" ? Math.min(hi, Math.max(lo, +v)) : d);
+  function sanitizeSave(raw) {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+    const out = { ...raw };
+    for (const [k, def] of Object.entries(SAVE_DEFAULTS)) {
+      if (!(k in raw)) continue;                                   // older saves: missing fields keep their defaults
+      const v = raw[k];
+      if (Array.isArray(def)) out[k] = Array.isArray(v) ? v : typeof v === "string" ? [v] : [];
+      else if (typeof def === "number") out[k] = numOr(v, def);
+      else if (typeof def === "boolean") out[k] = typeof v === "boolean" ? v : def;
+      else if (def && typeof def === "object") out[k] = v && typeof v === "object" && !Array.isArray(v) ? v : {};
+      else out[k] = v === null || typeof v === "string" || typeof v === "number" ? v : null;
+    }
+    for (const [k, def] of Object.entries(SAVE_DEFAULTS)) if (Array.isArray(def) && k !== "pets") out[k] = [...new Set((out[k] || []).filter((x) => typeof x === "string"))];
+    out.pets = (out.pets || []).filter((p) => p && typeof p === "object" && typeof p.kind === "string").map((p) => ({ ...p,
+      name: String(p.name || p.kind).slice(0, 16), color: numOr(p.color, 0, 0, 999) | 0, hunger: numOr(p.hunger, 10, 0, 100),
+      energy: numOr(p.energy, 100, 0, 100), bond: numOr(p.bond, 0), tints: p.tints && typeof p.tints === "object" ? p.tints : {} }));
+    return out;
+  }
+  const readKey = (key) => { const text = localStorage.getItem(key); if (text == null) return { missing: true }; try { return { text, data: JSON.parse(text) }; } catch (e) { return { text }; } };
+  try {
+    const main = readKey(SAVE_KEY);
+    let clean = main.missing ? null : sanitizeSave(main.data);
+    if (!main.missing && !clean) {                                  // damaged: keep it, then fall back to the backup
+      try { localStorage.setItem(BROKEN_KEY, main.text); } catch (e) { /* no room */ }
+      const bak = readKey(BAK_KEY); clean = bak.missing ? null : sanitizeSave(bak.data);
+      saveNote = clean ? "💾 Your save was damaged, so Blipville loaded your last backup." : "💾 Your save was damaged and there was no backup, so Blipville started a new town. The damaged save was kept.";
+    }
+    if (clean) Object.assign(save, clean);
+  } catch (e) { /* storage blocked: fresh start, still playable */ }
   if (!save.worlds.includes("Egypt World")) save.worlds.push("Egypt World");     // 🏺 free for everyone; its gods are dug up
   save.gods = save.gods || [];
   let saveTimer = null;
@@ -52,7 +85,16 @@
     const write = () => {
       save.pets = pets.map((p) => ({ kind: p.kind, color: p.color, name: p.name, hat: p.hat || null, hat2: p.hat2 || null, tints: p.tints || {}, hunger: Math.round(p.hunger), energy: Math.round(p.energy), bond: Math.round(p.bond || 0) }));
       save.lastSeen = Date.now();
-      try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* private mode: still playable */ }
+      try {
+        const prev = localStorage.getItem(SAVE_KEY);
+        if (prev && Date.now() - lastBackup > 60000) {                 // only a save that reads fine becomes the backup
+          try { if (sanitizeSave(JSON.parse(prev))) { localStorage.setItem(BAK_KEY, prev); lastBackup = Date.now(); } } catch (e) { /* skip */ }
+        }
+        localStorage.setItem(SAVE_KEY, JSON.stringify(save)); saveFailedAt = 0;
+      } catch (e) {                                                    // private mode or full storage: still playable, but say so
+        saveFailedAt = saveFailedAt || Date.now();
+        if (Date.now() - saveWarnedAt > 600000) { saveWarnedAt = Date.now(); setTimeout(() => toast("⚠️ Blipville can't save on this device right now (private mode or storage full). Your town still works.", 5), 0); }
+      }
     };
     clearTimeout(saveTimer);
     if (now) write(); else saveTimer = setTimeout(write, 400);
@@ -2116,6 +2158,7 @@
   }
   setTimeout(giveCodeKinds, 2000);
   const today = new Date().toISOString().slice(0, 10);
+  if (saveNote) setTimeout(() => toast(saveNote, 8), 6000);                  // 💾 tell the player what happened to a damaged save
   if (save.lastDay !== today) {
     save.lastDay = today; bump("days");
     setTimeout(() => { reward(pets[0], 10); say(pets[0], "daily treat! +10 💖", 4); }, 1600);

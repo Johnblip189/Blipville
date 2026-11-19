@@ -6390,13 +6390,116 @@ def load_custom_blips():
                 continue
 
 
-def load_save():
+# 💾 Save safety: every load is checked field by field (a wrong type is fixed instead of crashing later), the last good
+# save is kept as save.bak.json, a broken save is copied aside before anything replaces it, and a failed write is
+# reported to the player instead of silently forgotten.
+SAVE_LISTS = ("awakened", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
+              "rivals_beaten", "skins", "trophies", "unlocked", "worlds")
+SAVE_COUNTS = ("hearts", "nights_won")
+SAVE_FLAGS = ("auto_update", "climb", "cursor_play", "sound", "weather", "slot2")
+SAVE_DICTS = ("awaken_level", "event_points", "stats", "quests")
+SAVE_NOTES = []                     # what happened while loading, shown to the player once
+SAVE_STATE = {"failed": 0.0, "warned": 0.0, "backed_up": 0.0}
+
+
+def _num(v, default=0.0, lo=None, hi=None):
     try:
-        with open(save_path(), encoding="utf-8") as f:
-            data = json.load(f)
-        return data if isinstance(data, dict) else {}
-    except Exception:  # noqa: BLE001  (no save yet, or unreadable: start fresh)
-        return {}
+        v = float(v)
+        if v != v or v in (float("inf"), float("-inf")):
+            raise ValueError
+    except (TypeError, ValueError):
+        return default
+    if lo is not None:
+        v = max(lo, v)
+    if hi is not None:
+        v = min(hi, v)
+    return v
+
+
+def sanitize_save(data):
+    """Return (clean save, list of things that had to be fixed). Missing fields are fine (older saves): the game
+    fills in defaults. Only fields of the wrong type are fixed; everything valid is kept exactly as it was."""
+    fixed = []
+    if not isinstance(data, dict):
+        return {}, ["the save wasn't a list of settings"]
+    d = dict(data)
+    for k in SAVE_COUNTS:
+        if k in d and (isinstance(d[k], bool) or not isinstance(d[k], int) or d[k] < 0):
+            d[k] = int(_num(d[k], 0, 0)); fixed.append(k)
+    for k in SAVE_LISTS:
+        if k in d:
+            v = d[k] if isinstance(d[k], list) else [d[k]] if isinstance(d[k], str) else []
+            clean = [x for x in v if isinstance(x, str)]
+            if clean != d[k]:
+                fixed.append(k)
+            d[k] = list(dict.fromkeys(clean))           # no duplicates either
+    for k in SAVE_FLAGS:
+        if k in d and not isinstance(d[k], bool):
+            d[k] = bool(d[k]) if isinstance(d[k], (int, float)) else None; fixed.append(k)
+            if d[k] is None:
+                del d[k]
+    for k in SAVE_DICTS:
+        if k in d and not isinstance(d[k], dict):
+            d[k] = {}; fixed.append(k)
+    if isinstance(d.get("stats"), dict):
+        d["stats"] = {str(k): int(_num(v, 0, 0)) for k, v in d["stats"].items()}
+    if isinstance(d.get("awaken_level"), dict):
+        d["awaken_level"] = {str(k): int(_num(v, 0, 0, 10)) for k, v in d["awaken_level"].items()}
+    if "town_saved_at" in d:
+        d["town_saved_at"] = _num(d["town_saved_at"], time.time(), 0, time.time() + 60)
+    for k in ("world", "last_day", "mod_code"):
+        if k in d and d[k] is not None and not isinstance(d[k], str):
+            d[k] = None; fixed.append(k)
+    if "town" in d:
+        town = []
+        for t in d["town"] if isinstance(d["town"], list) else []:
+            if not isinstance(t, dict) or not isinstance(t.get("kind"), str):
+                continue
+            town.append({**t, "name": str(t.get("name") or t["kind"])[:16], "color": int(_num(t.get("color"), 0, 0, 999)),
+                         "hunger": _num(t.get("hunger"), 10, 0, 100), "energy": _num(t.get("energy"), 100, 0, 100),
+                         "bond": _num(t.get("bond"), 0, 0, 1e6), "hat": t.get("hat") if isinstance(t.get("hat"), str) else None,
+                         "hat2": t.get("hat2") if isinstance(t.get("hat2"), str) else None,
+                         "tints": {str(n): int(_num(v, 0, 0, 99)) for n, v in t["tints"].items()} if isinstance(t.get("tints"), dict) else {}})
+        if len(town) != len(d["town"]) if isinstance(d["town"], list) else True:
+            fixed.append("town")
+        d["town"] = town
+    return d, fixed
+
+
+def _read_json(path):
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    if not isinstance(data, dict):
+        raise ValueError("not a dictionary")
+    return data
+
+
+def load_save():
+    path = save_path()
+    if not os.path.exists(path):
+        return {}                                        # first launch
+    try:
+        data = _read_json(path)
+    except Exception as e:  # noqa: BLE001
+        import shutil
+        keep = path.replace("save.json", time.strftime("save.broken-%Y%m%d-%H%M%S.json"))
+        try:
+            shutil.copyfile(path, keep)                   # never lose the original, even if it's broken
+        except Exception:  # noqa: BLE001
+            keep = None
+        log(f"save could not be read ({e}); kept a copy at {keep}")
+        try:
+            data = _read_json(path.replace("save.json", "save.bak.json"))
+            SAVE_NOTES.append("Your save file was damaged, so Blipville loaded your last backup. 💾"
+                              + (f"\nThe damaged file was kept as {os.path.basename(keep)}." if keep else ""))
+        except Exception:  # noqa: BLE001
+            data = {}
+            SAVE_NOTES.append("Your save file was damaged and there was no backup, so Blipville started a new town."
+                              + (f"\nThe damaged file was kept as {os.path.basename(keep)} in case it can be repaired." if keep else ""))
+    data, fixed = sanitize_save(data)
+    if fixed:
+        log(f"save: fixed fields {fixed}")
+    return data
 
 
 _INSTANCE_LOCK = None
@@ -6440,9 +6543,23 @@ def write_save(data):
         tmp = f"{save_path()}.{os.getpid()}.tmp"           # unique per process, so writers can never share a temp file
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
-        os.replace(tmp, save_path())
-    except Exception:  # noqa: BLE001  (read-only disk etc.: the game still works, it just won't remember)
-        pass
+        path = save_path()
+        if os.path.exists(path) and time.monotonic() - SAVE_STATE["backed_up"] > 60:
+            try:
+                _read_json(path)                          # only a save that reads fine becomes the backup
+                import shutil
+                shutil.copyfile(path, path.replace("save.json", "save.bak.json"))
+                SAVE_STATE["backed_up"] = time.monotonic()
+            except Exception:  # noqa: BLE001
+                pass
+        os.replace(tmp, path)
+        SAVE_STATE["failed"] = 0.0
+        return True
+    except Exception as e:  # noqa: BLE001  (read-only disk etc.: the game still works, but the player is told)
+        if not SAVE_STATE["failed"]:
+            log(f"save failed: {e}")
+        SAVE_STATE["failed"] = SAVE_STATE["failed"] or time.monotonic()
+        return False
 
 
 def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=(), hat=None, silhouette=None, wear=None):
@@ -9792,6 +9909,11 @@ class App:
         self.maintenance = Maintenance(self)
         self.root.report_callback_exception = lambda *exc: log("error in a click or timer:\n" + "".join(__import__("traceback").format_exception(*exc)))
         log(f"started on {sys.platform}, Python {sys.version.split()[0]}")
+        if SAVE_NOTES:
+            def _tell():
+                from tkinter import messagebox
+                messagebox.showinfo("Blipville 💾", "\n\n".join(SAVE_NOTES), parent=self.root)
+            self.root.after(1500, _tell)
         load_custom_blips()
         self.game = None
         self.plays = []                            # games of catch / tag going on right now
@@ -10596,6 +10718,9 @@ class App:
                 return
         except tk.TclError:
             return                                  # the app is closing
+        if SAVE_STATE["failed"] and now - SAVE_STATE["warned"] > 600 and self.pets:      # 💾 can't save: say so (every 10 min)
+            SAVE_STATE["warned"] = now
+            self.pets[0].say("⚠️ i can't save right now! (is the disk full?)", 5)
         if self.maintenance.closed:                 # closed for maintenance: everything waits
             self.root.after(250, self.tick)
             return

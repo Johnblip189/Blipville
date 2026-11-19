@@ -20,13 +20,12 @@ for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
         "feet": v["feet"], "dx": v.get("dx", 0), "move": v["move"], "speed": v.get("speed", 1.0),
         "shifty": bool(v.get("shifty")), "extra": v.get("extra", {}), "ghost": bool(v.get("ghost")), "soul": v.get("soul", ""),
-        "lines": v["lines"], "colors": bl.kind_colors(k), **({"hd": v["hd"]} if v.get("hd") else {}),
+        "lines": v["lines"], "colors": bl.kind_colors(k),
         "default": bl.default_color(k),
     }
 data = {
     "kinds": kinds,
-    "cosplayOf": bl.COSPLAY_OF,
-    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS, "creator": getattr(bl, "CREATOR_KINDS", []), "cosplayers": bl.COSPLAYER_KINDS},
+    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS, "creator": getattr(bl, "CREATOR_KINDS", [])},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,

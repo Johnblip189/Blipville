@@ -4,9 +4,10 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
-- 🎭 **New tier: Cosplayers!** Gijinka-style Blip fusions drawn in extra detail: people with their Blip's ears, tails,
-  wings or eyes, hair that fits their personality, and striped stockings: the **Kitsune**, **Blip**, **Dragon**, **Robo** and **Lurker Cosplayers**, 3 costume colors each. A Cosplayer joins
-  your collection once you have the Blip they're dressed as, and they fight like that Blip in the Arena.
+- 🏺 **Egypt World: 30 Egyptian gods!** Ra, Anubis, Horus, Bastet, Thoth, Sobek, Isis, Osiris, Set, Hathor, Khepri, Ammit,
+  Sekhmet, Ptah, Amun, Khnum, Bes, Taweret, Nut, Geb, Shu, Tefnut, Ma'at, Nephthys, Wadjet, Nekhbet, Apep, Khonsu, Hapi and
+  Serket, each with their sacred animal, a gold collar and their crown or symbol, in Sacred, Moonlit and Sunset colors.
+  Unlock Egypt World (200 💖) to get them all and visit its golden desert. Gods hit a little harder in the Arena.
 - 🖍️ **The Redraw: every Blip has a new look.** Rounder shapes, bigger features and new shading on all of them. Miss the
   old look? Every Blip has a 🍬 **Classic** color (called **Original** for the few that already had a Classic) that shows the
   new drawing but glitches back to its old one every few seconds. Your chosen colors stay the same.
@@ -88,7 +89,7 @@ make Blipville what it is. This is the real thing.
   opens again by itself.
 - 🎁 Gifts can't get lost on the website version any more.
 
-**Everything in Blipville:** 350 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
+**Everything in Blipville:** 380 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
 17 kaiju, 25 ghosts, 5 worlds with 22 World Legends, 33 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 

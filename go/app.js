@@ -11,7 +11,6 @@
   const GIFTS = new Set(D.groups.gifts || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
-  const COSPLAY_OF = D.cosplayOf || {};              // 🎭 cosplayers: unlocked once you have the Blip they dress as
   const AWAKEN_FORM = D.awakenForm || {};
   const AWAKEN_CHAIN = D.awakenChain || Object.fromEntries(Object.entries(AWAKEN_FORM).map(([b, f]) => [b, [f]]));   // some Blips awaken up to 3 times
   const AWAKEN_BASE = Object.fromEntries(Object.entries(AWAKEN_CHAIN).flatMap(([b, fs]) => fs.map((f) => [f, b])));
@@ -23,6 +22,7 @@
     "Ocean World":  { sky: ["#0e4a8a", "#3ab0d8"], land: ["#2a7aa8", "#e8d8a0", "#c8b880"], fx: [["bubble", 6]], sun: null },
     "Dino World":   { sky: ["#c8582a", "#ffc87a"], land: ["#5a7a3a", "#6a4a2a", "#4a3418"], fx: [["ash", 5], ["leaf", 1]], sun: "#ffe08a", volcano: true },
     "Space World":  { sky: ["#06061a", "#2a1a5a"], land: ["#5a5a7a", "#8a8aa8", "#6a6a88"], fx: [["star", 5]], sun: null, planet: true },
+    "Egypt World":  { sky: ["#e88a3a", "#ffe8b0"], land: ["#e8c878", "#d8b060", "#c89a48"], fx: [["ash", 3]], sun: "#fff4c0" },
   };
   const WORLDS = D.worlds || [], WORLD_OF = {};          // world Blips are locked until you unlock their world
   for (const w of WORLDS) for (const [t, ks] of D.groups.tabs || []) if (t === w.tab) for (const k of ks) WORLD_OF[k] = w.name;
@@ -123,7 +123,7 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => COSPLAY_OF[k] ? isUnlocked(COSPLAY_OF[k]) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const isUnlocked = (k) => codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -402,23 +402,6 @@
     }
     return c;
   }
-  // 🎭 HD sprites (the Cosplayers): 32x26 art at half-size pixels; the face is part of the drawing
-  function hdGrid(k, pal, opt, t, st) {
-    const sh = st === "sleep" || opt.squash ? 2 : 0;
-    const g = Array.from({ length: 26 }, () => Array(32).fill(null));
-    k.hd.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== "." && y + sh < 26) g[y + sh][x] = pxColor(pal, ch); }));
-    const face = st === "sleep" ? "sleep" : opt.blink ? "blink" : opt.face === "happy" ? "happy" : "normal";
-    if (face !== "normal") {
-      const skin = pal.u || pal.o, line = pal.k || pal.o;
-      for (const [x0, x1] of [[11, 13], [18, 20]]) {
-        for (let y = 8; y < 12; y++) for (let x = x0; x <= x1; x++) if (g[y + sh][x]) g[y + sh][x] = skin;
-        if (face === "happy") { g[10 + sh][x0] = g[9 + sh][x0 + 1] = g[10 + sh][x1] = line; }
-        else for (let x = x0; x <= x1; x++) g[10 + sh][x] = line;
-      }
-    }
-    if (opt.silhouette) for (const row of g) for (let x = 0; x < 32; x++) if (row[x]) row[x] = "#5c528c";
-    return g;
-  }
   const glitching = (t) => { const p = ((t % 5) + 5) % 5; return p < 0.12 || (p >= 0.24 && p < 0.34); };   // twice, briefly, every 5 s
   const isNight = () => { const h = new Date().getHours(); return h >= 22 || h < 6; };
   function grid(kind, colorIdx, opt = {}) {
@@ -426,7 +409,6 @@
     const t = opt.t ?? now(), st = opt.state || "idle";
     let pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
     if (opt.live && pal.glitch != null && glitching(t + (opt.phase || 0))) pal = Object.assign({}, cols[pal.glitch], k.extra || {});   // ⚡ flicker to an old look
-    if (k.hd) return hdGrid(k, pal, opt, t, st);
     let body = pal.art || k.body;
     if (opt.live && pal.glitch_art && glitching(t)) body = pal.glitch_art;      // 📼 Classic: flicker back to the old drawing
     if (k.alt && ["walk", "fall", "held"].includes(st) && Math.floor(t * 10) % 2) body = k.alt;
@@ -525,16 +507,13 @@
     const base = c.globalAlpha;
     for (let r = 0; r < g.length; r++) {
       let col = 0;
-      const w = g[r].length, cs = s * 16 / w;               // 🎭 HD sprites (32 wide) use half-size pixels
-      while (col < w) {
+      while (col < 16) {
         const color = g[r][col];
         if (!color) { col++; continue; }
         let end = col;
-        while (end + 1 < w && g[r][end + 1] === color) end++;
+        while (end + 1 < 16 && g[r][end + 1] === color) end++;
         c.globalAlpha = soul && soul.has(color) ? base * soulA : base;
-        c.fillStyle = color;
-        if (w === 16) c.fillRect(x + col * s, y + r * s, (end - col + 1) * s, s);
-        else { const X0 = Math.round(x + col * cs), Y0 = Math.round(y + r * cs); c.fillRect(X0, Y0, Math.round(x + (end + 1) * cs) - X0, Math.round(y + (r + 1) * cs) - Y0); }
+        c.fillStyle = color; c.fillRect(x + col * s, y + r * s, (end - col + 1) * s, s);
         col = end + 1;
       }
     }
@@ -1467,10 +1446,9 @@
                     [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []],
                     ["Legends ✨ (visit a world, tap them when they stroll by)", D.groups.legends || []],
                     ["Ghosts 👻 (they drift by at night: tap one while it glows!)", D.groups.ghosts || []],
-                    ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []],
-                    ["Cosplayers 🎭 (Blip fans in costume: get the Blip they dress as)", D.groups.cosplayers || []]];
+                    ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (COSPLAY_OF[k] ? `🎭 get a ${COSPLAY_OF[k]} first` : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const world = WORLDS.find((w) => w.tab === title);

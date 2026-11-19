@@ -58,7 +58,8 @@ make Blipville what it is. This is the real thing.
   wind-up toy with a brass key in its head, sometimes turns up in the old workshop. Both join Pull the Strings and get
   Shadow colors from The Puppet Master. The hare's 🧪 **Prime** color shows it in its prime: polished gold, both ears
   up, flexing in a red showman's cape and bow tie. Prime is fully solid (not ghostly), but every few seconds
-  it glitches for a split second back to its old worn look.
+  it glitches for a split second back to its withered look. The hare's usual look is now that withered showman:
+  a torn ear, a drooping ear, a bent key, dangling arms and a tattered cape.
 - 🎨 **Classic crew colors:** each Night Shift robo has a 🍬 Classic color with its own drawing for its job: the
   crew's leader, Robo Bear, as captain with a captain's hat, gold shoulder pads and a star medal; a lights-crew
   Robo Bunny with a bulb and battery meter; a diner-cook Robo Hen ("Sunny") in a chef hat and apron; and a racer Robo Fox

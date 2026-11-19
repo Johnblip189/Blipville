@@ -58,13 +58,13 @@ def body_and_arms(sprite):
     mouth = {(ey + 4, 7), (ey + 4, 8)} if sprite.get("mouth") else set()
     visor = any("v" in r for r in rows)
     body_rows = sprite["body"]
-    widest = min(min(c for c, ch in enumerate(r) if ch != ".") for r in body_rows)
-    # shoulder: the row nearest eyes+3 where the body is at its widest (so nothing sticks out past the arm)
-    cand = [r for r in range(len(body_rows)) if min(c for c, ch in enumerate(body_rows[r]) if ch != ".") == widest]
-    shoulder = min(cand, key=lambda r: abs(r - (ey + 3)))
+    # shoulder: 3 rows below the eyes, at the body's width just under the eyes (antlers, ears, tails and claws that
+    # stick out further are left off where the arms swing: the arms replace any little arms drawn into the sprite)
+    shoulder = min(ey + 3, len(body_rows) - 3)
+    span = [r for r in range(ey, min(ey + 4, len(body_rows)))]
+    cl = min(min(c for c, ch in enumerate(body_rows[r]) if ch != ".") for r in span)
+    cr = max(max(c for c, ch in enumerate(body_rows[r]) if ch != ".") for r in span)
     sy = top_y - (shoulder + 0.5) * PX
-    cl = min(c for c, ch in enumerate(rows[shoulder]) if ch != ".")
-    cr = max(c for c, ch in enumerate(rows[shoulder]) if ch != ".")
     xl, xr = cl * PX, (cr + 1) * PX
     cubes = []
     for r, row in enumerate(rows):
@@ -139,10 +139,11 @@ if __name__ == "__main__":
     sprites = json.load(open(sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "sprites.json")))
     for name, sp in sprites.items():
         body, arms = plate(sp)
+        name_rarity = f"{name} ({sp.get('rarity', 'extra')})"
         t = to_trimesh(union([body] + arms))
         keep = [c for c in t.split(only_watertight=False) if abs(c.volume) > 1.0]   # drop zero-volume slivers where
         t = trimesh.util.concatenate(keep)                                           # pixel blocks meet exactly
         path = os.path.join(HERE, name.lower().replace(" ", "_").replace("-", "") + "_figure.stl")
         t.export(path)
-        print(f"{name:14} {os.path.basename(path)}  plate {np.round(t.extents, 1).tolist()} mm  watertight={t.is_watertight}  "
+        print(f"{name_rarity:28} {os.path.basename(path)}  plate {np.round(t.extents, 1).tolist()} mm  watertight={t.is_watertight}  "
               f"parts={len(t.split(only_watertight=False))}")

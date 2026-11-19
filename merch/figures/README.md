@@ -9,7 +9,7 @@ Posable pixel figures built straight from the game sprites (`python3 make_figure
 | T-Rex | regular | `trex_figure.stl` |
 | Wendigo | regular | `wendigo_figure.stl` |
 | Bun | regular | `bun_figure.stl` |
-| *(6th slot open)* | | |
+| Beta Buddy | regular | `beta_buddy_figure.stl` |
 
 Extras (not in the series yet): `robo_bear_figure.stl`, `boo_figure.stl`, `spike_figure.stl`.
 

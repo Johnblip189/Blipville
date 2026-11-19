@@ -24,13 +24,15 @@ W, H = round((TRIM_W + 2 * BLEED) * MM), round((TRIM_H + 2 * BLEED) * MM)
 BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 REG = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
-SERIES = [("Silvertear-03", "ultra-rare"), ("Blip", "rare"), ("T-Rex", "regular"), ("Wendigo", "regular"), ("Bun", "regular")]
+SERIES = [("Silvertear-03", "ultra-rare"), ("Blip", "rare"), ("T-Rex", "regular"), ("Wendigo", "regular"), ("Bun", "regular"),
+          ("Beta Buddy", "regular")]
 SLOTS = 6
 BIOS = {"Silvertear-03": "Tactical bodyguard. Secretly loves naps.",
         "Blip": "The friendliest Blip in town.",
         "T-Rex": "Tiny arms. Huge heart.",
         "Wendigo": "Spooky antlers, gentle soul.",
-        "Bun": "Shy, soft and very good at hiding."}
+        "Bun": "Shy, soft and very good at hiding.",
+        "Beta Buddy": "Our very first tester. Still finding bugs."}
 THEMES = {   # card colors by rarity: (top, bottom, accent, banner)
     "regular": ((58, 52, 110), (24, 20, 52), (154, 140, 255), (90, 74, 224)),
     "rare": ((112, 60, 170), (34, 14, 64), (255, 140, 220), (176, 70, 200)),
@@ -355,8 +357,10 @@ if __name__ == "__main__":
     cut = (round(BLEED * MM), round(BLEED * MM), W - round(BLEED * MM), H - round(BLEED * MM))
     tw = 360
     th = round(tw * TRIM_H / TRIM_W)
-    sheet = Image.new("RGB", (tw * 3 + 40, th * 2 + 30), (20, 18, 34))
+    cols = 4
+    rows = -(-len(previews) // cols)
+    sheet = Image.new("RGB", (tw * cols + 10 * (cols + 1), th * rows + 10 * (rows + 1)), (20, 18, 34))
     for i, p in enumerate(previews):
-        sheet.paste(p.crop(cut).convert("RGB").resize((tw, th), Image.LANCZOS), (10 + (i % 3) * (tw + 10), 10 + (i // 3) * (th + 10)))
+        sheet.paste(p.crop(cut).convert("RGB").resize((tw, th), Image.LANCZOS), (10 + (i % cols) * (tw + 10), 10 + (i // cols) * (th + 10)))
     sheet.save(os.path.join(out, "cards_preview.png"))
     print("wrote", len(SERIES), "fronts, card_back.png, dieline.png, cards_preview.png")

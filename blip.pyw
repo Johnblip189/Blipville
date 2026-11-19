@@ -6813,7 +6813,7 @@ def load_custom_blips():
 # 💾 Save safety: every load is checked field by field (a wrong type is fixed instead of crashing later), the last good
 # save is kept as save.bak.json, a broken save is copied aside before anything replaces it, and a failed write is
 # reported to the player instead of silently forgotten.
-SAVE_LISTS = ("awakened", "bad_dreams", "merch", "redeemed", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
+SAVE_LISTS = ("awakened", "bad_dreams", "merch", "merch_kinds", "redeemed", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
               "rivals_beaten", "skins", "trophies", "unlocked", "worlds")
 SAVE_COUNTS = ("hearts", "nights_won")
 SAVE_FLAGS = ("auto_update", "climb", "cursor_play", "sound", "voices", "weather", "slot2")
@@ -7975,12 +7975,29 @@ def maintenance_skipped():
 # merch's skin. The game never contains the codes, only a slow fingerprint of each one (PBKDF2-SHA256), so codes can't
 # be worked out from the game. New batches go in merch-codes.json in the repo (read online, like status.json), so new
 # codes work without an update. tools/merch_codes.py makes codes and their fingerprints.
-MERCH = {"REX-GRN": {"name": "Classic Dino Green", "for": "T-Rex"},
-         "REX-MAG": {"name": "Awakened Volcanic", "for": "T-Rex"},
-         "REX-SLV": {"name": "Mecha / Fossil Silver", "for": "T-Rex"},
-         "AEGIS-CHR": {"name": "Mirror Chrome", "kind": "Silvertear-03"}}     # "kind": the skin is in the game already
+MERCH = {"REX-GRN": {"name": "Classic Dino Green", "kind": "T-Rex"},
+         "REX-MAG": {"name": "Awakened Volcanic", "kind": "T-Rex"},
+         "REX-SLV": {"name": "Mecha / Fossil Silver", "kind": "T-Rex"},
+         "AEGIS-CHR": {"name": "Mirror Chrome", "kind": "Silvertear-03"},
+         # 🧸 Series 1 figures (5 of each): every figure's code unlocks that Blip (if you don't have it) + a merch-only color
+         "FIG-BLIP": {"name": "Figure Holo", "kind": "Blip"},
+         "FIG-BUN": {"name": "Figure Pastel", "kind": "Bun"},
+         "FIG-WENDI": {"name": "Figure Glow", "kind": "Wendigo"},
+         "FIG-BETA": {"name": "Figure Prototype", "kind": "Beta Buddy"}}
+# merch-only colors (added at the end of each Blip's colors: saves remember colors by position)
+MERCH_COLORS = {
+    "T-Rex": [{"name": "Classic Dino Green", "o": "#0c2a14", "b": "#5ac85a", "s": "#2e8a3a", "h": "#2e8a3a", "k": "#ffffff", "d": "#5a1a1a", "l": "#d8f8b0", "a": "#3a9a4a", "e": "#ffd23a"},
+              {"name": "Awakened Volcanic", "o": "#1a0604", "b": "#3a1a14", "s": "#ff5a1a", "h": "#ff8a2a", "k": "#ffd23a", "d": "#ff3a1a", "l": "#ff8a3a", "a": "#2a0e0a", "e": "#ffea5a"},
+              {"name": "Mecha / Fossil Silver", "o": "#1a1c22", "b": "#b8bec8", "s": "#7a828e", "h": "#7a828e", "k": "#ffffff", "d": "#3a3e48", "l": "#e8ecf2", "a": "#8a929e", "e": "#5ad8ff"}],
+    "Blip": [{"name": "Figure Holo", "o": "#2a1040", "b": "#c87aff", "l": "#ffe0ff", "p": "#ff7ad8", "e": "#1a0a2a"}],
+    "Bun": [{"name": "Figure Pastel", "o": "#3a2a4a", "b": "#ffc8e8", "l": "#ffffff", "p": "#ff8ac0", "e": "#2a1a3a"}],
+    "Wendigo": [{"name": "Figure Glow", "o": "#0a1a12", "h": "#b8ffd0", "l": "#e8fff0", "k": "#0a140e", "w": "#ffffff", "b": "#1a3a2a", "r": "#6ad8a0", "e": "#3aff8a"}],
+    "Beta Buddy": [{"name": "Figure Prototype", "o": "#1a1a2a", "b": "#c8ccd8", "h": "#ff5a8a", "s": "#ffffff", "y": "#5ae0ff", "p": "#ff9ab0", "e": "#1a1a2a"}],
+}
+for _k, _cs in MERCH_COLORS.items():
+    VARIANTS[_k]["colors"] = list(kind_colors(_k)) + [{**c, "unlock": "merch"} for c in _cs]
 MERCH_SALT, MERCH_ROUNDS = b"blipville-merch-v1", 60000
-MERCH_HASHES = []                 # fingerprints shipped with the game (more are read from MERCH_CODES_URL)
+MERCH_HASHES = ["0df3bee4df1cd9a88c43525104cdd46fa7b1180a691b5668419bd97746ba359f", "152c819272e07c901ff80ffe7e984d98dbbecd9fa5c07afc3876ac9b79f972fe", "15418cd6606dca58de2eb6fd8024ed5c8f030e14d0503f052c58c4cef3269d65", "177971b3cb9f5af5bb06de96dccbb06fb2a12d7b43f1394a57d8829b39f3d88a", "1ae3cf2d6144e5baf6f6d8161ed3f5a794c8c1f3bbb360eb05e7bdf722b6c75f", "2ad5d9a2018a054860af001f4c63d80d3a52ef26dc742f25ce24a1999e60d465", "2b18b607b91e701d08486e56dd11045ccd9b54ac5d1b19329198236ee127e819", "2e261873ce71beb251f650b62db880a2ce5cb1db61b3717aacd897d251908d8e", "3dd9114aeede159ac7c14b89d399152e09019bb0cd3bc7bc8c99c203fae96fa4", "597690a49f65c00cd824415d15d0088ed56e9652b433ce3c2343afafd571e2b6", "61c54295b6d1baf443eefa1b8acdbde6adfc98a98efb4051f8d5d821ab4eec72", "6634c81c82940d407808af535edaec9ff9dc35218ad1dc070539cd81426e9ea2", "6d40544780becae006562500a6607637ad0edbf34081be4b56bbccc7649a484d", "78dd33665dbdfad7918c086ca1b853dac95d6122e945baef192807400f43b7d7", "80fbe48fdd002c3dff397b15370f6937887208eb998e372127c93f3b7082fee0", "812fe885722cde93674ca5ee87e96d9c6562c11d3a64df97fd959d7d42bc4719", "8392a2883db6cfc75bfe963d98929ffe701022e43cd556bf1a21d874234ebcbc", "8d09b9b0ec7e2b50108a2d48573da24fc54821538f91f843d058a90a60c89cb3", "ad15c72c6ea2adb95c6c8b9d45a1b000ddd609ac9ef68278cef0a3609d13f017", "aedd54b9b3989ca16271d5433872a4a1fa285c9b827ea284f179170e2d57c978", "b4b915609013ac91e35d42ce5e2aa8f20255bc22a6f4a320edc6746f7eba0624", "b681d20fc4673b29d2f8a674707bb2be0232af24ef7e754223ecd50538daa0b4", "c1e7acd4b009b18d252fc186dfb4b9549683f91047192b902ed467f0d91fcd17", "d74f5b1d1d7768d5a4d3705ad745b7af0d52166b15bde3abc62fe1487274507e", "dc5fef5187718ec36a46a066a148cf70ad7259686ed9f5cf87fa4f50ef3fdf9f", "de05f6ae6797716b48d339f4aa0f3ecf6d2c8a40fb1746ddb305de67f4444093", "e38c1fa7e99140bf41b0a74be188891765b7e60290acb3b88b11148728b86e08", "e468e15e6edffb47aab14a91cb08dc25b064c6bfdbc7af9c80077d2ac5721f17", "e93aefa90b2c0078baa0ef076ff789100ad55d781dbf5783bd1fc48919c1f0ae", "ea57ef981a7a6f040624eccbfdc0ab6f0eb027a176977852b97968a6c8149c80"]   # fingerprints shipped with the game (Series 1 figures); more are read from MERCH_CODES_URL
 MERCH_CODES_URL = "https://raw.githubusercontent.com/Johnblip189/Blipville/main/merch-codes.json"
 
 
@@ -8002,7 +8019,7 @@ SAVE_CODE_KEYS = {"hearts": "hearts", "hatched": "hatched", "hats_owned": "hatsO
                   "cryptids": "cryptids", "kaiju": "kaiju", "gifts": "gifts", "worlds": "worlds", "world": "world", "legends": "legends",
                   "ghosts": "ghosts", "trophies": "trophies", "stats": "stats", "awakened": "awakened", "awaken_level": "awakenLevel",
                   "rivals_beaten": "rivalsBeaten", "slot2": "slot2", "skins": "skins", "event_points": "eventPoints",
-                  "gods": "gods", "bad_dreams": "badDreams", "merch": "merch", "redeemed": "redeemed"}
+                  "gods": "gods", "bad_dreams": "badDreams", "merch": "merch", "merch_kinds": "merchKinds", "redeemed": "redeemed"}
 
 
 def make_save_code(save, town):
@@ -11025,6 +11042,8 @@ class App:
                             parent=parent)
 
     def is_unlocked(self, kind):
+        if kind in self.save.get("merch_kinds", []):     # 🎟️ came with a merch code
+            return True
         owners = [h for h, ks in MOD_CODE_KINDS.items() if kind in ks]
         if owners:
             return self.save.get("mod_code") in owners
@@ -11248,8 +11267,8 @@ class App:
             skin = f"{kind}:{m['name']}"
             if skin not in self.save.setdefault("skins", []):
                 self.save["skins"].append(skin)
-            if kind in KAIJU and kind not in self.save.setdefault("kaiju", []):
-                self.save["kaiju"].append(kind)
+            if kind not in self.save.setdefault("merch_kinds", []):     # the Blip itself is yours too
+                self.save["merch_kinds"].append(kind)
             write_save(self.save)
             self.sound.play("fanfare")
             pet = self.add_pet(kind, greet=False)

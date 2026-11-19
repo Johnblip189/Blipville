@@ -3,12 +3,19 @@
 Physical Blipville merch comes with a code like `AEGIS-CHR-7K3M-9QPA`. Players type it in the 🔑 Secret code box
 (Windows: right-click a pet → ⭐ Secret code; website: ? → 🔑) to unlock that merch's skin.
 
-| Prefix | Unlocks |
+| Prefix | Unlocks (the Blip itself too, if you don't have it yet) |
 |---|---|
-| `REX-GRN` | T-Rex: Classic Dino Green (saved now; the T-Rex itself arrives in a later update) |
-| `REX-MAG` | T-Rex: Awakened Volcanic (same) |
-| `REX-SLV` | T-Rex: Mecha / Fossil Silver (same) |
-| `AEGIS-CHR` | Silvertear-03 + her merch-only **Mirror Chrome** color |
+| `AEGIS-CHR` | Silvertear-03: **Mirror Chrome** (Series 1 figure, ultra-rare) |
+| `FIG-BLIP` | Blip: **Figure Holo** (Series 1 figure, rare) |
+| `REX-GRN` | T-Rex: **Classic Dino Green** (Series 1 figure) |
+| `FIG-WENDI` | Wendigo: **Figure Glow** (Series 1 figure) |
+| `FIG-BUN` | Bun: **Figure Pastel** (Series 1 figure) |
+| `FIG-BETA` | Beta Buddy: **Figure Prototype** (Series 1 figure) |
+| `REX-MAG` | T-Rex: **Awakened Volcanic** (for a later T-Rex release) |
+| `REX-SLV` | T-Rex: **Mecha / Fossil Silver** (for a later T-Rex release) |
+
+Series 1: 5 of each figure, so 5 codes per figure (30). Their fingerprints are built into the game (`MERCH_HASHES`), so
+those codes work offline too. The codes themselves are only in `merch/private/` (never committed).
 
 ## Making a batch
 

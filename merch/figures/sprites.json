@@ -104,6 +104,27 @@
   "dx": 0,
   "rarity": "regular"
  },
+ "Beta Buddy": {
+  "body": [
+   ".......yY.......",
+   "......hhhH......",
+   ".o...hshhsH...o.",
+   ".ooohhhhhhhHooo.",
+   ".o*bbbbbbbbbbBo.",
+   "ob*bbbbbbbbbbbBo",
+   "obbbbbbbbbbbbbBo",
+   "obpbbbbbbbbbbpBo",
+   "obbbbbbbbbbbbbBo",
+   "oBbbbbbbbbbbbbBo",
+   ".oBBBBBBBBBBBBo.",
+   "..oooooooooooo.."
+  ],
+  "eyes": 5,
+  "mouth": true,
+  "feet": "...oo......oo...",
+  "dx": 0,
+  "rarity": "regular"
+ },
  "Robo Bear": {
   "body": [
    ".ooo........ooo.",

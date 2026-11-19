@@ -45,7 +45,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], badDreams: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], badDreams: [], merch: [], redeemed: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
   // 💾 save safety: check every field when loading, keep the last good save as a backup, never throw away a damaged save,
   // and tell the player when saving fails instead of failing silently
   const SAVE_DEFAULTS = JSON.parse(JSON.stringify(save)), BAK_KEY = SAVE_KEY + "-backup", BROKEN_KEY = SAVE_KEY + "-broken";
@@ -1120,7 +1120,7 @@
       b.appendChild(thumb(p.kind, i, false, 3)); b.append((locked ? "🔒 " : "") + col.name + (col.event && !locked ? " ✨" : ""));
       if (!locked && i !== p.color) { const pr = doc().createElement("small"); pr.className = "price"; pr.append(pxImg(cc.icon), ` ${cc.cost}`); b.appendChild(pr); }
       b.onclick = () => {
-        if (locked) { toast(col.unlock === "puppet" ? `🔒 ${col.name}: fend off this robo's Bad Dream to unlock it! (tap a Puppet Master 5 times)` : `🔒 ${col.name} is a ${EVENT.icon} ${EVENT.name} skin. Earn it in the event! (tap ${EVENT.icon} at the top)`, 4); return; }
+        if (locked) { toast(col.unlock === "puppet" ? `🔒 ${col.name}: fend off this robo's Bad Dream to unlock it! (tap a Puppet Master 5 times)` : col.unlock === "merch" ? `🔒 ${col.name} comes with Blipville merch: type its 🎟️ code in ? → 🔑 Secret code.` : `🔒 ${col.name} is a ${EVENT.icon} ${EVENT.name} skin. Earn it in the event! (tap ${EVENT.icon} at the top)`, 4); return; }
         if (i === p.color) return;
         if (!isCreator()) {                                   // 🍬🧪 a treat changes the color
           if (save.hearts < cc.cost) { toast(`${cc.icon === "potion" ? "🧪 A Color Potion" : "🍬 A Color Candy"} costs ${cc.cost} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 3.5); return; }
@@ -2102,8 +2102,38 @@
     } else if (EARLY_HASHES.includes(h)) {
       try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode */ }
       $("secretMsg").textContent = "🎟️ Early access code saved on this device!";
-    } else $("secretMsg").textContent = "Hmm, that code doesn't do anything.";
+    } else if (merchPrefix(code)) await redeemMerch(code);
+    else $("secretMsg").textContent = "Hmm, that code doesn't do anything.";
   };
+  // 🎟️ merch codes (same rules as blip.pyw): only a slow fingerprint of each code is known, never the code itself
+  const MERCH = D.merch || { items: {}, hashes: [] };
+  const merchPrefix = (code) => Object.keys(MERCH.items).find((p) => code.startsWith(p.replace(/-/g, "")) && code.length === p.replace(/-/g, "").length + 8);
+  async function merchFingerprint(code) {
+    const enc = new TextEncoder(), key = await crypto.subtle.importKey("raw", enc.encode(code), "PBKDF2", false, ["deriveBits"]);
+    const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", salt: enc.encode(MERCH.salt), iterations: MERCH.rounds, hash: "SHA-256" }, key, 256);
+    return [...new Uint8Array(bits)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+  async function redeemMerch(code) {
+    const msg = $("secretMsg"), prefix = merchPrefix(code), m = MERCH.items[prefix];
+    msg.textContent = "🎟️ Checking your code…";
+    const fp = await merchFingerprint(code), known = new Set(MERCH.hashes || []);
+    try { const r = await fetch(`${MERCH.url}?t=${Math.floor(Date.now() / 60000)}`, { cache: "no-store" }); if (r.ok) for (const h of (await r.json()).hashes || []) known.add(h); }
+    catch (e) { /* offline: only the codes shipped with the game work */ }
+    if (!known.has(fp)) { msg.textContent = "Hmm, that merch code doesn't work. Check the letters and try again!"; return; }
+    let device = []; try { device = JSON.parse(localStorage.getItem("blipville-redeemed") || "[]"); } catch (e) { /* private mode */ }
+    if (save.redeemed.includes(fp) || device.includes(fp)) { msg.textContent = "That code has already been used on this device. 🎟️"; return; }
+    save.redeemed.push(fp); if (!save.merch.includes(prefix)) save.merch.push(prefix);
+    try { localStorage.setItem("blipville-redeemed", JSON.stringify(device.concat(fp))); } catch (e) { /* private mode */ }
+    sfx("fanfare"); vibrate([30, 40, 30]);
+    if (m.kind) {
+      const skin = `${m.kind}:${m.name}`; if (!save.skins.includes(skin)) save.skins.push(skin);
+      if (KAIJU.has(m.kind) && !save.kaiju.includes(m.kind)) save.kaiju.push(m.kind);
+      const p = addPet(m.kind, { quiet: true });
+      if (p) { p.color = KINDS[m.kind].colors.findIndex((c) => c.name === m.name); say(p, "✨ merch link established. hello, keeper. ✨", 4); burst(p, "heart", 10); sparkle(p, 12); }
+      msg.textContent = `✨ ${m.kind}: ${m.name} unlocked! Thanks for supporting Blipville. 💜`;
+    } else msg.textContent = `✨ ${m.for}: ${m.name} is yours! The ${m.for} arrives in an update soon, and this skin will be waiting for you. 💜`;
+    persist(true); checkTrophies();
+  }
   function devAddCreators() {
     for (const [k, line] of [["Blipmaker", "the creator has arrived! 👑"], ["Byte", "*beep* ready to ship!"], ["Guardian", "🛡️ on duty!"]]) {
       if (!pets.some((p) => p.kind === k)) { const p = addPet(k, { name: k, quiet: true }); if (p) { say(p, line, 4); burst(p, "heart", 8); } }

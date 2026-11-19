@@ -52,6 +52,10 @@ make Blipville what it is. This is the real thing.
   (her whole faceplate flushes pink) if you call her cute. Colors: Chrome, Gunmetal,
   Gold Plated (with emerald eyes) and 📺 **Showa**, the boxy 1970s tin-robot model with its own drawing: bolt antennae,
   a riveted brow, amber eyes in a wide visor slot, clean riveted cheeks, a red/yellow/cyan chest strip and a stiff tail.
+- 🎟️ **Merch codes:** codes that come with Blipville merch can be typed into the 🔑 Secret code box to unlock that
+  merch's skin (like Silvertear-03's merch-only Mirror Chrome color).
+- 💾 **Save codes carry everything:** Egypt gods, Bad Dreams and merch skins now move with your town between the
+  website and Windows too.
 - 🔊 **Blip voices:** speech bubbles now type themselves out, and each Blip "talks" in little blips with its own
   voice: robots and mechs beep, ghosts hum softly, kaiju rumble low, and every Blip has its own pitch. Turn sound on
   (🔇 at the top on the website, right-click → Sound effects on Windows) to hear them; on Windows, right-click →

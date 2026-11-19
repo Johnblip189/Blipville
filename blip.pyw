@@ -3671,7 +3671,11 @@ KAIJU["Silvertear-03"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True
                 "r": "#e83a3a", "u": "#ffd23a", "c": "#3ad8ff", "f": "#3a3e46",
                 "art": ["..o..........o..", "..S..........S..", ".oSooooooooooSo.", ".osksssssssskso.", ".ovyvvvvvvvvyvo.",
                         ".ovyvvvvvvvvyvo.", ".osksssssssskso.", ".osssssssssssSo.", ".osssrruuccssSo.", ".oSsskSSSSksSSo.",
-                        "..okkSSSSSSkoSkS", "...okkkkkkkko..."]}]}
+                        "..okkSSSSSSkoSkS", "...okkkkkkkko..."]},
+               # 🎟️ Mirror Chrome: merch-only (redeem an AEGIS-CHR code from the physical toy). New colors go at the
+               # end: saves remember colors by position.
+               {"name": "Mirror Chrome", "unlock": "merch", "o": "#10141c", "k": "#2a3040", "s": "#eef4ff", "v": "#060a14", "y": "#7ad8ff",
+                "r": "#d81e3a", "e": "#b8ecff", "f": "#2a3040"}]}
 # 💬 Chats: talk to a Blip by picking ready-made lines. Each node is what the Blip says plus your choices
 # [what you say, next node]; "end" closes the chat. Add a Blip here (and nothing else) to let it chat.
 CHATS = {
@@ -6111,7 +6115,7 @@ class Blip:
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
             if skin_locked(self.app.save, self.kind, i):
-                why = "fend off its Bad Dream" if col.get("unlock") == "puppet" else f"{EVENT['icon']} {EVENT['name']} skin"
+                why = "fend off its Bad Dream" if col.get("unlock") == "puppet" else "redeem a 🎟️ merch code" if col.get("unlock") == "merch" else f"{EVENT['icon']} {EVENT['name']} skin"
                 self.color_menu.add_command(label=f"🔒 {col['name']}  ({why})", state="disabled")
             else:
                 icon, _, cost = color_cost(self.kind, i)
@@ -6809,7 +6813,7 @@ def load_custom_blips():
 # 💾 Save safety: every load is checked field by field (a wrong type is fixed instead of crashing later), the last good
 # save is kept as save.bak.json, a broken save is copied aside before anything replaces it, and a failed write is
 # reported to the player instead of silently forgotten.
-SAVE_LISTS = ("awakened", "bad_dreams", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
+SAVE_LISTS = ("awakened", "bad_dreams", "merch", "redeemed", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
               "rivals_beaten", "skins", "trophies", "unlocked", "worlds")
 SAVE_COUNTS = ("hearts", "nights_won")
 SAVE_FLAGS = ("auto_update", "climb", "cursor_play", "sound", "voices", "weather", "slot2")
@@ -7966,6 +7970,30 @@ def maintenance_skipped():
     # dev copies, test builds (v1.0.0-test) and the build's own test never close, so testing can go on during maintenance
     return APP_VERSION == "dev" or APP_VERSION.endswith("-test") or bool(os.environ.get("BLIPVILLE_NO_MAINTENANCE"))
 
+# ----------------------------------------------------------------------------- 🎟️ merch codes
+# Physical Blipville merch comes with a code like REX-GRN-7K3M-9QPA. Type it in the 🔑 Secret code box to get that
+# merch's skin. The game never contains the codes, only a slow fingerprint of each one (PBKDF2-SHA256), so codes can't
+# be worked out from the game. New batches go in merch-codes.json in the repo (read online, like status.json), so new
+# codes work without an update. tools/merch_codes.py makes codes and their fingerprints.
+MERCH = {"REX-GRN": {"name": "Classic Dino Green", "for": "T-Rex"},
+         "REX-MAG": {"name": "Awakened Volcanic", "for": "T-Rex"},
+         "REX-SLV": {"name": "Mecha / Fossil Silver", "for": "T-Rex"},
+         "AEGIS-CHR": {"name": "Mirror Chrome", "kind": "Silvertear-03"}}     # "kind": the skin is in the game already
+MERCH_SALT, MERCH_ROUNDS = b"blipville-merch-v1", 60000
+MERCH_HASHES = []                 # fingerprints shipped with the game (more are read from MERCH_CODES_URL)
+MERCH_CODES_URL = "https://raw.githubusercontent.com/Johnblip189/Blipville/main/merch-codes.json"
+
+
+def merch_fingerprint(code):
+    import hashlib
+    return hashlib.pbkdf2_hmac("sha256", code.encode(), MERCH_SALT, MERCH_ROUNDS).hex()
+
+
+def merch_prefix(code):
+    """The MERCH entry a (cleaned-up, letters-and-digits) code is for, or None."""
+    return next((p for p in MERCH if code.startswith(p.replace("-", "")) and len(code) == len(p.replace("-", "")) + 8), None)
+
+
 # ----------------------------------------------------------------------------- save codes
 # The same codes as the website version ("BLIPVILLE1:" + the save as base64 JSON), so a town can move between the Windows
 # app and a browser, phone or Chromebook, both ways. Keys are written the website's way.
@@ -7973,7 +8001,8 @@ SAVE_CODE_PREFIX = "BLIPVILLE1:"
 SAVE_CODE_KEYS = {"hearts": "hearts", "hatched": "hatched", "hats_owned": "hatsOwned", "peeked": "peeked", "nights_won": "nightsWon",
                   "cryptids": "cryptids", "kaiju": "kaiju", "gifts": "gifts", "worlds": "worlds", "world": "world", "legends": "legends",
                   "ghosts": "ghosts", "trophies": "trophies", "stats": "stats", "awakened": "awakened", "awaken_level": "awakenLevel",
-                  "rivals_beaten": "rivalsBeaten", "slot2": "slot2", "skins": "skins", "event_points": "eventPoints"}
+                  "rivals_beaten": "rivalsBeaten", "slot2": "slot2", "skins": "skins", "event_points": "eventPoints",
+                  "gods": "gods", "bad_dreams": "badDreams", "merch": "merch", "redeemed": "redeemed"}
 
 
 def make_save_code(save, town):
@@ -11195,6 +11224,47 @@ class App:
         self.dream_game = True
         self.root.after(1400, lambda: setattr(self, "dream_game", BadDreamFend(self, kind)))
 
+    def redeem_merch(self, code, parent):
+        """🎟️ A code from physical merch: check its fingerprint, then give the skin (once per town and per device)."""
+        from tkinter import messagebox
+        prefix, fp = merch_prefix(code), merch_fingerprint(code)
+        known = set(MERCH_HASHES)
+        try:
+            known |= set(json.loads(http_get(f"{MERCH_CODES_URL}?t={int(time.time() // 60)}", timeout=8).decode("utf-8")).get("hashes", []))
+        except Exception as e:  # noqa: BLE001  (offline: only the codes shipped with the game work)
+            log(f"merch codes: couldn't read the online list ({e!r})")
+        if fp not in known:
+            messagebox.showinfo("🎟️ Merch code", "Hmm, that merch code doesn't work. Check the letters and try again!", parent=parent)
+            return
+        if fp in self.save.get("redeemed", []):
+            messagebox.showinfo("🎟️ Merch code", "That code has already been used in this town. 🎟️", parent=parent)
+            return
+        m = MERCH[prefix]
+        self.save.setdefault("redeemed", []).append(fp)
+        if prefix not in self.save.setdefault("merch", []):
+            self.save["merch"].append(prefix)
+        kind = m.get("kind")
+        if kind:
+            skin = f"{kind}:{m['name']}"
+            if skin not in self.save.setdefault("skins", []):
+                self.save["skins"].append(skin)
+            if kind in KAIJU and kind not in self.save.setdefault("kaiju", []):
+                self.save["kaiju"].append(kind)
+            write_save(self.save)
+            self.sound.play("fanfare")
+            pet = self.add_pet(kind, greet=False)
+            if pet:
+                pet.palette = next(i for i, c in enumerate(kind_colors(kind)) if c["name"] == m["name"])
+                pet.color_var.set(pet.palette)
+                pet.burst("heart", 10)
+                pet.say("✨ merch link established. hello, keeper. ✨", 4)
+            messagebox.showinfo("🎟️ Merch code", f"✨ {kind}: {m['name']} unlocked! Thanks for supporting Blipville. 💜", parent=parent)
+        else:
+            write_save(self.save)
+            self.sound.play("fanfare")
+            messagebox.showinfo("🎟️ Merch code", f"✨ {m['for']}: {m['name']} is yours! The {m['for']} arrives in an update soon, and this "
+                                "skin will be waiting for you. Thanks for supporting Blipville. 💜", parent=parent)
+
     def nights_won(self):
         return int(self.save.get("nights_won", 0))
 
@@ -11248,9 +11318,12 @@ class App:
     def enter_secret_code(self, parent):
         import hashlib
         from tkinter import simpledialog, messagebox
-        text = simpledialog.askstring("Secret code", "Enter a secret code:", parent=parent) or ""
+        text = simpledialog.askstring("Secret code", "Enter a secret code or a 🎟️ merch code:", parent=parent) or ""
         code = "".join(ch for ch in text.upper() if ch.isalnum())
         if not code:
+            return
+        if merch_prefix(code):
+            self.redeem_merch(code, parent)
             return
         digest = hashlib.sha256(code.encode()).hexdigest()
         if digest in MOD_HASHES:

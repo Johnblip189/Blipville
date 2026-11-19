@@ -51,6 +51,8 @@ data = {
     "chatDefault": getattr(bl, "CHAT_DEFAULT", None),
     "typeCps": getattr(bl, "TYPE_CPS", 32),
     "kindRenames": getattr(bl, "KIND_RENAMES", {}),
+    "merch": {"items": getattr(bl, "MERCH", {}), "salt": getattr(bl, "MERCH_SALT", b"").decode(), "rounds": getattr(bl, "MERCH_ROUNDS", 0),
+              "hashes": getattr(bl, "MERCH_HASHES", []), "url": getattr(bl, "MERCH_CODES_URL", "")},
     "cookieCatch": {"seconds": bl.CATCH_SECONDS, "lives": bl.CATCH_LIVES, "maxHearts": bl.CATCH_MAX_HEARTS, "cookie": bl.CATCH_COOKIE,
                     "kinds": bl.CATCH_KINDS},
     "bond": {"levels": bl.BOND_LEVELS, "titles": bl.BOND_TITLES, "gain": bl.BOND_GAIN},

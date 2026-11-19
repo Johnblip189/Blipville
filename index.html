@@ -243,5 +243,52 @@
   c.hidden = false;
 })();
 </script>
+<script>
+// 🖍️ The Redraw sneaks in: every time you click off this page and come back, a few more Blips in the pictures
+// switch to their new 1.0 drawings (with a little glitch). After about a dozen visits away, they've all changed.
+(() => {
+  const KEY = "blipville-redraw-steps", STEPS = 12;
+  let steps = 0, boxes = null, away = false;
+  try { steps = Math.min(STEPS, +localStorage.getItem(KEY) || 0); } catch (e) { /* private mode: start fresh */ }
+  const cache = {};
+  const load = (src) => cache[src] || (cache[src] = new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = src; }));
+  const nameOf = (img) => (img.dataset.orig || img.getAttribute("src") || "").split("/").pop();
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  async function paint(img, glitch) {
+    if (!img.dataset.orig) img.dataset.orig = img.getAttribute("src");
+    const name = nameOf(img), list = boxes[name];
+    const count = (st) => Math.min(list.length, Math.ceil(list.length * st / STEPS));
+    const n = count(steps), before = glitch ? count(steps - 1) : n;
+    if (!n) return;
+    let a, b;
+    try { [a, b] = await Promise.all([load(img.dataset.orig), load("docs/redraw/" + name)]); } catch (e) { return; }
+    const c = document.createElement("canvas"); c.width = a.naturalWidth; c.height = a.naturalHeight;
+    const g = c.getContext("2d");
+    const show = (k) => new Promise((done) => {
+      g.drawImage(a, 0, 0);
+      for (const [x, y, w, h] of list.slice(0, k)) g.drawImage(b, x, y, w, h, x, y, w, h);
+      c.toBlob((blob) => { const old = img.src; img.src = URL.createObjectURL(blob); if (old.startsWith("blob:")) URL.revokeObjectURL(old); done(); });
+    });
+    const r = img.getBoundingClientRect(), onScreen = r.bottom > 0 && r.top < innerHeight;
+    if (glitch && n > before && onScreen && c.width * c.height < 4e6) {
+      for (const k of [n, before, n, before]) { await show(k); await wait(70); }
+    }
+    await show(n);
+  }
+  const all = () => [...document.querySelectorAll("img")].filter((img) => boxes[nameOf(img)]);
+  function back() {
+    if (!away || !boxes) return;
+    away = false;
+    if (steps >= STEPS) return;
+    steps++;
+    try { localStorage.setItem(KEY, steps); } catch (e) { /* fine */ }
+    all().forEach((img) => paint(img, true));
+  }
+  addEventListener("blur", () => { away = true; });
+  addEventListener("focus", back);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) away = true; else back(); });
+  fetch("docs/redraw/boxes.json").then((r) => r.json()).then((j) => { boxes = j; if (steps) all().forEach((img) => paint(img, false)); }).catch(() => {});
+})();
+</script>
 </body>
 </html>

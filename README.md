@@ -1,6 +1,6 @@
 # 🏘️ Blipville
 
-![Blipville: pixel pets that live on your taskbar](docs/banner.png)
+![Blipville: pixel pets that live on your taskbar](docs/banner-redraw.gif)
 
 > 💬 **[Join the Blipville Discord!](https://discord.gg/Q3zmYakNZT)** Chat, share your town, report bugs and suggest Blips.
 

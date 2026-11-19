@@ -28,6 +28,12 @@ HOLE_D, HOLE_DEPTH = 4.3, 7.0
 PEG_D, PEG_LEN, SLOT = 4.2, 5.5, 0.8
 ARM_W, ARM_L, ARM_T = 6.0, 15.0, 6.0     # arm width, longest length (shoulder to hand) and thickness
 COLLAR = 0.4                # small spacer ring on the peg so the arm doesn't rub the body
+# 🦵 legs: the body is raised LEG_H off the ground; each leg pegs into a hip notch cut into the body's bottom corner and
+# swings forward / back (walk, sit, kick). They replace the little feet drawn in the sprite.
+LEG_H, NOTCH_H = 6.0, 7.5   # body height off the ground, hip notch height
+LEG_X, LEG_Z, TOE = 5.0, 6.0, 3.0         # leg width (2 pixels), depth front-to-back, toe sticking forward
+LEG_COLS = (3, 11)          # left / right leg at these sprite columns (where the sprite's feet are)
+GAP = 0.5
 SEG = 48
 
 
@@ -50,9 +56,9 @@ def _along_x(cs, x0, x1):
 
 
 def body_and_arms(sprite):
-    rows = list(sprite["body"]) + ([sprite["feet"]] if sprite.get("feet") else [])
+    rows = list(sprite["body"])                       # the posable legs replace the sprite's little feet
     n = len(rows)
-    top_y = n * PX
+    top_y = n * PX + LEG_H
     ey, dx = sprite["eyes"], sprite.get("dx", 0)
     eyes = {(ey + b, ex + a + dx) for ex in (4, 10) for a in (0, 1) for b in (0, 1)}
     mouth = {(ey + 4, 7), (ey + 4, 8)} if sprite.get("mouth") else set()
@@ -65,6 +71,9 @@ def body_and_arms(sprite):
     cl = min(min(c for c, ch in enumerate(body_rows[r]) if ch != ".") for r in span)
     cr = max(max(c for c, ch in enumerate(body_rows[r]) if ch != ".") for r in span)
     sy = top_y - (shoulder + 0.5) * PX
+    while sy - HOLE_D / 2 < LEG_H + NOTCH_H + 1 and shoulder > ey:   # keep the shoulder holes clear of the hip joints
+        shoulder -= 1
+        sy = top_y - (shoulder + 0.5) * PX
     xl, xr = cl * PX, (cr + 1) * PX
     cubes = []
     for r, row in enumerate(rows):
@@ -72,8 +81,9 @@ def body_and_arms(sprite):
             if ch == ".":
                 continue
             x0, y0 = c * PX, top_y - (r + 1) * PX
-            if (x0 < xl or x0 + PX > xr) and abs(y0 + PX / 2 - sy) < ARM_L + 2:
-                continue                                              # nothing past the shoulders where arms swing
+            if (x0 < xl or x0 + PX > xr) and sy - ARM_L - 2 < y0 + PX / 2 < sy + PX:
+                continue                                              # nothing past the shoulders where arms hang
+                                                                      # (antlers / ears above them stay)
             if (r, c) in eyes:
                 h = T - 0.4 if visor else T - EYE                     # a visor's eyes glow out of it; others are sunk
             elif (r, c) in mouth:
@@ -92,7 +102,15 @@ def body_and_arms(sprite):
     holes = union([_along_x(teardrop_cs(sy, T / 2, HOLE_D), xl - 1, xl + HOLE_DEPTH),
                    _along_x(teardrop_cs(sy, T / 2, HOLE_D), xr - HOLE_DEPTH, xr + 1)])
     body = body - holes
-    return body, (xl, xr, sy), top_y
+    # hips: a notch at each bottom corner (open to the side, front and back) with a peg hole in its inner wall
+    hy = LEG_H + NOTCH_H / 2
+    hl = LEG_COLS[0] * PX + LEG_X + COLLAR + GAP / 2           # inner wall of the left notch
+    hr = LEG_COLS[1] * PX - COLLAR - GAP / 2                    # inner wall of the right notch
+    notches = union([box(-5, LEG_H - 1, -1, hl, LEG_H + NOTCH_H, T + 1), box(hr, LEG_H - 1, -1, 16 * PX + 5, LEG_H + NOTCH_H, T + 1)])
+    hips = union([_along_x(teardrop_cs(hy, T / 2, HOLE_D), hl - 0.5, hl + HOLE_DEPTH),
+                  _along_x(teardrop_cs(hy, T / 2, HOLE_D), hr - HOLE_DEPTH, hr + 0.5)])
+    body = body - notches - hips
+    return body, (xl, xr, sy, hl, hr, hy), top_y
 
 
 def teardrop_cs(cy, cz, d):
@@ -121,13 +139,31 @@ def arm(x0, y0, length=ARM_L):
     return union([bar, collar, peg, tip]) - slot
 
 
+def leg(x0, y0, hip, toe=1):
+    """One leg lying flat (its outer side down), peg pointing up. Drawn in (u, v) = (front-back, up): a pixel leg from
+    the floor (v = 0) up to the hip pin (v = hip) with a round top so it turns inside the notch, and a toe in front.
+    Left and right legs are mirror images (toe = -1 / +1), so both toes point forward once they're on."""
+    rd = NOTCH_H / 2 - GAP
+    shape = mf.CrossSection.circle(rd, SEG).translate([0, hip]) + \
+        mf.CrossSection.square([LEG_Z, hip]).translate([-LEG_Z / 2, 0]) + \
+        mf.CrossSection.square([LEG_Z + TOE, PX]).translate([-LEG_Z / 2 - (TOE if toe < 0 else 0), 0])
+    body = shape.extrude(LEG_X).translate([x0 + LEG_Z / 2, y0, 0])
+    cx, cy = x0 + LEG_Z / 2, y0 + hip
+    collar = mf.Manifold.cylinder(COLLAR, PEG_D / 2 + 1.2, PEG_D / 2 + 1.2, SEG).translate([cx, cy, LEG_X])
+    peg = mf.Manifold.cylinder(PEG_LEN, PEG_D / 2, PEG_D / 2, SEG).translate([cx, cy, LEG_X + COLLAR])
+    tip = mf.Manifold.cylinder(0.6, PEG_D / 2, PEG_D / 2 - 0.5, SEG).translate([cx, cy, LEG_X + COLLAR + PEG_LEN])
+    slot = box(cx - SLOT / 2, cy - PEG_D, LEG_X + COLLAR + 1.5, cx + SLOT / 2, cy + PEG_D, LEG_X + COLLAR + PEG_LEN + 1)
+    return union([body, collar, peg, tip]) - slot
+
+
 def plate(sprite):
-    body, (xl, xr, sy), top_y = body_and_arms(sprite)
-    w = xr - xl
+    body, (xl, xr, sy, hl, hr, hy), top_y = body_and_arms(sprite)
     L = arm_length(sy)
     a1 = arm(xr + 6, 2.0, L)
     a2 = arm(xr + 6 + ARM_W + 6, 2.0, L)
-    return body, [a1, a2]
+    l1 = leg(xr + 6 + TOE, top_y - 1, hy, toe=-1)                  # left leg
+    l2 = leg(xr + 6 + LEG_Z + 2 * TOE + 6, top_y - 1, hy, toe=+1)   # right leg
+    return body, [a1, a2, l1, l2]
 
 
 def to_trimesh(m):
@@ -138,7 +174,7 @@ def to_trimesh(m):
 if __name__ == "__main__":
     sprites = json.load(open(sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "sprites.json")))
     for name, sp in sprites.items():
-        body, arms = plate(sp)
+        body, arms = plate(sp)                                # arms = all four limbs
         name_rarity = f"{name} ({sp.get('rarity', 'extra')})"
         t = to_trimesh(union([body] + arms))
         keep = [c for c in t.split(only_watertight=False) if abs(c.volume) > 1.0]   # drop zero-volume slivers where

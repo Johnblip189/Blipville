@@ -234,7 +234,7 @@ def front(m, kind, rarity):
     img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(18)))
     d = ImageDraw.Draw(img)
     # the figure itself goes in the bubble; a small sprite badge on the card shows who's inside
-    burst(img, 73, 38, 11, "POSABLE\nARMS!", (255, 214, 58), (60, 30, 10))
+    burst(img, 73, 38, 12, "POSABLE\nARMS &\nLEGS!", (255, 214, 58), (60, 30, 10))
     d = ImageDraw.Draw(img)
     # name banner
     by0, by1 = 106.5, 118.5

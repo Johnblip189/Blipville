@@ -9517,7 +9517,8 @@ class NightShiftGame:
     """Survive 12 AM → 6 AM while the Night Shift crew wanders toward your office.
 
     FLASH a doorway to send a robo back to the stage. A robo you're watching on camera can't move,
-    but cameras and flashes use battery. Each night you survive unlocks a new robo pet.
+    but cameras and flashes use battery, and a camera left on one room overheats after a few seconds
+    (it switches off until it cools down). Each night you survive unlocks a new robo pet.
     """
     HOUR = 20.0                                   # seconds per in-game hour (6 hours ≈ 2 minutes)
     CW, CH = 720, 380
@@ -9533,7 +9534,8 @@ class NightShiftGame:
     FAST = {"Robo Fox": 0.7}                      # 🦊 the fox moves sooner than the others
     LAST = max(NIGHTS)
     MIDNIGHT = 3                                  # color index of the spooky glowing-eye look
-    FLASH_COST, DRAIN, CAM_DRAIN = 5.0, 0.2, 0.5  # battery % per flash, per second, extra per second on camera
+    FLASH_COST, DRAIN, CAM_DRAIN = 3.0, 0.18, 0.3  # battery % per flash, per second, extra per second on camera
+    CAM_HOT, CAM_COOL = 8.0, 0.8                  # a camera overheats after 8 s on one room; cools 0.8 s per second off
     BG, PANEL, TEXT, DIM = "#0c0b14", "#1d1a2e", "#e8e4ff", "#7a7598"
 
     def __init__(self, app, speed=1.0):
@@ -9585,6 +9587,7 @@ class NightShiftGame:
         cfg = self.NIGHTS[night]
         self.night, self.cfg = night, cfg
         self.t, self.battery, self.cam = 0.0, 100.0, None
+        self.heat, self.hot = {room: 0.0 for room in self.ROOMS}, set()   # per-camera heat (s) / overheated cameras
         self.flash_until, self.flash_side, self.flashed = -1.0, None, None
         self.msg, self.msg_until = "Night " + str(night) + " — good luck! 🔦", 3.0
         self.robots = [{"kind": k, "room": "Stage", "next": random.uniform(4, 9) + i * 2.5, "door_since": None}
@@ -9613,8 +9616,12 @@ class NightShiftGame:
         self.app.sound.play("zap")
 
     def open_cam(self, room):
-        if self.state == "play" and self.battery > 0:
-            self.cam = room
+        if self.state != "play" or self.battery <= 0:
+            return
+        if room in self.hot:
+            self.say(f"📷 the {room} camera is still cooling down…")
+            return
+        self.cam = room
 
     def office(self):
         if self.state == "play":
@@ -9653,6 +9660,17 @@ class NightShiftGame:
         if self.battery <= 0 and self.cam:
             self.cam = None
             self.say("the battery died… 🔋 lights out!", 4)
+        for room in self.ROOMS:                   # cameras heat up while watched and cool down while off
+            if room == self.cam:
+                self.heat[room] += dt
+                if self.heat[room] >= self.CAM_HOT:
+                    self.hot.add(room)
+                    self.cam = None
+                    self.say(f"📷 the {room} camera overheated! check another room", 3)
+            else:
+                self.heat[room] = max(0.0, self.heat[room] - self.CAM_COOL * dt)
+                if self.heat[room] == 0:
+                    self.hot.discard(room)
         for r in self.robots:
             if r["room"].startswith("door"):
                 if self.t - r["door_since"] > cfg["grace"]:
@@ -9704,6 +9722,8 @@ class NightShiftGame:
         self.clicks = {}
         for b in self.buttons:
             b.configure(state="normal" if self.state == "play" else "disabled")
+        for room, b in zip(self.ROOMS, self.buttons[2:-1]):       # an overheated camera's button turns red
+            b.configure(fg="#ff4a5a" if self.state == "play" and room in self.hot else self.TEXT)
         getattr(self, "draw_" + self.state)()
 
     def draw_menu(self):
@@ -9713,7 +9733,7 @@ class NightShiftGame:
                       text="Survive from 12 AM to 6 AM. The Night Shift crew wanders toward your office.\n"
                            "Glowing eyes in a doorway? FLASH that side (◀ ▶ or A / D) to send them back to the stage.\n"
                            "Check rooms with the cameras (1–5): a robo you're watching can't move. "
-                           "But cameras and flashes use battery!")
+                           "Cams overheat if left on one room, and everything uses battery!")
         for i, k in enumerate(NIGHT_SHIFT):
             x = W_ / 2 - 75 * (len(NIGHT_SHIFT) - 1) + i * 150
             unlocked = self.app.is_unlocked(k)
@@ -9813,6 +9833,11 @@ class NightShiftGame:
                       fill="#ff4a5a", font=("Segoe UI", 11, "bold"))
         c.create_text(W_ - 16, 52, anchor="e", text=("watching — it can't move" if here else "empty"),
                       fill="#9ad8a8", font=("Segoe UI", 9, "bold"))
+        heat = min(1.0, self.heat[room] / self.CAM_HOT)          # 🌡️ how close this camera is to overheating
+        c.create_text(16, H_ - 46, anchor="w", text="🌡️ CAM HEAT", fill="#9ad8a8", font=("Segoe UI", 9, "bold"))
+        c.create_rectangle(110, H_ - 53, 270, H_ - 39, outline="#3a3360", width=2)
+        c.create_rectangle(112, H_ - 51, 112 + 156 * heat, H_ - 41, outline="",
+                           fill="#5ad87a" if heat < 0.5 else "#ffd23a" if heat < 0.8 else "#ff4a5a")
 
     def draw_caught(self):
         c, W_, H_ = self.canvas, self.CW, self.CH

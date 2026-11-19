@@ -62,6 +62,9 @@ make Blipville what it is. This is the real thing.
   rival, **The Puppet Master**, to unlock the Shadow colors for Robo Bear, Robo Bunny and Robo Hen.
 - 🎵 **Battle music:** every Arena stage has its own tune (9 in all: Sunny Showdown, Magma Rush, Skyscraper Smash, Music Box Waltz…) that plays during the battle
   (with sound on).
+- 📷 **Night Shift cameras overheat:** a camera left on one room overheats after about 8 seconds (watch the 🌡️ heat bar)
+  and stays off while it cools, so you can't just stare at the Stage all night any more. To make up for it, flashes and
+  cameras use less battery. Every night is still winnable.
 - 🌙 **Night Shift Night 4:** a new, harder night where the **Robo Fox** joins the crew (it moves faster than the
   others). Survive it to unlock the fox. After that, keep an eye out at night: the **Wind-Up Hare**, an old forgotten
   wind-up toy with a brass key in its head, sometimes turns up in the old workshop. Both join Pull the Strings and get

@@ -133,6 +133,7 @@ html, body {
 .nsRow button.primary { background: var(--accent); }
 .nsRow button.flash { background: #4a3a10; color: #ffe08a; }
 .nsRow button.on { outline: 2px solid #ffd23a; }
+.nsRow button.hot { color: #ff4a5a; opacity: 0.75; }
 .nsRow button:disabled { opacity: .4; }
 .nsRow.cams button { white-space: pre-line; font-size: 11px; min-height: 50px; line-height: 1.25; }
 .nsCard .close { margin-top: 8px; min-height: 40px; }

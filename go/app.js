@@ -2182,7 +2182,8 @@
   if ("serviceWorker" in navigator && (location.protocol === "https:" || ["localhost", "127.0.0.1"].includes(location.hostname))) navigator.serviceWorker.register("sw.js").catch(() => {});
   // ------------------------------------------------------------------ Night Shift minigame
   // Survive 12 AM → 6 AM. Tap a doorway with glowing eyes to FLASH it and send that robo back to the stage.
-  // A robo you're watching on camera can't move, but cameras and flashes use battery. Each night won unlocks a robo.
+  // A robo you're watching on camera can't move, but cameras and flashes use battery, and a camera left on one room
+  // overheats after a few seconds (it switches off until it cools down). Each night won unlocks a robo.
   const NS = (() => {
     const HOUR = 20, CW = 360, CH = 300, MIDNIGHT = 3;
     const ROOMS = ["Stage", "Arcade", "Kitchen", "West Hall", "East Hall"];
@@ -2194,7 +2195,8 @@
       4: { robots: ["Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox"], interval: 3.7, chance: 0.78, grace: 1.7 },
     };
     const FAST = { "Robo Fox": 0.7 }, LAST = 4;   // 🦊 the fox moves sooner than the others
-    const FLASH_COST = 5, DRAIN = 0.2, CAM_DRAIN = 0.5;
+    const FLASH_COST = 3, DRAIN = 0.18, CAM_DRAIN = 0.3;
+    const CAM_HOT = 8, CAM_COOL = 0.8;            // a camera overheats after 8 s on one room; cools 0.8 s per second off
     const DOORS = { L: [10, 110], R: [250, 350] };
     const cv = $("nsCanvas"), c = cv.getContext("2d");
     let g = { state: "menu" }, last = 0, raf = null, speed = 1, FONT = "sans-serif";
@@ -2217,7 +2219,7 @@
 
     function start(n) {
       const cfg = NIGHTS[n];
-      g = { state: "play", night: n, cfg, t: 0, battery: 100, cam: null, flashUntil: -1, flashSide: null, flashed: null, msg: "", msgUntil: 0,
+      g = { state: "play", night: n, cfg, t: 0, battery: 100, cam: null, heat: Object.fromEntries(ROOMS.map((r) => [r, 0])), hot: new Set(), flashUntil: -1, flashSide: null, flashed: null, msg: "", msgUntil: 0,
             robots: cfg.robots.map((k, i) => ({ kind: k, room: "Stage", next: rnd(4, 9) + i * 2.5, doorSince: null })) };
       say(`Night ${n}, good luck! 🔦`, 3); buttons();
     }
@@ -2231,7 +2233,11 @@
       say(hit.length ? `*clank clank* ${hit[0].kind} ran back to the stage!` : "nothing there… this time.");
       sfx("zap"); vibrate(12); buttons();
     }
-    function cam(room) { if (g.state === "play" && g.battery > 0) { g.cam = room; buttons(); } }
+    function cam(room) {
+      if (g.state !== "play" || g.battery <= 0) return;
+      if (g.hot.has(room)) { say(`📷 the ${room} camera is still cooling down…`); return; }
+      g.cam = room; buttons();
+    }
     function won() {
       const first = g.night > save.nightsWon;
       const unlock = D.groups.nightShift.find((k) => D.unlocks[k] === g.night);
@@ -2243,6 +2249,15 @@
       g.t += dt;
       g.battery = Math.max(0, g.battery - (DRAIN + (g.cam ? CAM_DRAIN : 0)) * dt);
       if (g.battery <= 0 && g.cam) { g.cam = null; say("the battery died… 🔋 lights out!", 4); buttons(); }
+      for (const room of ROOMS) {                               // cameras heat up while watched and cool down while off
+        if (room === g.cam) {
+          g.heat[room] += dt;
+          if (g.heat[room] >= CAM_HOT) { g.hot.add(room); g.cam = null; say(`📷 the ${room} camera overheated! check another room`, 3); buttons(); }
+        } else {
+          g.heat[room] = Math.max(0, g.heat[room] - CAM_COOL * dt);
+          if (g.heat[room] === 0 && g.hot.delete(room)) buttons();
+        }
+      }
       for (const r of g.robots) {
         if (r.room.startsWith("door")) {
           if (g.t - r.doorSince > g.cfg.grace) { g.state = "caught"; g.caughtBy = r.kind; sfx("boing"); vibrate(200); buttons(); return; }
@@ -2264,7 +2279,7 @@
     function drawMenu() {
       c.fillStyle = "#0c0b14"; c.fillRect(0, 0, CW, CH);
       text("NIGHT SHIFT 🌙", CW / 2, 30, 24, "#e8e4ff");
-      wrap("Survive from 12 AM to 6 AM. Glowing eyes in a doorway? Tap that door to FLASH it. A robo you watch on camera can't move, but cameras and flashes use battery!",
+      wrap("Survive from 12 AM to 6 AM. Glowing eyes in a doorway? Tap that door to FLASH it. A robo you watch on camera can't move, but a cam left on one room overheats, and everything uses battery!",
            CW / 2, 64, CW - 30, 12.5, "#b8b2d8", 17);
       D.groups.nightShift.forEach((k, i) => {
         const x = CW / 2 - 42 * (D.groups.nightShift.length - 1) + i * 84, open = isUnlocked(k);
@@ -2311,6 +2326,10 @@
       for (let i = 0; i < 22; i++) { c.fillStyle = pick(["#1e2a22", "#26332a", "#18221b"]); c.fillRect(0, Math.random() * CH, CW, 1); }
       text(`● CAM ${ROOMS.indexOf(room) + 1} · ${room.toUpperCase()}`, 10, 44, 12, "#ff4a5a", "left");
       text(here.length ? "watching: it can't move" : "empty", CW - 10, 44, 10, "#9ad8a8", "right", 700);
+      const heat = Math.min(1, g.heat[room] / CAM_HOT);         // 🌡️ how close this camera is to overheating
+      text("🌡️ HEAT", 10, CH - 52, 10, "#9ad8a8", "left", 700);
+      c.fillStyle = "#3a3360"; c.fillRect(70, CH - 59, 104, 14); c.fillStyle = "#101a14"; c.fillRect(72, CH - 57, 100, 10);
+      c.fillStyle = heat < 0.5 ? "#5ad87a" : heat < 0.8 ? "#ffd23a" : "#ff4a5a"; c.fillRect(72, CH - 57, 100 * heat, 10);
     }
     function drawPlay() {
       if (g.cam) drawCamera(); else drawOffice();
@@ -2366,7 +2385,7 @@
         r.appendChild(btn("🪑 Office", () => { g.cam = null; buttons(); }, g.cam ? "" : "on"));
         r.appendChild(btn("FLASH ▶", () => flash("R"), "flash"));
         const r2 = row(); r2.classList.add("cams");
-        ROOMS.forEach((room, i) => r2.appendChild(btn(`📷${i + 1}\n${room.replace(" Hall", "")}`, () => cam(room), g.cam === room ? "on" : "")));
+        ROOMS.forEach((room, i) => r2.appendChild(btn(`📷${i + 1}\n${room.replace(" Hall", "")}`, () => cam(room), g.cam === room ? "on" : g.hot.has(room) ? "hot" : "")));
       } else if (g.state === "caught") {
         const r = row(); r.appendChild(btn(`Try Night ${g.night} again`, () => start(g.night), "primary")); r.appendChild(btn("Menu", menu));
       } else {

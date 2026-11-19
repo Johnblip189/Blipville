@@ -195,7 +195,7 @@ Right-click any pet → **Play Night Shift 🌙…**
 Survive from **12 AM to 6 AM** (about 2 minutes) while the Night Shift crew wanders toward your office.
 
 - **Glowing eyes in a doorway?** Hit **FLASH** on that side (◀ ▶ or **A** / **D**) to send the robo back to the stage.
-- **Check the cameras** (**1**–**5**): a robo you're watching **can't move**. But cameras and flashes use battery 🔋
+- **Check the cameras** (**1**–**5**): a robo you're watching **can't move**. But a camera left on one room **overheats** after about 8 seconds 🌡️ (switch rooms while it cools), and cameras and flashes use battery 🔋
 - Get caught and you just try again. No real jump scares, promise. (It just wanted a hug.)
 
 | Survive | Unlocks |

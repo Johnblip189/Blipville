@@ -44,6 +44,14 @@ make Blipville what it is. This is the real thing.
 - 🎭 **The Puppet Box:** an old toy chest that creaks open by itself at night, with red eyes peeking out of the gap.
   Awaken it and it opens into the **Puppet Master**: a cracked porcelain mask with red tears, a little top hat, and a
   see-through, flickering little Blip soul dangling from its puppet strings.
+- 🧸 **Bad Dreams:** plush versions of the Night Shift crew: Bear, Bunny, Hen, Fox, the Wind-Up Hare and the Puppet
+  Master. All day they're harmless plushies that just sit there… but from **midnight to 6 AM** (your clock) they burst
+  out of their stitches as Bad Dreams, with button eyes, safety pins and stuffing poking out. To get them, click a
+  **Puppet Master 5 times fast**. The first time it becomes the **Bad Dream Puppet Master**; after that it rewrites one
+  of the robos into its Bad Dream, and you have to **keep it away for 5 seconds**. Each one comes at you differently:
+  the Bear won't stop (click to shove it back), the Bunny turns the lights off (click it when they flicker on), the Hen
+  throws pancakes (swat them), the Fox dashes down a lane (get out of it) and the Hare winds itself up (click its key).
+  Win and it's yours, plus that robo's **Shadow** color. Lose and it just gives you a big stuffed hug. 🧸
 - 📷 **Night Shift cameras overheat:** a camera left on one room overheats after about 8 seconds (watch the 🌡️ heat bar)
   and stays off while it cools, so you can't just stare at the Stage all night any more. To make up for it, flashes and
   cameras use less battery. Every night is still winnable.
@@ -76,8 +84,8 @@ make Blipville what it is. This is the real thing.
   opens again by itself.
 - 🎁 Gifts can't get lost on the website version any more.
 
-**Everything in Blipville:** 380 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
-17 kaiju, 25 ghosts, 5 worlds with 22 World Legends, 27 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
+**Everything in Blipville:** 386 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
+17 kaiju, 25 ghosts, 5 worlds with 22 World Legends, 28 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
 minigame, and updates that install themselves.
 
 **Updating?** Blipville (and Blipville Redux) will offer this update by itself: just say yes. Your pets, hearts,

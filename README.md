@@ -10,7 +10,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**380 kinds of pets · 1,000+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
+**386 kinds of pets · 1,000+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
 
 ## ✨ New in 1.0
 
@@ -134,6 +134,8 @@ The pets don't show up on the taskbar, so use **right-click → Goodbye everyone
 Blip can even dress up as a **Husky** or a **German Shepherd** (right-click Blip → Change color).
 
 **Night Shift 🌙:** Robo Bear, Robo Bunny *(hops)*, Robo Hen. Creaky little animatronics with bolts and hinged jaws. Between 10 PM and 6 AM their eyes glow and they get… chatty. 🔒 You have to **earn** them in the Night Shift minigame ⬇️
+
+**Bad Dreams 🧸:** plush versions of the crew. Harmless plushies all day, Bad Dreams from midnight to 6 AM. 🔒 Click a **Puppet Master 5 times fast**, then keep the Bad Dream away for 5 seconds to keep it (each of the 5 comes at you its own way).
 
 **Animals:** Armadillo, Axolotl, Bat, Bear, Beaver, Bee, Butterfly, Capybara, Cat, Caterpillar, Chameleon, Chick, Chinchilla, Clownfish, Corgi, Cow, Crab, Crocodile, Dalmatian, Deer, Dog, Dolphin, Donkey, Dragon, Duck, Elephant, Fennec, Ferret, Flamingo, Fox, Frog, Gecko, Giraffe, Goat, Goldfish, Guinea Pig, Hamster, Hedgehog, Hippo, Horse, Jellyfish, Kangaroo, Koala, Ladybug, Lemur, Lion, Llama, Meerkat, Mole, Monkey, Mouse, Octopus, Otter, Owl, Panda, Parrot, Penguin, Pig, Pufferfish, Pug, Rabbit, Raccoon, Rhino, Seal, Shark, Sheep, Shiba, Skunk, Sloth, Snail, Snake, Squirrel, Starfish, Tiger, Turtle, Unicorn, Whale, Wolf, Zebra
 

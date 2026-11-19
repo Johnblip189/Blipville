@@ -11,6 +11,10 @@
   const GIFTS = new Set(D.groups.gifts || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
+  const DREAMS = new Set(Object.keys(D.badDreams || {}));          // 🧸 Bad Dreams (plushies until midnight)
+  const DREAM_ROBOS = [...DREAMS].filter((k) => D.badDreams[k].big);
+  const badDreamHour = () => new Date().getHours() < 6;
+  const plushNow = (kind) => !!(KINDS[kind] && KINDS[kind].plush) && !badDreamHour();
   const EGYPT = new Set(D.egyptGods || []), DIG = D.dig || { cols: 6, rows: 5, tries: 8, treasures: 4, hearts: 3 };
   const AWAKEN_FORM = D.awakenForm || {};
   const AWAKEN_CHAIN = D.awakenChain || Object.fromEntries(Object.entries(AWAKEN_FORM).map(([b, f]) => [b, [f]]));   // some Blips awaken up to 3 times
@@ -41,7 +45,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], badDreams: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
   // 💾 save safety: check every field when loading, keep the last good save as a backup, never throw away a damaged save,
   // and tell the player when saving fails instead of failing silently
   const SAVE_DEFAULTS = JSON.parse(JSON.stringify(save)), BAK_KEY = SAVE_KEY + "-backup", BROKEN_KEY = SAVE_KEY + "-broken";
@@ -168,7 +172,7 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const isUnlocked = (k) => DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -216,7 +220,7 @@
   const say = (p, text, secs = 3) => { p.bubble = { text, until: now() + secs }; };
   const setFace = (p, face, secs) => { p.face = face; p.faceUntil = now() + secs; };
   const setState = (p, st, secs = 0) => { p.state = st; p.until = now() + secs; };
-  const linesFor = (p) => D.lines.idle.concat(KINDS[p.kind].lines, KINDS[p.kind].lines, (D.seasonLines || {})[season()] || []);
+  const linesFor = (p) => plushNow(p.kind) ? KINDS[p.kind].plush.lines : D.lines.idle.concat(KINDS[p.kind].lines, KINDS[p.kind].lines, (D.seasonLines || {})[season()] || []);
   function burst(p, kind, n) {
     for (let i = 0; i < n; i++) p.particles.push({ kind, x: rnd(-26, 26) * S / 4, y: 13 * S + rnd(-6, 6), vx: rnd(-20, 20), vy: rnd(-70, -40), life: rnd(1, 1.6), born: now() });
   }
@@ -246,6 +250,10 @@
       p.lastPetReward = t; reward(p, 1); bondUp(p, "pet"); eventPoint(p, 1); questTick("pet_any");
       if (EVENT.kinds.includes(p.kind)) questTick("pet_spiky");
     }
+    if (p.kind === "Puppet Master" || p.kind === "Bad Dream Puppet Master") {     // 🎭 5 quick taps… if you dare
+      p.pmTaps = (p.pmTaps || []).filter((x) => t - x < 2.5).concat(t);
+      if (p.pmTaps.length >= 5) { p.pmTaps = []; badDreamRewrite(p); return; }
+    }
     say(p, pick(D.lines.pet), 2); setFace(p, "happy", 1.5); burst(p, "heart", 4);
     if (p.state !== "fall" && p.state !== "held") { p.vy = 260; p.vx = 0; setState(p, "fall"); }
     vibrate(10);
@@ -273,6 +281,7 @@
   }
 
   function decide(p, t) {
+    if (plushNow(p.kind)) { if (Math.random() < 0.1) say(p, pick(linesFor(p)), 2.5); setState(p, "idle", rnd(4, 9)); return; }   // 🧸 it just sits there… mostly
     const hour = new Date().getHours();
     if (p.energy < 25 || ((hour >= 23 || hour < 6) && Math.random() < 0.15)) { say(p, "*yawn* nap time...", 2.5); setState(p, "sleep", 20); return; }
     if (p.hunger > 70 && Math.random() < 0.35) say(p, pick(D.lines.hungry), 3);
@@ -282,6 +291,11 @@
     else setState(p, "idle", rnd(2, 5));
   }
 
+  function dreamBurst(p, plush) {              // 🧸 midnight: the plushie bursts out as its Bad Dream (and flops back at 6 AM)
+    if (plush) { say(p, "*flop* …just a plushie again", 2.5); return; }
+    say(p, pick(["*RRRIIIP!* 🌙", "*stitches pop* it's midnight…", "*bursts out of the plush*"]), 3); setFace(p, "surprised", 1.2); sfx("boing");
+    for (let i = 0; i < 14; i++) p.particles.push({ kind: "stuffing", x: rnd(-20, 20) * S / 4, y: rnd(4, 9) * S, vx: rnd(-90, 90), vy: rnd(-220, -80), life: rnd(0.8, 1.4), born: now() });
+  }
   function sparkle(p, n = 1) {
     for (let i = 0; i < n; i++) p.particles.push({ kind: "spark", x: rnd(-34, 34) * S / 4, y: rnd(4, 14 * S), vx: 0, vy: -12, life: rnd(0.8, 1.5),
                                                   born: now(), color: pick(["#ffffff", "#fff27a", "#ffd23a", "#a8d8ff"]) });
@@ -290,6 +304,7 @@
     if (AWAKEN_BASE[p.kind] && Math.random() < 0.05) sparkle(p);        // awakened Blips sparkle
     const k = KINDS[p.kind];
     if (t > p.nextBlink) { p.blinkUntil = t + 0.15; p.nextBlink = t + rnd(2, 6); }
+    if (k.plush) { const m = plushNow(p.kind); if (p.plushMode !== undefined && p.plushMode !== m) dreamBurst(p, m); p.plushMode = m; }
     if (p.state !== "sleep") p.energy = Math.max(0, p.energy - dt * 0.12);
     p.hunger = Math.min(100, p.hunger + dt * 0.08);
     if (p.playing) return;                           // a game of catch / tag is moving it
@@ -452,7 +467,8 @@
   const glitching = (t) => { const p = ((t % 5) + 5) % 5; return p < 0.12 || (p >= 0.24 && p < 0.34); };   // twice, briefly, every 5 s
   const isNight = () => { const h = new Date().getHours(); return h >= 22 || h < 6; };
   function grid(kind, colorIdx, opt = {}) {
-    const k = KINDS[kind], cols = k.colors;
+    let k = KINDS[kind], cols = k.colors;
+    if (k.plush && !badDreamHour()) { k = { ...k, body: k.plush.body, eyes: k.plush.eyes, xeye: false }; cols = k.plush.colors; }   // 🧸 plushie by day
     const t = opt.t ?? now(), st = opt.state || "idle";
     let pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
     if (opt.live && pal.glitch != null && glitching(t + (opt.phase || 0))) pal = Object.assign({}, cols[pal.glitch], k.extra || {});   // ⚡ flicker to an old look
@@ -485,6 +501,7 @@
     else {
       const [ox, oy] = face === "surprised" ? [0, 0] : (opt.look || [0, 0]);
       for (const ex of [4, 10]) { for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) px(ex + ox + a, 5 + oy + b, e); px(ex + ox, 5 + oy, shine); }
+      if (k.xeye) for (let i = 0; i < 4; i++) { px(3 + i, 4 + i, pal.x || pal.o); px(6 - i, 4 + i, pal.x || pal.o); }   // a stitched X where a button came off
     }
     if (k.mouth) {
       if (face === "surprised") { px(7, 8, e); px(8, 8, e); px(7, 9, e); px(8, 9, e); }
@@ -721,10 +738,11 @@
     // particles
     p.particles = p.particles.filter((q) => t - q.born < q.life);
     for (const q of p.particles) {
-      const a = t - q.born, qx = p.x + q.x + q.vx * a, qy = GROUND - p.y - q.y + q.vy * a + (q.kind === "crumb" ? 300 * a * a : 0);
+      const a = t - q.born, qx = p.x + q.x + q.vx * a, qy = GROUND - p.y - q.y + q.vy * a + (q.kind === "crumb" || q.kind === "stuffing" ? 300 * a * a : 0);
       if (q.kind === "heart") drawMask(HEART, qx, qy, 3, "#ff4f7b");
       else if (q.kind === "z") drawMask(ZED, qx, qy, 2 + Math.floor(a), "#bcd2ff");
       else if (q.kind === "crumb") { ctx.fillStyle = "#c98a4b"; ctx.fillRect(qx, qy, 3, 3); }
+      else if (q.kind === "stuffing") { ctx.fillStyle = "#f4ece4"; ctx.fillRect(qx, qy, 4, 4); }
       else if (q.kind === "spark") { ctx.fillStyle = q.color; ctx.fillRect(qx, qy - 2, 2, 6); ctx.fillRect(qx - 2, qy, 6, 2); }
       else if (q.kind === "plus") {
         ctx.font = "800 12px " + FONT;
@@ -1008,7 +1026,7 @@
     "first-pet": () => stat("pets") >= 1, "pets-100": () => stat("pets") >= 100, "cookies-25": () => stat("cookies") >= 25,
     "days-7": () => stat("days") >= 7, "full-town": () => pets.length >= maxPets(), "hats-5": () => save.hatsOwned.length >= 5,
     "egg-1": anyU(D.groups.rare), "egg-all": allU(D.groups.rare), "cryptid-1": anyU(D.groups.cryptids), "cryptid-all": allU(D.groups.cryptids),
-    "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts),
+    "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts), "dreams-all": allU([...DREAMS]),
     "world-1": () => WORLDS.some((w) => w.cost > 0 && save.worlds.includes(w.name)), "world-all": () => WORLDS.every((w) => !w.cost || save.worlds.includes(w.name)),
     "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
     "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "knight-3": () => awLevel("Phantom Knight") >= 3, "boss-1": () => !!save.beatCreator, "bond-5": () => pets.some((q) => bondLevel(q.bond || 0) >= 5), "catch-40": () => stat("catch_best") >= 40, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
@@ -1075,7 +1093,7 @@
       b.appendChild(thumb(p.kind, i, false, 3)); b.append((locked ? "🔒 " : "") + col.name + (col.event && !locked ? " ✨" : ""));
       if (!locked && i !== p.color) { const pr = doc().createElement("small"); pr.className = "price"; pr.append(pxImg(cc.icon), ` ${cc.cost}`); b.appendChild(pr); }
       b.onclick = () => {
-        if (locked) { toast(col.unlock === "puppet" ? `🔒 ${col.name}: beat The Puppet Master in the ⚔️ Arena to unlock it!` : `🔒 ${col.name} is a ${EVENT.icon} ${EVENT.name} skin. Earn it in the event! (tap ${EVENT.icon} at the top)`, 4); return; }
+        if (locked) { toast(col.unlock === "puppet" ? `🔒 ${col.name}: fend off this robo's Bad Dream to unlock it! (tap a Puppet Master 5 times)` : `🔒 ${col.name} is a ${EVENT.icon} ${EVENT.name} skin. Earn it in the event! (tap ${EVENT.icon} at the top)`, 4); return; }
         if (i === p.color) return;
         if (!isCreator()) {                                   // 🍬🧪 a treat changes the color
           if (save.hearts < cc.cost) { toast(`${cc.icon === "potion" ? "🧪 A Color Potion" : "🍬 A Color Candy"} costs ${cc.cost} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 3.5); return; }
@@ -1503,7 +1521,8 @@
                     [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []],
                     ["Legends ✨ (visit a world, tap them when they stroll by)", D.groups.legends || []],
                     ["Ghosts 👻 (they drift by at night: tap one while it glows!)", D.groups.ghosts || []],
-                    ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []]];
+                    ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []],
+                    ["Bad Dreams 🧸 (tap a Puppet Master 5 times… then fend them off)", [...DREAMS]]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
     const how = (k) => (EGYPT.has(k) ? "🏺 dig it up in Egypt World" : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
@@ -1874,6 +1893,150 @@
     });
   }
   $("sheetCatch").onclick = () => sheetPet && openCatch(sheetPet);
+  // ------------------------------------------------------------------ 🧸 Bad Dreams: fend one off for 5 seconds (same rules as blip.pyw)
+  let dreamGame = null, dreamRest = 0;
+  const DREAM_HOW = { "Bad Dream Bear": "It won't stop! TAP it to shove it back!", "Bad Dream Bunny": "Lights out… TAP it when the lights flicker on!",
+                      "Bad Dream Hen": "Order up! TAP the pancakes before they hit you!", "Bad Dream Fox": "Watch the red lane… MOVE out of it!",
+                      "Bad Dream Hare": "It's winding up! TAP its key to unwind it!" };
+  const dreamArt = {};
+  function dreamCanvas(kind, eyesOnly) {          // the big 32 x 30 art, drawn once into a little canvas
+    const key = kind + (eyesOnly ? "!" : "");
+    if (dreamArt[key]) return dreamArt[key];
+    const a = D.badDreams[kind], k = KINDS[kind], pal = { n: "#1a1024", u: "#1a1024", z: "#c8ccd8", g: "#ffd23a", l: "#f4ece0", ...k.colors[0] };
+    const mix = (x, y, f) => "#" + [1, 3, 5].map((i) => Math.round(parseInt(x.slice(i, i + 2), 16) * (1 - f) + parseInt(y.slice(i, i + 2), 16) * f).toString(16).padStart(2, "0")).join("");
+    Object.assign(pal, { c: pal.t || "#f0e4c8", h: "#ffffff", "%": mix(pal.b, pal.e, 0.45) });
+    const cv = document.createElement("canvas"); cv.width = 32; cv.height = 30; const c = cv.getContext("2d");
+    a.big.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== "." && (!eyesOnly || "eh%".includes(ch))) { c.fillStyle = pxColor(pal, ch); c.fillRect(x, y, 1, 1); } }));
+    return (dreamArt[key] = cv);
+  }
+  function badDreamRewrite(pm) {
+    const t = now();
+    if (dreamGame && (dreamGame.pending || !$("dreamSheet").hidden)) return;
+    if (t < dreamRest) { say(pm, `*the strings are tangled…* (try again in ${Math.ceil(dreamRest - t)}s)`, 2.5); return; }
+    if (!save.badDreams.includes("Bad Dream Puppet Master")) {
+      save.badDreams.push("Bad Dream Puppet Master"); pm.kind = "Bad Dream Puppet Master"; pm.color = 0; pm.plushMode = plushNow(pm.kind);
+      dreamBurst(pm, false); say(pm, "*snip* …the strings go both ways now 🎭", 3); persist(true);
+    }
+    const left = DREAM_ROBOS.filter((k) => !save.badDreams.includes(k));
+    if (!left.length) { say(pm, "all my Bad Dreams are yours… sweet dreams 🧸", 3); return; }
+    const inTown = left.filter((k) => pets.some((p) => p.kind === D.badDreams[k].robo)), kind = pick(inTown.length ? inTown : left);
+    for (const p of pets) if (p.kind === D.badDreams[kind].robo) say(p, "*whirr… rrrip… stitches?*", 2.5);
+    dreamRest = t + 30; dreamGame = { pending: true };
+    setTimeout(() => openDream(kind), 1400);
+  }
+  function openDream(kind) {
+    closeSheets(); openSheet("dreamSheet");
+    const cv = $("dreamCanvas");
+    dreamGame = { kind, robo: D.badDreams[kind].robo, state: "intro", t0: now(), last: now(), z: 0.2, x: cv.width / 2, mx: cv.width / 2, my: cv.height - 30,
+                  lit: true, phaseUntil: 0, cakes: [], nextCake: 0.6, lane: null, dash: null, nextLane: 0.5, wind: 0, pops: [] };
+    sfx("boing"); vibrate(60); requestAnimationFrame(dreamStep);
+  }
+  const dreamBox = (g, cv) => { const s = 2 + g.z * 6; return [g.x - 16 * s, cv.height - 14 - 30 * s, s]; };
+  const cakePos = (ck, t) => { const u = Math.min(1, (t - ck.t0) / ck.dur); return [ck.x0 + (ck.x1 - ck.x0) * u, ck.y0 + (ck.y1 - ck.y0) * u - Math.sin(Math.PI * u) * 45, 6 + 15 * u]; };
+  function dreamStep() {
+    const g = dreamGame; if (!g || g.pending) return;
+    const cv = $("dreamCanvas");
+    if ($("dreamSheet").hidden) { dreamGame = null; return; }
+    const t = now(), dt = Math.min(0.05, t - g.last); g.last = t;
+    if (g.state === "intro" && t - g.t0 > 2.2) { g.state = "play"; g.t0 = t; }
+    if (g.state === "play") dreamUpdate(g, cv, t - g.t0, dt);
+    dreamDraw(g, cv, t);
+    if (g.state === "intro" || g.state === "play") requestAnimationFrame(dreamStep);
+  }
+  function dreamUpdate(g, cv, t, dt) {
+    const W = cv.width, H = cv.height, pop = (x, y, text) => g.pops.push([x, y, text, now()]);
+    if (g.kind === "Bad Dream Bear") { g.z += 0.24 * dt; g.x += (W / 2 + Math.sin(t * 2.2) * 30 - g.x) * Math.min(1, dt * 3); }
+    else if (g.kind === "Bad Dream Bunny") {
+      if (t >= g.phaseUntil) { g.lit = !g.lit; g.phaseUntil = t + (g.lit ? 0.45 : rnd(0.7, 1.1)); if (!g.lit) { g.x = rnd(90, W - 90); sfx("thud"); } }
+      if (!g.lit) g.z += 0.30 * dt;
+    } else if (g.kind === "Bad Dream Hen") {
+      g.z += 0.04 * dt;
+      if (t >= g.nextCake) {
+        g.nextCake = t + rnd(0.55, 0.8); const [, y0, s] = dreamBox(g, cv);
+        g.cakes.push({ t0: t, dur: 1.1, x0: g.x + pick([-1, 1]) * 12 * s, y0: y0 + 18 * s, x1: rnd(40, W - 40), y1: H - 24 });
+      }
+      for (const ck of [...g.cakes]) if (t - ck.t0 >= ck.dur) { g.cakes.splice(g.cakes.indexOf(ck), 1); g.z += 0.22; pop(ck.x1, ck.y1 - 24, "splat!"); sfx("thud"); vibrate(30); }
+    } else if (g.kind === "Bad Dream Fox") {
+      if (!g.lane && !g.dash && t >= g.nextLane) g.lane = [clamp(g.my, 50, H - 50), t];
+      if (g.lane && t - g.lane[1] > 0.6) {
+        const y = g.lane[0]; g.dash = [y, t, pick([-1, 1])]; g.lane = null; sfx("whoosh");
+        if (Math.abs(g.my - y) < 32) { g.z += 0.3; pop(g.mx, g.my, "ouch!"); vibrate(40); }
+      }
+      if (g.dash && t - g.dash[1] > 0.3) { g.dash = null; g.nextLane = t + rnd(0.25, 0.5); }
+    } else if (g.kind === "Bad Dream Hare") {
+      g.wind += 0.75 * dt;
+      if (g.wind >= 1) { g.wind = 0; g.z += 0.35; pop(g.x, H / 2, "CHARGE!"); sfx("boing"); vibrate(40); }
+    }
+    if (g.z >= 1) { g.state = "lost"; sfx("boing"); vibrate(200); }
+    else if (t >= 5) {
+      g.state = "won";
+      if (!save.badDreams.includes(g.kind)) save.badDreams.push(g.kind);
+      const shadow = `${g.robo}:Shadow`; save.skins = save.skins || [];
+      if (KINDS[g.robo].colors.some((c) => c.name === "Shadow") && !save.skins.includes(shadow)) save.skins.push(shadow);
+      reward(null, 15); sfx("fanfare"); vibrate([30, 40, 30]);
+      const np = addPet(g.kind, { quiet: true }); if (np) say(np, "…okay. you can keep me. 🧸", 4);
+      persist(true); checkTrophies();
+    }
+  }
+  function dreamDraw(g, cv, now_) {
+    const c = cv.getContext("2d"), W = cv.width, H = cv.height, name = g.kind.replace("Bad Dream ", "");
+    c.imageSmoothingEnabled = false;
+    const sprite = (x, y, s, eyesOnly) => c.drawImage(dreamCanvas(g.kind, eyesOnly), Math.round(x), Math.round(y), 32 * s, 30 * s);
+    const text = (str, x, y, size, color, align = "center") => { c.font = `800 ${size}px ${FONT}`; c.fillStyle = color; c.textAlign = align; c.textBaseline = "middle"; c.fillText(str, x, y); };
+    c.fillStyle = "#0c0b14"; c.fillRect(0, 0, W, H);
+    if (g.state === "intro") {
+      text("🎭 The strings go taut…", W / 2, 34, 15, "#c8a0d8"); text(`The Puppet Master rewrote ${g.robo}!`, W / 2, 58, 11.5, "#e8e4ff");
+      g.z = 0.2; const [x0, y0, s] = dreamBox(g, cv); sprite(x0, y0, s, Math.floor(now_ * 4) % 2 === 0);
+      text(DREAM_HOW[g.kind], W / 2, H - 10, 10.5, "#ffd23a"); return;
+    }
+    if (g.state === "won" || g.state === "lost") {
+      const won = g.state === "won"; c.fillStyle = won ? "#1a1630" : "#14081a"; c.fillRect(0, 0, W, H);
+      g.z = won ? 0.25 : 0.55; g.x = W / 2; const [x0, y0, s] = dreamBox(g, cv); sprite(x0, y0 + (won ? 30 : 0), s);
+      c.fillStyle = won ? "#1a1630" : "#14081a"; c.fillRect(0, 0, W, 96);
+      if (won) { text(`You kept the Bad Dream ${name}! 🧸`, W / 2, 26, 15, "#ffd23a"); text(`+15 💖 · ${g.robo}'s Shadow color unlocked`, W / 2, 52, 10.5, "#e8e4ff"); text("(it's a plushie until midnight)", W / 2, 74, 10, "#9a94c0"); }
+      else { text("GOTCHA! 🧸", W / 2, 28, 20, "#ff4a6a"); text(`The Bad Dream ${name} gave you a big stuffed hug.`, W / 2, 56, 10.5, "#e8e4ff"); text("Tap a Puppet Master 5 times to try again (after a little rest).", W / 2, 78, 9.5, "#9a94c0"); }
+      return;
+    }
+    const t = now_ - g.t0;
+    if (g.kind === "Bad Dream Fox") {
+      if (g.lane) { const y = g.lane[0]; c.fillStyle = "#3a0a14"; c.fillRect(0, y - 32, W, 64); c.strokeStyle = "#ff4a5a"; c.lineWidth = 2; c.strokeRect(1, y - 32, W - 2, 64); text("!! MOVE !!", W / 2, y, 13, "#ff4a5a"); }
+      if (g.dash) { const [y, t1, d] = g.dash, u = (t - t1) / 0.3, s = 3, x = d > 0 ? -32 * s + (W + 64 * s) * u : W + 32 * s - (W + 64 * s) * u; sprite(x - 16 * s, y - 15 * s, s); }
+      else { const [x0, y0, s] = dreamBox(g, cv); sprite(x0, y0, s); }
+    } else {
+      const [x0, y0, s] = dreamBox(g, cv); sprite(x0, y0, s, g.kind === "Bad Dream Bunny" && !g.lit);
+      if (g.kind === "Bad Dream Hare") {
+        text("🔑 WIND", 10, 42, 10, "#d8b04a", "left"); c.fillStyle = "#3a3360"; c.fillRect(66, 35, 124, 14); c.fillStyle = "#101018"; c.fillRect(68, 37, 120, 10);
+        c.fillStyle = g.wind < 0.5 ? "#5ad87a" : g.wind < 0.8 ? "#ffd23a" : "#ff4a5a"; c.fillRect(68, 37, 120 * g.wind, 10);
+      }
+    }
+    for (const ck of g.cakes) {
+      const [cx, cy, r] = cakePos(ck, t);
+      c.fillStyle = "#e8b060"; c.strokeStyle = "#7a4a1a"; c.lineWidth = 2; c.beginPath(); c.ellipse(cx, cy, r, r * 0.6, 0, 0, Math.PI * 2); c.fill(); c.stroke();
+      c.fillStyle = "#ffe08a"; c.beginPath(); c.ellipse(cx, cy - r * 0.15, r * 0.4, r * 0.2, 0, 0, Math.PI * 2); c.fill();
+    }
+    g.pops = g.pops.filter((q) => now_ - q[3] < 0.7);
+    for (const q of g.pops) text(q[2], q[0], q[1] - (now_ - q[3]) * 40, 11, "#ffffff");
+    c.fillStyle = "#08070e"; c.fillRect(0, 0, W, 26);
+    text(`KEEP IT AWAY  ${Math.max(0, 5 - t).toFixed(1)}s`, 8, 13, 11, "#e8e4ff", "left");
+    c.fillStyle = "#3a3360"; c.fillRect(W - 114, 6, 106, 14); c.fillStyle = "#101018"; c.fillRect(W - 112, 8, 102, 10);
+    c.fillStyle = "#ff4a6a"; c.fillRect(W - 112, 8, 102 * Math.min(1, g.z), 10);
+  }
+  {
+    const cv = $("dreamCanvas");
+    const at = (e) => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * (cv.width / r.width), (e.clientY - r.top) * (cv.height / r.height)]; };
+    cv.addEventListener("pointermove", (e) => { if (dreamGame && !dreamGame.pending) [dreamGame.mx, dreamGame.my] = at(e); });
+    cv.addEventListener("pointerdown", (e) => {
+      const g = dreamGame; if (!g || g.pending) return;
+      const [x, y] = at(e); g.mx = x; g.my = y;
+      if (g.state !== "play") return;
+      const t = now() - g.t0, [x0, y0, s] = dreamBox(g, cv), onIt = x >= x0 && x <= x0 + 32 * s && y >= y0 && y <= y0 + 30 * s, pop = (text) => g.pops.push([x, y, text, now()]);
+      if (g.kind === "Bad Dream Bear" && onIt) { g.z = Math.max(0.1, g.z - 0.09); pop("shove!"); vibrate(10); }
+      else if (g.kind === "Bad Dream Bunny" && onIt) { if (g.lit) { g.z = Math.max(0.1, g.z - 0.25); pop("back!"); } else pop("too dark!"); }
+      else if (g.kind === "Bad Dream Hen") {
+        for (const ck of g.cakes) { const [cx, cy, r] = cakePos(ck, t); if (Math.hypot(x - cx, y - cy) < r + 14) { g.cakes.splice(g.cakes.indexOf(ck), 1); pop("swat!"); sfx("pop"); break; } }
+      } else if (g.kind === "Bad Dream Hare" && x >= x0 && x <= x0 + 32 * s && y >= y0 && y <= y0 + 8 * s) { g.wind = Math.max(0, g.wind - 0.38); pop("unwind!"); sfx("boop"); }
+    });
+  }
   // ⭐ secret codes (creator code; early access codes work here too) and the creator's dev sheet
   $("secretGo").onclick = async () => {
     const code = normCode($("secretCode").value);
@@ -2480,7 +2643,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { cookies: () => cookies, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { cookies: () => cookies, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

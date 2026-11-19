@@ -1,0 +1,74 @@
+310 INFO: PyInstaller: 6.11.1, contrib hooks: 2026.10
+310 INFO: Python: 3.12.10
+330 INFO: Platform: Windows-2025Server-10.0.26100-SP0
+330 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+331 INFO: wrote D:\a\Blipville\Blipville\Blipville.spec
+339 INFO: Module search paths (PYTHONPATH):
+['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Scripts\\pyinstaller.exe',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+ 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+ 'D:\\a\\Blipville\\Blipville']
+531 INFO: checking Analysis
+531 INFO: Building Analysis because Analysis-00.toc is non existent
+531 INFO: Running Analysis Analysis-00.toc
+531 INFO: Target bytecode optimization level: 0
+531 INFO: Initializing module dependency graph...
+549 INFO: Initializing module graph hook caches...
+561 INFO: Analyzing base_library.zip ...
+1356 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2852 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+3681 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+4185 INFO: Caching module dependency graph...
+4258 INFO: Looking for Python shared library...
+4309 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+4309 INFO: Analyzing D:\a\Blipville\Blipville\blip.pyw
+4985 INFO: Processing pre-find-module-path hook 'hook-tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+4987 INFO: TclTkInfo: initializing cached Tcl/Tk info...
+5972 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6019 INFO: Processing standard module hook 'hook-PIL.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6092 INFO: Processing standard module hook 'hook-PIL.Image.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6297 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+6297 INFO: SetuptoolsInfo: initializing cached setuptools info...
+6927 INFO: Processing standard module hook 'hook-xml.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6945 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+6970 INFO: Processing standard module hook 'hook-PIL.ImageFilter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+7375 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+7400 INFO: Processing standard module hook 'hook-packaging.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+7711 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+7739 INFO: Processing module hooks (post-graph stage)...
+7742 WARNING: Hidden import "pkg_resources" not found!
+7923 INFO: Processing standard module hook 'hook-PIL.SpiderImagePlugin.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+7992 INFO: Processing standard module hook 'hook-_tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+8000 INFO: Performing binary vs. data reclassification (928 entries)
+8633 INFO: Looking for ctypes DLLs
+8734 INFO: Analyzing run-time hooks ...
+8738 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+8738 INFO: Including run-time hook 'pyi_rth__tkinter.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+8760 INFO: Looking for dynamic libraries
+8869 INFO: Extra DLL search directories (AddDllDirectory): []
+8869 INFO: Extra DLL search directories (PATH): []
+9502 WARNING: Library not found: could not resolve 'api-ms-win-core-path-l1-1-0.dll', dependency of 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.dll'.
+9521 INFO: Warnings written to D:\a\Blipville\Blipville\build\Blipville\warn-Blipville.txt
+9538 INFO: Graph cross-reference written to D:\a\Blipville\Blipville\build\Blipville\xref-Blipville.html
+9566 INFO: checking PYZ
+9566 INFO: Building PYZ because PYZ-00.toc is non existent
+9566 INFO: Building PYZ (ZlibArchive) D:\a\Blipville\Blipville\build\Blipville\PYZ-00.pyz
+9907 INFO: Building PYZ (ZlibArchive) D:\a\Blipville\Blipville\build\Blipville\PYZ-00.pyz completed successfully.
+9935 INFO: checking PKG
+9935 INFO: Building PKG because PKG-00.toc is non existent
+9935 INFO: Building PKG (CArchive) Blipville.pkg
+14341 INFO: Building PKG (CArchive) Blipville.pkg completed successfully.
+14355 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+14355 INFO: checking EXE
+14355 INFO: Building EXE because EXE-00.toc is non existent
+14355 INFO: Building EXE from EXE-00.toc
+14355 INFO: Copying bootloader EXE to D:\a\Blipville\Blipville\dist\Blipville.exe
+14357 INFO: Copying icon to EXE
+14359 INFO: Copying 0 resources to EXE
+14359 INFO: Embedding manifest in EXE
+14361 INFO: Appending PKG archive to EXE
+14366 INFO: Fixing EXE headers
+14448 INFO: Building EXE from EXE-00.toc completed successfully.

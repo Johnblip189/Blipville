@@ -3618,9 +3618,9 @@ MOD_CODE_KINDS = {"f7442ad71cf1853b4834396505ec91f5cbba914d1e9c7f208351b22fd8f7f
 CREATOR_KINDS = list(CREATOR)
 
 # 🎭 Cosplayers: Blip fans dressed up as their favorite Blips. A Cosplayer joins your collection once you have
-# the Blip they're based on (COSPLAY_OF). Gijinka-style Blip fusions: people with their Blip's ears, tails, wings or eyes
-# and hair in its colors, drawn with rounder, less blocky shapes and striped stockings.
-COSPLAYERS = {"Kitsune Cosplayer": {"eyes": 3, "move": "hop", "speed": 1.0, "mouth": False, "lines": ["*swishes a pretend tail*", "do my ears look real?", "i'm a fox spirit! (kind of)", "stitched these ears myself", "kon kon!"], "body": ["..o..........o..", ".oao........oao.", ".oaaohhhhhhoaao.", "..ohuuuuuuuuho..", ".ohhuuuuuuuuhho.", "..ohhpummuphho..", "..ohhoouuoohho..", ".occcsccccsccco.", ".ocooccyyccooco.", ".ouooccccccoouoo", "....tt....tt.oao", "....ll....ll.oao"], "colors": [{"name": "Spirit", "o": "#6a2a3e", "h": "#fde4ec", "a": "#ff7a9a", "s": "#e8203a", "c": "#ffffff", "y": "#e8203a", "t": "#e8203a", "l": "#ffffff", "u": "#f6e0d4", "e": "#e8203a", "p": "#ff9ab0", "m": "#a05060"}, {"name": "Moon", "o": "#1a1a3a", "h": "#d8dcf0", "a": "#a8b0e8", "s": "#5a6aff", "c": "#ffffff", "y": "#5a6aff", "t": "#5a6aff", "l": "#ffffff", "u": "#f0e4ec", "e": "#5a6aff", "p": "#c8a8e8", "m": "#6a4a7a"}, {"name": "Flame", "o": "#3a1406", "h": "#ff9a3a", "a": "#ffd23a", "s": "#c81e1e", "c": "#fff4e6", "y": "#c81e1e", "t": "#c81e1e", "l": "#fff4e6", "u": "#f6e0d4", "e": "#c81e1e", "p": "#ff9a7a", "m": "#8a3a2a"}]}, "Blip Cosplayer": {"eyes": 3, "move": "hop", "speed": 1.0, "mouth": False, "lines": ["i'm basically a Blip now", "*boops your screen*", "this hoodie is SO comfy", "blip blip!", "biggest Blip fan ever"], "body": ["................", ".oo..........oo.", ".oaoohhhhhhooao.", "..ohuuuuuuuuho..", ".ohhuuuuuuuuhho.", "..ohhpummuphho..", "..ohhoouuoohho..", ".occcccccccccco.", ".ocoocllllcooco.", ".ouooccccccoouo.", "....tt....tt....", "....ll....ll...."], "colors": [{"name": "Lavender", "o": "#2b1d3a", "h": "#9b7bd8", "a": "#ff8fb3", "c": "#ddd0ff", "l": "#9b7bd8", "y": "#ffd23a", "t": "#ddd0ff", "u": "#f6dccb", "e": "#2a1a3a", "p": "#ff9fb8", "m": "#a0506a"}, {"name": "Mint", "o": "#163a2a", "h": "#7adcaa", "a": "#ff9fb8", "c": "#e0f8ec", "l": "#7adcaa", "y": "#ffd23a", "t": "#e0f8ec", "u": "#f6dccb", "e": "#163a2a", "p": "#ff9fb8", "m": "#a0506a"}, {"name": "Sunny", "o": "#3a2a04", "h": "#ffd23a", "a": "#ff8a1f", "c": "#fff4c0", "l": "#ffd23a", "y": "#ff8a1f", "t": "#fff4c0", "u": "#f6dccb", "e": "#2a1a10", "p": "#ff9a7a", "m": "#a0506a"}]}, "Dragon Cosplayer": {"eyes": 3, "move": "walk", "speed": 1.0, "mouth": False, "lines": ["rawr! (fire not included)", "my wings are cardboard. shh", "fear my felt horns!", "*pretend flame noises*", "i hoard cookies too"], "body": ["...n........n...", "...nn.oooo.nn...", "..oonhhhhhhnoo..", "..ohuuuuuuuuho..", ".ohhuuuuuuuuhho.", "g.ohhpummuphho.g", "gg.ohoouuooho.gg", "gocccccccccccog.", ".ocooccyyccooco.", ".ouooccccccoouon", "....tt....tt.ono", "....ll....ll..n."], "colors": [{"name": "Green", "o": "#0e2a14", "h": "#4ac85a", "n": "#fff0c0", "g": "#2a8a3a", "c": "#2a5a3a", "y": "#ffd23a", "t": "#fff0a8", "l": "#4ac85a", "u": "#e8c0a0", "e": "#c83a2a", "p": "#ff8a8a", "m": "#8a3a3a"}, {"name": "Ruby", "o": "#2a0606", "h": "#e83a3a", "n": "#ffd23a", "g": "#a81e1e", "c": "#5a1a1a", "y": "#ffd23a", "t": "#ffd23a", "l": "#e83a3a", "u": "#f6dccb", "e": "#ffd23a", "p": "#ff9a7a", "m": "#8a3a3a"}, {"name": "Frost", "o": "#0e2a3a", "h": "#e8f4ff", "n": "#8ad8ff", "g": "#4aa8e8", "c": "#8ad8ff", "y": "#ffffff", "t": "#ffffff", "l": "#8ad8ff", "u": "#f6e4e8", "e": "#4aa8e8", "p": "#ffb0c8", "m": "#6a4a7a"}]}, "Robo Cosplayer": {"eyes": 3, "move": "walk", "speed": 1.0, "mouth": False, "lines": ["beep boop… i mean, hi!", "*does the robot*", "rivets: hand-painted", "reporting for the night shift!", "my joints squeak (on purpose)"], "body": [".......rr.......", ".ooo...oo...ooo.", ".oaroohhhhoorao.", "..ohuuuuuuuuho..", ".ohhuuuuuuuuhho.", "..ohhpummuphho..", "..ohhoouuoohho..", ".occrcbbbbcrcco.", ".orooccyyccooro.", ".ouooccccccoouo.", "....tt....tt....", "....ll....ll...."], "colors": [{"name": "Captain", "o": "#2a1608", "h": "#9a6236", "a": "#6a3e1e", "r": "#d8dde6", "b": "#ffd23a", "c": "#2a4a8a", "y": "#ffd23a", "t": "#2a4a8a", "l": "#d8dde6", "u": "#f6dccb", "e": "#5ab8ff", "p": "#e88a7a", "m": "#a0506a"}, {"name": "Arcade", "o": "#0e2a3a", "h": "#3ab8c8", "a": "#1e7a8a", "r": "#d8dde6", "b": "#ff5a8a", "c": "#1e7a8a", "y": "#ffd23a", "t": "#ffd23a", "l": "#3ab8c8", "u": "#f6dccb", "e": "#ffd23a", "p": "#ff9fb0", "m": "#a0506a"}, {"name": "Midnight", "o": "#06060c", "h": "#2a2a3a", "a": "#16161f", "r": "#7a7a8a", "b": "#ff3b3b", "c": "#16161f", "y": "#ff3b3b", "t": "#ff3b3b", "l": "#2a2a3a", "u": "#e0d8e8", "e": "#ff3b3b", "p": "#5a2a3a", "m": "#5a2a3a"}]}, "Lurker Cosplayer": {"eyes": 3, "move": "walk", "speed": 1.0, "mouth": False, "lines": ["i'm watching you… just kidding", "count my eyes. go on.", "it took ages to sew all these eyes", "*lurks dramatically*", "boo? boo."], "body": ["................", "....oooooooo....", "..oohyhhhhyhoo..", "..ohuuuuuuuuho..", ".ohyuuuuuuuuyho.", "..ohhpummuphho..", "..ohhoouuoohho..", ".occyccccccycco.", ".ocooccyyccooco.", ".ouooccccccoouo.", "....tt....tt....", "...o.l.oo.l.o..."], "colors": [{"name": "Shade", "o": "#06060c", "h": "#1e1a2a", "y": "#ffd23a", "c": "#2a2440", "t": "#2a2440", "l": "#ffd23a", "u": "#e8e0f0", "e": "#ffd23a", "p": "#c890c8", "m": "#5a2a5a"}, {"name": "Abyss", "o": "#02060c", "h": "#0e2a3a", "y": "#5affd8", "c": "#0a1a2a", "t": "#0a1a2a", "l": "#5affd8", "u": "#e0ecf0", "e": "#5affd8", "p": "#8ac8c8", "m": "#2a4a5a"}, {"name": "Blood Moon", "o": "#0c0204", "h": "#2a0a10", "y": "#ff3b3b", "c": "#1a0608", "t": "#1a0608", "l": "#ff3b3b", "u": "#f0e0e0", "e": "#ff3b3b", "p": "#c87a7a", "m": "#7a2a2a"}]}}
+# the Blip they're based on (COSPLAY_OF). Gijinka-style Blip fusions: people with their Blip's ears, tails, wings or eyes and
+# hair that fits their personality. Drawn in HD ("hd": 32x26 at half-size pixels); "body" is a small stand-in used for hats.
+COSPLAYERS = {"Kitsune Cosplayer": {"eyes": 3, "move": "hop", "speed": 1.0, "mouth": False, "lines": ["*swishes a pretend tail*", "do my ears look real?", "i'm a fox spirit! (kind of)", "stitched these ears myself", "kon kon!"], "body": ["..o..........o..", ".oao........oao.", ".oaaohhhhhhoaao.", "..ohuuuuuuuuho..", ".ohhuuuuuuuuhho.", "..ohhpummuphho..", "..ohhoouuoohho..", ".occcsccccsccco.", ".ocooccyyccooco.", ".ouooccccccoouoo", "....tt....tt.oao", "....ll....ll.oao"], "colors": [{"o": "#5a2a3e", "h": "#fde4ec", "a": "#ff7a9a", "s": "#e8203a", "c": "#ffffff", "y": "#e8203a", "t": "#e8203a", "l": "#ffffff", "u": "#fbe8e0", "e": "#e8203a", "p": "#ffb0c0", "m": "#a05060", "k": "#3a1a2a", "w": "#ffffff", "name": "Spirit"}, {"o": "#1a1a3a", "h": "#d8dcf0", "a": "#a8b0e8", "s": "#5a6aff", "c": "#ffffff", "y": "#5a6aff", "t": "#5a6aff", "l": "#ffffff", "u": "#fbe8e0", "e": "#5a6aff", "p": "#c8b0f0", "m": "#6a4a7a", "k": "#1a1a3a", "w": "#ffffff", "name": "Moon"}, {"o": "#3a1406", "h": "#ff9a3a", "a": "#ffd23a", "s": "#c81e1e", "c": "#fff4e6", "y": "#c81e1e", "t": "#c81e1e", "l": "#fff4e6", "u": "#fbe8e0", "e": "#c81e1e", "p": "#ffb0c0", "m": "#8a3a2a", "k": "#3a1406", "w": "#ffffff", "name": "Flame"}], "hd": ["..........oo........oo..........", "..........ohooooooooho..........", ".........oaahhhhhhhhaao.........", "........ohahhhhhhhhhhaho........", "........ohhhhhhhhhhhhhho........", "........ohhhhhhhhhhhhhho........", "........ohhhhhhhhhhhhhho........", ".......ohhuhhhhhhhhhhuhho.......", ".......ohhukkkuuuukkkuhho.......", "......ohhhueweuuuueweuhhho......", "......ohhhueeeuuuueeeuhhho......", ".....ohhhhpEEEuuumEEEphhhho.....", ".....ohhhhhuuuummuuuuhhhhho...o.", ".....ohhhhhhooouuoouhhhhhho..oo.", "......ohhhho..oUUo.ohhhhho..oho.", "......ohhhococCUCCcchhhhho.ohho.", "......ohho.occcsccccchhhhhohhho.", "......oho.occcccscccccohhhhhhho.", ".......o..occcccccccco.ohhhhhho.", "......oo.occssssssssccohhhhhoo..", ".........ouccccccccccuuohhoo....", ".........uoooccooccooou.oo......", ".............tt..tt.............", ".............ll..ll.............", ".............tt..tt.............", ".............kk..kk............."]}, "Blip Cosplayer": {"eyes": 3, "move": "hop", "speed": 1.0, "mouth": False, "lines": ["i'm basically a Blip now", "*boops your screen*", "this hoodie is SO comfy", "blip blip!", "biggest Blip fan ever"], "body": ["................", ".oo..........oo.", ".oaoohhhhhhooao.", "..ohuuuuuuuuho..", ".ohhuuuuuuuuhho.", "..ohhpummuphho..", "..ohhoouuoohho..", ".occcccccccccco.", ".ocoocllllcooco.", ".ouooccccccoouo.", "....tt....tt....", "....ll....ll...."], "colors": [{"o": "#2b1d3a", "h": "#9b7bd8", "a": "#ff8fb3", "c": "#ddd0ff", "l": "#ffffff", "y": "#ffd23a", "t": "#9b7bd8", "u": "#fbe4d8", "e": "#6a4ab8", "p": "#ffb0c8", "m": "#a0506a", "k": "#2b1d3a", "w": "#ffffff", "name": "Lavender"}, {"o": "#163a2a", "h": "#7adcaa", "a": "#ff9fb8", "c": "#e0f8ec", "l": "#ffffff", "y": "#ffd23a", "t": "#7adcaa", "u": "#fbe4d8", "e": "#2a8a5a", "p": "#ffb0c8", "m": "#a0506a", "k": "#163a2a", "w": "#ffffff", "name": "Mint"}, {"o": "#3a2a04", "h": "#ffd23a", "a": "#ff8a1f", "c": "#fff4c0", "l": "#ffffff", "y": "#ff8a1f", "t": "#ff8a1f", "u": "#fbe4d8", "e": "#c87a1a", "p": "#ffb0c8", "m": "#a0506a", "k": "#3a2a04", "w": "#ffffff", "name": "Sunny"}], "hd": ["........oo......o.....oo........", ".......ohho.oooohooo.ohho.......", "......ohaahohhhhhhhhohaaho......", "......ohaahhhhhhhhhhhhaaho......", ".......ohhhhhhhhhhhhhhhho.......", "........ohhhhhhhhhhhhhho........", "........ohhhhhhhhhhhhhho........", "........ohuhhhhhhhhhhuho........", "........ohukkkuuuukkkuho........", "........ohueweuuuueweuho........", "........ohueeeuuuueeeuho........", ".......ohooEEEuuuuEEEooho.......", "........o..ouuummmuuo..o........", "............ooouwooo............", "..............oUUo..............", "...........oocCUCCcoo...........", "...........occcccccco...........", "..........occcllllccco..........", "..........occllllllcco..........", ".........occccllllcccco.........", ".........ouccccccccccuo.........", ".........uoooccooccooou.........", ".............tt..tt.............", ".............ll..ll.............", ".............tt..tt.............", ".............kk..kk............."]}, "Dragon Cosplayer": {"eyes": 3, "move": "walk", "speed": 1.0, "mouth": False, "lines": ["rawr! (fire not included)", "my wings are cardboard. shh", "fear my felt horns!", "*pretend flame noises*", "i hoard cookies too"], "body": ["...n........n...", "...nn.oooo.nn...", "..oonhhhhhhnoo..", "..ohuuuuuuuuho..", ".ohhuuuuuuuuhho.", "g.ohhpummuphho.g", "gg.ohoouuooho.gg", "gocccccccccccog.", ".ocooccyyccooco.", ".ouooccccccoouon", "....tt....tt.ono", "....ll....ll..n."], "colors": [{"o": "#0e2a14", "h": "#4ac85a", "n": "#fff0c0", "g": "#2a8a3a", "c": "#2a5a3a", "y": "#ffd23a", "t": "#fff0a8", "l": "#4ac85a", "u": "#f0d0b0", "e": "#e8a020", "p": "#ff9a8a", "m": "#8a3a3a", "k": "#0e2a14", "w": "#ffffff", "name": "Green"}, {"o": "#2a0606", "h": "#e83a3a", "n": "#ffd23a", "g": "#a81e1e", "c": "#5a1a1a", "y": "#ffd23a", "t": "#ffd23a", "l": "#e83a3a", "u": "#f0d0b0", "e": "#ffd23a", "p": "#ff9a8a", "m": "#8a3a3a", "k": "#2a0606", "w": "#ffffff", "name": "Ruby"}, {"o": "#0e2a3a", "h": "#e8f4ff", "n": "#8ad8ff", "g": "#4aa8e8", "c": "#3a6a9a", "y": "#ffffff", "t": "#ffffff", "l": "#8ad8ff", "u": "#f0d0b0", "e": "#4aa8e8", "p": "#ff9a8a", "m": "#8a3a3a", "k": "#0e2a3a", "w": "#ffffff", "name": "Frost"}], "hd": ["................................", ".......oo...oooooooo...oo.......", "........oooohhhhhhhhoooo........", "........onhhhhhhhhhhhhno........", "........ohhhhhhhhhhhhhho........", "........ohhhhhhhhhhhhhho........", ".........ohhhhhhhhhhhho.........", ".........ohhhhhhhhhhhho.........", ".........oukkkuuuukkkuo.........", ".........oueweuuuueweuo.........", ".........oueeeuuuueeeuo.........", "...o......oEEEuuuuEEEo......o...", "...oo......ouuummmuuo......oo...", "..oggoo.....ooouwooo.....oogo...", "..oggggoo.....oUUo.....ooggggo..", "..oggggggo.oocCUCCcoo.oggggggo..", "..ogggggggoccccCCccccoggggggo...", "...ogggggocccccCCcccccoggggo....", "....ooooo.occccCCcccco.oooo.....", ".........occcccCCccccco.........", ".........ouccccccccccuo.......o.", ".........uoooccooccooouoo....oo.", ".............tt..tt...oggooooo..", ".............ll..ll...oooooooo..", ".............tt..tt.............", ".............kk..kk............."]}, "Robo Cosplayer": {"eyes": 3, "move": "walk", "speed": 1.0, "mouth": False, "lines": ["beep boop… i mean, hi!", "*does the robot*", "rivets: hand-painted", "reporting for the night shift!", "my joints squeak (on purpose)"], "body": [".......rr.......", ".ooo...oo...ooo.", ".oaroohhhhoorao.", "..ohuuuuuuuuho..", ".ohhuuuuuuuuhho.", "..ohhpummuphho..", "..ohhoouuoohho..", ".occrcbbbbcrcco.", ".orooccyyccooro.", ".ouooccccccoouo.", "....tt....tt....", "....ll....ll...."], "colors": [{"o": "#1a1a2a", "h": "#8a5a36", "a": "#ffd23a", "r": "#c8ccd8", "b": "#5ab8ff", "c": "#2a4a8a", "y": "#ffd23a", "t": "#2a4a8a", "l": "#d8dde6", "u": "#fbe4d8", "e": "#3a8ad8", "p": "#ffb0b0", "m": "#a0506a", "k": "#16264a", "w": "#ffffff", "name": "Captain"}, {"o": "#1a1a2a", "h": "#3ab8c8", "a": "#ffd23a", "r": "#d8dde6", "b": "#ff5a8a", "c": "#1e7a8a", "y": "#ffd23a", "t": "#ffd23a", "l": "#3ab8c8", "u": "#fbe4d8", "e": "#ffd23a", "p": "#ffb0b0", "m": "#a0506a", "k": "#0e2a3a", "w": "#ffffff", "name": "Arcade"}, {"o": "#06060c", "h": "#2a2a3a", "a": "#ffd23a", "r": "#7a7a8a", "b": "#ff3b3b", "c": "#16161f", "y": "#ff3b3b", "t": "#ff3b3b", "l": "#2a2a3a", "u": "#fbe4d8", "e": "#ff3b3b", "p": "#ffb0b0", "m": "#a0506a", "k": "#06060c", "w": "#ffffff", "name": "Midnight"}], "hd": ["...............oo...............", "............ooorrooo............", "..........oohhhhhhhhoo..........", "........oohhhhhhhhhhhhoo........", "........ohhhhhhhhhhhhhho........", "........ohhhhhhhhhhhhhho........", "......oorhhhhhhhhhhhhhhroo......", "......orrhHHHHHHHHHHHHhrro......", "......obrhukkkuuuukkkuhrbo......", "......orrhueweuuuueweuhrro......", "......oorhueeeuuuueeeuhroo......", "........ohoEEEuuuuEEEoho........", "........oo.ouuuumuuuo.oo........", "............ooouuooo............", "..............oUUo..............", "...........oocCUCCcoo...........", "...........occcccccco...........", "..........occcbrrrccco..........", ".........occccrrracccco.........", ".........occcccccccccco.........", ".........ouccccccccccuo.........", ".........uoooccooccooou.........", ".............tt..tt.............", ".............ll..ll.............", ".............tt..tt.............", ".............kk..kk............."]}, "Lurker Cosplayer": {"eyes": 3, "move": "walk", "speed": 1.0, "mouth": False, "lines": ["i'm watching you… just kidding", "count my eyes. go on.", "it took ages to sew all these eyes", "*lurks dramatically*", "boo? boo."], "body": ["................", "....oooooooo....", "..oohyhhhhyhoo..", "..ohuuuuuuuuho..", ".ohyuuuuuuuuyho.", "..ohhpummuphho..", "..ohhoouuoohho..", ".occyccccccycco.", ".ocooccyyccooco.", ".ouooccccccoouo.", "....tt....tt....", "...o.l.oo.l.o..."], "colors": [{"o": "#06060c", "h": "#3a3054", "y": "#ffd23a", "c": "#4a3a6a", "t": "#4a3a6a", "l": "#ffd23a", "u": "#ece4f2", "e": "#ffd23a", "p": "#c890c8", "m": "#5a2a5a", "k": "#06060c", "w": "#ffffff", "name": "Shade"}, {"o": "#06060c", "h": "#1a3a4a", "y": "#5affd8", "c": "#1a4a5a", "t": "#1a4a5a", "l": "#5affd8", "u": "#ece4f2", "e": "#5affd8", "p": "#c890c8", "m": "#5a2a5a", "k": "#06060c", "w": "#ffffff", "name": "Abyss"}, {"o": "#06060c", "h": "#4a1a24", "y": "#ff3b3b", "c": "#5a1a24", "t": "#5a1a24", "l": "#ff3b3b", "u": "#ece4f2", "e": "#ff3b3b", "p": "#c890c8", "m": "#5a2a5a", "k": "#06060c", "w": "#ffffff", "name": "Blood Moon"}], "hd": ["................................", "............oooooooo............", "..........oohhhhhhhhoo..........", "........oohhhhhhhhhhhhoo........", "........ohhhhhhhhhhhhhho........", ".......ohhhhhhhhhhhhhhhho.......", ".......ohhhhhhhhhhhhhhhho.......", ".......ohhhhhhhhhhhhhuuho.......", "......ohhhhhhhuuuukkkuuhho......", "......ohhhhhhhuuuueweuuhho......", "......ohhhhyhhuuuueeeuuhho......", ".....ohhhhpEEhuuuuEEEphhhho.....", ".....ohhhhhuuuuuuuuuuhhhhho.....", ".....ohyhhhhoooumooohhhhhho.....", "......ohhhho..oUUo..ohhhho......", "......ohhhccocCUCCcochhhho......", "......ohhocccccccccccchhho......", "......oho.occccccccccchhho......", "......ohoocccycccccccccoho......", ".......o.occcccccccccco.o.......", ".........occcccccccycco.........", "........ouoooccooccooouo........", ".............tt..tt.............", ".............ll..ll.............", ".............tt..tt.............", ".............kk..kk............."]}}
 COSPLAY_OF = {"Kitsune Cosplayer": "Kitsune", "Blip Cosplayer": "Blip", "Dragon Cosplayer": "Dragon", "Robo Cosplayer": "Robo Bear", "Lurker Cosplayer": "Lurker"}
 COSPLAY_FEET = {"stand": "....oo....oo....", "walk1": "...oo......oo...", "walk2": ".....oo..oo.....", "air": ".....o....o....."}
 COSPLAYER_KINDS = list(COSPLAYERS)
@@ -3637,6 +3637,7 @@ for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIF
 
 for _name in COSPLAYERS:
     VARIANTS[_name]["feet"] = COSPLAY_FEET   # little legs in striped stockings
+    VARIANTS[_name]["hd"] = COSPLAYERS[_name]["hd"]   # drawn in HD (32x26 at half-size pixels)
 NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
@@ -6006,6 +6007,11 @@ class Blip:
         pal = {**colors[self.palette % len(colors)], **v.get("extra", {})}
         if pal.get("glitch") is not None and glitching(now + id(self) % 50 / 10):
             pal = {**colors[pal["glitch"]], **v.get("extra", {})}   # ⚡ a split-second flicker back to an old look
+        if v.get("hd"):
+            lying = self.state == "sleep" or now < self.squash_until
+            face = "sleep" if self.state == "sleep" else ("blink" if now < getattr(self, "blink_until", 0) else
+                                                          "happy" if now < self.face_until and self.face == "happy" else "normal")
+            return hd_grid(v, pal, face, lying)
         g = [[None] * ART_W for _ in range(ART_H)]
         body = pal.get("art") or v["body"]          # some colors come with their own markings
         if pal.get("glitch_art") and glitching(now + id(self) % 50 / 10):
@@ -6120,17 +6126,18 @@ class Blip:
         soul = {pal[ch] for ch in soul_chars if ch in pal}           # 🎭 only these colors are see-through
         soul_alpha = {"alpha": ghost_alpha(now, 0.0) * 0.75} if soul and isinstance(c, PixelCanvas) else {}
         # pixel art, merging runs of the same color into one rectangle per row
+        cs = SCALE * ART_W // len(art[0])                      # HD sprites use half-size pixels
         for y, row in enumerate(art):
             x = 0
-            while x < ART_W:
+            while x < len(row):
                 color = row[x]
                 if color is None:
                     x += 1
                     continue
                 x2 = x
-                while x2 + 1 < ART_W and row[x2 + 1] == color:
+                while x2 + 1 < len(row) and row[x2 + 1] == color:
                     x2 += 1
-                c.create_rectangle(ox + x * SCALE, oy + y * SCALE, ox + (x2 + 1) * SCALE, oy + (y + 1) * SCALE,
+                c.create_rectangle(ox + x * cs, oy + y * cs, ox + (x2 + 1) * cs, oy + (y + 1) * cs,
                                    fill=color, outline="", tags=("pet",), **(soul_alpha if color in soul else ghost))
                 x = x2 + 1
 
@@ -6407,6 +6414,23 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
     colors = kind_colors(kind)
     pal = {**colors[color_idx % len(colors)], **v.get("extra", {})}
     body = pal.get("art") or v["body"]
+    if v.get("hd"):
+        g = hd_grid(v, pal, "happy" if face == "happy" else "normal", silhouette=silhouette)
+        cs = scale / 2
+        for yy, row in enumerate(g):
+            xx = 0
+            while xx < 32:
+                col = row[xx]
+                if col is None:
+                    xx += 1
+                    continue
+                x2 = xx
+                while x2 + 1 < 32 and row[x2 + 1] == col:
+                    x2 += 1
+                canvas.create_rectangle(round(x + xx * cs), round(y + yy * cs), round(x + (x2 + 1) * cs), round(y + (yy + 1) * cs),
+                                        fill=col, outline="", tags=tags)
+                xx = x2 + 1
+        return
     g = [[None] * ART_W for _ in range(ART_H)]
     for yy, row in enumerate(body):
         for xx, ch in enumerate(row):
@@ -6771,6 +6795,35 @@ def px_color(pal, ch):
         else:
             _PX[key] = pal["o"]
     return _PX[key]
+
+
+HD_EYES = ((11, 13), (18, 20))   # where an HD sprite's eyes are (columns), rows 8-11: lash, iris, iris, iris
+
+
+def hd_grid(v, pal, face="normal", lying=False, silhouette=None):
+    """🎭 HD sprites (the Cosplayers): 32x26 art drawn at half-size pixels, so they're the same size as other Blips but
+    with 4x the detail. Their faces are part of the drawing; blinking, sleeping and happy faces repaint the eyes."""
+    g = [[None] * 32 for _ in range(26)]
+    sh = 2 if lying else 0
+    for y, row in enumerate(pal.get("hd") or v["hd"]):
+        for x, ch in enumerate(row):
+            if ch != "." and y + sh < 26:
+                g[y + sh][x] = px_color(pal, ch)
+    if face in ("sleep", "blink", "happy"):
+        skin, line = pal.get("u", pal["o"]), pal.get("k", pal["o"])
+        for x0, x1 in HD_EYES:
+            for y in range(8, 12):
+                for x in range(x0, x1 + 1):
+                    if g[y + sh][x] is not None:
+                        g[y + sh][x] = skin
+            if face == "happy":
+                g[10 + sh][x0] = g[9 + sh][x0 + 1] = g[10 + sh][x1] = line
+            else:
+                for x in range(x0, x1 + 1):
+                    g[10 + sh][x] = line
+    if silhouette:
+        g = [[silhouette if c else None for c in row] for row in g]
+    return g
 
 
 def glitching(t):

@@ -402,6 +402,23 @@
     }
     return c;
   }
+  // 🎭 HD sprites (the Cosplayers): 32x26 art at half-size pixels; the face is part of the drawing
+  function hdGrid(k, pal, opt, t, st) {
+    const sh = st === "sleep" || opt.squash ? 2 : 0;
+    const g = Array.from({ length: 26 }, () => Array(32).fill(null));
+    k.hd.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== "." && y + sh < 26) g[y + sh][x] = pxColor(pal, ch); }));
+    const face = st === "sleep" ? "sleep" : opt.blink ? "blink" : opt.face === "happy" ? "happy" : "normal";
+    if (face !== "normal") {
+      const skin = pal.u || pal.o, line = pal.k || pal.o;
+      for (const [x0, x1] of [[11, 13], [18, 20]]) {
+        for (let y = 8; y < 12; y++) for (let x = x0; x <= x1; x++) if (g[y + sh][x]) g[y + sh][x] = skin;
+        if (face === "happy") { g[10 + sh][x0] = g[9 + sh][x0 + 1] = g[10 + sh][x1] = line; }
+        else for (let x = x0; x <= x1; x++) g[10 + sh][x] = line;
+      }
+    }
+    if (opt.silhouette) for (const row of g) for (let x = 0; x < 32; x++) if (row[x]) row[x] = "#5c528c";
+    return g;
+  }
   const glitching = (t) => { const p = ((t % 5) + 5) % 5; return p < 0.12 || (p >= 0.24 && p < 0.34); };   // twice, briefly, every 5 s
   const isNight = () => { const h = new Date().getHours(); return h >= 22 || h < 6; };
   function grid(kind, colorIdx, opt = {}) {
@@ -409,6 +426,7 @@
     const t = opt.t ?? now(), st = opt.state || "idle";
     let pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
     if (opt.live && pal.glitch != null && glitching(t + (opt.phase || 0))) pal = Object.assign({}, cols[pal.glitch], k.extra || {});   // ⚡ flicker to an old look
+    if (k.hd) return hdGrid(k, pal, opt, t, st);
     let body = pal.art || k.body;
     if (opt.live && pal.glitch_art && glitching(t)) body = pal.glitch_art;      // 📼 Classic: flicker back to the old drawing
     if (k.alt && ["walk", "fall", "held"].includes(st) && Math.floor(t * 10) % 2) body = k.alt;
@@ -507,13 +525,16 @@
     const base = c.globalAlpha;
     for (let r = 0; r < g.length; r++) {
       let col = 0;
-      while (col < 16) {
+      const w = g[r].length, cs = s * 16 / w;               // 🎭 HD sprites (32 wide) use half-size pixels
+      while (col < w) {
         const color = g[r][col];
         if (!color) { col++; continue; }
         let end = col;
-        while (end + 1 < 16 && g[r][end + 1] === color) end++;
+        while (end + 1 < w && g[r][end + 1] === color) end++;
         c.globalAlpha = soul && soul.has(color) ? base * soulA : base;
-        c.fillStyle = color; c.fillRect(x + col * s, y + r * s, (end - col + 1) * s, s);
+        c.fillStyle = color;
+        if (w === 16) c.fillRect(x + col * s, y + r * s, (end - col + 1) * s, s);
+        else { const X0 = Math.round(x + col * cs), Y0 = Math.round(y + r * cs); c.fillRect(X0, Y0, Math.round(x + (end + 1) * cs) - X0, Math.round(y + (r + 1) * cs) - Y0); }
         col = end + 1;
       }
     }

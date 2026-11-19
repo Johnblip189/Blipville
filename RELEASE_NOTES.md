@@ -4,8 +4,8 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
-- 🎭 **New tier: Cosplayers!** Gijinka-style Blip fusions: people with their Blip's ears, tails, wings or eyes, hair in
-  its colors and striped stockings: the **Kitsune**, **Blip**, **Dragon**, **Robo** and **Lurker Cosplayers**, 3 costume colors each. A Cosplayer joins
+- 🎭 **New tier: Cosplayers!** Gijinka-style Blip fusions drawn in extra detail: people with their Blip's ears, tails,
+  wings or eyes, hair that fits their personality, and striped stockings: the **Kitsune**, **Blip**, **Dragon**, **Robo** and **Lurker Cosplayers**, 3 costume colors each. A Cosplayer joins
   your collection once you have the Blip they're dressed as, and they fight like that Blip in the Arena.
 - 🖍️ **The Redraw: every Blip has a new look.** Rounder shapes, bigger features and new shading on all of them. Miss the
   old look? Every Blip has a 🍬 **Classic** color (called **Original** for the few that already had a Classic) that shows the

@@ -2168,11 +2168,16 @@
     }
   }
   setTimeout(giveCodeKinds, 2000);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = localDay();          // 📅 the player's own calendar day, the same day quests and events use
   if (saveNote) setTimeout(() => toast(saveNote, 8), 6000);                  // 💾 tell the player what happened to a damaged save
   if (save.lastDay !== today) {
-    save.lastDay = today; bump("days");
-    setTimeout(() => { reward(pets[0], 10); say(pets[0], "daily treat! +10 💖", 4); }, 1600);
+    // older saves stored the UTC date, which can be "tomorrow" in local time: that day's treat was already claimed
+    const claimed = typeof save.lastDay === "string" && /^\d{4}-\d\d-\d\d$/.test(save.lastDay) && save.lastDay > today;
+    save.lastDay = today;
+    if (!claimed) {
+      bump("days");
+      setTimeout(() => { reward(pets[0], 10); say(pets[0], "daily treat! +10 💖", 4); }, 1600);
+    }
   }
   updateHearts(false);
   persist();

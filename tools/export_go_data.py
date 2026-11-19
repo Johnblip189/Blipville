@@ -46,6 +46,7 @@ data = {
     "quests": getattr(bl, "QUESTS", []),
     "features": getattr(bl, "FEATURES", {}),
     "chats": getattr(bl, "CHATS", {}),
+    "chatDefault": getattr(bl, "CHAT_DEFAULT", None),
     "typeCps": getattr(bl, "TYPE_CPS", 32),
     "kindRenames": getattr(bl, "KIND_RENAMES", {}),
     "cookieCatch": {"seconds": bl.CATCH_SECONDS, "lives": bl.CATCH_LIVES, "maxHearts": bl.CATCH_MAX_HEARTS, "cookie": bl.CATCH_COOKIE,

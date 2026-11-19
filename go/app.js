@@ -1922,7 +1922,16 @@
   $("sheetCatch").onclick = () => sheetPet && openCatch(sheetPet);
   // ------------------------------------------------------------------ 💬 chats: pick ready-made lines, the Blip answers (blip.pyw CHATS)
   const CHATS = D.chats || {};
-  const chatTree = (p) => CHATS[AWAKEN_BASE[p.kind] || p.kind];
+  const chatTree = (p) => CHATS[AWAKEN_BASE[p.kind] || p.kind] || D.chatDefault;       // everyone can chat; some have their own
+  function chatText(p, text) {                    // fill in the {blanks} for this Blip, right now (same as blip.pyw)
+    const k = KINDS[p.kind];
+    if (text.includes("{mood}")) text = text.replace("{mood}", p.hunger > 70 ? "honestly? kinda hungry… *tummy rumbles*" : p.energy < 30 ? "sleepy… *yawn*"
+      : bondLevel(p.bond || 0) >= 3 ? "the best! hanging out with you is my favorite" : "pretty good! thanks for asking :)");
+    if (text.includes("{cute}")) text = text.replace("{cute}", pick(k.pet_lines || ["*happy wiggle* you think so?!", "aww, stop it! (don't stop)", "*blushes* hehe"]));
+    if (text.includes("{snack}")) text = text.replace("{snack}", p.hunger > 40 ? "ooh, yes please! *hungry eyes*" : "i'm pretty full… but i'd never say no to a cookie");
+    if (text.includes("{line}")) text = text.replace("{line}", pick(linesFor(p)));
+    return text.replaceAll("{name}", p.name).replaceAll("{kind}", p.kind);
+  }
   let chatPet = null;
   function openChat(p) {
     if (!chatTree(p)) return;
@@ -1933,9 +1942,10 @@
   function chatShow(node) {
     const p = chatPet, tree = p && chatTree(p);
     if (!tree || node === "end" || !tree[node]) { chatEnd(); return; }
-    const n = tree[node];
+    const n = tree[node], text = chatText(p, n.say);
     if (n.blush) p.blushUntil = now() + 2.5;
-    $("chatLine").textContent = n.say; say(p, n.say, 4); setFace(p, "happy", 1.2); sfx("boop");
+    $("chatLine").textContent = text; say(p, text, 4); setFace(p, "happy", 1.2); sfx("boop");
+    if (n.action === "feed") feed(p);              // a real cookie
     const box = $("chatOpts"); box.innerHTML = "";
     for (const [text, nxt] of n.options) { const b = document.createElement("button"); b.textContent = `➜ ${text}`; b.onclick = () => chatShow(nxt); box.appendChild(b); }
   }

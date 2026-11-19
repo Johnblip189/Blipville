@@ -3707,6 +3707,44 @@ CHATS = {
 # 🗣️ Optional personality for any Blip: its own lines for night (7 PM-7 AM), petting, feeding, napping and waking up,
 # and a "blush" ({"pal": colors its face turns, "rows": [first, last] art rows of the face} when it gets flustered).
 VOICE_KEYS = ("night_lines", "pet_lines", "feed_lines", "nap_lines", "wake_lines", "blush")
+# Every other Blip uses this one. {name}, {kind}, {line} (one of its own lines), {mood} (how it's really doing),
+# {cute} (how it takes a compliment) and {snack} are filled in for each Blip. "action": "feed" really feeds it.
+CHAT_DEFAULT = {
+    "start": {"say": "hi! it's me, {name}! what's up?",
+              "options": [["how are you?", "mood"], ["tell me about yourself", "about"], ["you're so cute!", "cute"],
+                          ["want a snack?", "snack"], ["bye!", "bye"]]},
+    "mood": {"say": "{mood}", "options": [["aw, okay!", "start"], ["bye!", "bye"]]},
+    "about": {"say": "i'm a {kind}! {line}", "options": [["tell me more!", "about2"], ["cool!", "start"]]},
+    "about2": {"say": "{line}", "options": [["haha, nice", "start"], ["bye!", "bye"]]},
+    "cute": {"say": "{cute}", "blush": True, "options": [["you are!", "start"], ["bye!", "bye"]]},
+    "snack": {"say": "{snack}", "options": [["here you go! 🍪", "fed"], ["maybe later", "start"]]},
+    "fed": {"say": "yay!! thank you!", "action": "feed", "options": [["enjoy!", "end"]]},
+    "bye": {"say": "bye bye! come chat again soon!", "options": [["bye!", "end"]]},
+}
+
+
+def chat_tree(kind):
+    return CHATS.get(AWAKEN_BASE.get(kind, kind), CHAT_DEFAULT)
+
+
+def chat_text(pet, text):
+    """Fill in the {blanks} of a chat line for this Blip, right now."""
+    v = VARIANTS[pet.kind]
+    if "{mood}" in text:
+        mood = ("honestly? kinda hungry… *tummy rumbles*" if pet.hunger > 70 else
+                "sleepy… *yawn*" if pet.energy < 30 else
+                "the best! hanging out with you is my favorite" if bond_level(pet.bond) >= 3 else
+                "pretty good! thanks for asking :)")
+        text = text.replace("{mood}", mood)
+    if "{cute}" in text:
+        text = text.replace("{cute}", random.choice(v.get("pet_lines") or ["*happy wiggle* you think so?!", "aww, stop it! (don't stop)", "*blushes* hehe"]))
+    if "{snack}" in text:
+        text = text.replace("{snack}", "ooh, yes please! *hungry eyes*" if pet.hunger > 40 else "i'm pretty full… but i'd never say no to a cookie")
+    if "{line}" in text:
+        text = text.replace("{line}", random.choice(pet.lines()))
+    return text.replace("{name}", pet.name).replace("{kind}", pet.kind)
+
+
 for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
@@ -5523,8 +5561,7 @@ class Blip:
         self.app.sound.play("boing")
 
     def open_chat(self):
-        if AWAKEN_BASE.get(self.kind, self.kind) in CHATS:
-            ChatBox(self)
+        ChatBox(self)
 
     def show_reward(self, text):
         self.particles.append({"kind": "plus", "text": text, "x": W / 2 + 34, "y": H - ART_H * SCALE - 4,
@@ -5915,9 +5952,6 @@ class Blip:
     def on_menu(self, e):
         if SELFTEST:
             log(f"selftest: menu for {self.name}")
-        can_chat = AWAKEN_BASE.get(self.kind, self.kind) in CHATS
-        self.menu.entryconfigure(self.chat_entry, state="normal" if can_chat else "disabled",
-                                 label="💬 Chat…" if can_chat else "💬 Chat (only Silvertear-03 can chat so far)")
         self.night_menu.delete(0, "end")
         for k in NIGHT_SHIFT:
             if self.app.is_unlocked(k):
@@ -9264,7 +9298,7 @@ class ChatBox:
     BG, PANEL, TEXT = "#1d1a2e", "#2a2540", "#e8e4ff"
 
     def __init__(self, pet):
-        self.pet, self.tree = pet, CHATS[AWAKEN_BASE.get(pet.kind, pet.kind)]
+        self.pet, self.tree = pet, chat_tree(pet.kind)
         self.win = tk.Toplevel(pet.root)
         self.win.title(f"Chat with {pet.name}")
         self.win.configure(bg=self.BG)
@@ -9290,8 +9324,11 @@ class ChatBox:
         n = self.tree[node]
         if n.get("blush"):
             self.pet.blush_until = time.monotonic() + 2.5
-        self.line.configure(text=n["say"])
-        self.pet.say(n["say"], 4)
+        text = chat_text(self.pet, n["say"])
+        self.line.configure(text=text)
+        self.pet.say(text, 4)
+        if n.get("action") == "feed":
+            self.pet.feed()                         # a real cookie (its bubble then says its own snack line)
         self.pet.set_face("happy", 1.2)
         self.pet.app.sound.play("boop")
         for w in self.opts.winfo_children():

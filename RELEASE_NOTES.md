@@ -59,9 +59,10 @@ make Blipville what it is. This is the real thing.
 - 🗣️ **Personalities:** Blip, Bun, Sprout, Boo, Fuzz, Spike and the Night Shift crew have their own things to say when
   you pet them, feed them, put them to bed or wake them up (and some have night-time lines too). Bun is shy, Spike
   is "not cute, SHARP", Boo really wants you to be scared, and Sunny calls you "hon".
-- 💬 **Chat with your Blips (starting with Silvertear-03):** right-click Silvertear-03 → 💬 Chat (or tap her → 💬 Chat on
-  the website) and talk by picking what to say. Ask about her tears, where she came from, or whether she wants to stomp
-  something. Chatting builds friendship. More Blips will learn to chat after 1.0.
+- 💬 **Chat with your Blips:** right-click any Blip → 💬 Chat (or tap it → 💬 Chat on the website) and talk by picking
+  what to say. Ask how it's doing (it'll tell you honestly if it's hungry or sleepy), ask about itself, tell it it's
+  cute, or offer a snack (it really eats it). **Silvertear-03** has a whole conversation of her own: ask about her
+  tears, whether she's sleepy, or call her cute if you want to watch her overheat. Chatting builds friendship.
 - 🧸 **Bad Dreams:** plush versions of the Night Shift crew: Bear, Bunny, Hen, Fox, the Wind-Up Hare and the Puppet
   Master. All day they're harmless plushies that just sit there… but from **midnight to 6 AM** (your clock) they burst
   out of their stitches as Bad Dreams, with button eyes, safety pins and stuffing poking out. To get them, click a

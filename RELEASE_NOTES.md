@@ -48,9 +48,9 @@ make Blipville what it is. This is the real thing.
   Master. All day they're harmless plushies that just sit there… but from **midnight to 6 AM** (your clock) they burst
   out of their stitches as Bad Dreams, with button eyes, safety pins and stuffing poking out. To get them, click a
   **Puppet Master 5 times fast**. The first time it becomes the **Bad Dream Puppet Master**; after that it rewrites one
-  of the robos into its Bad Dream, and you have to **keep it away for 5 seconds**. Each one comes at you differently:
-  the Bear won't stop (click to shove it back), the Bunny turns the lights off (click it when they flicker on), the Hen
-  throws pancakes (swat them), the Fox dashes down a lane (get out of it) and the Hare winds itself up (click its key).
+  of the robos into its Bad Dream, and your mouse (or finger) becomes a 🔦 **flashlight**: keep the Bad Dream in the
+  beam for **5 seconds**. In the light it backs off; in the dark it creeps closer. Each one moves its own way: the Bear
+  lumbers, the Bunny hops around, the Hen zigzags, the Fox darts and the Hare winds up, then dashes.
   Win and it's yours, plus that robo's **Shadow** color. Lose and it just gives you a big stuffed hug. 🧸
 - 📷 **Night Shift cameras overheat:** a camera left on one room overheats after about 8 seconds (watch the 🌡️ heat bar)
   and stays off while it cools, so you can't just stare at the Stage all night any more. To make up for it, flashes and

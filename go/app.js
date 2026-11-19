@@ -1895,9 +1895,9 @@
   $("sheetCatch").onclick = () => sheetPet && openCatch(sheetPet);
   // ------------------------------------------------------------------ 🧸 Bad Dreams: fend one off for 5 seconds (same rules as blip.pyw)
   let dreamGame = null, dreamRest = 0;
-  const DREAM_HOW = { "Bad Dream Bear": "It won't stop! TAP it to shove it back!", "Bad Dream Bunny": "Lights out… TAP it when the lights flicker on!",
-                      "Bad Dream Hen": "Order up! TAP the pancakes before they hit you!", "Bad Dream Fox": "Watch the red lane… MOVE out of it!",
-                      "Bad Dream Hare": "It's winding up! TAP its key to unwind it!" };
+  const DREAM_HOW = { "Bad Dream Bear": "It's slow… but it never stops.", "Bad Dream Bunny": "It hops! Don't lose it.",
+                      "Bad Dream Hen": "It zigzags side to side.", "Bad Dream Fox": "It's FAST. Stay on it!", "Bad Dream Hare": "It winds up… then dashes!" };
+  const BEAM = 40;
   const dreamArt = {};
   function dreamCanvas(kind, eyesOnly) {          // the big 32 x 30 art, drawn once into a little canvas
     const key = kind + (eyesOnly ? "!" : "");
@@ -1927,12 +1927,11 @@
   function openDream(kind) {
     closeSheets(); openSheet("dreamSheet");
     const cv = $("dreamCanvas");
-    dreamGame = { kind, robo: D.badDreams[kind].robo, state: "intro", t0: now(), last: now(), z: 0.2, x: cv.width / 2, mx: cv.width / 2, my: cv.height - 30,
-                  lit: true, phaseUntil: 0, cakes: [], nextCake: 0.6, lane: null, dash: null, nextLane: 0.5, wind: 0, pops: [] };
+    dreamGame = { kind, robo: D.badDreams[kind].robo, state: "intro", t0: now(), last: now(), z: 0.25, lit: false, x: cv.width / 2, y: cv.height / 2 + 14,
+                  mx: cv.width / 2, my: cv.height / 2, goal: [cv.width / 2, cv.height / 2 + 14], nextMove: 0, wind: 0 };
     sfx("boing"); vibrate(60); requestAnimationFrame(dreamStep);
   }
-  const dreamBox = (g, cv) => { const s = 2 + g.z * 6; return [g.x - 16 * s, cv.height - 14 - 30 * s, s]; };
-  const cakePos = (ck, t) => { const u = Math.min(1, (t - ck.t0) / ck.dur); return [ck.x0 + (ck.x1 - ck.x0) * u, ck.y0 + (ck.y1 - ck.y0) * u - Math.sin(Math.PI * u) * 45, 6 + 15 * u]; };
+  const dreamScale = (g) => 2 + g.z * 4;
   function dreamStep() {
     const g = dreamGame; if (!g || g.pending) return;
     const cv = $("dreamCanvas");
@@ -1943,30 +1942,18 @@
     dreamDraw(g, cv, t);
     if (g.state === "intro" || g.state === "play") requestAnimationFrame(dreamStep);
   }
-  function dreamUpdate(g, cv, t, dt) {
-    const W = cv.width, H = cv.height, pop = (x, y, text) => g.pops.push([x, y, text, now()]);
-    if (g.kind === "Bad Dream Bear") { g.z += 0.24 * dt; g.x += (W / 2 + Math.sin(t * 2.2) * 30 - g.x) * Math.min(1, dt * 3); }
-    else if (g.kind === "Bad Dream Bunny") {
-      if (t >= g.phaseUntil) { g.lit = !g.lit; g.phaseUntil = t + (g.lit ? 0.45 : rnd(0.7, 1.1)); if (!g.lit) { g.x = rnd(90, W - 90); sfx("thud"); } }
-      if (!g.lit) g.z += 0.30 * dt;
-    } else if (g.kind === "Bad Dream Hen") {
-      g.z += 0.04 * dt;
-      if (t >= g.nextCake) {
-        g.nextCake = t + rnd(0.55, 0.8); const [, y0, s] = dreamBox(g, cv);
-        g.cakes.push({ t0: t, dur: 1.1, x0: g.x + pick([-1, 1]) * 12 * s, y0: y0 + 18 * s, x1: rnd(40, W - 40), y1: H - 24 });
-      }
-      for (const ck of [...g.cakes]) if (t - ck.t0 >= ck.dur) { g.cakes.splice(g.cakes.indexOf(ck), 1); g.z += 0.22; pop(ck.x1, ck.y1 - 24, "splat!"); sfx("thud"); vibrate(30); }
-    } else if (g.kind === "Bad Dream Fox") {
-      if (!g.lane && !g.dash && t >= g.nextLane) g.lane = [clamp(g.my, 50, H - 50), t];
-      if (g.lane && t - g.lane[1] > 0.6) {
-        const y = g.lane[0]; g.dash = [y, t, pick([-1, 1])]; g.lane = null; sfx("whoosh");
-        if (Math.abs(g.my - y) < 32) { g.z += 0.3; pop(g.mx, g.my, "ouch!"); vibrate(40); }
-      }
-      if (g.dash && t - g.dash[1] > 0.3) { g.dash = null; g.nextLane = t + rnd(0.25, 0.5); }
-    } else if (g.kind === "Bad Dream Hare") {
-      g.wind += 0.75 * dt;
-      if (g.wind >= 1) { g.wind = 0; g.z += 0.35; pop(g.x, H / 2, "CHARGE!"); sfx("boing"); vibrate(40); }
-    }
+  function dreamUpdate(g, cv, t, dt) {          // 🔦 keep it in the beam: lit it backs off, in the dark it creeps closer
+    const W = cv.width, H = cv.height, spot = () => [rnd(50, W - 50), rnd(70, H - 56)];
+    let speed = 0;
+    if (g.kind === "Bad Dream Bear") { if (t >= g.nextMove) { g.goal = spot(); g.nextMove = t + 1.6; } speed = 50; }
+    else if (g.kind === "Bad Dream Bunny") { if (t >= g.nextMove) { g.goal = spot(); g.nextMove = t + rnd(0.75, 1.05); sfx("boop"); } speed = 650; }
+    else if (g.kind === "Bad Dream Hen") { g.goal = [W / 2 + Math.sin(t * 2.4) * (W / 2 - 70), H / 2 + 14 + Math.sin(t * 4.8) * 50]; speed = 290; }
+    else if (g.kind === "Bad Dream Fox") { if (t >= g.nextMove) { g.goal = spot(); g.nextMove = t + rnd(0.45, 0.65); } speed = 275; }
+    else { g.wind += dt / 1.1; if (g.wind >= 1) { g.wind = 0; g.goal = spot(); sfx("whoosh"); } if (Math.hypot(g.goal[0] - g.x, g.goal[1] - g.y) > 2) speed = 470; }
+    const d = Math.hypot(g.goal[0] - g.x, g.goal[1] - g.y);
+    if (d > 0.5) { const f = Math.min(1, speed * dt / d); g.x += (g.goal[0] - g.x) * f; g.y += (g.goal[1] - g.y) * f; }
+    g.lit = Math.hypot(g.mx - g.x, g.my - g.y) < BEAM + 3 * dreamScale(g);
+    g.z = g.lit ? Math.max(0.1, g.z - 0.25 * dt) : g.z + 0.38 * dt;
     if (g.z >= 1) { g.state = "lost"; sfx("boing"); vibrate(200); }
     else if (t >= 5) {
       g.state = "won";
@@ -1981,61 +1968,35 @@
   function dreamDraw(g, cv, now_) {
     const c = cv.getContext("2d"), W = cv.width, H = cv.height, name = g.kind.replace("Bad Dream ", "");
     c.imageSmoothingEnabled = false;
-    const sprite = (x, y, s, eyesOnly) => c.drawImage(dreamCanvas(g.kind, eyesOnly), Math.round(x), Math.round(y), 32 * s, 30 * s);
+    const sprite = (cx, cy, s, eyesOnly) => c.drawImage(dreamCanvas(g.kind, eyesOnly), Math.round(cx - 16 * s), Math.round(cy - 15 * s), 32 * s, 30 * s);
     const text = (str, x, y, size, color, align = "center") => { c.font = `800 ${size}px ${FONT}`; c.fillStyle = color; c.textAlign = align; c.textBaseline = "middle"; c.fillText(str, x, y); };
+    const beam = () => { c.fillStyle = "#1e1a24"; c.beginPath(); c.arc(g.mx, g.my, BEAM + 10, 0, Math.PI * 2); c.fill(); c.fillStyle = "#3a3424"; c.beginPath(); c.arc(g.mx, g.my, BEAM, 0, Math.PI * 2); c.fill(); };
     c.fillStyle = "#0c0b14"; c.fillRect(0, 0, W, H);
     if (g.state === "intro") {
-      text("🎭 The strings go taut…", W / 2, 34, 15, "#c8a0d8"); text(`The Puppet Master rewrote ${g.robo}!`, W / 2, 58, 11.5, "#e8e4ff");
-      g.z = 0.2; const [x0, y0, s] = dreamBox(g, cv); sprite(x0, y0, s, Math.floor(now_ * 4) % 2 === 0);
-      text(DREAM_HOW[g.kind], W / 2, H - 10, 10.5, "#ffd23a"); return;
+      beam(); text("🎭 The strings go taut…", W / 2, 30, 15, "#c8a0d8"); text(`The Puppet Master rewrote ${g.robo}!`, W / 2, 54, 11.5, "#e8e4ff");
+      sprite(g.x, g.y, dreamScale(g), Math.floor(now_ * 4) % 2 === 0);
+      text("🔦 Keep it in your light for 5 seconds!", W / 2, H - 30, 12, "#ffd23a"); text(DREAM_HOW[g.kind] + " (drag your finger or mouse)", W / 2, H - 11, 9.5, "#9a94c0"); return;
     }
     if (g.state === "won" || g.state === "lost") {
       const won = g.state === "won"; c.fillStyle = won ? "#1a1630" : "#14081a"; c.fillRect(0, 0, W, H);
-      g.z = won ? 0.25 : 0.55; g.x = W / 2; const [x0, y0, s] = dreamBox(g, cv); sprite(x0, y0 + (won ? 30 : 0), s);
+      sprite(W / 2, won ? H - 80 : H / 2 + 40, won ? 3 : 5);
       c.fillStyle = won ? "#1a1630" : "#14081a"; c.fillRect(0, 0, W, 96);
       if (won) { text(`You kept the Bad Dream ${name}! 🧸`, W / 2, 26, 15, "#ffd23a"); text(`+15 💖 · ${g.robo}'s Shadow color unlocked`, W / 2, 52, 10.5, "#e8e4ff"); text("(it's a plushie until midnight)", W / 2, 74, 10, "#9a94c0"); }
       else { text("GOTCHA! 🧸", W / 2, 28, 20, "#ff4a6a"); text(`The Bad Dream ${name} gave you a big stuffed hug.`, W / 2, 56, 10.5, "#e8e4ff"); text("Tap a Puppet Master 5 times to try again (after a little rest).", W / 2, 78, 9.5, "#9a94c0"); }
       return;
     }
     const t = now_ - g.t0;
-    if (g.kind === "Bad Dream Fox") {
-      if (g.lane) { const y = g.lane[0]; c.fillStyle = "#3a0a14"; c.fillRect(0, y - 32, W, 64); c.strokeStyle = "#ff4a5a"; c.lineWidth = 2; c.strokeRect(1, y - 32, W - 2, 64); text("!! MOVE !!", W / 2, y, 13, "#ff4a5a"); }
-      if (g.dash) { const [y, t1, d] = g.dash, u = (t - t1) / 0.3, s = 3, x = d > 0 ? -32 * s + (W + 64 * s) * u : W + 32 * s - (W + 64 * s) * u; sprite(x - 16 * s, y - 15 * s, s); }
-      else { const [x0, y0, s] = dreamBox(g, cv); sprite(x0, y0, s); }
-    } else {
-      const [x0, y0, s] = dreamBox(g, cv); sprite(x0, y0, s, g.kind === "Bad Dream Bunny" && !g.lit);
-      if (g.kind === "Bad Dream Hare") {
-        text("🔑 WIND", 10, 42, 10, "#d8b04a", "left"); c.fillStyle = "#3a3360"; c.fillRect(66, 35, 124, 14); c.fillStyle = "#101018"; c.fillRect(68, 37, 120, 10);
-        c.fillStyle = g.wind < 0.5 ? "#5ad87a" : g.wind < 0.8 ? "#ffd23a" : "#ff4a5a"; c.fillRect(68, 37, 120 * g.wind, 10);
-      }
-    }
-    for (const ck of g.cakes) {
-      const [cx, cy, r] = cakePos(ck, t);
-      c.fillStyle = "#e8b060"; c.strokeStyle = "#7a4a1a"; c.lineWidth = 2; c.beginPath(); c.ellipse(cx, cy, r, r * 0.6, 0, 0, Math.PI * 2); c.fill(); c.stroke();
-      c.fillStyle = "#ffe08a"; c.beginPath(); c.ellipse(cx, cy - r * 0.15, r * 0.4, r * 0.2, 0, 0, Math.PI * 2); c.fill();
-    }
-    g.pops = g.pops.filter((q) => now_ - q[3] < 0.7);
-    for (const q of g.pops) text(q[2], q[0], q[1] - (now_ - q[3]) * 40, 11, "#ffffff");
+    beam(); sprite(g.x, g.y, dreamScale(g), !g.lit);
+    if (g.kind === "Bad Dream Hare" && g.wind > 0.6) text("*tick tick tick*", g.x, g.y - 18 * dreamScale(g), 10, "#d8b04a");
     c.fillStyle = "#08070e"; c.fillRect(0, 0, W, 26);
-    text(`KEEP IT AWAY  ${Math.max(0, 5 - t).toFixed(1)}s`, 8, 13, 11, "#e8e4ff", "left");
-    c.fillStyle = "#3a3360"; c.fillRect(W - 114, 6, 106, 14); c.fillStyle = "#101018"; c.fillRect(W - 112, 8, 102, 10);
-    c.fillStyle = "#ff4a6a"; c.fillRect(W - 112, 8, 102 * Math.min(1, g.z), 10);
+    text(`🔦 KEEP IT IN THE LIGHT  ${Math.max(0, 5 - t).toFixed(1)}s`, 8, 13, 11, "#e8e4ff", "left");
+    c.fillStyle = "#3a3360"; c.fillRect(W - 94, 6, 86, 14); c.fillStyle = "#101018"; c.fillRect(W - 92, 8, 82, 10);
+    c.fillStyle = "#ff4a6a"; c.fillRect(W - 92, 8, 82 * Math.min(1, g.z), 10);
   }
   {
     const cv = $("dreamCanvas");
-    const at = (e) => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * (cv.width / r.width), (e.clientY - r.top) * (cv.height / r.height)]; };
-    cv.addEventListener("pointermove", (e) => { if (dreamGame && !dreamGame.pending) [dreamGame.mx, dreamGame.my] = at(e); });
-    cv.addEventListener("pointerdown", (e) => {
-      const g = dreamGame; if (!g || g.pending) return;
-      const [x, y] = at(e); g.mx = x; g.my = y;
-      if (g.state !== "play") return;
-      const t = now() - g.t0, [x0, y0, s] = dreamBox(g, cv), onIt = x >= x0 && x <= x0 + 32 * s && y >= y0 && y <= y0 + 30 * s, pop = (text) => g.pops.push([x, y, text, now()]);
-      if (g.kind === "Bad Dream Bear" && onIt) { g.z = Math.max(0.1, g.z - 0.09); pop("shove!"); vibrate(10); }
-      else if (g.kind === "Bad Dream Bunny" && onIt) { if (g.lit) { g.z = Math.max(0.1, g.z - 0.25); pop("back!"); } else pop("too dark!"); }
-      else if (g.kind === "Bad Dream Hen") {
-        for (const ck of g.cakes) { const [cx, cy, r] = cakePos(ck, t); if (Math.hypot(x - cx, y - cy) < r + 14) { g.cakes.splice(g.cakes.indexOf(ck), 1); pop("swat!"); sfx("pop"); break; } }
-      } else if (g.kind === "Bad Dream Hare" && x >= x0 && x <= x0 + 32 * s && y >= y0 && y <= y0 + 8 * s) { g.wind = Math.max(0, g.wind - 0.38); pop("unwind!"); sfx("boop"); }
-    });
+    const aim = (e) => { const g = dreamGame; if (!g || g.pending) return; const r = cv.getBoundingClientRect(); g.mx = (e.clientX - r.left) * (cv.width / r.width); g.my = (e.clientY - r.top) * (cv.height / r.height); };
+    cv.addEventListener("pointermove", aim); cv.addEventListener("pointerdown", aim);
   }
   // ⭐ secret codes (creator code; early access codes work here too) and the creator's dev sheet
   $("secretGo").onclick = async () => {

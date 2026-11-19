@@ -8860,16 +8860,14 @@ def dream_runs(kind, eyes_only=False):
 
 
 class BadDreamFend:
-    """🧸 A Puppet Master rewrote a robo into its Bad Dream: keep it away for 5 seconds. Each one acts differently:
-    Bear lumbers in (click it to shove it back), Bunny turns the lights off (click it when they flicker on), Hen throws
-    pancakes (click them away), Fox dashes along a lane (move out of it) and Hare winds up (click its key to unwind)."""
-    CW, CH, LAST = 520, 420, 5.0
+    """🧸 A Puppet Master rewrote a robo into its Bad Dream. Your mouse is a flashlight: keep the Bad Dream in the beam
+    for 5 seconds. In the light it backs off; in the dark it creeps closer. Each one moves its own way: the Bear lumbers,
+    the Bunny hops around, the Hen zigzags, the Fox darts and the Hare winds up, then dashes."""
+    CW, CH, LAST, BEAM = 520, 420, 5.0, 56
     BG = "#0c0b14"
-    HOW = {"Bad Dream Bear": "It's slow but it won't stop. CLICK it to shove it back!",
-           "Bad Dream Bunny": "Lights out… CLICK it when the lights flicker on!",
-           "Bad Dream Hen": "Order up! CLICK the pancakes before they hit you!",
-           "Bad Dream Fox": "Watch for the red lane… MOVE your mouse out of it!",
-           "Bad Dream Hare": "It's winding up! CLICK its key to unwind it!"}
+    HOW = {"Bad Dream Bear": "It's slow… but it never stops.", "Bad Dream Bunny": "It hops! Don't lose it.",
+           "Bad Dream Hen": "It zigzags side to side.", "Bad Dream Fox": "It's FAST. Stay on it!",
+           "Bad Dream Hare": "It winds up… then dashes!"}
 
     def __init__(self, app, kind):
         self.app, self.kind = app, kind
@@ -8879,74 +8877,28 @@ class BadDreamFend:
         self.win.configure(bg=self.BG)
         self.win.resizable(False, False)
         self.win.attributes("-topmost", True)
-        self.c = tk.Canvas(self.win, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0, cursor="hand2")
+        self.c = tk.Canvas(self.win, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0, cursor="none")
         self.c.pack(padx=6, pady=6)
         self.c.bind("<Motion>", self.on_move)
-        self.c.bind("<Button-1>", self.on_click)
         self.win.protocol("WM_DELETE_WINDOW", self.close)
-        self.mx, self.my = self.CW / 2, self.CH - 40
+        self.mx, self.my = self.CW / 2, self.CH / 2
         self.state, self.after_id = "intro", None
         self.t0 = self.last = time.monotonic()
-        self.z, self.x = 0.2, self.CW / 2
-        self.lit, self.phase_until = True, 0.0      # 🐰
-        self.cakes, self.next_cake = [], 0.6        # 🐔
-        self.lane, self.dash = None, None           # 🦊
-        self.next_lane = 0.5
-        self.wind = 0.0                             # 🐇
-        self.flash = []                             # little "!" pops
+        self.z, self.lit = 0.25, False
+        self.x, self.y = self.CW / 2, self.CH / 2 + 20
+        self.goal, self.next_move, self.wind = (self.x, self.y), 0.0, 0.0
         app.sound.play("boing")
         self.step()
         self.win.focus_force()
 
-    # ----- geometry
-    def scale(self):
-        return 3 + self.z * 8
-
-    def box(self):
-        s = self.scale()
-        w, h = 32 * s, 30 * s
-        return self.x - w / 2, self.CH - 20 - h, s
-
     def on_move(self, e):
         self.mx, self.my = e.x, e.y
 
-    def on_click(self, e):
-        if self.state == "intro":
-            return
-        if self.state != "play":
-            return
-        t = time.monotonic() - self.t0
-        x0, y0, s = self.box()
-        on_it = x0 <= e.x <= x0 + 32 * s and y0 <= e.y <= y0 + 30 * s
-        k = self.kind
-        if k == "Bad Dream Bear" and on_it:
-            self.z = max(0.1, self.z - 0.09)
-            self.pop(e.x, e.y, "shove!")
-        elif k == "Bad Dream Bunny" and on_it:
-            if self.lit:
-                self.z = max(0.1, self.z - 0.25)
-                self.pop(e.x, e.y, "back!")
-            else:
-                self.pop(e.x, e.y, "too dark!")
-        elif k == "Bad Dream Hen":
-            for ck in self.cakes:
-                cx, cy, r = self.cake_pos(ck, t)
-                if math.hypot(e.x - cx, e.y - cy) < r + 12:
-                    self.cakes.remove(ck)
-                    self.pop(cx, cy, "swat!")
-                    self.app.sound.play("pop")
-                    break
-        elif k == "Bad Dream Hare" and x0 <= e.x <= x0 + 32 * s and y0 <= e.y <= y0 + 7 * s:   # the key, on top
-            self.wind = max(0.0, self.wind - 0.38)
-            self.pop(e.x, e.y, "unwind!")
-            self.app.sound.play("boop")
+    def scale(self):
+        return 2.5 + self.z * 5
 
-    def pop(self, x, y, text):
-        self.flash.append((x, y, text, time.monotonic()))
-
-    def cake_pos(self, ck, t):
-        u = min(1.0, (t - ck["t0"]) / ck["dur"])
-        return ck["x0"] + (ck["x1"] - ck["x0"]) * u, ck["y0"] + (ck["y1"] - ck["y0"]) * u - math.sin(math.pi * u) * 60, 8 + 20 * u
+    def spot(self):
+        return random.uniform(70, self.CW - 70), random.uniform(100, self.CH - 80)
 
     # ----- loop
     def step(self):
@@ -8963,54 +8915,48 @@ class BadDreamFend:
         if self.state in ("intro", "play"):
             self.after_id = self.win.after(16, self.step)
 
-    def update(self, t, dt):
-        k = self.kind
-        if k == "Bad Dream Bear":
-            self.z += 0.24 * dt
-            self.x += (self.CW / 2 + math.sin(t * 2.2) * 40 - self.x) * min(1, dt * 3)
-        elif k == "Bad Dream Bunny":
-            if t >= self.phase_until:
-                self.lit = not self.lit
-                self.phase_until = t + (0.45 if self.lit else random.uniform(0.7, 1.1))
-                if not self.lit:
-                    self.x = random.uniform(120, self.CW - 120)
-                    self.app.sound.play("thud")
-            if not self.lit:
-                self.z += 0.30 * dt
-        elif k == "Bad Dream Hen":
-            self.z += 0.04 * dt
-            if t >= self.next_cake:
-                self.next_cake = t + random.uniform(0.55, 0.8)
-                x0, y0, s = self.box()
-                self.cakes.append({"t0": t, "dur": 1.1, "x0": self.x + random.choice((-1, 1)) * 12 * s, "y0": y0 + 18 * s,
-                                   "x1": random.uniform(60, self.CW - 60), "y1": self.CH - 30})
-            for ck in list(self.cakes):
-                if t - ck["t0"] >= ck["dur"]:
-                    self.cakes.remove(ck)
-                    self.z += 0.22
-                    self.pop(ck["x1"], ck["y1"] - 30, "splat!")
-                    self.app.sound.play("thud")
-        elif k == "Bad Dream Fox":
-            if self.lane is None and self.dash is None and t >= self.next_lane:
-                self.lane = (min(max(self.my, 60), self.CH - 60), t)          # aims at where you are now
-            if self.lane and t - self.lane[1] > 0.6:
-                y, _ = self.lane
-                self.dash, self.lane = (y, t, random.choice((-1, 1))), None
-                self.app.sound.play("whoosh")
-                if abs(self.my - y) < 42:
-                    self.z += 0.3
-                    self.pop(self.mx, self.my, "ouch!")
-            if self.dash and t - self.dash[1] > 0.3:
-                self.dash, self.next_lane = None, t + random.uniform(0.25, 0.5)
-        elif k == "Bad Dream Hare":
-            self.wind += 0.75 * dt
+    def move(self, t, dt):
+        """Each Bad Dream moves its own way (x, y is the middle of it)."""
+        k, gx, gy = self.kind, *self.goal
+        if k == "Bad Dream Bear":                                   # slow, steady drift
+            if t >= self.next_move:
+                self.goal, self.next_move = self.spot(), t + 1.6
+            speed = 70
+        elif k == "Bad Dream Bunny":                                # hops to a new spot
+            if t >= self.next_move:
+                self.goal, self.next_move = self.spot(), t + random.uniform(0.75, 1.05)
+                self.app.sound.play("boop")
+            speed = 900
+        elif k == "Bad Dream Hen":                                  # zigzags across
+            self.goal = (self.CW / 2 + math.sin(t * 2.4) * (self.CW / 2 - 100), self.CH / 2 + 20 + math.sin(t * 4.8) * 70)
+            speed = 400
+        elif k == "Bad Dream Fox":                                  # quick darts
+            if t >= self.next_move:
+                self.goal, self.next_move = self.spot(), t + random.uniform(0.45, 0.65)
+            speed = 380
+        else:                                                       # Hare: winds up, then dashes
+            self.wind += dt / 1.1
+            speed = 0
             if self.wind >= 1:
-                self.wind = 0.0
-                self.z += 0.35
-                self.pop(self.x, self.CH / 2, "CHARGE!")
-                self.app.sound.play("boing")
+                self.wind, self.goal = 0.0, self.spot()
+                self.app.sound.play("whoosh")
+            if math.hypot(gx - self.x, gy - self.y) > 2:
+                speed = 650
+        gx, gy = self.goal
+        d = math.hypot(gx - self.x, gy - self.y)
+        if d > 0.5:
+            f = min(1.0, speed * dt / d)
+            self.x += (gx - self.x) * f
+            self.y += (gy - self.y) * f
+
+    def update(self, t, dt):
+        self.move(t, dt)
+        s = self.scale()
+        self.lit = math.hypot(self.mx - self.x, self.my - self.y) < self.BEAM + 3 * s
+        self.z = max(0.1, self.z - 0.25 * dt) if self.lit else self.z + 0.38 * dt
         if self.z >= 1:
-            self.lose()
+            self.state = "lost"
+            self.app.sound.play("boing")
         elif t >= self.LAST:
             self.win_()
 
@@ -9030,10 +8976,6 @@ class BadDreamFend:
         if pet:
             pet.say("…okay. you can keep me. 🧸", 4)
 
-    def lose(self):
-        self.state = "lost"
-        self.app.sound.play("boing")
-
     def close(self):
         if self.after_id:
             try:
@@ -9044,30 +8986,34 @@ class BadDreamFend:
         self.win.destroy()
 
     # ----- drawing
-    def sprite(self, x0, y0, s, eyes_only=False):
+    def sprite(self, cx, cy, s, eyes_only=False):
+        x0, y0 = cx - 16 * s, cy - 15 * s
         for y, a, b, col in dream_runs(self.kind, eyes_only):
             self.c.create_rectangle(x0 + a * s, y0 + y * s, x0 + b * s, y0 + (y + 1) * s, fill=col, outline="")
+
+    def beam(self):
+        r = self.BEAM
+        self.c.create_oval(self.mx - r - 14, self.my - r - 14, self.mx + r + 14, self.my + r + 14, fill="#1e1a24", outline="")
+        self.c.create_oval(self.mx - r, self.my - r, self.mx + r, self.my + r, fill="#3a3424", outline="")
 
     def draw(self, now):
         c, W_, H_ = self.c, self.CW, self.CH
         c.delete("all")
         name = self.kind.replace("Bad Dream ", "")
         if self.state == "intro":
-            c.create_text(W_ / 2, 60, text="🎭 The strings go taut…", fill="#c8a0d8", font=("Segoe UI", 16, "bold"))
-            c.create_text(W_ / 2, 96, text=f"The Puppet Master rewrote {self.robo} into a Bad Dream!", fill="#e8e4ff",
+            self.beam()
+            c.create_text(W_ / 2, 50, text="🎭 The strings go taut…", fill="#c8a0d8", font=("Segoe UI", 16, "bold"))
+            c.create_text(W_ / 2, 84, text=f"The Puppet Master rewrote {self.robo} into a Bad Dream!", fill="#e8e4ff",
                           font=("Segoe UI", 12, "bold"))
-            self.z = 0.2
-            x0, y0, s = self.box()
-            self.sprite(x0, y0, s, eyes_only=int(now * 4) % 2 == 0)
-            c.create_text(W_ / 2, H_ - 14, text=self.HOW[self.kind], fill="#ffd23a", font=("Segoe UI", 11, "bold"))
+            self.sprite(self.x, self.y, self.scale(), eyes_only=int(now * 4) % 2 == 0)
+            c.create_text(W_ / 2, H_ - 34, text="🔦 Keep it in your flashlight beam for 5 seconds!", fill="#ffd23a",
+                          font=("Segoe UI", 12, "bold"))
+            c.create_text(W_ / 2, H_ - 12, text=self.HOW[self.kind], fill="#9a94c0", font=("Segoe UI", 10, "bold"))
             return
         if self.state in ("won", "lost"):
             won = self.state == "won"
             c.create_rectangle(0, 0, W_, H_, fill="#1a1630" if won else "#14081a", outline="")
-            self.z = 0.25 if won else 0.6
-            self.x = W_ / 2
-            x0, y0, s = self.box()
-            self.sprite(x0, y0 + (40 if won else 0), s)
+            self.sprite(W_ / 2, H_ - 120 if won else H_ / 2 + 50, 4 if won else 7)
             c.create_rectangle(0, 0, W_, 120, fill="#1a1630" if won else "#14081a", outline="")
             if won:
                 c.create_text(W_ / 2, 40, text=f"You kept the Bad Dream {name}! 🧸", fill="#ffd23a", font=("Segoe UI", 18, "bold"))
@@ -9079,40 +9025,12 @@ class BadDreamFend:
                 c.create_text(W_ / 2, 98, text="Click a Puppet Master 5 times to try again (after a little rest).", fill="#9a94c0", font=("Segoe UI", 10))
             return
         t = now - self.t0
-        k = self.kind
-        if k == "Bad Dream Fox":
-            if self.lane:
-                y = self.lane[0]
-                c.create_rectangle(0, y - 42, W_, y + 42, fill="#3a0a14", outline="#ff4a5a", width=2)
-                c.create_text(W_ / 2, y, text="!! MOVE !!", fill="#ff4a5a", font=("Segoe UI", 14, "bold"))
-            if self.dash:
-                y, t1, d = self.dash
-                u = (t - t1) / 0.3
-                s = 4
-                x = -32 * s + (W_ + 64 * s) * u if d > 0 else W_ + 32 * s - (W_ + 64 * s) * u
-                self.sprite(x - 16 * s, y - 15 * s, s)
-            else:
-                x0, y0, s = self.box()
-                self.sprite(x0, y0, s)
-        else:
-            x0, y0, s = self.box()
-            dark = k == "Bad Dream Bunny" and not self.lit
-            self.sprite(x0, y0, s, eyes_only=dark)
-            if k == "Bad Dream Hare":                          # wind-up gauge
-                c.create_text(16, 48, anchor="w", text="🔑 WIND", fill="#d8b04a", font=("Segoe UI", 10, "bold"))
-                c.create_rectangle(80, 41, 240, 55, outline="#3a3360", width=2)
-                c.create_rectangle(82, 43, 82 + 156 * self.wind, 53, outline="",
-                                   fill="#5ad87a" if self.wind < 0.5 else "#ffd23a" if self.wind < 0.8 else "#ff4a5a")
-        for ck in self.cakes:
-            cx, cy, r = self.cake_pos(ck, t)
-            c.create_oval(cx - r, cy - r * 0.6, cx + r, cy + r * 0.6, fill="#e8b060", outline="#7a4a1a", width=2)
-            c.create_oval(cx - r * 0.4, cy - r * 0.3, cx + r * 0.4, cy, fill="#ffe08a", outline="")
-        self.flash = [f for f in self.flash if now - f[3] < 0.7]
-        for x, y, text, t0 in self.flash:
-            c.create_text(x, y - (now - t0) * 40, text=text, fill="#ffffff", font=("Segoe UI", 11, "bold"))
-        # top bar: time left + how close it is
+        self.beam()
+        self.sprite(self.x, self.y, self.scale(), eyes_only=not self.lit)
+        if self.kind == "Bad Dream Hare" and self.wind > 0.6:
+            c.create_text(self.x, self.y - 20 * self.scale(), text="*tick tick tick*", fill="#d8b04a", font=("Segoe UI", 10, "bold"))
         c.create_rectangle(0, 0, W_, 30, fill="#08070e", outline="")
-        c.create_text(12, 15, anchor="w", text=f"KEEP IT AWAY  {max(0, self.LAST - t):.1f}s", fill="#e8e4ff", font=("Segoe UI", 11, "bold"))
+        c.create_text(12, 15, anchor="w", text=f"🔦 KEEP IT IN THE LIGHT  {max(0, self.LAST - t):.1f}s", fill="#e8e4ff", font=("Segoe UI", 11, "bold"))
         c.create_text(W_ - 170, 15, anchor="e", text="TOO CLOSE", fill="#ff4a6a", font=("Segoe UI", 9, "bold"))
         c.create_rectangle(W_ - 160, 8, W_ - 12, 22, outline="#3a3360", width=2)
         c.create_rectangle(W_ - 158, 10, W_ - 158 + 144 * min(1, self.z), 20, fill="#ff4a6a", outline="")

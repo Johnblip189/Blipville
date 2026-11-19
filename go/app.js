@@ -1964,6 +1964,7 @@
     let g;
     if (k.portrait && !pal.art && !plushNow(p.kind)) {
       if (!pal.b) pal.b = pal.s || pal.o;            // "*" shines are a light version of the plating
+      if (!pal.h) pal.h = pal.s || pal.o;            // "h" helmet pieces match the plating (and don't blush)
       const bpal = blushing && k.blush ? Object.assign({}, pal, k.blush.pal) : pal, [r0, r1] = k.portrait.rows;
       g = k.portrait.art.map((row, y) => [...row].map((ch) => (ch === "." ? null : pxColor(blushing && y >= r0 && y <= r1 ? bpal : pal, ch))));
     } else g = scale2x(grid(p.kind, p.color, { t, face: "happy", blush: blushing }));

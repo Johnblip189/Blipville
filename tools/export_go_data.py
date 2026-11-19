@@ -41,6 +41,7 @@ data = {
     "event": getattr(bl, "EVENT", None),
     "quests": getattr(bl, "QUESTS", []),
     "features": getattr(bl, "FEATURES", {}),
+    "chats": getattr(bl, "CHATS", {}),
     "cookieCatch": {"seconds": bl.CATCH_SECONDS, "lives": bl.CATCH_LIVES, "maxHearts": bl.CATCH_MAX_HEARTS, "cookie": bl.CATCH_COOKIE,
                     "kinds": bl.CATCH_KINDS},
     "bond": {"levels": bl.BOND_LEVELS, "titles": bl.BOND_TITLES, "gain": bl.BOND_GAIN},

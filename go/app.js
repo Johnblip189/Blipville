@@ -1078,6 +1078,7 @@
   let sheetPet = null;
   function openPetSheet(p) {
     sheetPet = p;
+    $("sheetChat").hidden = !chatTree(p);
     $("petName").value = p.name;
     $("petKind").textContent = p.kind + (RARE.has(p.kind) ? " · rare ✨" : "");
     const blv = bondLevel(p.bond || 0);
@@ -1893,6 +1894,29 @@
     });
   }
   $("sheetCatch").onclick = () => sheetPet && openCatch(sheetPet);
+  // ------------------------------------------------------------------ 💬 chats: pick ready-made lines, the Blip answers (blip.pyw CHATS)
+  const CHATS = D.chats || {};
+  const chatTree = (p) => CHATS[AWAKEN_BASE[p.kind] || p.kind];
+  let chatPet = null;
+  function openChat(p) {
+    if (!chatTree(p)) return;
+    chatPet = p; closeSheets(); openSheet("chatSheet");
+    $("chatWho").textContent = `💬 ${p.name} (${p.kind})`;
+    chatShow("start");
+  }
+  function chatShow(node) {
+    const p = chatPet, tree = p && chatTree(p);
+    if (!tree || node === "end" || !tree[node]) { chatEnd(); return; }
+    const n = tree[node];
+    $("chatLine").textContent = n.say; say(p, n.say, 4); setFace(p, "happy", 1.2); sfx("boop");
+    const box = $("chatOpts"); box.innerHTML = "";
+    for (const [text, nxt] of n.options) { const b = document.createElement("button"); b.textContent = `➜ ${text}`; b.onclick = () => chatShow(nxt); box.appendChild(b); }
+  }
+  function chatEnd() {
+    const p = chatPet; chatPet = null; closeSheets();
+    if (p && pets.includes(p) && now() - (p.lastChat || -999) > 120) { p.lastChat = now(); bondUp(p, "chat"); persist(); }
+  }
+  $("sheetChat").onclick = () => sheetPet && openChat(sheetPet);
   // ------------------------------------------------------------------ 🧸 Bad Dreams: fend one off for 5 seconds (same rules as blip.pyw)
   let dreamGame = null, dreamRest = 0;
   const DREAM_HOW = { "Bad Dream Bear": "It's slow… but it never stops.", "Bad Dream Bunny": "It hops! Don't lose it.",
@@ -2604,7 +2628,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { cookies: () => cookies, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

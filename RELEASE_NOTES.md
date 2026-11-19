@@ -49,6 +49,9 @@ make Blipville what it is. This is the real thing.
   It powers up behind the city now and then: click it 3 times before it stomps off. Colors: Chrome, Gunmetal,
   Gold Plated (with emerald eyes) and 📺 **Showa**, the boxy 1970s tin-robot model with its own drawing: bolt antennae,
   a riveted brow, amber eyes in a wide visor slot, clean riveted cheeks, a red/yellow/cyan chest strip and a stiff tail.
+- 💬 **Chat with your Blips (starting with Silvertear):** right-click Silvertear → 💬 Chat (or tap it → 💬 Chat on
+  the website) and talk by picking what to say. Ask about its tears, where it came from, or whether it wants to stomp
+  something. Chatting builds friendship. More Blips will learn to chat after 1.0.
 - 🧸 **Bad Dreams:** plush versions of the Night Shift crew: Bear, Bunny, Hen, Fox, the Wind-Up Hare and the Puppet
   Master. All day they're harmless plushies that just sit there… but from **midnight to 6 AM** (your clock) they burst
   out of their stitches as Bad Dreams, with button eyes, safety pins and stuffing poking out. To get them, click a

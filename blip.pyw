@@ -3655,6 +3655,31 @@ KAIJU["Silvertear"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "
                 "art": ["..o..........o..", "..S..........S..", ".oSooooooooooSo.", ".osksssssssskso.", ".ovyvvvvvvvvyvo.",
                         ".ovyvvvvvvvvyvo.", ".osksssssssskso.", ".osssssssssssSo.", ".osssrruuccssSo.", ".oSsskSSSSksSSo.",
                         "..okkSSSSSSkoSkS", "...okkkkkkkko..."]}]}
+# 💬 Chats: talk to a Blip by picking ready-made lines. Each node is what the Blip says plus your choices
+# [what you say, next node]; "end" closes the chat. Add a Blip here (and nothing else) to let it chat.
+CHATS = {
+    "Silvertear": {
+        "start": {"say": "*visor brightens* greetings, tiny townsperson. how may this unit assist?",
+                  "options": [["why are you crying?", "tears"], ["what are you?", "origin"], ["wanna stomp something?", "stomp"], ["bye!", "bye"]]},
+        "tears": {"say": "*a crimson tear rolls down* not sad. it's just coolant. …mostly.",
+                  "options": [["mostly?", "tears2"], ["that's okay, you know", "hug"]]},
+        "tears2": {"say": "this unit was built to guard a city that isn't there anymore. so now it guards yours.",
+                   "options": [["thank you, Silvertear", "hug"], ["what happened to it?", "lost"]]},
+        "lost": {"say": "data corrupted. but i remember the lights. your town has nice lights too.",
+                 "options": [["you can stay here", "hug"], ["bye!", "bye"]]},
+        "hug": {"say": "*servos whirr softly* …affection protocol: activated. 💚",
+                "options": [["ask something else", "start"], ["bye!", "bye"]]},
+        "origin": {"say": "model AEGIS… the rest of the label is scratched off. i run on solar power, cookies and friendship.",
+                   "options": [["cookies??", "cookies"], ["ask something else", "start"]]},
+        "cookies": {"say": "affirmative. chocolate chip increases output by 3%. please do not tell the other kaiju.",
+                    "options": [["your secret's safe", "hug"], ["ask something else", "start"]]},
+        "stomp": {"say": "negative. stomping is for emergencies. …and puddles.",
+                  "options": [["puddles?", "puddles"], ["ask something else", "start"]]},
+        "puddles": {"say": "*stomps a tiny puddle* SPLASH. emergency resolved.",
+                    "options": [["lol", "start"], ["bye!", "bye"]]},
+        "bye": {"say": "powering down chat module. stay safe, tiny townsperson.", "options": [["bye!", "end"]]},
+    },
+}
 for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
@@ -4371,7 +4396,7 @@ EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "202
 # Friendship 💞: every Blip bonds with you as you care for it. Points needed for each level, and its title.
 BOND_LEVELS = [0, 10, 30, 70, 150]
 BOND_TITLES = ["New friend", "Pal", "Buddy", "Best friend", "Soulmate"]
-BOND_GAIN = {"pet": 1, "feed": 3, "nap": 1, "play": 2, "arena": 3, "catch": 2}
+BOND_GAIN = {"pet": 1, "feed": 3, "nap": 1, "play": 2, "arena": 3, "catch": 2, "chat": 2}
 
 
 def bond_level(points):
@@ -5196,6 +5221,8 @@ class Blip:
         self.menu.add_command(label="Nap time", command=self.toggle_sleep)
         self.menu.add_checkbutton(label="Follow my mouse", variable=self.follow, command=self.on_follow)
         self.menu.add_command(label="Say something", command=lambda: self.say(random.choice(self.lines())))
+        self.menu.add_command(label="💬 Chat…", command=self.open_chat)
+        self.chat_entry = self.menu.index("end")
         kinds = tk.Menu(self.menu, tearoff=0)
         n_groups = 6
         size = -(-len(ANIMAL_KINDS) // n_groups)
@@ -5361,6 +5388,10 @@ class Blip:
                                    "vx": random.uniform(-3, 3), "vy": random.uniform(-6, -2), "life": random.uniform(0.8, 1.4),
                                    "born": time.monotonic()})
         self.app.sound.play("boing")
+
+    def open_chat(self):
+        if AWAKEN_BASE.get(self.kind, self.kind) in CHATS:
+            ChatBox(self)
 
     def show_reward(self, text):
         self.particles.append({"kind": "plus", "text": text, "x": W / 2 + 34, "y": H - ART_H * SCALE - 4,
@@ -5744,6 +5775,9 @@ class Blip:
     def on_menu(self, e):
         if SELFTEST:
             log(f"selftest: menu for {self.name}")
+        can_chat = AWAKEN_BASE.get(self.kind, self.kind) in CHATS
+        self.menu.entryconfigure(self.chat_entry, state="normal" if can_chat else "disabled",
+                                 label="💬 Chat…" if can_chat else "💬 Chat (only Silvertear can chat so far)")
         self.night_menu.delete(0, "end")
         for k in NIGHT_SHIFT:
             if self.app.is_unlocked(k):
@@ -9054,6 +9088,57 @@ class BadDreamFend:
         c.create_text(W_ - 170, 15, anchor="e", text="TOO CLOSE", fill="#ff4a6a", font=("Segoe UI", 9, "bold"))
         c.create_rectangle(W_ - 160, 8, W_ - 12, 22, outline="#3a3360", width=2)
         c.create_rectangle(W_ - 158, 10, W_ - 158 + 144 * min(1, self.z), 20, fill="#ff4a6a", outline="")
+
+
+class ChatBox:
+    """💬 Talk to a Blip: it says something, you pick one of the ready-made answers, and so on (see CHATS)."""
+    BG, PANEL, TEXT = "#1d1a2e", "#2a2540", "#e8e4ff"
+
+    def __init__(self, pet):
+        self.pet, self.tree = pet, CHATS[AWAKEN_BASE.get(pet.kind, pet.kind)]
+        self.win = tk.Toplevel(pet.root)
+        self.win.title(f"Chat with {pet.name}")
+        self.win.configure(bg=self.BG)
+        self.win.resizable(False, False)
+        self.win.attributes("-topmost", True)
+        x = int(min(max(pet.wx, 10), pet.root.winfo_screenwidth() - 380))
+        y = int(max(10, pet.wy + H - ART_H * SCALE - 300))
+        self.win.geometry(f"+{x}+{y}")
+        tk.Label(self.win, text=f"💬 {pet.name} ({pet.kind})", bg=self.BG, fg="#ffd23a",
+                 font=("Segoe UI", 11, "bold")).pack(anchor="w", padx=12, pady=(10, 4))
+        self.line = tk.Label(self.win, text="", bg=self.PANEL, fg=self.TEXT, font=("Segoe UI", 11), wraplength=320,
+                             justify="left", padx=10, pady=8, width=36, anchor="w")
+        self.line.pack(fill="x", padx=12)
+        self.opts = tk.Frame(self.win, bg=self.BG)
+        self.opts.pack(fill="x", padx=12, pady=(8, 12))
+        self.win.protocol("WM_DELETE_WINDOW", self.close)
+        self.show("start")
+
+    def show(self, node):
+        if node == "end" or node not in self.tree:
+            self.close()
+            return
+        n = self.tree[node]
+        self.line.configure(text=n["say"])
+        self.pet.say(n["say"], 4)
+        self.pet.set_face("happy", 1.2)
+        self.pet.app.sound.play("boop")
+        for w in self.opts.winfo_children():
+            w.destroy()
+        for text, nxt in n["options"]:
+            tk.Button(self.opts, text=f"➜ {text}", anchor="w", command=lambda nx=nxt: self.show(nx), bg="#3a3360",
+                      fg="#ffffff", activebackground="#5a4ae0", activeforeground="#ffffff", relief="flat", bd=0,
+                      font=("Segoe UI", 10, "bold"), padx=10, pady=5, cursor="hand2").pack(fill="x", pady=2)
+
+    def close(self):
+        now = time.monotonic()
+        if now - getattr(self.pet, "last_chat", -999) > 120 and self.pet in self.pet.app.pets:   # chatting makes friends
+            self.pet.last_chat = now
+            self.pet.befriend("chat")
+        try:
+            self.win.destroy()
+        except tk.TclError:
+            pass
 
 
 class CookieCatch:

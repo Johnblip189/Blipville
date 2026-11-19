@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=81">
+<link rel="stylesheet" href="style.css?v=82">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -79,6 +79,7 @@
       <button id="sheetNap">💤 Nap</button>
       <button id="sheetPet">💖 Pet</button>
       <button id="sheetCatch">🍪 Catch</button>
+      <button id="sheetChat" hidden>💬 Chat</button>
     </div>
     <div class="label">Color</div>
     <div class="chips" id="colorChips"></div>
@@ -215,6 +216,14 @@
   </div>
 </div>
 
+<div class="sheet" id="chatSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle" id="chatWho">💬 Chat</div>
+    <div id="chatLine" class="chatLine"></div>
+    <div id="chatOpts" class="chatOpts"></div>
+  </div>
+</div>
+
 <div class="sheet" id="dreamSheet" hidden>
   <div class="card nsCard">
     <canvas id="dreamCanvas" width="360" height="320" style="touch-action:none"></canvas>
@@ -294,8 +303,8 @@
   </div>
 </div>
 
-<script src="data.js?v=81"></script>
-<script src="countdown.js?v=81"></script>
-<script src="app.js?v=81"></script>
+<script src="data.js?v=82"></script>
+<script src="countdown.js?v=82"></script>
+<script src="app.js?v=82"></script>
 </body>
 </html>

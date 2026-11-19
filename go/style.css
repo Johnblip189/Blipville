@@ -332,3 +332,9 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 #digGrid canvas { width: 90%; image-rendering: pixelated; }
 #digMsg { min-height: 2.6em; }
 #digNew { width: 100%; padding: 12px; border: 0; border-radius: 12px; background: #e8a020; color: #2a1406; font: inherit; font-weight: 700; cursor: pointer; }
+
+/* 💬 chats */
+.chatLine { background: #2a2540; color: #e8e4ff; border-radius: 12px; padding: 10px 12px; margin: 8px 0 10px; font-weight: 600; line-height: 1.35; }
+.chatOpts { display: flex; flex-direction: column; gap: 6px; }
+.chatOpts button { text-align: left; padding: 9px 12px; border-radius: 10px; border: 0; background: #3a3360; color: #fff; font-weight: 800; }
+.chatOpts button:active { background: #5a4ae0; }

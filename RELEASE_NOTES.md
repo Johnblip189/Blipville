@@ -4,6 +4,9 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
+- 🖍️ **The Redraw: every Blip has a new look.** Rounder shapes, bigger features and new shading on all of them. Miss the
+  old look? Every Blip has a 🍬 **Classic** color (called **Original** for the few that already had a Classic) that shows the
+  new drawing but glitches back to its old one every few seconds. Your chosen colors stay the same.
 - 🎁 **Two new gift Blips:** **Confetti** for everyone who plays on release day (Sunday, November 22), and **Bug Hunter**
   for the testers who helped get 1.0 ready. 🔍
 - 🌟 **72 new special Blips, at least 12 in every tier:** new Rare egg Blips (Qilin, Pixie, Wyvern, Rainbow Blip…), Cryptids

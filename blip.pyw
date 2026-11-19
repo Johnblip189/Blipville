@@ -3647,7 +3647,14 @@ KAIJU["Silvertear"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "
              "..okkSSSSSSkkokS", "...okkkSSkkko.ko"],
     "colors": [{"name": "Chrome", "o": "#14141c", "k": "#34343f", "s": "#c8ccd8", "v": "#0a0a12", "y": "#ffd23a", "r": "#d81e3a", "e": "#ffe14a", "f": "#34343f"},
                {"name": "Gunmetal", "o": "#0a0a10", "k": "#1e1e26", "s": "#6a7080", "v": "#050508", "y": "#5affd8", "r": "#ff3a6a", "e": "#7affe8", "f": "#1e1e26"},
-               {"name": "Gold Plated", "o": "#2a1a04", "k": "#3a2a14", "s": "#ffd27a", "v": "#140a02", "y": "#3aff8a", "r": "#d81e3a", "e": "#5affa0", "f": "#3a2a14"}]}
+               {"name": "Gold Plated", "o": "#2a1a04", "k": "#3a2a14", "s": "#ffd27a", "v": "#140a02", "y": "#3aff8a", "r": "#d81e3a", "e": "#5affa0", "f": "#3a2a14"},
+               # 📺 Showa: the 1970s tin-robot model, with its own drawing: bolt antennae, a flat riveted brow, amber eyes
+               # in a wide visor slot, clean riveted cheeks (no tears), a red/yellow/cyan chest strip and a stiff tail
+               {"name": "Showa", "o": "#1a1c20", "s": "#aeb5bd", "k": "#3a3e46", "v": "#14161a", "y": "#ff922b", "e": "#ff922b",
+                "r": "#e83a3a", "u": "#ffd23a", "c": "#3ad8ff", "f": "#3a3e46",
+                "art": ["..o..........o..", "..S..........S..", ".oSooooooooooSo.", ".osksssssssskso.", ".ovyvvvvvvvvyvo.",
+                        ".ovyvvvvvvvvyvo.", ".osksssssssskso.", ".osssssssssssSo.", ".osssrruuccssSo.", ".oSsskSSSSksSSo.",
+                        "..okkSSSSSSkoSkS", "...okkkkkkkko..."]}]}
 for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],

@@ -3656,7 +3656,7 @@ KAIJU["Silvertear"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "
                    "*scans cookie* …chocolate chip detected. morale +3%."],
     "nap_lines": ["*enters power-saving mode* this is NOT a nap.", "recharging. …five more minutes. that's an order."],
     "wake_lines": ["LOG: reboot complete. this unit was not napping.", "*visor flickers on* i was guarding. with my eyes closed."],
-    "blush": {"s": "#ffa8c0", "k": "#c86a8a"},      # full-faceplate embarrassment
+    "blush": {"pal": {"s": "#ffa8c0"}, "rows": [3, 8]},   # full-faceplate embarrassment: brow plate down to the chin guard
     "body": ["..o....oo....o..", "..so..osSo..oS..", ".osSooosSooosSo.", ".oksssssssssSko.", ".okyvvvvvvvvyko.",
              ".okyvvvvvvvvyko.", ".oksrssssssrSko.", ".oksrssssssrSko.", ".oksRssssssRSko.", ".okSsskSSksSSkoo",
              "..okkSSSSSSkkokS", "...okkkSSkkko.ko"],
@@ -3705,7 +3705,7 @@ CHATS = {
     },
 }
 # 🗣️ Optional personality for any Blip: its own lines for night (7 PM-7 AM), petting, feeding, napping and waking up,
-# and a "blush" (colors its face turns when it gets flustered, e.g. called cute in a chat).
+# and a "blush" ({"pal": colors its face turns, "rows": [first, last] art rows of the face} when it gets flustered).
 VOICE_KEYS = ("night_lines", "pet_lines", "feed_lines", "nap_lines", "wake_lines", "blush")
 for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
@@ -6212,8 +6212,6 @@ class Blip:
         colors = kind_colors(self.kind)
         pal = {**colors[self.palette % len(colors)], **v.get("extra", {})}
         v, pal = plush_view(self.kind, pal)          # 🧸 a Bad Dream is a plushie until midnight
-        if v.get("blush") and now < getattr(self, "blush_until", 0):
-            pal = {**pal, **v["blush"]}               # flustered!
         if pal.get("glitch") is not None and glitching(now + id(self) % 50 / 10):
             pal = {**colors[pal["glitch"]], **v.get("extra", {})}   # ⚡ a split-second flicker back to an old look
         g = [[None] * ART_W for _ in range(ART_H)]
@@ -6225,10 +6223,12 @@ class Blip:
         squash = now < self.squash_until
         lying = self.state == "sleep" or squash
         shift = 1 if lying else 0
+        blush = v.get("blush") if now < getattr(self, "blush_until", 0) else None     # flustered: only the face flushes
+        bpal = {**pal, **blush["pal"]} if blush else pal
         for y, row in enumerate(body):
             for x, ch in enumerate(row):
                 if ch != "." and y + shift < ART_H:
-                    g[y + shift][x] = px_color(pal, ch)
+                    g[y + shift][x] = px_color(bpal if blush and blush["rows"][0] <= y <= blush["rows"][1] else pal, ch)
         if not lying and v["feet"]:
             feet_set = v["feet"]
             if self.state in ("fall", "held", "jump") or self.lift(now) > 3:

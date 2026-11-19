@@ -474,14 +474,14 @@
     if (k.plush && !badDreamHour()) { k = { ...k, body: k.plush.body, eyes: k.plush.eyes, xeye: false }; cols = k.plush.colors; }   // 🧸 plushie by day
     const t = opt.t ?? now(), st = opt.state || "idle";
     let pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
-    if (opt.blush && k.blush) pal = Object.assign(pal, k.blush);                    // flustered!
     if (opt.live && pal.glitch != null && glitching(t + (opt.phase || 0))) pal = Object.assign({}, cols[pal.glitch], k.extra || {});   // ⚡ flicker to an old look
     let body = pal.art || k.body;
     if (opt.live && pal.glitch_art && glitching(t)) body = pal.glitch_art;      // 📼 Classic: flicker back to the old drawing
     if (k.alt && ["walk", "fall", "held"].includes(st) && Math.floor(t * 10) % 2) body = k.alt;
     const g = Array.from({ length: 13 }, () => Array(16).fill(null));
     const lying = st === "sleep" || opt.squash, shift = lying ? 1 : 0;
-    body.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== "." && y + shift < 13) g[y + shift][x] = pxColor(pal, ch); }));
+    const bl = opt.blush && k.blush, bpal = bl ? Object.assign({}, pal, k.blush.pal) : pal;     // flustered: only the face flushes
+    body.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== "." && y + shift < 13) g[y + shift][x] = pxColor(bl && y >= k.blush.rows[0] && y <= k.blush.rows[1] ? bpal : pal, ch); }));
     if (!lying && k.feet) {
       const f = k.feet;
       const feet = st === "fall" || st === "held" || (opt.lift || 0) > 3 ? f.air : st === "walk" ? (Math.floor(t * 6) % 2 ? f.walk1 : f.walk2) : f.stand;

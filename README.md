@@ -10,7 +10,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
 
 ![Blipville demo](docs/demo.gif)
 
-**386 kinds of pets · 1,000+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
+**387 kinds of pets · 1,000+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
 
 ## ✨ New in 1.0
 
@@ -21,7 +21,7 @@ Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase
   draws every pet as a real see-through picture and hands it straight to Windows, so nothing gets repainted.
 - 💞 **Friendship levels** for every Blip, up to Soulmate.
 - 🍪 **Cookie Catch**, a new minigame.
-- ✨ **20 Awakened forms**, including every kaiju, ghosts like King Sheetie and cryptids like Lunar Mothman.
+- ✨ **20 Awakened forms**, including the first 5 kaiju, ghosts like King Sheetie and cryptids like Lunar Mothman.
 - 🎨 **Accessory colors** and a **2nd accessory slot**.
 - 👁️ **The Lurker:** a many-eyed shadow ghost that Awakens **3 times**, up to Lurker Eternal.
 - 👻 **Ghosts:** a new tier of 25 ghosts that drift by at night. Click one while it glows! (Or light a 🕯️ Spirit Candle.)

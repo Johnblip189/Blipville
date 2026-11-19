@@ -253,7 +253,9 @@
   function feed(p) {
     if (p.state === "sleep") wake(p);
     const cx = clamp(p.x + pick([-1, 1]) * rnd(50, 90), 20, W - 20);
-    cookies.push({ x: cx, y: 260, vy: 0, landed: false, owner: p }); bump("cookies");
+    cookies = cookies.filter((c) => c.owner !== p || p.eating === c);   // 🍪 one waiting cookie per Blip: a new one replaces it
+    cookies.push({ x: cx, y: 260, vy: 0, landed: false, owner: p, born: now() }); bump("cookies");
+    tidyCookies();
     say(p, "ooh! a cookie!", 2); setFace(p, "surprised", 1);
   }
   function nap(p) {
@@ -740,6 +742,14 @@
     ctx.fillStyle = color;
     mask.forEach((row, r) => [...row].forEach((ch, c) => { if (ch === "x") ctx.fillRect(x + c * s, y + r * s, s, s); }));
   }
+  // 🍪 cookies never pile up: they go away with their Blip, uneaten ones vanish after a minute, and there are never
+  // more than COOKIE_MAX (oldest go first). Runs every frame, separately from drawing.
+  const COOKIE_MAX = 24, COOKIE_LIFE = 60;
+  function tidyCookies() {
+    const t = now();
+    cookies = cookies.filter((c) => pets.includes(c.owner) && (c.owner.eating === c || t - (c.born || t) < COOKIE_LIFE));
+    if (cookies.length > COOKIE_MAX) cookies = cookies.filter((c) => c.owner.eating === c).concat(cookies.filter((c) => c.owner.eating !== c).slice(-COOKIE_MAX));
+  }
   function drawCookies(t) {
     for (const c of cookies) {
       if (!c.landed) { c.vy += 1500 * (1 / 60); c.y = Math.max(0, c.y - c.vy * (1 / 60)); if (c.y <= 0) c.landed = true; }
@@ -913,6 +923,7 @@
     ctx.imageSmoothingEnabled = false;
     sky(t);
     for (const p of pets) update(p, t, dt);
+    tidyCookies();
     socialize(t);
     playStep(t, dt);
     drawCookies(t);
@@ -1133,7 +1144,7 @@
   $("sheetPet").onclick = () => { petIt(sheetPet); closeSheets(); };
   $("sheetBye").onclick = () => {
     if (pets.length <= 1) { toast("Your town needs at least one Blip! 🏡"); return; }
-    pets.splice(pets.indexOf(sheetPet), 1); toast(`👋 ${sheetPet.name} waved goodbye.`); closeSheets();
+    pets.splice(pets.indexOf(sheetPet), 1); tidyCookies(); toast(`👋 ${sheetPet.name} waved goodbye.`); closeSheets();
   };
   $("sheetKind").onclick = () => openZoo(sheetPet);
   const toNormal = (p) => { const base = AWAKEN_BASE[p.kind]; if (!base) return; p.kind = base; p.color %= KINDS[base].colors.length; say(p, "phew, back to normal", 2); persist(true); openPetSheet(p); };
@@ -2444,7 +2455,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { cookies: () => cookies, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

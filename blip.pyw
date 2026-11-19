@@ -3616,17 +3616,26 @@ MOD_KINDS = ["Guardian"]
 # Blips that belong to one moderator code only (the code's SHA-256 → its Blips). Nobody else gets them, creators included.
 MOD_CODE_KINDS = {"f7442ad71cf1853b4834396505ec91f5cbba914d1e9c7f208351b22fd8f7f05a": ["Diamond Ladybug"]}
 CREATOR_KINDS = list(CREATOR)
+
+# 🎭 Cosplayers: Blip fans dressed up as their favorite Blips. A Cosplayer joins your collection once you have
+# the Blip they're dressed as (COSPLAY_OF). Taller than most Blips, with the face higher up and striped stockings.
+COSPLAYERS = {"Kitsune Cosplayer": {"eyes": 3, "move": "hop", "speed": 1.0, "mouth": False, "lines": ["*swishes a pretend tail*", "do my ears look real?", "i'm a fox spirit! (kind of)", "stitched these ears myself", "kon kon!"], "body": [".oao........oao.", ".oaaooooooooaao.", ".ocshhhhhhhhsco.", ".ochuuuuuuuuhco.", ".ochuuuuuuuuhco.", ".ohhpuummuuphho.", ".hocokwwwwkocoh.", ".hoccccccccccoh.", ".voccttyyttccov.", "..oc.c.cc.c.co..", "....tt....tt....", "....ll....ll...."], "colors": [{"name": "Spirit", "o": "#6a2a3e", "c": "#fde4ec", "a": "#ff7a9a", "s": "#e8203a", "t": "#e8203a", "l": "#ffffff", "h": "#22202a", "v": "#8a3ad8", "u": "#f6e0d4", "e": "#3a1a2a", "p": "#ff9ab0", "m": "#a05060", "k": "#22202a", "w": "#f4f4f4", "y": "#e8b84a"}, {"name": "Moon", "o": "#1a1a3a", "c": "#d8dcf0", "a": "#a8b0e8", "s": "#5a6aff", "t": "#5a6aff", "l": "#ffffff", "h": "#22202a", "v": "#5a6aff", "u": "#f0e4ec", "e": "#1a1a3a", "p": "#c8a8e8", "m": "#6a4a7a", "k": "#1a1a2a", "w": "#f4f4ff", "y": "#d8dcf0"}, {"name": "Flame", "o": "#3a1406", "c": "#ff9a3a", "a": "#ffd23a", "s": "#c81e1e", "t": "#c81e1e", "l": "#fff4e6", "h": "#1a0a02", "v": "#c81e1e", "u": "#f6e0d4", "e": "#2a1406", "p": "#ff9a7a", "m": "#8a3a2a", "k": "#1a0a02", "w": "#fff4e6", "y": "#ffd23a"}]}, "Blip Cosplayer": {"eyes": 3, "move": "hop", "speed": 1.0, "mouth": False, "lines": ["i'm basically a Blip now", "*boops your screen*", "this hoodie is SO comfy", "blip blip!", "biggest Blip fan ever"], "body": [".oo..........oo.", ".oaoooooooooaao.", ".occhhhhhhhhcco.", ".ochuuuuuuuuhco.", ".ochuuuuuuuuhco.", ".ohhpuummuuphho.", ".hocokwwwwkocoh.", ".hoccccccccccoh.", ".voccttyyttccov.", "..oc.c.cc.c.co..", "....tt....tt....", "....ll....ll...."], "colors": [{"name": "Lavender", "o": "#2b1d3a", "c": "#9b7bd8", "a": "#ff8fb3", "t": "#ddd0ff", "l": "#9b7bd8", "h": "#5a3a24", "v": "#ff8fb3", "u": "#f6dccb", "e": "#2a1a3a", "p": "#ff9fb8", "m": "#a0506a", "k": "#2b1d3a", "w": "#ddd0ff", "y": "#ffd23a"}, {"name": "Mint", "o": "#163a2a", "c": "#7adcaa", "a": "#ff9fb8", "t": "#e0f8ec", "l": "#7adcaa", "h": "#e8b04a", "v": "#7adcaa", "u": "#f6dccb", "e": "#163a2a", "p": "#ff9fb8", "m": "#a0506a", "k": "#163a2a", "w": "#e0f8ec", "y": "#ffd23a"}, {"name": "Sunny", "o": "#3a2a04", "c": "#ffd23a", "a": "#ff8a1f", "t": "#fff4c0", "l": "#ffd23a", "h": "#2a1a10", "v": "#ff8a1f", "u": "#f6dccb", "e": "#2a1a10", "p": "#ff9a7a", "m": "#a0506a", "k": "#3a2a04", "w": "#fff4c0", "y": "#ff8a1f"}]}, "Dragon Cosplayer": {"eyes": 3, "move": "walk", "speed": 1.0, "mouth": False, "lines": ["rawr! (fire not included)", "my wings are cardboard. shh", "fear my felt horns!", "*pretend flame noises*", "i hoard cookies too"], "body": ["..n..........n..", ".onnooooooooonno", ".occhhhhhhhhcco.", ".ochuuuuuuuuhco.", ".ochuuuuuuuuhco.", ".ohhpuummuuphho.", ".hocokwwwwkocoh.", "whoccccccccccohw", "wvoccttyyttccovw", "..oc.c.cc.c.co..", "....tt....tt....", "....ll....ll...."], "colors": [{"name": "Green", "o": "#0e2a14", "c": "#4ac85a", "n": "#fff0c0", "t": "#fff0a8", "l": "#4ac85a", "w": "#2a8a3a", "h": "#1a1a2a", "v": "#4ac85a", "u": "#e8c0a0", "e": "#1a1a2a", "p": "#ff8a8a", "m": "#8a3a3a", "k": "#0e2a14", "y": "#ffd23a"}, {"name": "Ruby", "o": "#2a0606", "c": "#e83a3a", "n": "#ffd23a", "t": "#ffd23a", "l": "#e83a3a", "w": "#a81e1e", "h": "#2a1a10", "v": "#ffd23a", "u": "#f6dccb", "e": "#2a0606", "p": "#ff9a7a", "m": "#8a3a3a", "k": "#2a0606", "y": "#ffd23a"}, {"name": "Frost", "o": "#0e2a3a", "c": "#8ad8ff", "n": "#ffffff", "t": "#ffffff", "l": "#8ad8ff", "w": "#4aa8e8", "h": "#e8f0ff", "v": "#8ad8ff", "u": "#f6e4e8", "e": "#0e2a3a", "p": "#ffb0c8", "m": "#6a4a7a", "k": "#0e2a3a", "y": "#ffffff"}]}, "Robo Cosplayer": {"eyes": 3, "move": "walk", "speed": 1.0, "mouth": False, "lines": ["beep boop… i mean, hi!", "*does the robot*", "rivets: hand-painted", "reporting for the night shift!", "my joints squeak (on purpose)"], "body": [".ooo........ooo.", ".oaroooooooorao.", ".ocrhhhhhhhhrco.", ".ochuuuuuuuuhco.", ".ochuuuuuuuuhco.", ".ohhpuummuuphho.", ".hocokwwwwkocoh.", ".hoccccccccccoh.", ".voccttyyttccov.", "..oc.c.cc.c.co..", "....tt....tt....", "....ll....ll...."], "colors": [{"name": "Captain", "o": "#2a1608", "c": "#9a6236", "a": "#6a3e1e", "r": "#d8dde6", "t": "#2a4a8a", "l": "#d8dde6", "h": "#3a2410", "v": "#2a4a8a", "u": "#f6dccb", "e": "#2a1608", "p": "#e88a7a", "m": "#a0506a", "k": "#16264a", "w": "#ffd23a", "y": "#ffd23a"}, {"name": "Arcade", "o": "#0e2a3a", "c": "#3ab8c8", "a": "#1e7a8a", "r": "#d8dde6", "t": "#ffd23a", "l": "#3ab8c8", "h": "#1a1a2a", "v": "#ffd23a", "u": "#f6dccb", "e": "#0e2a3a", "p": "#ff9fb0", "m": "#a0506a", "k": "#0e2a3a", "w": "#d8dde6", "y": "#ffd23a"}, {"name": "Midnight", "o": "#06060c", "c": "#2a2a3a", "a": "#16161f", "r": "#7a7a8a", "t": "#ff3b3b", "l": "#2a2a3a", "h": "#16161f", "v": "#ff3b3b", "u": "#e0d8e8", "e": "#ff3b3b", "p": "#5a2a3a", "m": "#5a2a3a", "k": "#06060c", "w": "#7a7a8a", "y": "#ff3b3b"}]}, "Lurker Cosplayer": {"eyes": 3, "move": "walk", "speed": 1.0, "mouth": False, "lines": ["i'm watching you… just kidding", "count my eyes. go on.", "it took ages to sew all these eyes", "*lurks dramatically*", "boo? boo."], "body": ["....oooooooo....", "..oocyccccycoo..", ".ocyhhhhhhhhyco.", ".ochuuuuuuuuhco.", ".ochuuuuuuuuhco.", ".ohhpuummuuphho.", ".hocokwwwwkocoh.", ".hocycccccyccoh.", ".voccttyyttccov.", "..oc.y.cc.y.co..", "....tt....tt....", "....ll....ll...."], "colors": [{"name": "Shade", "o": "#06060c", "c": "#1e1a2a", "y": "#ffd23a", "t": "#ffd23a", "l": "#1e1a2a", "h": "#2a2440", "v": "#b05aff", "u": "#e8e0f0", "e": "#1e1a2a", "p": "#c890c8", "m": "#5a2a5a", "k": "#06060c", "w": "#ffd23a"}, {"name": "Abyss", "o": "#02060c", "c": "#0e2a3a", "y": "#5affd8", "t": "#5affd8", "l": "#0e2a3a", "h": "#0a1a2a", "v": "#5affd8", "u": "#e0ecf0", "e": "#0e2a3a", "p": "#8ac8c8", "m": "#2a4a5a", "k": "#02060c", "w": "#5affd8"}, {"name": "Blood Moon", "o": "#0c0204", "c": "#2a0a10", "y": "#ff3b3b", "t": "#ff3b3b", "l": "#2a0a10", "h": "#1a0608", "v": "#ff3b3b", "u": "#f0e0e0", "e": "#2a0a10", "p": "#c87a7a", "m": "#7a2a2a", "k": "#0c0204", "w": "#ff3b3b"}]}}
+COSPLAY_OF = {"Kitsune Cosplayer": "Kitsune", "Blip Cosplayer": "Blip", "Dragon Cosplayer": "Dragon", "Robo Cosplayer": "Robo Bear", "Lurker Cosplayer": "Lurker"}
+COSPLAY_FEET = {"stand": "....oo....oo....", "walk1": "...oo......oo...", "walk2": ".....oo..oo.....", "air": ".....o....o....."}
+COSPLAYER_KINDS = list(COSPLAYERS)
 MOD_HASHES = ["6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0", "f7442ad71cf1853b4834396505ec91f5cbba914d1e9c7f208351b22fd8f7f05a"]   # SHA-256 of each moderator code
 CREATOR_HASH = "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56"   # SHA-256 of the creator code (the code itself is never in here)
 CREATOR_TIER = {"Blipmaker": 2.0, "Byte": 1.3, "Diamond Ladybug": 1.3}
 CREATOR_BOSS = ["The Blipmaker (boss)", [["Blipmaker", 0, 0], ["Lurker", 0, 3], ["Phantom Knight", 0, 3]]]
 CREATOR_BOSS_REWARD = 50
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR, **COSPLAYERS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
                        "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False)}
 
+for _name in COSPLAYERS:
+    VARIANTS[_name]["feet"] = COSPLAY_FEET   # little legs in striped stockings
 NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
@@ -4060,7 +4069,7 @@ WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
 
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
-KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS + COSPLAYER_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, even in the daytime)
@@ -5116,7 +5125,7 @@ class Blip:
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
         groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
                   + list(TAB_GROUPS)
-                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Ghosts 👻", GHOST_KINDS), ("Gifts 🎁", GIFT_KINDS)]
+                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Ghosts 👻", GHOST_KINDS), ("Gifts 🎁", GIFT_KINDS), ("Cosplayers 🎭", COSPLAYER_KINDS)]
                   + ([("My Blips ⭐", CUSTOM_KINDS)] if CUSTOM_KINDS else []))
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
@@ -5134,6 +5143,8 @@ class Blip:
                 self.legend_menu = sub
             elif members is GHOST_KINDS:
                 self.ghost_menu = sub
+            elif members is COSPLAYER_KINDS:
+                self.cosplay_menu = sub
             elif any(members is ks for _, ks in TAB_GROUPS):
                 self.tab_menus = getattr(self, "tab_menus", {})
                 self.tab_menus[group] = (sub, members)
@@ -5708,6 +5719,12 @@ class Blip:
                 self.legend_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
             else:
                 self.legend_menu.add_command(label=f"🔒 ???  (visit {LEGEND_WORLD[k]})", state="disabled")
+        self.cosplay_menu.delete(0, "end")
+        for k in COSPLAYER_KINDS:
+            if self.app.is_unlocked(k):
+                self.cosplay_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            else:
+                self.cosplay_menu.add_command(label=f"🔒 ???  (get a {COSPLAY_OF[k]} first)", state="disabled")
         self.gift_menu.delete(0, "end")
         for k in GIFT_KINDS:
             if self.app.is_unlocked(k):
@@ -7651,6 +7668,9 @@ DUAL_TYPES = {
  "Penguin": ("frost", "splash"), "Polar Bear": ("frost", "splash"), "Walrus": ("frost", "splash"),
  "Eel": ("volt", "splash"), "Jellyfish": ("volt", "splash"), "Bee": ("sweet", "gust"), "Death Worm": ("stone", "volt"),
  "Puppet Box": ("phantom", "sweet"), "Wind-Up Hare": ("volt", "phantom"), "Blipmaker": ("cosmic", "volt"), "Byte": ("volt", "cosmic"), "Guardian": ("stone", "cosmic"), "Diamond Ladybug": ("stone", "cosmic"),
+ # 🎭 cosplayers fight like the Blip they dress as
+ "Kitsune Cosplayer": ("spark", "cosmic"), "Blip Cosplayer": ("sweet", "cosmic"), "Dragon Cosplayer": ("spark", "gust"),
+ "Robo Cosplayer": ("volt", "stone"), "Lurker Cosplayer": ("phantom", "cosmic"),
 }
 
 
@@ -7695,7 +7715,7 @@ def _arena_stats(kind):
     kind_type = TYPE_OF.get(base) or (DUAL_TYPES[base][0] if base in DUAL_TYPES else None) or _NEW_TYPE_OF.get(base) or ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
                  "sprout" if base in _SPROUT or tab.startswith("Plants") else ["spark", "splash", "sprout"][h % 3])
     tier = CREATOR_TIER.get(base) or (1.2 if base in LEGENDS or base in KAIJU else 1.12 if base in RARE or base in CRYPTIDS or base in GHOSTS
-            else 1.1 if base in ROBOTS else 1.05 if base in GIFTS else 1.0)
+            else 1.1 if base in ROBOTS or base in COSPLAYERS else 1.05 if base in GIFTS else 1.0)
     if kind in AWAKEN_BASE:
         tier *= 1.25 * 1.18 ** (awaken_stage(kind) - 1)
     v = VARIANTS[base]
@@ -8657,7 +8677,8 @@ class Collection:
                        (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS),
                        ("Legends ✨  visit a world and click them when they stroll by", LEGEND_KINDS),
                        ("Ghosts 👻  they drift by at night: click one while it glows!", GHOST_KINDS),
-                       ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS)]
+                       ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS),
+                       ("Cosplayers 🎭  Blip fans in costume: get the Blip they dress as", COSPLAYER_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         view_h = min(h, self.win.winfo_screenheight() - 140)        # scroll when the screen is too short to fit it all
         self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=view_h, bg="#1d1a2e", highlightthickness=0,
@@ -8678,7 +8699,7 @@ class Collection:
         return self.app.save.setdefault("peeked", [])
 
     def how(self, k):
-        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "a limited-time gift" if k in GIFTS else f"find it in {LEGEND_WORLD[k]}" if k in LEGENDS else "meet it at night" if k in GHOSTS else "hatch from an egg"
+        return f"get a {COSPLAY_OF[k]} first" if k in COSPLAYERS else f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "a limited-time gift" if k in GIFTS else f"find it in {LEGEND_WORLD[k]}" if k in LEGENDS else "meet it at night" if k in GHOSTS else "hatch from an egg"
 
     def draw(self):
         c = self.canvas
@@ -9935,6 +9956,8 @@ class App:
             return bool(self.save.get("creator"))
         if kind in AWAKEN_BASE:
             return self.awaken_level(AWAKEN_BASE[kind]) >= awaken_stage(kind) and self.is_unlocked(AWAKEN_BASE[kind])
+        if kind in COSPLAYERS:
+            return self.is_unlocked(COSPLAY_OF[kind])       # 🎭 they show up once you have the Blip they dress as
         if kind in LEGENDS:
             return kind in self.save.get("legends", [])
         if kind in WORLD_OF:

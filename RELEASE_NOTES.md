@@ -4,6 +4,9 @@
 make Blipville what it is. This is the real thing.
 
 **New in 1.0:**
+- 🎭 **New tier: Cosplayers!** Blip fans dressed up as their favorite Blips, in cozy hoodies, sashes and striped
+  stockings: the **Kitsune**, **Blip**, **Dragon**, **Robo** and **Lurker Cosplayers**, 3 costume colors each. A Cosplayer joins
+  your collection once you have the Blip they're dressed as, and they fight like that Blip in the Arena.
 - 🖍️ **The Redraw: every Blip has a new look.** Rounder shapes, bigger features and new shading on all of them. Miss the
   old look? Every Blip has a 🍬 **Classic** color (called **Original** for the few that already had a Classic) that shows the
   new drawing but glitches back to its old one every few seconds. Your chosen colors stay the same.

@@ -25,7 +25,8 @@ for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS
     }
 data = {
     "kinds": kinds,
-    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS, "creator": getattr(bl, "CREATOR_KINDS", [])},
+    "cosplayOf": bl.COSPLAY_OF,
+    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS, "creator": getattr(bl, "CREATOR_KINDS", []), "cosplayers": bl.COSPLAYER_KINDS},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,

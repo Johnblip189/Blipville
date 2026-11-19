@@ -11,6 +11,7 @@
   const GIFTS = new Set(D.groups.gifts || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
+  const COSPLAY_OF = D.cosplayOf || {};              // 🎭 cosplayers: unlocked once you have the Blip they dress as
   const AWAKEN_FORM = D.awakenForm || {};
   const AWAKEN_CHAIN = D.awakenChain || Object.fromEntries(Object.entries(AWAKEN_FORM).map(([b, f]) => [b, [f]]));   // some Blips awaken up to 3 times
   const AWAKEN_BASE = Object.fromEntries(Object.entries(AWAKEN_CHAIN).flatMap(([b, fs]) => fs.map((f) => [f, b])));
@@ -122,7 +123,7 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const isUnlocked = (k) => COSPLAY_OF[k] ? isUnlocked(COSPLAY_OF[k]) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -1445,9 +1446,10 @@
                     [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []],
                     ["Legends ✨ (visit a world, tap them when they stroll by)", D.groups.legends || []],
                     ["Ghosts 👻 (they drift by at night: tap one while it glows!)", D.groups.ghosts || []],
-                    ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []]];
+                    ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []],
+                    ["Cosplayers 🎭 (Blip fans in costume: get the Blip they dress as)", D.groups.cosplayers || []]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (COSPLAY_OF[k] ? `🎭 get a ${COSPLAY_OF[k]} first` : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const world = WORLDS.find((w) => w.tab === title);

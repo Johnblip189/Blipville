@@ -3643,6 +3643,45 @@ for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIF
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
                        "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False)}
 
+# 🧸 Bad Dreams: plush versions of the Night Shift crew. Until midnight they're harmless plushies that sit very still;
+# from midnight to 6 AM (your clock) they burst out as their Bad Dream selves. Click a Puppet Master 5 times fast and it
+# becomes the Bad Dream Puppet Master, then rewrites a robo into its Bad Dream: fend it off for 5 seconds to keep it.
+# "big" is the 32 x 30 art the fend-off shows ("%" is the glow around the eyes, "h" the eye shine, "c" the claws).
+BAD_DREAMS = {'Bad Dream Bear': {'robo': 'Robo Bear', 'eyes': 4, 'body': ['.oo..ohhhho..oo.', 'oqqoohhyyhhoobbo', 'oqtokkkkkkkkoBbo', '.obbbbbbbbbbbBo.', '.obbbbbbbbbbbBo.', '.obbbbbbbbbbbBo.', '.obpbllllllbpBo.', '..obblxlxlxlBo..', '.oboobbtbbbboobo', '.obobbbbbbbbbobo', '.wwobbbbbbbbbow.', '...obbo..obbo...'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#141428', 'name': 'Bad Dream', 'b': '#8a6878', 's': '#5a4050', 'l': '#d0b8c0', 'q': '#5a5a9a', 'h': '#2a2a50', 'y': '#d8b04a', 'p': '#c87a9a', 'e': '#ff5ad8'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#0a0610', 'k': '#141428', 'name': 'Lights Out', 'b': '#4a3a5a', 's': '#2a2038', 'l': '#8a7a9a', 'q': '#3a6a6a', 'h': '#1a1a30', 'y': '#a88a3a', 'p': '#8a5a7a', 'e': '#7affd8'}], 'xeye': True, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['*stitches creak*', 'the captain never sleeps', 'who turned off the nightlight?', '*button eye rolls around*'], 'plush': {'body': ['.ooo.oooooo.ooo.', 'oqtqohhhhhhoabBo', 'oqqqhhhyyhhhoaBo', '.oookkkkkkkkooo.', 'o*buuuubbbbbbbBo', 'obbubbubbbbbbbBo', 'obbubbubbbbbbbBo', 'obpuuuubtbbbbpBo', 'obbbbllllllbbbBo', 'obbblxlxlxllbbBo', 'oSbbbllllllbwwSo', '..ooBBBtBBBBoo..'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#8a9ad8', 'x': '#2a1a2a', 'k': '#141428', 'name': 'Plush', 'b': '#c89a7a', 'a': '#a87a5a', 's': '#8a6a50', 'l': '#f0e0d0', 'q': '#8a9ad8', 'h': '#3a4a8a', 'y': '#ffd23a', 'p': '#ff9ab0', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a plush bear. just a plush bear.*', '...', '*one button eye seems to follow you*']}, 'big': ['.....oooo.ooooooooooooooooo.....', '....obbBBokkkkkkkkkkkkkbbBBo....', '...obbqqbbkkkkkyyykkkkkbbbBBo...', '...obqtqqbkkkkkkkkkkkkkbbbBBo...', '...obqqtKKKKKKKKKKKKKKKKKbBBo...', '...obbqqtbbbbbbbbbbbbbbbbbBBo...', '....obbbbbbbbbbbbbbbbbbbbBBo....', '.....oobbbxbbxbbbbb%%%%%Boo.....', '......obbbbxxbbbbbb%hee%Bo......', '.....obbbbbxxbbbbbb%eee%BBo.....', '.....obbbbxbbxbbbbb%eee%BBo.....', '.....obbbbbbbbbbbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpbllllnnnlllbbpBo......', '......obbbllllllnlllllbBBo......', '.......obblxlllllllllxBBo.......', '........obblxxxlxlxxxBBo........', '.........obbllxxxxxlBBo.........', '........obbbbbxbxbxbbBBo........', '.......obbbbbbbbbbbbbbwBo.......', '.....oobbbbbbbbbtbbbbbbBBoo.....', '....obwbbbbbbbbbbbbbbbbbbwBo....', '...obbbwbbbbbbbbtbbbbbbbwbbwo...', '..obbbbbbbbbbbbbbbbbbbbbbbwBBo..', '..obbBBoobbbbbbbtbbbbBBoobbBBo..', '.obbBBo.obbbbbbbbbbbbBBo.obbBBo.', '.obbBBo.obbbbbbbtbbbbBBo.obbBBo.', '.obBBo...obbbbbbbbbbBBo...obBBo.', 'ocbcbco...obbbbbtbbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Bunny': {'robo': 'Robo Bunny', 'eyes': 4, 'body': ['..oo.......oo...', '.obAo.....oaBo..', '.ogAoooooozzBo..', '.obbbbbbbbbbbBo.', '.obbbbbbbbbbbBo.', '.obbbbbbbbbbbBo.', '.obpbllllllbpBo.', '..obblxlxlxlBo..', '.oboogbbgbbgoobo', '.obobbbbbbbbbobo', '.wwobbbqqbbbbo.w', '...obbo..obbo...'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#141428', 'name': 'Bad Dream', 'b': '#6aa890', 'a': '#c88aa0', 's': '#3a5a50', 'l': '#c8e0d4', 'q': '#8a6aa8', 'g': '#ffd23a', 'z': '#c8ccd8', 'p': '#c88aa0', 'e': '#ff4a6a'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#0a0610', 'k': '#141428', 'name': 'Lights Out', 'b': '#3a5a54', 'a': '#7a5a6a', 's': '#1e3430', 'l': '#7a948a', 'q': '#4a3a6a', 'g': '#ff8a3a', 'z': '#8a8ca0', 'p': '#7a5a6a', 'e': '#ffd23a'}], 'xeye': True, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['*string lights flicker*', 'lights out… lights out…', "my ear's held on with a pin!", '*hops closer*'], 'plush': {'body': ['..oo........oo..', '.obAo......oaBo.', '.ogAo......ozzo.', '.obRo......otBo.', '.ogboooooooobBo.', '.obbbbqqbbbbbBo.', 'obbbbbqqbbbbbbBo', 'obbbbbbbbbbbbbBo', 'obpbbllllllbbpBo', 'obbbblxlxlxbbbBo', 'oSSwwskkkkksSSSo', '..ooBBBBtBBBoo..'], 'eyes': 6, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#5a5aa8', 'x': '#2a1a2a', 'k': '#ffffff', 'name': 'Plush', 'b': '#9ae0c0', 'a': '#ffb0c8', 'r': '#ffffff', 's': '#5a9a80', 'l': '#eafff4', 'q': '#c8a8ff', 'g': '#ffd23a', 'z': '#d8dce8', 'p': '#ffb0c8', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a plush bunny with a safety pin*', '...', '*did its ear just move?*']}, 'big': ['.......obBBo.........obBBo......', '.......obBBo........obbBBo......', '.......obaBBooooooo.ozzzzo......', '.......obbaBobbbbBBoobbbzo......', '........obbbbbbbbbbbbbBBo.......', '........obbbbbbbbbbbbbBBo.......', '.......obbbbbbbbbbbbbbBBo.......', '......obbbxbbxbbbbb%%%%%Bo......', '......obbbbxxbbbbbb%hee%Bo......', '.....obbbbbxxbbbbbb%eee%BBo.....', '.....obbbbxbbxbbbbb%eee%BBo.....', '.....obbbbbbbbbbbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpbllllnnnlllbbpBo......', '......obbbllllllnlllllbBBo......', '.......obblxlllllllllxBBo.......', '........obblxxxlxlxxxBBo........', '.........obbllxxxxxlBBo.........', '........obbbbbxbxbxbbBBo........', '.......obbbkkkkkkkkkkkBBo.......', '.....oobbbbgbbbbtbbbbgbBBoo.....', '....obwbbbbbbbgbbbgbbbbbbwBo....', '...obbbwbbbbbbbbtbbbbbbbwbBBo...', '..obbbbbbbbbbbbbbbbbbbbbbbbBBo..', '..obbBBoobbbbbbbtbbbbBBoobbBBo..', '.obbBBo.obbbbbbbbbbbbBBo.obbBBo.', '.obbBBo.obbbbqqqtbbbbBBo.obbBBo.', '.obBBo...obbbqqqbbbbBBo...obBBo.', 'ocbcbco...obbbbbtbbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Hen': {'robo': 'Robo Hen', 'eyes': 4, 'body': ['....oowwwoo.....', '....owwwwwo.....', '...oooooooooo...', '..obbbbbbbbbBo..', '.obbbbbbbbbbbBo.', '.obbbbbnnbbbbBo.', '.obpbbnnnnbbpBo.', '..obbxbxbxbbBo..', '.oboobbbbbbboobo', 'kobobbbqqbbbbobo', 'kwwobbbbbbbbbow.', 'z..obbo..obbo...'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#a8b0b8', 'name': 'Bad Dream', 'q': '#7a8ac8', 'b': '#d8ccc0', 'n': '#d8903a', 'z': '#8a5a3a', 'p': '#c87a7a', 'e': '#ff6a3a'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#6a7078', 'name': 'Lights Out', 'q': '#3a4a7a', 'b': '#8a7a88', 'n': '#9a6a2a', 'z': '#5a3a2a', 'p': '#8a5a6a', 'e': '#ffd23a'}], 'xeye': False, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['order up… at midnight', '*crooked smile widens*', 'who wants pancakes?', '*spatula tap tap tap*'], 'plush': {'body': ['....oowwwoo.....', '....owwwwwo.....', '....oooooooo....', '..oo*bbbtbbbBoo.', '.obb*bbbtbbbbBo.', '.obbbbbbbbbbbbo.', 'obpbbbbbbbbbbpBo', 'obbbbnnnnnbbbbBo', 'osssssddnnssssSo', 'oBbbxbxbxbbbbbBo', '.oSBbbbqqbbbBSo.', '..ooBRBBBBRBoo..'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#5a5aa8', 'x': '#2a1a2a', 'k': '#a8b0b8', 'name': 'Plush', 'q': '#a8b8ff', 'b': '#fff8f0', 'c': '#ff7a8a', 's': '#c8c0c8', 'n': '#ffa83a', 'd': '#5a2a10', 'r': '#c8c0c8', 'z': '#8a5a3a', 'p': '#ff9a9a', 'e': '#1a1024'}], 'lines': ['*sits very still*', "*a plush hen in a cook's hat*", '...', '*smells faintly of pancakes*']}, 'big': ['...........oowwwwwwoo...........', '..........owwwwwwwwwwo..........', '..........owwwwwwwwwwo..........', '..........owwbbbbbbwwo..........', '.........obbbbbbbbbbBBo.........', '........obbbbbbbbbbbbBBo........', '.......obbbbbbbbbbbbbbBBo.......', '......obbb%%%%%bbbb%%%%%Bo......', '......obbb%hee%bbbb%hee%Bo......', '.....obbbb%eee%bbbb%eee%BBo.....', '.....obbbb%eee%bbbb%eee%BBo.....', '.....obbbb%%%%%bbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpblllnnnnnllbbpBo......', '......obbbllllnnnnnlllbBBo......', 'ooo....obblxlllnnllllxBBo.......', 'kkko....obblxxxlxlxxxBBo........', 'kkko.....obbllxxxxxlBBo.........', 'kkko....obbbbbxbxbxbbBBo........', 'kkko...obbbbbbbbbbbbbbBBo.......', 'ozo..oobbbbbbbbbtbbbbbbBBoo.....', 'ozo.obwbbbbbbbbbbbbbbbbbbwBo....', 'ozoobbbwbbbbbbbbtbbbbbbbwbBBo...', 'ozobbbbbbbbbbbbbbbbbbbbbbbbBBo..', 'ozobbBBoobbbbbbbtbqqqBBoobbBBo..', 'ozbbBBo.obbbbbbbbbqqqBBo.obbBBo.', 'ozbbBBo.obbbbbbbtbqqqBBo.obbBBo.', 'ozbBBo...obbbbbbbbbbBBo...obBBo.', 'ocbcbco...obbbbbtbbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Fox': {'robo': 'Robo Fox', 'eyes': 4, 'body': ['.oo........oo...', '.oao......oao...', '.oaAoooooooAaBo.', 'kobuuuubbbbbbBo.', '.kbubbubbbbbbBo.', '.obubbubbbbbbBo.', '.obuuuulllllbBo.', '..obbllnnlllBo..', '.orrrrrrrrrrrrr.', '.obrRbbbbbbbbobr', '.wwobbbbbbbbbowr', '...obbo..obbowWw'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#2a1a2a', 'name': 'Bad Dream', 'b': '#c87a5a', 'a': '#e8c0b0', 'l': '#e8d8c8', 'n': '#1a1024', 'r': '#7a4a8a', 'u': '#2a1a2a', 'p': '#d88a9a', 'e': '#ffd23a'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#0a0610', 'name': 'Lights Out', 'b': '#7a4a3a', 'a': '#9a7a70', 'l': '#9a8a80', 'n': '#0a0610', 'r': '#3a6a7a', 'u': '#0a0610', 'p': '#8a5a6a', 'e': '#ff4a5a'}], 'xeye': False, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['*scarf whips around*', 'fastest plush on the shelf', '*eyepatch squeaks*', 'ready… set…'], 'plush': {'body': ['o..............o', 'oo............oo', 'oao..........oao', 'oaAoooooooooooao', 'obkuuuubbbbbbbBo', 'okbubbubbbbbbbBo', 'kbbubbubbbbbbbBo', 'obpuuuubbbbbbpBo', 'obbblllnnlllbbBo', 'orrrrrrrrrrrrrro', '.orRrRbbbbbbrr.r', '..ooBBBBBBBBoowW'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#4a2a3a', 'x': '#2a1a2a', 'k': '#4a2a3a', 'name': 'Plush', 'b': '#f0945a', 'a': '#ffd8c8', 'l': '#fff4e8', 'n': '#1a1024', 'r': '#b87ad8', 'p': '#ffa8b8', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a plush fox with an eyepatch*', '...', '*its tail twitched. probably.*']}, 'big': ['......oBo...............oBo.....', '......oBo...............oBo.....', '.....obBBo...oooooo....obBBo....', '.....obaBoooobbbbBBooooobaBo....', '....obbabbbbbbbbbbbbbuubbaBBo...', '...oubbbbbbbbbbbbbbuubbbbbBBo...', '....ouuobbuuuubbbuubbbBBoooo....', '.....oouuuuuuuuuubb%%%%%Bo......', '......obbuuuuuubbbb%hee%Bo......', '.....obbbuuuuuubbbb%eee%BBo.....', '.....obbbuuuuuubbbb%eee%BBo.....', '.....obbbbuuuu%bbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpbllllnnnlllbbpBo......', '......obbbllllllnlllllbBBo......', '.......obblxlllllllllxBBo.......', '.......oobblxxxlxlxxxBBooo......', '......orrrrrrrrrrrrrrrrrRRo.....', '......orrrrrrrrrrrrrrrrrRRo.....', '.......obbbbbbbbbbbbbbbRRo......', '.....oobbbbbbbbbtbbbbbbrRRo.....', '....obwbbbbbbbbbbbbbbbbbrRRo....', '...obbbwbbbbbbbbtbbbbbbbwrrBo...', '..obbbbbbbbbbbbbbbbbbbbbbbbrBoo.', '..obbBBoobbbbbbbtbbbbBBoorbBBowo', '.obbBBo.obbbbbbbbbbbbBBo.obbbwo.', '.obbBBo.obbbbbbbtbbbbBBo.obbBBo.', '.obBBo...obbbbbbbbbbBBo...obBBo.', 'ocbcbco...obbbbbtbbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Hare': {'robo': 'Wind-Up Hare', 'eyes': 4, 'body': ['..oo......yY....', '.o*Ao....yooy...', '.otAooooooyYo...', '.obbbbbqqbbbbo..', '.obbbbbqqbbbbBo.', '.obbbbbbbbbbbBo.', '.obpbbbllbbbpBo.', '..obblxlxlxlBo..', '.oboollllllloobo', '.obollllllllobo.', '.wwoLLLtLLLLow..', '...obbo..obbo...'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#141428', 'name': 'Bad Dream', 'b': '#8aa89a', 'a': '#5a7a6a', 'l': '#d8e4d0', 'q': '#c8a05a', 'y': '#d8b04a', 'p': '#a87a7a', 'e': '#7affd8'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#141428', 'name': 'Lights Out', 'b': '#4a6058', 'a': '#2a4038', 'l': '#8a9a88', 'q': '#8a6a3a', 'y': '#a88a3a', 'p': '#6a4a4a', 'e': '#ff5ad8'}], 'xeye': False, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['*tick… tick… tick…*', 'wind me up…', 'the show starts at midnight', '*the felt key turns by itself*'], 'plush': {'body': ['..oo.....yY.....', '.o*Ao...yooy....', '.otAo....yY.....', '..obAooooooooo..', '..obbbbqqbbbbbo.', '.obbbbbqqbbbbbBo', '.obbbbbbbbbbbbBo', '.obpbbbllbbbbpBo', '.obbblxlxlxbbbBo', 'aAobbbbbbbbbbwWa', 'RAollllllllllaoR', '.r.oLLLtLLLLo.r.'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#5a5aa8', 'x': '#2a1a2a', 'k': '#141428', 'name': 'Plush', 'b': '#a8d8c0', 'a': '#7aa890', 'l': '#f0fff0', 'q': '#ffd27a', 'y': '#ffd23a', 'r': '#ff7a8a', 'p': '#ffa8a8', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a plush hare with a felt key*', '...', '*tick.*']}, 'big': ['.......obBBo..oyyyo.obBBo.......', '.......obtBo..oyyyo.obBBo.......', '.......obbtBooyyyyyobbBBo.......', '.......obbBBobbbyBBobbBBo.......', '........obbbbbbbbbbbbBBo........', '........obbbqqqbbbbbbBBo........', '.......obbbbqqqbbbbbbbBBo.......', '......obbb%%%%%bbbb%%%%%Bo......', '......obbb%hee%bbbb%hee%Bo......', '.....obbbb%eee%bbbb%eee%BBo.....', '.....obbbb%eee%bbbb%eee%BBo.....', '.....obbbb%%%%%bbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpbllllnnnlllbbpBo......', '......obbbllllllnlllllbBBo......', '.......obblxlllllllllxBBo.......', '........obblxxxlxlxxxBBo........', '.........obbllxxxxxlBBo.........', '........obbbbbxbxbxbbBBo........', '.......obbbbbbbbbbbbbbBBo.......', '.....oobbbbbbbbbtbbbbbbBBoo.....', '....obwbbbbbbbllllbbbbbbbwBo....', '...obbbwbbbbbllllllbbbbbwbBBo...', '..obbbbbbbbbllllllllbbbbbbbBBo..', '..obbBBoobbbllllllllbBBoobbBBo..', '.obbBBo.obbbllllllllbBBo.obbBBo.', '.obbBBo.obbbllllllllbBBo.obbBBo.', '.obBBo...obbbllllllbBBo...obBBo.', 'ocbcbco...obbbllllbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Puppet Master': {'robo': 'Puppet Master', 'eyes': 4, 'body': ['....oooooooo....', '...owwwwtwwwo...', '..owwwwwtwwwWo..', '.owwwwwwwwwwwWo.', '.owwwwwwwwwwwWo.', '.owwwwwwwwwwwWo.', '.orwwwwwwwwwrWo.', '..owwmmmmmmwWo..', 'yoobbqbbqbbqbooy', 'y.obbbbbbbbbbo.y', 'k..obqbbqbbqo..k', '....oooooooo....'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#e8dcd0', 'x': '#1a1024', 'k': '#d8a83a', 'name': 'Bad Dream', 'r': '#c83a5a', 'm': '#2a1020', 'b': '#4a3a6a', 'q': '#8a6aa8', 'y': '#c8a0d8', 'e': '#0a0610'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#8a8090', 'x': '#1a1024', 'k': '#8a6a2a', 'name': 'Lights Out', 'r': '#7a2a3a', 'm': '#0a0610', 'b': '#2a2038', 'q': '#4a3a6a', 'y': '#7a6a8a', 'e': '#ff4a6a'}], 'xeye': False, 'feet': False, 'move': 'float', 'speed': 0.8, 'lines': ['*yarn strings sway*', 'one more for the collection…', 'the strings go both ways', 'sweet dreams… or not'], 'plush': {'body': ['....oooooooo....', '...owwwwwwwwo...', '..owwwwtwwwwWo..', '..owwwwtwwwwWo..', '.owwwwwwwwwwwWo.', '.owwwwwwwwwwwWo.', '.owwwwwwwwwwwWo.', '.orwwmmmmmmwrWo.', 'oobbbbbbbbbbbBoo', 'kobqbqbqbqbqbok.', 'y.obbbbbbbbbbo.y', 'y..oooooooooo..y'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#fffaf4', 'u': '#5a5aa8', 'x': '#2a1a2a', 'k': '#ffd23a', 'name': 'Plush', 'r': '#ff5a7a', 'm': '#3a1a30', 'b': '#7a6aa8', 'q': '#c8a8f0', 'y': '#e8c8ff', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a sock puppet. probably.*', '...', '*its strings are tangled*']}}}
+BAD_DREAM_KINDS = list(BAD_DREAMS)
+BAD_DREAM_OF = {a["robo"]: k for k, a in BAD_DREAMS.items()}      # robo (or Puppet Master) → its Bad Dream
+BAD_DREAM_ROBOS = [k for k in BAD_DREAM_KINDS if "big" in BAD_DREAMS[k]]   # the 5 a Puppet Master can rewrite
+for _name, _a in BAD_DREAMS.items():
+    VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": False, "feet": FEET_STD if _a["feet"] else None,
+                       "dx": 0, "move": _a["move"], "colors": _a["colors"], "lines": _a["lines"], "speed": _a["speed"],
+                       "shifty": False, "ghost": False, "xeye": _a["xeye"], "plush": _a["plush"]}
+
+
+def bad_dream_hour():
+    """Bad Dreams are out from midnight until 6 AM (your local time); the rest of the day they're plushies."""
+    return time.localtime().tm_hour < 6
+
+
+def plush_now(kind):
+    return bool(VARIANTS.get(kind, {}).get("plush")) and not bad_dream_hour()
+
+
+def plush_view(kind, pal):
+    """(variant, palette) to draw right now: a Bad Dream's daytime plush look, or the Blip as it is."""
+    v = VARIANTS[kind]
+    if not plush_now(kind):
+        return v, pal
+    pl = v["plush"]
+    return {**v, "body": pl["body"], "eyes": pl["eyes"], "xeye": False}, dict(pl["colors"][0])
+
+
+def draw_xeye(px, pal):
+    """A stitched X where one button eye came off (face coordinates: eyes on row 5)."""
+    for i in range(4):
+        px(3 + i, 4 + i, pal.get("x", pal["o"]))
+        px(6 - i, 4 + i, pal.get("x", pal["o"]))
+
+
 NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
@@ -4077,7 +4116,7 @@ WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
 
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
-KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS + BAD_DREAM_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, even in the daytime)
@@ -4132,6 +4171,7 @@ TROPHIES = [
     ("bond-5", "💞", "Soulmates", "Reach max friendship (Soulmate) with a Blip", lambda a: any(bond_level(p.bond) >= 5 for p in a.pets), 30),
     ("catch-40", "🍪", "Cookie Pro", "Score 40 in one game of Cookie Catch", lambda a: a.stat("catch_best") >= 40, 20),
     ("boss-1", "👑", "Beat the Blipmaker", "Beat the creator's boss team in the Arena", lambda a: bool(a.save.get("beat_creator")), 50),
+    ("dreams-all", "🧸", "Sweet Dreams", "Keep all 6 Bad Dreams", _all(BAD_DREAM_KINDS), 40),
     ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
     ("mouse-10", "🖱️", "Cat and Mouse", "Your Blips catch your mouse pointer 10 times", lambda a: a.stat("cursor_catches") >= 10, 15),
 ]
@@ -5144,7 +5184,7 @@ class Blip:
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
         groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
                   + list(TAB_GROUPS)
-                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Ghosts 👻", GHOST_KINDS), ("Gifts 🎁", GIFT_KINDS)]
+                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Ghosts 👻", GHOST_KINDS), ("Gifts 🎁", GIFT_KINDS), ("Bad Dreams 🧸", BAD_DREAM_KINDS)]
                   + ([("My Blips ⭐", CUSTOM_KINDS)] if CUSTOM_KINDS else []))
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
@@ -5162,6 +5202,8 @@ class Blip:
                 self.legend_menu = sub
             elif members is GHOST_KINDS:
                 self.ghost_menu = sub
+            elif members is BAD_DREAM_KINDS:
+                self.dream_menu = sub
             elif any(members is ks for _, ks in TAB_GROUPS):
                 self.tab_menus = getattr(self, "tab_menus", {})
                 self.tab_menus[group] = (sub, members)
@@ -5289,6 +5331,18 @@ class Blip:
                 "vx": random.uniform(-0.6, 0.6), "vy": random.uniform(-2.2, -1.2), "life": random.uniform(1.0, 1.6),
                 "born": time.monotonic(),
             })
+
+    def dream_burst(self, plush):
+        if plush:
+            self.say("*flop* …just a plushie again", 2.5)
+            return
+        self.say(random.choice(["*RRRIIIP!* 🌙", "*stitches pop* it's midnight…", "*bursts out of the plush*"]), 3)
+        self.set_face("surprised", 1.2)
+        for _ in range(14):
+            self.particles.append({"kind": "stuffing", "x": W / 2 + random.uniform(-20, 20), "y": H - ART_H * SCALE + random.uniform(0, 20),
+                                   "vx": random.uniform(-3, 3), "vy": random.uniform(-6, -2), "life": random.uniform(0.8, 1.4),
+                                   "born": time.monotonic()})
+        self.app.sound.play("boing")
 
     def show_reward(self, text):
         self.particles.append({"kind": "plus", "text": text, "x": W / 2 + 34, "y": H - ART_H * SCALE - 4,
@@ -5443,6 +5497,12 @@ class Blip:
             self.app.quest_tick("pet_any")
             if self.kind in EVENT["kinds"]:
                 self.app.quest_tick("pet_spiky")
+        if self.kind in ("Puppet Master", "Bad Dream Puppet Master"):     # 🎭 5 quick clicks… if you dare
+            self.pm_clicks = [t for t in getattr(self, "pm_clicks", []) if now - t < 2.5] + [now]
+            if len(self.pm_clicks) >= 5:
+                self.pm_clicks = []
+                self.app.bad_dream_rewrite(self)
+                return
         self.say(random.choice(LINES_PET), 2)
         self.set_face("happy", 1.5)
         self.burst("heart", 4)
@@ -5494,6 +5554,8 @@ class Blip:
         self.burst("heart", 2)
 
     def lines(self):
+        if plush_now(self.kind):
+            return VARIANTS[self.kind]["plush"]["lines"]
         if self.kind in ROBOTS and is_night():
             return NIGHT_LINES * 2 + VARIANTS[self.kind]["lines"]
         return LINES_IDLE + VARIANTS[self.kind]["lines"] * 2 + SEASON_LINES.get(self.app.season, [])
@@ -5694,6 +5756,14 @@ class Blip:
         self.cryptid_menu.add_command(label=f"🔦 Set out a Cryptid Lure… ({LURE_COST} 💖, {spotted}/{len(CRYPTID_KINDS)} spotted)",
                                       command=lambda: self.app.set_lure(self.root))
         self.cryptid_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
+        self.dream_menu.delete(0, "end")
+        for k in BAD_DREAM_KINDS:
+            if self.app.is_unlocked(k):
+                self.dream_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            else:
+                self.dream_menu.add_command(label="🔒 ???", state="disabled")
+        self.dream_menu.add_separator()
+        self.dream_menu.add_command(label="🎭 Click a Puppet Master 5 times… if you dare", state="disabled")
         self.ghost_menu.delete(0, "end")
         for k in GHOST_KINDS:
             if self.app.is_unlocked(k):
@@ -5779,7 +5849,7 @@ class Blip:
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
             if skin_locked(self.app.save, self.kind, i):
-                why = "beat The Puppet Master" if col.get("unlock") == "puppet" else f"{EVENT['icon']} {EVENT['name']} skin"
+                why = "fend off its Bad Dream" if col.get("unlock") == "puppet" else f"{EVENT['icon']} {EVENT['name']} skin"
                 self.color_menu.add_command(label=f"🔒 {col['name']}  ({why})", state="disabled")
             else:
                 icon, _, cost = color_cost(self.kind, i)
@@ -5825,6 +5895,11 @@ class Blip:
 
     # ------------------------------------------------------------------ brain
     def decide(self, now):
+        if plush_now(self.kind):                          # 🧸 a plushie just sits there… mostly
+            if random.random() < 0.1:
+                self.say(random.choice(self.lines()), 2.5)
+            self.set_state("idle", random.uniform(4, 9))
+            return
         hour = time.localtime().tm_hour
         sleepy = self.energy < 25 or (hour >= 23 or hour < 6) and random.random() < 0.15
         if sleepy:
@@ -6038,6 +6113,7 @@ class Blip:
         v = VARIANTS[self.kind]
         colors = kind_colors(self.kind)
         pal = {**colors[self.palette % len(colors)], **v.get("extra", {})}
+        v, pal = plush_view(self.kind, pal)          # 🧸 a Bad Dream is a plushie until midnight
         if pal.get("glitch") is not None and glitching(now + id(self) % 50 / 10):
             pal = {**colors[pal["glitch"]], **v.get("extra", {})}   # ⚡ a split-second flicker back to an old look
         g = [[None] * ART_W for _ in range(ART_H)]
@@ -6102,6 +6178,8 @@ class Blip:
                     for xx in range(size):
                         px(ex + ox + xx, 5 + oy + yy, e)
                 px(ex + ox, 5 + oy, white)
+            if v.get("xeye"):
+                draw_xeye(px, pal)
         # mouth (beaks and snouts are part of the art instead)
         if not v.get("mouth", True):
             pass
@@ -6242,7 +6320,7 @@ class Blip:
                 continue
             p["x"] += p["vx"]
             p["y"] += p["vy"]
-            if p["kind"] == "crumb":
+            if p["kind"] in ("crumb", "stuffing"):
                 p["vy"] += 0.4
             alive.append(p)
             if p["kind"] == "heart":
@@ -6260,6 +6338,8 @@ class Blip:
                             c.create_rectangle(X, Y, X + s, Y + s, fill="#bcd2ff", outline="", tags=("fx",))
             elif p["kind"] == "crumb":
                 c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#c98a4b", outline="", tags=("fx",))
+            elif p["kind"] == "stuffing":
+                c.create_rectangle(p["x"], p["y"], p["x"] + 4, p["y"] + 4, fill="#f4ece4", outline="", tags=("fx",))
             elif p["kind"] == "snow":
                 s_ = 3 if p["phase"] > 2 else 2
                 c.create_rectangle(p["x"], p["y"], p["x"] + s_, p["y"] + s_, fill="#f4f8ff", outline="", tags=("fx",))
@@ -6303,6 +6383,11 @@ class Blip:
 
     # ------------------------------------------------------------------ loop
     def step(self, now):
+        if VARIANTS[self.kind].get("plush"):              # 🧸 midnight: the plushie bursts out as its Bad Dream
+            mode = plush_now(self.kind)
+            if getattr(self, "plush_mode", mode) != mode:
+                self.dream_burst(mode)
+            self.plush_mode = mode
         if now > self.next_blink:
             self.blink_until = now + 0.15
             self.next_blink = now + random.uniform(2, 6)
@@ -6454,7 +6539,7 @@ def load_custom_blips():
 # 💾 Save safety: every load is checked field by field (a wrong type is fixed instead of crashing later), the last good
 # save is kept as save.bak.json, a broken save is copied aside before anything replaces it, and a failed write is
 # reported to the player instead of silently forgotten.
-SAVE_LISTS = ("awakened", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
+SAVE_LISTS = ("awakened", "bad_dreams", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
               "rivals_beaten", "skins", "trophies", "unlocked", "worlds")
 SAVE_COUNTS = ("hearts", "nights_won")
 SAVE_FLAGS = ("auto_update", "climb", "cursor_play", "sound", "weather", "slot2")
@@ -6628,6 +6713,7 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
     v = VARIANTS[kind]
     colors = kind_colors(kind)
     pal = {**colors[color_idx % len(colors)], **v.get("extra", {})}
+    v, pal = plush_view(kind, pal)
     body = pal.get("art") or v["body"]
     g = [[None] * ART_W for _ in range(ART_H)]
     for yy, row in enumerate(body):
@@ -6650,6 +6736,12 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
                     g[er + b][ex + a] = e
             if not glow:
                 g[er][ex] = "#ffffff"
+    if v.get("xeye") and face != "happy":
+        def _px(xx, yy, col):
+            yy += er - 5
+            if 0 <= xx < ART_W and 0 <= yy < ART_H:
+                g[yy][xx] = col
+        draw_xeye(_px, pal)
     if silhouette:
         g = [[silhouette if col else None for col in row] for row in g]
     for yy, row in enumerate(g):
@@ -8735,6 +8827,297 @@ class EventWindow:
 
 
 
+def _mix(a, b, f):
+    A, B = int(a[1:], 16), int(b[1:], 16)
+    return "#%02x%02x%02x" % tuple(round(((A >> sh) & 255) * (1 - f) + ((B >> sh) & 255) * f) for sh in (16, 8, 0))
+
+
+_DREAM_RUNS = {}
+
+
+def dream_runs(kind, eyes_only=False):
+    """The fend-off art of a Bad Dream as runs of one color: [(row, x0, x1, color)], cached."""
+    key = (kind, eyes_only)
+    if key not in _DREAM_RUNS:
+        a = BAD_DREAMS[kind]
+        pal = {"n": "#1a1024", "u": "#1a1024", "z": "#c8ccd8", "g": "#ffd23a", "l": "#f4ece0", **a["colors"][0]}
+        pal.update({"c": pal.get("t", "#f0e4c8"), "h": "#ffffff", "%": _mix(pal["b"], pal["e"], 0.45)})
+        runs = []
+        for y, row in enumerate(a["big"]):
+            x = 0
+            while x < len(row):
+                ch = row[x]
+                if ch == "." or (eyes_only and ch not in "eh%"):
+                    x += 1
+                    continue
+                x2 = x
+                while x2 + 1 < len(row) and row[x2 + 1] == ch:
+                    x2 += 1
+                runs.append((y, x, x2 + 1, px_color(pal, ch)))
+                x = x2 + 1
+        _DREAM_RUNS[key] = runs
+    return _DREAM_RUNS[key]
+
+
+class BadDreamFend:
+    """🧸 A Puppet Master rewrote a robo into its Bad Dream: keep it away for 5 seconds. Each one acts differently:
+    Bear lumbers in (click it to shove it back), Bunny turns the lights off (click it when they flicker on), Hen throws
+    pancakes (click them away), Fox dashes along a lane (move out of it) and Hare winds up (click its key to unwind)."""
+    CW, CH, LAST = 520, 420, 5.0
+    BG = "#0c0b14"
+    HOW = {"Bad Dream Bear": "It's slow but it won't stop. CLICK it to shove it back!",
+           "Bad Dream Bunny": "Lights out… CLICK it when the lights flicker on!",
+           "Bad Dream Hen": "Order up! CLICK the pancakes before they hit you!",
+           "Bad Dream Fox": "Watch for the red lane… MOVE your mouse out of it!",
+           "Bad Dream Hare": "It's winding up! CLICK its key to unwind it!"}
+
+    def __init__(self, app, kind):
+        self.app, self.kind = app, kind
+        self.robo = BAD_DREAMS[kind]["robo"]
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville: Bad Dream 🧸")
+        self.win.configure(bg=self.BG)
+        self.win.resizable(False, False)
+        self.win.attributes("-topmost", True)
+        self.c = tk.Canvas(self.win, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0, cursor="hand2")
+        self.c.pack(padx=6, pady=6)
+        self.c.bind("<Motion>", self.on_move)
+        self.c.bind("<Button-1>", self.on_click)
+        self.win.protocol("WM_DELETE_WINDOW", self.close)
+        self.mx, self.my = self.CW / 2, self.CH - 40
+        self.state, self.after_id = "intro", None
+        self.t0 = self.last = time.monotonic()
+        self.z, self.x = 0.2, self.CW / 2
+        self.lit, self.phase_until = True, 0.0      # 🐰
+        self.cakes, self.next_cake = [], 0.6        # 🐔
+        self.lane, self.dash = None, None           # 🦊
+        self.next_lane = 0.5
+        self.wind = 0.0                             # 🐇
+        self.flash = []                             # little "!" pops
+        app.sound.play("boing")
+        self.step()
+        self.win.focus_force()
+
+    # ----- geometry
+    def scale(self):
+        return 3 + self.z * 8
+
+    def box(self):
+        s = self.scale()
+        w, h = 32 * s, 30 * s
+        return self.x - w / 2, self.CH - 20 - h, s
+
+    def on_move(self, e):
+        self.mx, self.my = e.x, e.y
+
+    def on_click(self, e):
+        if self.state == "intro":
+            return
+        if self.state != "play":
+            return
+        t = time.monotonic() - self.t0
+        x0, y0, s = self.box()
+        on_it = x0 <= e.x <= x0 + 32 * s and y0 <= e.y <= y0 + 30 * s
+        k = self.kind
+        if k == "Bad Dream Bear" and on_it:
+            self.z = max(0.1, self.z - 0.09)
+            self.pop(e.x, e.y, "shove!")
+        elif k == "Bad Dream Bunny" and on_it:
+            if self.lit:
+                self.z = max(0.1, self.z - 0.25)
+                self.pop(e.x, e.y, "back!")
+            else:
+                self.pop(e.x, e.y, "too dark!")
+        elif k == "Bad Dream Hen":
+            for ck in self.cakes:
+                cx, cy, r = self.cake_pos(ck, t)
+                if math.hypot(e.x - cx, e.y - cy) < r + 12:
+                    self.cakes.remove(ck)
+                    self.pop(cx, cy, "swat!")
+                    self.app.sound.play("pop")
+                    break
+        elif k == "Bad Dream Hare" and x0 <= e.x <= x0 + 32 * s and y0 <= e.y <= y0 + 7 * s:   # the key, on top
+            self.wind = max(0.0, self.wind - 0.38)
+            self.pop(e.x, e.y, "unwind!")
+            self.app.sound.play("boop")
+
+    def pop(self, x, y, text):
+        self.flash.append((x, y, text, time.monotonic()))
+
+    def cake_pos(self, ck, t):
+        u = min(1.0, (t - ck["t0"]) / ck["dur"])
+        return ck["x0"] + (ck["x1"] - ck["x0"]) * u, ck["y0"] + (ck["y1"] - ck["y0"]) * u - math.sin(math.pi * u) * 60, 8 + 20 * u
+
+    # ----- loop
+    def step(self):
+        try:
+            now = time.monotonic()
+            dt, self.last = min(0.05, now - self.last), now
+            if self.state == "intro" and now - self.t0 > 2.2:
+                self.state, self.t0 = "play", now
+            if self.state == "play":
+                self.update(now - self.t0, dt)
+            self.draw(now)
+        except tk.TclError:
+            return
+        if self.state in ("intro", "play"):
+            self.after_id = self.win.after(16, self.step)
+
+    def update(self, t, dt):
+        k = self.kind
+        if k == "Bad Dream Bear":
+            self.z += 0.24 * dt
+            self.x += (self.CW / 2 + math.sin(t * 2.2) * 40 - self.x) * min(1, dt * 3)
+        elif k == "Bad Dream Bunny":
+            if t >= self.phase_until:
+                self.lit = not self.lit
+                self.phase_until = t + (0.45 if self.lit else random.uniform(0.7, 1.1))
+                if not self.lit:
+                    self.x = random.uniform(120, self.CW - 120)
+                    self.app.sound.play("thud")
+            if not self.lit:
+                self.z += 0.30 * dt
+        elif k == "Bad Dream Hen":
+            self.z += 0.04 * dt
+            if t >= self.next_cake:
+                self.next_cake = t + random.uniform(0.55, 0.8)
+                x0, y0, s = self.box()
+                self.cakes.append({"t0": t, "dur": 1.1, "x0": self.x + random.choice((-1, 1)) * 12 * s, "y0": y0 + 18 * s,
+                                   "x1": random.uniform(60, self.CW - 60), "y1": self.CH - 30})
+            for ck in list(self.cakes):
+                if t - ck["t0"] >= ck["dur"]:
+                    self.cakes.remove(ck)
+                    self.z += 0.22
+                    self.pop(ck["x1"], ck["y1"] - 30, "splat!")
+                    self.app.sound.play("thud")
+        elif k == "Bad Dream Fox":
+            if self.lane is None and self.dash is None and t >= self.next_lane:
+                self.lane = (min(max(self.my, 60), self.CH - 60), t)          # aims at where you are now
+            if self.lane and t - self.lane[1] > 0.6:
+                y, _ = self.lane
+                self.dash, self.lane = (y, t, random.choice((-1, 1))), None
+                self.app.sound.play("whoosh")
+                if abs(self.my - y) < 42:
+                    self.z += 0.3
+                    self.pop(self.mx, self.my, "ouch!")
+            if self.dash and t - self.dash[1] > 0.3:
+                self.dash, self.next_lane = None, t + random.uniform(0.25, 0.5)
+        elif k == "Bad Dream Hare":
+            self.wind += 0.75 * dt
+            if self.wind >= 1:
+                self.wind = 0.0
+                self.z += 0.35
+                self.pop(self.x, self.CH / 2, "CHARGE!")
+                self.app.sound.play("boing")
+        if self.z >= 1:
+            self.lose()
+        elif t >= self.LAST:
+            self.win_()
+
+    def win_(self):
+        self.state = "won"
+        app, got = self.app, self.app.save.setdefault("bad_dreams", [])
+        if self.kind not in got:
+            got.append(self.kind)
+        skins = app.save.setdefault("skins", [])
+        shadow = f"{self.robo}:Shadow"
+        if any(c["name"] == "Shadow" for c in kind_colors(self.robo)) and shadow not in skins:
+            skins.append(shadow)
+        app.add_hearts(15)
+        write_save(app.save)
+        app.sound.play("fanfare")
+        pet = app.add_pet(self.kind, greet=False)
+        if pet:
+            pet.say("…okay. you can keep me. 🧸", 4)
+
+    def lose(self):
+        self.state = "lost"
+        self.app.sound.play("boing")
+
+    def close(self):
+        if self.after_id:
+            try:
+                self.win.after_cancel(self.after_id)
+            except tk.TclError:
+                pass
+        self.app.dream_game = None
+        self.win.destroy()
+
+    # ----- drawing
+    def sprite(self, x0, y0, s, eyes_only=False):
+        for y, a, b, col in dream_runs(self.kind, eyes_only):
+            self.c.create_rectangle(x0 + a * s, y0 + y * s, x0 + b * s, y0 + (y + 1) * s, fill=col, outline="")
+
+    def draw(self, now):
+        c, W_, H_ = self.c, self.CW, self.CH
+        c.delete("all")
+        name = self.kind.replace("Bad Dream ", "")
+        if self.state == "intro":
+            c.create_text(W_ / 2, 60, text="🎭 The strings go taut…", fill="#c8a0d8", font=("Segoe UI", 16, "bold"))
+            c.create_text(W_ / 2, 96, text=f"The Puppet Master rewrote {self.robo} into a Bad Dream!", fill="#e8e4ff",
+                          font=("Segoe UI", 12, "bold"))
+            self.z = 0.2
+            x0, y0, s = self.box()
+            self.sprite(x0, y0, s, eyes_only=int(now * 4) % 2 == 0)
+            c.create_text(W_ / 2, H_ - 14, text=self.HOW[self.kind], fill="#ffd23a", font=("Segoe UI", 11, "bold"))
+            return
+        if self.state in ("won", "lost"):
+            won = self.state == "won"
+            c.create_rectangle(0, 0, W_, H_, fill="#1a1630" if won else "#14081a", outline="")
+            self.z = 0.25 if won else 0.6
+            self.x = W_ / 2
+            x0, y0, s = self.box()
+            self.sprite(x0, y0 + (40 if won else 0), s)
+            c.create_rectangle(0, 0, W_, 120, fill="#1a1630" if won else "#14081a", outline="")
+            if won:
+                c.create_text(W_ / 2, 40, text=f"You kept the Bad Dream {name}! 🧸", fill="#ffd23a", font=("Segoe UI", 18, "bold"))
+                c.create_text(W_ / 2, 74, text=f"+15 💖  ·  {self.robo}'s Shadow color unlocked", fill="#e8e4ff", font=("Segoe UI", 11, "bold"))
+                c.create_text(W_ / 2, 98, text="(it's a plushie until midnight)", fill="#9a94c0", font=("Segoe UI", 10))
+            else:
+                c.create_text(W_ / 2, 40, text="GOTCHA! 🧸", fill="#ff4a6a", font=("Segoe UI", 22, "bold"))
+                c.create_text(W_ / 2, 76, text=f"The Bad Dream {name} gave you a big stuffed hug.", fill="#e8e4ff", font=("Segoe UI", 11, "bold"))
+                c.create_text(W_ / 2, 98, text="Click a Puppet Master 5 times to try again (after a little rest).", fill="#9a94c0", font=("Segoe UI", 10))
+            return
+        t = now - self.t0
+        k = self.kind
+        if k == "Bad Dream Fox":
+            if self.lane:
+                y = self.lane[0]
+                c.create_rectangle(0, y - 42, W_, y + 42, fill="#3a0a14", outline="#ff4a5a", width=2)
+                c.create_text(W_ / 2, y, text="!! MOVE !!", fill="#ff4a5a", font=("Segoe UI", 14, "bold"))
+            if self.dash:
+                y, t1, d = self.dash
+                u = (t - t1) / 0.3
+                s = 4
+                x = -32 * s + (W_ + 64 * s) * u if d > 0 else W_ + 32 * s - (W_ + 64 * s) * u
+                self.sprite(x - 16 * s, y - 15 * s, s)
+            else:
+                x0, y0, s = self.box()
+                self.sprite(x0, y0, s)
+        else:
+            x0, y0, s = self.box()
+            dark = k == "Bad Dream Bunny" and not self.lit
+            self.sprite(x0, y0, s, eyes_only=dark)
+            if k == "Bad Dream Hare":                          # wind-up gauge
+                c.create_text(16, 48, anchor="w", text="🔑 WIND", fill="#d8b04a", font=("Segoe UI", 10, "bold"))
+                c.create_rectangle(80, 41, 240, 55, outline="#3a3360", width=2)
+                c.create_rectangle(82, 43, 82 + 156 * self.wind, 53, outline="",
+                                   fill="#5ad87a" if self.wind < 0.5 else "#ffd23a" if self.wind < 0.8 else "#ff4a5a")
+        for ck in self.cakes:
+            cx, cy, r = self.cake_pos(ck, t)
+            c.create_oval(cx - r, cy - r * 0.6, cx + r, cy + r * 0.6, fill="#e8b060", outline="#7a4a1a", width=2)
+            c.create_oval(cx - r * 0.4, cy - r * 0.3, cx + r * 0.4, cy, fill="#ffe08a", outline="")
+        self.flash = [f for f in self.flash if now - f[3] < 0.7]
+        for x, y, text, t0 in self.flash:
+            c.create_text(x, y - (now - t0) * 40, text=text, fill="#ffffff", font=("Segoe UI", 11, "bold"))
+        # top bar: time left + how close it is
+        c.create_rectangle(0, 0, W_, 30, fill="#08070e", outline="")
+        c.create_text(12, 15, anchor="w", text=f"KEEP IT AWAY  {max(0, self.LAST - t):.1f}s", fill="#e8e4ff", font=("Segoe UI", 11, "bold"))
+        c.create_text(W_ - 170, 15, anchor="e", text="TOO CLOSE", fill="#ff4a6a", font=("Segoe UI", 9, "bold"))
+        c.create_rectangle(W_ - 160, 8, W_ - 12, 22, outline="#3a3360", width=2)
+        c.create_rectangle(W_ - 158, 10, W_ - 158 + 144 * min(1, self.z), 20, fill="#ff4a6a", outline="")
+
+
 class CookieCatch:
     """🍪 Cookie Catch: move your Blip with the mouse or the arrow keys and catch the falling cookies."""
     CW, CH, S = 480, 440, 4
@@ -8899,7 +9282,8 @@ class Collection:
                        (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS),
                        ("Legends ✨  visit a world and click them when they stroll by", LEGEND_KINDS),
                        ("Ghosts 👻  they drift by at night: click one while it glows!", GHOST_KINDS),
-                       ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS)]
+                       ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS),
+                       ("Bad Dreams 🧸  click a Puppet Master 5 times… then fend them off", BAD_DREAM_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         view_h = min(h, self.win.winfo_screenheight() - 140)        # scroll when the screen is too short to fit it all
         self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=view_h, bg="#1d1a2e", highlightthickness=0,
@@ -10002,6 +10386,7 @@ class App:
             self.root.after(1500, _tell)
         load_custom_blips()
         self.game = None
+        self.dream_game, self.dream_rest = None, 0.0     # 🧸 the Bad Dream fend-off window, and its cooldown
         self.plays = []                            # games of catch / tag going on right now
         self.sightings = []                        # a cryptid sneaking past right now
         self.next_sighting = time.monotonic() + random.uniform(6, 14) * 60
@@ -10303,6 +10688,8 @@ class App:
             return kind in self.save.get("legends", [])
         if kind in EGYPT_GODS:
             return kind in self.save.get("gods", [])       # 🏺 dug up at the Dig Site
+        if kind in BAD_DREAMS:
+            return kind in self.save.get("bad_dreams", [])  # 🧸 fended off (or a Puppet Master clicked 5 times)
         if kind in WORLD_OF:
             return WORLD_OF[kind] in self.save.get("worlds", [])
         if kind in GIFTS:
@@ -10453,6 +10840,39 @@ class App:
         if kind not in got:
             got.append(kind)
             write_save(self.save)
+
+    def bad_dream_rewrite(self, pm):
+        """🎭 A Puppet Master was clicked 5 times fast: the first time it becomes the Bad Dream Puppet Master; then it
+        rewrites a robo into its Bad Dream, which you have to fend off for 5 seconds to keep."""
+        now = time.monotonic()
+        if self.dream_game:
+            return
+        if now < self.dream_rest:
+            pm.say(f"*the strings are tangled…* (try again in {int(self.dream_rest - now) + 1}s)", 2.5)
+            return
+        got = self.save.setdefault("bad_dreams", [])
+        if "Bad Dream Puppet Master" not in got:
+            got.append("Bad Dream Puppet Master")
+            write_save(self.save)
+            pm.kind = "Bad Dream Puppet Master"
+            pm.palette = 0
+            pm.color_var.set(0)
+            pm.kind_var.set(pm.kind)
+            pm.plush_mode = plush_now(pm.kind)
+            pm.dream_burst(False)
+            pm.say("*snip* …the strings go both ways now 🎭", 3)
+        left = [k for k in BAD_DREAM_ROBOS if k not in got]
+        if not left:
+            pm.say("all my Bad Dreams are yours… sweet dreams 🧸", 3)
+            return
+        in_town = [k for k in left if any(p.kind == BAD_DREAMS[k]["robo"] for p in self.pets)]
+        kind = random.choice(in_town or left)
+        for p in self.pets:
+            if p.kind == BAD_DREAMS[kind]["robo"]:
+                p.say("*whirr… rrrip… stitches?*", 2.5)
+        self.dream_rest = now + 30
+        self.dream_game = True
+        self.root.after(1400, lambda: setattr(self, "dream_game", BadDreamFend(self, kind)))
 
     def nights_won(self):
         return int(self.save.get("nights_won", 0))

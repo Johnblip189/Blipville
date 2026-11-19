@@ -5459,6 +5459,11 @@ class Blip:
         self.say(random.choice(LINES_WAKE), 2.5)
         self.set_face("surprised", 0.8)
 
+    def following(self):
+        """Following the mouse, unless care comes first: a landed cookie is eaten before following resumes (the menu
+        tick, the player's choice, is never changed here). Running out of energy is handled in update()."""
+        return self.follow.get() and not (self.cookie and self.cookie["landed"])
+
     def on_follow(self):
         if self.follow.get():
             self.say("right behind you!", 2)
@@ -5854,7 +5859,7 @@ class Blip:
             ck["y"] += ck["vy"]
             if ck["y"] >= H - 6 * 3:
                 ck["y"], ck["landed"] = H - 6 * 3, True
-        if ck and ck["landed"] and self.state in ("idle", "walk") and not self.follow.get():
+        if ck and ck["landed"] and self.state in ("idle", "walk"):    # food beats following and wandering
             self.target_x = ck["x"] - W / 2
             self.state = "walk"
             self.state_until = now + 10
@@ -5950,7 +5955,12 @@ class Blip:
                                        "vx": random.uniform(-1.5, 1.5), "vy": random.uniform(-3, -1), "life": 0.6, "born": now})
             return
 
-        if self.follow.get() and self.perch is not None:
+        following = self.following()
+        if following and self.energy < 25 and self.state in ("idle", "walk"):
+            self.say("*yawn* too sleepy to follow... nap first", 2.5)    # rest beats following; it resumes on waking
+            self.set_state("sleep", 20)
+            return
+        if following and self.perch is not None:
             self.hop_down(say=False)
             return
         if now < self.chase_until and self.state in ("idle", "walk") and not self.follow.get():
@@ -5958,7 +5968,7 @@ class Blip:
             return
 
         # follow-my-mouse mode overrides wandering
-        if self.follow.get():
+        if following:
             mx = self.root.winfo_pointerx()
             goal = min(max(mx - W / 2, self.left), self.right - W)
             if abs(goal - self.wx) > 50:
@@ -5968,7 +5978,7 @@ class Blip:
                 self.state_until = now + 1
 
         if self.state == "walk" and self.target_x is not None:
-            speed = (3.2 if self.follow.get() else 2.0) * VARIANTS[self.kind].get("speed", 1.0)
+            speed = (3.2 if following else 2.0) * VARIANTS[self.kind].get("speed", 1.0)
             d = self.target_x - self.wx
             self.facing = 1 if d > 0 else -1
             if abs(d) <= speed or now > self.state_until:
@@ -5983,7 +5993,7 @@ class Blip:
             else:
                 self.wx += speed * self.facing
             self.place()
-        elif self.state == "idle" and now > self.state_until and not self.follow.get():
+        elif self.state == "idle" and now > self.state_until and not following:
             self.decide(now)
 
     # ------------------------------------------------------------------ drawing
@@ -10643,7 +10653,7 @@ class App:
     def play_step(self, now):
         dt = 1 / FPS
         free = [p for p in self.pets if not p.playing and p.state == "idle" and now - p.last_play > 40
-                and not getattr(p, "visitor", None) and p.perch is None and now > p.chase_until]
+                and not p.follow.get() and not getattr(p, "visitor", None) and p.perch is None and now > p.chase_until]
         # start a game now and then
         for i, a in enumerate(free):
             for b in free[i + 1:]:
@@ -10669,7 +10679,7 @@ class App:
         # a sleepy pet sometimes joins a napping friend
         for sleeper in [p for p in self.pets if p.state == "sleep"]:
             for p in self.pets:
-                if (p is not sleeper and not p.playing and not p.nap_buddy and p.state == "idle" and p.energy < 60
+                if (p is not sleeper and not p.playing and not p.nap_buddy and not p.follow.get() and p.state == "idle" and p.energy < 60
                         and p.perch is None and sleeper.perch is None
                         and abs(p.wx - sleeper.wx) < 600 and random.random() < dt * 0.15):
                     p.nap_buddy = True

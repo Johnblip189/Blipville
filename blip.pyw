@@ -3657,6 +3657,8 @@ KAIJU["Silvertear-03"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True
     "nap_lines": ["*enters power-saving mode* this is NOT a nap.", "recharging. …five more minutes. that's an order."],
     "wake_lines": ["LOG: reboot complete. this unit was not napping.", "*visor flickers on* i was guarding. with my eyes closed."],
     "blush": {"pal": {"s": "#ffa8c0"}, "rows": [3, 8]},   # full-faceplate embarrassment: brow plate down to the chin guard
+    # 💬 her chat portrait: a hand-drawn half torso (32 x 30) in her current colors; "rows" is the face, for blushing
+    "portrait": {"rows": [5, 16], "art": ['..............osso..............', '..............osso..............', '.............osssso.............', '.oooooo.oooooossssoooooo.oooooo.', 'oSsssssosssssssssssssssSoSssssSo', '.oSssssksssssssssssssssSkSsssSo.', '..oSsssssssssssssssssssSSSssSo..', '...oSssssssssssssssssssSSSsSo...', '....oSssskkkkkkkkkkkkkkSSSSo....', '.....oSssvvvvvvvvvvvvvvSSSo.....', '.....ossvvyeyyvvvvyeyyvvSSo.....', '.....ossvvyyyyvvvvyyyyvvSSo.....', '.....ossvvvvvvvvvvvvvvvvSSo.....', '.....osssssrrssssssrrssSSSo.....', '.....osssssrrssssssrrssSSSo.....', '.....osssssrrssssssrrssSSSo.....', '.....osssssrrssssssrrssSSSo.....', '......ossssRRssssssRRssSSo......', '......osssssSkSkSkSksssSSo......', '.......oooookSkSkSkSooooo.......', '........oooookkkkkkooooo........', '....oooossssskkkkkksssssoooo....', '...oSSSSssssskkyykksssssSSSSo...', '..ooSSSSssssskkkkkksssssSSSSoo..', '.ossSSSSssssssskksssssssSSSSsso.', '.oskkkkkkkkkkkkkkkkkkkkkkkkkkso.', '.ossssssssssssskkssssssssssssso.', '.ossssssssssssskkssssssssssssso.', '.ossssssssssssskkssssssssssssso.', '.ossssssssssssskkssssssssssssso.']},
     "body": ["..o....oo....o..", "..so..osSo..oS..", ".osSooosSooosSo.", ".oksssssssssSko.", ".okyvvvvvvvvyko.",
              ".okyvvvvvvvvyko.", ".oksrssssssrSko.", ".oksrssssssrSko.", ".oksRssssssRSko.", ".okSsskSSksSSkoo",
              "..okkSSSSSSkkokS", "...okkkSSkkko.ko"],
@@ -3723,6 +3725,39 @@ CHAT_DEFAULT = {
 }
 
 
+def scale2x(g):
+    """Smooth pixel-art upscale (EPX): twice the size, with rounder diagonals than a plain zoom."""
+    h, w = len(g), len(g[0])
+    out = [[None] * (w * 2) for _ in range(h * 2)]
+    for y in range(h):
+        for x in range(w):
+            p_ = g[y][x]
+            a = g[y - 1][x] if y else p_
+            b = g[y][x + 1] if x < w - 1 else p_
+            c = g[y][x - 1] if x else p_
+            d = g[y + 1][x] if y < h - 1 else p_
+            out[2 * y][2 * x] = c if c == a and c != d and a != b else p_
+            out[2 * y][2 * x + 1] = a if a == b and a != c and b != d else p_
+            out[2 * y + 1][2 * x] = c if d == c and d != b and c != a else p_
+            out[2 * y + 1][2 * x + 1] = b if b == d and b != a and d != c else p_
+    return out
+
+
+def chat_portrait(pet, now):
+    """The picture in the chat window: a hand-drawn half-torso portrait if the Blip has one, otherwise its own sprite,
+    smoothly upscaled. Either way in its current colors, blushing when it's flustered."""
+    v = VARIANTS[pet.kind]
+    cols = kind_colors(pet.kind)
+    pal = {**cols[pet.palette % len(cols)], **v.get("extra", {})}
+    por = v.get("portrait")
+    if por and not pal.get("art") and not plush_now(pet.kind):
+        blush = v.get("blush") if now < getattr(pet, "blush_until", 0) else None
+        bpal = {**pal, **blush["pal"]} if blush else pal
+        return [[None if ch == "." else px_color(bpal if blush and por["rows"][0] <= y <= por["rows"][1] else pal, ch)
+                 for ch in row] for y, row in enumerate(por["art"])]
+    return scale2x(pet.build_art(now))
+
+
 def chat_tree(kind):
     return CHATS.get(AWAKEN_BASE.get(kind, kind), CHAT_DEFAULT)
 
@@ -3750,7 +3785,7 @@ for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIF
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
                        "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False),
-                       **{k: _a[k] for k in VOICE_KEYS if k in _a}}
+                       **{k: _a[k] for k in VOICE_KEYS + ("portrait",) if k in _a}}
 
 
 def voice(kind, key, default):
@@ -9309,9 +9344,13 @@ class ChatBox:
         self.win.geometry(f"+{x}+{y}")
         tk.Label(self.win, text=f"💬 {pet.name} ({pet.kind})", bg=self.BG, fg="#ffd23a",
                  font=("Segoe UI", 11, "bold")).pack(anchor="w", padx=12, pady=(10, 4))
-        self.line = tk.Label(self.win, text="", bg=self.PANEL, fg=self.TEXT, font=("Segoe UI", 11), wraplength=320,
-                             justify="left", padx=10, pady=8, width=36, anchor="w")
-        self.line.pack(fill="x", padx=12)
+        row = tk.Frame(self.win, bg=self.BG)
+        row.pack(fill="x", padx=12)
+        self.face = tk.Canvas(row, width=128, height=120, bg=self.PANEL, highlightthickness=0)
+        self.face.pack(side="left", anchor="n")
+        self.line = tk.Label(row, text="", bg=self.PANEL, fg=self.TEXT, font=("Segoe UI", 11), wraplength=230,
+                             justify="left", padx=10, pady=8, width=26, anchor="nw", height=6)
+        self.line.pack(side="left", fill="both", expand=True, padx=(8, 0))
         self.opts = tk.Frame(self.win, bg=self.BG)
         self.opts.pack(fill="x", padx=12, pady=(8, 12))
         self.win.protocol("WM_DELETE_WINDOW", self.close)
@@ -9326,6 +9365,7 @@ class ChatBox:
             self.pet.blush_until = time.monotonic() + 2.5
         text = chat_text(self.pet, n["say"])
         self.line.configure(text=text)
+        self.draw_face()
         self.pet.say(text, 4)
         if n.get("action") == "feed":
             self.pet.feed()                         # a real cookie (its bubble then says its own snack line)
@@ -9337,6 +9377,27 @@ class ChatBox:
             tk.Button(self.opts, text=f"➜ {text}", anchor="w", command=lambda nx=nxt: self.show(nx), bg="#3a3360",
                       fg="#ffffff", activebackground="#5a4ae0", activeforeground="#ffffff", relief="flat", bd=0,
                       font=("Segoe UI", 10, "bold"), padx=10, pady=5, cursor="hand2").pack(fill="x", pady=2)
+
+    def draw_face(self):
+        c = self.face
+        c.delete("all")
+        g = chat_portrait(self.pet, time.monotonic())
+        s = min(128 // len(g[0]), 120 // len(g))
+        x0, y0 = (128 - len(g[0]) * s) // 2, 120 - len(g) * s
+        for y, row in enumerate(g):
+            x = 0
+            while x < len(row):
+                col = row[x]
+                if col is None:
+                    x += 1
+                    continue
+                x2 = x
+                while x2 + 1 < len(row) and row[x2 + 1] == col:
+                    x2 += 1
+                c.create_rectangle(x0 + x * s, y0 + y * s, x0 + (x2 + 1) * s, y0 + (y + 1) * s, fill=col, outline="")
+                x = x2 + 1
+        if getattr(self.pet, "blush_until", 0) > time.monotonic():
+            self.win.after(2600, lambda: self.win.winfo_exists() and self.draw_face())   # cool back down
 
     def close(self):
         now = time.monotonic()

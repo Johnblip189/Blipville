@@ -62,7 +62,8 @@ make Blipville what it is. This is the real thing.
 - 💬 **Chat with your Blips:** right-click any Blip → 💬 Chat (or tap it → 💬 Chat on the website) and talk by picking
   what to say. Ask how it's doing (it'll tell you honestly if it's hungry or sleepy), ask about itself, tell it it's
   cute, or offer a snack (it really eats it). **Silvertear-03** has a whole conversation of her own: ask about her
-  tears, whether she's sleepy, or call her cute if you want to watch her overheat. Chatting builds friendship.
+  tears, whether she's sleepy, or call her cute if you want to watch her overheat. Every chat shows a big portrait of the Blip you're
+  talking to (Silvertear-03 has her own hand-drawn one). Chatting builds friendship.
 - 🧸 **Bad Dreams:** plush versions of the Night Shift crew: Bear, Bunny, Hen, Fox, the Wind-Up Hare and the Puppet
   Master. All day they're harmless plushies that just sit there… but from **midnight to 6 AM** (your clock) they burst
   out of their stitches as Bad Dreams, with button eyes, safety pins and stuffing poking out. To get them, click a

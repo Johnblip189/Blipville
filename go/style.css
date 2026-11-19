@@ -338,3 +338,6 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 .chatOpts { display: flex; flex-direction: column; gap: 6px; }
 .chatOpts button { text-align: left; padding: 9px 12px; border-radius: 10px; border: 0; background: #3a3360; color: #fff; font-weight: 800; }
 .chatOpts button:active { background: #5a4ae0; }
+.chatRow { display: flex; gap: 10px; align-items: stretch; margin: 8px 0 10px; }
+.chatRow canvas { width: 112px; height: 105px; background: #2a2540; border-radius: 12px; image-rendering: pixelated; flex: none; }
+.chatRow .chatLine { margin: 0; flex: 1; }

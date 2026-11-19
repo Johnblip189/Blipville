@@ -27,6 +27,8 @@ for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS
         if v.get(vk):
             kinds[k][vk] = v[vk]
     kinds[k]["voice"] = list(bl.voice_of(k)) if hasattr(bl, "voice_of") else None
+    if v.get("portrait"):
+        kinds[k]["portrait"] = v["portrait"]
     if v.get("plush"):
         kinds[k].update(plush=v["plush"], xeye=bool(v.get("xeye")))
 data = {

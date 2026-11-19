@@ -1944,10 +1944,32 @@
     if (!tree || node === "end" || !tree[node]) { chatEnd(); return; }
     const n = tree[node], text = chatText(p, n.say);
     if (n.blush) p.blushUntil = now() + 2.5;
-    $("chatLine").textContent = text; say(p, text, 4); setFace(p, "happy", 1.2); sfx("boop");
+    $("chatLine").textContent = text; say(p, text, 4); setFace(p, "happy", 1.2); sfx("boop"); drawChatFace(p);
     if (n.action === "feed") feed(p);              // a real cookie
     const box = $("chatOpts"); box.innerHTML = "";
     for (const [text, nxt] of n.options) { const b = document.createElement("button"); b.textContent = `➜ ${text}`; b.onclick = () => chatShow(nxt); box.appendChild(b); }
+  }
+  function scale2x(g) {                          // smooth pixel-art upscale (EPX), same as blip.pyw
+    const h = g.length, w = g[0].length, out = Array.from({ length: h * 2 }, () => Array(w * 2).fill(null));
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const P = g[y][x], A = y ? g[y - 1][x] : P, B = x < w - 1 ? g[y][x + 1] : P, C = x ? g[y][x - 1] : P, Dn = y < h - 1 ? g[y + 1][x] : P;
+      out[2 * y][2 * x] = C === A && C !== Dn && A !== B ? C : P; out[2 * y][2 * x + 1] = A === B && A !== C && B !== Dn ? A : P;
+      out[2 * y + 1][2 * x] = Dn === C && Dn !== B && C !== A ? C : P; out[2 * y + 1][2 * x + 1] = B === Dn && B !== A && Dn !== C ? B : P;
+    }
+    return out;
+  }
+  function drawChatFace(p) {                     // 💬 a hand-drawn half-torso portrait if the Blip has one, else its sprite upscaled
+    const cv = $("chatPortrait"), c = cv.getContext("2d"), k = KINDS[p.kind], t = now(), blushing = t < (p.blushUntil || 0);
+    const pal = Object.assign({}, k.colors[p.color % k.colors.length], k.extra || {});
+    let g;
+    if (k.portrait && !pal.art && !plushNow(p.kind)) {
+      const bpal = blushing && k.blush ? Object.assign({}, pal, k.blush.pal) : pal, [r0, r1] = k.portrait.rows;
+      g = k.portrait.art.map((row, y) => [...row].map((ch) => (ch === "." ? null : pxColor(blushing && y >= r0 && y <= r1 ? bpal : pal, ch))));
+    } else g = scale2x(grid(p.kind, p.color, { t, face: "happy", blush: blushing }));
+    c.clearRect(0, 0, cv.width, cv.height);
+    const s = Math.min(Math.floor(cv.width / g[0].length), Math.floor(cv.height / g.length)), x0 = (cv.width - g[0].length * s) / 2, y0 = cv.height - g.length * s;
+    g.forEach((row, y) => row.forEach((col, x) => { if (col) { c.fillStyle = col; c.fillRect(x0 + x * s, y0 + y * s, s, s); } }));
+    if (blushing) setTimeout(() => { if (chatPet === p) drawChatFace(p); }, 2600);     // cool back down
   }
   function chatEnd() {
     const p = chatPet; chatPet = null; closeSheets();

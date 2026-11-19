@@ -46,7 +46,10 @@ make Blipville what it is. This is the real thing.
   see-through, flickering little Blip soul dangling from its puppet strings.
 - 🤖 **Silvertear, a new mecha kaiju:** silver plates over a charcoal frame, a sharp brow horn with swept-back fins,
   a dark visor with wide pixel eyes, crimson tear ridges down her cheeks, a segmented chin guard and a segmented tail.
-  She powers up behind the city now and then: click her 3 times before she stomps off. Colors: Chrome, Gunmetal,
+  She powers up behind the city now and then: click her 3 times before she stomps off. She has a personality all her
+  own: a hyper-serious tactical bodyguard who talks in mission logs, scans every cookie for its "threat level" and
+  stands guard from 7 PM to 7 AM… who is secretly very loyal to her keeper, secretly loves naps, and short-circuits
+  (her whole faceplate flushes pink) if you call her cute. Colors: Chrome, Gunmetal,
   Gold Plated (with emerald eyes) and 📺 **Showa**, the boxy 1970s tin-robot model with its own drawing: bolt antennae,
   a riveted brow, amber eyes in a wide visor slot, clean riveted cheeks, a red/yellow/cyan chest strip and a stiff tail.
 - 💬 **Chat with your Blips (starting with Silvertear):** right-click Silvertear → 💬 Chat (or tap her → 💬 Chat on

@@ -220,7 +220,9 @@
   const say = (p, text, secs = 3) => { p.bubble = { text, until: now() + secs }; };
   const setFace = (p, face, secs) => { p.face = face; p.faceUntil = now() + secs; };
   const setState = (p, st, secs = 0) => { p.state = st; p.until = now() + secs; };
-  const linesFor = (p) => plushNow(p.kind) ? KINDS[p.kind].plush.lines : D.lines.idle.concat(KINDS[p.kind].lines, KINDS[p.kind].lines, (D.seasonLines || {})[season()] || []);
+  const voice = (p, key, fallback) => { const own = (KINDS[p.kind] || {})[key]; return own && own.length ? pick(own) : fallback; };   // 🗣️ a Blip's own line
+  const guardHours = () => { const h = new Date().getHours(); return h >= 19 || h < 7; };
+  const linesFor = (p) => plushNow(p.kind) ? KINDS[p.kind].plush.lines : (KINDS[p.kind].night_lines && guardHours()) ? KINDS[p.kind].night_lines.concat(KINDS[p.kind].night_lines, KINDS[p.kind].lines) : KINDS[p.kind].pet_lines ? KINDS[p.kind].lines : D.lines.idle.concat(KINDS[p.kind].lines, KINDS[p.kind].lines, (D.seasonLines || {})[season()] || []);
   function burst(p, kind, n) {
     for (let i = 0; i < n; i++) p.particles.push({ kind, x: rnd(-26, 26) * S / 4, y: 13 * S + rnd(-6, 6), vx: rnd(-20, 20), vy: rnd(-70, -40), life: rnd(1, 1.6), born: now() });
   }
@@ -254,7 +256,8 @@
       p.pmTaps = (p.pmTaps || []).filter((x) => t - x < 2.5).concat(t);
       if (p.pmTaps.length >= 5) { p.pmTaps = []; badDreamRewrite(p); return; }
     }
-    say(p, pick(D.lines.pet), 2); setFace(p, "happy", 1.5); burst(p, "heart", 4);
+    say(p, voice(p, "pet_lines", pick(D.lines.pet)), 2.5); setFace(p, "happy", 1.5); burst(p, "heart", 4);
+    if (KINDS[p.kind].blush && Math.random() < 0.4) p.blushUntil = now() + 1.5;      // a head pat can be a little much
     if (p.state !== "fall" && p.state !== "held") { p.vy = 260; p.vx = 0; setState(p, "fall"); }
     vibrate(10);
   }
@@ -264,13 +267,13 @@
     cookies = cookies.filter((c) => c.owner !== p || p.eating === c);   // 🍪 one waiting cookie per Blip: a new one replaces it
     cookies.push({ x: cx, y: 260, vy: 0, landed: false, owner: p, born: now() }); bump("cookies");
     tidyCookies();
-    say(p, "ooh! a cookie!", 2); setFace(p, "surprised", 1);
+    say(p, voice(p, "feed_lines", "ooh! a cookie!"), 2.5); setFace(p, "surprised", 1);
   }
   function nap(p) {
     if (p.state === "sleep") { wake(p); return; }
-    if (p.state !== "held" && p.state !== "fall") { setState(p, "sleep", 20); say(p, "good night...", 2); }
+    if (p.state !== "held" && p.state !== "fall") { setState(p, "sleep", 20); say(p, voice(p, "nap_lines", "good night..."), 2); }
   }
-  function wake(p) { setState(p, "idle", 1.5); say(p, pick(D.lines.wake), 2.5); setFace(p, "surprised", 0.8); }
+  function wake(p) { setState(p, "idle", 1.5); say(p, voice(p, "wake_lines", pick(D.lines.wake)), 2.5); setFace(p, "surprised", 0.8); }
 
   function lift(p, t) {
     const move = KINDS[p.kind].move, moving = p.state === "walk", k = S / 4;
@@ -283,7 +286,7 @@
   function decide(p, t) {
     if (plushNow(p.kind)) { if (Math.random() < 0.1) say(p, pick(linesFor(p)), 2.5); setState(p, "idle", rnd(4, 9)); return; }   // 🧸 it just sits there… mostly
     const hour = new Date().getHours();
-    if (p.energy < 25 || ((hour >= 23 || hour < 6) && Math.random() < 0.15)) { say(p, "*yawn* nap time...", 2.5); setState(p, "sleep", 20); return; }
+    if (p.energy < 25 || ((hour >= 23 || hour < 6) && Math.random() < 0.15)) { say(p, voice(p, "nap_lines", "*yawn* nap time..."), 2.5); setState(p, "sleep", 20); return; }
     if (p.hunger > 70 && Math.random() < 0.35) say(p, pick(D.lines.hungry), 3);
     const r = Math.random();
     if (r < 0.45) { p.target = rnd(30, W - 30); setState(p, "walk", 12); }
@@ -471,6 +474,7 @@
     if (k.plush && !badDreamHour()) { k = { ...k, body: k.plush.body, eyes: k.plush.eyes, xeye: false }; cols = k.plush.colors; }   // 🧸 plushie by day
     const t = opt.t ?? now(), st = opt.state || "idle";
     let pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
+    if (opt.blush && k.blush) pal = Object.assign(pal, k.blush);                    // flustered!
     if (opt.live && pal.glitch != null && glitching(t + (opt.phase || 0))) pal = Object.assign({}, cols[pal.glitch], k.extra || {});   // ⚡ flicker to an old look
     let body = pal.art || k.body;
     if (opt.live && pal.glitch_art && glitching(t)) body = pal.glitch_art;      // 📼 Classic: flicker back to the old drawing
@@ -730,7 +734,7 @@
     const face = t < p.faceUntil ? p.face : "normal";
     if (KINDS[p.kind].ghost && !KINDS[p.kind].colors[p.color % KINDS[p.kind].colors.length].solid) ctx.globalAlpha = 0.8;   // ghosts stay a little see-through (unless the color is solid)
     const K = KINDS[p.kind], soul = K.soul ? new Set([...K.soul].map((ch) => K.colors[p.color % K.colors.length][ch]).filter(Boolean)) : null;
-    drawGrid(ctx, grid(p.kind, p.color, { t, live: true, state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
+    drawGrid(ctx, grid(p.kind, p.color, { t, live: true, blush: t < (p.blushUntil || 0), state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
              soul, soul ? ghostAlpha(t, p.x * 0.01) * 0.75 : 1);
     ctx.globalAlpha = 1;
     const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;
@@ -1908,6 +1912,7 @@
     const p = chatPet, tree = p && chatTree(p);
     if (!tree || node === "end" || !tree[node]) { chatEnd(); return; }
     const n = tree[node];
+    if (n.blush) p.blushUntil = now() + 2.5;
     $("chatLine").textContent = n.say; say(p, n.say, 4); setFace(p, "happy", 1.2); sfx("boop");
     const box = $("chatOpts"); box.innerHTML = "";
     for (const [text, nxt] of n.options) { const b = document.createElement("button"); b.textContent = `➜ ${text}`; b.onclick = () => chatShow(nxt); box.appendChild(b); }

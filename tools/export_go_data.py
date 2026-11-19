@@ -23,6 +23,9 @@ for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS
         "lines": v["lines"], "colors": bl.kind_colors(k),
         "default": bl.default_color(k),
     }
+    for vk in getattr(bl, "VOICE_KEYS", ()):
+        if v.get(vk):
+            kinds[k][vk] = v[vk]
     if v.get("plush"):
         kinds[k].update(plush=v["plush"], xeye=bool(v.get("xeye")))
 data = {

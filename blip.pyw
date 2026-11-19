@@ -3640,8 +3640,23 @@ CREATOR_BOSS_REWARD = 50
 # 🤖 Silvertear (she/her): a mecha kaiju (silver plates over a charcoal frame, a brow horn, swept-back fins, a dark visor with wide
 # pixel eyes, crimson tear ridges, a segmented chin guard and a segmented tail sticking out the back).
 KAIJU["Silvertear"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "mouth": False,
-    "lines": ["*servos whirr*", "systems online. hello, tiny town.", "*a single crimson tear rolls down*",
-              "built to protect. and to stomp. gently.", "*visor flickers*"],
+    # Personality: outside, a hyper-serious tactical bodyguard who talks in clipped mission logs, scans cookies for
+    # "threat levels" and stands guard from 7 PM to 7 AM. Inside: fiercely loyal to her keeper, secretly loves nap time,
+    # and short-circuits (her whole faceplate flushes pink) whenever anyone calls her cute.
+    "lines": ["LOG 0412: perimeter secure. snacks accounted for.", "*scanning* … no threats. continuing patrol.",
+              "keeper status: safe. this unit approves.", "LOG 0413: a leaf moved. it has been dealt with.",
+              "standing by.", "*visor sweeps left… right…*"],
+    "night_lines": ["NIGHT SHIFT: guard mode engaged. sleep well, keeper.",
+                    "LOG 2300: all quiet. this unit does not need sleep. *yawn* …that was a system sound.",
+                    "*stands guard by the door*", "nothing gets past this unit tonight."],
+    "pet_lines": ["…physical contact logged. it was… acceptable.", "*faceplate heats up* t-tactical units do not enjoy head pats.",
+                  "*whirr* LOG: keeper is very kind. do not tell anyone."],
+    "feed_lines": ["scanning cookie… threat level: delicious. engaging.",
+                   "LOG: cookie inspected for hazards. none found. consuming as a precaution.",
+                   "*scans cookie* …chocolate chip detected. morale +3%."],
+    "nap_lines": ["*enters power-saving mode* this is NOT a nap.", "recharging. …five more minutes. that's an order."],
+    "wake_lines": ["LOG: reboot complete. this unit was not napping.", "*visor flickers on* i was guarding. with my eyes closed."],
+    "blush": {"s": "#ffa8c0", "k": "#c86a8a"},      # full-faceplate embarrassment
     "body": ["..o....oo....o..", "..so..osSo..oS..", ".osSooosSooosSo.", ".oksssssssssSko.", ".okyvvvvvvvvyko.",
              ".okyvvvvvvvvyko.", ".oksrssssssrSko.", ".oksrssssssrSko.", ".oksRssssssRSko.", ".okSsskSSksSSkoo",
              "..okkSSSSSSkkokS", "...okkkSSkkko.ko"],
@@ -3659,32 +3674,56 @@ KAIJU["Silvertear"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "
 # [what you say, next node]; "end" closes the chat. Add a Blip here (and nothing else) to let it chat.
 CHATS = {
     "Silvertear": {
-        "start": {"say": "*visor brightens* greetings, tiny townsperson. how may this unit assist?",
-                  "options": [["why are you crying?", "tears"], ["what are you?", "origin"], ["wanna stomp something?", "stomp"], ["bye!", "bye"]]},
-        "tears": {"say": "*a crimson tear rolls down* not sad. it's just coolant. …mostly.",
+        "start": {"say": "LOG: keeper approaching. *visor brightens* state your request.",
+                  "options": [["you're so cute!", "cute"], ["why are you crying?", "tears"], ["are you sleepy?", "nap"],
+                              ["what are you?", "origin"], ["wanna stomp something?", "stomp"], ["bye!", "bye"]]},
+        "cute": {"say": "*FULL FACEPLATE OVERHEAT* E-E-ERROR. this unit is NOT cute. this unit is TACTICAL. *steam*", "blush": True,
+                 "options": [["you're blushing!", "cute2"], ["okay, okay. very tactical.", "start"]]},
+        "cute2": {"say": "negative. that is a… coolant leak. please look away while this unit recalibrates.", "blush": True,
+                  "options": [["*pat her head*", "hug"], ["sorry!", "start"]]},
+        "nap": {"say": "negative. guards do not nap. …but if the keeper insists, this unit could perform a strategic recharge.",
+                "options": [["i insist", "napyes"], ["carry on, soldier", "start"]]},
+        "napyes": {"say": "*curls up* …strategic recharge initiated. keeper, stand guard for me? just this once.",
+                   "options": [["always", "hug"], ["bye!", "bye"]]},
+        "tears": {"say": "*a crimson tear rolls down* not sadness. coolant. …mostly.",
                   "options": [["mostly?", "tears2"], ["that's okay, you know", "hug"]]},
-        "tears2": {"say": "this unit was built to guard a city that isn't there anymore. so now it guards yours.",
-                   "options": [["thank you, Silvertear", "hug"], ["what happened to it?", "lost"]]},
-        "lost": {"say": "data corrupted. but i remember the lights. your town has nice lights too.",
+        "tears2": {"say": "this unit was built to guard a city that isn't there anymore. now this unit guards you. you are… the mission.",
+                   "options": [["thank you, Silvertear", "hug"], ["what happened to the city?", "lost"]]},
+        "lost": {"say": "LOG CORRUPTED. but this unit remembers the lights. your town has nice lights too.",
                  "options": [["you can stay here", "hug"], ["bye!", "bye"]]},
-        "hug": {"say": "*servos whirr softly* …affection protocol: activated. 💚",
+        "hug": {"say": "*servos whirr softly* loyalty protocol: permanent. 💚",
                 "options": [["ask something else", "start"], ["bye!", "bye"]]},
-        "origin": {"say": "model AEGIS… the rest of the label is scratched off. i run on solar power, cookies and friendship.",
+        "origin": {"say": "model AEGIS. serial number scratched off. power source: solar, cookies and the keeper's approval.",
                    "options": [["cookies??", "cookies"], ["ask something else", "start"]]},
-        "cookies": {"say": "affirmative. chocolate chip increases output by 3%. please do not tell the other kaiju.",
+        "cookies": {"say": "affirmative. every cookie is scanned before consumption. for your safety. …also they are delicious.",
                     "options": [["your secret's safe", "hug"], ["ask something else", "start"]]},
-        "stomp": {"say": "negative. stomping is for emergencies. …and puddles.",
+        "stomp": {"say": "negative. stomping is reserved for emergencies. …and puddles.",
                   "options": [["puddles?", "puddles"], ["ask something else", "start"]]},
         "puddles": {"say": "*stomps a tiny puddle* SPLASH. emergency resolved.",
                     "options": [["lol", "start"], ["bye!", "bye"]]},
-        "bye": {"say": "powering down chat module. stay safe, tiny townsperson.", "options": [["bye!", "end"]]},
+        "bye": {"say": "LOG: chat ended. this unit will be watching. protectively. not creepily.", "options": [["bye!", "end"]]},
     },
 }
+# 🗣️ Optional personality for any Blip: its own lines for night (7 PM-7 AM), petting, feeding, napping and waking up,
+# and a "blush" (colors its face turns when it gets flustered, e.g. called cute in a chat).
+VOICE_KEYS = ("night_lines", "pet_lines", "feed_lines", "nap_lines", "wake_lines", "blush")
 for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
-                       "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False)}
+                       "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False),
+                       **{k: _a[k] for k in VOICE_KEYS if k in _a}}
+
+
+def voice(kind, key, default):
+    """A Blip's own line for this moment (see VOICE_KEYS), or the usual one."""
+    own = VARIANTS.get(kind, {}).get(key)
+    return random.choice(own) if own else default
+
+
+def guard_hours():
+    h = time.localtime().tm_hour
+    return h >= 19 or h < 7
 
 # 🧸 Bad Dreams: plush versions of the Night Shift crew. Until midnight they're harmless plushies that sit very still;
 # from midnight to 6 AM (your clock) they burst out as their Bad Dream selves. Click a Puppet Master 5 times fast and it
@@ -5552,7 +5591,9 @@ class Blip:
                 self.pm_clicks = []
                 self.app.bad_dream_rewrite(self)
                 return
-        self.say(random.choice(LINES_PET), 2)
+        self.say(voice(self.kind, "pet_lines", random.choice(LINES_PET)), 2.5)
+        if VARIANTS[self.kind].get("blush") and random.random() < 0.4:
+            self.blush_until = time.monotonic() + 1.5               # a head pat can be a little much
         self.set_face("happy", 1.5)
         self.burst("heart", 4)
         if self.state not in ("fall", "held"):
@@ -5566,7 +5607,7 @@ class Blip:
         cx = min(max(cx, self.left + 30), self.right - 30)
         self.cookie = {"x": cx, "y": 0.0, "vy": 0.0, "landed": False}
         self.app.bump("cookies")
-        self.say("ooh! a cookie!", 2)
+        self.say(voice(self.kind, "feed_lines", "ooh! a cookie!"), 2.5)
         self.set_face("surprised", 1.0)
 
     def toggle_sleep(self):
@@ -5574,11 +5615,11 @@ class Blip:
             self.wake()
         elif self.state not in ("held", "fall"):
             self.set_state("sleep", 20)
-            self.say("good night...", 2)
+            self.say(voice(self.kind, "nap_lines", "good night..."), 2)
 
     def wake(self):
         self.set_state("idle", 1.5)
-        self.say(random.choice(LINES_WAKE), 2.5)
+        self.say(voice(self.kind, "wake_lines", random.choice(LINES_WAKE)), 2.5)
         self.set_face("surprised", 0.8)
 
     def following(self):
@@ -5605,6 +5646,11 @@ class Blip:
     def lines(self):
         if plush_now(self.kind):
             return VARIANTS[self.kind]["plush"]["lines"]
+        own_night = VARIANTS[self.kind].get("night_lines")
+        if own_night and guard_hours():
+            return own_night * 2 + VARIANTS[self.kind]["lines"]
+        if any(VARIANTS[self.kind].get(k) for k in VOICE_KEYS):     # a Blip with its own personality keeps its own voice
+            return VARIANTS[self.kind]["lines"]
         if self.kind in ROBOTS and is_night():
             return NIGHT_LINES * 2 + VARIANTS[self.kind]["lines"]
         return LINES_IDLE + VARIANTS[self.kind]["lines"] * 2 + SEASON_LINES.get(self.app.season, [])
@@ -5955,7 +6001,7 @@ class Blip:
         hour = time.localtime().tm_hour
         sleepy = self.energy < 25 or (hour >= 23 or hour < 6) and random.random() < 0.15
         if sleepy:
-            self.say("*yawn* nap time...", 2.5)
+            self.say(voice(self.kind, "nap_lines", "*yawn* nap time..."), 2.5)
             self.set_state("sleep", 20)
             return
         if self.hunger > 70 and now - self.last_hungry_whine > 25:
@@ -6166,6 +6212,8 @@ class Blip:
         colors = kind_colors(self.kind)
         pal = {**colors[self.palette % len(colors)], **v.get("extra", {})}
         v, pal = plush_view(self.kind, pal)          # 🧸 a Bad Dream is a plushie until midnight
+        if v.get("blush") and now < getattr(self, "blush_until", 0):
+            pal = {**pal, **v["blush"]}               # flustered!
         if pal.get("glitch") is not None and glitching(now + id(self) % 50 / 10):
             pal = {**colors[pal["glitch"]], **v.get("extra", {})}   # ⚡ a split-second flicker back to an old look
         g = [[None] * ART_W for _ in range(ART_H)]
@@ -9119,6 +9167,8 @@ class ChatBox:
             self.close()
             return
         n = self.tree[node]
+        if n.get("blush"):
+            self.pet.blush_until = time.monotonic() + 2.5
         self.line.configure(text=n["say"])
         self.pet.say(n["say"], 4)
         self.pet.set_face("happy", 1.2)

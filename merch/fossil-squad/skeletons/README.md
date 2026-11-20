@@ -1,47 +1,51 @@
-# 🦖 Amber Age X skeletons (prototype)
+# 🦖 Amber Age X: printable parts (prototype)
 
 `python3 merch/fossil-squad/make_skeletons.py` rebuilds everything and re-runs the fit checks.
 
+Each Fossil Blip is a voxel Blip shell with a little robot folded up inside. The shell is a front half (the face) and a
+back half. **To transform, you have to split it:** pull the back half off, swing the legs down, and clip it back on.
+
 | File | Print | What it is |
 |---|---|---|
-| `arm_frame.stl` | ×2 | Tricera-Shield and Ptera-Blade: chest, two legs, head, two arms (6 parts) |
-| `leg_frame.stl` | ×2 | Stego-Stomp and Brachio-Pillar: the same bot plus a thigh socket, a head pocket and two flip-out toe plates (8 parts) |
-| `torso_frame.stl` | ×1 | Tyranno-King: torso, flip-up head, two fold-up mini-bot legs, two arms, two shoulder axles, two hip pegs (10 parts) |
-| `face_*.stl` | one each | The five Blip faces (voxel relief); each spins on a filament pin |
+| `../shells/tyranno_king.stl` | ×1 | Tyranno-King's front and back halves (77 × 58 × 39 mm closed) |
+| `../shells/tricera_shield.stl`, `ptera_blade.stl`, `stego_stomp.stl`, `brachio_pillar.stl` | one each | The four limb Blips' halves (46 × 34 × 31 mm closed; Brachio-Pillar is 40 wide) |
+| `limb_frame.stl` | ×4 | The robot inside each limb Blip: a chest and two legs |
+| `torso_frame.stl` | ×1 | Tyranno-King's robot: the torso, the sliding crowned head, two legs, two shoulder axles and two hip joints |
 
-Every part is already laid out in its print orientation, with no supports. The only overhangs are the tops of small
-pin holes, which bridge fine. Print in PLA, 0.12–0.16 mm layers for the small parts, 3 walls. Combined, Amber Age X
-is about 11 cm tall.
+Every part is laid out in its print orientation, with no supports.
+- **Front halves** print face up.
+- **Back halves** print rim down. The ceiling inside them bridges (up to about 4 cm on Tyranno-King). A little droop there
+  is hidden.
 
-## Pins
-- **Hinges:** cut 1.75 mm filament into pins. Push one through each hinge and trim it flush. The holes are 1.8 mm, so
-  the fit holds a pose by friction. If a hole is tight, run a 1.8 mm drill through it.
-- **Face panels:** each face spins on a short filament pin pushed into the centre of the chest.
-- **Shoulder axles and hip pegs:** the printed 5 mm pins. They press into the torso and turn in the limbs' 5.2 mm
-  holes, which is the 360° swivel.
+Use PLA, 0.2 mm layers for the shells, 0.12–0.16 mm for the frames, and 3 walls. Combined, Amber Age X is about
+11 cm tall and 17 cm wide.
 
-| Bot | Hinge pins |
+## Pins (1.75 mm filament)
+- **Hinges:** the hip of every robot (one pin each). Push a piece through and trim it flush. The holes are 1.8 mm, so the
+  pin holds by friction. If a hole is tight, run a 1.8 mm drill through it.
+- **The face:** push a short pin into the hole in the chest front (about 3 mm sticking out), then press the front half
+  onto it.
+- **Rim pins:** glue a 6 mm piece into each of the two holes in the back of the front half, with 3 mm sticking out. The
+  back half clips onto them.
+
+## Forms
+| Form | How |
 |---|---|
-| Limb bot | 5: hip, head, two arms, face; plus two toe pins on a leg frame |
-| Torso | 5: head, mini-bot legs, two arms (share one pin per side), face |
+| Blip | Shell closed, legs folded up behind the chest inside it. Tyranno-King's crown is pushed down. |
+| Walker | Pull the back half off, swing the legs down, and clip the back half on. The legs come out of the notch underneath. On Tyranno-King, pull the crown up out of the hatch. |
+| Amber Age X | Tyranno-King's legs stay folded inside and its crown is up. For each leg, the hip joint's short end goes in the leg Blip's top hole, and its long end goes through the slot under Tyranno-King into the hip. The shoulder axles go through Tyranno-King's side holes, and each arm Blip's side hole pushes onto one. |
 
-## Modes
-| Mode | How |
-|---|---|
-| Emblem | Swing the legs back and up behind the chest and fold the head back on top of them. Only the face shows. |
-| Mini-bot | Legs down, head up. |
-| Arm | Turn the bot upside down. The legs are now the upper arm and the chest the forearm. Spin the face on its pin so it's upright. The head is the fist. Slide both feet onto the torso's shoulder axle: that locks the legs together and is the 360° bicep swivel. The hip hinge is the elbow. |
-| Leg | The bot stands as it is (chest = thigh, legs = shin). Fold the head down into the pocket in the back of the chest, push the chest's top socket onto a torso hip peg (the 360° thigh swivel) and flip the toe plates down. The hip hinge is the knee. |
-| Torso | Fold the mini-bot legs up behind and swing its arms up into gold shoulder pauldrons. Flip the crowned head up. |
+Left and right as you look at it from the front: Tricera-Shield is the left arm and Ptera-Blade the right arm.
+Stego-Stomp is the left leg and Brachio-Pillar the right leg.
 
 ## Checked in the model
-- Every part, in every mode, is clear of every other part.
-- The full Amber Age X combine is clear.
-- The axles and pegs sit in their holes.
+- Every Blip's robot fits inside its shell in Blip mode, with 0.6 mm clearance and 1.6 mm walls.
+- The back half pulls straight off. It also clips back on with the legs down (walker).
+- The full Amber Age X combine is clear: every part, axle and joint is clear of everything else.
 
-Still to come:
-- the spring-loaded push-button head (it's a manual flip-up for now);
-- the hip ratchets;
-- the face splitting into shoulder plates.
+## Not in yet
+- The spring-loaded crown (it slides up by hand for now).
+- The hip ratchets.
+- Elbows and knees: in this version the legs only fold in and out.
 
-Test-print one arm frame first.
+Test-print one limb Blip first: Tricera-Shield's shell and one `limb_frame.stl`.

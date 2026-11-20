@@ -12,12 +12,14 @@ It's its own set, sold alongside Series 1.
 | Fossil-04 Stego-Stomp | black with blue & gold dorsal plates | left leg: dorsal-plate shin, flip-out foot |
 | Fossil-05 Brachio-Pillar | blue with a gold crest & jaw armor | right leg: wide flip-out boot |
 
-**Engineering:** only three skeletons are needed.
-- **Torso core:** the spring-loaded push-button head, shoulder ports, and outward-flaring hip ratchets.
-- **Arm frame:** shared by Tricera and Ptera. It folds emblem → bot → arm, with a 360° bicep swivel and a 90° elbow.
-- **Leg frame:** shared by Stego and Brachio, with a 360° thigh swivel, a 90° knee and flip-out toe/heel stabilizers.
-
-Only the snap-on dino face panels differ between the two arms and between the two legs.
+**Engineering (current design: shell-formers).**
+- Every Blip is a full voxel Blip shell (a front half with the face and a hollow back half) with its robot folded up
+  inside, so in Blip mode none of the robot shows.
+- To transform you have to split it: the back half pulls off, the legs swing down, and the back half clips back on.
+- Only two skeletons are needed:
+  - **Limb frame** (all four limb Blips): a chest and two legs, a top socket for the hip joint, and side holes for the
+    shoulder axle.
+  - **Torso frame** (Tyranno-King): a sliding crowned head, two legs, and holes for the shoulder axles and hip joints.
 
 ## Naming and colors
 - **The combiner's name: settled.** The combined robot is **Amber Age X**, an original name ("Megazord" is a
@@ -32,25 +34,19 @@ Only the snap-on dino face panels differ between the two arms and between the tw
    - Next: refine them, put them in the game, and make voxel display figures.
 2. **Non-transforming combiner.** Five chunky voxel parts that snap together, to settle proportions, connections and
    standing balance.
-3. **Full triple change** on the three skeletons (**first prototype done:** `skeletons/`, `make_skeletons.py`): folding, swivels, ratchets, the spring head and the stabilizers.
-   Prototype one skeleton at a time and test-print it before building on it.
+3. **Full triple change: first prototype done** (`make_skeletons.py`, `shells/`, `skeletons/`,
+   `instructions/`). Blip → walker → Amber Age X, checked clear in the model.
+   - Still to come: the spring-loaded crown, hip ratchets, and knees/elbows.
+   - Test-print one limb Blip before building on it.
 
-## How each Blip folds (no extra parts: each robot mode contains its own limb)
-`tricera_three_modes.png` shows Tricera-Shield going emblem → mini-bot → left arm.
+## How each Blip changes
+`limb_modes.png` and `tyranno_modes.png` show it; `amber_age_x_preview.png` shows the combine.
 
-- **Arm frame (Tricera-Shield, Ptera-Blade)**
+| Form | Limb Blips (Tricera-Shield, Ptera-Blade, Stego-Stomp, Brachio-Pillar) | Tyranno-King |
+|---|---|---|
+| Blip | Shell closed, robot folded inside | Shell closed, robot folded inside, crown pushed down |
+| Walker | Split it, legs down, back half back on: legs stick out underneath | Same, and the crown pulls up out of the hatch on top |
+| Amber Age X | Arms hang on shoulder axles through their side holes (swing all the way round). Legs hang on L-shaped hip joints in their top holes (swivel) | The chest: legs folded inside, crown up |
 
-  | Form | What happens |
-  |---|---|
-  | Emblem | The face in front, the bot folded flat behind it |
-  | Mini-bot | The face splits into chest and shoulder pieces (Tricera's frill becomes shoulder shields, Ptera's crest becomes wing panels), the legs swing down and the head pops up |
-  | Arm | The bot's two legs lock together as the upper arm and its chest becomes the forearm, with the face out front as the shield or blade. The head tucks into the chest, the bot's arms fold flat on the sides and a hand folds out. The bot's waist and hip joints become the bicep swivel and the elbow |
-
-- **Leg frame (Stego-Stomp, Brachio-Pillar)**
-  - The bot's legs lock together as the shin and its torso becomes the thigh.
-  - The bot's arms fold flat and its feet fold out into the stabilizer feet.
-  - The face ends up as the shin armor plate.
-  - The bot's hip becomes the thigh swivel and its knee becomes the robot's knee.
-- **Torso (Tyranno-King)**
-  - The bot's legs fold up into the hips (the leg sockets) and its arms fold back into the shoulder ports.
-  - The face stays as the chest emblem, and the crowned head springs up out of the shoulders.
+The earlier idea (an open mini-bot with arms and a head, the face splitting into shoulder plates) was replaced by the
+shell design on request: "I wanted the whole frame covered by the Blip and then you have to split it to transform it".

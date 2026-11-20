@@ -17,7 +17,7 @@ Extras (not in the series yet): `robo_bear_figure.stl`, `boo_figure.stl`, `spike
 **The look:** a soft vinyl-toy body about 40 × 37 × 16 mm. The sprite's pixel outline gets slightly rounded corners and the
 front swells into a smooth dome. The sprite's details are carved into it: sunk eyes and mouth, grooves for inner outlines,
 raised bellies, teeth and highlights, and a recessed visor with the eyes standing out. Arms are short, soft Blip nubs with round
-paws. Legs are chunky boots.
+paws. Legs are stubby Blip feet under the body, so the whole sprite is there.
 
 **Printing:** each STL is one plate:
 - the figure on its back;
@@ -36,11 +36,11 @@ The whole joint sits within about 7 mm of the body.
 1. **Shoulder keys:** push each key's pointed peg into a shoulder hole until it clicks. The flat round end sticks out.
 2. **Arms:** slide the slot in the top of the arm over the key's round end, then push a **small** pin through from the
    front until it clicks out the back.
-3. **Legs:** push a **big** pin through the leg from the outside (the head drops into the pocket), hold the leg in its
-   hip notch with the toe forward and press until it clicks.
+3. **Legs:** push a **big** pin through the leg from the outside (the head drops into the pocket), hold the leg against
+   the little tab under the body (toe forward) and press until the pin clicks out on the tab's inner side.
 
 See `joint_lock_cutaway.png` for how a pin locks. Everything holds its pose by friction: the arms swivel all the way
-round and lift from hanging straight down to straight up, and the legs swing about 80° each way.
+round and lift from hanging straight down to straight up, and the legs swing about 60° back and 90° forward.
 
 **Tips:**
 - **A pin too hard to push in:** press with a flat tool (the back of a pen), or sand the barb's slope a little.

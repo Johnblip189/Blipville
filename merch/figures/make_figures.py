@@ -9,12 +9,13 @@ pins (3 big for the hips, 3 small for the shoulders, one of each spare).
   silhouette (with slightly rounded corners) and the front swells into a smooth rounded dome. The sprite's details are carved into the dome: eyes and mouth sunk in, darker patches and
   inner outlines sunk a little, light patches (bellies, teeth, highlights) raised a little, visors recessed with the
   eyes glowing out of them. Every layer is smaller than the one under it, so nothing overhangs.
-* Limbs: short, soft Blip nub arms with round paws and chunky legs with boots, all with softened edges.
+* Limbs: short, soft Blip nub arms with round paws and stubby feet, all with softened edges. The body keeps the whole
+  sprite and sits on top of the feet; each foot pins onto a little tab hidden under the body.
 * 💪 Action-figure shoulders, kept small: a flat shoulder key with a snap peg built in clicks into the body's shoulder
   socket and swivels there (the arm swings forward and back, all the way round). Its round end sits in a fork in the top of
   the arm, with a small snap pin through it as a hinge (the arm lifts out to the side, all the way up). The key prints
   flat, so its peg is as strong as the pins.
-* 🔒 Locking joints: snap pins. At the hips, a pin goes through the leg's hole (its head sits in a keyed pocket
+* 🔒 Locking joints: snap pins. At the hips, a pin goes through the foot's hole (its head sits in a keyed pocket
   on the outside, so the limb turns the pin) and into the body, where its split barb clicks open in a chamber behind a
   3 mm wall: it can't be pulled back out, but it turns, with a little friction to hold a pose. The pins print lying flat,
   so their springy halves bend along the print layers (pegs printed standing up snapped at the layer lines). The holes and
@@ -66,7 +67,9 @@ HX = -(COLLAR + YOKE_GAP + TONGUE_R)    # hinge axis, measured out from the body
 ZC = 6.0                    # height of every joint axis above the bed (= inside the body's thickness)
 # limbs
 ARM_W, ARM_L, ARM_T = 5.6, 11.5, 5.8     # stubby Blip nub arms: width, length (hinge to tip), thickness
-LEG_H, NOTCH_H = 7.0, 8.5   # body height off the ground, hip notch height
+LEG_H = 10.0                # the body sits this high, on top of the legs (the whole sprite stays: no notches)
+LEG_R = 3.75                # the leg's round top, which turns under the body
+LUG_R = 3.4                 # the hip tab under the body that each leg pins onto (hidden between the legs)
 LEG_X, LEG_Z, TOE = 5.5, 6.5, 3.5         # leg thickness (side to side), depth (front to back), toe sticking forward
 LEG_COLS = (3, 11)          # left / right leg under these sprite columns (where the sprite's feet are)
 GAP = 0.5
@@ -246,7 +249,7 @@ def body_and_joints(sprite):
     cr = max(max(c for c, ch in enumerate(rows[r]) if ch != ".") for r in span)
     xl, xr = cl * PX, (cr + 1) * PX
     sy = top_y - (shoulder + 0.5) * PX
-    while sy - CH_D * 0.72 < LEG_H + NOTCH_H + 1 and shoulder > ey:   # keep the shoulder chambers clear of the hips
+    while sy - CH_D * 0.72 < LEG_H + 1 and shoulder > ey:            # keep the shoulder chambers above the body's bottom
         shoulder -= 1
         sy = top_y - (shoulder + 0.5) * PX
     keep = np.array([[ch != "." for ch in row] for row in rows])
@@ -267,13 +270,20 @@ def body_and_joints(sprite):
     body = heightfield(fine, h, 0, top_y, cell)
     sil = soften(rects_cs(keep, 0, top_y, PX), ROUND)
     body = body ^ sil.extrude(40)
-    # hips: a notch at each bottom corner (open to the side, front and back) with a socket in its inner wall
-    hy = LEG_H + NOTCH_H / 2
-    hl = LEG_COLS[0] * PX + LEG_X + COLLAR + GAP / 2
-    hr = LEG_COLS[1] * PX - COLLAR - GAP / 2
-    notches = union([box(-5, LEG_H - 1, -1, hl, LEG_H + NOTCH_H, 30), box(hr, LEG_H - 1, -1, 16 * PX + 5, LEG_H + NOTCH_H, 30)])
-    sockets = union([socket(xl, +1, sy), socket(xr, -1, sy), socket(hl, +1, hy), socket(hr, -1, hy)])
-    body = body - notches - sockets
+    # (the body sits LEG_H up, on top of the feet)
+    # hips: a tab hangs under the body on the inner side of each leg; the leg's pin goes through it and the barbs catch on
+    # its inner face. The tab's outline (seen from the side) is round at the front and 45 degrees underneath (it prints
+    # face up), so nothing overhangs.
+    hy = LEG_H - LEG_R - GAP                                              # hip axis, just under the body
+    hl = LEG_COLS[0] * PX + LEG_X + COLLAR                                # left tab's outer face
+    hr = LEG_COLS[1] * PX - COLLAR                                        # right tab's outer face
+    r = LUG_R
+    arc = [(hy + r * np.cos(a), ZC + r * np.sin(a)) for a in np.linspace(np.pi / 2, 5 * np.pi / 4, 24)]
+    tip = (hy, ZC - r * np.sqrt(2))
+    prof = mf.CrossSection([[(LEG_H + 1.5, ZC + r)] + arc + [tip, (hy + tip[1], 0.0), (LEG_H + 1.5, 0.0)]], mf.FillRule.NonZero)
+    tabs = union([_along_x(prof, hl, hl + WALL), _along_x(prof, hr - WALL, hr)])
+    holes = union([_along_x(teardrop_cs(hy, ZC, BODY_HOLE), hl - 1, hl + WALL + 1), _along_x(teardrop_cs(hy, ZC, BODY_HOLE), hr - WALL - 1, hr + 1)])
+    body = (body + tabs) - socket(xl, +1, sy) - socket(xr, -1, sy) - holes
     return body, (xl, xr, sy, hl, hr, hy), top_y
 
 
@@ -373,9 +383,9 @@ def yoke(x0=0.0, y0=0.0):
 
 def leg(x0, y0, hip, toe=1):
     """One leg lying flat (outer side down), inner side up. Drawn as (u, v) = (front-back, up) from the floor (v = 0) to the hip
-    pin (v = hip): a round top that turns inside the hip notch, a shin and a boot with the toe forward. Left and right are
+    pin (v = hip): a round top that turns just under the body, a shin and a boot with the toe forward. Left and right are
     mirror images (toe = -1 / +1), so both toes point forward once they're on."""
-    rd = NOTCH_H / 2 - GAP
+    rd = LEG_R
     top = mf.CrossSection.circle(rd, SEG).translate([0, hip])
     shin = mf.CrossSection.square([LEG_Z, hip]).translate([-LEG_Z / 2, PX])
     boot = mf.CrossSection.square([LEG_Z + TOE - 1.5, PX + 1.2]).translate([-LEG_Z / 2 - (TOE - 1.5 if toe < 0 else 0), 0])

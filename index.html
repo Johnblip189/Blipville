@@ -84,6 +84,28 @@
   .merchgrid .stars { color: var(--gold); font-size: 13px; }
   .merchgrid .wip { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,.45); color: var(--muted); font-size: 11px;
                     font-weight: 800; padding: 2px 7px; border-radius: 8px; }
+  button.card { font: inherit; color: inherit; border: 0; cursor: pointer; width: 100%; transition: transform .12s, box-shadow .12s; }
+  button.card:hover, button.card:focus-visible { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--accent); outline: none; }
+  .merchgrid .view { display: inline-block; margin-top: 6px; font-size: 12px; font-weight: 800; color: #9ad8ff; }
+  #merchView { border: 0; padding: 0; border-radius: 20px; background: var(--card); color: var(--text); width: min(860px, calc(100vw - 32px));
+               max-height: calc(100vh - 32px); overflow: auto; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+  #merchView::backdrop { background: rgba(10, 8, 20, .75); }
+  #merchView[open] { display: grid; grid-template-columns: 1.3fr 1fr; }
+  .mvStage { position: relative; background: radial-gradient(circle at 50% 40%, #3b3266, #1b1730); min-height: 360px; }
+  #mvCanvas, #mvCanvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  #mvLoad { position: absolute; inset: auto 0 45% 0; text-align: center; margin: 0; }
+  .mvHint { position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; margin: 0; pointer-events: none; }
+  .mvInfo { position: relative; padding: 22px 22px 18px; }
+  .mvInfo h3 { margin: 6px 0 2px; font-size: 26px; }
+  .mvInfo .stars { color: var(--gold); font-weight: 700; }
+  .mvInfo p { color: var(--muted); }
+  .mvClose { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 12px; border: 0; background: #352e57;
+             color: var(--text); font-size: 18px; cursor: pointer; }
+  .wip2 { display: inline-block; background: rgba(0,0,0,.35); color: var(--muted); font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 8px; }
+  .mvPrice { display: flex; flex-direction: column; gap: 2px; margin: 14px 0 12px; }
+  .mvPrice b { font-size: 24px; color: var(--gold); }
+  .mvBuy[disabled] { opacity: .6; cursor: not-allowed; transform: none; width: 100%; justify-content: center; }
+  @media (max-width: 680px) { #merchView[open] { grid-template-columns: 1fr; } .mvStage { min-height: 300px; } }
 </style>
 </head>
 <body>
@@ -199,21 +221,36 @@
   <section class="merch" id="merch">
     <h2>🧸 Blipville merch <span class="badge">IN PROGRESS</span></h2>
     <p class="lead">Real Blips you can hold! These are still being designed and test-printed, so <b>nothing is for sale yet</b>,
-       and the pictures are 3D previews, not the final toys.</p>
+       and the pictures are 3D previews, not the final toys. Tap one to spin it around in 3D.</p>
     <div class="merchgrid">
-      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/silvertear03.png" alt="3D model of the Silvertear-03 figure" loading="lazy"><b>Silvertear-03</b><span class="stars">★★★ ultra rare</span><p>Figure + display base</p></div>
-      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/blip.png" alt="3D model of the Blip figure" loading="lazy"><b>Blip</b><span class="stars">★★ rare</span><p>Figure + display base</p></div>
-      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/trex.png" alt="3D model of the T-Rex figure" loading="lazy"><b>T-Rex</b><span class="stars">★ regular</span><p>Figure + display base</p></div>
-      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/wendigo.png" alt="3D model of the Wendigo figure" loading="lazy"><b>Wendigo</b><span class="stars">★ regular</span><p>Figure + display base</p></div>
-      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/bun.png" alt="3D model of the Bun figure" loading="lazy"><b>Bun</b><span class="stars">★ regular</span><p>Figure + display base</p></div>
-      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/beta-buddy.png" alt="3D model of the Beta Buddy figure" loading="lazy"><b>Beta Buddy</b><span class="stars">★ regular</span><p>Figure + display base</p></div>
-      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/trex-chomper.png" alt="3D model of the T-Rex Chomper toy" loading="lazy"><b>T-Rex Chomper</b><span class="stars">fidget toy</span><p>Press the tail: chomp!</p></div>
-      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/blip-chomper.png" alt="3D model of the Blip Chomper toy" loading="lazy"><b>Blip Chomper</b><span class="stars">fidget toy</span><p>Press the tail: chomp!</p></div>
+      <button class="card" type="button" data-item="silvertear03"><span class="wip">🚧 in progress</span><img src="docs/merch/silvertear03.png" alt="" loading="lazy"><b>Silvertear-03</b><span class="stars">★★★ ultra rare</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
+      <button class="card" type="button" data-item="blip"><span class="wip">🚧 in progress</span><img src="docs/merch/blip.png" alt="" loading="lazy"><b>Blip</b><span class="stars">★★ rare</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
+      <button class="card" type="button" data-item="trex"><span class="wip">🚧 in progress</span><img src="docs/merch/trex.png" alt="" loading="lazy"><b>T-Rex</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
+      <button class="card" type="button" data-item="wendigo"><span class="wip">🚧 in progress</span><img src="docs/merch/wendigo.png" alt="" loading="lazy"><b>Wendigo</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
+      <button class="card" type="button" data-item="bun"><span class="wip">🚧 in progress</span><img src="docs/merch/bun.png" alt="" loading="lazy"><b>Bun</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
+      <button class="card" type="button" data-item="beta-buddy"><span class="wip">🚧 in progress</span><img src="docs/merch/beta-buddy.png" alt="" loading="lazy"><b>Beta Buddy</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
+      <button class="card" type="button" data-item="trex-chomper"><span class="wip">🚧 in progress</span><img src="docs/merch/trex-chomper.png" alt="" loading="lazy"><b>T-Rex Chomper</b><span class="stars">fidget toy</span><p>Press the tail: chomp!</p><span class="view">🔍 View in 3D</span></button>
+      <button class="card" type="button" data-item="blip-chomper"><span class="wip">🚧 in progress</span><img src="docs/merch/blip-chomper.png" alt="" loading="lazy"><b>Blip Chomper</b><span class="stars">fidget toy</span><p>Press the tail: chomp!</p><span class="view">🔍 View in 3D</span></button>
     </div>
-    <p class="small"><b>Series 1 figures:</b> about 4 cm wide, each on its own display base with its name and rarity stars. Each one will come on a
+    <p class="small"><b>Series 1 figures</b> come in <b>mystery boxes ($4.99 each)</b>: you won't know which Blip you get until you open it! About 4 cm wide, each on its own display base with its name and rarity stars. Each one will come on a
        collectible card with a code for a <b>merch-only color</b> in the game. Silvertear-03 joins the game itself in 1.1.
        Want to hear when they're ready? <a href="https://discord.gg/Q3zmYakNZT">Join the Discord</a>.</p>
   </section>
+
+  <dialog id="merchView" aria-labelledby="mvName">
+    <div class="mvStage"><div id="mvCanvas"></div><p id="mvLoad" class="small">Loading 3D model…</p>
+      <p class="mvHint small">Drag to spin · scroll or pinch to zoom</p></div>
+    <div class="mvInfo">
+      <button class="mvClose" type="button" aria-label="Close">✕</button>
+      <span class="wip2">🚧 in progress</span>
+      <h3 id="mvName"></h3>
+      <div id="mvStars" class="stars"></div>
+      <p id="mvBio"></p>
+      <div class="mvPrice"><b id="mvPrice"></b><span id="mvPriceNote" class="small"></span></div>
+      <button class="btn mvBuy" type="button" disabled>🚧 Not for sale yet</button>
+      <p class="small" id="mvMore"></p>
+    </div>
+  </dialog>
 
   <h2>Play anywhere</h2>
   <div class="where">
@@ -324,6 +361,75 @@
   addEventListener("focus", back);
   document.addEventListener("visibilitychange", () => { if (document.hidden) away = true; else back(); });
   fetch("docs/redraw/boxes.json").then((r) => r.json()).then((j) => { boxes = j; if (steps) all().forEach((img) => paint(img, false)); }).catch(() => {});
+})();
+</script>
+<script>
+// 🧸 Merch viewer: tap an item to spin its 3D model. Nothing is for sale yet (the buy button stays off).
+(() => {
+  const BOX = { price: "Mystery box · $4.99", note: "Each box holds one random Series 1 figure on its display base, plus a code for a merch-only color in Blipville." };
+  const TBA = { price: "Price TBA", note: "Not priced yet." };
+  const ITEMS = {
+    "silvertear03": { name: "Silvertear-03", stars: "★★★ Ultra rare", bio: "Tactical bodyguard. Secretly loves naps. Joins the game in 1.1!", ...BOX },
+    "blip": { name: "Blip", stars: "★★ Rare", bio: "The friendliest Blip in town.", ...BOX },
+    "trex": { name: "T-Rex", stars: "★ Regular", bio: "Tiny arms. Huge heart.", ...BOX },
+    "wendigo": { name: "Wendigo", stars: "★ Regular", bio: "Spooky antlers, gentle soul.", ...BOX },
+    "bun": { name: "Bun", stars: "★ Regular", bio: "Shy, soft and very good at hiding.", ...BOX },
+    "beta-buddy": { name: "Beta Buddy", stars: "★ Regular", bio: "Our very first tester. Still finding bugs.", ...BOX },
+    "trex-chomper": { name: "T-Rex Chomper", stars: "Fidget toy", bio: "Press the tail and the jaw snaps open, let go and it chomps shut. Prints in one piece, hinge and spring included.", ...TBA },
+    "blip-chomper": { name: "Blip Chomper", stars: "Fidget toy", bio: "Blip's head on a springy chomper: press the tail, it opens wide.", ...TBA },
+  };
+  const dlg = document.getElementById("merchView"), $ = (id) => document.getElementById(id);
+  let libs = null, three = null;
+  const load = (src) => new Promise((ok, bad) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = bad; document.head.appendChild(s); });
+  const getLibs = () => libs || (libs = load("docs/merch/viewer/three.min.js").then(() => Promise.all([
+    load("docs/merch/viewer/GLTFLoader.js"), load("docs/merch/viewer/OrbitControls.js")])));
+  function setup() {
+    const T = window.THREE, host = $("mvCanvas");
+    const renderer = new T.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.outputEncoding = T.sRGBEncoding;
+    host.appendChild(renderer.domElement);
+    const scene = new T.Scene(), camera = new T.PerspectiveCamera(35, 1, 1, 2000);
+    scene.add(new T.HemisphereLight(0xffffff, 0x302850, 0.9));
+    const key = new T.DirectionalLight(0xffffff, 0.9); key.position.set(60, 90, 120); scene.add(key);
+    const rim = new T.DirectionalLight(0xb8a8ff, 0.5); rim.position.set(-80, 40, -60); scene.add(rim);
+    const controls = new T.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.autoRotate = true; controls.autoRotateSpeed = 2.2; controls.enablePan = false;
+    controls.addEventListener("start", () => { controls.autoRotate = false; });
+    const size = () => { const r = host.getBoundingClientRect(); renderer.setSize(r.width, r.height, false); camera.aspect = r.width / Math.max(1, r.height); camera.updateProjectionMatrix(); };
+    new ResizeObserver(size).observe(host);
+    let running = false;
+    const tick = () => { if (!running) return; controls.update(); renderer.render(scene, camera); requestAnimationFrame(tick); };
+    return { T, scene, camera, controls, size, model: null, cache: {},
+             start() { if (!running) { running = true; size(); tick(); } }, stop() { running = false; } };
+  }
+  async function show(id) {
+    const it = ITEMS[id]; if (!it) return;
+    $("mvName").textContent = it.name; $("mvStars").textContent = it.stars; $("mvBio").textContent = it.bio;
+    $("mvPrice").textContent = it.price; $("mvPriceNote").textContent = it.note;
+    $("mvMore").innerHTML = 'Want to hear when they\'re ready? <a href="https://discord.gg/Q3zmYakNZT">Join the Discord</a>.';
+    $("mvLoad").textContent = "Loading 3D model…"; $("mvLoad").hidden = false;
+    dlg.showModal();
+    try {
+      await getLibs();
+      three = three || setup();
+      const v = three;
+      if (v.model) { v.scene.remove(v.model); v.model = null; }
+      const gltf = v.cache[id] || (v.cache[id] = await new Promise((ok, bad) => new v.T.GLTFLoader().load(`docs/merch/models/${id}.glb?v=1`, ok, undefined, bad)));
+      v.model = gltf.scene; v.scene.add(v.model);
+      const box = new v.T.Box3().setFromObject(v.model), r = box.getSize(new v.T.Vector3()).length() / 2;
+      v.controls.target.set(0, 0, 0); v.camera.position.set(r * 0.9, r * 0.75, r * 2.6);
+      v.controls.minDistance = r * 1.2; v.controls.maxDistance = r * 5; v.controls.autoRotate = true;
+      $("mvLoad").hidden = true; v.start();
+    } catch (e) {
+      $("mvLoad").textContent = "Couldn't load the 3D model. Try again in a bit!";
+    }
+  }
+  document.querySelectorAll(".merchgrid [data-item]").forEach((b) => b.addEventListener("click", () => show(b.dataset.item)));
+  dlg.querySelector(".mvClose").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });       // tap outside to close
+  dlg.addEventListener("close", () => { if (three) three.stop(); });
+  window.blipMerch = { show, items: ITEMS };
 })();
 </script>
 </body>

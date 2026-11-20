@@ -16,8 +16,8 @@ Extras (not in the series yet): `robo_bear_figure.stl`, `boo_figure.stl`, `spike
 
 **The look:** a soft vinyl-toy body about 40 × 37 × 16 mm. The sprite's pixel outline gets slightly rounded corners and the
 front swells into a smooth dome. The sprite's details are carved into it: sunk eyes and mouth, grooves for inner outlines,
-raised bellies, teeth and highlights, and a recessed visor with the eyes standing out. Arms are rounded, with mitten hands
-and a thumb. Legs are chunky boots.
+raised bellies, teeth and highlights, and a recessed visor with the eyes standing out. Arms are short, soft Blip nubs with round
+paws. Legs are chunky boots.
 
 **Printing:** each STL is one plate:
 - the figure on its back;

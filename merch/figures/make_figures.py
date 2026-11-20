@@ -9,7 +9,7 @@ pins (5 long + 3 short, one of each spare).
   silhouette (with slightly rounded corners) and the front swells into a smooth rounded dome. The sprite's details are carved into the dome: eyes and mouth sunk in, darker patches and
   inner outlines sunk a little, light patches (bellies, teeth, highlights) raised a little, visors recessed with the
   eyes glowing out of them. Every layer is smaller than the one under it, so nothing overhangs.
-* Limbs: rounded arms with mitten hands and chunky legs with boots, all with softened edges.
+* Limbs: short, soft Blip nub arms with round paws and chunky legs with boots, all with softened edges.
 * 💪 Action-figure shoulders: each arm hangs from a yoke. The yoke swivels in the body's shoulder socket (the arm swings
   forward and back, all the way round) and the arm hinges in the yoke's fork (it lifts out to the side, all the way up).
   The yoke prints standing on its edge, so both of its pin holes print as clean teardrops.
@@ -62,7 +62,7 @@ TONGUE_R = 3.6              # the tongue is thicker than the arm (7.2 mm) so the
 TONGUE_LEN = 5.6            # the arm stays tongue-thin this far below the hinge (clears the fork when it lifts)
 ZC = 6.0                    # height of every joint axis above the bed (= inside the body's thickness)
 # limbs
-ARM_W, ARM_L, ARM_T = 7.0, 16.0, 5.5     # arm width, longest length (shoulder centre to fingertips), thickness
+ARM_W, ARM_L, ARM_T = 5.6, 11.5, 5.5     # stubby Blip nub arms: width, length (hinge to tip), thickness
 LEG_H, NOTCH_H = 7.0, 8.5   # body height off the ground, hip notch height
 LEG_X, LEG_Z, TOE = 5.5, 6.5, 3.5         # leg thickness (side to side), depth (front to back), toe sticking forward
 LEG_COLS = (3, 11)          # left / right leg under these sprite columns (where the sprite's feet are)
@@ -329,15 +329,14 @@ def layered(cs, height, chamfer=0.9, steps=3, bottom=0.4):
 
 def arm(x0, y0, length=ARM_L):
     """One arm lying flat (outer side down). Hinge at the top end (in a thin tongue that sits in the yoke's fork, with a
-    hole across it for the hinge pin), mitten hand at the bottom. The hinge axis is (cx, y0 + length, TONGUE_R), along X."""
+    hole across it for the hinge pin), then a short, soft nub with a round paw, like a Blip's. The hinge axis is (cx, y0 + length, TONGUE_R), along X."""
     cx, yh = x0 + ARM_W / 2 + 0.6, y0 + length
     yw = yh - TONGUE_LEN                                              # where the arm widens out of the tongue
-    hand = mf.CrossSection.circle(ARM_W / 2 + 0.6, SEG).translate([cx, y0 + ARM_W / 2 + 0.6])
-    bar = mf.CrossSection([[(cx - ARM_W * 0.42, y0 + ARM_W / 2 + 0.6), (cx + ARM_W * 0.42, y0 + ARM_W / 2 + 0.6),
+    paw = mf.CrossSection.circle(ARM_W / 2 + 0.3, SEG).translate([cx, y0 + ARM_W / 2 + 0.3])   # a round little paw
+    bar = mf.CrossSection([[(cx - ARM_W / 2, y0 + ARM_W / 2 + 0.3), (cx + ARM_W / 2, y0 + ARM_W / 2 + 0.3),
                             (cx + ARM_W / 2, yw - (ARM_W - TONGUE) / 2), (cx + TONGUE / 2, yw), (cx - TONGUE / 2, yw),
                             (cx - ARM_W / 2, yw - (ARM_W - TONGUE) / 2)]])
-    thumb = mf.CrossSection.circle(1.6, SEG).translate([cx + ARM_W / 2 + 0.2, y0 + ARM_W / 2 + 2.2])
-    lower = layered(soften(hand + bar + thumb, 0.5), ARM_T)
+    lower = layered(soften(paw + bar, 0.8), ARM_T, chamfer=1.4, steps=4)
     r = TONGUE_R                                                      # the tongue's end: round on top, 45 degrees underneath
     arc = [(yh + r * np.cos(a), r + r * np.sin(a)) for a in np.linspace(0, np.pi / 2, 16)]
     end = mf.CrossSection([[(yw - 2, 0), (yh, 0)] + arc + [(yw - 2, 2 * r)]])
@@ -363,7 +362,11 @@ def yoke():
     key = _along_x(td_y(0, 0, PIN_D + 2 * KEY_CLR) ^ band(PIN_H + 2 * KEY_CLR), -YB - 1, 1)
     pocket = _along_x(td_y(0, 0, HEAD_D + 0.4) ^ band(PIN_H + 0.4), -YB - 1, -YB + HEAD_T + 0.1)
     holes = teardrop_cs(hx, 0, HINGE_HOLE).extrude(20).translate([0, 0, -10])
-    return union([base, plates, ring]) - key - pocket - holes
+    zw = PL_T + PL_GAP + TONGUE / 2                                   # soften the outline seen from above: a rounded pill
+    pill = soften(mf.CrossSection.square([0.5 - (hx - HINGE_R) + 3, 2 * zw]).translate([hx - HINGE_R, -zw]), zw - 0.2)
+    pill = pill ^ mf.CrossSection.square([0.5 - (hx - HINGE_R), 2 * zw]).translate([hx - HINGE_R, -zw])
+    pill = pill.extrude(2 * Y_HALF + 2).rotate([90, 0, 0]).translate([0, Y_HALF + 1, 0])
+    return ((union([base, plates]) ^ pill) + ring) - key - pocket - holes
 
 
 def yoke_flat(x0, y0):

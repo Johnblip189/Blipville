@@ -32,7 +32,7 @@ Only the snap-on dino face panels differ between the two arms and between the tw
    - Next: refine them, put them in the game, and make voxel display figures.
 2. **Non-transforming combiner.** Five chunky voxel parts that snap together, to settle proportions, connections and
    standing balance.
-3. **Full triple change** on the three skeletons: folding, swivels, ratchets, the spring head and the stabilizers.
+3. **Full triple change** on the three skeletons (**first prototype done:** `skeletons/`, `make_skeletons.py`): folding, swivels, ratchets, the spring head and the stabilizers.
    Prototype one skeleton at a time and test-print it before building on it.
 
 ## How each Blip folds (no extra parts: each robot mode contains its own limb)

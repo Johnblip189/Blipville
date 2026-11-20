@@ -1,0 +1,59 @@
+ref: refs/heads/main  event: push  commit: a6ef618cc9485b9fff09a7e3698673d51d59a613
+deploy job result: success
+== environment github-pages
+{
+  "id": 27513483872,
+  "node_id": "EN_kwDOVvxMIc8AAAAGZ-5yYA",
+  "name": "github-pages",
+  "url": "https://api.github.com/repos/Johnblip189/Blipville/environments/github-pages",
+  "html_url": "https://github.com/Johnblip189/Blipville/deployments/activity_log?environments_filter=github-pages",
+  "created_at": "2026-11-16T21:12:19Z",
+  "updated_at": "2026-11-16T21:12:19Z",
+  "can_admins_bypass": true,
+  "protection_rules": [
+    {
+      "id": 72763292,
+      "node_id": "GA_kwDOVvxMIc4EVkec",
+      "type": "branch_policy"
+    }
+  ],
+  "deployment_branch_policy": {
+    "protected_branches": false,
+    "custom_branch_policies": true
+  }
+}
+== branch policies
+{
+  "total_count": 2,
+  "branch_policies": [
+    {
+      "id": 67008519,
+      "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NzAwODUxOQ==",
+      "name": "main",
+      "type": "branch"
+    },
+    {
+      "id": 67007888,
+      "node_id": "MDE2OkdhdGVCcmFuY2hQb2xpY3k2NzAwNzg4OA==",
+      "name": "site",
+      "type": "branch"
+    }
+  ]
+}
+== pages
+{
+  "url": "https://api.github.com/repos/Johnblip189/Blipville/pages",
+  "status": "built",
+  "cname": null,
+  "custom_404": false,
+  "html_url": "https://johnblip189.github.io/Blipville/",
+  "build_type": "workflow",
+  "source": {
+    "branch": "site",
+    "path": "/"
+  },
+  "public": true,
+  "protected_domain_state": null,
+  "pending_domain_unverified_at": null,
+  "https_enforced": true
+}

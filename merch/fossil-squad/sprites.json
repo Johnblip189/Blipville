@@ -1,0 +1,22 @@
+{
+ "Tyranno-King": {"eyes": 4, "mouth": false, "dx": 0, "feet": "...oo......oo...", "body": [
+  "....gg....gg....", "...oggooooggo...", "..orrrrrrrrrro..", ".orgggrrrrgggro.", ".orvvvvvvvvvvro.", ".orvvvvvvvvvvro.",
+  "orrrrrrrrrrrrrro", "orRrrrrrrrrrrRro", "orkwkwkwkwkwkwro", "orkkkkkkkkkkkkro", ".orRwrwrrwrwRro.", "..oooooooooooo.."],
+  "colors": {"o": "#2a0a0a", "r": "#d42a2a", "R": "#9a1a1a", "g": "#ffc83a", "v": "#0a1a2a", "e": "#5ae8ff", "w": "#ffffff", "k": "#3a0a0a", "f": "#2a0a0a"}},
+ "Tricera-Shield": {"eyes": 5, "mouth": false, "dx": 0, "feet": "...oo......oo...", "body": [
+  ".s..s..ss..s..s.", "ssSssSssssSssSss", ".SssssssssssssS.", "..oobbbbbbbboo..", ".hobbbbbbbbbboh.", "hhobbbbbbbbbbohh",
+  ".obbbbbbbbbbbbo.", ".obBbbbhhbbbBbo.", ".obbbbbhhbbbbbo.", "..obbbbhhbbbbo..", "..obbBbbbbBbbo..", "...oooooooooo..."],
+  "colors": {"o": "#0a1430", "b": "#2a5ad8", "B": "#1a3a9a", "s": "#c8d0e0", "S": "#8a94a8", "h": "#fff4c8", "e": "#0a1430", "f": "#0a1430"}},
+ "Ptera-Blade": {"eyes": 5, "mouth": false, "dx": 0, "feet": "....oo....oo....", "body": [
+  "pppp............", ".pppppp.........", "..ppppppoooo....", "...ooommmmmmo...", "...ommmmmmmmmo..", "..ommmmmmmmmmmo.",
+  ".pommmmmmmmmmmop", "ppomMmmmmmmMmopp", "ppPomMmmmmMmoPpp", "...ommmppmmmo...", "....ommppmmo....", "......oppo......"],
+  "colors": {"o": "#2a0a2a", "m": "#e03aa8", "M": "#a01a78", "p": "#f4ecf4", "P": "#c8bccc", "e": "#ffd23a", "f": "#2a0a2a"}},
+ "Stego-Stomp": {"eyes": 5, "mouth": true, "dx": 0, "feet": "...oo......oo...", "body": [
+  "...n...nn...n...", "..nnn.nnnn.nnn..", ".nngnnngnnnngnn.", "..oooooooooooo..", ".oyyyyyyyyyyyyo.", "noyyyyyyyyyyyyon",
+  "noyyyyyyyyyyyyon", ".oyYyyyyyyyyYyo.", ".oyyyyyyyyyyyyo.", ".oyyyyyyyyyyyyo.", "..onnyyyyyynno..", "...oooooooooo..."],
+  "colors": {"o": "#2a1a04", "y": "#f0b020", "Y": "#b07810", "n": "#4a5060", "N": "#2e3440", "g": "#ffd23a", "e": "#2a1a04", "f": "#2a1a04"}},
+ "Brachio-Pillar": {"eyes": 5, "mouth": false, "dx": 0, "feet": "...oo......oo...", "body": [
+  ".......zz.......", "......ozzo......", "......ommo......", ".....ommmmo.....", "...oommmmmmoo...", "..ommmmmmmmmmo..",
+  ".ommmmmmmmmmmmo.", ".omMmmmmmmmmMmo.", ".ommmmmmmmmmmmo.", ".ozzzzzzzzzzzzo.", ".ozZzZzZzZzZzzo.", "..oooooooooooo.."],
+  "colors": {"o": "#062a14", "m": "#1ec86e", "M": "#128a4a", "z": "#c07a30", "Z": "#8a5020", "e": "#062a14", "f": "#062a14"}}
+}

@@ -2,17 +2,18 @@
 
     python3 merch/figures/make_figures.py            (needs: pip install manifold3d trimesh numpy scipy)
 
-Each STL is one print plate: the figure lying on its back (face up) plus two arms and two legs lying flat beside it.
+Each STL is one print plate: the figure lying on its back (face up), two arms, two legs and 6 snap pins (4 + 2 spares).
 
 * Body: the Blip's 16 x 12 game sprite, 2.5 mm per pixel, as a soft vinyl-toy shape: the outline keeps the pixel
   silhouette (with slightly rounded corners) and the front swells into a smooth rounded dome. The sprite's details are carved into the dome: eyes and mouth sunk in, darker patches and
   inner outlines sunk a little, light patches (bellies, teeth, highlights) raised a little, visors recessed with the
   eyes glowing out of them. Every layer is smaller than the one under it, so nothing overhangs.
 * Limbs: rounded arms with mitten hands and chunky legs with boots, all with softened edges.
-* 🔒 Locking joints: every limb has a split snap peg with a barb on the end. Push it into its hole and the barb squeezes
-  through, then springs open in a wider chamber inside the body and catches behind the hole's back wall: the limb can't
-  be pulled back out (please don't try: it's meant to be permanent), but it still turns and holds a pose by friction.
-  The holes and chambers are teardrop-shaped (pointed on top) so they print without supports.
+* 🔒 Locking joints: separate snap pins. A pin goes through the limb's shoulder/hip hole (its head sits in a keyed pocket
+  on the outside, so the limb turns the pin) and into the body, where its split barb clicks open in a chamber behind a
+  3 mm wall: it can't be pulled back out, but it turns, with a little friction to hold a pose. The pins print lying flat,
+  so their springy halves bend along the print layers (pegs printed standing up snapped at the layer lines). The holes and
+  chambers in the body are teardrop-shaped (pointed on top) so they print without supports.
 * Print in PLA at 0.2 mm, 3 walls, 15-20% infill. Arms turn all the way round; legs swing about 80 degrees each way.
 """
 import json
@@ -31,19 +32,25 @@ T0, DOME, DOME_R = 9.5, 6.0, 7.0   # body thickness at the outline, extra height
 ROUND = 0.6                 # silhouette corner rounding
 EYE, MOUTH, DARK, LIGHT, VISOR = 1.6, 1.2, 0.7, 0.45, 1.2   # relief depths (mm)
 SEG = 48
-# 🔒 snap-lock joints (the same for shoulders and hips)
-HOLE_D = 4.2                # hole through the wall
-WALL = 3.0                  # how thick the wall is that the barb catches behind
-CH_D, CH_LEN = 5.6, 2.4     # the chamber inside the body the barb opens up in
-SHAFT_D = 4.4               # a hair bigger than the hole: the split shaft squeezes in and holds poses by friction
-BARB_D, BARB_LEDGE, BARB_CONE, TIP_D = 4.9, 0.4, 1.2, 3.3
-SLOT = 1.2                  # the split down the peg (lets the barb squeeze to HOLE_D)
-COLLAR = 0.4                # spacer ring so the limb doesn't rub the body
+# 🔒 locking joints: a separate snap pin (printed lying flat, so its springy halves bend along the layers, not across them)
+# goes through the limb into the body. Its head sits keyed in the limb (so the limb turns the pin) and its barbs click
+# into a chamber inside the body, behind a wall, so it can't come back out. The pin turns in the body with a little
+# friction, which holds poses.
+PIN_D, PIN_H = 4.6, 3.6     # pin shaft: a 4.6 mm rod with its top and bottom flattened to 3.6 mm (so it prints lying flat)
+BODY_HOLE = 4.5             # the hole in the body's wall (a hair smaller than the pin: the split pin squeezes in = friction)
+WALL = 3.0                  # the wall the barbs catch behind
+CH_D, CH_LEN = 5.9, 2.8     # the chamber inside the body the barbs open up in
+BARB_W, BARB_LEDGE, BARB_CONE, TIP_W = 5.3, 0.5, 1.5, 3.8
+SLOT, SLOT_LEN = 1.0, 7.5   # the split down the pin from its tip
+HEAD_D, HEAD_T = 6.0, 1.6   # the pin's head, which sits in a pocket on the limb's outer side
+KEY_CLR = 0.15              # clearance of the pin in its limb hole
+COLLAR = 0.4                # spacer ring on the limb so it doesn't rub the body
+SPARE_PINS = 2              # extra pins on every plate
 ZC = 6.0                    # height of every joint axis above the bed (= inside the body's thickness)
 # limbs
 ARM_W, ARM_L, ARM_T = 7.0, 16.0, 5.5     # arm width, longest length (shoulder centre to fingertips), thickness
 LEG_H, NOTCH_H = 7.0, 8.5   # body height off the ground, hip notch height
-LEG_X, LEG_Z, TOE = 5.0, 6.5, 3.5         # leg thickness (side to side), depth (front to back), toe sticking forward
+LEG_X, LEG_Z, TOE = 5.5, 6.5, 3.5         # leg thickness (side to side), depth (front to back), toe sticking forward
 LEG_COLS = (3, 11)          # left / right leg under these sprite columns (where the sprite's feet are)
 GAP = 0.5
 
@@ -104,19 +111,45 @@ def socket(x_face, inward, cy):
     def seg(a, b, d):
         lo, hi = sorted((x_face + inward * a, x_face + inward * b))
         return _along_x(teardrop_cs(cy, ZC, d), lo, hi)
-    return union([seg(-1.0, WALL + 0.01, HOLE_D), seg(WALL, WALL + CH_LEN, CH_D)])
+    return union([seg(-1.0, WALL + 0.01, BODY_HOLE), seg(WALL, WALL + CH_LEN, CH_D)])
 
 
-def peg(cx, cy, z0):
-    """🔒 The snap peg on a limb, standing up from the face at height z0: collar, split shaft, barb with a flat catch."""
-    s_len = WALL + 0.25
-    parts = [mf.Manifold.cylinder(COLLAR + 1.0, SHAFT_D / 2 + 1.2, SHAFT_D / 2 + 1.2, SEG).translate([cx, cy, z0 - 1.0]),   # sunk 1 mm into the limb
-             mf.Manifold.cylinder(s_len + 0.01, SHAFT_D / 2, SHAFT_D / 2, SEG).translate([cx, cy, z0 + COLLAR]),
-             mf.Manifold.cylinder(BARB_LEDGE, BARB_D / 2, BARB_D / 2, SEG).translate([cx, cy, z0 + COLLAR + s_len]),
-             mf.Manifold.cylinder(BARB_CONE, BARB_D / 2, TIP_D / 2, SEG).translate([cx, cy, z0 + COLLAR + s_len + BARB_LEDGE])]
-    top = z0 + COLLAR + s_len + BARB_LEDGE + BARB_CONE
-    slot = box(cx - SLOT / 2, cy - BARB_D, z0 + COLLAR + 0.5, cx + SLOT / 2, cy + BARB_D, top + 1)
-    return union(parts) - slot
+def _pin_band(r, x0, x1):
+    """A piece of the pin along X (from x0 to x1): a rod of radius r, flattened to PIN_H top and bottom (z = 0 .. PIN_H)."""
+    rod = mf.Manifold.cylinder(x1 - x0, r, r, SEG).rotate([0, 90, 0]).translate([x0, 0, PIN_H / 2])
+    return rod ^ box(x0 - 1, -r - 1, 0, x1 + 1, r + 1, PIN_H)
+
+
+def pin_length(limb_t):
+    return HEAD_T + (limb_t - HEAD_T) + COLLAR + WALL + 0.2
+
+
+def pin(x0, y0, limb_t=ARM_T):
+    """🔒 One snap pin lying flat on the bed, pointing +X: head, shaft, then a split barb at the tip."""
+    s_end = pin_length(limb_t)
+    head = _pin_band(HEAD_D / 2, 0, HEAD_T)
+    shaft = _pin_band(PIN_D / 2, HEAD_T - 0.01, s_end + 0.01)
+    prof = mf.CrossSection([[(s_end, -BARB_W / 2), (s_end + BARB_LEDGE, -BARB_W / 2), (s_end + BARB_LEDGE + BARB_CONE, -TIP_W / 2),
+                             (s_end + BARB_LEDGE + BARB_CONE, TIP_W / 2), (s_end + BARB_LEDGE, BARB_W / 2), (s_end, BARB_W / 2)]])
+    barb = prof.extrude(PIN_H) ^ _pin_band(BARB_W / 2, s_end - 0.01, s_end + BARB_LEDGE + BARB_CONE + 0.01)
+    tip = s_end + BARB_LEDGE + BARB_CONE
+    slot = box(tip - SLOT_LEN, -SLOT / 2, -1, tip + 1, SLOT / 2, PIN_H + 1)
+    return (union([head, shaft, barb]) - slot).translate([x0, y0, 0])
+
+
+def pin_seat(cx, cy, limb_t, along_y=True):
+    """What to cut out of a limb lying flat for its pin: a keyed hole through it (the pin's flattened shape) and a pocket
+    for the head on the outer (bed) side. The flats run across the limb's length, so the limb turns the pin."""
+    def key(r, z0, z1):
+        c = mf.CrossSection.circle(r, SEG) ^ mf.CrossSection.square([2 * r + 2, PIN_H + 2 * KEY_CLR]).translate([-r - 1, -PIN_H / 2 - KEY_CLR])
+        return c.extrude(z1 - z0).translate([cx, cy, z0])
+    return key(PIN_D / 2 + KEY_CLR, -1, limb_t + 1) + key(HEAD_D / 2 + 0.2, -1, HEAD_T + 0.1)
+
+
+def washer(cx, cy, z0):
+    ring = mf.Manifold.cylinder(COLLAR + 0.5, PIN_D / 2 + 1.4, PIN_D / 2 + 1.4, SEG) - \
+        mf.Manifold.cylinder(COLLAR + 3, PIN_D / 2 + 0.4, PIN_D / 2 + 0.4, SEG).translate([0, 0, -1])
+    return ring.translate([cx, cy, z0 - 0.5])
 
 
 def lum(hexcol):
@@ -270,7 +303,7 @@ def layered(cs, height, chamfer=0.9, steps=3, bottom=0.4):
 
 
 def arm(x0, y0, length=ARM_L):
-    """One arm lying flat (outer side down), peg up. Shoulder at the top end, mitten hand at the bottom."""
+    """One arm lying flat (outer side down), inner side up. Shoulder at the top end, mitten hand at the bottom."""
     cx, cy = x0 + ARM_W / 2 + 0.6, y0 + length
     shoulder = mf.CrossSection.circle(ARM_W / 2 + 0.3, SEG).translate([cx, cy])
     hand = mf.CrossSection.circle(ARM_W / 2 + 0.6, SEG).translate([cx, y0 + ARM_W / 2 + 0.6])
@@ -278,11 +311,11 @@ def arm(x0, y0, length=ARM_L):
                             (cx + ARM_W / 2, cy), (cx - ARM_W / 2, cy)]])
     thumb = mf.CrossSection.circle(1.6, SEG).translate([cx + ARM_W / 2 + 0.2, y0 + ARM_W / 2 + 2.2])
     shape = soften(shoulder + hand + bar + thumb, 0.5)
-    return layered(shape, ARM_T) + peg(cx, cy, ARM_T)
+    return layered(shape, ARM_T) + washer(cx, cy, ARM_T) - pin_seat(cx, cy, ARM_T)
 
 
 def leg(x0, y0, hip, toe=1):
-    """One leg lying flat (outer side down), peg up. Drawn as (u, v) = (front-back, up) from the floor (v = 0) to the hip
+    """One leg lying flat (outer side down), inner side up. Drawn as (u, v) = (front-back, up) from the floor (v = 0) to the hip
     pin (v = hip): a round top that turns inside the hip notch, a shin and a boot with the toe forward. Left and right are
     mirror images (toe = -1 / +1), so both toes point forward once they're on."""
     rd = NOTCH_H / 2 - GAP
@@ -291,7 +324,7 @@ def leg(x0, y0, hip, toe=1):
     boot = mf.CrossSection.square([LEG_Z + TOE - 1.5, PX + 1.2]).translate([-LEG_Z / 2 - (TOE - 1.5 if toe < 0 else 0), 0])
     tip = mf.CrossSection.circle((PX + 1.2) / 2, SEG).translate([toe * (LEG_Z / 2 + TOE - 1.5), (PX + 1.2) / 2])
     shape = soften(top + shin + boot + tip, 0.6).translate([x0, y0])
-    return layered(shape, LEG_X) + peg(x0, y0 + hip, LEG_X)
+    return layered(shape, LEG_X) + washer(x0, y0 + hip, LEG_X) - pin_seat(x0, y0 + hip, LEG_X)
 
 
 def plate(sprite):
@@ -302,7 +335,9 @@ def plate(sprite):
     a2 = arm(bx + ARM_W + 6, 2.0, L)
     l1 = leg(bx + LEG_Z / 2 + TOE, top_y + 4, hy, toe=-1)
     l2 = leg(bx + LEG_Z * 1.5 + 2 * TOE + 6, top_y + 4, hy, toe=+1)
-    return body, [a1, a2, l1, l2]
+    px = max(m.bounding_box()[3] for m in (a1, a2, l1, l2)) + 4      # pins in a column right of the limbs
+    pins = [pin(px, 3.0 + HEAD_D / 2 + i * (HEAD_D + 3), LEG_X) for i in range(4 + SPARE_PINS)]
+    return body, [a1, a2, l1, l2] + pins
 
 
 def to_trimesh(m):

@@ -19,18 +19,21 @@ front swells into a smooth dome. The sprite's details are carved into it: sunk e
 raised bellies, teeth and highlights, and a recessed visor with the eyes standing out. Arms are rounded, with mitten hands
 and a thumb. Legs are chunky boots.
 
-**Printing:** each STL is one plate: the figure on its back, two arms and two legs (a left and a right: the toes point the
-other way). No supports. PLA, 0.2 mm layers, 3 walls, 15–20% infill.
+**Printing:** each STL is one plate: the figure on its back, two arms, two legs (a left and a right: the toes point the
+other way) and **6 snap pins** (4 plus 2 spares). No supports. PLA, 0.2 mm layers, 3 walls, 15–20% infill. Keep the pins
+lying flat as they are: that's what makes them strong.
 
-**🔒 Locking joints:** every limb has a split snap peg with a barb on the end. Push it firmly into its hole (arms into the
-shoulders, legs into the hip notches from the side, toes forward). You feel a click as the barb squeezes through and opens
-up in a chamber inside the body. After that it **can't be pulled back out**, so check left and right before you click it
-in. See `joint_lock_cutaway.png`. Once in, arms turn all the way round (Wendigo's stop at about 135°, against its antlers) and legs swing about 80° each way. The shaft is a
-snug fit, so every joint holds its pose by friction.
+**🔒 Putting it together:** for each joint, push a pin through the limb from the outside (the head drops into the
+pocket, flat sides lined up with the flats in the hole), then hold the limb against the body (arms at the shoulders,
+legs in the hip notches with the toes forward) and press the pin in until it clicks. The pin's split barb squeezes
+through the body's wall and opens up in a chamber behind it, so the limb **can't come off** (check left and right
+before you click it in). See `joint_lock_cutaway.png`. Arms turn all the way round (Wendigo's stop at about 135°, against
+its antlers) and legs swing about 80° each way, holding their pose by friction.
 
 **Tips:**
-- **A peg too hard to push in:** sand the barb's slope a little.
+- **A pin too hard to push in:** press with a flat tool (the back of a pen), or sand the barb's slope a little.
+- **A pin breaks:** use a spare.
 - **A joint that ends up loose:** a drop of thick glue on the shaft sets it in a pose for good.
 - **Settings to tweak** are at the top of `make_figures.py`:
-  - `SHAFT_D` (friction);
-  - `BARB_D` (how hard it locks: keep it under `HOLE_D + SLOT`).
+  - `BODY_HOLE` (friction: bigger is looser);
+  - `BARB_W` (how hard it locks: keep it under `BODY_HOLE + SLOT`).

@@ -16,9 +16,18 @@
   ],
   "eyes": 4,
   "mouth": false,
-  "feet": "...oo......oo...",
   "dx": 0,
-  "rarity": "ultra-rare"
+  "rarity": "ultra-rare",
+  "colors": {
+   "o": "#14141c",
+   "k": "#34343f",
+   "s": "#c8ccd8",
+   "v": "#0a0a12",
+   "y": "#ffd23a",
+   "r": "#d81e3a",
+   "e": "#ffe14a",
+   "f": "#34343f"
+  }
  },
  "Blip": {
   "body": [
@@ -37,9 +46,15 @@
   ],
   "eyes": 5,
   "mouth": true,
-  "feet": "...oo......oo...",
   "dx": 0,
-  "rarity": "rare"
+  "rarity": "rare",
+  "colors": {
+   "o": "#2b1d3a",
+   "b": "#9b7bd8",
+   "l": "#ddd0ff",
+   "p": "#ff8fb3",
+   "e": "#1a1024"
+  }
  },
  "T-Rex": {
   "body": [
@@ -58,9 +73,19 @@
   ],
   "eyes": 4,
   "mouth": false,
-  "feet": "...oo......oo...",
   "dx": 0,
-  "rarity": "regular"
+  "rarity": "regular",
+  "colors": {
+   "o": "#0c2a14",
+   "b": "#4aa85a",
+   "s": "#2e7a3a",
+   "h": "#2e7a3a",
+   "k": "#ffffff",
+   "d": "#5a1a1a",
+   "l": "#c8e8a0",
+   "a": "#3a8a4a",
+   "e": "#ffd23a"
+  }
  },
  "Wendigo": {
   "body": [
@@ -79,9 +104,18 @@
   ],
   "eyes": 5,
   "mouth": false,
-  "feet": null,
   "dx": 0,
-  "rarity": "regular"
+  "rarity": "regular",
+  "colors": {
+   "o": "#0a0e1a",
+   "h": "#d8d0c0",
+   "l": "#f4f0e8",
+   "k": "#0a0a14",
+   "w": "#ffffff",
+   "b": "#2a2a3a",
+   "r": "#8a8a9a",
+   "e": "#6ae0ff"
+  }
  },
  "Bun": {
   "body": [
@@ -100,9 +134,15 @@
   ],
   "eyes": 6,
   "mouth": true,
-  "feet": "...oo......oo...",
   "dx": 0,
-  "rarity": "regular"
+  "rarity": "regular",
+  "colors": {
+   "o": "#2b1d3a",
+   "b": "#9b7bd8",
+   "l": "#ddd0ff",
+   "p": "#ff8fb3",
+   "e": "#1a1024"
+  }
  },
  "Beta Buddy": {
   "body": [
@@ -121,9 +161,17 @@
   ],
   "eyes": 5,
   "mouth": true,
-  "feet": "...oo......oo...",
   "dx": 0,
-  "rarity": "regular"
+  "rarity": "regular",
+  "colors": {
+   "o": "#4a3006",
+   "b": "#ffd23a",
+   "h": "#ff5a8a",
+   "s": "#ffffff",
+   "y": "#5ae0ff",
+   "p": "#ff9a6a",
+   "e": "#2a1a04"
+  }
  },
  "Robo Bear": {
   "body": [
@@ -142,9 +190,20 @@
   ],
   "eyes": 5,
   "mouth": false,
-  "feet": "...oo......oo...",
   "dx": 0,
-  "rarity": "extra"
+  "rarity": "extra",
+  "colors": {
+   "o": "#0e2a3a",
+   "b": "#3ab8c8",
+   "l": "#c8f4f8",
+   "a": "#1e7a8a",
+   "r": "#d8dde6",
+   "s": "#5a6170",
+   "k": "#ffffff",
+   "n": "#0e2a3a",
+   "p": "#ff9fb0",
+   "e": "#ffd23a"
+  }
  },
  "Boo": {
   "body": [
@@ -163,9 +222,15 @@
   ],
   "eyes": 4,
   "mouth": true,
-  "feet": null,
   "dx": 0,
-  "rarity": "extra"
+  "rarity": "extra",
+  "colors": {
+   "o": "#2b1d3a",
+   "b": "#9b7bd8",
+   "l": "#ddd0ff",
+   "p": "#ff8fb3",
+   "e": "#1a1024"
+  }
  },
  "Spike": {
   "body": [
@@ -184,8 +249,14 @@
   ],
   "eyes": 5,
   "mouth": true,
-  "feet": "...oo......oo...",
   "dx": 0,
-  "rarity": "extra"
+  "rarity": "extra",
+  "colors": {
+   "o": "#2b1d3a",
+   "b": "#9b7bd8",
+   "l": "#ddd0ff",
+   "p": "#ff8fb3",
+   "e": "#1a1024"
+  }
  }
 }

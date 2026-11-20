@@ -50,7 +50,7 @@
   .btn.redux { background: linear-gradient(135deg, #ff7ac0, #7a5cff); }
   .new { background: var(--gold); color: #2a1a3a; font-size: 11px; font-weight: 900; padding: 2px 7px; border-radius: 8px; letter-spacing: .04em; }
   .about { margin-top: 10px; }
-  .about .lead { color: var(--muted); font-size: 18px; margin: 0 0 4px; }
+  .about .lead, .merch .lead { color: var(--muted); font-size: 18px; margin: 0 0 4px; }
   .grid.two { grid-template-columns: repeat(2, 1fr); margin: 18px 0 8px; }
   @media (max-width: 640px) { .grid.two { grid-template-columns: 1fr; } }
   h3.sub { margin: 28px 0 10px; font-size: 20px; }
@@ -75,6 +75,15 @@
   .btn.discord { background: #5865f2; }
   img.px { width: 22px; height: 22px; image-rendering: pixelated; vertical-align: -4px; }
   h3 img.px { width: 24px; height: 24px; margin-right: 4px; }
+  .merch .badge { background: #ff8ac8; color: #2a1a3a; font-size: 12px; font-weight: 900; padding: 3px 9px; border-radius: 9px;
+                  letter-spacing: .05em; vertical-align: 4px; margin-left: 6px; }
+  .merchgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 16px 0 10px; }
+  .merchgrid .card { padding: 10px 10px 12px; text-align: center; position: relative; }
+  .merchgrid img { width: 100%; max-width: 160px; aspect-ratio: 1; object-fit: contain; display: block; margin: 0 auto; }
+  .merchgrid b { display: block; font-size: 16px; }
+  .merchgrid .stars { color: var(--gold); font-size: 13px; }
+  .merchgrid .wip { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,.45); color: var(--muted); font-size: 11px;
+                    font-weight: 800; padding: 2px 7px; border-radius: 8px; }
 </style>
 </head>
 <body>
@@ -185,6 +194,25 @@
     </ol>
     <p class="small">Found a bug? Right-click a pet → <b>💬 Suggestions &amp; help</b> → <b>Get help / report a problem</b>
        (and <b>Copy error log</b> helps a lot).</p>
+  </section>
+
+  <section class="merch" id="merch">
+    <h2>🧸 Blipville merch <span class="badge">IN PROGRESS</span></h2>
+    <p class="lead">Real Blips you can hold! These are still being designed and test-printed, so <b>nothing is for sale yet</b>,
+       and the pictures are 3D previews, not the final toys.</p>
+    <div class="merchgrid">
+      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/silvertear03.png" alt="3D model of the Silvertear-03 figure" loading="lazy"><b>Silvertear-03</b><span class="stars">★★★ ultra rare</span><p>Posable figure</p></div>
+      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/blip.png" alt="3D model of the Blip figure" loading="lazy"><b>Blip</b><span class="stars">★★ rare</span><p>Posable figure</p></div>
+      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/trex.png" alt="3D model of the T-Rex figure" loading="lazy"><b>T-Rex</b><span class="stars">★ regular</span><p>Posable figure</p></div>
+      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/wendigo.png" alt="3D model of the Wendigo figure" loading="lazy"><b>Wendigo</b><span class="stars">★ regular</span><p>Posable figure</p></div>
+      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/bun.png" alt="3D model of the Bun figure" loading="lazy"><b>Bun</b><span class="stars">★ regular</span><p>Posable figure</p></div>
+      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/beta-buddy.png" alt="3D model of the Beta Buddy figure" loading="lazy"><b>Beta Buddy</b><span class="stars">★ regular</span><p>Posable figure</p></div>
+      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/trex-chomper.png" alt="3D model of the T-Rex Chomper toy" loading="lazy"><b>T-Rex Chomper</b><span class="stars">fidget toy</span><p>Press the tail: chomp!</p></div>
+      <div class="card"><span class="wip">🚧 in progress</span><img src="docs/merch/blip-chomper.png" alt="3D model of the Blip Chomper toy" loading="lazy"><b>Blip Chomper</b><span class="stars">fidget toy</span><p>Press the tail: chomp!</p></div>
+    </div>
+    <p class="small"><b>Series 1 figures:</b> about 4 cm tall, with arms and legs that click in and pose. Each one will come on a
+       collectible card with a code for a <b>merch-only color</b> in the game. Silvertear-03 joins the game itself in 1.1.
+       Want to hear when they're ready? <a href="https://discord.gg/Q3zmYakNZT">Join the Discord</a>.</p>
   </section>
 
   <h2>Play anywhere</h2>

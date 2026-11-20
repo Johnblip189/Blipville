@@ -1,0 +1,5 @@
+{"Mythkeeper": {"body": ["......oooo......", "....oohhhhoo....", "...ohhhhhhhho...", "..ohhhssssshho..", "..ohffffffffho..",
+  "..ohffffffffho..", ".ohhffffffffhho.", ".ohcHffffffHcho.", "ohccHHHHHHHHccho", "oyyocccsscccccco", "ylloccccccccccco",
+  ".yy.ooccccccoo.."], "eyes": 5, "mouth": false, "dx": 0, "rarity": "regular", "feet": "",
+  "colors": {"o": "#1a1030", "h": "#4a2f7a", "H": "#34205a", "c": "#5b3a96", "f": "#120a20", "e": "#ffd86b", "s": "#e8d8ff",
+             "l": "#ffe27a", "y": "#c08a2a"}}}

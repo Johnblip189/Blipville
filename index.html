@@ -415,7 +415,7 @@
       three = three || setup();
       const v = three;
       if (v.model) { v.scene.remove(v.model); v.model = null; }
-      const gltf = v.cache[id] || (v.cache[id] = await new Promise((ok, bad) => new v.T.GLTFLoader().load(`docs/merch/models/${id}.glb?v=3`, ok, undefined, bad)));
+      const gltf = v.cache[id] || (v.cache[id] = await new Promise((ok, bad) => new v.T.GLTFLoader().load(`docs/merch/models/${id}.glb?v=4`, ok, undefined, bad)));
       v.model = gltf.scene; v.scene.add(v.model);
       const box = new v.T.Box3().setFromObject(v.model), r = box.getSize(new v.T.Vector3()).length() / 2;
       v.controls.target.set(0, 0, 0); v.camera.position.set(r * 0.9, r * 0.75, r * 2.6);

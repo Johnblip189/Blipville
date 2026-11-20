@@ -103,22 +103,32 @@ def voxel_mesh(sp, sink):
             for k in range(-h + 1, h + 1):
                 vox[(x, y, k)] = face if k == h else base_col
     V = F.V
+    world = {(x, F.ROWS - 1 - y, k - 1): col for (x, y, k), col in vox.items()}   # x right, y up, z toward the viewer
     verts, faces, cols = [], [], []
-    dirs = [((1, 0, 0), [(1, 0, 0), (1, 1, 0), (1, 1, 1), (1, 0, 1)]), ((-1, 0, 0), [(0, 0, 0), (0, 0, 1), (0, 1, 1), (0, 1, 0)]),
-            ((0, -1, 0), [(0, 1, 0), (0, 1, 1), (1, 1, 1), (1, 1, 0)]), ((0, 1, 0), [(0, 0, 0), (1, 0, 0), (1, 0, 1), (0, 0, 1)]),
-            ((0, 0, 1), [(0, 0, 1), (1, 0, 1), (1, 1, 1), (0, 1, 1)]), ((0, 0, -1), [(0, 0, 0), (0, 1, 0), (1, 1, 0), (1, 0, 0)])]
-    for (x, y, k), col in vox.items():
-        X0, Y0, Z0 = x * V, (F.ROWS - 1 - y) * V - sink, (k - 1) * V
-        for (dx, dy, dz), quad in dirs:
-            if (x + dx, y + dy, k + dz) in vox:                          # (grid y grows downward)
-                continue
-            b = len(verts)
-            for qx, qy, qz in quad:
-                verts.append((X0 + qx * V, Y0 + (1 - qy) * V if dy else Y0 + qy * V, Z0 + qz * V))
-            faces += [(b, b + 1, b + 2), (b, b + 2, b + 3)]
-            cols += [col, col]
+    for (x, y, z), col in world.items():
+        for axis in range(3):
+            for sgn in (1, -1):
+                nb = [x, y, z]
+                nb[axis] += sgn
+                if tuple(nb) in world:                                 # hidden: another cube is there
+                    continue
+                o = [x, y, z]
+                if sgn > 0:
+                    o[axis] += 1
+                u, w = [(axis + 1) % 3, (axis + 2) % 3]
+                quad = []
+                for a, b in ((0, 0), (1, 0), (1, 1), (0, 1)):
+                    q = list(o)
+                    q[u] += a
+                    q[w] += b
+                    quad.append([q[0] * V, q[1] * V - sink, q[2] * V])
+                if sgn < 0:                                            # wind it so it faces outward
+                    quad = quad[::-1]
+                bi = len(verts)
+                verts += quad
+                faces += [(bi, bi + 1, bi + 2), (bi, bi + 2, bi + 3)]
+                cols += [col, col]
     m = trimesh.Trimesh(vertices=np.array(verts, float), faces=np.array(faces), process=False)
-    m.fix_normals()
     return m, np.array(cols, np.uint8)
 
 

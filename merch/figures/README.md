@@ -7,8 +7,8 @@ Voxel figures in the style of the Blipville 3D viewer, each on its own display b
 
 | Figure | Rarity | File |
 |---|---|---|
-| Silvertear-03 | ⭐⭐⭐ ultra-rare | `silvertear03_figure.stl` |
-| Blip | ⭐⭐ rare | `blip_figure.stl` |
+| Silvertear-03 | regular | `silvertear03_figure.stl` |
+| Blip | regular | `blip_figure.stl` |
 | T-Rex | regular | `trex_figure.stl` |
 | Wendigo | regular | `wendigo_figure.stl` |
 | Bun | regular | `bun_figure.stl` |

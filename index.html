@@ -246,8 +246,8 @@
     <h3 class="sub">🎁 Could be inside…</h3>
     <p class="small">Every Blip comes in basic or shiny chrome. Each figure is 1 in 6, and 2 in 5 boxes hold a chrome one.</p>
     <div class="merchgrid">
-      <button class="card" type="button" data-item="silvertear03"><span class="wip">🚧 in progress</span><img src="docs/merch/silvertear03.png?v=4" alt="" loading="lazy"><b>Silvertear-03</b><span class="stars">★★★ ultra rare</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
-      <button class="card" type="button" data-item="blip"><span class="wip">🚧 in progress</span><img src="docs/merch/blip.png?v=4" alt="" loading="lazy"><b>Blip</b><span class="stars">★★ rare</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
+      <button class="card" type="button" data-item="silvertear03"><span class="wip">🚧 in progress</span><img src="docs/merch/silvertear03.png?v=5" alt="" loading="lazy"><b>Silvertear-03</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
+      <button class="card" type="button" data-item="blip"><span class="wip">🚧 in progress</span><img src="docs/merch/blip.png?v=5" alt="" loading="lazy"><b>Blip</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
       <button class="card" type="button" data-item="trex"><span class="wip">🚧 in progress</span><img src="docs/merch/trex.png?v=4" alt="" loading="lazy"><b>T-Rex</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
       <button class="card" type="button" data-item="wendigo"><span class="wip">🚧 in progress</span><img src="docs/merch/wendigo.png?v=4" alt="" loading="lazy"><b>Wendigo</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
       <button class="card" type="button" data-item="bun"><span class="wip">🚧 in progress</span><img src="docs/merch/bun.png?v=4" alt="" loading="lazy"><b>Bun</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
@@ -395,8 +395,8 @@
   const TBA = { price: "Price TBA", note: "Not priced yet." };
   const ITEMS = {
     "mystery-box": { name: "Mystery Blip Box", stars: "Series 1", bio: "One random Series 1 Blip on its display base and a code card, sealed in a starry box. Each figure 1 in 6; 2 in 5 boxes hold a shiny chrome one.", ...BOX },
-    "silvertear03": { name: "Silvertear-03", stars: "★★★ Ultra rare", bio: "Tactical bodyguard. Secretly loves naps. Joins the game in 1.1!", ...BOX },
-    "blip": { name: "Blip", stars: "★★ Rare", bio: "The friendliest Blip in town.", ...BOX },
+    "silvertear03": { name: "Silvertear-03", stars: "★ Regular", bio: "Tactical bodyguard. Secretly loves naps. Joins the game in 1.1!", ...BOX },
+    "blip": { name: "Blip", stars: "★ Regular", bio: "The friendliest Blip in town.", ...BOX },
     "trex": { name: "T-Rex", stars: "★ Regular", bio: "Tiny arms. Huge heart.", ...BOX },
     "wendigo": { name: "Wendigo", stars: "★ Regular", bio: "Spooky antlers, gentle soul.", ...BOX },
     "bun": { name: "Bun", stars: "★ Regular", bio: "Shy, soft and very good at hiding.", ...BOX },
@@ -441,7 +441,7 @@
       three = three || setup();
       const v = three;
       if (v.model) { v.scene.remove(v.model); v.model = null; }
-      const gltf = v.cache[id] || (v.cache[id] = await new Promise((ok, bad) => new v.T.GLTFLoader().load(`docs/merch/models/${id}.glb?v=4`, ok, undefined, bad)));
+      const gltf = v.cache[id] || (v.cache[id] = await new Promise((ok, bad) => new v.T.GLTFLoader().load(`docs/merch/models/${id}.glb?v=5`, ok, undefined, bad)));
       v.model = gltf.scene; v.scene.add(v.model);
       const box = new v.T.Box3().setFromObject(v.model), r = box.getSize(new v.T.Vector3()).length() / 2;
       v.controls.target.set(0, 0, 0); v.camera.position.set(r * 0.9, r * 0.75, r * 2.6);

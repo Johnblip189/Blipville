@@ -24,7 +24,7 @@ W, H = round((TRIM_W + 2 * BLEED) * MM), round((TRIM_H + 2 * BLEED) * MM)
 BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 REG = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
-SERIES = [("Silvertear-03", "ultra-rare"), ("Blip", "rare"), ("T-Rex", "regular"), ("Wendigo", "regular"), ("Bun", "regular"),
+SERIES = [("Silvertear-03", "regular"), ("Blip", "regular"), ("T-Rex", "regular"), ("Wendigo", "regular"), ("Bun", "regular"),
           ("Beta Buddy", "regular")]
 SLOTS = 6
 BIOS = {"Silvertear-03": "Tactical bodyguard. Secretly loves naps.",

@@ -17,7 +17,7 @@
   "eyes": 4,
   "mouth": false,
   "dx": 0,
-  "rarity": "ultra-rare",
+  "rarity": "regular",
   "colors": {
    "o": "#14141c",
    "k": "#34343f",
@@ -48,7 +48,7 @@
   "eyes": 5,
   "mouth": true,
   "dx": 0,
-  "rarity": "rare",
+  "rarity": "regular",
   "colors": {
    "o": "#2b1d3a",
    "b": "#9b7bd8",

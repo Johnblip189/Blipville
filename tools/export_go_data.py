@@ -14,7 +14,7 @@ bl = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(bl)
 
 kinds = {}
-for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS", [])):
+for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS", [])) + sorted(getattr(bl, "PARKED_NOW", ())):
     v = bl.VARIANTS[k]
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
@@ -47,6 +47,7 @@ data = {
     "event": getattr(bl, "EVENT", None),
     "quests": getattr(bl, "QUESTS", []),
     "features": getattr(bl, "FEATURES", {}),
+    "parkedKinds": sorted(getattr(bl, "PARKED_NOW", ())),
     "chats": getattr(bl, "CHATS", {}),
     "chatDefault": getattr(bl, "CHAT_DEFAULT", None),
     "typeCps": getattr(bl, "TYPE_CPS", 32),

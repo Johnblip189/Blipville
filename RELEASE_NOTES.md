@@ -1,5 +1,8 @@
 ## 💜 Blipville 1.0
 
+> **1.0.1:** 🤖 Silvertear-03, the mecha kaiju, is saving her big debut for **1.1**. If you already caught her, she stays
+> yours, and Mirror Chrome merch codes still work: the skin will be waiting for her.
+
 **Thank you.** Every pet you hatched, cryptid you spotted, bug you reported and idea you sent through the betas helped
 make Blipville what it is. This is the real thing.
 
@@ -44,16 +47,8 @@ make Blipville what it is. This is the real thing.
 - 🎭 **The Puppet Box:** an old toy chest that creaks open by itself at night, with red eyes peeking out of the gap.
   Awaken it and it opens into the **Puppet Master**: a cracked porcelain mask with red tears, a little top hat, and a
   see-through, flickering little Blip soul dangling from its puppet strings.
-- 🤖 **Silvertear-03, a new mecha kaiju:** silver plates over a charcoal frame, a sharp brow horn with swept-back fins,
-  a dark visor with wide pixel eyes, crimson tear ridges down her cheeks, a segmented chin guard and a segmented tail.
-  She powers up behind the city now and then: click her 3 times before she stomps off. She has a personality all her
-  own: a hyper-serious tactical bodyguard who talks in mission logs, scans every cookie for its "threat level" and
-  stands guard from 7 PM to 7 AM… who is secretly very loyal to her keeper, secretly loves naps, and short-circuits
-  (her whole faceplate flushes pink) if you call her cute. Colors: Chrome, Gunmetal,
-  Gold Plated (with emerald eyes) and 📺 **Showa**, the boxy 1970s tin-robot model with its own drawing: bolt antennae,
-  a riveted brow, amber eyes in a wide visor slot, clean riveted cheeks, a red/yellow/cyan chest strip and a stiff tail.
 - 🎟️ **Merch codes:** codes that come with Blipville merch can be typed into the 🔑 Secret code box to unlock that
-  merch's skin (like Silvertear-03's merch-only Mirror Chrome color).
+  merch's skin. A code for a Blip that isn't in the game yet is saved, and its skin is waiting when that Blip arrives.
 - 💾 **Save codes carry everything:** Egypt gods, Bad Dreams and merch skins now move with your town between the
   website and Windows too.
 - 🔊 **Blip voices:** speech bubbles now type themselves out, and each Blip "talks" in little blips with its own
@@ -65,9 +60,8 @@ make Blipville what it is. This is the real thing.
   is "not cute, SHARP", Boo really wants you to be scared, and Sunny calls you "hon".
 - 💬 **Chat with your Blips:** right-click any Blip → 💬 Chat (or tap it → 💬 Chat on the website) and talk by picking
   what to say. Ask how it's doing (it'll tell you honestly if it's hungry or sleepy), ask about itself, tell it it's
-  cute, or offer a snack (it really eats it). **Silvertear-03** has a whole conversation of her own: ask about her
-  tears, whether she's sleepy, or call her cute if you want to watch her overheat. Every chat shows a big portrait of the Blip you're
-  talking to (Silvertear-03 has her own hand-drawn one). Chatting builds friendship.
+  cute, or offer a snack (it really eats it). Every chat shows a big portrait of the Blip you're
+  talking to. Chatting builds friendship.
 - 🧸 **Bad Dreams:** plush versions of the Night Shift crew: Bear, Bunny, Hen, Fox, the Wind-Up Hare and the Puppet
   Master. All day they're harmless plushies that just sit there… but from **midnight to 6 AM** (your clock) they burst
   out of their stitches as Bad Dreams, with button eyes, safety pins and stuffing poking out. To get them, click a

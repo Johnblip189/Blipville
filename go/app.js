@@ -7,7 +7,7 @@
   const RARE = new Set(D.groups.rare);
   const NIGHT = new Set(D.groups.nightShift);
   const CRYPT = new Set(D.groups.cryptids);
-  const KAIJU = new Set(D.groups.kaiju || []), HITS = D.kaijuHits || 3;
+  const KAIJU = new Set([...(D.groups.kaiju || []), ...(D.parkedKinds || [])]), HITS = D.kaijuHits || 3;
   const GIFTS = new Set(D.groups.gifts || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
@@ -86,6 +86,13 @@
   } catch (e) { /* storage blocked: fresh start, still playable */ }
   if (!save.worlds.includes("Egypt World")) save.worlds.push("Egypt World");     // 🏺 free for everyone; its gods are dug up
   save.gods = save.gods || [];
+  for (const prefix of save.merch || []) {          // 🎟️ a code redeemed before its Blip arrived: hand out the Blip + skin now
+    const m = ((D.merch || {}).items || {})[prefix] || {};
+    if (m.kind && D.kinds[m.kind]) {
+      const skin = `${m.kind}:${m.name}`; save.skins = save.skins || []; if (!save.skins.includes(skin)) save.skins.push(skin);
+      save.merchKinds = save.merchKinds || []; if (!save.merchKinds.includes(m.kind)) save.merchKinds.push(m.kind);
+    }
+  }
   let saveTimer = null;
   let frozen = false;                                   // set while a loaded save code is taking over
   function persist(now = false) {

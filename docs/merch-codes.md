@@ -5,7 +5,7 @@ Physical Blipville merch comes with a code like `AEGIS-CHR-7K3M-9QPA`. Players t
 
 | Prefix | Unlocks (the Blip itself too, if you don't have it yet) |
 |---|---|
-| `AEGIS-CHR` | Silvertear-03: **Mirror Chrome** (Series 1 figure, ultra-rare) |
+| `AEGIS-CHR` | Silvertear-03: **Mirror Chrome** (Series 1 figure, ultra-rare). Silvertear-03 arrives in 1.1: until then the code is saved and the skin waits |
 | `FIG-BLIP` | Blip: **Figure Holo** (Series 1 figure, rare) |
 | `REX-GRN` | T-Rex: **Classic Dino Green** (Series 1 figure) |
 | `FIG-WENDI` | Wendigo: **Figure Glow** (Series 1 figure) |

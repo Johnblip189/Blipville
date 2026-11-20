@@ -4372,7 +4372,14 @@ CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, e
 # (menus, trophies and quests included). Keep tools/export_go_data.py in step so the website matches.
 FEATURES = {"arena": False,           # ⚔️ Arena battles, battle codes, rivals, battle music, Pull the Strings
             "climb": False,           # 🪟 Blips climbing onto your windows (Windows only)
-            "cursor_play": False}     # 🖱️ Blips chasing and "stealing" the mouse pointer (Windows only)
+            "cursor_play": False,     # 🖱️ Blips chasing and "stealing" the mouse pointer (Windows only)
+            "silvertear": False}      # 🤖 Silvertear-03, the mecha kaiju (coming in 1.1)
+# 🚧 Parked Blips: their art and chats stay in the game (anyone who already caught one keeps it), but they don't show up
+# in the wild, the collection, trophies or the creator/mod tools. A merch code for one is saved and its skin waits for it.
+PARKED_KINDS = {"Silvertear-03": "silvertear"}
+PARKED_NOW = {k for k, f in PARKED_KINDS.items() if not FEATURES.get(f, True)}
+KAIJU_KINDS[:] = [k for k in KAIJU_KINDS if k not in PARKED_NOW]
+KINDS[:] = [k for k in KINDS if k not in PARKED_NOW]
 PARKED_TROPHIES = {"arena-1": "arena", "arena-champ": "arena", "arena-kaiju": "arena", "boss-1": "arena",
                    "climb-1": "climb", "mouse-10": "cursor_play"}
 PARKED_QUESTS = {"arena_win": "arena"}
@@ -7984,6 +7991,22 @@ MERCH = {"REX-GRN": {"name": "Classic Dino Green", "kind": "T-Rex"},
          "FIG-BUN": {"name": "Figure Pastel", "kind": "Bun"},
          "FIG-WENDI": {"name": "Figure Glow", "kind": "Wendigo"},
          "FIG-BETA": {"name": "Figure Prototype", "kind": "Beta Buddy"}}
+for _p, _m in MERCH.items():                  # 🚧 a parked Blip's code is kept and its skin waits until the Blip arrives
+    if _m.get("kind") in PARKED_NOW:
+        MERCH[_p] = {"name": _m["name"], "for": _m["kind"], "waits": _m["kind"]}
+
+
+def merch_backfill(save):
+    """🎟️ Codes redeemed for a Blip that wasn't in the game yet: once it arrives, hand out the Blip and its skin."""
+    for prefix in save.get("merch", []):
+        m = MERCH.get(prefix) or {}
+        kind = m.get("kind")
+        if kind and kind in VARIANTS:
+            skin = f"{kind}:{m['name']}"
+            if skin not in save.setdefault("skins", []):
+                save["skins"].append(skin)
+            if kind not in save.setdefault("merch_kinds", []):
+                save["merch_kinds"].append(kind)
 # merch-only colors (added at the end of each Blip's colors: saves remember colors by position)
 MERCH_COLORS = {
     "T-Rex": [{"name": "Classic Dino Green", "o": "#0c2a14", "b": "#5ac85a", "s": "#2e8a3a", "h": "#2e8a3a", "k": "#ffffff", "d": "#5a1a1a", "l": "#d8f8b0", "a": "#3a9a4a", "e": "#ffd23a"},
@@ -10731,6 +10754,7 @@ class App:
         self.name_tags = tk.BooleanVar(master=self.root, value=True)
         self.season = current_season()
         self.save = load_save()
+        merch_backfill(self.save)
         if "Egypt World" not in self.save.setdefault("worlds", []):
             self.save["worlds"].append("Egypt World")      # 🏺 free for everyone (its gods still have to be dug up)
         self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))

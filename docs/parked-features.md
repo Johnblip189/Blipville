@@ -4,6 +4,18 @@ These are built and still in the code, switched off with `FEATURES` in `blip.pyw
 (the website follows it through `tools/export_go_data.py`). To bring one back: set it to `True`,
 re-export the web data, and paste its release note back in.
 
+- 🤖 **Silvertear-03, a new mecha kaiju:** silver plates over a charcoal frame, a sharp brow horn with swept-back fins,
+  a dark visor with wide pixel eyes, crimson tear ridges down her cheeks, a segmented chin guard and a segmented tail.
+  She powers up behind the city now and then: click her 3 times before she stomps off. She has a personality all her
+  own: a hyper-serious tactical bodyguard who talks in mission logs, scans every cookie for its "threat level" and
+  stands guard from 7 PM to 7 AM… who is secretly very loyal to her keeper, secretly loves naps, and short-circuits
+  (her whole faceplate flushes pink) if you call her cute. Colors: Chrome, Gunmetal,
+  Gold Plated (with emerald eyes) and 📺 **Showa**, the boxy 1970s tin-robot model with its own drawing: bolt antennae,
+  a riveted brow, amber eyes in a wide visor slot, clean riveted cheeks, a red/yellow/cyan chest strip and a stiff tail.
+  She also has her own chat (ask about her tears, whether she's sleepy, or call her cute to watch her overheat) with a
+  hand-drawn chat portrait. Switch: `FEATURES["silvertear"]` (parked Blips are listed in `PARKED_KINDS`). Anyone who
+  already caught her keeps her, and AEGIS-CHR merch codes redeemed meanwhile hand out her and Mirror Chrome once she's on.
+
 - 🪟 **Only on Windows: Blips climb your windows!** Now and then a Blip jumps up onto the top edge of an open window,
   walks along it and naps there. Drag the window and they ride along (wheee!); close or minimize it and they tumble back
   down. You can even toss a Blip onto a window. Turn it off with right-click → 🪟 Climb on my windows.

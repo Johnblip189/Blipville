@@ -237,8 +237,8 @@
        and the pictures are 3D previews, not the final toys. Tap one to spin it around in 3D.</p>
     <button class="card boxfeature" type="button" data-item="mystery-box">
       <span class="wip">🚧 in progress</span>
-      <img src="docs/merch/mystery-box.png?v=1" alt="" loading="lazy">
-      <span class="bfText"><b>Mystery Blip Box</b><span class="stars">Series 1 · $4.99</span>
+      <img src="docs/merch/mystery-box.png?v=2" alt="" loading="lazy">
+      <span class="bfText"><b>Mystery Blip Box</b><span class="stars">Series 1: The Beginning · $4.99</span>
         <p>One random Blip figure on its display base, plus a code card for a <b>merch-only color</b> in the game. You won't know
            who's inside until you open it, and any of them could be a <b>shiny chrome</b> one!</p>
         <span class="view">🔍 View the box in 3D</span></span>
@@ -391,10 +391,10 @@
 <script>
 // 🧸 Merch viewer: tap an item to spin its 3D model. Nothing is for sale yet (the buy button stays off).
 (() => {
-  const BOX = { price: "Mystery box · $4.99", note: "Each box holds one random Series 1 figure on its display base, plus a code for a merch-only color in Blipville." };
+  const BOX = { price: "Mystery box · $4.99", note: "Each box holds one random Series 1 (The Beginning) figure on its display base, plus a code for a merch-only color in Blipville." };
   const TBA = { price: "Price TBA", note: "Not priced yet." };
   const ITEMS = {
-    "mystery-box": { name: "Mystery Blip Box", stars: "Series 1", bio: "One random Series 1 Blip on its display base and a code card, sealed in a starry box. Each figure 1 in 6; 2 in 5 boxes hold a shiny chrome one.", ...BOX },
+    "mystery-box": { name: "Mystery Blip Box", stars: "Series 1: The Beginning", bio: "One random Series 1 Blip on its display base and a code card, sealed in a starry box. Each figure 1 in 6; 2 in 5 boxes hold a shiny chrome one.", ...BOX },
     "silvertear03": { name: "Silvertear-03", stars: "★ Regular", bio: "Tactical bodyguard. Secretly loves naps. Joins the game in 1.1!", ...BOX },
     "blip": { name: "Blip", stars: "★ Regular", bio: "The friendliest Blip in town.", ...BOX },
     "trex": { name: "T-Rex", stars: "★ Regular", bio: "Tiny arms. Huge heart.", ...BOX },
@@ -441,7 +441,7 @@
       three = three || setup();
       const v = three;
       if (v.model) { v.scene.remove(v.model); v.model = null; }
-      const gltf = v.cache[id] || (v.cache[id] = await new Promise((ok, bad) => new v.T.GLTFLoader().load(`docs/merch/models/${id}.glb?v=5`, ok, undefined, bad)));
+      const gltf = v.cache[id] || (v.cache[id] = await new Promise((ok, bad) => new v.T.GLTFLoader().load(`docs/merch/models/${id}.glb?v=6`, ok, undefined, bad)));
       v.model = gltf.scene; v.scene.add(v.model);
       const box = new v.T.Box3().setFromObject(v.model), r = box.getSize(new v.T.Vector3()).length() / 2;
       v.controls.target.set(0, 0, 0); v.camera.position.set(r * 0.9, r * 0.75, r * 2.6);

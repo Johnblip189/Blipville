@@ -11,6 +11,7 @@ If merch/private/series1-codes.csv is there (it is never committed), it also wri
 its code printed in the box, into merch/private/card_backs/ (copies #1-2 of each figure are the chrome ones).
 """
 import csv
+import json
 import importlib.util
 import math
 import os
@@ -43,6 +44,10 @@ THEMES = {   # (top, bottom, accent, banner)
     "regular": ((70, 56, 150), (24, 18, 56), (170, 150, 255), (98, 76, 230)),
     "chrome": ((232, 236, 246), (112, 120, 140), (255, 255, 255), (84, 92, 116)),
 }
+# 🏷️ which series this is: merch/series.json is the one place to rename it (cards, box and site read it)
+_SER = json.load(open(os.path.join(ROOT, "merch", "series.json")))
+SERIES_NO, SERIES_NAME = _SER["number"], _SER["name"]
+SERIES_LABEL = f"Series {SERIES_NO}: {SERIES_NAME}"
 SITE, DISCORD = "johnblip189.github.io/Blipville", "discord.gg/Q3zmYakNZT"
 GOLD, INK = (255, 214, 58), (40, 22, 70)
 
@@ -276,7 +281,7 @@ def front(m, kind, number, chrome=False):
     if chrome:
         text_center(d, TRIM_W / 2, 50.9, "\u2726 CHROME \u00b7 ONLY 2 OF EACH \u2726", font(BOLD, 1.8), (40, 44, 64))
     else:
-        text_center(d, TRIM_W / 2, 50.9, f"\u2605 SERIES 1 \u00b7 {number} OF 6 \u2605", font(BOLD, 1.8), GOLD)
+        text_center(d, TRIM_W / 2, 50.9, f"\u2605 {SERIES_NAME.upper()} \u00b7 {number} OF 6 \u2605", font(BOLD, 1.8), GOLD)
     return round_corners(img)
 
 

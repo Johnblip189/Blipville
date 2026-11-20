@@ -147,14 +147,14 @@ class Panel:
 def front_panel(m, grids):
     p = Panel(W, H, 1)
     p.logo(W / 2, 4.0, W - 10)
-    p.text(W / 2, 11.5, "SERIES 1 FIGURES", f(C.BOLD, 2.6), fill=(225, 215, 255))
+    p.text(W / 2, 11.5, f"SERIES {C.SERIES_NO} \u00b7 {C.SERIES_NAME.upper()}", f(C.BOLD, 2.4), fill=(225, 215, 255))
     # the mystery Blip: a dark silhouette with a glowing ? in front of it
     p.sprite(grids["Blip"], W / 2, 31, 36, silhouette=(14, 8, 32))
     p.qmark(W / 2, 30, 15, GOLD, glow=(255, 214, 58, 200))
     p.rrect(4, 44, W - 4, 53, 2.5, fill=GOLD, outline=INK, width=round(0.4 * MM))
     p.text(W / 2, 45.2, "MYSTERY BLIP", f(C.BOLD, 5.2), fill=INK)
     p.text(W / 2, 54.6, "1 random figure + display base inside", f(C.BOLD, 2.1), fill=WHITE)
-    p.burst(W - 8.5, 19.5, 7.0, "CHROME\nCHASE!", fill=(220, 228, 245), size=1.9)
+    p.burst(W - 8.0, 22.5, 6.6, "CHROME\nCHASE!", fill=(220, 228, 245), size=1.9)
     return p
 
 
@@ -216,7 +216,7 @@ def top_panel(m, grids):
 def bottom_panel(m, grids):
     p = Panel(W, D, 6)
     p.logo(W / 2, 4, W - 18)
-    lines = [("Series 1 · Mystery Blip", C.BOLD, 2.6, WHITE), (f"{PRICE}", C.BOLD, 5.0, GOLD),
+    lines = [(C.SERIES_LABEL, C.BOLD, 2.4, WHITE), (f"{PRICE}", C.BOLD, 5.0, GOLD),
              ("Contains: 1 random figure,", C.REG, 2.1, WHITE), ("display base and a code card.", C.REG, 2.1, WHITE),
              ("Each figure 1 in 6 · Chrome 2 in 5", C.BOLD, 2.0, (220, 228, 245)),
              (C.SITE, C.REG, 1.9, (200, 190, 255)), (C.DISCORD, C.REG, 1.9, (200, 190, 255)),

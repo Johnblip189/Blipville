@@ -1,6 +1,6 @@
 # 🏛️ Series 2: House of Myths (planned)
 
-Series 1 is "The Beginning". Series 2 waits on how Series 1 sells; the quantities below are still open.
+Series 1 is "The Beginning" (set in merch/series.json). Series 2 waits on how Series 1 sells; the quantities below are still open.
 
 ## Lineup
 | Blip | Role |
@@ -28,7 +28,7 @@ A new Blip: a hooded keeper with glowing gold eyes and a little lantern who guar
 - The box color. The idea is deep green and gold, so the two series are easy to tell apart.
 
 ## To build when it's time
-1. Make the series name a single setting across the cards, box and site, and put "The Beginning" on Series 1.
+1. Set `merch/series.json` to Series 2 / House of Myths (the cards and box read it; update the site text to match).
 2. Mythkeeper in the game: a hidden kind, a merch prefix and codes, and the in-game unlock.
 3. Figures and bases (`merch/figures`), cards with a ??? card for the Lurker (`merch/cards`), the box with the real
    odds (`merch/box`), and a House of Myths section on the website.

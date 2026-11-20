@@ -5,11 +5,11 @@ It's its own set, sold alongside Series 1.
 
 | Blip | Colors | Combiner part |
 |---|---|---|
-| Fossil-01 Tyranno-King | crimson red & gold, cyan visor eyes | torso + spring-loaded push-button head with a T-Rex crown crest |
-| Fossil-02 Tricera-Shield | cobalt blue & silver | left arm: triple-horn shield gauntlet |
-| Fossil-03 Ptera-Blade | magenta & pearl white | right arm: crest energy blade |
-| Fossil-04 Stego-Stomp | amber & gunmetal | left leg: dorsal-plate shin, flip-out foot |
-| Fossil-05 Brachio-Pillar | emerald & bronze | right leg: wide flip-out boot |
+| Fossil-01 Tyranno-King | black & gold, dark-blue visor with blue eyes | torso + spring-loaded push-button head with a T-Rex crown crest |
+| Fossil-02 Tricera-Shield | blue with a black frill & gold horns | left arm: triple-horn shield gauntlet |
+| Fossil-03 Ptera-Blade | gold with a black crest & blue eyes | right arm: crest energy blade |
+| Fossil-04 Stego-Stomp | black with blue & gold dorsal plates | left leg: dorsal-plate shin, flip-out foot |
+| Fossil-05 Brachio-Pillar | blue with a gold crest & jaw armor | right leg: wide flip-out boot |
 
 **Engineering:** only three skeletons are needed.
 - **Torso core:** the spring-loaded push-button head, shoulder ports, and outward-flaring hip ratchets.
@@ -21,8 +21,8 @@ Only the snap-on dino face panels differ between the two arms and between the tw
 ## Before release: naming and colors
 - **The combiner's name.** "Megazord" (and "Dino-Megazord", "Samurai Megazord") are trademarks of the Power Rangers
   franchise, so the combined robot needs an original name, for example "Apex Fossil Titan" or "Fossil Colossus".
-- **The colors.** A red T-Rex + blue Triceratops + pink Pterodactyl trio is the classic Power Rangers Dinozord
-  lineup. Changing one or two colors (for example Ptera-Blade in teal & pearl) keeps the set clearly Blipville's own.
+- **The colors: settled.** The whole squad shares one gold, black and blue team scheme, mixed differently on each Blip,
+  which keeps it clearly Blipville's own and not a red / blue / pink Dinozord look.
 
 ## Stages
 1. **The five Blips (in progress).**

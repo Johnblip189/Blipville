@@ -2,8 +2,8 @@
 
     python3 merch/figures/make_web_models.py          (needs what make_figures.py needs)
 
-Each figure is put together standing on its base and painted with the sprite's colors (one mesh per color, so the
-files stay small). The chompers are one color.
+Each figure is put together standing on its base, voxel style like the Blipville 3D viewer, painted with the sprite's
+colors (one mesh per color, so the files stay small). The chompers are one color.
 """
 import json
 import os
@@ -27,33 +27,43 @@ def hexrgb(h):
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
 
 
-def main_letter(sp):
-    letters = [c.lower() for r in sp["body"] for c in r if c not in ".o*"]
-    return max(set(letters), key=letters.count)
+def letter_color(pal, ch):
+    """A sprite letter's color: lowercase from the palette, uppercase = its shade, * = a highlight, f = feet."""
+    if ch == "f":
+        return hexrgb(pal.get("f", pal["o"]))
+    if ch in pal:
+        return hexrgb(pal[ch])
+    if ch == "*":
+        main = max((k for k in pal if len(k) == 1 and k not in "oe"), key=lambda k: 0, default="o")
+        return tuple(min(255, int(v * 1.25 + 30)) for v in hexrgb(pal.get("b", pal[main])))
+    low = ch.lower()
+    if low in pal:
+        return tuple(int(v * 0.78) for v in hexrgb(pal[low]))
+    return hexrgb(pal["o"])
 
 
-def figure_colors(t, sp):
-    """Each face gets the sprite color under it (front faces), or the Blip's main color (sides and back)."""
-    rows, pal = sp["body"], sp["colors"]
-    main = hexrgb(pal[main_letter(sp)])
-    top_y = len(rows) * F.PX
-    ey, dx = sp["eyes"], sp.get("dx", 0)
-    eyes = {(ey + b, ex + a + dx) for ex in (4, 10) for a in (0, 1) for b in (0, 1)}
-    visor = any("v" in r for r in rows)
-    out = np.tile(np.array(main, float), (len(t.faces), 1))
+def figure_colors(t, sp, front):
+    """Like the viewer: the front face shows the sprite (eyes, glints, mouth), everything else the pixel's own color."""
+    pal = sp["colors"]
+    g = F.grid(sp)
+    eyes, glint, mouth = F.face_cells(sp)
+    eye = hexrgb(pal.get("e", "#111111"))
+    lum = 0.299 * eye[0] + 0.587 * eye[1] + 0.114 * eye[2]
+    shine = hexrgb(pal["o"]) if lum > 150 else (255, 255, 255)
     c, n = t.triangles_center, t.face_normals
-    for i in np.where(n[:, 2] > 0.5)[0]:
-        col_, row_ = int(c[i, 0] // F.PX), int((top_y - c[i, 1]) // F.PX)
-        if not (0 <= row_ < len(rows) and 0 <= col_ < 16):
-            continue
-        ch = rows[row_][col_]
-        if (row_, col_) in eyes:
-            out[i] = hexrgb(pal.get("e", "#111111")) if not visor else hexrgb(pal.get("e", "#ffffff"))
-        elif ch == "*":
-            out[i] = np.minimum(np.array(main) * 1.2 + 30, 255)
-        elif ch != ".":
-            out[i] = hexrgb(pal.get(ch.lower(), pal[main_letter(sp)]))
-    return out.astype(np.uint8)
+    out = np.zeros((len(c), 3), np.uint8)
+    for i in range(len(c)):
+        x, y = int(c[i, 0] // F.V), F.ROWS - 1 - int(c[i, 1] // F.V)
+        x, y = min(max(x, 0), F.COLS - 1), min(max(y, 0), F.ROWS - 1)
+        ch = g[y][x] or "o"
+        col = letter_color(pal, ch)
+        if front and n[i, 2] > 0.5 or front and (x, y) in eyes | mouth:
+            if (x, y) in glint:
+                col = shine
+            elif (x, y) in eyes or (x, y) in mouth:
+                col = eye
+        out[i] = col
+    return out
 
 
 def by_color(meshes_colors):
@@ -74,19 +84,55 @@ def by_color(meshes_colors):
     return scene
 
 
+def voxel_mesh(sp, sink):
+    """The figure exactly like the 3D viewer: one cube per voxel (only outside faces), the front-most cube of each column
+    showing the sprite (eyes, glint, mouth), the rest the pixel's own color."""
+    pal = sp["colors"]
+    g, d = F.grid(sp), F.depth_map(F.grid(sp))
+    eyes, glint, mouth = F.face_cells(sp)
+    eye = hexrgb(pal.get("e", "#111111"))
+    shine = hexrgb(pal["o"]) if 0.299 * eye[0] + 0.587 * eye[1] + 0.114 * eye[2] > 150 else (255, 255, 255)
+    vox = {}
+    for y in range(F.ROWS):
+        for x in range(F.COLS):
+            if not g[y][x]:
+                continue
+            h = d[y][x]
+            base_col = letter_color(pal, g[y][x])
+            face = shine if (x, y) in glint else eye if (x, y) in eyes or (x, y) in mouth else base_col
+            for k in range(-h + 1, h + 1):
+                vox[(x, y, k)] = face if k == h else base_col
+    V = F.V
+    verts, faces, cols = [], [], []
+    dirs = [((1, 0, 0), [(1, 0, 0), (1, 1, 0), (1, 1, 1), (1, 0, 1)]), ((-1, 0, 0), [(0, 0, 0), (0, 0, 1), (0, 1, 1), (0, 1, 0)]),
+            ((0, -1, 0), [(0, 1, 0), (0, 1, 1), (1, 1, 1), (1, 1, 0)]), ((0, 1, 0), [(0, 0, 0), (1, 0, 0), (1, 0, 1), (0, 0, 1)]),
+            ((0, 0, 1), [(0, 0, 1), (1, 0, 1), (1, 1, 1), (0, 1, 1)]), ((0, 0, -1), [(0, 0, 0), (0, 1, 0), (1, 1, 0), (1, 0, 0)])]
+    for (x, y, k), col in vox.items():
+        X0, Y0, Z0 = x * V, (F.ROWS - 1 - y) * V - sink, (k - 1) * V
+        for (dx, dy, dz), quad in dirs:
+            if (x + dx, y + dy, k + dz) in vox:                          # (grid y grows downward)
+                continue
+            b = len(verts)
+            for qx, qy, qz in quad:
+                verts.append((X0 + qx * V, Y0 + (1 - qy) * V if dy else Y0 + qy * V, Z0 + qz * V))
+            faces += [(b, b + 1, b + 2), (b, b + 2, b + 3)]
+            cols += [col, col]
+    m = trimesh.Trimesh(vertices=np.array(verts, float), faces=np.array(faces), process=False)
+    m.fix_normals()
+    return m, np.array(cols, np.uint8)
+
+
 def figure_scene(name, sp):
-    fig, hx = F.body(sp)
-    b = F.base(sp, name, hx, 16 * F.PX)
-    # the base as printed (x, y from its front edge, z up) -> standing: y up, z toward the viewer
-    b = b.rotate([-90, 0, 0]).translate([0, -F.BASE_H, F.BASE_D - F.BACK])
-    ft, bt = F.to_trimesh(fig), F.to_trimesh(b)
+    _, _, b = F.assembled(sp, name)
+    fig, fc = voxel_mesh(sp, F.POCKET)
+    bt = F.to_trimesh(b)
     bc = np.tile(np.array(BASE_COLOR, np.uint8), (len(bt.faces), 1))
     c, n = bt.triangles_center, bt.face_normals
-    front = F.BASE_D - F.BACK                                        # the lettering strip, in from the base's edges
-    strip = (c[:, 2] > front - (F.BASE_D - F.BACK - 17.0) + 0.3) & (c[:, 2] < front - 1.5) & (np.abs(c[:, 0] - 8 * F.PX) < 16)
-    bc[(n[:, 1] > 0.5) & (c[:, 1] < -0.3) & (c[:, 1] > -1.2) & strip] = LETTER_COLOR     # the engraved name
-    scene = by_color([(ft, figure_colors(ft, sp)), (bt, bc)])
-    return scene
+    floor = (n[:, 1] > 0.5) & (c[:, 1] < -0.3) & (c[:, 1] > -1.0)               # engraved floors (and the foot pockets)
+    strip = (np.abs(c[:, 0] - F.COLS * F.V / 2) < 18) & (c[:, 2] < F.SPLIT_Y - 1.5)
+    front_of_feet = c[:, 2] > max(hd for _, _, hd in F.footprint(sp)) + 1.0
+    bc[floor & strip & front_of_feet] = LETTER_COLOR
+    return by_color([(fig, fc), (bt, bc)])
 
 
 def chomper_scene(path, color):

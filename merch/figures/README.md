@@ -1,7 +1,9 @@
 # 🧸 Blipville figures: Series 1
 
-Display figures built straight from the game sprites, each on its own base (`python3 make_figures.py` rebuilds them all;
-`python3 make_figures.py sprites.json Blip` rebuilds one).
+Voxel figures in the style of the Blipville 3D viewer, each on its own display base. To rebuild:
+- all of them: `python3 make_figures.py`;
+- one: `python3 make_figures.py sprites.json Blip`;
+- the website's 3D models: `python3 make_web_models.py`.
 
 | Figure | Rarity | File |
 |---|---|---|
@@ -14,21 +16,25 @@ Display figures built straight from the game sprites, each on its own base (`pyt
 
 Extras (not in the series yet): `robo_bear_figure.stl`, `boo_figure.stl`, `spike_figure.stl`.
 
-**The look:** the Blip's whole sprite as a soft vinyl-toy body, about 40 × 30 × 16 mm. The pixel outline gets slightly
-rounded corners and the front swells into a smooth dome. The sprite's details are carved into it:
-- sunk eyes and mouth;
-- grooves for inner outlines;
-- raised bellies, teeth and highlights;
-- a recessed visor with the eyes standing out.
+**The look:** the game sprite, feet included, turned into chunky 2.5 mm cubes, exactly like the 3D viewer. Each pixel
+is a column of cubes: 8 deep in the middle, thinner toward the edges, the same front and back, like a plush toy. The figure
+is about 40 × 32 × 20 mm. The eyes and mouth are carved into the front, and each eye keeps a raised glint in its corner.
 
-**The base:** a rounded plinth, about 46 × 30 × 6 mm, with the Blip's name and rarity stars engraved along the front.
-A teardrop-shaped peg fits a matching hole in the figure's bottom, so it stands upright facing forward and can't spin.
+**Printing:** each STL is one plate with 5 parts, all with no supports. PLA, 0.2 mm layers, 3 walls, 15–20% infill.
 
-**Printing:** each STL is one plate with two parts, the figure (lying face up) and its base. No supports. PLA, 0.2 mm
-layers, 3 walls, 15–20% infill. Print the base in a contrasting color, or paint the engraved name, to make it pop.
+| Part | How it prints |
+|---|---|
+| Front half | On its flat cut face. The face is on this half. |
+| Back half | On its flat cut face. It's mirrored on the plate, so it matches once flipped over. |
+| Base | Flat. It has foot pockets and the engraved name and rarity stars. |
+| 2 small pins | Standing up. They line the halves up for gluing. |
 
-**Putting it together:** press the figure down onto the peg. It's a snug fit; a drop of glue makes it permanent.
+A voxel shape overhangs whichever way it lies, which is why the figure prints as two halves.
 
-**Settings to tweak** (at the top of `make_figures.py`):
-- `PEG_D` / `HOLE_D`: the peg fit (bigger gap is looser);
-- `BASE_D`, `BASE_H`, `TEXT_H`: the base's size and lettering.
+**Putting it together:**
+1. Push the two pins into the holes on one half's flat face.
+2. Glue the halves together. The pins line them up.
+3. Glue the feet into the pockets on the base, with the face toward the name.
+
+**Tips:** print the base in a contrasting color (or paint the engraved name) so it pops. A light sanding of the cut
+faces before gluing makes the seam disappear.

@@ -1,18 +1,20 @@
-"""🧸 Blip figures (Series 1), built straight from the game sprites, each on its own display base. Zero supports.
+"""🧸 Blip figures (Series 1), built like the Blipville 3D voxel viewer, each on its own display base. Zero supports.
 
-    python3 merch/figures/make_figures.py                   (needs: pip install manifold3d trimesh numpy scipy pillow)
+    python3 merch/figures/make_figures.py                   (needs: pip install manifold3d trimesh numpy pillow)
     python3 merch/figures/make_figures.py sprites.json Blip (just one)
 
-Each STL is one print plate with two parts: the figure lying on its back (face up) and its base.
+The figure is the game sprite (16 x 13 with its feet) turned into chunky voxels, exactly like the 3D viewer: every pixel
+is a 2.5 mm cube column, thickest in the middle (8 cubes deep) and thinner toward the edges, the same front and back,
+like a plush toy. About 40 x 32 x 20 mm.
 
-* Figure: the Blip's whole 16 x 12 game sprite, 2.5 mm per pixel (about 40 x 30 x 16 mm), as a soft vinyl-toy shape: the
-  outline keeps the pixel silhouette (with slightly rounded corners) and the front swells into a smooth rounded dome. The
-  sprite's details are carved into the dome: eyes and mouth sunk in, darker patches and inner outlines sunk a little,
-  light patches (bellies, teeth, highlights) raised a little, visors recessed with the eyes glowing out of them. Nothing
-  overhangs. A teardrop-shaped hole in its bottom (pointed toward the front, so it prints cleanly) fits the base's peg.
-* Base: a rounded plinth with the Blip's name and its rarity stars engraved in the front. A matching teardrop peg holds
-  the figure upright and facing forward (it can't spin). Snug fit; a drop of glue makes it permanent.
-* Print in PLA at 0.2 mm, 3 walls, 15-20% infill.
+A shape like that overhangs whichever way it lies, so it prints as two halves, split down the middle: the front half
+(with the eyes and mouth carved in, each eye keeping a raised glint in its corner) and the back half, each lying flat on
+its cut face, so every layer is smaller than the one under it. Two small pins line the halves up for gluing.
+
+The base: a rounded plinth with shallow pockets the feet sit in, and the Blip's name and rarity stars engraved along the
+front. Glue the feet into the pockets.
+
+Each STL is one print plate: front half, back half, base and 2 alignment pins. PLA, 0.2 mm, 3 walls, 15-20% infill.
 """
 import json
 import os
@@ -22,22 +24,19 @@ import manifold3d as mf
 import numpy as np
 import trimesh
 from PIL import Image, ImageDraw, ImageFont
-from scipy import ndimage
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PX = 2.5                    # mm per sprite pixel
-SUB = 10                    # height-field cells per pixel (0.25 mm)
-T0, DOME, DOME_R = 9.5, 6.0, 7.0   # body thickness at the outline, extra height in the middle, how far in it reaches full height
-ROUND = 0.6                 # silhouette corner rounding
-EYE, MOUTH, DARK, LIGHT, VISOR = 1.6, 1.2, 0.7, 0.45, 1.2   # relief depths (mm)
+V = 2.5                     # mm per voxel (one sprite pixel)
+ROWS, COLS = 13, 16         # 12 body rows + the feet row
+MAX_HALF = 4                # half-thickness in voxels (like the viewer: up to 8 cubes deep)
+EYE_D, MOUTH_D = 1.2, 1.0   # carved face (mm)
+PIN_D, PIN_HOLE, PIN_L, PIN_DEPTH = 3.0, 3.25, 5.4, 3.0   # alignment pins between the halves
 SEG = 48
 # 🪧 the base
-BASE_D, BASE_H = 30.0, 6.0  # depth (front to back) and height; the width follows the figure (at least 46 mm)
+BASE_D, BASE_H = 32.0, 6.0  # depth (front to back) and height; the width follows the figure (at least 46 mm)
 BASE_R = 7.0                # corner rounding
-BACK = 3.0                  # the figure's back stands this far in from the base's back edge
-PEG_D, HOLE_D = 5.0, 5.3    # teardrop peg and the hole in the figure's bottom
-PEG_L, HOLE_L = 6.0, 6.8
-HOLE_Z = 4.6                # the hole's centre, in from the figure's back (inside the thin outline: the tip stays inside)
+SPLIT_Y = 19.0              # where the figure's middle (the split) sits, measured from the base's front edge
+POCKET, POCKET_CLR = 1.2, 0.25
 TEXT_H, ENGRAVE = 6.0, 0.8  # name lettering height and depth
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 STARS = {"ultra-rare": 3, "rare": 2, "regular": 1}
@@ -76,66 +75,6 @@ def soften(cs, r):
     return cs.offset(-r, mf.JoinType.Round).offset(r, mf.JoinType.Round).offset(r, mf.JoinType.Round).offset(-r, mf.JoinType.Round)
 
 
-def _along_x(cs, x0, x1):
-    """A CrossSection drawn in (y, z) -> a prism along X from x0 to x1."""
-    mesh = cs.extrude(x1 - x0).to_mesh()
-    v = np.asarray(mesh.vert_properties)[:, :3].copy()
-    v = np.stack([v[:, 2] + x0, v[:, 0], v[:, 1]], axis=1)
-    tri = np.asarray(mesh.tri_verts)
-    m = mf.Manifold(mf.Mesh(vert_properties=v.astype(np.float32), tri_verts=tri.astype(np.uint32)))
-    return m if m.volume() > 0 else mf.Manifold(mf.Mesh(vert_properties=v.astype(np.float32), tri_verts=tri[:, ::-1].astype(np.uint32)))
-
-
-def teardrop_cs(cy, cz, d):
-    """Round at the bottom, pointed on top (+Z), so a sideways hole prints without supports."""
-    r = d / 2
-    pts = [(cy + r * np.cos(a), cz + r * np.sin(a)) for a in np.linspace(3 * np.pi / 4, 2 * np.pi + np.pi / 4, 40)]
-    pts.append((cy, cz + r * np.sqrt(2)))
-    return mf.CrossSection([pts])
-
-
-def lum(hexcol):
-    h = hexcol.lstrip("#")
-    r, g, b = (int(h[i:i + 2], 16) for i in (0, 2, 4))
-    return 0.3 * r + 0.59 * g + 0.11 * b
-
-
-def relief_map(sprite, rows):
-    """Per-pixel height change (mm) from the sprite's details."""
-    pal = sprite.get("colors", {})
-    letters = [ch.lower() for row in rows for ch in row if ch not in ".o*"]
-    main = max(set(letters), key=letters.count) if letters else "b"
-    base = lum(pal.get(main, "#888888"))
-    ey, dx = sprite["eyes"], sprite.get("dx", 0)
-    eyes = {(ey + b, ex + a + dx) for ex in (4, 10) for a in (0, 1) for b in (0, 1)}
-    mouth = {(ey + 4, 7 + dx), (ey + 4, 8 + dx)} if sprite.get("mouth") else set()
-    visor = any("v" in r for r in rows)
-    n, w = len(rows), 16
-    filled = np.array([[ch != "." for ch in row] for row in rows])
-    rel = np.zeros((n, w))
-    for r, row in enumerate(rows):
-        for c, ch in enumerate(row):
-            if ch == ".":
-                continue
-            edge = any(not (0 <= r + i < n and 0 <= c + j < w and filled[r + i, c + j]) for i in (-1, 0, 1) for j in (-1, 0, 1))
-            if (r, c) in eyes:
-                rel[r, c] = 0.0 if visor else -EYE           # a visor's eyes glow out of it
-            elif (r, c) in mouth:
-                rel[r, c] = -MOUTH
-            elif ch == "v":
-                rel[r, c] = -VISOR
-            elif ch == "o":
-                rel[r, c] = 0.0 if edge else -DARK               # outlines inside the shape become grooves
-            elif ch == "*":
-                rel[r, c] = LIGHT
-            else:
-                col = pal.get(ch.lower())
-                if col and ch.lower() != main:
-                    d = lum(col) - base
-                    rel[r, c] = LIGHT if d > 40 else -DARK if d < -40 else 0.0
-    return rel
-
-
 def _no_corner_touch(m):
     """Fill one cell wherever two filled cells touch only at a corner (keeps the mesh a clean solid)."""
     m = m.copy()
@@ -152,39 +91,6 @@ def _no_corner_touch(m):
     return m
 
 
-def heightfield(mask, h, x0, y0, cell):
-    """A closed solid: flat bottom at z = 0, vertical walls round the mask, and a smooth top whose corners take the
-    lowest height of the cells around them (so sunk details stay crisp). Row 0 of the mask is the top (y0)."""
-    R, C = mask.shape
-    hp = np.where(mask, h, np.inf)
-    pad = np.pad(hp, 1, constant_values=np.inf)
-    corner = np.minimum(np.minimum(pad[:-1, :-1], pad[:-1, 1:]), np.minimum(pad[1:, :-1], pad[1:, 1:]))   # (R+1, C+1)
-    vid, verts = {}, []
-
-    def v(r, c, top):
-        key = (r, c, top)
-        if key not in vid:
-            vid[key] = len(verts)
-            verts.append((x0 + c * cell, y0 - r * cell, corner[r, c] if top else 0.0))
-        return vid[key]
-    faces = []
-    for r, c in zip(*np.where(mask)):
-        a, b, cc, d = (r, c), (r, c + 1), (r + 1, c + 1), (r + 1, c)     # tl, tr, br, bl (y goes down with r)
-        faces += [(v(*a, 1), v(*d, 1), v(*cc, 1)), (v(*a, 1), v(*cc, 1), v(*b, 1))]           # top, facing +z
-        faces += [(v(*a, 0), v(*cc, 0), v(*d, 0)), (v(*a, 0), v(*b, 0), v(*cc, 0))]           # bottom, facing -z
-        for (p, q), (dr, dc) in (((a, b), (-1, 0)), ((b, cc), (0, 1)), ((cc, d), (1, 0)), ((d, a), (0, -1))):
-            rr, c2 = r + dr, c + dc
-            if 0 <= rr < R and 0 <= c2 < C and mask[rr, c2]:
-                continue
-            faces += [(v(*p, 0), v(*q, 1), v(*q, 0)), (v(*p, 0), v(*p, 1), v(*q, 1))]
-    V = np.array(verts, np.float32)
-    Fc = np.array(faces, np.uint32)
-    m = mf.Manifold(mf.Mesh(vert_properties=V, tri_verts=Fc))
-    if m.volume() < 0 or m.is_empty():
-        m = mf.Manifold(mf.Mesh(vert_properties=V, tri_verts=Fc[:, ::-1].copy()))
-    return m
-
-
 def layered(cs, height, chamfer=0.9, steps=3, bottom=0.4):
     """Extrude a profile with softened edges: a small 45-degree chamfer on the bed side, rounded-off top edges."""
     parts = [cs.offset(-bottom, mf.JoinType.Round).extrude(bottom + 0.01), cs.extrude(height - chamfer - bottom + 0.01).translate([0, 0, bottom])]
@@ -193,55 +99,6 @@ def layered(cs, height, chamfer=0.9, steps=3, bottom=0.4):
         inset = chamfer * (1 - np.sqrt(1 - a * a))
         parts.append(cs.offset(-inset - 0.05, mf.JoinType.Round).extrude(chamfer / steps + (0.02 if i < steps - 1 else 0)).translate([0, 0, height - chamfer + i * chamfer / steps - 0.01]))
     return union(parts)
-
-
-def to_trimesh(m):
-    mm = m.to_mesh()
-    return trimesh.Trimesh(vertices=np.asarray(mm.vert_properties)[:, :3], faces=np.asarray(mm.tri_verts))
-
-
-def _along_y(cs, y0, y1):
-    """A CrossSection drawn in (x, z) -> a prism along Y from y0 to y1."""
-    mesh = cs.extrude(y1 - y0).to_mesh()
-    v = np.asarray(mesh.vert_properties)[:, :3].copy()
-    v = np.stack([v[:, 0], v[:, 2] + y0, v[:, 1]], axis=1)
-    tri = np.asarray(mesh.tri_verts)
-    m = mf.Manifold(mf.Mesh(vert_properties=v.astype(np.float32), tri_verts=tri.astype(np.uint32)))
-    return m if m.volume() > 0 else mf.Manifold(mf.Mesh(vert_properties=v.astype(np.float32), tri_verts=tri[:, ::-1].astype(np.uint32)))
-
-
-def hole_x(rows):
-    """Where the base's peg goes: the middle of the widest solid stretch of the sprite's bottom 3 rows."""
-    solid = np.all([[ch != "." for ch in row] for row in rows[-3:]], axis=0)
-    best, run, start = (0, 0), 0, 0
-    for c in range(17):
-        if c < 16 and solid[c]:
-            run, start = run + 1, (start if run else c)
-        else:
-            if run > best[0]:
-                best = (run, start)
-            run = 0
-    if best[0] < 3:
-        raise ValueError("no room for the stand peg in the bottom rows")
-    return (best[1] + best[0] / 2) * PX
-
-
-def body(sprite):
-    """The figure, lying face up as printed: x across, y up (y = 0 is its bottom), z out of its face."""
-    rows = list(sprite["body"])
-    n = len(rows)
-    top_y = n * PX
-    keep = np.array([[ch != "." for ch in row] for row in rows])
-    rel = relief_map(sprite, rows)
-    fine = _no_corner_touch(np.kron(keep, np.ones((SUB, SUB), bool)))
-    cell = PX / SUB
-    dist = ndimage.distance_transform_edt(np.pad(fine, 1))[1:-1, 1:-1] * cell - cell / 2
-    t = np.clip(dist / DOME_R, 0, 1)
-    h = T0 + DOME * np.sqrt(1 - (1 - t) ** 2) + np.kron(rel, np.ones((SUB, SUB)))
-    fig = heightfield(fine, h, 0, top_y, cell) ^ soften(rects_cs(keep, 0, top_y, PX), ROUND).extrude(40)
-    hx = hole_x(rows)
-    hole = _along_y(teardrop_cs(hx, HOLE_Z, HOLE_D), -1, HOLE_L)        # pointed toward the face (up, as it prints)
-    return fig - hole, hx
 
 
 def text_cs(text, height, max_w):
@@ -256,32 +113,135 @@ def text_cs(text, height, max_w):
     return cs.translate([-a.shape[1] * cell / 2, a.shape[0] * cell / 2])
 
 
-def base(sprite, name, hx, fig_w, x0=0.0, y0=0.0):
-    """The display base, flat on the bed: x across (matching the figure), y from the front edge (0) to the back (BASE_D),
-    z up. The peg stands up at the figure's hole; the name and stars are engraved along the front."""
-    w = max(46.0, fig_w + 8)
-    cx = fig_w / 2
+def to_trimesh(m):
+    mm = m.to_mesh()
+    return trimesh.Trimesh(vertices=np.asarray(mm.vert_properties)[:, :3], faces=np.asarray(mm.tri_verts))
+
+
+def grid(sp):
+    """The viewer's grid: letters (or None) per cell, 13 rows x 16, feet in the last row."""
+    g = [[None] * COLS for _ in range(ROWS)]
+    for y, row in enumerate(sp["body"]):
+        for x, ch in enumerate(row):
+            if ch != ".":
+                g[y][x] = ch
+    feet = sp.get("feet") or ""
+    for x, ch in enumerate(feet):
+        xx = x + sp.get("dx", 0)
+        if ch != "." and 0 <= xx < COLS:
+            g[12][xx] = "f"
+    return g
+
+
+def depth_map(g):
+    """Half-thickness in voxels: 1 at the edge, +1 per step inward (4-neighbours), at most MAX_HALF (as in the viewer)."""
+    d = [[99 if c else 0 for c in row] for row in g]
+    for _ in range(6):
+        for y in range(ROWS):
+            for x in range(COLS):
+                if d[y][x]:
+                    n = [d[b][a] if 0 <= a < COLS and 0 <= b < ROWS else 0 for a, b in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1))]
+                    d[y][x] = min(d[y][x], 1 + min(n))
+    return [[min(MAX_HALF, v) for v in row] for row in d]
+
+
+def face_cells(sp):
+    """Eye cells (with the glint cell in each eye's top-left) and mouth cells, as in the viewer."""
+    ey, dx = sp["eyes"], sp.get("dx", 0)
+    eyes = {(ex + a, ey + b) for ex in (4 + dx, 10 + dx) for a in (0, 1) for b in (0, 1)}
+    glint = {(4 + dx, ey), (10 + dx, ey)}
+    mouth = {(7 + dx, ey + 4), (8 + dx, ey + 4)} if sp.get("mouth") else set()
+    return eyes, glint, mouth
+
+
+def cell_xy(x, y):
+    """Figure coordinates: x across, y up (y = 0 is the bottom of the feet row)."""
+    return x * V, (ROWS - 1 - y) * V
+
+
+def half(sp, front=True):
+    """One half of the figure, lying on its cut face (z = 0 .. depth): a height map of voxel columns."""
+    g, d = grid(sp), None
+    d = depth_map(g)
+    eyes, glint, mouth = face_cells(sp)
+    e = 0.02
+    cubes = []
+    for y in range(ROWS):
+        for x in range(COLS):
+            if not g[y][x]:
+                continue
+            h = d[y][x] * V
+            if front and (x, y) in eyes and (x, y) not in glint:
+                h -= EYE_D
+            elif front and (x, y) in mouth:
+                h -= MOUTH_D
+            x0, y0 = cell_xy(x, y)
+            cubes.append(box(x0 - e, y0 - e, 0, x0 + V + e, y0 + V + e, h))
+    m = union(cubes)
+    for hx, hy in pin_spots(sp):
+        m = m - mf.Manifold.cylinder(PIN_DEPTH + 1, PIN_HOLE / 2, PIN_HOLE / 2, SEG).translate([hx, hy, -1])
+    return m
+
+
+def pin_spots(sp):
+    """Two thick cells far apart for the alignment pins (centres, figure coordinates)."""
+    g = grid(sp)
+    d = depth_map(g)
+    thick = [(x, y) for y in range(ROWS) for x in range(COLS) if d[y][x] >= 3]
+    best = max(((a, b) for a in thick for b in thick), key=lambda p: (p[0][0] - p[1][0]) ** 2 + (p[0][1] - p[1][1]) ** 2)
+    return [(cell_xy(x, y)[0] + V / 2, cell_xy(x, y)[1] + V / 2) for x, y in best]
+
+
+def alignment_pin(x0, y0):
+    """A short pin, standing up as printed (chamfered both ends)."""
+    r = PIN_D / 2
+    m = union([mf.Manifold.cylinder(0.41, r - 0.4, r, SEG), mf.Manifold.cylinder(PIN_L - 0.8, r, r, SEG).translate([0, 0, 0.4]),
+               mf.Manifold.cylinder(0.41, r, r - 0.4, SEG).translate([0, 0, PIN_L - 0.41])])
+    return m.translate([x0, y0, 0])
+
+
+def footprint(sp):
+    """The bottom row's cells as (x0, x1, half-depth) in mm: what the base's pockets hold."""
+    g = grid(sp)
+    d = depth_map(g)
+    low = max(y for y in range(ROWS) if any(g[y]))
+    return [(x * V, (x + 1) * V, d[low][x] * V) for x in range(COLS) if g[low][x]]
+
+
+def base(sp, name, x0=0.0, y0=0.0):
+    """The display base, flat on the bed: x across (matching the figure), y from the front edge (0) to the back, z up."""
+    w = max(46.0, COLS * V + 8)
+    cx = COLS * V / 2
     outline = soften(mf.CrossSection.square([w, BASE_D]).translate([cx - w / 2, 0]), BASE_R)
     plinth = layered(outline, BASE_H, chamfer=1.2, steps=4, bottom=0.6)
-    # the peg: the hole's teardrop, a little smaller, pointing toward the front (-y)
-    py = BASE_D - BACK - HOLE_Z
-    r = PEG_D / 2
-    pts = [(hx + r * np.cos(a), py - r * np.sin(a)) for a in np.linspace(3 * np.pi / 4, 2 * np.pi + np.pi / 4, 40)]
-    pts.append((hx, py - r * np.sqrt(2)))
-    peg_cs = mf.CrossSection([pts], mf.FillRule.NonZero)
-    peg = peg_cs.extrude(PEG_L - 0.6 + 1.0).translate([0, 0, BASE_H - 1.0]) + \
-        peg_cs.offset(-0.5, mf.JoinType.Round).extrude(0.61).translate([0, 0, BASE_H + PEG_L - 0.6 - 0.01])
-    stars = STARS.get(sprite.get("rarity"), 0)
-    label = name.upper() + ("  " + "★" * stars if stars else "")
-    front = BASE_D - BACK - 17.0                                        # the strip in front of the figure
-    txt = text_cs(label, TEXT_H, w - 2 * BASE_R).translate([cx, front / 2 + 0.6]).extrude(ENGRAVE + 1).translate([0, 0, BASE_H - ENGRAVE])
-    return (plinth + peg - txt).translate([x0, y0, 0])
+    pockets = union([box(a - POCKET_CLR, SPLIT_Y - hd - POCKET_CLR, BASE_H - POCKET, b + POCKET_CLR, SPLIT_Y + hd + POCKET_CLR, BASE_H + 1)
+                     for a, b, hd in footprint(sp)])
+    stars = STARS.get(sp.get("rarity"), 0)
+    label = name.upper() + ("  " + "\u2605" * stars if stars else "")
+    front = SPLIT_Y - max(hd for _, _, hd in footprint(sp)) - 1.5     # the strip in front of the feet
+    txt = text_cs(label, min(TEXT_H, front - 2.5), w - 2 * BASE_R).translate([cx, front / 2 + 0.3])
+    txt = txt.extrude(ENGRAVE + 1).translate([0, 0, BASE_H - ENGRAVE])
+    return (plinth - pockets - txt).translate([x0, y0, 0])
 
 
-def plate(sprite, name):
-    fig, hx = body(sprite)
-    fig_w = 16 * PX
-    return [fig, base(sprite, name, hx, fig_w, x0=fig_w + 8 + max(46.0, fig_w + 8) / 2 - fig_w / 2, y0=0)]
+def plate(sp, name):
+    """Front half and back half (both cut face down; the back half mirrored), base and two pins, side by side."""
+    fw = COLS * V
+    fr = half(sp, True)
+    bk = half(sp, False).mirror([1, 0, 0]).translate([2 * fw + 6, 0, 0])      # mirrored, so it matches once flipped over
+    bw = max(46.0, fw + 8)
+    bs = base(sp, name, x0=2 * fw + 12 + bw / 2 - fw / 2, y0=0)
+    pins = [alignment_pin(2 * fw + 12 + bw + 6, 4 + i * 6) for i in range(2)]
+    return [fr, bk, bs] + pins
+
+
+def assembled(sp, name):
+    """For previews: the figure standing on its base (x across, y up, z toward the viewer), base top at y = 0."""
+    fr = half(sp, True)
+    bk = half(sp, False).mirror([0, 0, 1])
+    b = base(sp, name).rotate([-90, 0, 0]).translate([0, -BASE_H, SPLIT_Y])
+    sink = POCKET                                                      # the feet sit down in their pockets
+    return fr.translate([0, -sink, 0]), bk.translate([0, -sink, 0]), b
 
 
 if __name__ == "__main__":

@@ -22,22 +22,21 @@ paws. Legs are chunky boots.
 **Printing:** each STL is one plate:
 - the figure on its back;
 - two arms and two legs (a left and a right leg: the toes point the other way);
-- two **shoulder yokes** (the small forked pieces);
-- **8 snap pins:** 5 long and 3 short, including one spare of each.
+- two flat **shoulder keys**;
+- **6 snap pins:** 3 big ones for the hips and 3 small ones for the shoulders, including one spare of each.
 
-No supports. PLA, 0.2 mm layers, 3 walls, 15–20% infill. Keep the pins lying flat and the yokes standing on their
-edges, as they are: that's what makes them strong.
+No supports. PLA, 0.2 mm layers, 3 walls, 15–20% infill. Keep the pins and keys lying flat, as they are: that's what
+makes their springy ends strong.
 
-**💪 Shoulders, Marvel Legends style:** each shoulder has two joints. The **swivel** at the body swings the arm forward
-and back, all the way round. The **hinge** in the yoke lifts the arm out to the side and all the way up. Combine them
-for flexing, waving, flying and so on.
+**💪 Shoulders, Marvel Legends style (but small):** each shoulder has two joints. The **swivel** at the body swings the
+arm forward and back, all the way round. The **hinge** at the top of the arm lifts it out to the side and all the way up.
+The whole joint sits within about 7 mm of the body.
 
 **🔒 Putting it together** (every pin clicks in and can't come back out, so check left and right first):
-1. **Shoulders:** push a **short** pin into a yoke from its fork side (the head drops into the pocket between the
-   prongs, flat sides lined up) and press the yoke onto the body's shoulder hole until it clicks.
-2. **Arms:** slide the arm's thick top end into the yoke's fork, then push a **long** pin through the fork from the
+1. **Shoulder keys:** push each key's pointed peg into a shoulder hole until it clicks. The flat round end sticks out.
+2. **Arms:** slide the slot in the top of the arm over the key's round end, then push a **small** pin through from the
    front until it clicks out the back.
-3. **Legs:** push a **long** pin through the leg from the outside (the head drops into the pocket), hold the leg in its
+3. **Legs:** push a **big** pin through the leg from the outside (the head drops into the pocket), hold the leg in its
    hip notch with the toe forward and press until it clicks.
 
 See `joint_lock_cutaway.png` for how a pin locks. Everything holds its pose by friction: the arms swivel all the way

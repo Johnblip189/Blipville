@@ -1,6 +1,7 @@
 # 🦖 Apex Dino-Fossil Squadron (planned)
 
-Five new Blips that are each a triple changer (emblem → mini-bot → combiner part) and combine into one big robot.
+Five new Blips that are each a triple changer (emblem → mini-bot → combiner part) and combine into one big robot:
+**Amber Age X**.
 It's its own set, sold alongside Series 1.
 
 | Blip | Colors | Combiner part |
@@ -18,9 +19,9 @@ It's its own set, sold alongside Series 1.
 
 Only the snap-on dino face panels differ between the two arms and between the two legs.
 
-## Before release: naming and colors
-- **The combiner's name.** "Megazord" (and "Dino-Megazord", "Samurai Megazord") are trademarks of the Power Rangers
-  franchise, so the combined robot needs an original name, for example "Apex Fossil Titan" or "Fossil Colossus".
+## Naming and colors
+- **The combiner's name: settled.** The combined robot is **Amber Age X**, an original name ("Megazord" is a
+  Power Rangers trademark).
 - **The colors: settled.** The whole squad shares one gold, black and blue team scheme, mixed differently on each Blip,
   which keeps it clearly Blipville's own and not a red / blue / pink Dinozord look.
 

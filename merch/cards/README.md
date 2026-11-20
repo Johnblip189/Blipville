@@ -1,6 +1,6 @@
 # 🃏 Figure cards (Series 1)
 
-Hang-card packaging for the posable figures. `python3 merch/cards/make_cards.py` rebuilds everything from the game data.
+Hang-card packaging for the display figures. `python3 merch/cards/make_cards.py` rebuilds everything from the game data.
 
 * **Size:** 90 x 140 mm trim, with 3 mm bleed on every side (files are 96 x 146 mm, 1134 x 1724 px at 300 DPI).
   Keep important text 4 mm inside the trim.

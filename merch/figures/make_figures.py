@@ -1,26 +1,18 @@
-"""🧸 Posable Blip figures (Series 1), built straight from the game sprites. Zero supports.
+"""🧸 Blip figures (Series 1), built straight from the game sprites, each on its own display base. Zero supports.
 
-    python3 merch/figures/make_figures.py            (needs: pip install manifold3d trimesh numpy scipy)
+    python3 merch/figures/make_figures.py                   (needs: pip install manifold3d trimesh numpy scipy pillow)
+    python3 merch/figures/make_figures.py sprites.json Blip (just one)
 
-Each STL is one print plate: the figure lying on its back (face up), two arms, two legs, two flat shoulder keys and 6 snap
-pins (3 big for the hips, 3 small for the shoulders, one of each spare).
+Each STL is one print plate with two parts: the figure lying on its back (face up) and its base.
 
-* Body: the Blip's 16 x 12 game sprite, 2.5 mm per pixel, as a soft vinyl-toy shape: the outline keeps the pixel
-  silhouette (with slightly rounded corners) and the front swells into a smooth rounded dome. The sprite's details are carved into the dome: eyes and mouth sunk in, darker patches and
-  inner outlines sunk a little, light patches (bellies, teeth, highlights) raised a little, visors recessed with the
-  eyes glowing out of them. Every layer is smaller than the one under it, so nothing overhangs.
-* Limbs: short, soft Blip nub arms with round paws and stubby feet, all with softened edges. The body keeps the whole
-  sprite and sits on top of the feet; each foot pins onto a little tab hidden under the body.
-* 💪 Action-figure shoulders, kept small: a flat shoulder key with a snap peg built in clicks into the body's shoulder
-  socket and swivels there (the arm swings forward and back, all the way round). Its round end sits in a fork in the top of
-  the arm, with a small snap pin through it as a hinge (the arm lifts out to the side, all the way up). The key prints
-  flat, so its peg is as strong as the pins.
-* 🔒 Locking joints: snap pins. At the hips, a pin goes through the foot's hole (its head sits in a keyed pocket
-  on the outside, so the limb turns the pin) and into the body, where its split barb clicks open in a chamber behind a
-  3 mm wall: it can't be pulled back out, but it turns, with a little friction to hold a pose. The pins print lying flat,
-  so their springy halves bend along the print layers (pegs printed standing up snapped at the layer lines). The holes and
-  chambers in the body are teardrop-shaped (pointed on top) so they print without supports.
-* Print in PLA at 0.2 mm, 3 walls, 15-20% infill. Arms turn all the way round; legs swing about 80 degrees each way.
+* Figure: the Blip's whole 16 x 12 game sprite, 2.5 mm per pixel (about 40 x 30 x 16 mm), as a soft vinyl-toy shape: the
+  outline keeps the pixel silhouette (with slightly rounded corners) and the front swells into a smooth rounded dome. The
+  sprite's details are carved into the dome: eyes and mouth sunk in, darker patches and inner outlines sunk a little,
+  light patches (bellies, teeth, highlights) raised a little, visors recessed with the eyes glowing out of them. Nothing
+  overhangs. A teardrop-shaped hole in its bottom (pointed toward the front, so it prints cleanly) fits the base's peg.
+* Base: a rounded plinth with the Blip's name and its rarity stars engraved in the front. A matching teardrop peg holds
+  the figure upright and facing forward (it can't spin). Snug fit; a drop of glue makes it permanent.
+* Print in PLA at 0.2 mm, 3 walls, 15-20% infill.
 """
 import json
 import os
@@ -29,6 +21,7 @@ import sys
 import manifold3d as mf
 import numpy as np
 import trimesh
+from PIL import Image, ImageDraw, ImageFont
 from scipy import ndimage
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -38,41 +31,16 @@ T0, DOME, DOME_R = 9.5, 6.0, 7.0   # body thickness at the outline, extra height
 ROUND = 0.6                 # silhouette corner rounding
 EYE, MOUTH, DARK, LIGHT, VISOR = 1.6, 1.2, 0.7, 0.45, 1.2   # relief depths (mm)
 SEG = 48
-# 🔒 locking joints: a separate snap pin (printed lying flat, so its springy halves bend along the layers, not across them)
-# goes through the limb into the body. Its head sits keyed in the limb (so the limb turns the pin) and its barbs click
-# into a chamber inside the body, behind a wall, so it can't come back out. The pin turns in the body with a little
-# friction, which holds poses.
-PIN_D, PIN_H = 4.6, 3.6     # pin shaft: a 4.6 mm rod with its top and bottom flattened to 3.6 mm (so it prints lying flat)
-BODY_HOLE = 4.5             # the hole in the body's wall (a hair smaller than the pin: the split pin squeezes in = friction)
-WALL = 3.0                  # the wall the barbs catch behind
-CH_D, CH_LEN = 5.9, 2.8     # the chamber inside the body the barbs open up in
-BARB_W, BARB_LEDGE, BARB_CONE, TIP_W = 5.3, 0.5, 1.5, 3.8
-SLOT, SLOT_LEN = 1.0, 7.5   # the split down the pin from its tip
-HEAD_D, HEAD_T = 6.0, 1.6   # the pin's head, which sits in a pocket on the limb's outer side
-KEY_CLR = 0.15              # clearance of the pin in its limb hole
-COLLAR = 0.4                # spacer ring on the limb so it doesn't rub the body
-SPARE_PINS = 1              # extra pins of each kind on every plate
-# 💪 action-figure shoulders, kept small: a flat "key" (the yoke) clicks into the body's shoulder socket with a snap peg
-# built into it and swivels there (the arm swings forward / back). Its round end sits in a fork in the top of the arm,
-# and a small snap pin through the fork is the hinge (the arm lifts out to the side and up).
-TONGUE = 3.4                # the yoke's thickness (it prints flat; its peg is flattened to this)
-TONGUE_R = 2.9              # the yoke's round end, round the hinge
-YOKE_GAP = 0.6              # gap between the top of the arm and the body
-FORK_PL, FORK_GAP = 1.2, 0.3            # the arm's fork plates and the gap each side of the yoke
-# the small hinge pin (printed flat, like the big ones)
-HP = dict(d=3.4, h=2.6, barb_w=3.9, tip_w=2.8, head_d=4.8, head_t=1.0, slot=0.8, slot_len=5.0, ledge=0.4, cone=1.0)
-HINGE_HOLE, TONGUE_HOLE = 3.6, 3.3      # loose in the fork plates, a friction fit in the yoke
-HINGE_PIN = HP["head_t"] + 2 * FORK_PL + 2 * FORK_GAP + TONGUE + 0.2   # head (outside the fork) to the barb's catch
-HX = -(COLLAR + YOKE_GAP + TONGUE_R)    # hinge axis, measured out from the body's side
-ZC = 6.0                    # height of every joint axis above the bed (= inside the body's thickness)
-# limbs
-ARM_W, ARM_L, ARM_T = 5.6, 11.5, 5.8     # stubby Blip nub arms: width, length (hinge to tip), thickness
-LEG_H = 10.0                # the body sits this high, on top of the legs (the whole sprite stays: no notches)
-LEG_R = 3.75                # the leg's round top, which turns under the body
-LUG_R = 3.4                 # the hip tab under the body that each leg pins onto (hidden between the legs)
-LEG_X, LEG_Z, TOE = 5.5, 6.5, 3.5         # leg thickness (side to side), depth (front to back), toe sticking forward
-LEG_COLS = (3, 11)          # left / right leg under these sprite columns (where the sprite's feet are)
-GAP = 0.5
+# 🪧 the base
+BASE_D, BASE_H = 30.0, 6.0  # depth (front to back) and height; the width follows the figure (at least 46 mm)
+BASE_R = 7.0                # corner rounding
+BACK = 3.0                  # the figure's back stands this far in from the base's back edge
+PEG_D, HOLE_D = 5.0, 5.3    # teardrop peg and the hole in the figure's bottom
+PEG_L, HOLE_L = 6.0, 6.8
+HOLE_Z = 4.6                # the hole's centre, in from the figure's back (inside the thin outline: the tip stays inside)
+TEXT_H, ENGRAVE = 6.0, 0.8  # name lettering height and depth
+FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+STARS = {"ultra-rare": 3, "rare": 2, "regular": 1}
 
 
 def box(x0, y0, z0, x1, y1, z1):
@@ -126,74 +94,6 @@ def teardrop_cs(cy, cz, d):
     return mf.CrossSection([pts])
 
 
-def td_y(cy, cz, d):
-    """A teardrop in (y, z) pointing toward +y (for holes that print with Y up)."""
-    r = d / 2
-    pts = [(cy + r * np.sin(a), cz + r * np.cos(a)) for a in np.linspace(3 * np.pi / 4, 2 * np.pi + np.pi / 4, 40)]
-    pts.append((cy + r * np.sqrt(2), cz))
-    return mf.CrossSection([pts], mf.FillRule.NonZero)
-
-
-def socket(x_face, inward, cy):
-    """🔒 Hole + barb chamber going into the body from a side face at x_face (inward = +1 to the right, -1 to the left)."""
-    def seg(a, b, d):
-        lo, hi = sorted((x_face + inward * a, x_face + inward * b))
-        return _along_x(teardrop_cs(cy, ZC, d), lo, hi)
-    return union([seg(-1.0, WALL + 0.01, BODY_HOLE), seg(WALL, WALL + CH_LEN, CH_D)])
-
-
-def _band(r, x0, x1, h):
-    """A rod of radius r along X (x0..x1), flattened top and bottom to z = 0 .. h."""
-    rod = mf.Manifold.cylinder(x1 - x0, r, r, SEG).rotate([0, 90, 0]).translate([x0, 0, h / 2])
-    return rod ^ box(x0 - 1, -r - 1, 0, x1 + 1, r + 1, h)
-
-
-def snap(s_end, d, h, barb_w, tip_w, slot, slot_len, ledge, cone, x0=0.0):
-    """🔒 A flattened rod along +X (from x0) with a split barb at s_end: the springy halves bend sideways (in the print
-    layers). Returns the shaft + barb, minus the split."""
-    shaft = _band(d / 2, x0, s_end + 0.01, h)
-    prof = mf.CrossSection([[(s_end, -barb_w / 2), (s_end + ledge, -barb_w / 2), (s_end + ledge + cone, -tip_w / 2),
-                             (s_end + ledge + cone, tip_w / 2), (s_end + ledge, barb_w / 2), (s_end, barb_w / 2)]])
-    barb = prof.extrude(h) ^ _band(barb_w / 2, s_end - 0.01, s_end + ledge + cone + 0.01, h)
-    tip = s_end + ledge + cone
-    return union([shaft, barb]) - box(tip - slot_len, -slot / 2, -1, tip + 1, slot / 2, h + 1)
-
-
-def pin_length(limb_t):
-    return HEAD_T + (limb_t - HEAD_T) + COLLAR + WALL + 0.2
-
-
-def pin(x0, y0, limb_t=LEG_X, s_end=None):
-    """🔒 A big snap pin (the hips) lying flat on the bed, pointing +X: head, shaft, split barb."""
-    s_end = s_end or pin_length(limb_t)
-    head = _band(HEAD_D / 2, 0, HEAD_T, PIN_H)
-    body = snap(s_end, PIN_D, PIN_H, BARB_W, TIP_W, SLOT, SLOT_LEN, BARB_LEDGE, BARB_CONE, x0=HEAD_T - 0.01)
-    return (head + body).translate([x0, y0, 0])
-
-
-def hinge_pin(x0, y0):
-    """🔒 The small shoulder-hinge pin, lying flat, pointing +X."""
-    head = _band(HP["head_d"] / 2, 0, HP["head_t"], HP["h"])
-    body = snap(HINGE_PIN, HP["d"], HP["h"], HP["barb_w"], HP["tip_w"], HP["slot"], HP["slot_len"], HP["ledge"], HP["cone"],
-                x0=HP["head_t"] - 0.01)
-    return (head + body).translate([x0, y0, 0])
-
-
-def pin_seat(cx, cy, limb_t, along_y=True):
-    """What to cut out of a limb lying flat for its pin: a keyed hole through it (the pin's flattened shape) and a pocket
-    for the head on the outer (bed) side. The flats run across the limb's length, so the limb turns the pin."""
-    def key(r, z0, z1):
-        c = mf.CrossSection.circle(r, SEG) ^ mf.CrossSection.square([2 * r + 2, PIN_H + 2 * KEY_CLR]).translate([-r - 1, -PIN_H / 2 - KEY_CLR])
-        return c.extrude(z1 - z0).translate([cx, cy, z0])
-    return key(PIN_D / 2 + KEY_CLR, -1, limb_t + 1) + key(HEAD_D / 2 + 0.2, -1, HEAD_T + 0.1)
-
-
-def washer(cx, cy, z0):
-    ring = mf.Manifold.cylinder(COLLAR + 0.5, PIN_D / 2 + 1.4, PIN_D / 2 + 1.4, SEG) - \
-        mf.Manifold.cylinder(COLLAR + 3, PIN_D / 2 + 0.4, PIN_D / 2 + 0.4, SEG).translate([0, 0, -1])
-    return ring.translate([cx, cy, z0 - 0.5])
-
-
 def lum(hexcol):
     h = hexcol.lstrip("#")
     r, g, b = (int(h[i:i + 2], 16) for i in (0, 2, 4))
@@ -234,57 +134,6 @@ def relief_map(sprite, rows):
                     d = lum(col) - base
                     rel[r, c] = LIGHT if d > 40 else -DARK if d < -40 else 0.0
     return rel
-
-
-def body_and_joints(sprite):
-    rows = list(sprite["body"])
-    n = len(rows)
-    top_y = n * PX + LEG_H
-    ey = sprite["eyes"]
-    # shoulders: 3 rows below the eyes, at the body's width just under the eyes. Anything sticking out further (ears,
-    # claws, little drawn-in arms) is left off where the arms hang; antlers and ears above the shoulders stay.
-    shoulder = min(ey + 3, n - 3)
-    span = range(ey, min(ey + 4, n))
-    cl = min(min(c for c, ch in enumerate(rows[r]) if ch != ".") for r in span)
-    cr = max(max(c for c, ch in enumerate(rows[r]) if ch != ".") for r in span)
-    xl, xr = cl * PX, (cr + 1) * PX
-    sy = top_y - (shoulder + 0.5) * PX
-    while sy - CH_D * 0.72 < LEG_H + 1 and shoulder > ey:            # keep the shoulder chambers above the body's bottom
-        shoulder -= 1
-        sy = top_y - (shoulder + 0.5) * PX
-    keep = np.array([[ch != "." for ch in row] for row in rows])
-    for r in range(n):
-        y_mid = top_y - (r + 0.5) * PX
-        for c in range(16):
-            x0 = c * PX
-            if (x0 < xl or x0 + PX > xr) and sy - ARM_L - 2 < y_mid < sy + PX:
-                keep[r, c] = False
-    rel = relief_map(sprite, rows)
-    # height field on a fine grid: the dome (by distance from the edge) + the sprite's relief
-    fine = np.kron(keep, np.ones((SUB, SUB), bool))
-    fine = _no_corner_touch(fine)
-    cell = PX / SUB
-    dist = ndimage.distance_transform_edt(np.pad(fine, 1))[1:-1, 1:-1] * cell - cell / 2
-    t = np.clip(dist / DOME_R, 0, 1)
-    h = T0 + DOME * np.sqrt(1 - (1 - t) ** 2) + np.kron(rel, np.ones((SUB, SUB)))
-    body = heightfield(fine, h, 0, top_y, cell)
-    sil = soften(rects_cs(keep, 0, top_y, PX), ROUND)
-    body = body ^ sil.extrude(40)
-    # (the body sits LEG_H up, on top of the feet)
-    # hips: a tab hangs under the body on the inner side of each leg; the leg's pin goes through it and the barbs catch on
-    # its inner face. The tab's outline (seen from the side) is round at the front and 45 degrees underneath (it prints
-    # face up), so nothing overhangs.
-    hy = LEG_H - LEG_R - GAP                                              # hip axis, just under the body
-    hl = LEG_COLS[0] * PX + LEG_X + COLLAR                                # left tab's outer face
-    hr = LEG_COLS[1] * PX - COLLAR                                        # right tab's outer face
-    r = LUG_R
-    arc = [(hy + r * np.cos(a), ZC + r * np.sin(a)) for a in np.linspace(np.pi / 2, 5 * np.pi / 4, 24)]
-    tip = (hy, ZC - r * np.sqrt(2))
-    prof = mf.CrossSection([[(LEG_H + 1.5, ZC + r)] + arc + [tip, (hy + tip[1], 0.0), (LEG_H + 1.5, 0.0)]], mf.FillRule.NonZero)
-    tabs = union([_along_x(prof, hl, hl + WALL), _along_x(prof, hr - WALL, hr)])
-    holes = union([_along_x(teardrop_cs(hy, ZC, BODY_HOLE), hl - 1, hl + WALL + 1), _along_x(teardrop_cs(hy, ZC, BODY_HOLE), hr - WALL - 1, hr + 1)])
-    body = (body + tabs) - socket(xl, +1, sy) - socket(xr, -1, sy) - holes
-    return body, (xl, xr, sy, hl, hr, hy), top_y
 
 
 def _no_corner_touch(m):
@@ -336,11 +185,6 @@ def heightfield(mask, h, x0, y0, cell):
     return m
 
 
-def arm_length(sy):
-    """As long as it can be while the hand stays 1 mm off the ground with the arm hanging down (sy: shoulder height)."""
-    return min(ARM_L, sy - 1.0)
-
-
 def layered(cs, height, chamfer=0.9, steps=3, bottom=0.4):
     """Extrude a profile with softened edges: a small 45-degree chamfer on the bed side, rounded-off top edges."""
     parts = [cs.offset(-bottom, mf.JoinType.Round).extrude(bottom + 0.01), cs.extrude(height - chamfer - bottom + 0.01).translate([0, 0, bottom])]
@@ -351,67 +195,93 @@ def layered(cs, height, chamfer=0.9, steps=3, bottom=0.4):
     return union(parts)
 
 
-def arm(x0, y0, length=ARM_L):
-    """One arm lying flat (outer side down): a short, soft Blip nub with a round paw. Its top end is round and split into
-    a fork that the yoke's round end sits in; the hinge axis is (cx, y0 + length, ARM_T / 2), along X."""
-    cx, yh = x0 + ARM_W / 2 + 0.6, y0 + length
-    fw = TONGUE / 2 + FORK_GAP + FORK_PL                              # half width of the fork
-    paw = mf.CrossSection.circle(ARM_W / 2 + 0.3, SEG).translate([cx, y0 + ARM_W / 2 + 0.3])
-    prof = mf.CrossSection([[(cx - ARM_W / 2, y0 + ARM_W / 2 + 0.3), (cx + ARM_W / 2, y0 + ARM_W / 2 + 0.3),
-                             (cx + ARM_W / 2, yh - 4.0), (cx + fw, yh - 3.2), (cx + fw, yh + 6), (cx - fw, yh + 6),
-                             (cx - fw, yh - 3.2), (cx - ARM_W / 2, yh - 4.0)]])
-    r = ARM_T / 2                                                     # the top end: round, 45 degrees underneath
-    arc = [(yh + r * np.cos(a), r + r * np.sin(a)) for a in np.linspace(0, np.pi / 2, 16)]
-    end = _along_x(mf.CrossSection([[(y0 - 5, 0), (yh, 0)] + arc + [(y0 - 5, ARM_T)]]), cx - 10, cx + 10)
-    nub = layered(soften(paw + prof, 0.8), ARM_T, chamfer=1.2, steps=4) ^ end
-    slot = box(cx - TONGUE / 2 - FORK_GAP, yh - TONGUE_R - 0.5, -1, cx + TONGUE / 2 + FORK_GAP, yh + 10, ARM_T + 1)
-    hole = _along_x(teardrop_cs(yh, r, HINGE_HOLE) ^ mf.CrossSection.square([40, r + HINGE_HOLE / 2 + 0.6]).translate([yh - 20, 0]),
-                    cx - 10, cx + 10)                                 # tip trimmed: a short bridge, not a thin point
-    return nub - slot - hole
-
-
-def yoke(x0=0.0, y0=0.0):
-    """💪 The shoulder key, lying flat as printed (z = 0 .. TONGUE). In its own frame the body's side is at x = 0: the snap
-    peg points +X into the body's socket, the flat key stops against the side at x = -COLLAR, and the round end with the
-    hinge hole is at x = HX."""
-    peg = snap(WALL + 0.2, PIN_D, TONGUE, BARB_W, TIP_W, SLOT, SLOT_LEN, BARB_LEDGE, BARB_CONE, x0=-COLLAR - 0.5)
-    key = (mf.CrossSection.circle(TONGUE_R, SEG).translate([HX, 0]) +
-           mf.CrossSection.square([-COLLAR - HX, 2 * TONGUE_R]).translate([HX, -TONGUE_R])).extrude(TONGUE)
-    hole = mf.Manifold.cylinder(TONGUE + 2, TONGUE_HOLE / 2, TONGUE_HOLE / 2, SEG).translate([HX, 0, -1])
-    return (peg + key - hole).translate([x0, y0, 0])
-
-
-def leg(x0, y0, hip, toe=1):
-    """One leg lying flat (outer side down), inner side up. Drawn as (u, v) = (front-back, up) from the floor (v = 0) to the hip
-    pin (v = hip): a round top that turns just under the body, a shin and a boot with the toe forward. Left and right are
-    mirror images (toe = -1 / +1), so both toes point forward once they're on."""
-    rd = LEG_R
-    top = mf.CrossSection.circle(rd, SEG).translate([0, hip])
-    shin = mf.CrossSection.square([LEG_Z, hip]).translate([-LEG_Z / 2, PX])
-    boot = mf.CrossSection.square([LEG_Z + TOE - 1.5, PX + 1.2]).translate([-LEG_Z / 2 - (TOE - 1.5 if toe < 0 else 0), 0])
-    tip = mf.CrossSection.circle((PX + 1.2) / 2, SEG).translate([toe * (LEG_Z / 2 + TOE - 1.5), (PX + 1.2) / 2])
-    shape = soften(top + shin + boot + tip, 0.6).translate([x0, y0])
-    return layered(shape, LEG_X) + washer(x0, y0 + hip, LEG_X) - pin_seat(x0, y0 + hip, LEG_X)
-
-
-def plate(sprite):
-    body, (xl, xr, sy, hl, hr, hy), top_y = body_and_joints(sprite)
-    L = arm_length(sy)
-    bx = 16 * PX + 6
-    a1 = arm(bx, 2.0, L)
-    a2 = arm(bx + ARM_W + 6, 2.0, L)
-    l1 = leg(bx + LEG_Z / 2 + TOE, top_y + 4, hy, toe=-1)
-    l2 = leg(bx + LEG_Z * 1.5 + 2 * TOE + 6, top_y + 4, hy, toe=+1)
-    px = max(m.bounding_box()[3] for m in (a1, a2, l1, l2)) + 4      # pins and yokes in columns right of the limbs
-    pins = [pin(px, 3.0 + HEAD_D / 2 + i * (HEAD_D + 3), LEG_X) for i in range(2 + SPARE_PINS)]       # hips
-    pins += [hinge_pin(px, 30.0 + i * (HP["head_d"] + 3)) for i in range(2 + SPARE_PINS)]            # shoulder hinges
-    yokes = [yoke(px + 16 - HX + TONGUE_R, 6 + i * (2 * TONGUE_R + 4)) for i in range(2)]
-    return body, [a1, a2, l1, l2] + pins + yokes
-
-
 def to_trimesh(m):
     mm = m.to_mesh()
     return trimesh.Trimesh(vertices=np.asarray(mm.vert_properties)[:, :3], faces=np.asarray(mm.tri_verts))
+
+
+def _along_y(cs, y0, y1):
+    """A CrossSection drawn in (x, z) -> a prism along Y from y0 to y1."""
+    mesh = cs.extrude(y1 - y0).to_mesh()
+    v = np.asarray(mesh.vert_properties)[:, :3].copy()
+    v = np.stack([v[:, 0], v[:, 2] + y0, v[:, 1]], axis=1)
+    tri = np.asarray(mesh.tri_verts)
+    m = mf.Manifold(mf.Mesh(vert_properties=v.astype(np.float32), tri_verts=tri.astype(np.uint32)))
+    return m if m.volume() > 0 else mf.Manifold(mf.Mesh(vert_properties=v.astype(np.float32), tri_verts=tri[:, ::-1].astype(np.uint32)))
+
+
+def hole_x(rows):
+    """Where the base's peg goes: the middle of the widest solid stretch of the sprite's bottom 3 rows."""
+    solid = np.all([[ch != "." for ch in row] for row in rows[-3:]], axis=0)
+    best, run, start = (0, 0), 0, 0
+    for c in range(17):
+        if c < 16 and solid[c]:
+            run, start = run + 1, (start if run else c)
+        else:
+            if run > best[0]:
+                best = (run, start)
+            run = 0
+    if best[0] < 3:
+        raise ValueError("no room for the stand peg in the bottom rows")
+    return (best[1] + best[0] / 2) * PX
+
+
+def body(sprite):
+    """The figure, lying face up as printed: x across, y up (y = 0 is its bottom), z out of its face."""
+    rows = list(sprite["body"])
+    n = len(rows)
+    top_y = n * PX
+    keep = np.array([[ch != "." for ch in row] for row in rows])
+    rel = relief_map(sprite, rows)
+    fine = _no_corner_touch(np.kron(keep, np.ones((SUB, SUB), bool)))
+    cell = PX / SUB
+    dist = ndimage.distance_transform_edt(np.pad(fine, 1))[1:-1, 1:-1] * cell - cell / 2
+    t = np.clip(dist / DOME_R, 0, 1)
+    h = T0 + DOME * np.sqrt(1 - (1 - t) ** 2) + np.kron(rel, np.ones((SUB, SUB)))
+    fig = heightfield(fine, h, 0, top_y, cell) ^ soften(rects_cs(keep, 0, top_y, PX), ROUND).extrude(40)
+    hx = hole_x(rows)
+    hole = _along_y(teardrop_cs(hx, HOLE_Z, HOLE_D), -1, HOLE_L)        # pointed toward the face (up, as it prints)
+    return fig - hole, hx
+
+
+def text_cs(text, height, max_w):
+    """Lettering as a CrossSection (cut from a high-res render), centred on (0, 0), at most max_w wide."""
+    font = ImageFont.truetype(FONT, 120)
+    x0, y0, x1, y1 = font.getbbox(text)
+    img = Image.new("L", (x1 - x0 + 8, y1 - y0 + 8), 0)
+    ImageDraw.Draw(img).text((4 - x0, 4 - y0), text, fill=255, font=font)
+    a = _no_corner_touch(np.asarray(img)[::3, ::3] > 127)              # 40 px tall is plenty for a 5 mm line
+    cell = min(height / a.shape[0], max_w / a.shape[1])
+    cs = rects_cs(a, 0, 0, cell)
+    return cs.translate([-a.shape[1] * cell / 2, a.shape[0] * cell / 2])
+
+
+def base(sprite, name, hx, fig_w, x0=0.0, y0=0.0):
+    """The display base, flat on the bed: x across (matching the figure), y from the front edge (0) to the back (BASE_D),
+    z up. The peg stands up at the figure's hole; the name and stars are engraved along the front."""
+    w = max(46.0, fig_w + 8)
+    cx = fig_w / 2
+    outline = soften(mf.CrossSection.square([w, BASE_D]).translate([cx - w / 2, 0]), BASE_R)
+    plinth = layered(outline, BASE_H, chamfer=1.2, steps=4, bottom=0.6)
+    # the peg: the hole's teardrop, a little smaller, pointing toward the front (-y)
+    py = BASE_D - BACK - HOLE_Z
+    r = PEG_D / 2
+    pts = [(hx + r * np.cos(a), py - r * np.sin(a)) for a in np.linspace(3 * np.pi / 4, 2 * np.pi + np.pi / 4, 40)]
+    pts.append((hx, py - r * np.sqrt(2)))
+    peg_cs = mf.CrossSection([pts], mf.FillRule.NonZero)
+    peg = peg_cs.extrude(PEG_L - 0.6 + 1.0).translate([0, 0, BASE_H - 1.0]) + \
+        peg_cs.offset(-0.5, mf.JoinType.Round).extrude(0.61).translate([0, 0, BASE_H + PEG_L - 0.6 - 0.01])
+    stars = STARS.get(sprite.get("rarity"), 0)
+    label = name.upper() + ("  " + "★" * stars if stars else "")
+    front = BASE_D - BACK - 17.0                                        # the strip in front of the figure
+    txt = text_cs(label, TEXT_H, w - 2 * BASE_R).translate([cx, front / 2 + 0.6]).extrude(ENGRAVE + 1).translate([0, 0, BASE_H - ENGRAVE])
+    return (plinth + peg - txt).translate([x0, y0, 0])
+
+
+def plate(sprite, name):
+    fig, hx = body(sprite)
+    fig_w = 16 * PX
+    return [fig, base(sprite, name, hx, fig_w, x0=fig_w + 8 + max(46.0, fig_w + 8) / 2 - fig_w / 2, y0=0)]
 
 
 if __name__ == "__main__":
@@ -420,8 +290,7 @@ if __name__ == "__main__":
     for name, sp in sprites.items():
         if only and name not in only:
             continue
-        body, limbs = plate(sp)
-        t = to_trimesh(union([body] + limbs))
+        t = to_trimesh(union(plate(sp, name)))
         keep = [c for c in t.split(only_watertight=False) if abs(c.volume) > 1.0]   # drop zero-volume slivers
         t = trimesh.util.concatenate(keep)
         path = os.path.join(HERE, name.lower().replace(" ", "_").replace("-", "") + "_figure.stl")

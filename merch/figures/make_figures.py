@@ -2,13 +2,17 @@
 
     python3 merch/figures/make_figures.py            (needs: pip install manifold3d trimesh numpy scipy)
 
-Each STL is one print plate: the figure lying on its back (face up), two arms, two legs and 6 snap pins (4 + 2 spares).
+Each STL is one print plate: the figure lying on its back (face up), two arms, two legs, two shoulder yokes and 8 snap
+pins (5 long + 3 short, one of each spare).
 
 * Body: the Blip's 16 x 12 game sprite, 2.5 mm per pixel, as a soft vinyl-toy shape: the outline keeps the pixel
   silhouette (with slightly rounded corners) and the front swells into a smooth rounded dome. The sprite's details are carved into the dome: eyes and mouth sunk in, darker patches and
   inner outlines sunk a little, light patches (bellies, teeth, highlights) raised a little, visors recessed with the
   eyes glowing out of them. Every layer is smaller than the one under it, so nothing overhangs.
 * Limbs: rounded arms with mitten hands and chunky legs with boots, all with softened edges.
+* 💪 Action-figure shoulders: each arm hangs from a yoke. The yoke swivels in the body's shoulder socket (the arm swings
+  forward and back, all the way round) and the arm hinges in the yoke's fork (it lifts out to the side, all the way up).
+  The yoke prints standing on its edge, so both of its pin holes print as clean teardrops.
 * 🔒 Locking joints: separate snap pins. A pin goes through the limb's shoulder/hip hole (its head sits in a keyed pocket
   on the outside, so the limb turns the pin) and into the body, where its split barb clicks open in a chamber behind a
   3 mm wall: it can't be pulled back out, but it turns, with a little friction to hold a pose. The pins print lying flat,
@@ -45,7 +49,17 @@ SLOT, SLOT_LEN = 1.0, 7.5   # the split down the pin from its tip
 HEAD_D, HEAD_T = 6.0, 1.6   # the pin's head, which sits in a pocket on the limb's outer side
 KEY_CLR = 0.15              # clearance of the pin in its limb hole
 COLLAR = 0.4                # spacer ring on the limb so it doesn't rub the body
-SPARE_PINS = 2              # extra pins on every plate
+SPARE_PINS = 2              # extra pins on every plate (one long, one short)
+# 💪 action-figure shoulders: a swivel at the body (the arm swings forward / back) plus a hinge just outside it (the arm
+# lifts out to the side and up). The "yoke" snaps into the body with a short pin; the arm's narrow top (the tongue)
+# sits in the yoke's fork and a long pin through the fork is the hinge.
+YB, HX = 3.6, 4.0           # yoke base thickness (sideways), base to hinge axis
+Y_HALF = 4.0                # yoke half height
+PL_T, TONGUE, PL_GAP = 1.65, 3.4, 0.3   # fork plate thickness, arm tongue thickness, gap on each side of the tongue
+HINGE_R = 3.6               # fork plate radius round the hinge
+HINGE_HOLE, TONGUE_HOLE = 4.8, 4.5      # pin holes: loose in the fork plates, a friction fit in the tongue
+TONGUE_R = 3.6              # the tongue is thicker than the arm (7.2 mm) so the hinge hole has a solid wall round it
+TONGUE_LEN = 5.6            # the arm stays tongue-thin this far below the hinge (clears the fork when it lifts)
 ZC = 6.0                    # height of every joint axis above the bed (= inside the body's thickness)
 # limbs
 ARM_W, ARM_L, ARM_T = 7.0, 16.0, 5.5     # arm width, longest length (shoulder centre to fingertips), thickness
@@ -106,6 +120,14 @@ def teardrop_cs(cy, cz, d):
     return mf.CrossSection([pts])
 
 
+def td_y(cy, cz, d):
+    """A teardrop in (y, z) pointing toward +y (for holes that print with Y up)."""
+    r = d / 2
+    pts = [(cy + r * np.sin(a), cz + r * np.cos(a)) for a in np.linspace(3 * np.pi / 4, 2 * np.pi + np.pi / 4, 40)]
+    pts.append((cy + r * np.sqrt(2), cz))
+    return mf.CrossSection([pts], mf.FillRule.NonZero)
+
+
 def socket(x_face, inward, cy):
     """🔒 Hole + barb chamber going into the body from a side face at x_face (inward = +1 to the right, -1 to the left)."""
     def seg(a, b, d):
@@ -124,9 +146,12 @@ def pin_length(limb_t):
     return HEAD_T + (limb_t - HEAD_T) + COLLAR + WALL + 0.2
 
 
-def pin(x0, y0, limb_t=ARM_T):
+HINGE_PIN = HEAD_T + 2 * PL_T + 2 * PL_GAP + TONGUE + 0.2     # head (outside the fork) to the barb's catch
+
+
+def pin(x0, y0, limb_t=ARM_T, s_end=None):
     """🔒 One snap pin lying flat on the bed, pointing +X: head, shaft, then a split barb at the tip."""
-    s_end = pin_length(limb_t)
+    s_end = s_end or pin_length(limb_t)
     head = _pin_band(HEAD_D / 2, 0, HEAD_T)
     shaft = _pin_band(PIN_D / 2, HEAD_T - 0.01, s_end + 0.01)
     prof = mf.CrossSection([[(s_end, -BARB_W / 2), (s_end + BARB_LEDGE, -BARB_W / 2), (s_end + BARB_LEDGE + BARB_CONE, -TIP_W / 2),
@@ -303,15 +328,47 @@ def layered(cs, height, chamfer=0.9, steps=3, bottom=0.4):
 
 
 def arm(x0, y0, length=ARM_L):
-    """One arm lying flat (outer side down), inner side up. Shoulder at the top end, mitten hand at the bottom."""
-    cx, cy = x0 + ARM_W / 2 + 0.6, y0 + length
-    shoulder = mf.CrossSection.circle(ARM_W / 2 + 0.3, SEG).translate([cx, cy])
+    """One arm lying flat (outer side down). Hinge at the top end (in a thin tongue that sits in the yoke's fork, with a
+    hole across it for the hinge pin), mitten hand at the bottom. The hinge axis is (cx, y0 + length, TONGUE_R), along X."""
+    cx, yh = x0 + ARM_W / 2 + 0.6, y0 + length
+    yw = yh - TONGUE_LEN                                              # where the arm widens out of the tongue
     hand = mf.CrossSection.circle(ARM_W / 2 + 0.6, SEG).translate([cx, y0 + ARM_W / 2 + 0.6])
     bar = mf.CrossSection([[(cx - ARM_W * 0.42, y0 + ARM_W / 2 + 0.6), (cx + ARM_W * 0.42, y0 + ARM_W / 2 + 0.6),
-                            (cx + ARM_W / 2, cy), (cx - ARM_W / 2, cy)]])
+                            (cx + ARM_W / 2, yw - (ARM_W - TONGUE) / 2), (cx + TONGUE / 2, yw), (cx - TONGUE / 2, yw),
+                            (cx - ARM_W / 2, yw - (ARM_W - TONGUE) / 2)]])
     thumb = mf.CrossSection.circle(1.6, SEG).translate([cx + ARM_W / 2 + 0.2, y0 + ARM_W / 2 + 2.2])
-    shape = soften(shoulder + hand + bar + thumb, 0.5)
-    return layered(shape, ARM_T) + washer(cx, cy, ARM_T) - pin_seat(cx, cy, ARM_T)
+    lower = layered(soften(hand + bar + thumb, 0.5), ARM_T)
+    r = TONGUE_R                                                      # the tongue's end: round on top, 45 degrees underneath
+    arc = [(yh + r * np.cos(a), r + r * np.sin(a)) for a in np.linspace(0, np.pi / 2, 16)]
+    end = mf.CrossSection([[(yw - 2, 0), (yh, 0)] + arc + [(yw - 2, 2 * r)]])
+    tongue = box(cx - TONGUE / 2, yw - 0.5, 0, cx + TONGUE / 2, yh + r + 1, 2 * r) ^ _along_x(end, cx - TONGUE, cx + TONGUE)
+    hole = _along_x(teardrop_cs(yh, r, TONGUE_HOLE) ^ mf.CrossSection.square([40, r + TONGUE_HOLE / 2 + 0.5]).translate([yh - 20, 0]),
+                    cx - TONGUE, cx + TONGUE)                            # tip trimmed: a short bridge, not a thin point
+    return union([lower, tongue]) - hole
+
+
+def yoke():
+    """💪 The shoulder piece, in its own frame: swivel axis = X (the body is at x > 0; the washer touches it at x = 0.4),
+    hinge axis along Z at (-YB - HX, 0). A base block with a keyed hole for the short pin, and a fork of two plates."""
+    hx = -YB - HX
+    base_cs = soften(mf.CrossSection.square([2 * Y_HALF, 2 * (PL_T + PL_GAP) + TONGUE]).translate([-Y_HALF, -(PL_T + PL_GAP + TONGUE / 2)]), 1.0)
+    base = _along_x(base_cs, -YB, 0.01)
+    zt = TONGUE / 2 + PL_GAP
+    pl = (mf.CrossSection.circle(HINGE_R, SEG).translate([hx, 0]) +
+          mf.CrossSection.square([-YB + 0.5 - (hx - HINGE_R), Y_HALF]).translate([hx - HINGE_R, -Y_HALF]) +
+          mf.CrossSection.square([-YB + 0.5 - hx, HINGE_R]).translate([hx, 0]))
+    plates = union([pl.extrude(PL_T).translate([0, 0, zt]), pl.extrude(PL_T).translate([0, 0, -zt - PL_T])])
+    ring = _along_x(mf.CrossSection.circle(PIN_D / 2 + 1.4, SEG) - mf.CrossSection.circle(PIN_D / 2 + 0.4, SEG), -0.5, COLLAR)
+    band = lambda h: mf.CrossSection.square([20, h]).translate([-10, -h / 2])
+    key = _along_x(td_y(0, 0, PIN_D + 2 * KEY_CLR) ^ band(PIN_H + 2 * KEY_CLR), -YB - 1, 1)
+    pocket = _along_x(td_y(0, 0, HEAD_D + 0.4) ^ band(PIN_H + 0.4), -YB - 1, -YB + HEAD_T + 0.1)
+    holes = teardrop_cs(hx, 0, HINGE_HOLE).extrude(20).translate([0, 0, -10])
+    return union([base, plates, ring]) - key - pocket - holes
+
+
+def yoke_flat(x0, y0):
+    """The yoke turned for printing: Y (its up) becomes Z, sitting flat on its bottom edge."""
+    return yoke().rotate([90, 0, 0]).translate([x0, y0, Y_HALF])
 
 
 def leg(x0, y0, hip, toe=1):
@@ -335,11 +392,11 @@ def plate(sprite):
     a2 = arm(bx + ARM_W + 6, 2.0, L)
     l1 = leg(bx + LEG_Z / 2 + TOE, top_y + 4, hy, toe=-1)
     l2 = leg(bx + LEG_Z * 1.5 + 2 * TOE + 6, top_y + 4, hy, toe=+1)
-    px = max(m.bounding_box()[3] for m in (a1, a2, l1, l2)) + 4      # pins in a column right of the limbs
-    pins = [pin(px, 3.0 + HEAD_D / 2 + i * (HEAD_D + 3), LEG_X) for i in range(4 + SPARE_PINS)]
-    return body, [a1, a2, l1, l2] + pins
-
-
+    px = max(m.bounding_box()[3] for m in (a1, a2, l1, l2)) + 4      # pins and yokes in columns right of the limbs
+    pins = [pin(px, 3.0 + HEAD_D / 2 + i * (HEAD_D + 3), LEG_X) for i in range(5)]          # long: 2 hips, 2 hinges, 1 spare
+    pins += [pin(px + 15, 3.0 + HEAD_D / 2 + i * (HEAD_D + 3), YB) for i in range(3)]      # short: 2 shoulders, 1 spare
+    yokes = [yoke_flat(px + 30 + YB + HX + HINGE_R, 6 + i * 14) for i in range(2)]
+    return body, [a1, a2, l1, l2] + pins + yokes
 def to_trimesh(m):
     mm = m.to_mesh()
     return trimesh.Trimesh(vertices=np.asarray(mm.vert_properties)[:, :3], faces=np.asarray(mm.tri_verts))

@@ -106,6 +106,19 @@
   .mvPrice b { font-size: 24px; color: var(--gold); }
   .mvBuy[disabled] { opacity: .6; cursor: not-allowed; transform: none; width: 100%; justify-content: center; }
   @media (max-width: 680px) { #merchView[open] { grid-template-columns: 1fr; } .mvStage { min-height: 300px; } }
+  .boxfeature { display: grid !important; grid-template-columns: 220px 1fr; gap: 16px; align-items: center; text-align: left !important;
+                margin: 16px 0 6px; padding: 14px 18px !important; background: linear-gradient(135deg, #3a2a6e, #2b2547) !important; }
+  .boxfeature img { width: 100%; max-width: 220px !important; aspect-ratio: 1; object-fit: contain; }
+  .boxfeature { position: relative; }
+  .boxfeature .wip { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.45); color: var(--muted); font-size: 11px;
+                     font-weight: 800; padding: 2px 7px; border-radius: 8px; }
+  .bfText { display: block; }
+  .bfText > b { display: block; font-size: 24px; }
+  .bfText > .stars { display: block; color: var(--gold); font-size: 16px; font-weight: 800; }
+  .bfText p { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
+  .bfText p b { color: var(--text); }
+  .bfText .view { display: inline-block; margin-top: 10px; font-size: 13px; font-weight: 800; color: #9ad8ff; }
+  @media (max-width: 560px) { .boxfeature { grid-template-columns: 1fr; text-align: center !important; } .boxfeature img { margin: 0 auto; } }
 </style>
 </head>
 <body>
@@ -222,6 +235,16 @@
     <h2>🧸 Blipville merch <span class="badge">IN PROGRESS</span></h2>
     <p class="lead">Real Blips you can hold! These are still being designed and test-printed, so <b>nothing is for sale yet</b>,
        and the pictures are 3D previews, not the final toys. Tap one to spin it around in 3D.</p>
+    <button class="card boxfeature" type="button" data-item="mystery-box">
+      <span class="wip">🚧 in progress</span>
+      <img src="docs/merch/mystery-box.png?v=1" alt="" loading="lazy">
+      <span class="bfText"><b>Mystery Blip Box</b><span class="stars">Series 1 · $4.99</span>
+        <p>One random Blip figure on its display base, plus a code card for a <b>merch-only color</b> in the game. You won't know
+           who's inside until you open it, and any of them could be a <b>shiny chrome</b> one!</p>
+        <span class="view">🔍 View the box in 3D</span></span>
+    </button>
+    <h3 class="sub">🎁 Could be inside…</h3>
+    <p class="small">Every Blip comes in basic or shiny chrome. Each figure is 1 in 6, and 2 in 5 boxes hold a chrome one.</p>
     <div class="merchgrid">
       <button class="card" type="button" data-item="silvertear03"><span class="wip">🚧 in progress</span><img src="docs/merch/silvertear03.png?v=4" alt="" loading="lazy"><b>Silvertear-03</b><span class="stars">★★★ ultra rare</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
       <button class="card" type="button" data-item="blip"><span class="wip">🚧 in progress</span><img src="docs/merch/blip.png?v=4" alt="" loading="lazy"><b>Blip</b><span class="stars">★★ rare</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
@@ -229,11 +252,13 @@
       <button class="card" type="button" data-item="wendigo"><span class="wip">🚧 in progress</span><img src="docs/merch/wendigo.png?v=4" alt="" loading="lazy"><b>Wendigo</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
       <button class="card" type="button" data-item="bun"><span class="wip">🚧 in progress</span><img src="docs/merch/bun.png?v=4" alt="" loading="lazy"><b>Bun</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
       <button class="card" type="button" data-item="beta-buddy"><span class="wip">🚧 in progress</span><img src="docs/merch/beta-buddy.png?v=4" alt="" loading="lazy"><b>Beta Buddy</b><span class="stars">★ regular</span><p>Figure + display base</p><span class="view">🔍 View in 3D</span></button>
+    </div>
+    <h3 class="sub">🦖 Also in the works</h3>
+    <div class="merchgrid">
       <button class="card" type="button" data-item="trex-chomper"><span class="wip">🚧 in progress</span><img src="docs/merch/trex-chomper.png?v=4" alt="" loading="lazy"><b>T-Rex Chomper</b><span class="stars">fidget toy</span><p>Press the tail: chomp!</p><span class="view">🔍 View in 3D</span></button>
       <button class="card" type="button" data-item="blip-chomper"><span class="wip">🚧 in progress</span><img src="docs/merch/blip-chomper.png?v=4" alt="" loading="lazy"><b>Blip Chomper</b><span class="stars">fidget toy</span><p>Press the tail: chomp!</p><span class="view">🔍 View in 3D</span></button>
     </div>
-    <p class="small"><b>Series 1 figures</b> come in <b>mystery boxes ($4.99 each)</b>: you won't know which Blip you get until you open it! About 4 cm wide, each on its own display base with its name and rarity stars. Each one will come on a
-       collectible card with a code for a <b>merch-only color</b> in the game. Silvertear-03 joins the game itself in 1.1.
+    <p class="small">The figures are about 4 cm wide, each on its own display base with its name. Silvertear-03 joins the game itself in 1.1.
        Want to hear when they're ready? <a href="https://discord.gg/Q3zmYakNZT">Join the Discord</a>.</p>
   </section>
 
@@ -369,6 +394,7 @@
   const BOX = { price: "Mystery box · $4.99", note: "Each box holds one random Series 1 figure on its display base, plus a code for a merch-only color in Blipville." };
   const TBA = { price: "Price TBA", note: "Not priced yet." };
   const ITEMS = {
+    "mystery-box": { name: "Mystery Blip Box", stars: "Series 1", bio: "One random Series 1 Blip on its display base and a code card, sealed in a starry box. Each figure 1 in 6; 2 in 5 boxes hold a shiny chrome one.", ...BOX },
     "silvertear03": { name: "Silvertear-03", stars: "★★★ Ultra rare", bio: "Tactical bodyguard. Secretly loves naps. Joins the game in 1.1!", ...BOX },
     "blip": { name: "Blip", stars: "★★ Rare", bio: "The friendliest Blip in town.", ...BOX },
     "trex": { name: "T-Rex", stars: "★ Regular", bio: "Tiny arms. Huge heart.", ...BOX },
@@ -425,7 +451,7 @@
       $("mvLoad").textContent = "Couldn't load the 3D model. Try again in a bit!";
     }
   }
-  document.querySelectorAll(".merchgrid [data-item]").forEach((b) => b.addEventListener("click", () => show(b.dataset.item)));
+  document.querySelectorAll("#merch [data-item]").forEach((b) => b.addEventListener("click", () => show(b.dataset.item)));
   dlg.querySelector(".mvClose").addEventListener("click", () => dlg.close());
   dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });       // tap outside to close
   dlg.addEventListener("close", () => { if (three) three.stop(); });

@@ -34,3 +34,23 @@ Only the snap-on dino face panels differ between the two arms and between the tw
    standing balance.
 3. **Full triple change** on the three skeletons: folding, swivels, ratchets, the spring head and the stabilizers.
    Prototype one skeleton at a time and test-print it before building on it.
+
+## How each Blip folds (no extra parts: each robot mode contains its own limb)
+`tricera_three_modes.png` shows Tricera-Shield going emblem → mini-bot → left arm.
+
+- **Arm frame (Tricera-Shield, Ptera-Blade)**
+
+  | Form | What happens |
+  |---|---|
+  | Emblem | The face in front, the bot folded flat behind it |
+  | Mini-bot | The face splits into chest and shoulder pieces (Tricera's frill becomes shoulder shields, Ptera's crest becomes wing panels), the legs swing down and the head pops up |
+  | Arm | The bot's two legs lock together as the upper arm and its chest becomes the forearm, with the face out front as the shield or blade. The head tucks into the chest, the bot's arms fold flat on the sides and a hand folds out. The bot's waist and hip joints become the bicep swivel and the elbow |
+
+- **Leg frame (Stego-Stomp, Brachio-Pillar)**
+  - The bot's legs lock together as the shin and its torso becomes the thigh.
+  - The bot's arms fold flat and its feet fold out into the stabilizer feet.
+  - The face ends up as the shin armor plate.
+  - The bot's hip becomes the thigh swivel and its knee becomes the robot's knee.
+- **Torso (Tyranno-King)**
+  - The bot's legs fold up into the hips (the leg sockets) and its arms fold back into the shoulder ports.
+  - The face stays as the chest emblem, and the crowned head springs up out of the shoulders.

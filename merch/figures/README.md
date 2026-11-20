@@ -38,3 +38,5 @@ A voxel shape overhangs whichever way it lies, which is why the figure prints as
 
 **Tips:** print the base in a contrasting color (or paint the engraved name) so it pops. A light sanding of the cut
 faces before gluing makes the seam disappear.
+
+**Bases on their own:** `bases/*_base.stl` has just the base for each Series 1 figure, for printing in a different color.

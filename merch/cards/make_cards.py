@@ -37,6 +37,7 @@ THEMES = {   # card colors by rarity: (top, bottom, accent, banner)
     "regular": ((58, 52, 110), (24, 20, 52), (154, 140, 255), (90, 74, 224)),
     "rare": ((112, 60, 170), (34, 14, 64), (255, 140, 220), (176, 70, 200)),
     "ultra-rare": ((250, 214, 120), (150, 96, 20), (255, 248, 210), (200, 130, 30)),
+    "chrome": ((232, 236, 246), (112, 120, 140), (255, 255, 255), (84, 92, 116)),   # 🪩 the chase cards (shiny chrome boxes)
 }
 STARS = {"regular": 1, "rare": 2, "ultra-rare": 3}
 SITE, DISCORD = "johnblip189.github.io/Blipville", "discord.gg/Q3zmYakNZT"
@@ -199,11 +200,45 @@ def warning(d, y_mm, ink):
     text_center(d, TRIM_W / 2, y_mm + 2.8, "Not for children under 3 years.", font(REG, 2.0), ink)
 
 
-def front(m, kind, rarity):
-    top, bottom, accent, banner = THEMES[rarity]
+def chrome_grid(g):
+    """A sprite grid turned to polished chrome: every color becomes silver at its own brightness (so details stay)."""
+    out = []
+    for row in g:
+        r2 = []
+        for c in row:
+            if not c:
+                r2.append(None)
+                continue
+            n = int(c.lstrip("#"), 16)
+            lum = (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255
+            v = round(60 + 190 * lum ** 0.75)
+            r2.append("#%02x%02x%02x" % (v, v, min(255, v + 14)))
+        out.append(r2)
+    return out
+
+
+def holo(img):
+    """A soft rainbow foil sheen in diagonal bands."""
+    sheen = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    sd = ImageDraw.Draw(sheen)
+    cols = [(255, 120, 200), (255, 220, 120), (140, 255, 200), (120, 190, 255), (200, 140, 255)]
+    band = W * 0.16
+    for i in range(-6, 10):
+        c = cols[i % len(cols)]
+        x = i * band
+        sd.polygon([(x, 0), (x + band, 0), (x + band - W * 0.55, H), (x - W * 0.55, H)], fill=c + (46,))
+    img.alpha_composite(sheen.filter(ImageFilter.GaussianBlur(50)))
+
+
+def front(m, kind, rarity, chrome=False):
+    theme = "chrome" if chrome else rarity
+    foil = chrome or rarity == "ultra-rare"
+    top, bottom, accent, banner = THEMES[theme]
     img = gradient(top, bottom)
-    pixel_stars(img, kind, (255, 255, 255) if rarity != "ultra-rare" else (255, 255, 240), 90 if rarity != "regular" else 60)
-    if rarity == "ultra-rare":                           # a foil-like diagonal shine
+    if chrome:
+        holo(img)
+    pixel_stars(img, kind, (255, 255, 255) if not foil else (255, 255, 240), 90 if theme != "regular" else 60)
+    if foil:                                             # a foil-like diagonal shine
         shine = Image.new("RGBA", img.size, (0, 0, 0, 0))
         sd = ImageDraw.Draw(shine)
         for i, a in ((0, 90), (1, 60)):
@@ -211,9 +246,9 @@ def front(m, kind, rarity):
             sd.polygon([(W * 0.15 + off, 0), (W * 0.32 + off, 0), (W * 0.02 + off, H), (-W * 0.15 + off, H)], fill=(255, 255, 255, a))
         img.alpha_composite(shine.filter(ImageFilter.GaussianBlur(40)))
     d = ImageDraw.Draw(img)
-    ink = (30, 18, 50) if rarity == "ultra-rare" else (255, 255, 255)
+    ink = (30, 18, 50) if foil else (255, 255, 255)
     # logo + series
-    bottom_logo = logo(img, TRIM_W / 2, 13.5, 70, (255, 255, 255), (40, 24, 80) if rarity != "ultra-rare" else (110, 60, 10))
+    bottom_logo = logo(img, TRIM_W / 2, 13.5, 70, (255, 255, 255), (40, 24, 80) if not foil else ((60, 66, 86) if chrome else (110, 60, 10)))
     d = ImageDraw.Draw(img)
     text_center(d, TRIM_W / 2, (bottom_logo / MM) - BLEED + 2.2, "FIGURES • SERIES 1", font(BOLD, 3.0), ink)
     # the window (where the bubble and the figure sit): a glowing stage behind the figure
@@ -234,7 +269,10 @@ def front(m, kind, rarity):
     img.alpha_composite(sh.filter(ImageFilter.GaussianBlur(18)))
     d = ImageDraw.Draw(img)
     # the figure itself goes in the bubble; a small sprite badge on the card shows who's inside
-    burst(img, 73, 38, 12, "WITH\nDISPLAY\nBASE!", (255, 214, 58), (60, 30, 10))
+    if chrome:
+        burst(img, 73, 38, 12, "SHINY\nCHROME\nCHASE!", (236, 240, 250), (40, 44, 64))
+    else:
+        burst(img, 73, 38, 12, "WITH\nDISPLAY\nBASE!", (255, 214, 58), (60, 30, 10))
     d = ImageDraw.Draw(img)
     # name banner
     by0, by1 = 106.5, 118.5
@@ -243,15 +281,20 @@ def front(m, kind, rarity):
     _, y1 = px(0, by1)
     notch = 3 * MM
     d.polygon([(bx0 - notch, y0), (bx1 + notch, y0), (bx1, (y0 + y1) / 2), (bx1 + notch, y1), (bx0 - notch, y1), (bx0, (y0 + y1) / 2)],
-              fill=banner + (255,), outline=(255, 255, 255, 255) if rarity != "ultra-rare" else (90, 50, 0, 255), width=round(0.5 * MM))
+              fill=banner + (255,), outline=(255, 255, 255, 255) if not foil or chrome else (90, 50, 0, 255), width=round(0.5 * MM))
     name = kind.upper()
     text_center(d, TRIM_W / 2, by0 + 2.0, name, font(BOLD, 6.6 if len(name) < 10 else 5.4), (255, 255, 255), stroke=round(0.35 * MM), stroke_fill=(40, 20, 60))
     # mini sprite badge next to the banner
-    draw_sprite(img, sprite_grid(m, kind), px(13, by0 - 2.5)[0], px(0, by0 - 2.5)[1], 12 * MM)
+    g = sprite_grid(m, kind)
+    draw_sprite(img, chrome_grid(g) if chrome else g, px(13, by0 - 2.5)[0], px(0, by0 - 2.5)[1], 12 * MM)
     d = ImageDraw.Draw(img)
     # rarity
-    stars(d, TRIM_W / 2, 120.5, STARS[rarity], 3, 4.2, (255, 214, 58) if rarity != "ultra-rare" else (120, 60, 0), None)
-    text_center(d, TRIM_W / 2, 125.4, rarity.upper().replace("-", " "), font(BOLD, 2.6), ink)
+    if chrome:
+        text_center(d, TRIM_W / 2, 120.0, "\u2726 CHROME \u2726", font(BOLD, 4.4), (40, 44, 64))
+        text_center(d, TRIM_W / 2, 125.4, "ONLY 2 OF EACH", font(BOLD, 2.6), ink)
+    else:
+        stars(d, TRIM_W / 2, 120.5, STARS[rarity], 3, 4.2, (255, 214, 58) if rarity != "ultra-rare" else (120, 60, 0), None)
+        text_center(d, TRIM_W / 2, 125.4, rarity.upper().replace("-", " "), font(BOLD, 2.6), ink)
     warning(d, 130.5, ink)
     return img
 
@@ -344,11 +387,15 @@ if __name__ == "__main__":
     m = game()
     out = HERE
     previews = []
+    chrome_previews = []
     for kind, rarity in SERIES:
-        f = front(m, kind, rarity)
         name = kind.lower().replace(" ", "_").replace("-", "")
+        f = front(m, kind, rarity)
         f.convert("RGB").save(os.path.join(out, f"{name}_front.png"), dpi=(DPI, DPI))
         previews.append(punch_slot(f.copy()))
+        c = front(m, kind, rarity, chrome=True)                         # 🪩 the chase version (goes in the chrome boxes)
+        c.convert("RGB").save(os.path.join(out, f"{name}_chrome_front.png"), dpi=(DPI, DPI))
+        chrome_previews.append(punch_slot(c.copy()))
     b = back(m)
     b.convert("RGB").save(os.path.join(out, "card_back.png"), dpi=(DPI, DPI))
     previews.append(punch_slot(b.copy()))
@@ -363,4 +410,8 @@ if __name__ == "__main__":
     for i, p in enumerate(previews):
         sheet.paste(p.crop(cut).convert("RGB").resize((tw, th), Image.LANCZOS), (10 + (i % cols) * (tw + 10), 10 + (i // cols) * (th + 10)))
     sheet.save(os.path.join(out, "cards_preview.png"))
-    print("wrote", len(SERIES), "fronts, card_back.png, dieline.png, cards_preview.png")
+    cs = Image.new("RGB", (tw * 3 + 40, th * 2 + 30), (20, 18, 34))
+    for i, p in enumerate(chrome_previews):
+        cs.paste(p.crop(cut).convert("RGB").resize((tw, th), Image.LANCZOS), (10 + (i % 3) * (tw + 10), 10 + (i // 3) * (th + 10)))
+    cs.save(os.path.join(out, "chrome_cards_preview.png"))
+    print("wrote", len(SERIES), "fronts +", len(SERIES), "chrome fronts, card_back.png, dieline.png, cards_preview.png, chrome_cards_preview.png")

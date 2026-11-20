@@ -6,6 +6,12 @@ Hang-card packaging for the display figures. `python3 merch/cards/make_cards.py`
   Keep important text 4 mm inside the trim.
 * **Fronts:** `silvertear03_front.png`, `blip_front.png`, `trex_front.png`,
   `wendigo_front.png`, `bun_front.png` (regular, night-sky lavender).
+* **Chrome chase fronts:** `*_chrome_front.png`, one per figure. They go in the 2 chrome boxes of each Blip, and
+  `chrome_cards_preview.png` shows all six:
+  - holographic silver foil background;
+  - the Blip drawn in chrome;
+  - a SHINY CHROME CHASE! burst;
+  - "✦ CHROME ✦ · ONLY 2 OF EACH".
 * **Back:** `card_back.png`, shared by every figure (checklist, bios, how to redeem the in-game code, where to play).
 * **dieline.png:** for the printer: cut line (red), hang slot to punch (red), blister bubble 68 x 66 mm (magenta),
   safe area (green), bleed (blue). It is a guide, not part of the art.

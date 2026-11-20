@@ -4,30 +4,36 @@
 
 > 💬 **[Join the Blipville Discord!](https://discord.gg/Q3zmYakNZT)** Chat, share your town, report bugs and suggest Blips.
 
-> 🔜 **Blipville 1.0 drops Sunday, November 22!** No more black flashes, a new engine, and a thank-you for everyone who played the betas.
-
-> 💜 **Thanks for playing the Blipville beta!** This is **Release Candidate 2**, the last step before Blipville 1.0. Spot a bug? Now's the time to tell me. [Tell me what you think!](https://github.com/Johnblip189/blipville/issues/new/choose)
+> 💜 **Blipville 1.0 is here!** Thank you to everyone who played the betas. Spot a bug or have an idea? [Tell me!](https://github.com/Johnblip189/blipville/issues/new/choose)
 
 Tiny pixel pets that live on top of your taskbar. They wander around, nap, chase your mouse, eat cookies, say hi to each other — and you can pick them up and throw them.
 
 ![Blipville demo](docs/demo.gif)
 
-**249 kinds of pets · 790+ colors · hats, hearts, eggs, cryptids, kaiju & a minigame** — one Python file, nothing to install.
+**387 kinds of pets · 1,000+ colors · hats, hearts, eggs, cryptids, kaiju, ghosts, trophies & a minigame** — one Python file, nothing to install.
 
-## ✨ New: Blipville Redux (v0.5.1, early beta)
+## ✨ New in 1.0
 
-**[⬇️ Download Blipville-Redux.exe](https://github.com/Johnblip189/Blipville/releases/download/v0.5.1-redux/Blipville-Redux.exe)**: the Windows app with a brand-new way of drawing your pets.
+**[⬇️ Download Blipville.exe (1.0)](https://github.com/Johnblip189/Blipville/releases/latest/download/Blipville.exe)**
 
-- 🚫 **No more black flashes.** The classic app hid a "magic pink" background that Windows had to repaint whenever you
-  clicked a pet or opened a menu, and sometimes it showed black for a moment. Redux draws every pet as a real see-through
-  picture and hands it straight to Windows, so nothing gets repainted.
-- 💾 **Same save**: your pets, hearts, worlds and unlocks come with you. Quit the classic app first so they don't both run.
-- 🧩 **Everything's still here**, and it updates itself like the classic app.
-- 👻 **New in v0.5.1: Ghosts!** 10 ghosts drift by at night and fade in and out: click one while it glows. A 🕯️ Spirit Candle calls them in the daytime.
+- 🚫 **No more black flashes.** Blipville used to hide a "magic pink" background that Windows had to repaint whenever
+  you clicked a pet or opened a menu, and sometimes it showed black for a moment. 1.0 runs on the **Redux engine**: it
+  draws every pet as a real see-through picture and hands it straight to Windows, so nothing gets repainted.
+- 💞 **Friendship levels** for every Blip, up to Soulmate.
+- 🍪 **Cookie Catch**, a new minigame.
+- ✨ **20 Awakened forms**, including the first 5 kaiju, ghosts like King Sheetie and cryptids like Lunar Mothman.
+- 🎨 **Accessory colors** and a **2nd accessory slot**.
+- 👁️ **The Lurker:** a many-eyed shadow ghost that Awakens **3 times**, up to Lurker Eternal.
+- 👻 **Ghosts:** a new tier of 25 ghosts that drift by at night. Click one while it glows! (Or light a 🕯️ Spirit Candle.)
+- 🏆 **Trophies:** 31 of them, each worth bonus hearts. Right-click a pet → 🏆 Trophies.
+- 🎨 **Redraws** of the 10 roughest Blips.
+- 🔧 **Patch**, a free thank-you gift for waiting out the maintenance (until Tuesday, November 24).
+- 🛠️ **Maintenance mode**, so a big fix never leaves you with a broken app.
+- 💾 Your pets, hearts, worlds and unlocks come with you. Blipville and Blipville Redux both offer the update by themselves.
 
-Redux is built from the same `blip.pyw` (with `EDITION = "redux"`). [More about Redux on the website](https://johnblip189.github.io/Blipville/#redux).
+## Earlier versions
 
-## ✨ New in v0.4.0 (release candidate 2)
+### v0.4.0 (release candidate 2)
 
 **Thank you for playing our beta!** 💜 Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipville. This is **Release Candidate 2**, the last step before **1.0**, and it comes with:
 
@@ -43,26 +49,26 @@ Redux is built from the same `blip.pyw` (with `EDITION = "redux"`). [More about 
 - 🌟 **World Legends:** each world hides 2 legendary Blips (10 in all: Mossling, Bloomkin, Gumdrop Golem, Cotton Candy Cloud, Pearlfin, Abyss Wisp, Fossilbones, Amber Raptor, Nebula Cat, Cosmo Pup). They only stroll by while you're visiting their world, sparkling in full color. Click one before it leaves!
 - 🎁 **A free gift:** everyone who plays this week gets **Beta Buddy**, a limited-edition party Blip, in the new Gifts tab. **This week only** (until Sunday, November 22)!
 
-## ✨ New in v0.3.4 (beta)
+### v0.3.4 (beta)
 
 - 💬 **Suggestions & help** in every pet's right-click menu: suggest an animal or an idea, or get help if you're stuck.
 - 💖 **Donate / support Blipville** button.
 
-## ✨ New in v0.3.3 (beta)
+### v0.3.3 (beta)
 
 - 🎨 **More redraws:** Ladybug, Hippo, Nessie and Goldfish got makeovers.
 
-## ✨ New in v0.3.2 (beta)
+### v0.3.2 (beta)
 
 - 🦖 **New rarity: Kaiju!** 5 giant monsters (Tidal Titan, Magmaw, Gigabot, Skyray and Frostback) that stomp through a little city at the bottom of your screen. They're **way** harder to get than cryptids: they show up rarely, move fast, and you have to click one **3 times** before it leaves. Or switch on a 📡 Kaiju Beacon.
 - 👣 **13 more cryptids:** Thunderbird, Hodag, Mokele-mbembe, Lizard Man, Kappa, Tsuchinoko, Owlman, Beast of Bodmin, Pope Lick Monster, Bunyip, Skunk Ape, Wendigo and Snallygaster, each with its own scene.
 - 🎨 **Redrawn Blips:** Mothman, Flamingo, Snake, Capybara, Butterfly, Death Worm, Dover Demon and Fresno Nightcrawler got makeovers.
 
-## ✨ New in v0.3.1 (beta)
+### v0.3.1 (beta)
 
 - 👣 **New rarity: Cryptids!** 12 Blips based on legendary creatures (Bigfoot, Mothman, Nessie and more). Spot one in its own little scene, like Mothman on a lamp post, and click it before it gets away. Or set out a 🔦 Cryptid Lure.
 
-## ✨ New in v0.3.0 (beta)
+### v0.3.0 (beta)
 
 - 🏠 **Your pets are remembered.** Close Blipville and your whole town comes back next time, names, colors and hats included.
 - 🎩 **Hats & outfits shop.** Spend hearts on 12 hats and outfits, plus seasonal ones that only show up at the right time of year.
@@ -75,9 +81,7 @@ Redux is built from the same `blip.pyw` (with `EDITION = "redux"`). [More about 
 
 ### Windows: just download and run
 
-**[⬇️ Download Blipville Redux](https://github.com/Johnblip189/Blipville/releases/download/v0.5.1-redux/Blipville-Redux.exe)** (new, no black flashes), then double-click it. A little pet drops onto your taskbar. 🎉
-
-Prefer the classic app? [Blipville.exe (RC2)](https://github.com/Johnblip189/blipville/releases/download/v0.4.0-rc2/Blipville.exe) is still here.
+**[⬇️ Download Blipville.exe](https://github.com/Johnblip189/Blipville/releases/latest/download/Blipville.exe)**, then double-click it. A little pet drops onto your taskbar. 🎉
 
 > Windows may say **"Windows protected your PC"** the first time, because the app isn't signed (signing costs money).
 > Click **More info → Run anyway**. You only need to do this once.
@@ -86,6 +90,8 @@ Prefer the classic app? [Blipville.exe (RC2)](https://github.com/Johnblip189/bli
 
 1. Install [Python](https://www.python.org/downloads/) (on Windows, tick **"Add python.exe to PATH"** during setup).
 2. Download [`blip.pyw`](blip.pyw) and double-click it, or run `python blip.pyw`.
+3. Optional, on Windows: `pip install pillow` turns on the Redux engine (no black flashes). Without it, Blipville
+   still runs and uses the older see-through trick.
 
 > Made for **Windows**. Should also work on **macOS**. (On Linux the pet shows up in a pink box, because most Linux desktops don't support see-through windows from Python.)
 
@@ -129,6 +135,8 @@ Blip can even dress up as a **Husky** or a **German Shepherd** (right-click Blip
 
 **Night Shift 🌙:** Robo Bear, Robo Bunny *(hops)*, Robo Hen. Creaky little animatronics with bolts and hinged jaws. Between 10 PM and 6 AM their eyes glow and they get… chatty. 🔒 You have to **earn** them in the Night Shift minigame ⬇️
 
+**Bad Dreams 🧸:** plush versions of the crew. Harmless plushies all day, Bad Dreams from midnight to 6 AM. 🔒 Click a **Puppet Master 5 times fast**, then keep the Bad Dream in your 🔦 flashlight beam for 5 seconds to keep it (each of the 5 moves its own way).
+
 **Animals:** Armadillo, Axolotl, Bat, Bear, Beaver, Bee, Butterfly, Capybara, Cat, Caterpillar, Chameleon, Chick, Chinchilla, Clownfish, Corgi, Cow, Crab, Crocodile, Dalmatian, Deer, Dog, Dolphin, Donkey, Dragon, Duck, Elephant, Fennec, Ferret, Flamingo, Fox, Frog, Gecko, Giraffe, Goat, Goldfish, Guinea Pig, Hamster, Hedgehog, Hippo, Horse, Jellyfish, Kangaroo, Koala, Ladybug, Lemur, Lion, Llama, Meerkat, Mole, Monkey, Mouse, Octopus, Otter, Owl, Panda, Parrot, Penguin, Pig, Pufferfish, Pug, Rabbit, Raccoon, Rhino, Seal, Shark, Sheep, Shiba, Skunk, Sloth, Snail, Snake, Squirrel, Starfish, Tiger, Turtle, Unicorn, Whale, Wolf, Zebra
 
 Each animal has its own lines and its own way of moving: frogs and kangaroos hop, bats, bees and butterflies flutter, whales and fish float, sloths and snails are *very* slow, flamingos stand on one leg, and chameleons change color on their own.
@@ -160,7 +168,7 @@ Taking care of your Blips earns **hearts**:
 | 🎁 Open Blipville on a new day | +10 daily treat |
 | 🌙 Survive a night in Night Shift | +10 (+25 the first time) |
 
-Spend **30 hearts** on a **🥚 Mystery Egg** (right-click any pet). It wobbles, cracks, and hatches one of the 20 rare Blips, which then joins you on the desktop. Collect them all!
+Spend **30 hearts** on a **🥚 Mystery Egg** (right-click any pet). It wobbles, cracks, and hatches one of the 32 rare Blips, which then joins you on the desktop. Collect them all!
 
 You can also spend hearts in the **🎩 Hats & outfits** shop: party hats, bows, crowns, wizard hats and more, from 💖 15 to 💖 50. Some only appear in their season, like the Santa Hat in winter or the Witch Hat around Halloween.
 
@@ -186,7 +194,7 @@ Right-click any pet → **Play Night Shift 🌙…**
 Survive from **12 AM to 6 AM** (about 2 minutes) while the Night Shift crew wanders toward your office.
 
 - **Glowing eyes in a doorway?** Hit **FLASH** on that side (◀ ▶ or **A** / **D**) to send the robo back to the stage.
-- **Check the cameras** (**1**–**5**): a robo you're watching **can't move**. But cameras and flashes use battery 🔋
+- **Check the cameras** (**1**–**5**): a robo you're watching **can't move**. But a camera left on one room **overheats** after about 8 seconds 🌡️ (switch rooms while it cools), and cameras and flashes use battery 🔋
 - Get caught and you just try again. No real jump scares, promise. (It just wanted a hug.)
 
 | Survive | Unlocks |

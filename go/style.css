@@ -133,6 +133,7 @@ html, body {
 .nsRow button.primary { background: var(--accent); }
 .nsRow button.flash { background: #4a3a10; color: #ffe08a; }
 .nsRow button.on { outline: 2px solid #ffd23a; }
+.nsRow button.hot { color: #ff4a5a; opacity: 0.75; }
 .nsRow button:disabled { opacity: .4; }
 .nsRow.cams button { white-space: pre-line; font-size: 11px; min-height: 50px; line-height: 1.25; }
 .nsCard .close { margin-top: 8px; min-height: 40px; }
@@ -216,6 +217,16 @@ body.mini .card { padding: 10px; border-radius: 14px; }
 .worldRow button.locked { background: #4a3a10; color: #ffe08a; }
 .worldRow button.armed { background: #a83a6a; color: #fff; }
 
+/* trophies */
+#trophyGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 10px; }
+.trophy { background: var(--card2); border-radius: 14px; padding: 10px 6px 8px; display: flex; flex-direction: column; align-items: center;
+  gap: 4px; text-align: center; color: var(--muted); border: 2px solid transparent; }
+.trophy canvas { width: 48px; height: 44px; image-rendering: pixelated; }
+.trophy b { font-size: 12px; color: #b8b0d8; }
+.trophy small { font-size: 10px; line-height: 1.25; }
+.trophy.earned { border-color: #ffd23a55; }
+.trophy.earned b { color: #ffd23a; }
+.trophy.earned small { color: #9ad8a8; }
 
 /* ghosts sheet */
 .ghostStatus { margin: 8px 0 6px; padding: 10px 12px; border-radius: 12px; background: #2a2450; font-weight: 800; font-size: 14px; }
@@ -228,23 +239,11 @@ body.mini .card { padding: 10px; border-radius: 14px; }
   #bar button span { font-size: 20px; }
 }
 
-/* ⬇ Install app (shows when Edge / Chrome says Blipville can be installed) */
-#installBtn[hidden] { display: none; }
-#installBtn { color: #ffd23a; border-color: rgba(255, 210, 58, .45); cursor: pointer; }
-#installBtn.nudge { animation: nudge 1.2s ease-in-out 4; }
-@keyframes nudge { 50% { transform: scale(1.12); box-shadow: 0 0 0 4px rgba(255, 210, 58, .25); } }
-@media (max-width: 520px) { #installBtn span { display: none; } }
-
-/* trophies */
-#trophyGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 10px; }
-.trophy { background: var(--card2); border-radius: 14px; padding: 10px 6px 8px; display: flex; flex-direction: column; align-items: center;
-  gap: 4px; text-align: center; color: var(--muted); border: 2px solid transparent; }
-.trophy canvas { width: 48px; height: 44px; image-rendering: pixelated; }
-.trophy b { font-size: 12px; color: #b8b0d8; }
-.trophy small { font-size: 10px; line-height: 1.25; }
-.trophy.earned { border-color: #ffd23a55; }
-.trophy.earned b { color: #ffd23a; }
-.trophy.earned small { color: #9ad8a8; }
+/* accessory colors */
+#hatTints .tintRow { display: flex; align-items: center; gap: 6px; margin: 8px 2px 0; font-size: 12px; font-weight: 800; color: var(--muted); }
+#hatTints .tintRow span { min-width: 84px; }
+#hatTints button { width: 24px; height: 24px; border-radius: 7px; border: 2px solid #14121e; padding: 0; }
+#hatTints button.on { border-color: #ffffff; box-shadow: 0 0 0 2px #ffd23a; }
 
 /* arena */
 #arenaTeam button { width: 84px; }
@@ -259,7 +258,21 @@ body.mini .card { padding: 10px; border-radius: 14px; }
 #arenaLog { font-size: 12px; line-height: 1.45; color: var(--muted); margin: 8px 2px; min-height: 90px; }
 #arenaLog div:last-child { color: var(--text); font-weight: 800; }
 #arenaAwaken { background: #c86aff !important; color: #fff; }
+
+/* pixel icons */
+img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: middle; display: inline-block; }
+#bar button span img.px { width: 28px; height: 28px; }
+.pill img.px { width: 22px; height: 22px; }
+#hearts img.px { width: 20px; height: 20px; margin-right: 2px; }
+@media (max-width: 520px) { #bar button span img.px { width: 24px; height: 24px; } }
+.typed { display: inline-flex; align-items: center; gap: 2px; } .typed img.px { width: 14px; height: 14px; }
 @media (max-width: 480px) { #top .title span { display: none; } }
+/* ⬇ Install app (shows when Edge / Chrome says Blipville can be installed) */
+#installBtn[hidden] { display: none; }
+#installBtn { color: #ffd23a; border-color: rgba(255, 210, 58, .45); cursor: pointer; }
+#installBtn.nudge { animation: nudge 1.2s ease-in-out 4; }
+@keyframes nudge { 50% { transform: scale(1.12); box-shadow: 0 0 0 4px rgba(255, 210, 58, .25); } }
+@media (max-width: 520px) { #installBtn span { display: none; } }
 
 /* events */
 #eventBtn[hidden] { display: none; }
@@ -279,6 +292,9 @@ body.mini .card { padding: 10px; border-radius: 14px; }
   background: var(--card2); font-size: 13px; border: 2px solid transparent; }
 .quest.done { border-color: #9ad8a855; color: #9ad8a8; font-weight: 800; }
 
+/* Cookie Catch */
+#catchCanvas { width: 100%; aspect-ratio: 360 / 320; display: block; border-radius: 14px; image-rendering: pixelated; touch-action: none; }
+
 /* early access codes */
 .earlyBox { margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.12); }
 .earlyRow { display: flex; gap: 8px; margin-top: 6px; }
@@ -286,3 +302,44 @@ body.mini .card { padding: 10px; border-radius: 14px; }
   color: #fff; font: 700 14px var(--font); letter-spacing: .06em; text-transform: uppercase; }
 .earlyRow button { padding: 0 16px; border: 0; border-radius: 12px; background: #ffd23a; color: #14121e; font: 800 14px var(--font); }
 #earlyMsg { min-height: 18px; margin-top: 6px; }
+
+/* creator menu */
+#devBtn[hidden] { display: none; }
+.devGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.devGrid button { min-height: 44px; border: 0; border-radius: 12px; background: var(--card2); color: var(--text); font: 800 13px var(--font); }
+.devGrid button[hidden] { display: none; }
+.typeChart { margin: 8px 0; font-size: 13px; }
+.typeChart summary { cursor: pointer; font-weight: 800; color: #ffd23a; list-style: none; display: inline-flex; align-items: center; gap: 6px; }
+.typeChart summary img.px { width: 18px; height: 18px; }
+.typeRow { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.08); color: var(--muted); }
+.typeRow > .typed:first-child { color: #fff; font-weight: 800; min-width: 84px; }
+.typeRow .typed img.px { width: 16px; height: 16px; }
+#arenaMoves { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 4px; }
+#arenaMoves .move { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 56px; padding: 6px;
+  border: 0; border-radius: 14px; color: #fff; font: 800 14px var(--font); cursor: pointer; }
+#arenaMoves .move small { font-size: 11px; font-weight: 600; opacity: .85; }
+#arenaMoves .move img.px { width: 16px; height: 16px; }
+#arenaMoves .m0 { background: #5a4ae0; } #arenaMoves .m1 { background: #3a8a6a; } #arenaMoves .m2 { background: #c8454a; } #arenaMoves .m3 { background: #a8742a; }
+#arenaMoves .move:disabled { background: #2b2547; color: #6a6290; cursor: default; }
+#arenaMoves .move:disabled img.px { opacity: .4; }
+#colorChips button small.price { display: inline-flex; align-items: center; gap: 2px; margin-left: 4px; font-size: 11px; font-weight: 800; color: #ffd23a; }
+#colorChips button small.price img.px { width: 14px; height: 14px; }
+
+/* 🏺 Dig Site */
+#digGrid { display: grid; gap: 4px; margin: 10px 0; padding: 6px; border-radius: 10px; background: #c89a48; }
+#digGrid button { aspect-ratio: 1; border: 2px solid #8a6020; border-radius: 6px; background: #e8c878; font-size: 20px; padding: 0; display: grid; place-items: center; }
+#digGrid button.dug { background: #a87a30; cursor: default; }
+#digGrid canvas { width: 90%; image-rendering: pixelated; }
+#digMsg { min-height: 2.6em; }
+#digNew { width: 100%; padding: 12px; border: 0; border-radius: 12px; background: #e8a020; color: #2a1406; font: inherit; font-weight: 700; cursor: pointer; }
+
+/* 💬 chats */
+.chatLine { background: #2a2540; color: #e8e4ff; border-radius: 12px; padding: 10px 12px; margin: 8px 0 10px; font-weight: 600; line-height: 1.35; }
+.chatOpts { display: flex; flex-direction: column; gap: 6px; }
+.chatOpts button { text-align: left; padding: 9px 12px; border-radius: 10px; border: 0; background: #3a3360; color: #fff; font-weight: 800; }
+.chatOpts button:active { background: #5a4ae0; }
+.chatRow { display: flex; gap: 10px; align-items: stretch; margin: 8px 0 10px; }
+.chatRow canvas { width: 112px; height: 105px; background: #2a2540; border-radius: 12px; image-rendering: pixelated; flex: none; }
+.chatRow .chatLine { margin: 0; flex: 1; }
+/* no double-tap zoom on rapid taps (petting, feeding, tapping kaiju) */
+button { touch-action: manipulation; }

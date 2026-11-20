@@ -13,34 +13,35 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=30">
+<link rel="stylesheet" href="style.css?v=94">
 </head>
 <body>
 <canvas id="world"></canvas>
 
 <header id="top">
-  <div class="pill" id="hearts" title="Hearts">💖 <b id="heartCount">0</b></div>
+  <div class="pill" id="hearts" title="Hearts"><img class="px" src="icons/px/heart.png" alt=""> <b id="heartCount">0</b></div>
   <div class="title">Blipville<span>: On the Go</span></div>
   <div class="right">
-    <button class="pill" id="installBtn" title="Install Blipville as an app on this laptop or phone" hidden>⬇ <span>Install app</span></button>
-    <button class="pill icon" id="arenaBtn" aria-label="Arena" title="Arena">⚔️</button>
+    <button class="pill" id="installBtn" title="Install Blipville as an app on this laptop or phone" hidden><img class="px" src="icons/px/download.png" alt=""> <span>Install app</span></button>
+    <button class="pill icon" id="arenaBtn" aria-label="Arena" title="Arena"><img class="px" src="icons/px/arena.png" alt=""></button>
+    <button class="pill icon" id="devBtn" aria-label="Creator menu" title="Creator menu" hidden>🛠️</button>
     <button class="pill icon" id="eventBtn" aria-label="Event" title="Spiky Week event" hidden>🦔</button>
-    <button class="pill icon" id="trophyBtn" aria-label="Trophies" title="Trophies">🏆</button>
-    <button class="pill icon" id="soundBtn" aria-label="Sound off">🔇</button>
-    <button class="pill icon" id="helpBtn" aria-label="How to play">?</button>
+    <button class="pill icon" id="trophyBtn" aria-label="Trophies" title="Trophies"><img class="px" src="icons/px/trophy.png" alt=""></button>
+    <button class="pill icon" id="soundBtn" aria-label="Sound off"><img class="px" src="icons/px/mute.png" alt=""></button>
+    <button class="pill icon" id="helpBtn" aria-label="How to play"><img class="px" src="icons/px/help.png" alt=""></button>
   </div>
 </header>
 
 <nav id="bar">
-  <button id="feedBtn" title="Feed the hungriest Blip (F)"><span>🍪</span>Feed</button>
-  <button id="friendBtn" title="Invite a new friend (N)"><span>➕</span>Friend</button>
-  <button id="eggBtn" title="Hatch a Mystery Egg (E)"><span>🥚</span>Egg</button>
-  <button id="collectionBtn" title="Your collection (Z)"><span>📖</span>Zoo</button>
-  <button id="ghostBtn" title="Ghosts (G)"><span>👻</span>Ghosts</button>
-  <button id="worldBtn" title="Visit other worlds"><span>🌍</span>Worlds</button>
-  <button id="nightBtn" title="Play Night Shift"><span>🌙</span>Night</button>
-  <button id="shareBtn" title="Save a picture of your town (S)"><span>📸</span>Share</button>
-  <button id="popBtn" title="Pop the town out into a small window that stays on top (P)" hidden><span>📌</span>Pop out</button>
+  <button id="feedBtn" title="Feed the hungriest Blip (F)"><span><img class="px" src="icons/px/cookie.png" alt=""></span>Feed</button>
+  <button id="friendBtn" title="Invite a new friend (N)"><span><img class="px" src="icons/px/friend.png" alt=""></span>Friend</button>
+  <button id="eggBtn" title="Hatch a Mystery Egg (E)"><span><img class="px" src="icons/px/egg.png" alt=""></span>Egg</button>
+  <button id="collectionBtn" title="Your collection (Z)"><span><img class="px" src="icons/px/zoo.png" alt=""></span>Zoo</button>
+  <button id="ghostBtn" title="Ghosts (G)"><span><img class="px" src="icons/px/ghost.png" alt=""></span>Ghosts</button>
+  <button id="worldBtn" title="Visit other worlds"><span><img class="px" src="icons/px/worlds.png" alt=""></span>Worlds</button>
+  <button id="nightBtn" title="Play Night Shift"><span><img class="px" src="icons/px/night.png" alt=""></span>Night</button>
+  <button id="shareBtn" title="Save a picture of your town (S)"><span><img class="px" src="icons/px/share.png" alt=""></span>Share</button>
+  <button id="popBtn" title="Pop the town out into a small window that stays on top (P)" hidden><span><img class="px" src="icons/px/pin.png" alt=""></span>Pop out</button>
 </nav>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -54,7 +55,6 @@
     <p class="gold">Your pets are safe. They're saved on this device.</p>
     <a id="maintLink" class="maintLink" hidden target="_blank" rel="noopener"></a>
     <button id="maintRetry">Check again</button>
-    <div id="cdHost"></div>
     <div class="earlyBox">
       <div class="small">🎟️ Got an early access code?</div>
       <div class="earlyRow"><input id="earlyCode" placeholder="BLIP-XXXX-XXXX" autocomplete="off" spellcheck="false" maxlength="20"><button id="earlyGo">Unlock</button></div>
@@ -71,17 +71,22 @@
       <div>
         <input id="petName" maxlength="16" aria-label="Pet name">
         <div class="muted" id="petKind"></div>
+        <div class="muted small" id="petBond"></div>
       </div>
     </div>
     <div class="row">
       <button id="sheetFeed">🍪 Feed</button>
       <button id="sheetNap">💤 Nap</button>
       <button id="sheetPet">💖 Pet</button>
+      <button id="sheetCatch">🍪 Catch</button>
+      <button id="sheetChat" hidden>💬 Chat</button>
     </div>
     <div class="label">Color</div>
     <div class="chips" id="colorChips"></div>
     <div class="label">Hats &amp; outfits <span id="hatSeason" class="season"></span></div>
     <div class="chips" id="hatChips"></div>
+    <div id="hatTints"></div>
+    <button class="peekAll lure" id="slot2Btn" hidden>🔓 Unlock a 2nd accessory slot</button>
     <div class="row">
       <button id="sheetAwaken" hidden>✨ Awaken</button>
       <button id="sheetAwakenBack" hidden>💤 Normal form</button>
@@ -106,11 +111,52 @@
   </div>
 </div>
 
+<div class="sheet" id="eventSheet" hidden>
+  <div class="card tall">
+    <div class="sheetTitle"><span id="eventTitle"></span> <span class="muted small" id="eventWhen"></span></div>
+    <div id="cdHost"></div>
+    <div class="muted small">Pet and feed your Hedgehogs, Foxes and Echidnas, and do today's quests! A pet is 1 point (once every few seconds) and a cookie for a hungry Blip up to 3 (full Blips give nothing).
+      Every 10 points unlocks a new event skin. Skins you earn are yours forever (the Windows app has them too).</div>
+    <div class="eventBar"><div id="eventFill"></div><span id="eventPts"></span></div>
+    <div id="eventGrid"></div>
+    <div id="eventAdd"></div>
+    <div class="sheetTitle small" style="margin-top:14px">📅 Today's quests</div>
+    <div class="muted small" id="questNote"></div>
+    <div id="questList"></div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="devSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle" id="devTitle">🛠️ Creator menu</div>
+    <div class="muted small" id="devNote">Only you have this. 💜</div>
+    <div class="devGrid">
+      <button id="devHearts">💖 +100 hearts</button><button id="devEvent">🦔 +10 event points</button>
+      <button id="devCryptid">👣 Spawn a cryptid</button><button id="devKaiju">🦖 Spawn a kaiju</button>
+      <button id="devGhost">👻 Spawn a ghost</button><button id="devLegend">✨ Spawn a legend</button>
+      <button id="devQuests">📅 Fresh quests</button><button id="devUnlock">🔓 Unlock everything</button>
+      <button id="devCreators">⭐ Add my Creator Blips</button><button id="devBoss">🥊 Copy my boss code</button>
+    </div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
+<div class="sheet" id="trophySheet" hidden>
+  <div class="card tall">
+    <div class="sheetTitle">🏆 Trophies <span class="muted" id="trophyCount"></span></div>
+    <div class="muted small">Every trophy earns bonus 💖 hearts.</div>
+    <div id="trophyGrid"></div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
 <div class="sheet" id="arenaSheet" hidden>
   <div class="card tall">
     <div class="sheetTitle">⚔️ Arena <span class="muted" id="arenaWins"></span></div>
     <div id="arenaLobby">
-      <div class="muted small">🔥 Spark beats 🌿 Sprout · 🌿 Sprout beats 💧 Splash · 💧 Splash beats 🔥 Spark · ✨ one Awaken per battle</div>
+      <div class="muted small">Pick a move each turn · 10 types, each element strong against 2 (x1.5 damage) · ✨ one Awaken per battle</div>
+      <details class="typeChart"><summary><img class="px" src="icons/px/arena.png" alt=""> Type chart</summary><div id="typeChart"></div></details>
       <div class="label">Your team <span class="muted small">(tap your Blips to pick 3)</span></div>
       <div class="chips" id="arenaTeam"></div>
       <button class="bigBtn" id="arenaCopy">📋 Copy my battle code</button>
@@ -122,6 +168,7 @@
     <div id="arenaFight" hidden>
       <canvas id="arenaCanvas" width="360" height="200"></canvas>
       <div id="arenaLog"></div>
+      <div id="arenaMoves"></div>
       <div class="row">
         <button id="arenaAwaken" hidden>✨ Awaken!</button>
         <button id="arenaBack">🏳️ Give up</button>
@@ -142,26 +189,12 @@
   </div>
 </div>
 
-<div class="sheet" id="eventSheet" hidden>
-  <div class="card tall">
-    <div class="sheetTitle"><span id="eventTitle"></span> <span class="muted small" id="eventWhen"></span></div>
-    <div class="muted small">Pet and feed your Hedgehogs, Foxes and Echidnas, and do today's quests! A pet is 1 point (once every few seconds) and a cookie for a hungry Blip up to 3 (full Blips give nothing).
-      Every 10 points unlocks a new event skin. Skins you earn are yours forever (the Windows app has them too).</div>
-    <div class="eventBar"><div id="eventFill"></div><span id="eventPts"></span></div>
-    <div id="eventGrid"></div>
-    <div id="eventAdd"></div>
-    <div class="sheetTitle small" style="margin-top:14px">📅 Today's quests</div>
-    <div class="muted small" id="questNote"></div>
-    <div id="questList"></div>
-    <button class="close" data-close>Close</button>
-  </div>
-</div>
-
-<div class="sheet" id="trophySheet" hidden>
-  <div class="card tall">
-    <div class="sheetTitle">🏆 Trophies <span class="muted" id="trophyCount"></span></div>
-    <div class="muted small">Every trophy earns bonus 💖 hearts.</div>
-    <div id="trophyGrid"></div>
+<div class="sheet" id="digSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle">🏺 Dig Site</div>
+    <div class="muted small" id="digMsg"></div>
+    <div id="digGrid"></div>
+    <button id="digNew">New dig site</button>
     <button class="close" data-close>Close</button>
   </div>
 </div>
@@ -176,6 +209,28 @@
 </div>
 
 <!-- Night Shift minigame -->
+<div class="sheet" id="catchSheet" hidden>
+  <div class="card nsCard">
+    <canvas id="catchCanvas" width="360" height="320"></canvas>
+    <button class="close" data-close>Leave</button>
+  </div>
+</div>
+
+<div class="sheet" id="chatSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle" id="chatWho">💬 Chat</div>
+    <div class="chatRow"><canvas id="chatPortrait" width="128" height="120"></canvas><div id="chatLine" class="chatLine"></div></div>
+    <div id="chatOpts" class="chatOpts"></div>
+  </div>
+</div>
+
+<div class="sheet" id="dreamSheet" hidden>
+  <div class="card nsCard">
+    <canvas id="dreamCanvas" width="360" height="320" style="touch-action:none"></canvas>
+    <button class="close" data-close>Run away</button>
+  </div>
+</div>
+
 <div class="sheet" id="nsSheet" hidden>
   <div class="card nsCard">
     <canvas id="nsCanvas" width="360" height="300"></canvas>
@@ -209,8 +264,7 @@
       <li>🦖 Once in a long while a giant <b>kaiju</b> stomps through. Tap it <b>3 times</b> before it leaves!</li>
       <li>👻 At night (7 PM to 7 AM) <b>ghosts</b> drift by. They fade in and out: tap one while it glows! A 🕯️ <b>Spirit Candle</b> (in the 📖 Zoo) calls them in the daytime.</li>
       <li>👁️ Watch out for the <b>Lurker</b>, a shadow ghost with lots of eyes. It's the only Blip that can <b>✨ Awaken 3 times</b>, all the way to Lurker Eternal!</li>
-      <li>⚔️ Tap <b>⚔️</b> at the top for the <b>Arena</b>: pick 3 Blips, share your battle code with friends (it works with the Windows app too) or beat the practice rivals.
-        Some Blips can <b>✨ Awaken</b> into a stronger form with an Awakening Crystal (in their menu).</li>
+      <li>Some Blips can <b>✨ Awaken</b> into a new form with an Awakening Crystal (in their menu).</li>
       <li>🏆 Tap the <b>trophy</b> at the top to see your trophies. Each one earns bonus hearts.</li>
       <li>Brave enough? Tap <b>🌙 Night</b> to play <b>Night Shift</b>. Survive until 6 AM to unlock the robo crew!</li>
       <li>Buy <b>hats &amp; outfits</b> from a Blip's menu. Tap <b>🔇</b> at the top to turn on sound effects.</li>
@@ -224,9 +278,11 @@
     </ul>
     <div class="saveBox">
       <div class="sheetTitle small">💾 Save code</div>
-      <div class="muted small">Your town saves on this device automatically. To back it up or move it to another phone or browser, copy your save code, then paste it there and tap Load.</div>
+      <div class="muted small">Your town saves on this device automatically. To back it up or move it to another phone, browser or the Windows app (right-click a pet → 💾 Save code), copy your save code, then paste it there and tap Load.</div>
       <textarea id="saveCode" rows="2" placeholder="Paste a save code here…" spellcheck="false" autocomplete="off"></textarea>
       <div class="saveRow"><button id="copySave">Copy my save code</button><button id="loadSave">Load this code</button></div>
+      <div class="earlyRow"><input id="secretCode" placeholder="🔑 Secret or 🎟️ merch code" autocomplete="off" spellcheck="false" maxlength="32"><button id="secretGo">Enter</button></div>
+      <div id="secretMsg" class="small gold"></div>
     </div>
     <div class="linkRow">
       <a class="linkBtn" href="https://github.com/Johnblip189/blipville/issues/new?template=idea.yml" target="_blank" rel="noopener">💡 Suggest</a>
@@ -247,8 +303,8 @@
   </div>
 </div>
 
-<script src="data.js?v=30"></script>
-<script src="countdown.js?v=30"></script>
-<script src="app.js?v=30"></script>
+<script src="data.js?v=94"></script>
+<script src="countdown.js?v=94"></script>
+<script src="app.js?v=94"></script>
 </body>
 </html>

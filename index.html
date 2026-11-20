@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Blipville — pixel pets for your screen</title>
-<meta name="description" content="Tiny pixel pets that wander, nap, eat cookies and hatch from Mystery Eggs. Play free in your browser on any phone, laptop or Chromebook, or download Blipville Redux for Windows.">
+<meta name="description" content="Tiny pixel pets that wander, nap, eat cookies and hatch from Mystery Eggs. Play free in your browser on any phone, laptop or Chromebook, or download Blipville 1.0 for Windows.">
 <meta property="og:title" content="Blipville">
-<meta property="og:description" content="Tiny pixel pets you can play with anywhere. 249 kinds, hearts, Mystery Eggs, cryptids and worlds. New: Blipville Redux for Windows.">
+<meta property="og:description" content="Tiny pixel pets you can play with anywhere. 249 kinds, hearts, Mystery Eggs, cryptids and worlds. New: Blipville 1.0 for Windows.">
 <meta property="og:image" content="docs/banner.png">
 <meta name="theme-color" content="#211c38">
 <link rel="icon" href="go/icons/icon-192.png">
@@ -73,6 +73,8 @@
                font-weight: 800; font-size: 16px; }
   .countdown[hidden] { display: none; }
   .btn.discord { background: #5865f2; }
+  img.px { width: 22px; height: 22px; image-rendering: pixelated; vertical-align: -4px; }
+  h3 img.px { width: 24px; height: 24px; margin-right: 4px; }
 </style>
 </head>
 <body>
@@ -87,11 +89,11 @@
     <h1>🏘️ Blipville</h1>
     <p class="tag">Tiny pixel pets that wander, nap, eat cookies, and say hi to each other.</p>
     <div class="cta">
-      <a class="btn play" href="go/">▶ Play in your browser</a>
-      <a class="btn redux" href="https://github.com/Johnblip189/Blipville/releases/download/v0.5.1-redux/Blipville-Redux.exe">⬇ Blipville Redux for Windows <span class="new">NEW</span></a>
-      <a class="btn discord" href="https://discord.gg/Q3zmYakNZT" target="_blank" rel="noopener">💬 Join the Discord</a>
+      <a class="btn play" href="go/"><img class="px" src="docs/icons/play.png" alt=""> Play in your browser</a>
+      <a class="btn redux" href="https://github.com/Johnblip189/Blipville/releases/latest/download/Blipville.exe"><img class="px" src="docs/icons/download.png" alt=""> Download for Windows <span class="new">1.0</span></a>
+      <a class="btn discord" href="https://discord.gg/Q3zmYakNZT" target="_blank" rel="noopener"><img class="px" src="docs/icons/discord.png" alt=""> Join the Discord</a>
     </div>
-    <p class="small">Free · no account · 260 pets · 820+ colors · works on phones, laptops, Chromebooks and Windows · <a href="#redux">What's Redux?</a></p>
+    <p class="small">Free · no account · 387 pets · 1,000+ colors · works on phones, laptops, Chromebooks and Windows · <a href="#new">What's new in 1.0?</a></p>
   </section>
 
   <div class="gifts" id="gifts">
@@ -104,85 +106,105 @@
   </div>
 
   <div class="grid">
-    <div class="card"><h3>🐾 249 kinds of pets</h3><p>Cats, capybaras, axolotls, dragons, sharks, a very slow sloth… each with its own colors, moves and lines.</p></div>
-    <div class="card"><h3>💖 Take care of them</h3><p>Pet them, feed them cookies, let them nap, dress them up in hats. Caring earns hearts, plus a daily treat.</p></div>
-    <div class="card"><h3>🥚 Mystery Eggs</h3><p>Spend hearts on eggs that hatch 20 rare Blips. One of them is <i>very</i> shiny. ✨</p></div>
-    <div class="card"><h3>👣 Cryptids &amp; kaiju</h3><p>25 cryptids sneak past now and then, and 5 giant kaiju stomp by (rarely!). Click them to befriend them.</p></div>
-    <div class="card"><h3>🌍 Worlds</h3><p>Unlock Plants, Sweets, Ocean, Dinos and Space with hearts. Each has new Blips and 2 legends to spot.</p></div>
-    <div class="card"><h3>🌙 Night Shift</h3><p>A spooky-cute minigame: survive until 6 AM to unlock the robo crew.</p></div>
+    <div class="card"><h3><img class="px" src="docs/icons/friend.png" alt=""> 387 kinds of pets</h3><p>Cats, capybaras, axolotls, dragons, sharks, a very slow sloth… each with its own colors, moves and lines.</p></div>
+    <div class="card"><h3><img class="px" src="docs/icons/heart.png" alt=""> Take care of them</h3><p>Pet them, feed them cookies, let them nap, dress them up in hats. Caring earns hearts, plus a daily treat.</p></div>
+    <div class="card"><h3><img class="px" src="docs/icons/egg.png" alt=""> Mystery Eggs</h3><p>Spend hearts on eggs that hatch 32 rare Blips. One of them is <i>very</i> shiny. ✨</p></div>
+    <div class="card"><h3><img class="px" src="docs/icons/zoo.png" alt=""> Cryptids &amp; kaiju</h3><p>49 cryptids sneak past now and then, and 17 giant kaiju stomp by (rarely!). Click them to befriend them.</p></div>
+    <div class="card"><h3><img class="px" src="docs/icons/worlds.png" alt=""> Worlds</h3><p>Unlock Plants, Sweets, Ocean, Dinos and Space with hearts. Each has new Blips and legends to spot.</p></div>
+    <div class="card"><h3><img class="px" src="docs/icons/night.png" alt=""> Night Shift</h3><p>A spooky-cute minigame: survive until 6 AM to unlock the robo crew.</p></div>
   </div>
 
   <img class="demo" src="docs/demo.gif" alt="Blips dropping onto a taskbar, eating a cookie, getting petted and saying hi">
 
-  <section class="about" id="redux">
-    <h2>✨ About Blipville Redux</h2>
-    <p class="lead">Redux is the new Windows app: the same Blipville you know, with a brand-new way of drawing your pets.
-       <b>New in v0.5.1: 👻 ghosts!</b> 10 of them drift by at night. Click one while it glows.</p>
+  <section class="about" id="new">
+    <h2>💜 Blipville 1.0</h2>
+    <p class="lead">Thank you to everyone who played the betas. Every pet you hatched, cryptid you spotted and idea you sent helped make this.</p>
     <div class="grid two">
       <div class="card">
-        <h3>🚫 No more black flashes</h3>
-        <p>The classic app hid a "magic pink" background, and Windows had to repaint it whenever you clicked a pet or opened a menu.
-           Sometimes that showed black for a split second. Redux draws every pet as a real see-through picture and hands it
-           straight to Windows, so nothing gets repainted and nothing flashes.</p>
+        <h3><img class="px" src="docs/icons/crystal.png" alt=""> The Redux engine</h3>
+        <p>Blipville used to hide a "magic pink" background, and Windows had to repaint it whenever you clicked a pet or opened
+           a menu. Sometimes that showed black for a split second. 1.0 draws every pet as a real see-through picture and hands
+           it straight to Windows, so nothing gets repainted and <b>nothing flashes</b>. Text and bubbles got smooth edges too.</p>
       </div>
       <div class="card">
-        <h3>💾 Your town comes with you</h3>
-        <p>Redux uses the same save as the classic app: same pets, names, hats, hearts, worlds and unlocks. Just quit the classic
-           Blipville first, so the two don't both move your pets around.</p>
+        <h3><img class="px" src="docs/icons/heart.png" alt=""> Your town comes with you</h3>
+        <p>Same save as before: same pets, names, hats, hearts, worlds and unlocks. Already playing? Blipville (and Blipville
+           Redux) offer the 1.0 update by themselves. Just say yes.</p>
       </div>
       <div class="card">
-        <h3>🧩 Everything's still here</h3>
-        <p>All 249 Blips and 790+ colors, Mystery Eggs, the hat shop, the Collection, cryptids, kaiju, World Legends, Worlds,
-           weather, games of ball and tag, sound effects, Night Shift and the Beta Buddy gift.</p>
+        <h3><img class="px" src="docs/icons/crystal.png" alt=""> 72 new special Blips</h3>
+        <p>12 more in every tier (24 more Cryptids!): Rare egg Blips like the Qilin and Rainbow Blip, Cryptids like the Ningen, Lusca and Beast of Gévaudan,
+           Kaiju like Clockwork Rex, Ghosts like the Haunted Teacup, and World Legends like the Star Whale.</p>
       </div>
       <div class="card">
-        <h3>🔄 Keeps itself up to date</h3>
-        <p>When a new version is out, Redux asks, downloads it and restarts by itself. Right-click a pet → <b>🔄 Updates</b> to check any time.</p>
+        <h3><img class="px" src="docs/icons/friend.png" alt=""> 13 new Blips</h3>
+        <p>Say hi to the Red Panda, Polar Bear, Puffin, Beluga, Gorilla, Sugar Glider, Highland Cow, Shoebill, Tarsier, Marmot,
+           Mantis Shrimp, Frilled Lizard and the Echidna. That's 387 kinds of pets!</p>
+      </div>
+      <div class="card">
+        <h3><img class="px" src="docs/icons/heart.png" alt=""> Friendship &amp; Cookie Catch</h3>
+        <p>Every Blip now bonds with you as you care for it, all the way from New friend to <b>Soulmate</b>, with hearts at
+           every level. And in the new minigame <b>Cookie Catch</b>, your Blip catches falling cookies (watch out for burnt ones!).</p>
+      </div>
+      <div class="card">
+        <h3><img class="px" src="docs/icons/ghost.png" alt=""> Bad Dreams 🧸</h3>
+        <p>Plush versions of the Night Shift crew. By day they just sit there… at midnight they burst out of their stitches.
+           Click a Puppet Master 5 times fast if you dare, then keep the Bad Dream in your flashlight beam for 5 seconds to keep it!</p>
+      </div>
+      <div class="card">
+        <h3><img class="px" src="docs/icons/awaken.png" alt=""> Awakened forms</h3>
+        <p>20 Blips can awaken into powered-up forms, like the Nine-Tail Kitsune, Inferno Magmaw, King Sheetie and Lunar Mothman.
+           The first 5 kaiju have one! And the new ghost, the many-eyed <b>Lurker</b>, awakens <b>three times</b>, all the way up to Lurker Eternal. 👁️</p>
+      </div>
+      <div class="card">
+        <h3><img class="px" src="docs/icons/ghost.png" alt=""> Ghosts</h3>
+        <p>A brand-new tier: 25 ghosts drift past haunted houses and graveyards at night. They fade in and out, so tap one
+           while it glows! Light a 🕯️ Spirit Candle to call them in the daytime.</p>
+      </div>
+      <div class="card">
+        <h3><img class="px" src="docs/icons/trophy.png" alt=""> Trophies</h3>
+        <p>28 trophies to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.</p>
+      </div>
+      <div class="card">
+        <h3><img class="px" src="docs/icons/gift.png" alt=""> A thank-you gift</h3>
+        <p><b>Patch</b>, a little repair-crew Blip in a hard hat, for waiting out the maintenance. Free until Tuesday,
+           November 24, plus <b>Beta Buddy</b> until Sunday, November 22.</p>
+      </div>
+      <div class="card">
+        <h3><img class="px" src="docs/icons/download.png" alt=""> Keeps itself up to date</h3>
+        <p>When a new version is out, Blipville asks, downloads it and restarts by itself. Right-click a pet →
+           <b>🔄 Updates</b> to check any time.</p>
       </div>
     </div>
 
-    <h3 class="sub">Redux or classic?</h3>
-    <table class="compare">
-      <tr><th></th><th>✨ Redux <span class="small">v0.5</span></th><th>Classic <span class="small">v0.4 RC2</span></th></tr>
-      <tr><td>Black flashes when clicking</td><td>✅ Fixed</td><td>Sometimes</td></tr>
-      <tr><td>👻 Ghosts (new!)</td><td>✅</td><td>Coming in 1.0</td></tr>
-      <tr><td>Smooth edges on text and bubbles</td><td>✅</td><td>Jagged</td></tr>
-      <tr><td>All pets, eggs, worlds, Night Shift</td><td>✅</td><td>✅</td></tr>
-      <tr><td>Same save file</td><td>✅</td><td>✅</td></tr>
-      <tr><td>Updates itself</td><td>✅</td><td>✅</td></tr>
-      <tr><td>Status</td><td>Early beta, the future of the app</td><td>Stable, kept around for now</td></tr>
-    </table>
-
     <h3 class="sub">Getting it</h3>
     <ol class="steps">
-      <li>If the classic Blipville is running, right-click a pet → <b>Goodbye everyone (quit)</b>.</li>
-      <li>Download <a href="https://github.com/Johnblip189/Blipville/releases/download/v0.5.1-redux/Blipville-Redux.exe"><b>Blipville-Redux.exe</b></a> and double-click it. No installer needed.</li>
+      <li>Download <a href="https://github.com/Johnblip189/Blipville/releases/latest/download/Blipville.exe"><b>Blipville.exe</b></a> and double-click it. No installer needed.</li>
       <li>Windows may say "protected your PC" the first time. Click <b>More info → Run anyway</b>.</li>
       <li>Your pets drop in from the top of the screen. Right-click one for everything else. 🎉</li>
     </ol>
-    <p class="small">Found a bug in Redux? Right-click a pet → <b>💬 Suggestions &amp; help</b> → <b>Get help / report a problem</b>
+    <p class="small">Found a bug? Right-click a pet → <b>💬 Suggestions &amp; help</b> → <b>Get help / report a problem</b>
        (and <b>Copy error log</b> helps a lot).</p>
   </section>
 
   <h2>Play anywhere</h2>
   <div class="where">
     <div class="card">
-      <h3>💻 Laptop &amp; Chromebook</h3>
+      <h3><img class="px" src="docs/icons/play.png" alt=""> Laptop &amp; Chromebook</h3>
       <p>Play right in Edge or Chrome, or <b>install it as an app</b>: it gets its own icon in the Start menu, its own window, and works offline.
         Perfect for school and work laptops that don't allow downloads. Use <b>📌 Pop out</b> to keep your Blips on top while you work.</p>
-      <a class="btn" href="go/">▶ Play</a> <a class="btn" href="go/?install">⬇ Get the laptop app</a>
+      <a class="btn" href="go/"><img class="px" src="docs/icons/play.png" alt=""> Play</a> <a class="btn" href="go/?install"><img class="px" src="docs/icons/download.png" alt=""> Get the laptop app</a>
     </div>
     <div class="card">
-      <h3>📱 Phone</h3>
+      <h3><img class="px" src="docs/icons/play.png" alt=""> Phone</h3>
       <p>Open it in your phone's browser, then <b>Add to Home Screen</b> so it works like an app, even offline.</p>
-      <a class="btn" href="go/">▶ Play</a>
+      <a class="btn" href="go/"><img class="px" src="docs/icons/play.png" alt=""> Play</a>
     </div>
     <div class="card">
-      <h3>🪟 Windows</h3>
+      <h3><img class="px" src="docs/icons/download.png" alt=""> Windows</h3>
       <p>The full desktop-pet version: Blips walk along your real taskbar, on top of everything you do.</p>
-      <a class="btn redux" href="https://github.com/Johnblip189/Blipville/releases/download/v0.5.1-redux/Blipville-Redux.exe">⬇ Blipville Redux</a>
-      <p class="small" style="margin-top:8px">Prefer the old one? <a href="https://github.com/Johnblip189/Blipville/releases/download/v0.4.0-rc2/Blipville.exe">Classic Blipville (v0.4 RC2)</a>.
-        Windows may say "protected your PC" the first time. Click <b>More info → Run anyway</b>.</p>
+      <a class="btn redux" href="https://github.com/Johnblip189/Blipville/releases/latest/download/Blipville.exe"><img class="px" src="docs/icons/download.png" alt=""> Download</a>
+      <p class="small" style="margin-top:8px">Windows may say "protected your PC" the first time. Click <b>More info → Run anyway</b>.</p>
     </div>
   </div>
 
@@ -202,7 +224,7 @@
 <script>
 // The maintenance switch (status.json in the repo) also shows up here.
 (async () => {
-  const names = { classic: "the Windows app", redux: "Blipville Redux", web: "the browser version" };
+  const names = { classic: "the Windows app", redux: "Blipville Redux (old v0.5)", web: "the browser version" };
   for (const url of ["https://raw.githubusercontent.com/Johnblip189/Blipville/main/status.json", "status.json"]) {
     try {
       const res = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
@@ -227,20 +249,6 @@
   const d = new Date(), day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   if (day > "2026-11-24") document.getElementById("gifts").hidden = true;
   else if (day > "2026-11-22") document.getElementById("giftText").innerHTML = "<b>Patch</b> 🔧, a thank-you for waiting out the maintenance, until Tuesday, November 24. Just open Blipville, in your browser or on Windows, and it walks right onto your screen.";
-})();
-</script>
-<script>
-// Countdown to Blipville 1.0 (Sunday, November 22): a teaser banner for each day, by the visitor's own date.
-(() => {
-  const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const days = Math.round((new Date(2026, 10, 22) - today) / 86400000);
-  if (days < 1 || days > 5) return;
-  const img = document.getElementById("heroBanner");
-  img.src = `docs/teaser-${days}.png`;
-  img.alt = days === 1 ? "Tomorrow: Blipville 1.0, Sunday November 22" : `${days} days to go until Blipville 1.0, Sunday November 22`;
-  const c = document.getElementById("countdown");
-  c.textContent = days === 1 ? "🔜 Blipville 1.0 drops tomorrow!" : `🔜 Blipville 1.0 drops Sunday, November 22 · ${days} days to go`;
-  c.hidden = false;
 })();
 </script>
 <script>

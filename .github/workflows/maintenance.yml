@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
     inputs:
       classic:
-        description: "Close the Windows app (Blipville.exe)"
+        description: "Close the Windows app (Blipville.exe, 1.0 and older)"
         type: boolean
         default: false
       redux:
-        description: "Close Blipville Redux (Blipville-Redux.exe)"
+        description: "Close old Blipville Redux v0.5 copies (Blipville-Redux.exe)"
         type: boolean
         default: false
       web:

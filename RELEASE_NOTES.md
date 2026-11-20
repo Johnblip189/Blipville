@@ -1,29 +1,118 @@
-## 💜 Release Candidate 2
+## 💜 Blipville 1.0
 
-**New in RC2:**
-- 🌍 **Worlds** on desktop *and* phones/laptops: unlock Plant, Sweets, Ocean, Dino and Space World with hearts, then visit them
-- 🔄 **Updates that actually reach you:** a backup way to check, a fallback for blocked connections, the build time in the Updates menu, and a fix for the "Failed to load Python DLL" error after updating
-- ⚡ **Smoother and no black flashes:** steady 30 FPS, pets only redraw when they change, fewer window repaints
-- 🌟 **World Legends:** 10 legendary Blips, 2 per world, that only stroll by while you're visiting their world. Click them to befriend them!
-- 🦊 Kitsune's Spirit colors redrawn
+**Thank you.** Every pet you hatched, cryptid you spotted, bug you reported and idea you sent through the betas helped
+make Blipville what it is. This is the real thing.
 
-**Updating from RC1?** If your copy can't find this update, download it once by hand from this page. After that it updates itself.
+**New in 1.0:**
+- 🏺 **Egypt World: 30 Egyptian gods!** Ra, Anubis, Horus, Bastet, Thoth, Sobek, Isis, Osiris, Set, Hathor, Khepri, Ammit,
+  Sekhmet, Ptah, Amun, Khnum, Bes, Taweret, Nut, Geb, Shu, Tefnut, Ma'at, Nephthys, Wadjet, Nekhbet, Apep, Khonsu, Hapi and
+  Serket, each with their sacred animal, a gold collar and their crown or symbol, in Sacred, Moonlit and Sunset colors.
+  Egypt World is **free**, but the gods have to be **found**: open the 🏺 **Dig Site**, where each board of sand hides one god.
+  Every dig tells you how close you are (🔥 hot, ☀️ warm, ❄️ cold), you get 8 digs per board, and there's heart treasure
+  in the sand. New boards are free.
+- 🖍️ **The Redraw: every Blip has a new look.** Rounder shapes, bigger features and new shading on all of them. Miss the
+  old look? Every Blip has a 🍬 **Classic** color (called **Original** for the few that already had a Classic) that shows the
+  new drawing but glitches back to its old one every few seconds. Your chosen colors stay the same.
+- 🎁 **Two new gift Blips:** **Confetti** for everyone who plays on launch weekend (through Sunday, November 22), and **Bug Hunter**
+  for the testers who helped get 1.0 ready. 🔍
+- 🌟 **72 new special Blips, at least 12 in every tier:** new Rare egg Blips (Qilin, Pixie, Wyvern, Rainbow Blip…), Cryptids
+  (Ningen, Van Meter Visitor, Lusca, Beast of Gévaudan, Yowie, Ogopogo, Squonk…: 24 new ones!), Kaiju (Boulderback, Stormcrab, Clockwork Rex, Coralgon…), Ghosts (Wick,
+  Phantom Knight, Jack-o'-Ghost, Haunted Teacup…) and World Legends (Elder Treant, Candy Dragon, Star Whale, Comet Fox…).
+- 🐾 **12 new Blips:** Red Panda, Polar Bear, Puffin, Beluga, Gorilla, Sugar Glider, Highland Cow, Shoebill, Tarsier,
+  Marmot, Mantis Shrimp and Frilled Lizard (plus the Echidna), each with its own colors and lines.
+- 💞 **Friendship levels:** every Blip bonds with you as you pet, feed and play with it, from New friend to Pal,
+  Buddy, Best friend and **Soulmate**. Each level-up gives hearts, and your closest friends get a heart on their name tag.
+- 🍪 **Cookie Catch:** a new minigame. Move your Blip to catch falling cookies (golden ones are worth 5, burnt ones cost a
+  heart). Earns hearts, friendship and event points. Right-click a pet → 🍪 Cookie Catch.
+- 🦔 **Spiky Week (event, until December 3):** pet and feed Hedgehogs, Foxes and the brand-new **Echidna** to earn
+  8 event skins. Right-click a pet → 🦔 Spiky Week to see your progress.
+- 📅 **Daily quests:** 3 new ones every day (the same on Windows and the website), each worth 10 💖, plus event
+  points during events.
+- ✨ **20 Awakened forms:** Blip, Kitsune, Dragon, Phoenix, Wolf and Unicorn, plus **all 5 kaiju** (Abyssal Titan, Inferno
+  Magmaw, Omega Gigabot, Storm Skyray, Blizzard Frostback), **ghosts** (King Sheetie, Soulfire Wisp, Howling Banshee,
+  Eclipse Cat, Phantom Admiral), **cryptids** (Titan Bigfoot, Lunar Mothman, Ancient Nessie) and the Night Shift's
+  **Mecha Bear**. Use an Awakening Crystal once, then switch any time.
+- 💾 **Save codes on Windows:** right-click a pet → 💾 Save code to copy your whole town as one line, or paste a code to
+  load one. They're the same codes as the website version, so your town can move between Windows and a browser,
+  phone or Chromebook, both ways.
+- 🎨 **Accessory colors** (free, 9 of them) and a **2nd accessory slot** (50 💖) to wear a hat with glasses or a scarf.
+- 👁️ **The Lurker:** a new ghost made of shadow and *lots* of eyes. It loves tag (it's always "it"), and it's the
+  only Blip that **Awakens 3 times**: Wide-Eyed Lurker → Shadow Lurker → **Lurker Eternal**. Each Awakening needs a
+  bigger crystal (75, 150, 250 💖).
+- ⚔️ **The Phantom Knight** got a full redraw and the Lurker treatment: 3 Awakenings, Spectral Knight → Phantom Champion →
+  **Phantom Sovereign**.
+- 🎭 **The Puppet Box:** an old toy chest that creaks open by itself at night, with red eyes peeking out of the gap.
+  Awaken it and it opens into the **Puppet Master**: a cracked porcelain mask with red tears, a little top hat, and a
+  see-through, flickering little Blip soul dangling from its puppet strings.
+- 🤖 **Silvertear-03, a new mecha kaiju:** silver plates over a charcoal frame, a sharp brow horn with swept-back fins,
+  a dark visor with wide pixel eyes, crimson tear ridges down her cheeks, a segmented chin guard and a segmented tail.
+  She powers up behind the city now and then: click her 3 times before she stomps off. She has a personality all her
+  own: a hyper-serious tactical bodyguard who talks in mission logs, scans every cookie for its "threat level" and
+  stands guard from 7 PM to 7 AM… who is secretly very loyal to her keeper, secretly loves naps, and short-circuits
+  (her whole faceplate flushes pink) if you call her cute. Colors: Chrome, Gunmetal,
+  Gold Plated (with emerald eyes) and 📺 **Showa**, the boxy 1970s tin-robot model with its own drawing: bolt antennae,
+  a riveted brow, amber eyes in a wide visor slot, clean riveted cheeks, a red/yellow/cyan chest strip and a stiff tail.
+- 🎟️ **Merch codes:** codes that come with Blipville merch can be typed into the 🔑 Secret code box to unlock that
+  merch's skin (like Silvertear-03's merch-only Mirror Chrome color).
+- 💾 **Save codes carry everything:** Egypt gods, Bad Dreams and merch skins now move with your town between the
+  website and Windows too.
+- 🔊 **Blip voices:** speech bubbles now type themselves out, and each Blip "talks" in little blips with its own
+  voice: robots and mechs beep, ghosts hum softly, kaiju rumble low, and every Blip has its own pitch. Turn sound on
+  (🔇 at the top on the website, right-click → Sound effects on Windows) to hear them; on Windows, right-click →
+  🔊 Blip voices turns just the voices off.
+- 🗣️ **Personalities:** Blip, Bun, Sprout, Boo, Fuzz, Spike and the Night Shift crew have their own things to say when
+  you pet them, feed them, put them to bed or wake them up (and some have night-time lines too). Bun is shy, Spike
+  is "not cute, SHARP", Boo really wants you to be scared, and Sunny calls you "hon".
+- 💬 **Chat with your Blips:** right-click any Blip → 💬 Chat (or tap it → 💬 Chat on the website) and talk by picking
+  what to say. Ask how it's doing (it'll tell you honestly if it's hungry or sleepy), ask about itself, tell it it's
+  cute, or offer a snack (it really eats it). **Silvertear-03** has a whole conversation of her own: ask about her
+  tears, whether she's sleepy, or call her cute if you want to watch her overheat. Every chat shows a big portrait of the Blip you're
+  talking to (Silvertear-03 has her own hand-drawn one). Chatting builds friendship.
+- 🧸 **Bad Dreams:** plush versions of the Night Shift crew: Bear, Bunny, Hen, Fox, the Wind-Up Hare and the Puppet
+  Master. All day they're harmless plushies that just sit there… but from **midnight to 6 AM** (your clock) they burst
+  out of their stitches as Bad Dreams, with button eyes, safety pins and stuffing poking out. To get them, click a
+  **Puppet Master 5 times fast**. The first time it becomes the **Bad Dream Puppet Master**; after that it rewrites one
+  of the robos into its Bad Dream, and your mouse (or finger) becomes a 🔦 **flashlight**: keep the Bad Dream in the
+  beam for **5 seconds**. In the light it backs off; in the dark it creeps closer. Each one moves its own way: the Bear
+  lumbers, the Bunny hops around, the Hen zigzags, the Fox darts and the Hare winds up, then dashes.
+  Win and it's yours, plus that robo's **Shadow** color. Lose and it just gives you a big stuffed hug. 🧸
+- 📷 **Night Shift cameras overheat:** a camera left on one room overheats after about 8 seconds (watch the 🌡️ heat bar)
+  and stays off while it cools, so you can't just stare at the Stage all night any more. To make up for it, flashes and
+  cameras use less battery. Every night is still winnable.
+- 🌙 **Night Shift Night 4:** a new, harder night where the **Robo Fox** joins the crew (it moves faster than the
+  others). Survive it to unlock the fox. After that, keep an eye out at night: the **Wind-Up Hare**, an old forgotten
+  wind-up toy with a brass key in its head, sometimes turns up in the old workshop. Both get Shadow colors
+  from their Bad Dreams. The hare's 🧪 **Prime** color shows it in its prime: polished gold, both ears
+  up, flexing in a red showman's cape and bow tie. Prime is fully solid (not ghostly), but every few seconds
+  it glitches for a split second back to its withered look. The hare's usual look is now that withered showman:
+  a torn ear, a drooping ear, a bent key, dangling arms and a tattered cape.
+- 🎨 **Classic crew colors:** each Night Shift robo has a 🍬 Classic color with its own drawing for its job: the
+  crew's leader, Robo Bear, as captain with a captain's hat, gold shoulder pads and a star medal; a lights-crew
+  Robo Bunny with a bulb and battery meter; a diner-cook Robo Hen ("Sunny") in a chef hat and apron; and a racer Robo Fox
+  with goggles and a lightning bolt.
+- 🍬🧪 **Color Candy and Color Potions:** changing a Blip's color now takes a treat. A 🍬 Color Candy (10 💖) for
+  everyday colors, a 🧪 Color Potion (40 💖) for the rare and special ones (Midnight, Black Light, Shadow, event skins…).
+- 🎭 **Don't feel like playing Night Shift?** Keep a **Puppet Master** in your town and the Night Shift robos
+  sometimes wander by on their own. Click one before it leaves to befriend it.
+- 👻 **Ghosts, a brand-new tier:** 25 ghosts (Sheetie, Will-o'-Wisp, Banshee, Phantom Cat, Ghost Captain and more) drift
+  past haunted houses and graveyards at night. They fade in and out, so you can only befriend one while it glows. Light a
+  🕯️ **Spirit Candle** to call them in the daytime. They're really see-through, even in your town.
+- 🏆 **Trophies:** 31 to earn, from petting your first Blip to befriending every ghost. Each one gives bonus hearts.
+- 🎨 **Redraws:** Anteater, Camel, Kiwi, Lemming, Platypus, Tapir, Walrus, Wombat, Ankylosaurus and Tsuchinoko.
+- ✨ **The Redux engine, for everyone:** every pet window is a real see-through picture now, handed straight to Windows.
+  **No more black flashes** when you click your pets, drag them around or open a menu, and text and speech bubbles
+  have smooth edges.
+- 🔧 **Patch**, a little repair-crew Blip in a hard hat, as a thank-you for waiting out the maintenance: a free gift
+  until Tuesday, November 24 (and **Beta Buddy** until Sunday, November 22, if you missed it).
+- 🛠️ **Maintenance mode:** if something big ever needs fixing, Blipville can tell you instead of misbehaving, and
+  opens again by itself.
+- 🎁 Gifts can't get lost on the website version any more.
 
----
+**Everything in Blipville:** 387 Blips and 1,000+ colors, hats, hearts and Mystery Eggs (32 rare Blips), 49 cryptids,
+18 kaiju, 25 ghosts, 5 worlds with 22 World Legends, 28 trophies, seasons and weather, games of ball and tag, sound effects, the Night Shift
+minigame, and updates that install themselves.
 
-## 💜 Thanks for playing our beta!
+**Updating?** Blipville (and Blipville Redux) will offer this update by itself: just say yes. Your pets, hearts,
+worlds and unlocks all come with you. New here? Download `Blipville.exe` below and double-click it.
 
-Every pet you hatched, cryptid you spotted and idea you sent helped shape Blipville. Thank you!
-
-**v0.4.0** is the last step before **Blipville 1.0**. It comes with:
-
-- 🐾 **100 new Blips**: 50 new animals, plus 5 brand-new tabs: 🦕 Dinos, 🌊 Ocean, 🍩 Sweets, 🚀 Space and 🌱 Plants
-- 🎁 **A free gift:** open this version and you get **Beta Buddy**, a limited-edition party Blip, only given out **this week** (until Sunday, November 22)
-- 🔄 **Auto-updates:** from now on Blipville checks for new versions and updates itself (it always asks first)
-- ⚡ Smoother frame rate
-- 🌍 **Worlds:** unlock Plant, Sweets, Ocean, Dino and Space World with hearts to pick their Blips, then visit them (right-click a pet → 🌍 Worlds). Blips you already had stay yours
-- 🎨 20 of the new Blips already got a second round of polish
-
-Your pets, hearts and unlocks all carry over. Spot a bug or have an idea? Right-click any pet → **💬 Suggestions & help**. Now's the time, before 1.0!
-
-**Updating?** Quit the old Blipville first (right-click a pet → **Goodbye everyone (quit)**), then open the new `Blipville.exe`.
+Windows may say "protected your PC" the first time. Click **More info → Run anyway**.

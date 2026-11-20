@@ -1,11 +1,11 @@
 {
   "_how": "Maintenance switch for every version of Blipville. Set one to true to close it: players see the message below until it's false again. classic = Blipville.exe, redux = Blipville-Redux.exe, web = the website version (go/). Apps check about every 5 minutes (every minute while closed); the website every 2 minutes. Updates still work while closed. link and link_text add a button (leave link empty for none). Easiest way: Actions -> Maintenance mode -> Run workflow.",
   "maintenance": {
-    "classic": true,
-    "redux": true,
-    "web": true
+    "classic": false,
+    "redux": false,
+    "web": false
   },
-  "message": "Blipville is getting ready for 1.0! 🎉 Everything opens again on Sunday, November 22, with Blipville 1.0: new Blips, the Arena, friendship, Cookie Catch and lots more. See you there! 💜",
-  "link": "https://discord.gg/Q3zmYakNZT",
-  "link_text": "Join the Discord"
+  "message": "Blipville 1.0 is here! 🎉",
+  "link": "",
+  "link_text": ""
 }

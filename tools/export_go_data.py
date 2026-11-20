@@ -13,28 +13,30 @@ spec = importlib.util.spec_from_loader("blip", SourceFileLoader("blip", os.path.
 bl = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(bl)
 
-# Some 1.0 features (trophies, Awakened forms, the Arena) went on the website before the 1.0 desktop app.
-# Until blip.pyw has them (the release-1.0 branch), their data comes from go/early-1.0.json.
-EARLY = {}
-if not hasattr(bl, "TROPHIES"):
-    with open(os.path.join(ROOT, "go", "early-1.0.json"), encoding="utf-8") as f:
-        EARLY = json.load(f)
-
 kinds = {}
-for k in list(bl.KINDS) + list(getattr(bl, "AWAKEN_BASE", [])):
+for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS", [])):
     v = bl.VARIANTS[k]
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
         "feet": v["feet"], "dx": v.get("dx", 0), "move": v["move"], "speed": v.get("speed", 1.0),
-        "shifty": bool(v.get("shifty")), "extra": v.get("extra", {}), "ghost": bool(v.get("ghost")),
+        "shifty": bool(v.get("shifty")), "extra": v.get("extra", {}), "ghost": bool(v.get("ghost")), "soul": v.get("soul", ""),
         "lines": v["lines"], "colors": bl.kind_colors(k),
         "default": bl.default_color(k),
     }
-kinds.update(EARLY.get("kinds", {}))
-EARLY_DATA = {k: v for k, v in EARLY.items() if k not in ("kinds", "extraGhosts", "extraScenes")}
+    for vk in getattr(bl, "VOICE_KEYS", ()):
+        if v.get(vk):
+            kinds[k][vk] = v[vk]
+    kinds[k]["voice"] = list(bl.voice_of(k)) if hasattr(bl, "voice_of") else None
+    if v.get("portrait"):
+        kinds[k]["portrait"] = v["portrait"]
+    if v.get("plush"):
+        kinds[k].update(plush=v["plush"], xeye=bool(v.get("xeye")))
 data = {
     "kinds": kinds,
-    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS + EARLY.get("extraGhosts", [])},
+    "egyptGods": list(bl.EGYPT_GODS),
+    "badDreams": {k: {"robo": a["robo"], **({"big": a["big"]} if "big" in a else {})} for k, a in bl.BAD_DREAMS.items()},
+    "dig": {"cols": bl.DIG_COLS, "rows": bl.DIG_ROWS, "tries": bl.DIG_TRIES, "treasures": bl.DIG_TREASURES, "hearts": bl.DIG_HEARTS},
+    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS, "creator": getattr(bl, "CREATOR_KINDS", [])},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,
@@ -44,19 +46,36 @@ data = {
     "candleCost": bl.CANDLE_COST,
     "event": getattr(bl, "EVENT", None),
     "quests": getattr(bl, "QUESTS", []),
+    "features": getattr(bl, "FEATURES", {}),
+    "chats": getattr(bl, "CHATS", {}),
+    "chatDefault": getattr(bl, "CHAT_DEFAULT", None),
+    "typeCps": getattr(bl, "TYPE_CPS", 32),
+    "kindRenames": getattr(bl, "KIND_RENAMES", {}),
+    "merch": {"items": getattr(bl, "MERCH", {}), "salt": getattr(bl, "MERCH_SALT", b"").decode(), "rounds": getattr(bl, "MERCH_ROUNDS", 0),
+              "hashes": getattr(bl, "MERCH_HASHES", []), "url": getattr(bl, "MERCH_CODES_URL", "")},
+    "cookieCatch": {"seconds": bl.CATCH_SECONDS, "lives": bl.CATCH_LIVES, "maxHearts": bl.CATCH_MAX_HEARTS, "cookie": bl.CATCH_COOKIE,
+                    "kinds": bl.CATCH_KINDS},
+    "bond": {"levels": bl.BOND_LEVELS, "titles": bl.BOND_TITLES, "gain": bl.BOND_GAIN},
     "questRewards": {"hearts": getattr(bl, "QUEST_HEARTS", 10), "points": getattr(bl, "QUEST_POINTS", 5), "bonus": getattr(bl, "QUEST_BONUS", 5)},
-    **({"trophies": [{"id": t[0], "icon": t[1], "name": t[2], "how": t[3], "bonus": t[5]} for t in bl.TROPHIES],
-        "trophyCup": bl.TROPHY_CUP, "awakenForm": bl.AWAKEN_FORM, "crystalCost": bl.CRYSTAL_COST,
-        "arena": {"stats": bl.ARENA_STATS, "types": bl.ARENA_TYPES, "beats": bl.ARENA_BEATS,
-                  "rivals": [{"name": n, "reward": r, "team": t} for n, r, t in bl.ARENA_RIVALS]}}
-       if not EARLY else EARLY_DATA),
+    "arenaBgs": bl.ARENA_BGS, "finalFormBgs": bl.FINAL_FORM_BGS, "phantomDodge": bl.PHANTOM_DODGE, "cosmicCrit": bl.COSMIC_CRIT, "arenaMusic": bl.ARENA_MUSIC, "summon": {"hp": bl.SUMMON_HP, "atk": bl.SUMMON_ATK}, "puppetRival": bl.PUPPET_RIVAL, "shadowSkins": bl.SHADOW_SKINS, "arenaPix": bl.ARENA_PIX, "rivalBgs": bl.RIVAL_BGS, "friendBgs": bl.FRIEND_BGS,
+        "awakenForm": bl.AWAKEN_FORM, "awakenChain": bl.AWAKEN_CHAIN, "stageCosts": bl.STAGE_COSTS,
+    "crystalCost": bl.CRYSTAL_COST,
+    "arena": {"stats": bl.ARENA_STATS, "types": bl.ARENA_TYPES, "beats": bl.ARENA_BEATS,
+              "rivals": [{"name": n, "reward": r, "team": t} for n, r, t in bl.ARENA_RIVALS]},
+    "accessoryTints": bl.ACCESSORY_TINTS,
+    "slot2Cost": bl.SLOT2_COST,
+    "trophies": [{"id": t[0], "icon": t[1], "name": t[2], "how": t[3], "bonus": t[5]} for t in bl.TROPHIES
+                       if t[0] not in getattr(bl, "DESKTOP_TROPHIES", ())],
+    "trophyCup": bl.TROPHY_CUP,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,
-    "giftDrops": [{k: d[k] for k in ("kind", "until", "why")} for d in bl.GIFT_DROPS],
+    "modHashes": bl.MOD_HASHES, "modKinds": bl.MOD_KINDS, "modCodeKinds": bl.MOD_CODE_KINDS, "roboScenes": list(bl.ROBO_SCENES), "roboPuppet": bl.ROBO_PUPPET, "colorCost": {"candy": bl.COLOR_CANDY_COST, "potion": bl.COLOR_POTION_COST, "special": sorted(bl.SPECIAL_COLORS)}, "ghostNights": {k: g["night"] for k, g in bl.GHOSTS.items() if g.get("night")},
+    "creator": {"hash": bl.CREATOR_HASH, "boss": bl.CREATOR_BOSS, "bossReward": bl.CREATOR_BOSS_REWARD},
+    "giftDrops": [{k: d[k] for k in ("kind", "until", "why", "start", "testers", "countdown") if k in d} for d in bl.GIFT_DROPS],
     "legendWorld": bl.LEGEND_WORLD,
     "worlds": [{k: w[k] for k in ("name", "icon", "tab", "cost")} for w in bl.WORLDS],
     "giftUntil": bl.GIFT_UNTIL,
-    "scenes": {**bl.SCENES, **EARLY.get("extraScenes", {})},
+    "scenes": bl.SCENES,
     "sceneProps": bl.SCENE_PROPS,
     "sceneSize": [bl.SCENE_W, bl.SCENE_H],
     "unlocks": bl.UNLOCKS,

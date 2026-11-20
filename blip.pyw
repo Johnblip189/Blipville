@@ -35,10 +35,8 @@ FPS = 30
 # Filled in by the GitHub build (see .github/workflows/build-exe.yml). "dev" means "running from source".
 APP_VERSION = "dev"
 APP_BUILT = ""                      # UTC time the .exe was built, e.g. 2026-11-17T01:20:00Z
-EDITION = "classic"                 # "redux" for Blipville Redux (set by the Redux build, see build-redux.yml)
-REDUX = EDITION == "redux"
-APP_NAME = "Blipville Redux" if REDUX else "Blipville"
-EXE_NAME = "Blipville-Redux.exe" if REDUX else "Blipville.exe"
+APP_NAME = "Blipville"
+EXE_NAME = "Blipville.exe"
 
 PALETTES = [  # outline, body, belly, cheeks, eyes
     {"name": "Lavender", "o": "#2b1d3a", "b": "#9b7bd8", "l": "#ddd0ff", "p": "#ff8fb3", "e": "#1a1024"},
@@ -782,6 +780,7 @@ ROBOTS = {
     dict(name="Rusty",    o="#2a1206", b="#b8643a", l="#e8c0a0", a="#7a3a1a", r="#c8a070", s="#4a3424", k="#f2e6c8", n="#1a0a04", p="#e87a6a", e="#ff8a1f"),
     dict(name="Bubblegum", o="#5a1a3a", b="#ff9fcf", l="#fff0f8", a="#e85a9a", r="#ffffff", s="#a8708a", k="#ffffff", n="#5a1a3a", p="#ff5f9f", e="#5af0ff"),
     dict(name="Midnight", o="#06060c", b="#2a2a3a", l="#4a4a62", a="#16161f", r="#7a7a8a", s="#12121a", k="#d8d8e0", n="#06060c", p="#5a2a3a", e="#ff3b3b"),
+    dict(name="Shadow", unlock="puppet", o="#000000", b="#14101e", l="#2a2240", a="#0a0812", r="#b05aff", s="#0a0812", k="#e0d8ff", n="#000000", p="#3a1a4a", e="#f4f0ff"),
  ]),
  "Robo Bunny": dict(eyes=6, mouth=False, body=[
     "...oo......oo...",
@@ -800,6 +799,7 @@ ROBOTS = {
     dict(name="Rusty",    o="#2a1206", b="#c87a4a", l="#f0d0b0", a="#7a3a1a", r="#d8b080", s="#4a3424", k="#f2e6c8", n="#1a0a04", p="#e87a6a", e="#ffd23a"),
     dict(name="Sunset",   o="#3a1406", b="#ff9a4a", l="#fff0dc", a="#ffd06a", r="#ffffff", s="#a85a2a", k="#ffffff", n="#a82a2a", p="#ff6a5a", e="#3a1406"),
     dict(name="Midnight", o="#06060c", b="#2a2a3a", l="#4a4a62", a="#16161f", r="#7a7a8a", s="#12121a", k="#d8d8e0", n="#06060c", p="#5a2a3a", e="#ff3b3b"),
+    dict(name="Shadow", unlock="puppet", o="#000000", b="#14101e", l="#2a2240", a="#b05aff", r="#b05aff", s="#0a0812", k="#e0d8ff", n="#000000", p="#3a1a4a", e="#f4f0ff"),
  ]),
  "Robo Hen": dict(eyes=5, mouth=False, body=[
     "......o..o......",
@@ -818,8 +818,17 @@ ROBOTS = {
     dict(name="Rusty",    o="#2a1206", b="#b8643a", r="#d8b080", s="#4a3424", n="#e8c03a", d="#1a0a04", p="#e87a6a", e="#ffd23a", f="#e8c03a"),
     dict(name="Arcade",   o="#3a0a14", b="#e8303a", r="#ffffff", s="#8a1a24", n="#ffd23a", d="#3a0a14", p="#ff9f9f", e="#5af0ff", f="#ffd23a"),
     dict(name="Midnight", o="#06060c", b="#2a2a3a", r="#7a7a8a", s="#12121a", n="#5a4a2a", d="#06060c", p="#5a2a3a", e="#ff3b3b", f="#3a3a4a"),
+    dict(name="Shadow", unlock="puppet", o="#000000", b="#14101e", r="#b05aff", s="#0a0812", n="#b05aff", d="#000000", p="#3a1a4a", e="#f4f0ff", f="#2a2240"),
  ]),
 }
+ROBOTS["Robo Fox"] = dict(eyes=5, mouth=False, body=[".o............o.", "oao..........oao", "oaao........oaao", ".obboooooooobbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbllllllbbpbo", "obbblllnnlllbbbo", "osssskkkkkksssso", ".obbbllllllbbbo.", "..obrbbbbbbrbo.."],
+    colors=[{"name": "Copper", "o": "#2a0e06", "b": "#e8743a", "l": "#fff0dc", "a": "#ffd0b0", "r": "#d8dde6", "s": "#5a6170", "k": "#ffffff", "n": "#2a0e06", "p": "#ff9fb0", "e": "#ffd23a"}, {"name": "Arcade", "o": "#14082a", "b": "#8a5aff", "l": "#e8dcff", "a": "#5affd8", "r": "#ffffff", "s": "#3a2a6a", "k": "#ffffff", "n": "#14082a", "p": "#ff8ad8", "e": "#5affd8"}, {"name": "Snow", "o": "#1a2a3a", "b": "#e8f0f8", "l": "#ffffff", "a": "#a8c8e8", "r": "#c8d8e8", "s": "#6a7a8a", "k": "#ffffff", "n": "#1a2a3a", "p": "#ffb0c8", "e": "#5ab8ff"}, {"name": "Midnight", "o": "#06060c", "b": "#2a2a3a", "l": "#4a4a62", "a": "#16161f", "r": "#7a7a8a", "s": "#12121a", "k": "#d8d8e0", "n": "#06060c", "p": "#5a2a3a", "e": "#ff3b3b"}, {"name": "Shadow", "unlock": "puppet", "o": "#000000", "b": "#14101e", "l": "#2a2240", "a": "#b05aff", "r": "#b05aff", "s": "#0a0812", "k": "#e0d8ff", "n": "#000000", "p": "#3a1a4a", "e": "#f4f0ff"}])   # 🦊 Night 4
+# 🎨 Classic: the crew in plain animal colors, each drawn for its job on the night shift: captain bear (crew leader), lights-crew bunny,
+# diner-cook hen and racer fox (added at the end so Midnight and Shadow keep their spots)
+ROBOTS["Robo Bear"]["colors"].append(dict(name="Classic", o="#2a1608", b="#9a6236", l="#e8c8a0", a="#6a3e1e", r="#d8dde6", s="#4a3424", k="#ffffff", n="#2a1608", p="#e88a7a", e="#5ab8ff", c="#2a4a8a", x="#16264a", y="#ffd23a", w="#ffffff", art=[".ooo.oooooo.ooo.", "oaaAowwwwwWoaaAo", "oaAowwwyywwWoaAo", ".oxxxxyyyyxxxXo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbblllnnlllbbBo", "osSsskkkkkkssSSo", "YYocccccccycCoYY", "..oCRCCCCCCCCo.."]))
+ROBOTS["Robo Bunny"]["colors"].append(dict(name="Classic", o="#1a1236", b="#8a7ad8", l="#e0d8ff", a="#ff9fc8", r="#ffffff", s="#4a3a8a", k="#ffffff", n="#ff7aa8", p="#ff9fc8", e="#ff4a6a", y="#fff27a", h="#fffbd0", g="#a8aeb8", m="#5aff7a", x="#2a2a4a", art=["...oo.oyYo.oo...", "..o*AoyhyYoaBo..", "..o*Ao.yY.oaBo..", "..obRo.gG.orBo..", ".obbBoogGoobbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllnnllbbpBo", "obbbbllllllbbbBo", "oSSsskkkkkksSSSo", "..oBRMMMXXRBo..."]))
+ROBOTS["Robo Hen"]["colors"].append(dict(name="Sunny", o="#3a2a04", b="#ffd23a", r="#e83a4a", s="#c89a1a", n="#ff8a1f", d="#3a1a04", p="#ff8a7a", e="#7a3aff", f="#ff8a1f", w="#ffffff", g="#d8d8e8", h="#ffffff", art=["...oooooooooo...", "..owwwwwwwwwWo..", "..owwhwwwwwwGo..", "..oogggggggGoo..", ".o*bbbbbbbbbbBo.", ".o*bbbbbbbbbbBo.", "obpbbbbbbbbbbpBo", "obbbbbnnnnbbbbBo", "osssssddddssssSo", "oBbbbbnnnnbbbbBo", ".oBBwwwwwwwwBBo.", "..ooBWWRRWWBoo.."]))
+ROBOTS["Robo Fox"]["colors"].append(dict(name="Classic", o="#2a0606", b="#c8323a", l="#f4d8c8", a="#ffb0a0", r="#d8dde6", s="#5a3034", k="#ffffff", n="#2a0606", p="#ff9fb0", e="#ffd23a", x="#3a2a1a", g="#7ad8ff", y="#ffd23a", art=[".o............o.", "oao..........oao", "oaAo........oaAo", ".obxxxxxxxxxxBo.", "o*bxggxbbxggxbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbblllnnlllbbBo", "oSssskkkkkksssSo", ".oBbbbbyybbbbBo.", "..oBRBYYBBBRBo.."]))
 ANIMALS.update(ROBOTS)
 
 ANIMAL_TRAITS = {   # how each animal moves + what it says
@@ -873,9 +882,10 @@ ANIMAL_TRAITS = {   # how each animal moves + what it says
     "Whale":   ("float", ["*whale song*", "*sprays water*", "biggest pet ever", "ooooOOOooo~"]),
     "Jellyfish": ("float", ["*floats*", "no brain, no problem", "bloop", "*glows*"]),
     "Dragon":  ("flutter", ["*breathes tiny flame*", "rawr! (fire)", "guarding my treasure", "i hoard cookies"]),
-    "Robo Bear":  ("walk", ["*servo whirr*", "beep boop... i mean, hi", "my joints need oiling", "i'm totally not watching you"]),
+    "Robo Bear":  ("walk", ["*servo whirr*", "beep boop... i mean, hi", "my joints need oiling", "i'm totally not watching you", "crew, line up! the captain is here"]),
     "Robo Bunny": ("hop",  ["*boing* *clank*", "battery at 12%...", "who turned off the lights?", "*ears twitch mechanically*"]),
     "Robo Hen":   ("walk", ["*mechanical clucking*", "bawk. boop.", "my jaw squeaks", "still on the night shift"]),
+    "Robo Fox":   ("walk", ["*tail servo swish*", "fastest robo on the night shift", "i hear everything. ears up!", "zip zip, gotta go"]),
 }
 SPEED = {"Echidna": 0.9, "Sloth": 0.35, "Seal": 0.7, "Hedgehog": 1.3, "Mouse": 1.4, "Hamster": 1.2, "Cow": 0.8, "Koala": 0.6,
          "Capybara": 0.6, "Elephant": 0.7, "Hippo": 0.7, "Ladybug": 0.5, "Squirrel": 1.4, "Horse": 1.4, "Zebra": 1.4,
@@ -891,32 +901,32 @@ BLIP_DOGS = [
     {"name": "Husky", "o": "#1c2028", "b": "#7d8796", "l": "#f4f6f9", "p": "#ffb0c0", "n": "#14161b", "e": "#4aa3ff",
      "art": [
         "..oo........oo..",
-        ".olbo......oblo.",
-        ".obbbooooooobbo.",
-        ".obbbbbbbbbbbbo.",
-        "obbbllbbbbllbbbo",
-        "obbbbbbbbbbbbbbo",
-        "ollbbbbbbbbbbllo",
-        "olplllbbbblllplo",
-        "ollllllnnllllllo",
-        "ollllllllllllllo",
-        ".ollllllllllllo.",
-        "..ollllllllllo..",
+        ".olBo......o*Lo.",
+        ".obbBooooooo*Bo.",
+        ".obbbbbbbbbbbBo.",
+        "obbbllbbbbllbbBo",
+        "obbbbbbbbbbbbbBo",
+        "ollbbbbbbbbbblLo",
+        "olplllbbbblllpLo",
+        "ollllllnnlllllLo",
+        "oLllllllllllllLo",
+        ".oLllllllllllLo.",
+        "..oLLLLLLLLLLo..",
      ]},
     {"name": "German Shepherd", "o": "#1a0e04", "b": "#c8843a", "s": "#1e1a18", "p": "#e88a6a", "n": "#0a0808", "e": "#2a1404",
      "art": [
         "..oo........oo..",
-        ".osso......osso.",
-        ".osssooooooosso.",
-        ".obssssssssssbo.",
-        "obbbbssssssbbbbo",
-        "obbbbbbssbbbbbbo",
-        "obbbbbbssbbbbbbo",
-        "obpbbbbssbbbbpbo",
-        "obbbbssnnssbbbbo",
-        "obbbbssssssbbbbo",
-        ".obbbbbbbbbbbbo.",
-        "..obbbbbbbbbbo..",
+        ".osSo......osSo.",
+        ".ossSooooooosSo.",
+        ".obssssssssssBo.",
+        "o*bbbssssssbbbBo",
+        "o*bbbbbssbbbbbBo",
+        "obbbbbbssbbbbbBo",
+        "obpbbbbssbbbbpBo",
+        "obbbbssnnssbbbBo",
+        "oBbbbssssssbbbBo",
+        ".oBbbbbbbbbbbBo.",
+        "..oBBBBBBBBBBo..",
      ]},
 ]
 VARIANTS["Blip"]["colors"] = PALETTES + BLIP_DOGS
@@ -2974,10 +2984,8 @@ CRYPTIDS.update({
              {"name": "Moss", "o": "#1a1a0a", "b": "#8a9a3a", "k": "#a8e0ff", "h": "#3a2a1a", "y": "#ffd23a", "s": "#5a3a1a", "p": "#ff9a7a", "e": "#1a1004"}]},
  "Tsuchinoko": {"eyes": 4, "move": "hop", "speed": 1.0, "feet": False,
   "lines": ["*boing*", "i'm a snake, but chonky", "i hop. snakes don't hop. i'm special", "i love sake", "there's a reward for finding me!"],
-  "body": ["................", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbllllllllbbbo", "obbbllllllllbbbo", ".obbbbbbbbbbbboo", "..oooooooooobbbo", "............ooo."],
-  "colors": [{"name": "Field", "o": "#2a1a0a", "b": "#8a6a3a", "l": "#e8d0a0", "p": "#ff9a7a", "e": "#1a0e04"},
-             {"name": "Viper", "o": "#0a1a0a", "b": "#4a7a3a", "l": "#d8e8a0", "p": "#ff9a8a", "e": "#ffd23a"},
-             {"name": "Golden", "o": "#3a2404", "b": "#e8b83a", "l": "#fff0b0", "p": "#ff8a5a", "e": "#2a1404"}]},
+  "body": ["................", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbdlldlldlldbbo", "obbldlldlldldbbo", ".obbbbbrrbbbbboo", "..ooooroorooobbo", "...........oooo."],
+  "colors": [{"name": "Field", "o": "#2a1a0a", "b": "#8a6a3a", "l": "#e8d0a0", "p": "#ff9a7a", "e": "#1a0e04", "d": "#5a3a1a", "r": "#e83a5a"}, {"name": "Viper", "o": "#0a1a0a", "b": "#4a7a3a", "l": "#d8e8a0", "p": "#ff9a8a", "e": "#ffd23a", "d": "#2a4a1a", "r": "#e83a5a"}, {"name": "Golden", "o": "#3a2404", "b": "#e8b83a", "l": "#fff0b0", "p": "#ff8a5a", "e": "#2a1404", "d": "#a87a1a", "r": "#e83a5a"}]},
  "Owlman": {"eyes": 4, "move": "flutter", "feet": False,
   "lines": ["*hoo… HOO*", "seen near a church in cornwall", "half owl, half man, all mystery", "i see you", "i only come out in the summer"],
   "body": [".oo..........oo.", ".obo........obo.", ".obboooooooobbo.", "obbbbbbbbbbbbbbo", "obbllllbbllllbbo", "obbllllbbllllbbo", "wobbbbbkkbbbbbow", "wwobbbbkkbbbboww", "wwobbbbbbbbbboww", ".wobbbbbbbbbbow.", "..oobbbbbbbboo..", "....oo....oo...."],
@@ -3067,7 +3075,7 @@ KAIJU = {
 NEW_ANIMALS.update({
  'Badger': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*digs a hole*', "i'm not grumpy, i'm busy", 'stripes are in', 'hole sweet hole'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obwbbbbbbbbwbo.', 'obbwbbbbbbbbwbbo', 'obbwbbbbbbbbwbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Honey', 'o': '#14100a', 'b': '#5a5a5a', 'e': '#0a0a0a', 'w': '#ffffff', 'a': '#3a3a3a', 'p': '#d88a8a', 'l': '#e8e0d0', 'n': '#0a0a0a'}, {'name': 'European', 'o': '#0a0a0a', 'b': '#8a8a8a', 'e': '#0a0a0a', 'w': '#f4f4f4', 'a': '#4a4a4a', 'p': '#d88a8a', 'l': '#dcdcdc', 'n': '#1a1a1a'}, {'name': 'Golden', 'o': '#2a1a06', 'b': '#c8a04a', 'e': '#1a1004', 'w': '#fff4dc', 'a': '#8a6a2a', 'p': '#ff9a7a', 'l': '#f4e0b0', 'n': '#1a1004'}]},
  'Bison': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*snort*', "i'm a big floof", 'stampede! (slowly)', 'prairie life'], 'body': ['................', 'h..............h', 'hh............hh', '.hooooooooooooh.', 'oaaaaaaaaaaaaaao', 'oaabbbbbbbbbbaao', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Plains', 'o': '#1a0e06', 'b': '#7a4a2a', 'e': '#0a0604', 'h': '#e8dcc8', 'a': '#4a2a14', 'p': '#c86a5a', 'l': '#a87a5a', 'n': '#0a0604'}, {'name': 'Snowy', 'o': '#2a2a3a', 'b': '#e8e4e0', 'e': '#1a1a2a', 'h': '#8a8a9a', 'a': '#c8c0b8', 'p': '#ffb0b0', 'l': '#ffffff', 'n': '#2a2a3a'}, {'name': 'Dusk', 'o': '#140a14', 'b': '#5a3a4a', 'e': '#0a040a', 'h': '#d8c8b8', 'a': '#3a2030', 'p': '#d88a9a', 'l': '#8a6a7a', 'n': '#0a040a'}]},
- 'Camel': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*chews slowly*', 'my hump is full of snacks', "hot? i'm fine", 'spit? never. ok maybe'], 'body': ['................', '.ooo........ooo.', 'oaaao......oaaao', 'oaaaooooooooaaao', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Desert', 'o': '#3a2410', 'b': '#d8a868', 'e': '#1a1004', 'a': '#b8884a', 'p': '#ff9a7a', 'l': '#f0d0a0', 'n': '#3a2410'}, {'name': 'Dark', 'o': '#1a0e06', 'b': '#8a5a3a', 'e': '#0a0604', 'a': '#6a4026', 'p': '#d88a7a', 'l': '#c8a080', 'n': '#1a0e06'}, {'name': 'White', 'o': '#5a4a3a', 'b': '#f4ece0', 'e': '#2a1e14', 'a': '#e0d0b8', 'p': '#ffb0a0', 'l': '#ffffff', 'n': '#5a4a3a'}]},
+ 'Camel': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*chews slowly*', 'my hump is full of snacks', "hot? i'm fine", 'spit? never. ok maybe'], 'body': ['................', '......oooo......', '.....oaaaao.....', '..ooooaaaaoooo..', 'oaobaabbbbaaboao', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbllllllbbpbo', 'obbbblkllklbbbbo', 'obbbbllllllbbbbo', '.obbbllkkllbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Desert', 'o': '#3a2410', 'b': '#d8a868', 'e': '#1a1004', 'a': '#b8884a', 'p': '#ff9a7a', 'l': '#f0d0a0', 'n': '#3a2410', 'k': '#5a3a1a'}, {'name': 'Dark', 'o': '#1a0e06', 'b': '#8a5a3a', 'e': '#0a0604', 'a': '#6a4026', 'p': '#d88a7a', 'l': '#c8a080', 'n': '#1a0e06', 'k': '#2a1408'}, {'name': 'White', 'o': '#5a4a3a', 'b': '#f4ece0', 'e': '#2a1e14', 'a': '#e0d0b8', 'p': '#ffb0a0', 'l': '#ffffff', 'n': '#5a4a3a', 'k': '#8a7a6a'}]},
  'Cheetah': {'eyes': 5, 'move': 'walk', 'speed': 1.8, 'feet': True, 'mouth': True, 'lines': ['zoom!', 'fastest blip around', '*spots intensify*', 'catch me if you can'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obsbbsbbbbsbbsbo', 'obpbbbllllbbbpbo', 'osbbbllnnllbbbso', 'obbsbllllllbsbbo', '.obbsbbbbbbsbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Savanna', 'o': '#2a1a06', 'b': '#f0c060', 'e': '#1a1004', 'a': '#c89040', 's': '#2a1a06', 'p': '#ff9a6a', 'l': '#fff4dc', 'n': '#1a1004'}, {'name': 'King', 'o': '#1a1006', 'b': '#e8b850', 'e': '#1a1004', 'a': '#a87a30', 's': '#1a1006', 'p': '#ff8a5a', 'l': '#fff0d0', 'n': '#1a1004'}, {'name': 'Snow', 'o': '#2a2a3a', 'b': '#e8e8f0', 'e': '#1a1a2a', 'a': '#b8b8c8', 's': '#4a4a5a', 'p': '#ffb0c0', 'l': '#ffffff', 'n': '#2a2a3a'}]},
  'Chipmunk': {'eyes': 5, 'move': 'walk', 'speed': 1.4, 'feet': True, 'mouth': True, 'lines': ['*stuffs cheeks*', 'acorns for winter', 'chip chip!', 'my cheeks are pockets'], 'body': ['................', '.oo..........oo.', 'oaao...ss...oaao', 'oaaooooooooooaao', '.obbbbbssbbbbbo.', 'owbbbbbssbbbbbwo', 'owbbbbbbbbbbbbwo', 'obpbbbbbbbbbbpbo', 'opbbbllbbllbbbpo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Eastern', 'o': '#2a1406', 'b': '#c8783a', 'e': '#1a0a04', 'a': '#8a4a20', 'w': '#fff4dc', 'p': '#ff9a7a', 'l': '#f4e0c0', 's': '#3a1a0a'}, {'name': 'Golden', 'o': '#3a2408', 'b': '#e8a84a', 'e': '#1a1004', 'a': '#a8742a', 'w': '#fff8e8', 'p': '#ff9a6a', 'l': '#fff0d0', 's': '#5a3010'}, {'name': 'Gray', 'o': '#2a2a2a', 'b': '#9a9a9a', 'e': '#0a0a0a', 'a': '#6a6a6a', 'w': '#ffffff', 'p': '#ffa0a0', 'l': '#e8e8e8', 's': '#3a3a3a'}]},
  'Crow': {'eyes': 5, 'move': 'hop', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['caw!', 'i like shiny things', 'i remember faces. yours is nice', '*hops*'], 'body': ['................', '.......oo.......', '..oooooooooooo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbkkkkbbbpbo', 'wobbbbkkkkbbbbow', 'wwobbbbkkbbbboww', '.wobbbbbbbbbbow.', '..oooooooooooo..'], 'colors': [{'name': 'Black', 'o': '#06060a', 'b': '#1e1e2a', 'e': '#ffffff', 'k': '#3a3a4a', 'p': '#5a4a6a', 'w': '#0e0e16'}, {'name': 'Raven', 'o': '#04040a', 'b': '#14142a', 'e': '#a8c8ff', 'k': '#2a2a3a', 'p': '#4a3a6a', 'w': '#0a0a1e'}, {'name': 'Hooded', 'o': '#141414', 'b': '#8a8a90', 'e': '#0a0a0a', 'k': '#2a2a2a', 'p': '#c88a9a', 'w': '#5a5a60'}]},
@@ -3076,7 +3084,7 @@ NEW_ANIMALS.update({
  'Hyena': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['hehehe!', '*giggles*', "that's hilarious", 'ha ha ha HAAA'], 'body': ['......s..s......', '.oo..ssssss..oo.', 'oaaossssssssoaao', 'oaaooooooooooaao', '.obbbbbbbbbbbbo.', 'obsbbsbbbbsbbsbo', 'obbbbbsbbsbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Spotted', 'o': '#1a1006', 'b': '#c8a070', 'e': '#1a1004', 'a': '#5a3a1e', 's': '#5a3a1e', 'p': '#d88a7a', 'l': '#a8885a', 'n': '#0a0604'}, {'name': 'Striped', 'o': '#1a1a14', 'b': '#b0a890', 'e': '#0a0a0a', 'a': '#3a3a2a', 's': '#3a3a2a', 'p': '#c88a7a', 'l': '#d8d0b8', 'n': '#0a0a0a'}, {'name': 'Brown', 'o': '#14100a', 'b': '#6a5a4a', 'e': '#0a0604', 'a': '#2a2014', 's': '#3a2a1e', 'p': '#c88a7a', 'l': '#9a8a7a', 'n': '#0a0604'}]},
  'Iguana': {'eyes': 5, 'move': 'walk', 'speed': 0.8, 'feet': True, 'mouth': True, 'lines': ['*basks*', "sun's out, scales out", "i'm a spiky friend", 'warm rock pls'], 'body': ['................', '.......ss.......', '...ooossssooo...', '..obbbbssbbbbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'obbblllbblllbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Green', 'o': '#0a2a10', 'b': '#4ab85a', 'e': '#1a1004', 's': '#2a8a3a', 'l': '#a8e0a0', 'p': '#ff9a8a'}, {'name': 'Blue', 'o': '#0a1a3a', 'b': '#4a8ad8', 'e': '#0a0a1a', 's': '#2a5aa8', 'l': '#a8d0ff', 'p': '#ff9ac0'}, {'name': 'Red', 'o': '#3a0a0a', 'b': '#d85a3a', 'e': '#1a0404', 's': '#a83a1a', 'l': '#ffb8a0', 'p': '#ffd23a'}]},
  'Jaguar': {'eyes': 5, 'move': 'walk', 'speed': 1.3, 'feet': True, 'mouth': True, 'lines': ['*silent paws*', 'rainforest royalty', 'rrrr', "spots? they're rosettes, thank you"], 'body': ['................', '.oo..........oo.', 'oaao........oaao', 'oaaooooooooooaao', '.obbbbbbbbbbbbo.', 'obbsbbsbbsbbsbbo', 'osbbsbbbbbbsbbso', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.osbbbsbbsbbbso.', '..oooooooooooo..'], 'colors': [{'name': 'Gold', 'o': '#2a1406', 'b': '#e8a848', 'e': '#1a1004', 'a': '#8a5a20', 's': '#3a2006', 'p': '#ff9a6a', 'l': '#fff0d0', 'n': '#2a1406'}, {'name': 'Black', 'o': '#06060a', 'b': '#2a2a34', 'e': '#ffd23a', 'a': '#1a1a20', 's': '#14141a', 'p': '#8a5a6a', 'l': '#4a4a54', 'n': '#06060a'}, {'name': 'Pale', 'o': '#3a2a1a', 'b': '#f0d8b0', 'e': '#2a1a0a', 'a': '#c8a070', 's': '#6a4a2a', 'p': '#ffb0a0', 'l': '#ffffff', 'n': '#3a2a1a'}]},
- 'Kiwi': {'eyes': 5, 'move': 'walk', 'speed': 1.2, 'feet': True, 'mouth': False, 'lines': ['*sniff sniff* (with my beak)', 'from new zealand!', "i'm round and proud", 'no wings, no problem'], 'body': ['................', '................', '...oooooooooo...', '..obbbbbbbbbbo..', '.obsbbsbbsbbsbo.', 'obbbbbbbbbbbbbbo', 'osbbsbbbbbbsbbso', 'obpbbbbbbbbbbpbo', 'obbsbbbkkbbbsbbo', 'obbbbbbkkbbbbbbo', '.obbbbbkkbbbbbo.', '..oooookkooooo..'], 'colors': [{'name': 'Brown', 'o': '#1a1006', 'b': '#8a6a3a', 'e': '#0a0604', 'k': '#e8c890', 'p': '#d88a7a', 's': '#5a3a1a'}, {'name': 'Spotted', 'o': '#140e06', 'b': '#6a5a3a', 'e': '#0a0604', 'k': '#f0d8a0', 'p': '#c88a7a', 's': '#3a2a1a'}, {'name': 'Fruit', 'o': '#1a2a06', 'b': '#8ab83a', 'e': '#1a1004', 'k': '#5a3a1e', 'p': '#ff9a8a', 's': '#5a7a2a'}]},
+ 'Kiwi': {'eyes': 5, 'move': 'walk', 'speed': 1.2, 'feet': True, 'mouth': False, 'lines': ['*sniff sniff* (with my beak)', 'from new zealand!', "i'm round and proud", 'no wings, no problem'], 'body': ['................', '.....oooooo.....', '...oosbbbbsoo...', '..obbbbssbbbbo..', '.obsbbbbbbbbsbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'osbpbbbkkbbbpbso', 'obbbsbbkkbbsbbbo', '.obbbbbkkbbbbbo.', '..osbbbkbbbbso..', '...ooookoooooo..'], 'colors': [{'name': 'Brown', 'o': '#1a1006', 'b': '#8a6a3a', 'e': '#0a0604', 'k': '#e8c890', 'p': '#d88a7a', 's': '#5a3a1a'}, {'name': 'Spotted', 'o': '#140e06', 'b': '#6a5a3a', 'e': '#0a0604', 'k': '#f0d8a0', 'p': '#c88a7a', 's': '#3a2a1a'}, {'name': 'Fruit', 'o': '#1a2a06', 'b': '#8ab83a', 'e': '#1a1004', 'k': '#5a3a1e', 'p': '#ff9a8a', 's': '#5a7a2a'}]},
  'Lynx': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*ear tufts twitch*', 'quiet as snow', 'i see in the dark', 'fluffy feet, big jumps'], 'body': ['o..............o', '.o............o.', '.oo..........oo.', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbllnnllbbbbo', 'owbblllbblllbbwo', '.owbbbbbbbbbbwo.', '..oooooooooooo..'], 'colors': [{'name': 'Canada', 'o': '#2a2014', 'b': '#b8a080', 'e': '#1a1408', 'a': '#3a2a1a', 'w': '#e8e0d0', 'p': '#d88a7a', 'l': '#e8e0d0', 'n': '#2a1a14'}, {'name': 'Bobcat', 'o': '#2a1406', 'b': '#c8885a', 'e': '#1a0a04', 'a': '#3a2010', 'w': '#f0e0c8', 'p': '#ff9a7a', 'l': '#f4e4d0', 'n': '#2a1406'}, {'name': 'Snow', 'o': '#3a3a4a', 'b': '#e0e0e8', 'e': '#2a3a5a', 'a': '#4a4a5a', 'w': '#ffffff', 'p': '#ffb0c0', 'l': '#ffffff', 'n': '#3a3a4a'}]},
  'Manatee': {'eyes': 5, 'move': 'float', 'speed': 0.6, 'feet': False, 'mouth': True, 'lines': ['*slow blink*', 'sea cow, reporting', 'i eat lettuce all day', 'no rush'], 'body': ['................', '................', '...oooooooooo...', '..oaaaaaaaaaao..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbblslnnlslbbbo', 'fobblllbblllbbof', 'ff.obbbbbbbbo.ff', 'f...oooooooo...f'], 'colors': [{'name': 'Gray', 'o': '#2a2e36', 'b': '#8a929e', 'e': '#0a0e14', 'a': '#7a828e', 'p': '#d8a0b0', 'l': '#b0b8c4', 'n': '#2a2e36', 's': '#5a626e', 'f': '#6a727e'}, {'name': 'Mossy', 'o': '#1a2a1a', 'b': '#7a9a7a', 'e': '#0a140a', 'a': '#6a8a6a', 'p': '#d8a0a0', 'l': '#a8c8a8', 'n': '#1a2a1a', 's': '#4a6a4a', 'f': '#5a7a5a'}, {'name': 'Pink', 'o': '#5a2a3a', 'b': '#e8a8b8', 'e': '#2a0a14', 'a': '#d898a8', 'p': '#ff7a9a', 'l': '#ffd0dc', 'n': '#5a2a3a', 's': '#c87a8a', 'f': '#d898a8'}]},
  'Moose': {'eyes': 5, 'move': 'walk', 'speed': 0.9, 'feet': True, 'mouth': True, 'lines': ['*munches leaves*', 'antlers: huge. brain: chill', "i'm a big deer", 'moose on the loose'], 'body': ['h.h..h....h..h.h', 'hhhhh......hhhhh', '.hh..........hh.', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Forest', 'o': '#1a0e06', 'b': '#5a3a24', 'e': '#0a0604', 'h': '#c8a878', 'a': '#3a2414', 'p': '#c86a5a', 'l': '#8a6a4a', 'n': '#0a0604'}, {'name': 'Light', 'o': '#2a1a0a', 'b': '#8a6a4a', 'e': '#1a0e04', 'h': '#e8d8b8', 'a': '#5a3e26', 'p': '#d88a7a', 'l': '#b8987a', 'n': '#1a0e04'}, {'name': 'Gray', 'o': '#1a1a1a', 'b': '#5a5a5a', 'e': '#0a0a0a', 'h': '#d0c8b8', 'a': '#3a3a3a', 'p': '#c88a8a', 'l': '#8a8a8a', 'n': '#0a0a0a'}]},
@@ -3084,20 +3092,20 @@ NEW_ANIMALS.update({
  'Orangutan': {'eyes': 5, 'move': 'walk', 'speed': 0.9, 'feet': True, 'mouth': True, 'lines': ['*swings from vines*', 'person of the forest', "i'm a gentle giant", 'banana? yes please'], 'body': ['................', '................', '...oooooooooo...', '..oaaaaaaaaaao..', 'aaobbbbbbbbbboaa', 'aaobbbbbbbbbboaa', 'aaobbbbbbbbbboaa', 'aaopbllllllbpoaa', '.aobllllllllboa.', '.obllllllllllbo.', '..obllllllllbo..', '..oooooooooooo..'], 'colors': [{'name': 'Bornean', 'o': '#2a0e04', 'b': '#c85a2a', 'e': '#1a0604', 'a': '#e88a4a', 'p': '#ff9a7a', 'l': '#e8b890'}, {'name': 'Sumatran', 'o': '#2a1206', 'b': '#e07a3a', 'e': '#1a0804', 'a': '#f0a060', 'p': '#ff9a7a', 'l': '#f0c8a0'}, {'name': 'Dark', 'o': '#140804', 'b': '#7a3a1a', 'e': '#0a0402', 'a': '#9a5a2a', 'p': '#d88a6a', 'l': '#c89a7a'}]},
  'Peacock': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*fans tail*', 'look at meeee', 'fabulous? always', "i'm a whole outfit"], 'body': ['w.w..w....w..w.w', 'wkwkwk....kwkwkw', '.w..o......o..w.', '..oooooooooooo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbkkkkbbbpbo', 'obbbbbbkkbbbbbbo', 'obbbbbbbbbbbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Blue', 'o': '#06142a', 'b': '#2a6ad8', 'e': '#0a0a1a', 'w': '#2a9a6a', 'k': '#ffd23a', 'p': '#ff9ac0'}, {'name': 'Green', 'o': '#0a1a0a', 'b': '#3a9a5a', 'e': '#0a140a', 'w': '#2a6ad8', 'k': '#ffd23a', 'p': '#ff9a8a'}, {'name': 'White', 'o': '#5a5a6a', 'b': '#f4f4ff', 'e': '#2a2a3a', 'w': '#ffffff', 'k': '#d8d8e8', 'p': '#ffb0c8'}]},
  'Pelican': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*fills beak with fish*', 'my beak is a backpack', 'gulp', 'beach patrol'], 'body': ['................', '................', '...oooooooooo...', '..obbbbbbbbbbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbkkkkkkbbpbo', 'obbbkkkkkkkkbbbo', 'obbbkkkkkkkkbbbo', '.obbokkkkkkobbo.', '..oooooooooooo..'], 'colors': [{'name': 'White', 'o': '#4a4a5a', 'b': '#f4f4f8', 'e': '#1a1a2a', 'k': '#ffb03a', 'p': '#ffb0c0'}, {'name': 'Brown', 'o': '#1a1006', 'b': '#8a6a4a', 'e': '#1a0a04', 'k': '#e8a85a', 'p': '#ff9a8a'}, {'name': 'Pink', 'o': '#5a2a3a', 'b': '#f8d0d8', 'e': '#2a0a14', 'k': '#ff8a5a', 'p': '#ff7a9a'}]},
- 'Platypus': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*quack? beep?*', "i'm a bit of everything", 'duck bill, beaver tail', "i lay eggs AND i'm a mammal"], 'body': ['................', '................', '...oooooooooo...', '..obbbbbbbbbbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbkkkkbbbpbo', 'obbkkkkkkkkkkbbo', 'obbkkkkkkkkkkbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Classic', 'o': '#1a0e06', 'b': '#7a4a2a', 'e': '#0a0604', 'k': '#3a3a4a', 'p': '#d88a7a'}, {'name': 'Teal', 'o': '#062a2a', 'b': '#2a8a8a', 'e': '#061414', 'k': '#ffb03a', 'p': '#ff9ac0'}, {'name': 'Sandy', 'o': '#2a1a0a', 'b': '#c8a070', 'e': '#1a1004', 'k': '#5a4a3a', 'p': '#ff9a8a'}]},
+ 'Platypus': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*quack? beep?*', "i'm a bit of everything", 'duck bill, beaver tail', "i lay eggs AND i'm a mammal"], 'body': ['................', '................', '...oooooooooo...', '..obbbbbbbbbbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'ookkkkkkkkkkkkoo', 'okkkkknkknkkkkko', 'okkkkkkkkkkkkkko', '.oooooooooooooo.'], 'colors': [{'name': 'Classic', 'o': '#1a0e06', 'b': '#7a4a2a', 'e': '#0a0604', 'k': '#6a6a7a', 'p': '#d88a7a'}, {'name': 'Teal', 'o': '#062a2a', 'b': '#2a8a8a', 'e': '#061414', 'k': '#ffb03a', 'p': '#ff9ac0'}, {'name': 'Sandy', 'o': '#2a1a0a', 'b': '#c8a070', 'e': '#1a1004', 'k': '#7a6a5a', 'p': '#ff9a8a'}]},
  'Porcupine': {'eyes': 5, 'move': 'walk', 'speed': 0.8, 'feet': True, 'mouth': True, 'lines': ['*quills up*', 'hugs? careful.', 'pointy but polite', 'spike spike'], 'body': ['k.k.k.k..k.k.k.k', 'kk.kk.kkkk.kk.kk', '.kkkkkkkkkkkkkk.', 'kkooooooooooookk', 'kobbbbbbbbbbbbok', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Brown', 'o': '#1a1006', 'b': '#8a6a4a', 'e': '#0a0604', 'k': '#e8d8c0', 'p': '#d88a7a', 'l': '#c8a888', 'n': '#0a0604'}, {'name': 'Dark', 'o': '#0a0604', 'b': '#4a3a2a', 'e': '#0a0604', 'k': '#c8b8a0', 'p': '#c88a7a', 'l': '#7a6a5a', 'n': '#0a0604'}, {'name': 'Pink', 'o': '#5a2a3a', 'b': '#e8a8b8', 'e': '#2a0a14', 'k': '#ffffff', 'p': '#ff7a9a', 'l': '#ffd0dc', 'n': '#5a2a3a'}]},
  'Possum': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*plays dead*', "...i'm alive, just tired", 'trash? treasure.', 'hang tight'], 'body': ['................', '.oo..........oo.', 'oaao........oaao', 'oaaooooooooooaao', '.owwwwwwwwwwwwo.', 'owwwwwwwwwwwwwwo', 'owwwwwwwwwwwwwwo', 'owpwwwwwwwwwwpwo', 'owwwwwwnnwwwwwwo', 'obwwwwwwwwwwwwbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Gray', 'o': '#2a2a2a', 'b': '#8a8a8a', 'e': '#0a0a0a', 'w': '#f4f4f4', 'a': '#ffb0c0', 'p': '#ffb0c0', 'n': '#ff8aa0'}, {'name': 'Dark', 'o': '#0a0a0a', 'b': '#3a3a3a', 'e': '#0a0a0a', 'w': '#e8e8e8', 'a': '#ffa0b0', 'p': '#ff9ab0', 'n': '#ff7a9a'}, {'name': 'Cream', 'o': '#4a3a2a', 'b': '#c8b8a0', 'e': '#1a1008', 'w': '#fffaf0', 'a': '#ffb0c0', 'p': '#ffb0b0', 'n': '#ff8aa0'}]},
- 'Lemming': {'eyes': 5, 'move': 'walk', 'speed': 1.4, 'feet': True, 'mouth': True, 'lines': ['*scurries*', 'i follow my own path', 'tiny and brave', 'brrr, tundra life'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'obbblllbblllbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Tundra', 'o': '#1a1006', 'b': '#c89a5a', 'e': '#0a0604', 'a': '#3a2010', 'l': '#f4e0c0', 'p': '#ff9a7a'}, {'name': 'Snow', 'o': '#4a4a5a', 'b': '#f8f8ff', 'e': '#1a1a2a', 'a': '#d0d0e0', 'l': '#ffffff', 'p': '#ffb0c0'}, {'name': 'Calico', 'o': '#1a1006', 'b': '#e8c890', 'e': '#0a0604', 'a': '#2a1a0a', 'l': '#ffffff', 'p': '#ff9a7a'}]},
+ 'Lemming': {'eyes': 5, 'move': 'walk', 'speed': 1.4, 'feet': True, 'mouth': True, 'lines': ['*scurries*', 'i follow my own path', 'tiny and brave', 'brrr, tundra life'], 'body': ['................', '................', '..oooooooooooo..', '.oaaaaaaaaaaaao.', 'oaaaaaaaaaaaaaao', 'obbbbaaaaaabbbbo', 'obbbbbbaabbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbllllbbbbbo', 'obbbbllllllbbbbo', '.obbbllllllbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Tundra', 'o': '#1a1006', 'b': '#c89a5a', 'e': '#0a0604', 'a': '#3a2010', 'l': '#f4e0c0', 'p': '#ff9a7a'}, {'name': 'Snow', 'o': '#4a4a5a', 'b': '#f8f8ff', 'e': '#1a1a2a', 'a': '#d0d0e0', 'l': '#ffffff', 'p': '#ffb0c0'}, {'name': 'Calico', 'o': '#1a1006', 'b': '#e8c890', 'e': '#0a0604', 'a': '#2a1a0a', 'l': '#ffffff', 'p': '#ff9a7a'}]},
  'Swan': {'eyes': 5, 'move': 'float', 'speed': 1.0, 'feet': False, 'mouth': False, 'lines': ['*glides*', 'elegant at all times', 'honk? no. never.', 'ballet is my life'], 'body': ['................', '...ooo....ooo...', '..obbbo..obbbo..', '..obboooooobbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbkkkkbbbpbo', 'obbbbbbkkbbbbbbo', 'obbbbbbbbbbbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'White', 'o': '#5a5a6a', 'b': '#ffffff', 'e': '#1a1a2a', 'k': '#ff8a3a', 'p': '#ffb0c0'}, {'name': 'Black', 'o': '#06060a', 'b': '#1e1e28', 'e': '#ffffff', 'k': '#e8203a', 'p': '#8a5a6a'}, {'name': 'Blush', 'o': '#6a3a4a', 'b': '#fff0f4', 'e': '#2a0a14', 'k': '#ff9a5a', 'p': '#ff8ab0'}]},
- 'Tapir': {'eyes': 5, 'move': 'walk', 'speed': 0.9, 'feet': True, 'mouth': True, 'lines': ['*wiggles nose*', 'half pig, half elephant, all cute', 'snoot boop', 'rainforest snacker'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbblnnlbbbbbo', 'obbbbbllllbbbbbo', '.owwwwollowwwwo.', '..ooooollooooo..'], 'colors': [{'name': 'Malayan', 'o': '#0a0a0a', 'b': '#2a2a2a', 'e': '#0a0a0a', 'a': '#ffffff', 'l': '#3a3a3a', 'n': '#0a0a0a', 'p': '#8a5a6a', 'w': '#ffffff'}, {'name': 'Baby', 'o': '#1a1006', 'b': '#7a5a3a', 'e': '#0a0604', 'a': '#f4e0c0', 'l': '#9a7a5a', 'n': '#0a0604', 'p': '#c88a7a', 'w': '#e8d8c0'}, {'name': 'Lowland', 'o': '#14100a', 'b': '#5a4a3a', 'e': '#0a0604', 'a': '#3a2a1a', 'l': '#7a6a5a', 'n': '#0a0604', 'p': '#c88a7a', 'w': '#9a8a7a'}]},
+ 'Tapir': {'eyes': 5, 'move': 'walk', 'speed': 0.9, 'feet': True, 'mouth': False, 'lines': ['*wiggles nose*', 'half pig, half elephant, all cute', 'snoot boop', 'rainforest snacker'], 'body': ['................', '................', '.ooo........ooo.', '.oaao......oaao.', 'oabboooooooobbao', 'obbbbbbbbbbbbbbo', 'obbbbbbllbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbbllllbbbbbo', 'obbbbbbllbbbbbbo', '.owwwbbllbbwwwo.', '..ooooonnooooo..'], 'colors': [{'name': 'Malayan', 'o': '#0a0a0a', 'b': '#2a2a2a', 'e': '#0a0a0a', 'a': '#ffffff', 'l': '#4a4a4a', 'n': '#0a0a0a', 'p': '#8a5a6a', 'w': '#ffffff'}, {'name': 'Baby', 'o': '#1a1006', 'b': '#7a5a3a', 'e': '#0a0604', 'a': '#f4e0c0', 'l': '#9a7a5a', 'n': '#0a0604', 'p': '#c88a7a', 'w': '#e8d8c0'}, {'name': 'Lowland', 'o': '#14100a', 'b': '#5a4a3a', 'e': '#0a0604', 'a': '#3a2a1a', 'l': '#7a6a5a', 'n': '#0a0604', 'p': '#c88a7a', 'w': '#9a8a7a'}]},
  'Toucan': {'eyes': 5, 'move': 'hop', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*big beak noises*', 'fruit salad please', 'my beak is mostly air', 'tropical vibes'], 'body': ['................', '.......oo.......', '...oooooooooo...', '..obbbbbbbbbbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbkkkkkkbbpbo', 'obbbkkkkkkkkbbbo', 'obbbbbkkkkbbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Toco', 'o': '#06060a', 'b': '#1e1e24', 'e': '#3a8ad8', 'k': '#ff8a1f', 'p': '#ff5a3a'}, {'name': 'Keel', 'o': '#06060a', 'b': '#1e1e24', 'e': '#0a0a0a', 'k': '#8ad84a', 'p': '#ffd23a'}, {'name': 'Rainbow', 'o': '#0a0a0a', 'b': '#2a2a2a', 'e': '#3ab0ff', 'k': '#ff4a6a', 'p': '#ffd23a'}]},
- 'Walrus': {'eyes': 5, 'move': 'walk', 'speed': 0.6, 'feet': False, 'mouth': True, 'lines': ['*flop*', 'tusk tusk', 'ice is my couch', 'i have the best mustache'], 'body': ['................', '................', '...oooooooooo...', '..obbbbbbbbbbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbllllllbbpbo', 'obbbllllllllbbbo', 'obbwbbbbbbbbwbbo', '.obwbbbbbbbbwbo.', '..oooooooooooo..'], 'colors': [{'name': 'Arctic', 'o': '#2a1a14', 'b': '#a87a6a', 'e': '#0a0604', 'l': '#d8b8a8', 'w': '#fff4e0', 'p': '#ff9a8a'}, {'name': 'Pink', 'o': '#4a2a2a', 'b': '#e8a8a0', 'e': '#1a0a0a', 'l': '#ffd0c8', 'w': '#ffffff', 'p': '#ff7a7a'}, {'name': 'Gray', 'o': '#2a2a2e', 'b': '#8a8a90', 'e': '#0a0a0a', 'l': '#c8c8d0', 'w': '#fffaf0', 'p': '#c88a9a'}]},
+ 'Walrus': {'eyes': 5, 'move': 'walk', 'speed': 0.6, 'feet': False, 'mouth': False, 'lines': ['*flop*', 'tusk tusk', 'ice is my couch', 'i have the best mustache'], 'body': ['................', '................', '....oooooooo....', '..oobbbbbbbboo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbllllllllbpbo', 'obblldlllldllbbo', 'obbbwllllllwbbbo', '.obbwbbbbbbwbbo.', '..oowoooooowoo..'], 'colors': [{'name': 'Arctic', 'o': '#2a1a14', 'b': '#a87a6a', 'e': '#0a0604', 'l': '#d8b8a8', 'w': '#fff4e0', 'p': '#ff9a8a', 'd': '#6a4a3a'}, {'name': 'Pink', 'o': '#4a2a2a', 'b': '#e8a8a0', 'e': '#1a0a0a', 'l': '#ffd0c8', 'w': '#ffffff', 'p': '#ff7a7a', 'd': '#a86a6a'}, {'name': 'Gray', 'o': '#2a2a2e', 'b': '#8a8a90', 'e': '#0a0a0a', 'l': '#c8c8d0', 'w': '#fffaf0', 'p': '#c88a9a', 'd': '#5a5a60'}]},
  'Warthog': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*snort snort*', 'hakuna matata', 'my tusks are my bling', 'mud spa time'], 'body': ['................', '.o............o.', '.oo..........oo.', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbwbllllllbwbbo', '.obwbbbbbbbbwbo.', '..oooooooooooo..'], 'colors': [{'name': 'Savanna', 'o': '#1a1006', 'b': '#8a6a4a', 'e': '#0a0604', 'a': '#5a3a24', 'l': '#c8a888', 'w': '#fff4dc', 'n': '#0a0604', 'p': '#d88a7a'}, {'name': 'Gray', 'o': '#1a1a1a', 'b': '#6a6a6a', 'e': '#0a0a0a', 'a': '#3a3a3a', 'l': '#9a9a9a', 'w': '#ffffff', 'n': '#0a0a0a', 'p': '#c88a8a'}, {'name': 'Pink', 'o': '#4a1a2a', 'b': '#d88a9a', 'e': '#1a0a0a', 'a': '#a85a6a', 'l': '#ffc0c8', 'w': '#ffffff', 'n': '#4a1a2a', 'p': '#ff6a8a'}]},
- 'Wombat': {'eyes': 5, 'move': 'walk', 'speed': 0.8, 'feet': True, 'mouth': True, 'lines': ['*chonk*', "i make cube poops (it's science)", 'dig dig', 'sturdy little guy'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbnnnnnnbbpbo', 'obbbbnnnnnnbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', '.oooooooooooooo.'], 'colors': [{'name': 'Common', 'o': '#1a1006', 'b': '#7a6a5a', 'e': '#0a0604', 'a': '#4a3a2a', 'p': '#c88a7a', 'l': '#a89888', 'n': '#0a0604'}, {'name': 'Hairy', 'o': '#14100a', 'b': '#a89880', 'e': '#0a0604', 'a': '#6a5a4a', 'p': '#d88a7a', 'l': '#d0c4b0', 'n': '#0a0604'}, {'name': 'Dark', 'o': '#0a0604', 'b': '#3a3028', 'e': '#0a0604', 'a': '#1a140e', 'p': '#a87a6a', 'l': '#6a5a4a', 'n': '#0a0604'}]},
+ 'Wombat': {'eyes': 5, 'move': 'walk', 'speed': 0.8, 'feet': True, 'mouth': False, 'lines': ['*chonk*', "i make cube poops (it's science)", 'dig dig', 'sturdy little guy'], 'body': ['................', '..oo........oo..', '.oaao......oaao.', '.oaaooooooooaao.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbllnnllbbpbo', 'obbbblnnnnlbbbbo', 'obbbbbllllbbbbbo', 'obbbbbbbbbbbbbbo', '.oooooooooooooo.'], 'colors': [{'name': 'Common', 'o': '#1a1006', 'b': '#7a6a5a', 'e': '#0a0604', 'a': '#4a3a2a', 'p': '#c88a7a', 'l': '#a89888', 'n': '#2a1e16'}, {'name': 'Hairy', 'o': '#14100a', 'b': '#a89880', 'e': '#0a0604', 'a': '#6a5a4a', 'p': '#d88a7a', 'l': '#d0c4b0', 'n': '#3a2e24'}, {'name': 'Dark', 'o': '#0a0604', 'b': '#3a3028', 'e': '#0a0604', 'a': '#1a140e', 'p': '#a87a6a', 'l': '#6a5a4a', 'n': '#0a0604'}]},
  'Yak': {'eyes': 5, 'move': 'walk', 'speed': 0.8, 'feet': True, 'mouth': True, 'lines': ['*fluffs*', 'mountain mode', "i'm a fuzzy cow", 'yak yak yak (talking)'], 'body': ['................', 'h..............h', 'hh............hh', '.hooooooooooooh.', 'oaaaaaaaaaaaaaao', 'obaaaaaaaaaaaabo', 'obbbaaaaaaaabbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Black', 'o': '#06060a', 'b': '#2a2a30', 'e': '#ffffff', 'h': '#e8e0d0', 'a': '#3a3a44', 'p': '#8a5a6a', 'l': '#5a5a64', 'n': '#06060a'}, {'name': 'Brown', 'o': '#1a0e06', 'b': '#6a4a2a', 'e': '#0a0604', 'h': '#f0e8d8', 'a': '#8a6a4a', 'p': '#c88a7a', 'l': '#9a7a5a', 'n': '#0a0604'}, {'name': 'White', 'o': '#4a4a5a', 'b': '#f4f0ea', 'e': '#1a1a2a', 'h': '#a8a8b8', 'a': '#ffffff', 'p': '#ffb0b0', 'l': '#ffffff', 'n': '#4a4a5a'}]},
  'Antelope': {'eyes': 5, 'move': 'walk', 'speed': 1.5, 'feet': True, 'mouth': True, 'lines': ['*pronks*', 'boing! boing!', 'fast and fancy', 'horns on point'], 'body': ['.h............h.', '.h............h.', '.hh..........hh.', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obwbbbbbbbbbbwbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Gazelle', 'o': '#2a1406', 'b': '#d8985a', 'e': '#1a0a04', 'h': '#2a1a0a', 'a': '#8a5a2a', 'w': '#ffffff', 'p': '#ff9a7a', 'l': '#fff0d8', 'n': '#2a1406'}, {'name': 'Springbok', 'o': '#2a1a0a', 'b': '#c88a4a', 'e': '#1a0e04', 'h': '#1a1006', 'a': '#6a4020', 'w': '#ffffff', 'p': '#ff9a7a', 'l': '#ffffff', 'n': '#1a0e04'}, {'name': 'Blackbuck', 'o': '#0a0a0a', 'b': '#3a3030', 'e': '#0a0a0a', 'h': '#5a4a3a', 'a': '#1a1414', 'w': '#ffffff', 'p': '#c88a8a', 'l': '#f4f0ea', 'n': '#0a0a0a'}]},
  'Aardvark': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*slurp* ants!', 'first in the dictionary', 'long snoot gang', 'dig dig dig'], 'body': ['.oo..........oo.', '.oao........oao.', '.oao........oao.', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllllllbbbbo', 'obbblllnnlllbbbo', '.obbllllllllbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Earth', 'o': '#2a1a14', 'b': '#c8a090', 'e': '#1a0a04', 'a': '#ffb0a0', 'l': '#d8b8a8', 'n': '#4a2a1a', 'p': '#ff9a8a'}, {'name': 'Dusty', 'o': '#2a2a2a', 'b': '#a89a90', 'e': '#0a0a0a', 'a': '#d8a0a0', 'l': '#c8bab0', 'n': '#3a2a2a', 'p': '#d88a8a'}, {'name': 'Rosy', 'o': '#4a2a2a', 'b': '#e8b8b0', 'e': '#2a0a0a', 'a': '#ff9aa0', 'l': '#ffd8d0', 'n': '#6a3a3a', 'p': '#ff7a8a'}]},
- 'Anteater': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*tongue out*', 'ants are my whole diet', 'long nose, long life', 'slurp slurp'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'osbbbbbbbbbbbbso', 'obpbbbllllbbbpbo', 'obbbbbllllbbbbbo', 'obbbbblnnlbbbbbo', '.obsbbllllbbsbo.', '..oooooooooooo..'], 'colors': [{'name': 'Giant', 'o': '#1a1006', 'b': '#8a7a6a', 'e': '#0a0604', 'a': '#3a2a1a', 's': '#1a1006', 'l': '#a89a8a', 'n': '#0a0604', 'p': '#c88a7a'}, {'name': 'Silky', 'o': '#3a2a0a', 'b': '#e8c870', 'e': '#1a1004', 'a': '#a8883a', 's': '#8a6a2a', 'l': '#fff0b0', 'n': '#3a2a0a', 'p': '#ff9a6a'}, {'name': 'Tamandua', 'o': '#0a0a0a', 'b': '#e8d0a0', 'e': '#0a0a0a', 'a': '#1a1a1a', 's': '#1a1a1a', 'l': '#f4e8c8', 'n': '#0a0a0a', 'p': '#ff9a7a'}]},
+ 'Anteater': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*tongue out*', 'ants are my whole diet', 'long nose, long life', 'slurp slurp'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbllllbbbbbo', 'obpbbbllllbbbpbo', 'obbbbbbllbbbbbbo', 'owbbbbbllbbbbbwo', '.owwbbbllbbbwwo.', '..ooooonnooooo..'], 'colors': [{'name': 'Giant', 'o': '#1a1006', 'b': '#8a7a6a', 'e': '#0a0604', 'a': '#3a2a1a', 's': '#1a1006', 'l': '#a89a8a', 'n': '#0a0604', 'p': '#c88a7a', 'w': '#f4ece0'}, {'name': 'Silky', 'o': '#3a2a0a', 'b': '#e8c870', 'e': '#1a1004', 'a': '#a8883a', 's': '#8a6a2a', 'l': '#fff0b0', 'n': '#3a2a0a', 'p': '#ff9a6a', 'w': '#fff8d0'}, {'name': 'Tamandua', 'o': '#0a0a0a', 'b': '#e8d0a0', 'e': '#0a0a0a', 'a': '#1a1a1a', 's': '#1a1a1a', 'l': '#f4e8c8', 'n': '#0a0a0a', 'p': '#ff9a7a', 'w': '#1a1a1a'}]},
  'Beagle': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*AWOOO*', 'i smell snacks', 'nose to the ground', 'best detective in town'], 'body': ['................', '................', 'oooooooooooooooo', 'oaaobbbbbbbboaao', 'oaaobbbbbbbboaao', 'oaaobbbbbbbboaao', '.ooobbbbbbbbooo.', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Tricolor', 'o': '#1a0e06', 'b': '#c8884a', 'e': '#0a0604', 'a': '#3a2014', 'p': '#ff9a7a', 'l': '#ffffff', 'n': '#0a0604'}, {'name': 'Lemon', 'o': '#3a2a0a', 'b': '#f0d8a0', 'e': '#1a1004', 'a': '#e8b860', 'p': '#ff9a7a', 'l': '#ffffff', 'n': '#3a2a0a'}, {'name': 'Blue', 'o': '#1a1a2a', 'b': '#9aa0b8', 'e': '#0a0a14', 'a': '#3a3e54', 'p': '#ff9ac0', 'l': '#ffffff', 'n': '#0a0a14'}]},
  'Poodle': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*prances*', 'fluff = style', 'trimmed to perfection', 'oui oui'], 'body': ['...aaa....aaa...', '..aaaaa..aaaaa..', 'aaaaaooooooaaaaa', 'aaaobbbbbbbboaaa', 'aaobbbbbbbbbboaa', 'aaobbbbbbbbbboaa', '.aobbbbbbbbbboa.', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'White', 'o': '#5a5a6a', 'b': '#ffffff', 'e': '#1a1a2a', 'a': '#f0f0f8', 'p': '#ffb0c8', 'l': '#ffffff', 'n': '#1a1a2a'}, {'name': 'Apricot', 'o': '#3a1a0a', 'b': '#f0b880', 'e': '#1a0a04', 'a': '#e8a868', 'p': '#ff9a7a', 'l': '#fff0e0', 'n': '#1a0a04'}, {'name': 'Black', 'o': '#06060a', 'b': '#2a2a30', 'e': '#ffffff', 'a': '#1e1e24', 'p': '#8a5a6a', 'l': '#4a4a50', 'n': '#06060a'}]},
  'Dachshund': {'eyes': 5, 'move': 'walk', 'speed': 1.1, 'feet': True, 'mouth': True, 'lines': ['*long dog*', "i'm a hot dog!", 'short legs, big heart', 'loooong boi'], 'body': ['................', '................', 'oooooooooooooooo', 'oaaobbbbbbbboaao', 'oaaobbbbbbbboaao', 'oaaobbbbbbbboaao', '.ooobbbbbbbbooo.', 'obpbbbbbbbbbbpbo', 'obbbbbbnnbbbbbbo', 'obbbbbbbbbbbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Red', 'o': '#2a0e04', 'b': '#b8582a', 'e': '#0a0402', 'a': '#7a3414', 'p': '#ff9a7a', 'n': '#0a0402'}, {'name': 'Black & Tan', 'o': '#06060a', 'b': '#2a2a30', 'e': '#ffffff', 'a': '#c8783a', 'p': '#c88a7a', 'n': '#06060a'}, {'name': 'Dapple', 'o': '#1a1a1a', 'b': '#9a8a7a', 'e': '#0a0a0a', 'a': '#5a4a3a', 'p': '#d88a8a', 'n': '#0a0a0a'}]},
@@ -3124,7 +3132,7 @@ TAB_KINDS = {
  'Brachiosaurus': {'eyes': 3, 'move': 'walk', 'speed': 0.6, 'feet': False, 'mouth': True, 'lines': ['*munches treetops*', 'the view up here is great', 'long neck gang', 'gentle giant'], 'body': ['...oooooooooo...', '..obbbbbbbbbbo..', '..obbbbbbbbbbo..', '..obbbbbbbbbbo..', '..obbbbbbbbbbo..', '..obbbbbbbbbbo..', '..obpbbbbbbpbo..', '...obbbbbbbbo...', '.oobbbbbbbbbboo.', 'obbbbbbbbbbbbbbo', 'obllllllllllllbo', '.oooooooooooooo.'], 'colors': [{'name': 'Green', 'o': '#0a2a10', 'b': '#6ab86a', 'e': '#0a140a', 'l': '#b8e8a8', 'p': '#ff9a8a'}, {'name': 'Sandy', 'o': '#2a1a06', 'b': '#d8b070', 'e': '#1a0a04', 'l': '#fff0c8', 'p': '#ff9a7a'}, {'name': 'Lilac', 'o': '#1a0a2a', 'b': '#b89ae8', 'e': '#0a0614', 'l': '#ece0ff', 'p': '#ff9ac0'}]},
  'Pterodactyl': {'eyes': 5, 'move': 'flutter', 'speed': 1.0, 'feet': False, 'mouth': False, 'lines': ['*SKREE*', 'technically not a dinosaur!', 'wing day every day', 'swoop!'], 'body': ['o..............o', '.oo..........oo.', '..oooooooooooo..', 'w.obbbbbbbbbbo.w', 'wwobbbbbbbbbboww', 'wwwobbbbbbbbowww', 'wwwobbbbbbbbowww', 'wwwobpbkkbpbowww', '.wwobbkkkkbboww.', '..wobbbkkbbbow..', '...obbbbbbbbo...', '....oooooooo....'], 'colors': [{'name': 'Rust', 'o': '#2a0e04', 'b': '#c8683a', 'e': '#1a0604', 'w': '#8a3a1a', 'k': '#ffc83a', 'p': '#ff9a7a'}, {'name': 'Sky', 'o': '#0a1a3a', 'b': '#6aa8e8', 'e': '#0a0a1a', 'w': '#3a6aa8', 'k': '#ffd23a', 'p': '#ff9ac0'}, {'name': 'Dusk', 'o': '#1a0a2a', 'b': '#8a5aa8', 'e': '#0a0614', 'w': '#5a3a7a', 'k': '#ffb03a', 'p': '#ff9ac0'}]},
  'Raptor': {'eyes': 5, 'move': 'walk', 'speed': 1.6, 'feet': True, 'mouth': False, 'lines': ['*clever girl noises*', "i'm fast AND smart", 'click click (claws)', 'pack hunter. pack hugger.'], 'body': ['................', '................', '.oooooooooooooo.', 'osbsbsbssbsbsbso', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'owwwwwwwwwwwwwwo', '.owbwbwbbwbwbwo.', '..oooooooooooo..'], 'colors': [{'name': 'Desert', 'o': '#2a1a06', 'b': '#d8a85a', 'e': '#e8203a', 's': '#8a5a2a', 'w': '#ffffff', 'p': '#ff9a7a'}, {'name': 'Jungle', 'o': '#0a2a10', 'b': '#5a9a4a', 'e': '#ffd23a', 's': '#2a5a2a', 'w': '#ffffff', 'p': '#ff9a8a'}, {'name': 'Blue', 'o': '#0a1a2a', 'b': '#5a7aa8', 'e': '#ffd23a', 's': '#2a3a5a', 'w': '#ffffff', 'p': '#ff9ac0'}]},
- 'Ankylosaurus': {'eyes': 5, 'move': 'walk', 'speed': 0.6, 'feet': True, 'mouth': True, 'lines': ['*tail club swings*', 'built like a tank', 'armor on, hugs ready', 'clonk'], 'body': ['................', 's.s.s.s..s.s.s.s', 'ssssssssssssssss', 'soooooooooooooos', 'sobbbbbbbbbbbbos', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'obbbllllllllbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Earth', 'o': '#1a1006', 'b': '#a8885a', 'e': '#0a0604', 's': '#5a4a3a', 'l': '#e0d0b0', 'p': '#d88a7a'}, {'name': 'Mossy', 'o': '#0a1a0a', 'b': '#7a9a5a', 'e': '#0a0a04', 's': '#3a5a2a', 'l': '#c8e0a8', 'p': '#ff9a8a'}, {'name': 'Rocky', 'o': '#1a1a1a', 'b': '#8a8a8a', 'e': '#0a0a0a', 's': '#4a4a4a', 'l': '#d0d0d0', 'p': '#d88a9a'}]},
+ 'Ankylosaurus': {'eyes': 5, 'move': 'walk', 'speed': 0.6, 'feet': True, 'mouth': True, 'lines': ['*tail club swings*', 'built like a tank', 'armor on, hugs ready', 'clonk'], 'body': ['................', '...s..s..s..s...', '..okkokkkkokko..', '.okkkkkkkkkkkko.', 'okkokkokkokkokko', 'sobbbbbbbbbbbbos', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'sobbbbbbbbbbbbos', 'obbbbbllllbbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Earth', 'o': '#1a1006', 'b': '#a8885a', 'e': '#0a0604', 's': '#5a4a3a', 'l': '#e0d0b0', 'p': '#d88a7a', 'k': '#7a6a4a'}, {'name': 'Mossy', 'o': '#0a1a0a', 'b': '#7a9a5a', 'e': '#0a0a04', 's': '#3a5a2a', 'l': '#c8e0a8', 'p': '#ff9a8a', 'k': '#5a7a3a'}, {'name': 'Rocky', 'o': '#1a1a1a', 'b': '#8a8a8a', 'e': '#0a0a0a', 's': '#4a4a4a', 'l': '#d0d0d0', 'p': '#d88a9a', 'k': '#6a6a6a'}]},
  'Spinosaurus': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*splash*', 'my sail is my sun hat', 'fish? fish.', 'biggest of the big'], 'body': ['...s.s.ss.s.s...', '..ssssssssssss..', '..ssssssssssss..', '..oooooooooooo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'owwwwwwwwwwwwwwo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'River', 'o': '#0a1a1a', 'b': '#4a8a7a', 'e': '#ffd23a', 's': '#e8683a', 'w': '#ffffff', 'p': '#ff9a8a'}, {'name': 'Crimson', 'o': '#2a0606', 'b': '#b83a3a', 'e': '#ffd23a', 's': '#ffb03a', 'w': '#ffffff', 'p': '#ff9a7a'}, {'name': 'Midnight', 'o': '#06061a', 'b': '#3a3a6a', 'e': '#6ae0ff', 's': '#8a5ad8', 'w': '#ffffff', 'p': '#c88aff'}]},
  'Parasaurolophus': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*TOOT* (from my crest)', "i'm a dino trumpet", 'honk honk', 'music time!'], 'body': ['....hhh..hhh....', '...hh......hh...', '..hh........hh..', '..oooooooooooo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbllllllllbbbo', 'obbblllbblllbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Teal', 'o': '#062a2a', 'b': '#3ab8a8', 'e': '#061414', 'h': '#e8683a', 'l': '#c8f0e8', 'p': '#ff9a8a'}, {'name': 'Sunset', 'o': '#3a1406', 'b': '#ff9a4a', 'e': '#1a0a04', 'h': '#8a3ad8', 'l': '#ffe0c8', 'p': '#ff6a6a'}, {'name': 'Green', 'o': '#0a2a10', 'b': '#6ab86a', 'e': '#0a140a', 'h': '#ffd23a', 'l': '#d8f0c8', 'p': '#ff9a8a'}]},
  'Dimetrodon': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*sunbathes*', 'older than dinosaurs!', 'my sail keeps me warm', 'fin-tastic'], 'body': ['..s.s.s..s.s.s..', '.ssssssssssssss.', '.ssssssssssssss.', '..oooooooooooo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'owwwwwwwwwwwwwwo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Violet', 'o': '#14062a', 'b': '#7a5ab8', 'e': '#ffd23a', 's': '#e85a8a', 'w': '#ffffff', 'p': '#ff9ac0'}, {'name': 'Rusty', 'o': '#2a0e04', 'b': '#b8682a', 'e': '#ffd23a', 's': '#ffb03a', 'w': '#ffffff', 'p': '#ff9a7a'}, {'name': 'Olive', 'o': '#14140a', 'b': '#7a7a3a', 'e': '#ffd23a', 's': '#c8a83a', 'w': '#ffffff', 'p': '#ff9a8a'}]},
@@ -3171,6 +3179,22 @@ TAB_KINDS = {
  'Lotus': {'eyes': 5, 'move': 'float', 'speed': 0.4, 'feet': False, 'mouth': True, 'lines': ['*floats on the pond*', 'calm and peaceful', 'rising from the mud', 'breathe in, breathe out'], 'body': ['....r......r....', '...rrr....rrr...', 'r.rrrrr..rrrrr.r', 'rrroooooooooorrr', 'rrobbbbbbbbbborr', 'rrobbbbbbbbbborr', 'rrobbbbbbbbbborr', '.ropbbbbbbbbpor.', '..oobbbbbbbboo..', 'wwwwoooooooowwww', '.wwwwwwwwwwwwww.', '................'], 'colors': [{'name': 'Pink', 'o': '#4a1a2a', 'b': '#ffd0e0', 'e': '#2a0a14', 'r': '#ff8ab0', 'w': '#4ab83a', 'p': '#ff5a8a'}, {'name': 'White', 'o': '#4a4a5a', 'b': '#ffffff', 'e': '#2a2a3a', 'r': '#f0f0ff', 'w': '#4ab83a', 'p': '#ffb0c8'}, {'name': 'Blue', 'o': '#0a1a3a', 'b': '#d0e8ff', 'e': '#0a1a3a', 'r': '#6aa8ff', 'w': '#3a9a5a', 'p': '#ff9ac0'}]},
 }
 TAB_GROUPS = [('Dinos 🦕', ['Triceratops', 'Stegosaurus', 'Brachiosaurus', 'Pterodactyl', 'Raptor', 'Ankylosaurus', 'Spinosaurus', 'Parasaurolophus', 'Dimetrodon', 'Iguanodon']), ('Ocean 🌊', ['Seahorse', 'Stingray', 'Squid', 'Lobster', 'Shrimp', 'Anglerfish', 'Eel', 'Swordfish', 'Sea Urchin', 'Hermit Crab']), ('Sweets 🍩', ['Donut', 'Cupcake', 'Ice Cream', 'Macaron', 'Pudding', 'Gummy Bear', 'Dumpling', 'Toast', 'Marshmallow', 'Taco']), ('Space 🚀', ['Space Jelly', 'Astronaut', 'UFO', 'Star', 'Moon', 'Comet', 'Ringed Planet', 'Rocket', 'Space Slug', 'Black Hole']), ('Plants 🌱', ['Bamboo', 'Daisy', 'Sunflower', 'Tulip', 'Flytrap', 'Acorn', 'Pumpkin', 'Pinecone', 'Clover', 'Lotus'])]
+
+# 🏺 Egypt World: the gods of ancient Egypt as Blips, each with their sacred animal, a gold collar and their crown or symbol.
+# Unlock Egypt World with hearts and they're all yours (like the other worlds).
+EGYPT_GODS = {"Ra": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*the sun rises*", "i light up your whole desktop", "bow to the sun! (or just wave)", "my disk is warm, don't touch"], "body": [".....oooooo.....", "....osssssSo....", "...ooosssSooo...", "..o*bBoooobbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obkkbbbbbbbbkkBo", "obbkbbyyyybbkbBo", "obbbbbbyybbbbbBo", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#3a1a06", "b": "#c8843a", "l": "#f4d8a8", "e": "#1a1a2a", "y": "#ffd23a", "s": "#ff5a2a", "k": "#2a1a0a", "n": "#2a4ab8", "w": "#ffffff", "p": "#ff9a7a"}, {"name": "Moonlit", "o": "#473a4d", "b": "#9c7a6c", "l": "#b6acae", "e": "#1a1a2a", "y": "#d8dce8", "s": "#bd6063", "k": "#3d3a50", "n": "#3d57b8", "w": "#bdc3e3", "p": "#bd8793"}, {"name": "Sunset", "o": "#3a1a06", "b": "#d67e36", "l": "#f7bc88", "e": "#1a1a2a", "y": "#ffb836", "s": "#ff5e2a", "k": "#5f2e12", "n": "#5f5294", "w": "#ffdaca", "p": "#ff8e66"}]}, "Anubis": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*weighs your heart* …light as a feather!", "i guard the night", "good boy of the afterlife", "*tall ears twitch*"], "body": [".o............o.", ".oo..........oo.", ".oao........oao.", ".oaAo......oaAo.", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".obbbbbkkbbbbBo.", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#000000", "b": "#1a1a22", "a": "#ffd23a", "e": "#ffd23a", "y": "#ffd23a", "n": "#2a4ab8", "k": "#3a3a4a", "l": "#3a3a4a", "p": "#5a2a3a", "s": "#ff5a2a", "w": "#ffffff"}, {"name": "Moonlit", "o": "#242a4a", "b": "#343a5e", "a": "#bda86c", "e": "#ffd23a", "y": "#d8dce8", "n": "#3d57b8", "k": "#474d76", "l": "#474d76", "p": "#5a446c", "s": "#bd6063", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#000000", "b": "#532e24", "a": "#ffb836", "e": "#ffd23a", "y": "#ffb836", "n": "#5f5294", "k": "#6b4642", "l": "#6b4642", "p": "#833a36", "s": "#ff5e2a", "w": "#ffdaca"}]}, "Horus": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*keen falcon stare*", "my eye sees everything", "sky king, reporting", "*flaps proudly*"], "body": ["....ooowWooo....", "...owwwssswWo...", "...oowwwwwWoo...", "..o*bBoooobbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbkbbbbbbbbkbBo", "obbkkbyyyybkkbBo", "obbbkbbyybbkbbBo", "oYnyynyynyynyyNo", ".oBLllllllllLBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#2a1406", "b": "#8a5a2a", "l": "#f0d8b0", "e": "#1a1a2a", "y": "#ffd23a", "s": "#e83a3a", "k": "#1a0a04", "n": "#2a4ab8", "w": "#ffffff", "p": "#ff9a7a"}, {"name": "Moonlit", "o": "#3d364d", "b": "#776063", "l": "#b4acb3", "e": "#1a1a2a", "y": "#d8dce8", "s": "#af4d6c", "k": "#34304c", "n": "#3d57b8", "w": "#bdc3e3", "p": "#bd8793"}, {"name": "Sunset", "o": "#2a1406", "b": "#a75e2a", "l": "#f4bc8e", "e": "#1a1a2a", "y": "#ffb836", "s": "#ee4636", "k": "#53220e", "n": "#5f5294", "w": "#ffdaca", "p": "#ff8e66"}]}, "Bastet": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": True, "lines": ["*purrs royally*", "protector of homes (and naps)", "my earrings are real gold", "pet me. that's an order."], "body": [".o............o.", ".oao........oao.", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbbbbbbbBo.", "ybbbbbbbbbbbbbbY", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbllllbbbbBo", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#0a0a12", "b": "#2a2a3a", "a": "#ffd23a", "l": "#4a4a62", "e": "#5affd8", "y": "#ffd23a", "n": "#2a4ab8", "p": "#5a3a5a", "s": "#ff5a2a", "k": "#000000", "w": "#ffffff"}, {"name": "Moonlit", "o": "#2a3054", "b": "#3d446c", "a": "#bda86c", "l": "#505784", "e": "#5affd8", "y": "#d8dce8", "n": "#3d57b8", "p": "#5a4d80", "s": "#bd6063", "k": "#242a4a", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#0a0a12", "b": "#5f3a36", "a": "#ffb836", "l": "#775254", "e": "#5affd8", "y": "#ffb836", "n": "#5f5294", "p": "#83464e", "s": "#ff5e2a", "k": "#401a0a", "w": "#ffdaca"}]}, "Thoth": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*writes it down*", "i invented writing. you're welcome", "the moon and i are close", "scroll? scroll."], "body": [".....ooowWo.....", "....owwwwWo.....", "...oowwwwWoo....", "..owwwwwwwwWo...", ".owwwwwwwwwwWo..", "owwwwwwwwwwwwwWo", "owwwwwwwwwwwwwWo", "owwwwwkkkwwwwwWo", "owwwwwwkkkkkkkko", "oYnyynyynyynyyNo", ".oWWwwwwwwwwWWo.", "..ooWWWWWWWWoo.."], "colors": [{"name": "Sacred", "o": "#1a1a2a", "w": "#f4f4f0", "b": "#f4f4f0", "k": "#1a1a2a", "e": "#1a1a2a", "y": "#ffd23a", "n": "#2a4ab8", "l": "#f4f4f0", "p": "#ffb0b0", "s": "#ff5a2a"}, {"name": "Moonlit", "o": "#343a63", "w": "#b6bdda", "b": "#b6bdda", "k": "#343a63", "e": "#1a1a2a", "y": "#d8dce8", "n": "#3d57b8", "l": "#b6bdda", "p": "#bd94b3", "s": "#bd6063"}, {"name": "Sunset", "o": "#1a1a2a", "w": "#f7d2be", "b": "#f7d2be", "k": "#532e2a", "e": "#1a1a2a", "y": "#ffb836", "n": "#5f5294", "l": "#f7d2be", "p": "#ff9e8e", "s": "#ff5e2a"}]}, "Sobek": {"eyes": 1, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*snap snap*", "lord of the Nile", "i'm smiling, not hungry", "crocodile tears? never"], "body": ["..oooo....oooo..", ".o*bbbo..obbbBo.", ".o*bbboooobbbBo.", "obbbbbbbbbbbbbBo", "obbgbbbbbbbbgbBo", "obbbbbgbbgbbbbBo", "obbbbbbbbbbbbbBo", "olllllllllllllLo", "owlwlwlwlwlwlwLo", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#0e2a14", "b": "#3a8a4a", "g": "#2a6a3a", "l": "#c8e0a0", "w": "#ffffff", "e": "#ffd23a", "y": "#ffd23a", "n": "#2a4ab8", "p": "#ff9a8a", "s": "#ff5a2a", "k": "#0e2a14"}, {"name": "Moonlit", "o": "#2c4456", "b": "#477d76", "g": "#3d6a6c", "l": "#9cb1aa", "w": "#bdc3e3", "e": "#ffd23a", "y": "#d8dce8", "n": "#3d57b8", "p": "#bd879c", "s": "#bd6063", "k": "#2c4456"}, {"name": "Sunset", "o": "#0e2a14", "b": "#6b8242", "g": "#5f6a36", "l": "#d6c282", "w": "#ffdaca", "e": "#ffd23a", "y": "#ffb836", "n": "#5f5294", "p": "#ff8e72", "s": "#ff5e2a", "k": "#4a3a1a"}]}, "Isis": {"eyes": 5, "move": "flutter", "speed": 0.9, "feet": False, "mouth": True, "lines": ["*spreads her wings*", "magic? i AM magic", "i protect my little ones", "throne on my head, love in my heart"], "body": [".....oyyyYo.....", ".....oyooyo.....", "....oyyyyyYo....", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "no*bbbbbbbbbbBon", "nNobbbbbbbbbBonN", "nYobpbbbbbbpBoyN", "NNobbbbllbbbBonN", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#1a1030", "b": "#f0c890", "n": "#2a4ab8", "y": "#ffd23a", "l": "#ffe8c8", "e": "#1a1030", "p": "#ff9a9a", "s": "#ff5a2a", "k": "#000000", "w": "#ffffff"}, {"name": "Moonlit", "o": "#343466", "b": "#b4a2a0", "n": "#3d57b8", "y": "#d8dce8", "l": "#bdb6c2", "e": "#1a1030", "p": "#bd87a6", "s": "#bd6063", "k": "#242a4a", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#1a1030", "b": "#f4b076", "n": "#5f5294", "y": "#ffb836", "l": "#ffc8a0", "e": "#1a1030", "p": "#ff8e7e", "s": "#ff5e2a", "k": "#401a0a", "w": "#ffdaca"}]}, "Osiris": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": True, "lines": ["*rules the green fields*", "i always come back", "crook and flail, ready", "plant something today 🌱"], "body": ["......owWo......", ".....owwwWo.....", "..yY.owwwWo.yY..", "...yoowwwWooy...", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oYnyynyynyynyyNo", "yoWWwwwwwwwwWWoy", "y.ooWWWWWWWWoo.y"], "colors": [{"name": "Sacred", "o": "#0e2a14", "b": "#4ab85a", "w": "#f4f4f0", "y": "#ffd23a", "e": "#0e2a14", "p": "#ff9a8a", "n": "#2a4ab8", "l": "#a8e8b0", "s": "#ff5a2a", "k": "#000000"}, {"name": "Moonlit", "o": "#2c4456", "b": "#509980", "w": "#b6bdda", "y": "#d8dce8", "e": "#0e2a14", "p": "#bd879c", "n": "#3d57b8", "l": "#89b6b3", "s": "#bd6063", "k": "#242a4a"}, {"name": "Sunset", "o": "#0e2a14", "b": "#77a44e", "w": "#f7d2be", "y": "#ffb836", "e": "#0e2a14", "p": "#ff8e72", "n": "#5f5294", "l": "#bec88e", "s": "#ff5e2a", "k": "#401a0a"}]}, "Set": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*desert wind howls*", "storms are my thing", "nobody knows what animal i am", "chaos? i prefer 'spicy'"], "body": [".oo..........oo.", ".oao........oao.", ".oaAo......oaAo.", ".obAoooooooobAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbkko", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#2a0a06", "b": "#c8503a", "a": "#5a1a0a", "e": "#ffd23a", "y": "#ffd23a", "n": "#2a4ab8", "k": "#2a0a06", "l": "#e88a6a", "p": "#ff7a6a", "s": "#ff5a2a", "w": "#ffffff"}, {"name": "Moonlit", "o": "#3d304d", "b": "#9c5a6c", "a": "#5a3a50", "e": "#ffd23a", "y": "#d8dce8", "n": "#3d57b8", "k": "#3d304d", "l": "#af7d89", "p": "#bd7489", "s": "#bd6063", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#2a0a06", "b": "#d65636", "a": "#832e12", "e": "#ffd23a", "y": "#ffb836", "n": "#5f5294", "k": "#5f220f", "l": "#ee825a", "p": "#ff765a", "s": "#ff5e2a", "w": "#ffdaca"}]}, "Hathor": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": True, "lines": ["*sings a happy song*", "joy, music and dancing!", "moo-sic to my ears", "the sun sits between my horns"], "body": ["w...oosssSoo...w", "wW..osssssSo..wW", ".wW.oosssSoo.wW.", "..wWoooooooowo..", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpllllllllllpBo", "obllllkllkllllBo", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#3a1a06", "b": "#f4e8d8", "w": "#ffd23a", "s": "#ff5a2a", "l": "#ffb8c0", "k": "#3a1a06", "e": "#1a1a2a", "p": "#ff9aa8", "y": "#ffd23a", "n": "#2a4ab8"}, {"name": "Moonlit", "o": "#473a4d", "b": "#b6b6cb", "w": "#bda86c", "s": "#bd6063", "l": "#bd99bd", "k": "#473a4d", "e": "#1a1a2a", "p": "#bd87ae", "y": "#d8dce8", "n": "#3d57b8"}, {"name": "Sunset", "o": "#3a1a06", "b": "#f7c8ac", "w": "#ffb836", "s": "#ff5e2a", "l": "#ffa49a", "k": "#6b2e0f", "e": "#1a1a2a", "p": "#ff8e88", "y": "#ffb836", "n": "#5f5294"}]}, "Khepri": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*rolls the sun across the sky*", "every morning is my job", "scarab power!", "push… push… sunrise!"], "body": ["....oooooooo....", "...osssssssSo...", "...osssssssSo...", "..ooooooooooooo.", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbBbbbbbBo", "ollllllLolllllLo", "ollllllLolllllLo", "oYNyynyynyynyYNo", "k.oLLLLLLLLLLo.k", "kk.oooooooooo.kk"], "colors": [{"name": "Sacred", "o": "#0a1a2a", "b": "#2a6aa8", "l": "#3a8ac8", "s": "#ffb02a", "e": "#ffd23a", "y": "#ffd23a", "n": "#2a4ab8", "k": "#0a1a2a", "p": "#5a8ac8", "w": "#ffffff"}, {"name": "Moonlit", "o": "#2a3a63", "b": "#3d6aae", "l": "#477dc2", "s": "#bd9463", "e": "#ffd23a", "y": "#d8dce8", "n": "#3d57b8", "k": "#2a3a63", "p": "#5a7dc2", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#0a1a2a", "b": "#5f6a88", "l": "#6b82a0", "s": "#ff9e2a", "e": "#ffd23a", "y": "#ffb836", "n": "#5f5294", "k": "#472e2a", "p": "#8382a0", "w": "#ffdaca"}]}, "Ammit": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*chomp*", "part croc, part lion, part hippo", "i only eat bad hearts. yours is fine", "grrrr-hrumph"], "body": ["................", ".yyY........yyY.", "yyyyY.oooo.yyyyY", "yyyYoo*bbBoyyyyY", ".yobbb*bbbbbBoy.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "oggggggggggggGo.", "owgwggwwggwgwGo.", "oYnyynyynyynyyN.", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#1a0a06", "b": "#c8a05a", "y": "#e8a020", "g": "#3a8a4a", "w": "#ffffff", "e": "#ff3b3b", "n": "#2a4ab8", "k": "#000000", "l": "#e8d0a0", "p": "#c86a5a", "s": "#ff5a2a"}, {"name": "Moonlit", "o": "#34304d", "b": "#9c8a80", "y": "#d8dce8", "g": "#477d76", "w": "#bdc3e3", "e": "#ff3b3b", "n": "#3d57b8", "k": "#242a4a", "l": "#afa7aa", "p": "#9c6a80", "s": "#bd6063"}, {"name": "Sunset", "o": "#1a0a06", "b": "#d6924e", "y": "#ee9222", "g": "#6b8242", "w": "#ffdaca", "e": "#ff3b3b", "n": "#5f5294", "k": "#401a0a", "l": "#eeb682", "p": "#d66a4e", "s": "#ff5e2a"}]}, "Sekhmet": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": True, "lines": ["*mighty roar*", "lioness of the sun", "i also heal, actually", "fierce but fair"], "body": [".....oooooo.....", "....osssssSo....", "..yYoosssSooyY..", ".yYooooooooooyY.", "yYo*bbbbbbbbbbyY", "yob*bbbbbbbbbBoy", "yobbbbbbbbbbbBoy", "yoBpbbllllbbpBoy", ".yobbllkkllbBoy.", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#3a1a06", "b": "#e8a040", "y": "#c8641e", "s": "#ff3a2a", "l": "#ffe0b0", "k": "#3a1a06", "e": "#1a1a2a", "p": "#ff8a6a", "n": "#2a4ab8", "w": "#ffffff"}, {"name": "Moonlit", "o": "#473a4d", "b": "#af8a70", "y": "#d8dce8", "s": "#bd4d63", "l": "#bdb1b3", "k": "#473a4d", "e": "#1a1a2a", "p": "#bd7d89", "n": "#3d57b8", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#3a1a06", "b": "#ee923a", "y": "#d66621", "s": "#ff462a", "l": "#ffc28e", "k": "#6b2e0f", "e": "#1a1a2a", "p": "#ff825a", "n": "#5f5294", "w": "#ffdaca"}]}, "Ptah": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": True, "lines": ["*shapes the world from clay*", "i build things. big things", "craftsmen, unite!", "measure twice, create once"], "body": ["................", "....oooooooo....", "..oonnnnnnnNoo..", ".onnnnnnnnnnnNo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oYnyynyynyynyyNo", ".oWWwwwwwwwwWWo.", "..ooWWWWWWWWoo.."], "colors": [{"name": "Sacred", "o": "#1a1a2a", "n": "#2a4ab8", "b": "#6ac88a", "w": "#f4f4f0", "y": "#ffd23a", "e": "#1a1a2a", "p": "#ff9a8a", "l": "#a8e8b0", "s": "#ff5a2a", "k": "#000000"}, {"name": "Moonlit", "o": "#343a63", "n": "#3d57b8", "b": "#64a29c", "w": "#b6bdda", "y": "#d8dce8", "e": "#1a1a2a", "p": "#bd879c", "l": "#89b6b3", "s": "#bd6063", "k": "#242a4a"}, {"name": "Sunset", "o": "#1a1a2a", "n": "#5f5294", "b": "#8fb072", "w": "#f7d2be", "y": "#ffb836", "e": "#1a1a2a", "p": "#ff8e72", "l": "#bec88e", "s": "#ff5e2a", "k": "#401a0a"}]}, "Amun": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": True, "lines": ["*mysterious hum*", "the hidden one (you found me!)", "king of the gods, nice to meet you", "my plumes are VERY tall"], "body": ["....sS....sS....", "....sS....sS....", "....yY....yY....", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ao*bbbbbbbbbbBoa", "aAobbbbbbbbbBoaA", "AAobpbbbbbbpBoaA", ".aobbbbbbbbbBoa.", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#1a1030", "b": "#4a6ad8", "s": "#e83a3a", "y": "#ffd23a", "a": "#f4e8d8", "e": "#ffd23a", "p": "#8a9aff", "n": "#2a4ab8", "l": "#8a9aff", "k": "#000000", "w": "#ffffff"}, {"name": "Moonlit", "o": "#343466", "b": "#506acb", "s": "#af4d6c", "y": "#d8dce8", "a": "#b6b6cb", "e": "#ffd23a", "p": "#7787e3", "n": "#3d57b8", "l": "#7787e3", "k": "#242a4a", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#1a1030", "b": "#776aac", "s": "#ee4636", "y": "#ffb836", "a": "#f7c8ac", "e": "#ffd23a", "p": "#a78eca", "n": "#5f5294", "l": "#a78eca", "k": "#401a0a", "w": "#ffdaca"}]}, "Khnum": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*spins the potter's wheel*", "i made you on my wheel", "baaa-ah, a masterpiece", "curly horns, steady hands"], "body": ["................", ".aaA........aaA.", "aAoaA.oooo.aAoaA", "aA.aoo*bbBoa.aaA", ".aAobb*bbbbBoaA.", "..obbbbbbbbbBo..", ".obbbbbbbbbbbBo.", ".oBbbbbbbbbbbBo.", "..obbbllllbbBo..", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#2a1a0a", "b": "#e8d8c0", "a": "#a8783a", "l": "#f4e8d8", "e": "#1a1a2a", "y": "#ffd23a", "n": "#2a4ab8", "p": "#ffb0a0", "k": "#000000", "s": "#ff5a2a", "w": "#ffffff"}, {"name": "Moonlit", "o": "#3d3a50", "b": "#afacbd", "a": "#89726c", "l": "#b6b6cb", "e": "#1a1a2a", "y": "#d8dce8", "n": "#3d57b8", "p": "#bd94aa", "k": "#242a4a", "s": "#bd6063", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#2a1a0a", "b": "#eebc9a", "a": "#be7436", "l": "#f7c8ac", "e": "#1a1a2a", "y": "#ffb836", "n": "#5f5294", "p": "#ff9e82", "k": "#401a0a", "s": "#ff5e2a", "w": "#ffdaca"}]}, "Bes": {"eyes": 5, "move": "hop", "speed": 0.9, "feet": True, "mouth": True, "lines": ["*silly dance*", "i scare away bad dreams!", "boo! …did it work?", "protector of babies and naps"], "body": ["..s.y.s..s.y.s..", "..sysyS..sysyS..", "..oooooooooooo..", ".oaaaaaaaaaaaAo.", "oaabbbbbbbbbbaAo", "oabbbbbbbbbbbbAo", "oabbbbbbbbbbbbAo", "oabpbbbbbbbbpbAo", "oaabbkkkkkkbbaAo", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#2a1406", "b": "#e8a050", "a": "#a85a1a", "s": "#3a8a4a", "y": "#ffd23a", "k": "#e83a3a", "e": "#1a1a2a", "p": "#ff8a6a", "n": "#2a4ab8", "l": "#f4c890", "w": "#ffffff"}, {"name": "Moonlit", "o": "#3d364d", "b": "#af8a7a", "a": "#896059", "s": "#477d76", "y": "#d8dce8", "k": "#af4d6c", "e": "#1a1a2a", "p": "#bd7d89", "n": "#3d57b8", "l": "#b6a2a0", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#2a1406", "b": "#ee9246", "a": "#be5e1e", "s": "#6b8242", "y": "#ffb836", "k": "#ee4636", "e": "#1a1a2a", "p": "#ff825a", "n": "#5f5294", "l": "#f7b076", "w": "#ffdaca"}]}, "Taweret": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*big gentle hug*", "protector of mothers and kids", "hippo hugs are the best hugs", "*splash*"], "body": ["......oyYo......", "......oyYo......", "..oo.oooooo.oo..", ".oaoo*bbbbBooao.", ".obbb*bbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpllllllllllpBo", "olllkllllllklLo.", "oYnyynyynyynyyN.", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#1a1a2a", "b": "#8a8ab8", "a": "#ffb0c8", "l": "#c8c8e8", "y": "#ffd23a", "k": "#1a1a2a", "e": "#1a1a2a", "p": "#ffb0c8", "n": "#2a4ab8", "s": "#ff5a2a", "w": "#ffffff"}, {"name": "Moonlit", "o": "#343a63", "b": "#777db8", "a": "#bd94c2", "l": "#9ca2d5", "y": "#d8dce8", "k": "#343a63", "e": "#1a1a2a", "p": "#bd94c2", "n": "#3d57b8", "s": "#bd6063", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#1a1a2a", "b": "#a78294", "a": "#ff9ea0", "l": "#d6b0b8", "y": "#ffb836", "k": "#532e2a", "e": "#1a1a2a", "p": "#ff9ea0", "n": "#5f5294", "s": "#ff5e2a", "w": "#ffdaca"}]}, "Nut": {"eyes": 5, "move": "float", "speed": 0.9, "feet": False, "mouth": True, "lines": ["*stretches across the sky*", "the stars are my freckles", "i swallow the sun every night (it's fine)", "goodnight, little Blips ✨"], "body": ["....oooooooo....", "..oo*bybbbybBoo.", ".obb*bbbybbbbBo.", "obybbbbbbbbbbyBo", "obbbbbybbbbybbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbybbbbbpBo", "obbybbbbbbbbybBo", "oYnyynyynyynyyNo", ".oBBbybbbbybBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#06061a", "b": "#2a2a7a", "y": "#ffffff", "e": "#ffd23a", "p": "#8a6ad8", "n": "#5a6aff", "s": "#ff5a2a", "k": "#000000", "l": "#4a4aa8", "w": "#ffffff"}, {"name": "Moonlit", "o": "#282e59", "b": "#3d4493", "y": "#d8dce8", "e": "#ffd23a", "p": "#776acb", "n": "#5a6ae3", "s": "#bd6063", "k": "#242a4a", "l": "#5057ae", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#06061a", "b": "#5f3a66", "y": "#ffdaca", "e": "#ffd23a", "p": "#a76aac", "n": "#836aca", "s": "#ff5e2a", "k": "#401a0a", "l": "#775288", "w": "#ffdaca"}]}, "Geb": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*honk*", "i am the earth itself", "grass grows on my back", "the great cackler!"], "body": ["......oooo......", ".....ogggGo.....", "....oggbbgGo....", "...o*bbbbbbBo...", "..ob*bbbbbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbyyyybbbbBo", "obbbbbbyybbbbbBo", "oYnyynyynyynyyNo", ".oBGbgbgbgbgBGo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#1a2a0a", "b": "#f4f4e8", "g": "#4ab85a", "y": "#ff9a2a", "e": "#1a1a2a", "n": "#2a4ab8", "l": "#f4f4e8", "p": "#ffb0a0", "s": "#ff5a2a", "k": "#000000", "w": "#ffffff"}, {"name": "Moonlit", "o": "#344450", "b": "#b6bdd5", "g": "#509980", "y": "#d8dce8", "e": "#1a1a2a", "n": "#3d57b8", "l": "#b6bdd5", "p": "#bd94aa", "s": "#bd6063", "k": "#242a4a", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#1a2a0a", "b": "#f7d2b8", "g": "#77a44e", "y": "#ff8e2a", "e": "#1a1a2a", "n": "#5f5294", "l": "#f7d2b8", "p": "#ff9e82", "s": "#ff5e2a", "k": "#401a0a", "w": "#ffdaca"}]}, "Shu": {"eyes": 5, "move": "float", "speed": 0.9, "feet": False, "mouth": True, "lines": ["*whoosh*", "i hold up the sky", "breathe in… that's me!", "light as a feather"], "body": ["........w.......", ".......wW.......", ".......wWo......", "..oooooowoooo...", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#1a2a3a", "b": "#c8e8ff", "w": "#ffffff", "e": "#1a2a3a", "p": "#a8c8ff", "y": "#ffd23a", "n": "#2a4ab8", "l": "#e8f4ff", "s": "#ff5a2a", "k": "#000000"}, {"name": "Moonlit", "o": "#34446c", "b": "#9cb6e3", "w": "#bdc3e3", "e": "#1a2a3a", "p": "#89a2e3", "y": "#d8dce8", "n": "#3d57b8", "l": "#afbde3", "s": "#bd6063", "k": "#242a4a"}, {"name": "Sunset", "o": "#1a2a3a", "b": "#d6c8ca", "w": "#ffdaca", "e": "#1a2a3a", "p": "#beb0ca", "y": "#ffb836", "n": "#5f5294", "l": "#eed2ca", "s": "#ff5e2a", "k": "#401a0a"}]}, "Tefnut": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": True, "lines": ["*misty yawn*", "i bring the rain and dew", "lioness of the morning mist", "stay hydrated!"], "body": [".....oooooo.....", "....osssssSo....", "..aAoosssSooaA..", ".aAooooooooooaA.", "aAo*bbbbbbbbbbaA", "aob*bbbbbbbbbBoa", "aobbbbbbbbbbbBoa", "aoBpbbllllbbpBoa", ".aobbllkkllbBoa.", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#0a2a3a", "b": "#7ac8d8", "a": "#3a8aa8", "s": "#ff5a2a", "l": "#d8f4ff", "k": "#0a2a3a", "e": "#1a1a2a", "p": "#ff9aa8", "y": "#ffd23a", "n": "#2a4ab8", "w": "#ffffff"}, {"name": "Moonlit", "o": "#2a446c", "b": "#6da2cb", "a": "#477dae", "s": "#bd6063", "l": "#a6bde3", "k": "#2a446c", "e": "#1a1a2a", "p": "#bd87ae", "y": "#d8dce8", "n": "#3d57b8", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#0a2a3a", "b": "#9bb0ac", "a": "#6b8288", "s": "#ff5e2a", "l": "#e2d2ca", "k": "#473a36", "e": "#1a1a2a", "p": "#ff8e88", "y": "#ffb836", "n": "#5f5294", "w": "#ffdaca"}]}, "Ma'at": {"eyes": 5, "move": "flutter", "speed": 0.9, "feet": False, "mouth": True, "lines": ["*balances the scales*", "truth and fairness, always", "my feather never lies", "be kind, it keeps things in order"], "body": ["........w.......", ".......wWo......", "......owWo......", "..ooooowoooooo..", ".o*bbbbbbbbbbBo.", "no*bbbbbbbbbbBon", "nNobbbbbbbbbBonN", "nYobpbbbbbbpBoyN", "NNobbbbbbbbbBonN", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#1a1030", "b": "#f0d0a8", "w": "#ffffff", "n": "#e83a3a", "y": "#ffd23a", "e": "#1a1030", "p": "#ff9a9a", "l": "#ffe8c8", "s": "#ff5a2a", "k": "#000000"}, {"name": "Moonlit", "o": "#343466", "b": "#b4a7ae", "w": "#bdc3e3", "n": "#af4d6c", "y": "#d8dce8", "e": "#1a1030", "p": "#bd87a6", "l": "#bdb6c2", "s": "#bd6063", "k": "#242a4a"}, {"name": "Sunset", "o": "#1a1030", "b": "#f4b688", "w": "#ffdaca", "n": "#ee4636", "y": "#ffb836", "e": "#1a1030", "p": "#ff8e7e", "l": "#ffc8a0", "s": "#ff5e2a", "k": "#401a0a"}]}, "Nephthys": {"eyes": 5, "move": "flutter", "speed": 0.9, "feet": False, "mouth": True, "lines": ["*quiet wingbeats*", "i watch over the dusk", "the house on my head is cozy", "sister of Isis, hi!"], "body": ["....oyyyyyYo....", "....oyooooyo....", "....oyyyyyYo....", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ao*bbbbbbbbbbBoa", "aAobbbbbbbbbBoaA", "aYobpbbbbbbpBoyA", "AAobbbbllbbbBoaA", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#1a1030", "b": "#e8c8a0", "a": "#5a3a8a", "y": "#ffd23a", "l": "#ffe0c8", "e": "#1a1030", "p": "#d890b0", "n": "#2a4ab8", "s": "#ff5a2a", "k": "#000000", "w": "#ffffff"}, {"name": "Moonlit", "o": "#343466", "b": "#afa2aa", "a": "#5a4d9c", "y": "#d8dce8", "l": "#bdb1c2", "e": "#1a1030", "p": "#a681b3", "n": "#3d57b8", "s": "#bd6063", "k": "#242a4a", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#1a1030", "b": "#eeb082", "a": "#834672", "y": "#ffb836", "l": "#ffc2a0", "e": "#1a1030", "p": "#e2868e", "n": "#5f5294", "s": "#ff5e2a", "k": "#401a0a", "w": "#ffdaca"}]}, "Wadjet": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*hiss of protection*", "cobra of the crown", "i guard the pharaoh's brow", "sssso nice to meet you"], "body": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "oblbbbbbbbbbblBo", "obllbbbbbbbbllBo", "obllbbbbbbbbllBo", "oBlllbbbbbblllBo", ".oBlllbkkbllLBo.", "..oYnyynyynYo...", "...oBBBBBBBBo...", "....oooooooo...."], "colors": [{"name": "Sacred", "o": "#0e2a14", "b": "#3ab85a", "l": "#e8c83a", "k": "#e83a3a", "e": "#ffd23a", "y": "#ffd23a", "n": "#2a4ab8", "p": "#ff9a8a", "s": "#ff5a2a", "w": "#ffffff"}, {"name": "Moonlit", "o": "#2c4456", "b": "#479980", "l": "#afa26c", "k": "#af4d6c", "e": "#ffd23a", "y": "#d8dce8", "n": "#3d57b8", "p": "#bd879c", "s": "#bd6063", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#0e2a14", "b": "#6ba44e", "l": "#eeb036", "k": "#ee4636", "e": "#ffd23a", "y": "#ffb836", "n": "#5f5294", "p": "#ff8e72", "s": "#ff5e2a", "w": "#ffdaca"}]}, "Nekhbet": {"eyes": 5, "move": "flutter", "speed": 0.9, "feet": False, "mouth": False, "lines": ["*circles overhead*", "vulture of the south crown", "i protect, i don't eat (much)", "wings wide, heart wide"], "body": ["....owwwwwWo....", "...owwwwwwwWo...", "...owwwwwwwWo...", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ao*bbbbbbbbbbBoa", "aAobbbbbbbbbBoaA", "aAobbbyyyybbBoAA", "a.obbbbyybbbBo.a", "oYnyynyynyynyYNo", ".oLLllllllllLo..", "..ooLLLLLLLLo..."], "colors": [{"name": "Sacred", "o": "#1a1a1a", "b": "#f4c8a8", "w": "#f4f4f0", "a": "#2a2a2a", "y": "#ffb02a", "l": "#f4f4f0", "e": "#1a1a2a", "n": "#2a4ab8", "p": "#ff9a8a", "s": "#ff5a2a", "k": "#000000"}, {"name": "Moonlit", "o": "#343a59", "b": "#b6a2ae", "w": "#b6bdda", "a": "#3d4463", "y": "#d8dce8", "l": "#b6bdda", "e": "#1a1a2a", "n": "#3d57b8", "p": "#bd879c", "s": "#bd6063", "k": "#242a4a"}, {"name": "Sunset", "o": "#1a1a1a", "b": "#f7b088", "w": "#f7d2be", "a": "#5f3a2a", "y": "#ff9e2a", "l": "#f7d2be", "e": "#1a1a2a", "n": "#5f5294", "p": "#ff8e72", "s": "#ff5e2a", "k": "#401a0a"}]}, "Apep": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*hissssss*", "the sun and i… don't get along", "chaos noodle", "i'll get that sun one day"], "body": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obbsbbbbbbsbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", ".oBbbbkkkkbbbBo.", "..obbbbkkbbbBo..", ".oobbsbbbbsbBoo.", "obbbbbbbbbbbbbBo", "oSBSBSBSBSBSBSBo", ".oooooooooooooo."], "colors": [{"name": "Sacred", "o": "#0a0612", "b": "#5a2a8a", "s": "#c8a0ff", "k": "#e83a3a", "e": "#ff3b3b", "y": "#ffd23a", "n": "#2a4ab8", "p": "#8a5aaa", "l": "#8a5aaa", "w": "#ffffff"}, {"name": "Moonlit", "o": "#2a2e54", "b": "#5a449c", "s": "#9c8ae3", "k": "#af4d6c", "e": "#ff3b3b", "y": "#d8dce8", "n": "#3d57b8", "p": "#7760b0", "l": "#7760b0", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#0a0612", "b": "#833a72", "s": "#d692ca", "k": "#ee4636", "e": "#ff3b3b", "y": "#ffb836", "n": "#5f5294", "p": "#a75e8a", "l": "#a75e8a", "w": "#ffdaca"}]}, "Khonsu": {"eyes": 5, "move": "float", "speed": 0.9, "feet": False, "mouth": True, "lines": ["*glows softly*", "i travel the night sky", "full moon tonight? that's me", "time keeper of the moon"], "body": ["....oooooooo....", "...owwwwwwwWo...", "..owWoooooowWo..", "..oo.oooooo.oo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oYnyynyynyynyyNo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#0a0a2a", "b": "#d8dcf0", "w": "#ffffff", "e": "#2a2a6a", "p": "#b0b8f0", "y": "#ffd23a", "n": "#2a4ab8", "l": "#ffffff", "s": "#ff5a2a", "k": "#000000"}, {"name": "Moonlit", "o": "#2a3063", "b": "#a6aeda", "w": "#bdc3e3", "e": "#2a2a6a", "p": "#8e99da", "y": "#d8dce8", "n": "#3d57b8", "l": "#bdc3e3", "s": "#bd6063", "k": "#242a4a"}, {"name": "Sunset", "o": "#0a0a2a", "b": "#e2c0be", "w": "#ffdaca", "e": "#2a2a6a", "p": "#c4a4be", "y": "#ffb836", "n": "#5f5294", "l": "#ffdaca", "s": "#ff5e2a", "k": "#401a0a"}]}, "Hapi": {"eyes": 5, "move": "float", "speed": 0.9, "feet": False, "mouth": True, "lines": ["*the Nile floods (gently)*", "i bring water to the fields", "papyrus hat, very fashionable", "glug glug, happy crops!"], "body": ["..g.g.g..g.g.g..", "...ggG....ggG...", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obwbbbbbbbbbbwBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbwwwwbbbbBo", "oYnyynyynyynyyNo", ".oWBwbwbwbwbWBo.", "..ooBBBBBBBBoo.."], "colors": [{"name": "Sacred", "o": "#0a1a3a", "b": "#3a8ad8", "g": "#4ab85a", "w": "#c8f0ff", "e": "#0a1a3a", "p": "#8ac8ff", "y": "#ffd23a", "n": "#2a4ab8", "l": "#c8f0ff", "s": "#ff5a2a", "k": "#000000"}, {"name": "Moonlit", "o": "#2a3a6c", "b": "#477dcb", "g": "#509980", "w": "#9cbae3", "e": "#0a1a3a", "p": "#77a2e3", "y": "#d8dce8", "n": "#3d57b8", "l": "#9cbae3", "s": "#bd6063", "k": "#242a4a"}, {"name": "Sunset", "o": "#0a1a3a", "b": "#6b82ac", "g": "#77a44e", "w": "#d6ceca", "e": "#0a1a3a", "p": "#a7b0ca", "y": "#ffb836", "n": "#5f5294", "l": "#d6ceca", "s": "#ff5e2a", "k": "#401a0a"}]}, "Serket": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False, "lines": ["*tail up, totally friendly*", "i heal stings, i don't give them", "scorpion queen", "click clack"], "body": ["....oooo........", "...osssSo.......", "...oso.so.......", ".....oso..oooo..", "..ooooooooo*bbBo", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oYNyynyynyynyYNo", "k.oBBBBBBBBBBo.k", "kk.oooooooooo.kk"], "colors": [{"name": "Sacred", "o": "#2a1406", "b": "#d8a05a", "s": "#a85a1a", "k": "#2a1406", "e": "#1a1a2a", "p": "#ff9a7a", "y": "#ffd23a", "n": "#2a4ab8", "l": "#f4d8a8", "w": "#ffffff"}, {"name": "Moonlit", "o": "#3d364d", "b": "#a68a80", "s": "#896059", "k": "#3d364d", "e": "#1a1a2a", "p": "#bd8793", "y": "#d8dce8", "n": "#3d57b8", "l": "#b6acae", "w": "#bdc3e3"}, {"name": "Sunset", "o": "#2a1406", "b": "#e2924e", "s": "#be5e1e", "k": "#5f2a0f", "e": "#1a1a2a", "p": "#ff8e66", "y": "#ffb836", "n": "#5f5294", "l": "#f7bc88", "w": "#ffdaca"}]}}
+EGYPT_TYPES = {"Ra": ["spark", "cosmic"], "Anubis": ["phantom", "stone"], "Horus": ["gust", "cosmic"], "Bastet": ["sweet", "phantom"], "Thoth": ["cosmic", "gust"], "Sobek": ["splash", "stone"], "Isis": ["cosmic", "gust"], "Osiris": ["sprout", "phantom"], "Set": ["stone", "volt"], "Hathor": ["sweet", "cosmic"], "Khepri": ["spark", "stone"], "Ammit": ["phantom", "splash"], "Sekhmet": ["spark", "stone"], "Ptah": ["stone", "cosmic"], "Amun": ["gust", "cosmic"], "Khnum": ["splash", "stone"], "Bes": ["sweet", "spark"], "Taweret": ["splash", "sweet"], "Nut": ["cosmic"], "Geb": ["sprout", "stone"], "Shu": ["gust"], "Tefnut": ["splash", "spark"], "Ma'at": ["gust", "cosmic"], "Nephthys": ["phantom", "gust"], "Wadjet": ["sprout", "spark"], "Nekhbet": ["gust", "phantom"], "Apep": ["phantom", "splash"], "Khonsu": ["cosmic", "frost"], "Hapi": ["splash", "sprout"], "Serket": ["stone", "phantom"]}
+TAB_KINDS.update(EGYPT_GODS)
+TAB_GROUPS.append(('Egypt 🏺', list(EGYPT_GODS)))
+# 🏺 Dig Site: Egypt World is free to visit, but its gods have to be dug up. Each board is a grid of sand hiding one god you
+# haven't found yet, plus a few heart treasures. Every dig tells you how close the god is (hot/cold). New boards are free.
+DIG_COLS, DIG_ROWS, DIG_TRIES, DIG_TREASURES, DIG_HEARTS = 6, 5, 8, 4, 3
+
+
+def dig_hint(d):
+    """How close a dig was to the hidden god (Manhattan distance)."""
+    return ("🔥", "HOT!") if d == 1 else ("☀️", "warm") if d == 2 else ("🌤️", "lukewarm") if d == 3 else ("❄️", "cold")
+
 
 # Ghosts 👻: they drift past haunted scenes at night (or when you light a Spirit Candle). They fade in and out, and
 # you can only befriend one while it's glowing. With the Redux engine they're really see-through, even in your town.
@@ -3245,7 +3269,192 @@ GHOSTS = {
   "colors": [{"name": "Sea Spirit", "o": "#1a3a4a", "b": "#c8f4f0", "h": "#14141e", "w": "#ffffff", "p": "#ffb0c0", "e": "#0a2a2a"},
              {"name": "Old Gold", "o": "#3a2a0a", "b": "#fff0c0", "h": "#3a1a0a", "w": "#ffd23a", "p": "#ffa890", "e": "#2a1a04"},
              {"name": "Phantom", "o": "#14142a", "b": "#a8b8e8", "h": "#0a0a14", "w": "#e8303a", "p": "#c8a0e0", "e": "#ffe66a"}]},
+ "Lurker": {"eyes": 5, "move": "float", "speed": 1.2, "feet": False, "ghost": True, "mouth": False,
+  "lines": ["...", "i see you", "*blinks with every eye*", "don't look behind you (jk)", "run. (it's tag)", "i have more eyes than friends",
+            "*drip*"],
+  "body": ["................", "......oooo......", "....oobbbboo....", "...obbbbbbybo...", "..obbybbbbbbbo..", ".obbbbbbbbbbbbo.",
+           ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obybbbbbbbbbbybo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", "..obo.obbo.obo.."],
+  "colors": [{"name": "Ink", "o": "#05040a", "b": "#1a1626", "y": "#e8e0ff", "p": "#3a2a4a", "e": "#e8e0ff"},
+             {"name": "Tar", "o": "#000000", "b": "#121212", "y": "#ff3a3a", "p": "#3a0a0a", "e": "#ff3a3a"},
+             {"name": "Void", "o": "#06021a", "b": "#20104a", "y": "#7affea", "p": "#3a1a6a", "e": "#7affea"}]},
 }
+
+# Awakened forms ✨: a powered-up form for some Blips. Buy an Awakening Crystal once for that kind, then switch any time.
+# (In the Arena, an Awakened Blip hits harder.) The forms are their own hidden kinds, named below.
+AWAKENED = {
+ "Blip": {"name": "Astral Blip", "eyes": 5, "move": "float", "speed": 1.1, "feet": True, "mouth": True,
+  "lines": ["i've seen the stars up close ✨", "astral mode: ON", "i feel… infinite", "*hums in starlight*", "still me! just shinier"],
+  "body": [".y.oo......oo.y.", "..yobo....oboy..", ".obbbooooooobbo.", ".obbbbbsbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obsbbbbbbbbbbsbo", "obbbbbllllbbbbbo", "obbbblllllllbbbo", ".obbbllllllbbbo.", "..obbbbbbbbbbo.."],
+  "colors": [{"name": "Nebula", "o": "#1a1040", "b": "#5a4ae0", "l": "#b8d8ff", "s": "#fff27a", "y": "#ffe66a", "p": "#ff8ad8", "e": "#fff6c0"},
+             {"name": "Supernova", "o": "#3a0a2a", "b": "#ff5aa8", "l": "#ffe0f0", "s": "#ffffff", "y": "#ffd23a", "p": "#ffd23a", "e": "#2a0a1a"}]},
+ "Kitsune": {"name": "Nine-Tail Kitsune", "eyes": 5, "move": "walk", "speed": 1.3, "feet": True, "mouth": True,
+  "lines": ["nine tails, nine times the magic 🦊", "*foxfire flickers*", "i've awakened", "my tails tell old stories", "bow before the fox! (jk, pet me)"],
+  "body": ["tt.o........o.tt", "taoao......oaoat", "ttoaboooooobaott", "t.obbbbbssbbbbo.t"[:16], "ttbsbbbssbbbsbtt", "tobbbbbbbbbbbbot",
+           "tobbbbbbbbbbbbot", "tsllbbbbbbbbllst", "tllllllnnllllllt", ".ollllllllllllo.", "..ollllllllllo..", "...oooooooooo..."],
+  "colors": [{"name": "Foxfire", "o": "#5a1a06", "b": "#fff0d0", "a": "#ff9a3a", "t": "#ff5a1a", "l": "#ffffff", "s": "#3a8aff", "n": "#5a1a06", "e": "#3a8aff"},
+             {"name": "Moonfox", "o": "#2a2a5a", "b": "#ffffff", "a": "#b8c8ff", "t": "#8a9aff", "l": "#f4f6ff", "s": "#ff4a8a", "n": "#2a2a5a", "e": "#ff4a8a"}]},
+ "Dragon": {"name": "Elder Dragon", "eyes": 5, "move": "flutter", "speed": 1.1, "feet": True, "mouth": True,
+  "lines": ["*ancient roar* (it's a hello)", "i've been asleep for a thousand years", "my scales are older than mountains", "behold. (pet me)", "elder and wiser"],
+  "body": [".hh..........hh.", "..hh.c.cc.c.hh..", "w..hooooooooh..w", "ww.obbbbbbbbbo.ww"[:16], "wwwobbbbbbbbbbwww"[:16], "wwobbbbbbbbbbbow",
+           "wobbbbbbbbbbbbow", "obpbbllllllbbpbo", "obbbldlllldlbbbo", "obbbbllllllbbbbo", ".obcbbbbbbbbcbo.", "..obbbbbbbbbbo.."],
+  "colors": [{"name": "Ancient Jade", "o": "#06200e", "b": "#1a8a4a", "l": "#c8f0b0", "h": "#ffd23a", "c": "#ff5a3a", "w": "#0e5a2e", "d": "#06200e", "p": "#ffb05a", "e": "#ff5a3a"},
+             {"name": "Obsidian", "o": "#06060e", "b": "#2a2a3e", "l": "#8a8ab0", "h": "#c8a0ff", "c": "#ff3a6a", "w": "#16162a", "d": "#06060e", "p": "#a86aff", "e": "#ff3a6a"}]},
+ "Phoenix": {"name": "Solar Phoenix", "eyes": 5, "move": "flutter", "speed": 1.4, "feet": True, "mouth": False,
+  "lines": ["*blazes brighter than the sun* ☀️", "reborn and ready", "too hot to handle", "i rise. every time.", "warm hugs only"],
+  "body": [".a...a.aa.a...a.", "..a.aaaaaaaa.a..", "w...oaaaaaao...w", "ww.oobbbbbboo.ww", "wwwobbbbbbbbowww", "wwobbbbbbbbbbbow",
+           "wwobbbbbbbbbbbow", "wobpbbbbbbbbpbow", ".obbbbbkkbbbbbo.", ".obbbbbbbbbbbbo.", "..obbbbbbbbbbo..", "..aoaaooooaaoa.."],
+  "colors": [{"name": "Solar", "o": "#5a1a02", "b": "#ffb03a", "a": "#fff27a", "w": "#ff5a1a", "k": "#ffffff", "p": "#ff5a1a", "e": "#3a0a02"},
+             {"name": "Bluefire", "o": "#06204a", "b": "#3a9aff", "a": "#c8f4ff", "w": "#1a5ae0", "k": "#ffffff", "p": "#8ae0ff", "e": "#06104a"}]},
+ "Wolf": {"name": "Moon Wolf", "eyes": 5, "move": "walk", "speed": 1.5, "feet": True, "mouth": True,
+  "lines": ["*howls at the full moon* 🌕", "the pack follows the moon", "i run with the night", "awoooooo!", "loyal under every moon"],
+  "body": [".o............o.", ".oao...yy...oao.", ".oabooyyoooobao.", "mobbbbbbybbbbbom", "mobbbbbbbbbbbbom", "mmbbbbbbbbbbbbmm",
+           "mobbbbbbbbbbbbom", "mobbbllllllbbbom", "mobllllnnllllbom", ".mbllllllllllbm.", "..mbllllllllbm..", "...oooooooooo..."],
+  "colors": [{"name": "Moonlit", "o": "#0e1028", "b": "#4a5a9a", "l": "#e0e8ff", "a": "#2a3060", "m": "#c8d4ff", "y": "#fff6b0", "n": "#0e1028", "e": "#fff27a"},
+             {"name": "Blood Moon", "o": "#1a0606", "b": "#5a2a2a", "l": "#f0d8d0", "a": "#3a1414", "m": "#e86a5a", "y": "#ff8a5a", "n": "#1a0606", "e": "#ff5a3a"}]},
+ "Unicorn": {"name": "Starlight Unicorn", "eyes": 5, "move": "flutter", "speed": 1.2, "feet": True, "mouth": True,
+  "lines": ["*wings sparkle* ✨🦄", "i grew wings!!", "starlight flows through me", "make a wish", "magic levels: maximum"],
+  "body": ["........h.......", "s......hh.....s.", "w.oo.oohhoo.oo.w", "wwoaoobbbbbbooaow"[:16], "wwmobbbbbbbbbbmw", "wmmobbbbbbbbbomm",
+           ".omobbbbbbbbbomo", ".oobpbbbbbbpboo.", "..obllllllllbo..", "..oblldlldllbo..", "..obllllllllbo..", "...oooooooooo..."],
+  "colors": [{"name": "Starlight", "o": "#2a2a6a", "b": "#ffffff", "m": "#8ac8ff", "l": "#eef4ff", "a": "#c8b0ff", "h": "#fff27a", "w": "#d8c8ff",
+              "s": "#fff27a", "p": "#ffb0d8", "d": "#9a8ac0", "e": "#2a2a6a", "f": "#fff27a"},
+             {"name": "Twilight", "o": "#1a0a3a", "b": "#3a2a6a", "m": "#ff7ac8", "l": "#5a4a8a", "a": "#ff9ad8", "h": "#ffd23a", "w": "#8a5ad8",
+              "s": "#ffd23a", "p": "#ff7ac8", "d": "#1a0a3a", "e": "#fff27a", "f": "#ffd23a"}]},
+ # ---- kaiju 🦖
+ "Tidal Titan": {"name": "Abyssal Titan", "eyes": 4, "move": "walk", "speed": 0.8, "feet": False, "mouth": True,
+  "lines": ["*the whole ocean rumbles*", "i rose from the deepest trench", "my glow lights up the abyss", "tidal wave incoming! (a gentle one)", "i am the deep"],
+  "body": ["y.o.y.o..o.y.o.y", "..oo.oo..oo.oo..", "...oooooooooo...", "..obbsbbbbsbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obgsbbbbbbbbsgbo", "obgbllslllslbgbo", "obbbllllllllbbbo", "obsbllslllslbsbo", ".obbbbbbbbbbbbo.", ".obbo......obbo."],
+  "colors": [{"name": "Abyss", "o": "#020a1a", "b": "#14305a", "g": "#0a1e3a", "l": "#4ae0e8", "s": "#7affea", "y": "#7affea", "p": "#ff6ac0", "e": "#fff27a"},
+             {"name": "Kraken", "o": "#1a0614", "b": "#6a1a4a", "g": "#3a0a2a", "l": "#ff9ad8", "s": "#ffd23a", "y": "#ffd23a", "p": "#ffd23a", "e": "#ffffff"}]},
+ "Magmaw": {"name": "Inferno Magmaw", "eyes": 4, "move": "walk", "speed": 0.7, "feet": False, "mouth": False,
+  "lines": ["*volcano noises*", "i'm hotter than the sun's sun", "the ground melts where i nap", "ERUPTION! (of love)", "careful, i'm extra toasty"],
+  "body": ["..y..........y..", ".oyo........oyo.", ".obroooooooorbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obrybbbbbbbbyrbo",
+           "obbbrbbbbbbrbbbo", "orbbbrbbbbrbbbro", "obrrrrrrrrrrrrbo", "obbwbwbwbwbwbbbo", ".orbbbbbbbbbbro.", ".obbo......obbo."],
+  "colors": [{"name": "Inferno", "o": "#140404", "b": "#3a1a1a", "r": "#ff3a0a", "y": "#fff27a", "w": "#ffffff", "p": "#ff6a1a", "e": "#fff27a"},
+             {"name": "Blue Magma", "o": "#04081a", "b": "#1a2a4a", "r": "#3aa8ff", "y": "#e8ffff", "w": "#ffffff", "p": "#3aa8ff", "e": "#e8ffff"}]},
+ "Gigabot": {"name": "Omega Gigabot", "eyes": 4, "move": "walk", "speed": 0.9, "feet": False, "mouth": False,
+  "lines": ["OMEGA MODE: ENGAGED", "*servos whir at max power*", "upgrade complete. hugs: unlimited", "beep boop (but louder)", "scanning for friends… found you"],
+  "body": [".......y........", "......oyo.......", "...oooooooooo...", "..ommmmmmmmmmo..", "..ommmmmmmmmmo..", "..ommmmmmmmmmo..",
+           "...oooooooooo...", "ooyobbbbbbbboyoo", "ommobbbllbbbommo", "ommobbllllbbommo", "oo.obbbllbbbo.oo", "...obbo..obbo..."],
+  "colors": [{"name": "Omega", "o": "#0a0a14", "m": "#ffd23a", "b": "#3a3a5a", "l": "#ff3aa8", "y": "#3affd8", "e": "#3affd8"},
+             {"name": "Prototype", "o": "#14141e", "m": "#f0f0f8", "b": "#e83a3a", "l": "#3affd8", "y": "#ffd23a", "e": "#ff3a3a"}]},
+ "Skyray": {"name": "Storm Skyray", "eyes": 5, "move": "float", "speed": 1.2, "feet": False, "mouth": True,
+  "lines": ["*thunder crackles*", "i ride the lightning", "storm's coming… and it's me", "zap! (affectionate)", "the sky bends to my wings"],
+  "body": ["......yyyy......", ".....y.yy.y.....", "......oooo......", "....oobbbboo....", "..oobbbbbbbboo..", "oobbbbbbbbbbbboo",
+           "ysbbbbbbbbbbbbsy", ".obbllllllllbbo.", "..oolllllllloo..", "....obbbbbbo....", ".......yy.......", "........y......."],
+  "colors": [{"name": "Thunder", "o": "#0a0a1a", "b": "#2a2a5a", "l": "#8ae0ff", "s": "#fff27a", "y": "#fff27a", "p": "#8ae0ff", "e": "#fff27a"},
+             {"name": "Red Sky", "o": "#2a0a1a", "b": "#c83a6a", "l": "#ffd0a0", "s": "#ffffff", "y": "#ffd23a", "p": "#ffd23a", "e": "#ffffff"}]},
+ "Frostback": {"name": "Blizzard Frostback", "eyes": 5, "move": "walk", "speed": 0.8, "feet": False, "mouth": True,
+  "lines": ["*a blizzard swirls around me*", "winter is my forever season", "brrr-illiant, right?", "i froze a volcano once", "snow day, every day"],
+  "body": ["s.c...c..c...c.s", "..cc.ccc.ccc.cc.", "...oooooooooo...", "..obcbbbbbbcbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbllllllllbbbo", "obcbllllllllbcbo", ".obcbbbbbbbbcbo.", ".obbo......obbo."],
+  "colors": [{"name": "Blizzard", "o": "#06102a", "b": "#4a8ae8", "c": "#ffffff", "l": "#e8f8ff", "s": "#c8f0ff", "p": "#ff9ac0", "e": "#ffffff"},
+             {"name": "Aurora", "o": "#06201a", "b": "#3ac8a0", "c": "#e0fff4", "l": "#f0fff8", "s": "#ff9aff", "p": "#ff9ad8", "e": "#06201a"}]},
+ # ---- ghosts 👻 (still a little see-through)
+ "Sheetie": {"name": "King Sheetie", "eyes": 5, "move": "float", "speed": 1.0, "feet": False, "mouth": True, "ghost": True,
+  "lines": ["bow before the king of boo 👑", "*royal haunting*", "my cape is also a sheet", "i rule the night", "royal decree: more pets"],
+  "body": ["....y..yy..y....", ".....yyyyyy.....", "...oobbbbbboo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "orbbbbbbbbbbbbro", "orrbbbbbbbbbbrro", "orrorrorrorrorro", ".oo.oo.oo.oo.oo."],
+  "colors": [{"name": "Royal", "o": "#4a3a6a", "b": "#f6f6ff", "y": "#ffd23a", "r": "#a83ae8", "p": "#ffb0c8", "e": "#2a2a4a"},
+             {"name": "Midnight", "o": "#14142a", "b": "#3a3a6a", "y": "#c8d0ff", "r": "#e83a6a", "p": "#ff8ab0", "e": "#fff27a"}]},
+ "Will-o'-Wisp": {"name": "Soulfire Wisp", "eyes": 6, "move": "float", "speed": 1.4, "feet": False, "mouth": True, "ghost": True,
+  "lines": ["*flickers in every color*", "my flame never goes out", "follow me… to the snacks", "soulfire, but make it cozy", "i light the way home"],
+  "body": ["..s....oo....s..", "...s..obbo..s...", "....sobbbbos....", "...obbbllbbbo...", "..obbllllllbbo..", ".obbllllllllbbo.",
+           "obbllllllllllbbo", "obllllllllllllbo", "obpllllllllllpbo", ".obbllllllllbbo.", "..obbbbbbbbbbo..", "...oooooooooo..."],
+  "colors": [{"name": "Soulfire", "o": "#3a0a6a", "b": "#a85aff", "l": "#f0d8ff", "s": "#ff8aff", "p": "#ff9ae0", "e": "#2a0a4a"},
+             {"name": "Emerald", "o": "#0a3a1a", "b": "#3ae07a", "l": "#e0ffe8", "s": "#b8ff3a", "p": "#ff9ac8", "e": "#0a2a10"}]},
+ "Banshee": {"name": "Howling Banshee", "eyes": 5, "move": "float", "speed": 1.2, "feet": False, "mouth": False, "ghost": True,
+  "lines": ["*howls across the moors*", "my voice shakes the stars", "wooOOoooOOO", "i only wail because i care", "the night listens to me"],
+  "body": ["h...oooooooo...h", "hh.ohhhhhhhho.hh", ".hohhhhhhhhhhoh.", ".ohhhbbbbbbhhho.", ".ohhbbbbbbbbhho.", "ohhbbbbbbbbbbhho",
+           "ohhbbbbbbbbbbhho", "ohhbpbbbbbbpbhho", "ohhbbbbkkbbbbhho", "ohhhbbbkkbbbhhho", "h.ohhhbbbbbbhhho"[:16], ".h.oo.oo..oo.oo."],
+  "colors": [{"name": "Wailing", "o": "#1a1a3a", "b": "#e8f0ff", "h": "#5a3aa8", "k": "#1a0a2a", "p": "#c8a0ff", "e": "#ff3a6a"},
+             {"name": "Pale Fire", "o": "#3a1a0a", "b": "#fff4e8", "h": "#ff7a3a", "k": "#3a0a0a", "p": "#ffb08a", "e": "#3a0a0a"}]},
+ "Phantom Cat": {"name": "Eclipse Cat", "eyes": 5, "move": "float", "speed": 1.3, "feet": False, "mouth": True, "ghost": True,
+  "lines": ["*purrs during the eclipse*", "two tails, double the mischief", "the moon chose me", "meow… from beyond", "i blink and the sun goes out"],
+  "body": [".......yy.......", ".o............o.", ".oo..........oo.", ".obo........obo.", ".obboooooooobbo.", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbot", "..obbobbbbobbott", "...o..oooo..o.t."],
+  "colors": [{"name": "Eclipse", "o": "#1a0a3a", "b": "#2a1a5a", "t": "#a87aff", "y": "#ffd23a", "p": "#ff7ac8", "e": "#ffd23a"},
+             {"name": "Solar", "o": "#3a2a0a", "b": "#fff0c8", "t": "#ffb03a", "y": "#ff5a3a", "p": "#ffa8a8", "e": "#3a1a0a"}]},
+ "Ghost Captain": {"name": "Phantom Admiral", "eyes": 6, "move": "float", "speed": 1.2, "feet": False, "mouth": True, "ghost": True,
+  "lines": ["all hands on deck! (ghost hands)", "i command the phantom fleet", "*ship bell tolls*", "promoted after 300 years", "set sail for adventure!"],
+  "body": [".....hhhhhh.....", ".hh.hhhwwhhh.hh.", "hhhhhhwyywhhhhhh", ".yyyyyyyyyyyyyy.", "..oooooooooooo..", ".obbbbbbbbbbbbo.",
+           "ybbbbbbbbbbbbbby", "ybbbbbbbbbbbbbby", "obpbbbbbbbbbbpbo", "obbbbbbyybbbbbbo", "obbobbobbobbobbo", ".oo.oo.oo.oo.oo."],
+  "colors": [{"name": "Admiral", "o": "#1a3a4a", "b": "#c8f4f0", "h": "#0a1a3a", "w": "#ffffff", "y": "#ffd23a", "p": "#ffb0c0", "e": "#0a2a2a"},
+             {"name": "Cursed", "o": "#0a2a0a", "b": "#8aff9a", "h": "#1a0a1a", "w": "#e8ffe8", "y": "#c8ff3a", "p": "#3ae07a", "e": "#0a1a0a"}]},
+ # ---- cryptids 👣
+ "Bigfoot": {"name": "Titan Bigfoot", "eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": True,
+  "lines": ["*footsteps shake the forest*", "they'll never get a clear photo now", "i'm the mountain's guardian", "big foot, bigger heart", "the legends were true"],
+  "body": ["....wwwwwwww....", "...owwwwwwwwo...", "..obbwbbbbwbbo..", ".obbllllllllbbo.", ".obllllllllllbo.", "obbllllllllllbbo",
+           "obbllllllllllbbo", "obbpllllllllpbbo", "obbbllllllllbbbo", "obgbbllllllbbgbo", "obbogbbbbbbgobbo", ".oo.obbbbbbo.oo."],
+  "colors": [{"name": "Titan", "o": "#1a0e06", "b": "#5a3a1a", "w": "#ffffff", "l": "#e8c8a0", "g": "#6aa83a", "p": "#e8806a", "e": "#ffd23a"},
+             {"name": "Shadow", "o": "#06060e", "b": "#1e1e2e", "w": "#c8d0ff", "l": "#5a5a7a", "g": "#8a3aff", "p": "#8a3aff", "e": "#ff3a3a"}]},
+ "Mothman": {"name": "Lunar Mothman", "eyes": 5, "move": "flutter", "speed": 1.2, "feet": False, "mouth": False,
+  "lines": ["*wings shimmer like moonlight*", "drawn to the biggest light of all", "i've seen what's coming (it's snacks)", "lunar wings, activate", "flutter flutter… boom"],
+  "body": ["..yy........yy..", "w..y.a....a.y..w", "ww...oooooo...ww", "wwwoobbbbbboowww", "wlwobbbbbbbbowlw", "wwlobbrbbrbbolww",
+           "wwwobbrbbrbbowww", "wlwoffffffffowlw", "wwlwofbffbfowlww", ".wwwobbffbbowww.", "..wwwobbbbowww..", "......o..o......"],
+  "colors": [{"name": "Lunar", "o": "#0e0e2a", "b": "#3a3a7a", "w": "#c8d0ff", "l": "#fff27a", "f": "#e8e8ff", "a": "#8a8ad8", "r": "#8ae0ff", "y": "#fff27a", "e": "#8ae0ff"},
+             {"name": "Crimson", "o": "#1a0606", "b": "#5a0a14", "w": "#e83a3a", "l": "#ffd23a", "f": "#ff9a8a", "a": "#3a0a0a", "r": "#ffd23a", "y": "#ffd23a", "e": "#ffd23a"}]},
+ "Nessie": {"name": "Ancient Nessie", "eyes": 2, "move": "float", "speed": 1.1, "feet": False, "mouth": False,
+  "lines": ["*the loch glows*", "i was here before the castles", "queen of the loch, at your service", "splish… splash… legend", "photograph me. i dare you."],
+  "body": ["...oyooooooyo...", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "..obpbbbbbbpbo..", "...obbbbbbbbo...",
+           "....oobbbboo....", "......obbo......", "..sss.obbo.sss..", ".obbbobbbbobbbo.", "wwwwwwwwwwwwwwww", "w.ww..ww..ww.ww."],
+  "colors": [{"name": "Ancient", "o": "#0a1a2a", "b": "#2a6aa8", "p": "#8ad8ff", "w": "#1a3a8a", "y": "#ffd23a", "s": "#8ad8ff", "e": "#fff27a"},
+             {"name": "Golden", "o": "#3a2a06", "b": "#e8b83a", "p": "#fff0a0", "w": "#3a6ab8", "y": "#ffffff", "s": "#ff8a3a", "e": "#3a1a04"}]},
+ # ---- the Night Shift crew 🌙
+ "Robo Bear": {"name": "Mecha Bear", "eyes": 5, "move": "walk", "speed": 1.2, "feet": True, "mouth": False,
+  "lines": ["MECHA MODE ONLINE", "*rocket boots ignite*", "the night shift just got an upgrade", "6 AM? i don't need sleep", "armor polished, ready to hug"],
+  "body": [".oyo........oyo.", "oaaao......oaaao", "oaaboooooooobaao", ".obrbbbbbbbbrbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbllllllbbpbo", "obbblllnnlllbbbo", "ossyskkkkkksysso", ".obbbllllllbbbo.", "..obrbbbbbbrbo.."],
+  "colors": [{"name": "Mecha", "o": "#0a0a1a", "b": "#3a3a5a", "l": "#8ae0ff", "a": "#ff3a8a", "r": "#ffd23a", "s": "#2a2a3a", "k": "#8ae0ff", "n": "#0a0a1a", "y": "#ff3a8a", "p": "#ff3a8a", "e": "#ff3a3a"},
+             {"name": "Golden", "o": "#2a1a04", "b": "#e8b83a", "l": "#fff4c8", "a": "#ff8a3a", "r": "#ffffff", "s": "#8a5a1a", "k": "#fff27a", "n": "#2a1a04", "y": "#3affd8", "p": "#ff8a8a", "e": "#3affd8"}]},
+}
+AWAKENED["Lurker"] = {"name": "Wide-Eyed Lurker", "eyes": 5, "move": "float", "speed": 1.3, "feet": False, "mouth": False, "ghost": True,
+  "lines": ["now i see EVERYTHING", "*more eyes open*", "you can't hide from me (in tag)", "the walls are watching too", "blink. blink. blink."],
+  "body": ["..y..........y..", ".oo...oooo...oo.", "..oooobbbboooo..", "...obybbbbybo...", "..obbbbybbbbbo..", ".obbbbbbbbbbbbo.",
+           ".obbbbbbbbbbbbo.", "obybbbbybbbbbybo", "obbbbbbbbbbbbbbo", "obbbybbbbbbybbbo", ".obbbbbbbbbbbbo.", "o.obo.obbo.obo.o"],
+  "colors": [{"name": "Ink", "o": "#05040a", "b": "#1a1626", "y": "#ffffff", "e": "#ffffff"},
+             {"name": "Tar", "o": "#000000", "b": "#121212", "y": "#ff5a3a", "e": "#ff5a3a"},
+             {"name": "Void", "o": "#06021a", "b": "#20104a", "y": "#aaffef", "e": "#aaffef"}]}
+# Some Blips can awaken more than once: each deeper stage needs its own (pricier) Awakening Crystal.
+AWAKEN_STAGES = {
+ "Lurker": [
+  {"name": "Shadow Lurker", "eyes": 5, "move": "float", "speed": 1.45, "feet": False, "mouth": False, "ghost": True,
+   "lines": ["the lights flicker when i'm near", "*reaches out*", "i grew. you didn't notice.", "every shadow is a door", "ready or not..."],
+   "body": ["...oooooooooo...", "..obybbbbbbybo..", ".obbbbbybbbbbbo.", ".obybbbbbbbbybo.", "oobbbbbbbbbbbboo", "bobbbbbbbbbbbbob",
+            "bobbbbbbbbbbbbob", ".obbybbbbbbybbo.", "..obbbbybbbbbo..", "..obbbbbbbbbbo..", ".obbobbbbbbobbo.", "obo.obo..obo.obo"],
+   "colors": [{"name": "Ink", "o": "#020206", "b": "#100c1a", "y": "#ffffff", "e": "#ffffff"},
+              {"name": "Tar", "o": "#000000", "b": "#0a0a0a", "y": "#ff3a1a", "e": "#ff3a1a"},
+              {"name": "Void", "o": "#04011a", "b": "#160a38", "y": "#7affea", "e": "#7affea"}]},
+  {"name": "Lurker Eternal", "eyes": 4, "move": "float", "speed": 1.6, "feet": False, "mouth": False, "ghost": True,
+   "lines": ["I AM THE DARK BETWEEN THE STARS", "*every eye opens at once*", "the final form. (still wants pets)", "the hallway never ends",
+             "found you.", "*the ink spreads*", "run."],
+   "body": ["...y.y.yy.y.y...", "....oooooooo....", "...obbbbbbbbo...", "..obybbbbbbybo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.",
+            "oabbbmwmwmwmbbao", "oa.obbbccbbbo.ao", "oa.obbccccbbo.ao", "oa.obbbccbbbo.ao", "wow.obbbbbbo.wow", "dddddddddddddddd"],
+   "colors": [{"name": "Eternal", "o": "#000000", "b": "#140e24", "a": "#2e2050", "y": "#fff27a", "c": "#c83aff", "m": "#3a0a2a", "w": "#e8e0ff", "d": "#2a1848", "e": "#fff27a"},
+              {"name": "Crimson", "o": "#000000", "b": "#1a0606", "a": "#4a1414", "y": "#ff3a3a", "c": "#ff8a3a", "m": "#3a0606", "w": "#ffd0c0", "d": "#3a0c0c", "e": "#ff3a3a"},
+              {"name": "Abyss", "o": "#000006", "b": "#080e26", "a": "#14285a", "y": "#7affea", "c": "#3a8aff", "m": "#06203a", "w": "#c8fff4", "d": "#0e2244", "e": "#7affea"}]},
+ ],
+}
+AWAKENED['Phantom Knight'] = {"name": "Spectral Knight", "eyes": 5, "move": "float", "speed": 1.15, "feet": False, "mouth": False, "ghost": True, "lines": ["*my armor glows with spirit fire*", "the oath awakens", "en garde!", "i am the castle's shield"], "body": ["......rrrr......", ".....rrrrrr.....", "...oooooooooo...", "..ohhhhhhhhhho..", ".ohhghhhhhhghho.", ".ohvvvvvvvvvvho.", ".ohhhhhhhhhhhho.", "oossssssssssssoo", "aaosgssssssgsoaa", ".osssssssssssso.", ".wwwwwwwwwwwwww.", "w.ww.ww..ww.ww.w"], "colors": [{"name": "Iron", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8", "g": "#5affd8"}, {"name": "Gilded", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a", "g": "#ff8a3a"}]}
+AWAKEN_STAGES['Phantom Knight'] = [{"name": "Phantom Champion", "eyes": 5, "move": "float", "speed": 1.3, "feet": False, "mouth": False, "ghost": True, "lines": ["*spectral flames roar*", "a hundred battles, never lost", "my blade cuts through worlds", "CHAAARGE!"], "body": ["f.....rrrr.....f", "ff..o.rrrr.o..ff", "ff.ohooooooho.ff", "f.ohhhhhhhhhho.f", "ffohhghhhhghhoff", "fohvvvvvvvvvvhof", "fohhhhhhhhhhhhof", "oossssssssssssoo", "aaosgssssssgsoaa", "aaossssssssssoaa", ".fwwwwwwwwwwwwf.", "f.ww.ww..ww.ww.f"], "colors": [{"name": "Iron", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8", "g": "#5affd8", "f": "#5affd8"}, {"name": "Gilded", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a", "g": "#ff8a3a", "f": "#ff8a3a"}]}, {"name": "Phantom Sovereign", "eyes": 5, "move": "float", "speed": 1.45, "feet": False, "mouth": False, "ghost": True, "lines": ["KNEEL BEFORE THE PHANTOM CROWN", "*every armor in the castle salutes*", "the realm of ghosts is mine", "the final oath is sworn."], "body": ["y.y.y..yy..y.y.y", "yyyyyyyyyyyyyyyy", "cyyyyyyyyyyyyyyc", "cooooooooooooooc", "cohhghhhhhhghhoc", "cohvvvvvvvvvvhoc", "cohhhhhhhhhhhhoc", "coossssssssssooc", "caaosgssssgsoaac", "caosssgssgsssoac", "cwwwwwwwwwwwwwwc", ".w.ww.wwww.ww.w."], "colors": [{"name": "Sovereign", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8", "g": "#5affd8", "y": "#ffd23a", "c": "#3a1a6a"}, {"name": "Golden Age", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a", "g": "#ff8a3a", "y": "#ffffff", "c": "#8a1a2a"}]}]
+AWAKEN_FORM = {base: a["name"] for base, a in AWAKENED.items()}
+# 🎭 the Puppet Box opens into the Puppet Master (concept by the Blipville team)
+AWAKENED['Puppet Box'] = {"name": "Puppet Master", "eyes": 5, "move": "float", "speed": 0.8, "feet": False, "mouth": False, "ghost": True, "lines": ["the show must go on.", "*the strings tighten*", "every tear is part of the act", "take your seats… the curtain rises", "who's pulling whose strings?", "*a slow bow*"], "body": ["s....tttttt....s", "s....tttttt....s", "s..tttttttttt..s", "s..owwwwxwwwwo.s", "s.owwwwwwxwwwo.s", "s.owwwwwwwwwwo.s", "s.owwwwwwwwwwo.s", "s.owrwwwwwwrwo.s", "s.owrwmmmmwrwo.s", "s.rcrcrcrcrcrc.s", "hobbbbbbbbbbbboh", ".obkbbbbbbbbkbo."], "colors": [{"name": "Porcelain", "o": "#1a1020", "w": "#f4efe8", "x": "#a8a0b0", "r": "#d81e3a", "m": "#2a1020", "t": "#1a1020", "c": "#f4efe8", "b": "#2a1a3a", "k": "#d8a83a", "h": "#ffffff", "s": "#c8c0d8", "e": "#0a0610"}, {"name": "Gilded", "o": "#2a0a10", "w": "#fff4e0", "x": "#c8a878", "r": "#d81e3a", "m": "#3a0a14", "t": "#5a0a1a", "c": "#ffd23a", "b": "#5a0a1a", "k": "#ffd23a", "h": "#fff4e0", "s": "#e8d8b0", "e": "#0a0610"}]}
+AWAKENED['Puppet Box']["colors"].append({"name": "Black Light", "o": "#000000", "w": "#f4f0ff", "x": "#b8a8ff", "r": "#b05aff", "m": "#000000", "t": "#0a0a0a", "c": "#ffffff", "b": "#0a0a0a", "k": "#ffffff", "h": "#ffffff", "s": "#e0d8ff", "e": "#000000"})   # 🔦 Black Light: glows under UV
+# The Puppet Master is solid now; only the little Blip soul on its strings is see-through (the "soul" letters) and flickers.
+AWAKENED['Puppet Box'].update({"ghost": False, "dx": -2, "soul": "qz", "body": ["...tttttT.......", "...tttttT.......", ".tttttttttT.....", ".owwwwxwwwWo....", "owwwwwwxwwwWo...", "owwwwwwwwwwWo...", "owwwwwwwwwwWokkk", "owrwwwwwwrwWo.s.", "owrwmmmmwrwWo.s.", ".rcrcrcrcrCq.s.q", "oBbbbbbbbBoqzqzq", ".oBkBBBBkBo.qqq."],
+    "colors": [{"name": "Porcelain", "o": "#1a1020", "w": "#f4efe8", "x": "#a8a0b0", "r": "#d81e3a", "m": "#2a1020", "t": "#1a1020", "c": "#f4efe8", "b": "#2a1a3a", "k": "#d8a83a", "h": "#ffffff", "s": "#c8c0d8", "e": "#0a0610", "q": "#bff4ff", "z": "#1a3a5a"}, {"name": "Gilded", "o": "#2a0a10", "w": "#fff4e0", "x": "#c8a878", "r": "#d81e3a", "m": "#3a0a14", "t": "#5a0a1a", "c": "#ffd23a", "b": "#5a0a1a", "k": "#ffd23a", "h": "#fff4e0", "s": "#e8d8b0", "e": "#0a0610", "q": "#ffe8b0", "z": "#5a3a0a"}, {"name": "Black Light", "o": "#000000", "w": "#f4f0ff", "x": "#b8a8ff", "r": "#b05aff", "m": "#000000", "t": "#0a0a0a", "c": "#ffffff", "b": "#0a0a0a", "k": "#ffffff", "h": "#ffffff", "s": "#e0d8ff", "e": "#000000", "q": "#e0c8ff", "z": "#3a0a6a"}]})
+AWAKEN_CHAIN = {base: [a["name"]] + [st["name"] for st in AWAKEN_STAGES.get(base, [])] for base, a in AWAKENED.items()}
+AWAKEN_BASE = {form: base for base, chain in AWAKEN_CHAIN.items() for form in chain}
+CRYSTAL_COST = 75
+STAGE_COSTS = [CRYSTAL_COST, 150, 250]       # the Awakening Crystal for the 1st, 2nd and 3rd awakening
+
+
+def awaken_stage(kind):
+    """0 for a normal Blip, 1 for its first Awakened form, 2 and 3 for deeper ones."""
+    base = AWAKEN_BASE.get(kind)
+    return AWAKEN_CHAIN[base].index(kind) + 1 if base else 0
 
 # Gifts 🎁: thank-you Blips handed out for a limited time. Once you have one, it's yours forever.
 GIFTS = {
@@ -3264,6 +3473,24 @@ GIFTS = {
   "colors": [{"name": "Hard Hat", "o": "#2a2a3a", "b": "#8ac8ff", "h": "#ffd23a", "s": "#ffffff", "k": "#d8a00a", "t": "#6a4a2a", "y": "#d8d8e8", "p": "#ff9ab0", "e": "#1a1a2a"},
              {"name": "Safety Orange", "o": "#3a1a06", "b": "#ffc490", "h": "#ff7a1a", "s": "#ffffff", "k": "#c8500a", "t": "#4a3a2a", "y": "#ffe04a", "p": "#ff8a8a", "e": "#2a1004"},
              {"name": "Night Crew", "o": "#14142a", "b": "#7a7ac0", "h": "#b8ff3a", "s": "#ffffff", "k": "#7ab80a", "t": "#2a2a3a", "y": "#ffd23a", "p": "#ff9ac8", "e": "#0a0a1a"}]},
+ "Bug Hunter": {"eyes": 5, "move": "hop", "speed": 1.1,
+  "lines": ["found one! (a bug)", "*squints through magnifying glass*", "thanks for testing 1.0! 🔍", "i'm on the case", "tester crew, represent"],
+  "body": [".....hhhhhh.....", "....hhhhhhhh....", "..hhhhhhhhhhhh..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbmmm.", "obbbbbbbbbbmgggm", ".obbbbbbbbbmgggm", "..oooooooookmmm."],
+  "colors": [{"name": "Explorer", "o": "#1a2a1a", "b": "#8ac8ff", "h": "#c8a86a", "m": "#5a4a3a", "g": "#c8f0ff", "k": "#8a5a2a", "p": "#ff9ab0", "e": "#1a1a2a"},
+             {"name": "Night Bug", "o": "#1a1a2a", "b": "#b8a0ff", "h": "#3a6a3a", "m": "#2a2a3a", "g": "#d8fff0", "k": "#5a3a1a", "p": "#ff9ad8", "e": "#1a1a2a"}]},
+ "Liftoff": {"eyes": 5, "move": "float", "speed": 1.2,
+  "lines": ["3… 2… 1… LIFTOFF! 🚀", "i caught 200 stars for this", "countdown crew, represent", "*rocket noises*", "next stop: blipville 1.0"],
+  "body": ["......rrrr......", ".....rwwwwr.....", "....rwwccwwr....", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "fobbbbbbbbbbbbof",
+           "fobbbbbbbbbbbbof", "fobpbbbbbbbbpbof", ".obbbbbbbbbbbbo.", "..oooooooooooo..", "....yyllllyy....", ".....yyllyy....."],
+  "colors": [{"name": "Launch", "o": "#2a1a3a", "b": "#c8d8ff", "r": "#ff4a6a", "w": "#ffffff", "c": "#5ad8ff", "f": "#ff4a6a", "p": "#ff9ac0", "y": "#ffd23a", "l": "#ff8a2a", "e": "#1a1030"},
+             {"name": "Starlight", "o": "#1a1a3a", "b": "#ffe8a0", "r": "#7a5ad8", "w": "#ffffff", "c": "#ffd23a", "f": "#7a5ad8", "p": "#ff9a7a", "y": "#ffffff", "l": "#5ad8ff", "e": "#1a1030"}]},
+ "Confetti": {"eyes": 5, "move": "hop", "speed": 1.2,
+  "lines": ["IT'S RELEASE DAY!! 🎉", "*throws confetti everywhere*", "blipville 1.0, baby!", "i was there on day one!", "party party party"],
+  "body": ["r......yy.....g.", "......hhhh......", ".g...hhsshh...r.", "....hhhhhhhh....", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obbrbbbbbbbbgbbo", "obpbbbbbbbbbbpbo", "obbbbgbbbbrbbbbo", "obbbbbbbbbbbbbbo", ".obbbybbbbbbbbo.", "..oooooooooooo.."],
+  "colors": [{"name": "Party", "o": "#3a1a3a", "b": "#ffd0e8", "h": "#5a8aff", "s": "#ffd23a", "y": "#ffd23a", "r": "#ff5a7a", "g": "#5ae07a", "p": "#ff8ab8", "e": "#2a0a2a"},
+             {"name": "Gold", "o": "#5a3a06", "b": "#ffe8a0", "h": "#ff5a8a", "s": "#ffffff", "y": "#ffffff", "r": "#ff5a7a", "g": "#5ab8ff", "p": "#ff9a7a", "e": "#2a1a04"}]}
 }
 # World Legends ✨: two legendary Blips per world. They only show up while you're visiting that world: they stroll
 # past in full color with sparkles, and you click them before they leave.
@@ -3288,21 +3515,837 @@ GIFT_DROPS = [
      "why": "Thanks for playing the Blipville beta!"},
     {"kind": "Patch", "until": "2026-11-24", "until_text": "Tuesday, November 24",
      "why": "Thanks for waiting while we fixed things up! 🔧"},
+    {"kind": "Bug Hunter", "until": "2026-12-31", "until_text": "the end of the year", "testers": True,   # early access + test builds only
+     "why": "Thanks for testing Blipville 1.0 early! 🔍"},
+    {"kind": "Liftoff", "until": "2026-11-21", "until_text": "Saturday, November 21", "countdown": True,   # website only: Countdown Stars
+     "why": "You caught 200 Countdown Stars and helped launch Blipville 1.0! 🚀"},
+    {"kind": "Confetti", "start": "2026-11-20", "until": "2026-11-22", "until_text": "the end of launch weekend (Sunday, November 22)",
+     "why": "Happy launch weekend! Thanks for playing Blipville 1.0 right away! 🎉"},
 ]
 GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest one (the website version reads these)
 GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
 GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS}.items():
+# 12 new animals for Blipville 1.0
+NEW_ANIMALS.update({
+ "Red Panda": {"eyes": 5, "move": "walk", "speed": 1.1, "feet": True, "mouth": True,
+  "lines": ["*fluffy tail swish*", "i'm not a panda. i'm THE panda", "bamboo? i prefer berries", "climbing is my cardio"],
+  "body": [".o............o.", ".owo........owo.", ".owwoooooooowwo.", ".obbbbbbbbbbbbo.", "obbwwbbbbbbwwbbo", "obwwwwbbbbwwwwbo",
+           "obwwwwbbbbwwwwbo", "obbwwbbnnbbwwbbo", "obbbbbwwwwbbbbbo", ".obbbbbbbbbbbbo.", ".odddbbbbbbdddo.", "..oooooooooooo.."],
+  "colors": [{"name": "Classic", "o": "#2a0e04", "b": "#c8501a", "w": "#fff4e8", "n": "#1a0a04", "d": "#3a1a0a", "p": "#ff9a8a", "e": "#1a0a04"},
+             {"name": "Cinnamon", "o": "#3a1606", "b": "#e07a3a", "w": "#fff8ec", "n": "#2a1004", "d": "#5a2a0e", "p": "#ff9a8a", "e": "#2a1004"},
+             {"name": "Snowy", "o": "#5a4a40", "b": "#e8d8c8", "w": "#ffffff", "n": "#3a2a20", "d": "#8a6a5a", "p": "#ffb0c0", "e": "#3a2a20"}]},
+ "Polar Bear": {"eyes": 5, "move": "walk", "speed": 0.8, "feet": True, "mouth": True,
+  "lines": ["brrr-illiant weather today", "*slides on belly*", "i'm a big fluffy snowball", "fish? did someone say fish?"],
+  "body": [".ooo........ooo.", "obbbo......obbbo", "obbboooooooobbbo", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbnnbbbbbbo", "obbbbbllllbbbbbo", ".obbbbbbbbbbbbo.", "..obbbbbbbbbbo.."],
+  "colors": [{"name": "Arctic", "o": "#6a7a8a", "b": "#f4f8ff", "l": "#ffffff", "n": "#101018", "p": "#ffc0d0", "e": "#101018"},
+             {"name": "Cream", "o": "#8a7a5a", "b": "#fff4dc", "l": "#ffffff", "n": "#201810", "p": "#ffc0b0", "e": "#201810"},
+             {"name": "Ice", "o": "#4a6a8a", "b": "#d8ecff", "l": "#f4faff", "n": "#101828", "p": "#c8d8ff", "e": "#101828"}]},
+ "Puffin": {"eyes": 5, "move": "walk", "speed": 1.2, "feet": True, "mouth": False,
+  "lines": ["*waddle waddle*", "my beak is my whole personality", "i fly AND swim, no big deal", "fish moustache!"],
+  "body": ["....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbwwwwwwwwbbo.", "obbwwwwwwwwwwbbo", "obwwwwwwwwwwwwbo",
+           "obwwwwwwwwwwwwbo", "obwwwwyyyywwwwbo", "obbwwyrrrrywwbbo", "obbbwwyrrywwbbbo", ".obbbwwwwwwbbbo.", "..oooooooooooo.."],
+  "colors": [{"name": "Atlantic", "o": "#0a0a10", "b": "#1a1a24", "w": "#ffffff", "y": "#ffb03a", "r": "#ff5a1a", "e": "#0a0a10", "f": "#ff7a1a"},
+             {"name": "Tufted", "o": "#0a0a0e", "b": "#14141c", "w": "#e8e8f0", "y": "#ffd23a", "r": "#ff7a1a", "e": "#0a0a0e", "f": "#ff8a2a"}]},
+ "Beluga": {"eyes": 5, "move": "float", "speed": 0.9, "feet": False, "mouth": False,
+  "lines": ["*happy whale noises*", "i'm the canary of the sea", "boop my melon", "smile! it's a whale of a day"],
+  "body": ["................", "....oooooooo....", "..oobbbbbbbboo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbmbbbbmbbbbo", ".obbbbmmmmbbbbo.", "..oobbbbbbbboo..", "....oooooooo...."],
+  "colors": [{"name": "Beluga", "o": "#6a7a9a", "b": "#f0f6ff", "m": "#6a7a9a", "p": "#ffc0d8", "e": "#1a2030"},
+             {"name": "Pearl", "o": "#9a7a8a", "b": "#fff4f0", "m": "#9a7a8a", "p": "#ffb0c8", "e": "#2a1a20"}]},
+ "Gorilla": {"eyes": 5, "move": "walk", "speed": 0.8, "feet": True, "mouth": False,
+  "lines": ["*chest thump* (gentle)", "big but very soft", "i'd like a nap and a banana", "hoo hoo!"],
+  "body": ["................", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbffffffffffbbo",
+           "obbffffffffffbbo", "obbfffnffnfffbbo", "obbbffffffffbbbo", "obbbbfmmmmfbbbbo", ".obbbbbbbbbbbbo.", "..obboooooobbo.."],
+  "colors": [{"name": "Silverback", "o": "#0a0a0e", "b": "#2a2a30", "f": "#8a8a98", "n": "#0a0a0e", "m": "#3a3a44", "e": "#120a06"},
+             {"name": "Snowball", "o": "#6a6a78", "b": "#e8e8ee", "f": "#f8d8d0", "n": "#3a3a44", "m": "#c8a8a0", "e": "#1a1a20"}]},
+ "Sugar Glider": {"eyes": 5, "move": "hop", "speed": 1.3, "feet": True, "mouth": True,
+  "lines": ["wheee! (gliding)", "pocket-sized and proud", "*nibbles a grape*", "i can fly! (sort of)"],
+  "body": [".oo..........oo.", "obbo........obbo", "obbboooooooobbbo", ".obbbbbddbbbbbo.", "obbbbbbddbbbbbbo", "obbbbbbddbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbnnbbbbbbo", "owwwwwwwwwwwwwwo", ".owwwwwwwwwwwwo.", "..oooooooooooo.."],
+  "colors": [{"name": "Grey", "o": "#2a2a3a", "b": "#9a9aaa", "d": "#2a2a3a", "w": "#f4f0ec", "n": "#ff9ab0", "p": "#ffb0c8", "e": "#0a0a10"},
+             {"name": "Leucistic", "o": "#9a8a8a", "b": "#f4f0ec", "d": "#e8d0c8", "w": "#ffffff", "n": "#ff9ab0", "p": "#ffb0c8", "e": "#1a1010"},
+             {"name": "Cocoa", "o": "#2a1408", "b": "#8a6a5a", "d": "#3a2014", "w": "#f0e0d0", "n": "#ff9ab0", "p": "#ffa8a0", "e": "#0a0604"}]},
+ "Highland Cow": {"eyes": 5, "move": "walk", "speed": 0.7, "feet": True, "mouth": False,
+  "lines": ["moo (with a scottish accent)", "can't see a thing, love the bangs", "*shaggy shake*", "it's a good hair day. every day."],
+  "body": ["h..............h", "hh............hh", ".hhoooooooooohh.", "..obbbbbbbbbbo..", ".obbfbfbbfbfbbo.", "obbbfbfbbfbfbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbllllllbbbbo", "obbblnnllnnlbbbo", ".obbllllllllbbo.", "..oooooooooooo.."],
+  "colors": [{"name": "Ginger", "o": "#3a1a06", "b": "#c8642a", "f": "#8a3a10", "l": "#e8a87a", "n": "#3a1a06", "h": "#f4e8d0", "p": "#ff9a7a", "e": "#1a0a02"},
+             {"name": "Black", "o": "#0a0806", "b": "#2a2420", "f": "#14100c", "l": "#6a5a50", "n": "#0a0806", "h": "#f4e8d0", "p": "#8a5a5a", "e": "#e8d8c8"},
+             {"name": "Dun", "o": "#3a2a14", "b": "#c8a878", "f": "#8a6a48", "l": "#e8d0b0", "n": "#3a2a14", "h": "#fff8e8", "p": "#ffa88a", "e": "#1a1004"}]},
+ "Shoebill": {"eyes": 5, "move": "walk", "speed": 0.6, "feet": True, "mouth": False,
+  "lines": ["...", "*stares*", "*stares harder*", "i'm not angry, this is just my face", "*clatters beak*"],
+  "body": ["......oooo......", "....oobbbboo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obbbbkkkkkkbbbbo", "obbbkkkkkkkkbbbo", "obbbkkkkkkkkbbbo", ".obbbkkkkkkbbbo.", "..ooookkkkoooo.."],
+  "colors": [{"name": "Slate", "o": "#2a3040", "b": "#8a9aac", "k": "#d8c8a0", "e": "#f0e8a0", "f": "#3a4050"},
+             {"name": "Storm", "o": "#1a2030", "b": "#5a6a7a", "k": "#c8b890", "e": "#f4e070", "f": "#2a3040"}]},
+ "Tarsier": {"eyes": 5, "move": "hop", "speed": 1.1, "feet": True, "mouth": True,
+  "lines": ["*blinks slowly*", "my eyes are bigger than my brain", "i see EVERYTHING", "*swivels head all the way around*"],
+  "body": [".oo..........oo.", "obbo........obbo", "obbboooooooobbbo", ".obbbbbbbbbbbbo.", "obbyyyybbyyyybbo", "obbyyyybbyyyybbo",
+           "obbyyyybbyyyybbo", "obbyyyybbyyyybbo", "obbbbbbnnbbbbbbo", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", "..oooooooooooo.."],
+  "colors": [{"name": "Tawny", "o": "#3a2a1a", "b": "#b8946a", "y": "#e8a83a", "n": "#3a2a1a", "p": "#ff9a8a", "e": "#1a0a04"},
+             {"name": "Grey", "o": "#3a3028", "b": "#a89a8a", "y": "#d8b04a", "n": "#3a3028", "p": "#ffa8a0", "e": "#1a1008"}]},
+ "Marmot": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "mouth": False,
+  "lines": ["*loud whistle*", "sunbathing on my favorite rock", "chonky and proud", "is it spring yet?"],
+  "body": ["................", "..o..........o..", ".oboooooooooobo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo",
+           "obbbbbbbbbbbbbbo", "obpbbllllllbbpbo", "obbbllnnnnllbbbo", "obbbbllwwllbbbbo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."],
+  "colors": [{"name": "Yellow-bellied", "o": "#2a1a0a", "b": "#9a6a3a", "l": "#e8c890", "n": "#2a1a0a", "w": "#ffffff", "p": "#ff9a7a", "e": "#1a0a02"},
+             {"name": "Hoary", "o": "#2a2a24", "b": "#9a9a8a", "l": "#f0f0e8", "n": "#1a1a14", "w": "#ffffff", "p": "#ffa8a0", "e": "#0a0a08"}]},
+ "Mantis Shrimp": {"eyes": 5, "move": "walk", "speed": 1.3, "feet": False, "mouth": False,
+  "lines": ["i see 16 colors you can't", "*punches at the speed of sound*", "fabulous AND dangerous", "pew pew! (punch noises)"],
+  "body": [".yy..........yy.", ".yy..........yy.", "..o.oooooooo.o..", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.",
+           ".orrrrrrrrrrrro.", "obbbbbbbbbbbbbbo", "oggggggggggggggo", "obbbbbbbbbbbbbbo", ".oaaoaaaaaaoaao.", "..o..o....o..o.."],
+  "colors": [{"name": "Peacock", "o": "#0a2a2a", "b": "#3ac8a0", "r": "#ff5a3a", "g": "#5a8aff", "y": "#ffd23a", "a": "#ff5a8a", "e": "#0a0a10"},
+             {"name": "Sunset", "o": "#3a0a0a", "b": "#ff8a3a", "r": "#ff3a6a", "g": "#ffd23a", "y": "#3affd8", "a": "#8a3aff", "e": "#1a0404"}]},
+ "Frilled Lizard": {"eyes": 5, "move": "walk", "speed": 1.4, "feet": True, "mouth": False,
+  "lines": ["*FRILL OUT*", "i look scary but i'm shy", "watch me run on two legs!", "*hisses politely*"],
+  "body": ["f..ff..ff..ff..f", "ffffffffffffffff", "fffoooooooooofff", "ffobbbbbbbbbboff", "fobbbbbbbbbbbbof", "fobbbbbbbbbbbbof",
+           "fobbbbbbbbbbbbof", "ffobbbbbbbbbboff", "fffobbbmmbbbofff", "f..obbbbbbbbo..f", "...obbbbbbbbo...", "....oooooooo...."],
+  "colors": [{"name": "Desert", "o": "#2a1a0a", "b": "#b8945a", "f": "#e86a2a", "m": "#ff9a7a", "e": "#1a0a02"},
+             {"name": "Forest", "o": "#1a2a0a", "b": "#6a8a3a", "f": "#ffd23a", "m": "#ff7a6a", "e": "#0a1404"}]},
+})
+
+# Blipville 1.0: 12 more Blips in every special tier
+RARE.update({"Qilin": {"eyes": 5, "move": "walk", "speed": 1.1, "lines": ["*hooves shimmer*", "i bring good luck!", "my scales are lucky charms", "a qilin never steps on grass. sorry, grass"], "body": ["h..h........h..h", ".hh..........hh.", "..h.oooooooo.h..", "..obbbbbbbbbbo..", ".obbbsbbbbsbbbo.", "mobbbbbbbbbbbbom", "mobbbbbbbbbbbbom", "mobpbbbbbbbbpbom", "mobbbsbbbbsbbbom", ".obbllllllllbbo.", "..obllllllllbo..", "...oooooooooo..."], "colors": [{"name": "Jade", "o": "#0e2a1e", "b": "#4ac88a", "s": "#2a8a5a", "h": "#ffd23a", "m": "#ffd23a", "l": "#e8fff0", "p": "#ff9ab0", "e": "#0e2a1e"}, {"name": "Ruby", "o": "#2a0a12", "b": "#e84a5a", "s": "#a82a3a", "h": "#ffd23a", "m": "#ffd23a", "l": "#fff0e8", "p": "#ffd0a0", "e": "#2a0a12"}]}, "Pixie": {"eyes": 6, "move": "flutter", "speed": 1.4, "feet": False, "lines": ["*sprinkles pixie dust*", "i'm tiny but mighty", "wishes: 3 for 1 cookie", "*giggles in sparkle*"], "body": [".....a....a.....", "......a..a......", "ww...oooooo...ww", "wwwoobbbbbboowww", "wwobbbbbbbbbboww", ".wobbbbbbbbbbow.", "wwobbbbbbbbbboww", "wwobpbbbbbbpboww", "w..obbbbbbbbo..w", "....obbbbbbo....", ".....obbbbo.....", "......oooo......"], "colors": [{"name": "Petal", "o": "#4a1a3a", "b": "#ffd0e8", "w": "#c8f0ff", "a": "#ffd23a", "p": "#ff8ab8", "e": "#3a0a2a"}, {"name": "Moss", "o": "#1a3a1a", "b": "#d8f8c8", "w": "#fff4b0", "a": "#ff9ad8", "p": "#ff9ab0", "e": "#0a2a0a"}]}, "Baby Kraken": {"eyes": 4, "move": "float", "speed": 0.9, "feet": False, "lines": ["*wiggles all 8 arms*", "release me! (into a hug)", "i'm a baby. a BIG baby", "blub blub"], "body": ["...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbsbbbbbbsbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", ".obbbbbbbbbbbbo.", ".oboboobboobobo.", "obo.obo..obo.obo", "ob..obo..obo..bo", ".o...o....o...o."], "colors": [{"name": "Coral", "o": "#3a0a1a", "b": "#ff7a8a", "s": "#ffc0c8", "p": "#ffd0d8", "e": "#2a0410"}, {"name": "Deep", "o": "#0a1a3a", "b": "#5a6ae8", "s": "#a8b8ff", "p": "#c8a8ff", "e": "#0a0a2a"}]}, "Wyvern": {"eyes": 5, "move": "flutter", "speed": 1.3, "feet": True, "lines": ["*tiny roar*", "two legs, two wings, all attitude", "i'm a dragon's cool cousin", "*flaps dramatically*"], "body": ["w..............w", "ww..h......h..ww", "wwwohoooooohowww", "wwwobbbbbbbbowww", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", ".wobbbbbbbbbbow.", "..obpbbbbbbpbo..", "..obbbllllbbbo..", "..obbllllllbbo..", "...obbllllbbo...", "....oooooooo...."], "colors": [{"name": "Forest", "o": "#0a1a0e", "b": "#3a8a4a", "w": "#2a5a3a", "h": "#e8e0c0", "l": "#c8e8a0", "p": "#ff9a7a", "e": "#ffd23a", "f": "#0a1a0e"}, {"name": "Dusk", "o": "#1a0a2a", "b": "#7a4ab8", "w": "#4a2a7a", "h": "#ffe0a0", "l": "#d8c0ff", "p": "#ff9ad8", "e": "#ffd23a", "f": "#1a0a2a"}]}, "Rock Golem": {"eyes": 5, "move": "walk", "speed": 0.6, "feet": True, "mouth": False, "lines": ["*grinding stone noises*", "i'm rock solid", "pebble-sized feelings", "don't take me for granite"], "body": ["................", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbcbbbbbbcbbo.", "obbbbbcbbcbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obcbbbbrrbbbbcbo", "obbbbbbrrbbbbbbo", "obbbcbbbbbbcbbbo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Granite", "o": "#1a1a20", "b": "#8a8a96", "c": "#5a5a66", "r": "#5affd8", "e": "#5affd8", "f": "#1a1a20"}, {"name": "Sandstone", "o": "#3a2410", "b": "#d8a870", "c": "#a87a48", "r": "#ff8a3a", "e": "#ff8a3a", "f": "#3a2410"}]}, "Crystal Axolotl": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "lines": ["*sparkly smile*", "my gills are gems", "regenerating... and glittering", "i'm basically a geode with legs"], "body": ["g..............g", ".g............g.", "gg.oooooooooo.gg", ".gobbbbbbbbbbog.", "ggobbbbbbbbbbogg", ".gobbbbbbbbbbog.", "ggobbbbbbbbbbogg", ".obpbbbbbbbbpbo.", ".obbbbbbbbbbbbo.", ".obbbbllllbbbbo.", "..obbllllllbbo..", "...oooooooooo..."], "colors": [{"name": "Rose Quartz", "o": "#4a1a3a", "b": "#ffc8e0", "g": "#c86aff", "l": "#ffffff", "p": "#ff8ab8", "e": "#2a0a1a", "f": "#4a1a3a"}, {"name": "Aquamarine", "o": "#0a3a3a", "b": "#a8fff0", "g": "#3a8aff", "l": "#ffffff", "p": "#ff9ad8", "e": "#0a2a2a", "f": "#0a3a3a"}]}, "Sky Whale": {"eyes": 5, "move": "float", "speed": 0.7, "feet": False, "mouth": True, "lines": ["*low cloudy hum*", "i swim through the sky", "clouds taste like cotton candy", "wanna ride on my back?"], "body": ["c..............c", "cc...oooooo...cc", "c..oobbbbbboo..c", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "ollbbbbbbbbbbllo", ".olllbbbbbblllo.", "..ollllllllllo..", "...oooooooooo..."], "colors": [{"name": "Daydream", "o": "#2a3a6a", "b": "#8ab8ff", "l": "#f0f6ff", "c": "#ffffff", "p": "#ffb0d0", "e": "#1a2a4a"}, {"name": "Sunset", "o": "#5a2a3a", "b": "#ffa88a", "l": "#fff0e0", "c": "#fff4c8", "p": "#ff7a9a", "e": "#3a1a20"}]}, "Dodo": {"eyes": 4, "move": "walk", "speed": 0.8, "feet": True, "mouth": False, "lines": ["i'm not extinct, i was hiding", "*confused bird noises*", "dodo? do-do? what do you do?", "i survived! (in an egg)"], "body": ["....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbbkkkkkkbbbo.", ".obbkkkkkkkkbbo.", "obbbkkkkkkkkbbbo", "obbbbkkkkkkbbbbo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Classic", "o": "#2a2a30", "b": "#9a9aaa", "k": "#e8c86a", "e": "#1a1a20", "f": "#e8c86a"}, {"name": "Pink", "o": "#3a1a2a", "b": "#e8a8c8", "k": "#ffd27a", "e": "#2a0a1a", "f": "#ffd27a"}]}, "Saber Kitten": {"eyes": 5, "move": "walk", "speed": 1.2, "feet": True, "lines": ["rawr! (very small)", "my teeth are 90% of me", "ice age? i'm built for it", "*pounces on a leaf*"], "body": [".o............o.", ".oao........oao.", ".oaboooooooobao.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbsbbbbbbbbsbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbnnbbbbbbo", "obbbbbwoowbbbbbo", ".obbbbwbbwbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Tawny", "o": "#3a2008", "b": "#e0a050", "a": "#ffb0a0", "s": "#a86a28", "n": "#3a2008", "w": "#ffffff", "p": "#ff9a7a", "e": "#1a0a02"}, {"name": "Snow", "o": "#4a5060", "b": "#f0f0f6", "a": "#ffc0c8", "s": "#b8c0d0", "n": "#4a5060", "w": "#ffffff", "p": "#ffb0c0", "e": "#4aa8ff"}]}, "Lucky Cat": {"eyes": 5, "move": "walk", "speed": 0.9, "feet": True, "lines": ["*waves paw* come in, come in!", "lucky day? every day!", "*jingle jingle*", "may your hearts multiply!"], "body": [".o............o.", ".oao........oao.", ".oaboooooooobao.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbrrbbbbbbo", "orrrrrryyrrrrrro", ".obbbbbyybbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Classic", "o": "#3a2a2a", "b": "#ffffff", "a": "#ff9ab0", "r": "#e83a3a", "y": "#ffd23a", "p": "#ffb0c0", "e": "#1a1010"}, {"name": "Gold", "o": "#4a3006", "b": "#ffd23a", "a": "#ffb0a0", "r": "#e83a3a", "y": "#ffffff", "p": "#ff9a7a", "e": "#2a1a04"}]}, "Rainbow Blip": {"eyes": 5, "move": "hop", "speed": 1.1, "lines": ["*shines in every color*", "taste the rainbow! (please don't)", "i'm the rarest of the rare", "✨🌈✨"], "body": ["..oo........oo..", ".orro......orro.", ".orrroooooorrro.", ".oyyyyyyyyyyyyo.", "oyyyyyyyyyyyyyyo", "oggggggggggggggo", "oggggggggggggggo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", "ovvvvvvvvvvvvvvo", ".ovvvvvvvvvvvvo.", "..oooooooooooo.."], "colors": [{"name": "Rainbow", "o": "#2a1a3a", "r": "#ff5a6a", "y": "#ffd23a", "g": "#5ae07a", "b": "#5ab8ff", "v": "#b87aff", "p": "#ffb0d0", "e": "#1a0a2a"}, {"name": "Pastel", "o": "#5a4a6a", "r": "#ffb0b8", "y": "#fff0a0", "g": "#b8f0c0", "b": "#b8dcff", "v": "#e0c8ff", "p": "#ffc8e0", "e": "#3a2a4a"}]}, "Moon Moth": {"eyes": 5, "move": "flutter", "speed": 1.0, "feet": False, "mouth": False, "lines": ["*soft wing flutter*", "the moon is my nightlight", "fuzzy and proud", "i follow the brightest star"], "body": ["a..............a", ".a............a.", "ww..oooooooo..ww", "wwwobbbbbbbbowww", "wwsobbbbbbbbosww", "wwwobbbbbbbbowww", "wwsobbbbbbbbosww", "wwwobbbbbbbbowww", ".wwobbbbbbbboww.", "..wwobbbbbboww..", "...wobbbbbbow...", "....oooooooo...."], "colors": [{"name": "Luna", "o": "#1a3a2a", "b": "#f4fff0", "w": "#a8f0c0", "s": "#ff9ad8", "a": "#f4fff0", "e": "#1a1a2a"}, {"name": "Twilight", "o": "#1a1a3a", "b": "#fff0f8", "w": "#b8a0ff", "s": "#ffd23a", "a": "#fff0f8", "e": "#1a1a2a"}]}})
+CRYPTIDS.update({"Yowie": {"eyes": 5, "move": "walk", "speed": 0.9, "lines": ["*big hairy wave*", "g'day! (in a deep voice)", "outback's my backyard", "i'm bigfoot's aussie cousin"], "body": ["...oooooooooo...", "..obbbbbbbbbbo..", ".obbllllllllbbo.", ".obllllllllllbo.", "obbllllllllllbbo", "obbllllllllllbbo", "obbllllllllllbbo", "obbpllllllllpbbo", "obbbllllllllbbbo", "obbbbllllllbbbbo", "obbobbbbbbbbobbo", ".oo.obbbbbbo.oo."], "colors": [{"name": "Outback", "o": "#2a140a", "b": "#a8582a", "l": "#e8b088", "p": "#e8806a", "e": "#1a0a04"}, {"name": "Dusk", "o": "#1a1418", "b": "#5a4a52", "l": "#a89aa0", "p": "#c8808a", "e": "#ffd23a"}]}, "Ogopogo": {"eyes": 3, "move": "float", "speed": 1.0, "feet": False, "mouth": False, "lines": ["*splish*", "the lake is my living room", "humps? i have three", "say cheese! (blurry photo)"], "body": ["...oooooooooo...", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "..obpbbbbbbpbo..", "...obbbbbbbbo...", "....oobbbboo....", "......obbo......", "..ooo.obbo.ooo..", ".obbbo.oo.obbbo.", "wwwwwwwwwwwwwwww", "w.ww..wwww..ww.w", "................"], "colors": [{"name": "Lake Green", "o": "#0e2a1a", "b": "#5ab87a", "p": "#a8e8b0", "w": "#3a7ab8", "e": "#0a1a10"}, {"name": "Okanagan", "o": "#1a1a2a", "b": "#6a7aa8", "p": "#b8c8f0", "w": "#2a6aa8", "e": "#ffd23a"}]}, "Ahool": {"eyes": 5, "move": "flutter", "speed": 1.2, "feet": False, "mouth": True, "lines": ["AHOOOL! (that's my name)", "giant bat, gentle heart", "the jungle at night is mine", "*flaps enormous wings*"], "body": ["o..............o", "wo...o....o...ow", "wwo.oboooobo.oww", "wwwobbbbbbbbowww", "wwwobbbbbbbbowww", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "w.obpbbbbbbpbo.w", "w..obbbbbbbbo..w", "...obbbbbbbbo...", "....obbbbbbo....", ".....oooooo....."], "colors": [{"name": "Jungle", "o": "#1a0e0a", "b": "#6a4a3a", "w": "#3a2620", "p": "#e8806a", "e": "#ffd23a"}, {"name": "Ash", "o": "#0e0e14", "b": "#5a5a6a", "w": "#2a2a36", "p": "#c8808a", "e": "#ff5a3a"}]}, "Grootslang": {"eyes": 5, "move": "walk", "speed": 0.7, "feet": False, "mouth": False, "lines": ["half elephant, half snake, all drama", "i guard the diamond cave", "*trumpets* hssss", "the ancestors made me first"], "body": ["................", ".oo..oooooo..oo.", "obbo.obbbbo.obbo", "obbboobbbboobbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", ".obpbbbbbbbbpbo.", "..obbbbttbbbbo..", "..obbbbttbbbbo..", "...obbbttbbbo...", "....ooottooo...."], "colors": [{"name": "Stone", "o": "#1a1a14", "b": "#8a8a7a", "t": "#6a6a5a", "p": "#c8a8a0", "e": "#5affd8"}, {"name": "Diamond Cave", "o": "#0e1a2a", "b": "#5a6a8a", "t": "#3a4a6a", "p": "#a8c8ff", "e": "#a8ffff"}]}, "Teakettler": {"eyes": 5, "move": "walk", "speed": 1.1, "lines": ["*whistles like a kettle*", "i walk backwards. it's a thing", "steam comes out of my mouth!", "tea time? always"], "body": ["..s..........s..", ".s..s......s..s.", "..s..........s..", ".o.oooooooooo.o.", ".oaobbbbbbbboao.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Lumberjack", "o": "#2a1a0e", "b": "#c8885a", "a": "#e8b088", "s": "#ffffff", "p": "#ff9a7a", "e": "#1a0a04"}, {"name": "Copper Kettle", "o": "#2a1004", "b": "#d86a2a", "a": "#ffa860", "s": "#e8f0ff", "p": "#ff9a8a", "e": "#1a0a02"}]}, "Squonk": {"eyes": 5, "move": "walk", "speed": 0.6, "feet": True, "mouth": True, "lines": ["*sniffle* i'm so ugly", "*cries a little puddle*", "nobody likes my warts", "a hug? for ME?"], "body": ["................", "...oooooooooo...", "..obbwbbbbwbbo..", ".obbbbbbbbbbbbo.", "obwbbbbbbbbbbwbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbwbbbbwbbpbo", "obbbbbbbbbbbbbbo", "obwbbbbbbbbbbwbo", ".obbbbbbbbbbbbo.", "..t.oooooooo.t.."], "colors": [{"name": "Hemlock", "o": "#2a2a1a", "b": "#a8a87a", "w": "#7a7a50", "t": "#6ac8ff", "p": "#e8a8a0", "e": "#1a1a0a"}, {"name": "Mossy", "o": "#1a2a1a", "b": "#8ab87a", "w": "#5a8a4a", "t": "#6ac8ff", "p": "#e8a8b0", "e": "#0a1a0a"}]}, "Hidebehind": {"eyes": 5, "move": "walk", "speed": 1.3, "feet": True, "mouth": False, "lines": ["*hides behind you*", "you'll never see me. ever.", "turn around! ...gone", "i'm very shy, okay?"], "body": ["....o......o....", "...obo....obo...", "..obbboooobbbo..", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obsbbbbbbbbbbsbo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Bark", "o": "#140e0a", "b": "#3a2a20", "s": "#5a4030", "e": "#ffe66a"}, {"name": "Shadow", "o": "#06060a", "b": "#1a1a24", "s": "#2a2a3a", "e": "#ff5a8a"}]}, "Fur-bearing Trout": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "mouth": True, "lines": ["*fuzzy splash*", "i grew fur for the cold lakes", "a fish in a sweater, basically", "blub (cozily)"], "body": ["....f.f..f.f....", "...ffffffffff...", "..offffffffffo..", ".obbbbbbbbbbbbo.", "fobbbbbbbbbbbbof", "ffbbbbbbbbbbbbff", "fobsbsbbbbsbsbof", ".obpbbbbbbbbpbo.", "..obbbbbbbbbbo..", "...ofobbbbofo...", "....ffffffff....", "................"], "colors": [{"name": "Rainbow Trout", "o": "#1a2a1a", "b": "#a8c8a0", "f": "#e8d8c0", "s": "#ff8aa8", "p": "#ff9ab0", "e": "#0a1a0a"}, {"name": "Arctic", "o": "#2a3040", "b": "#c8d8ff", "f": "#ffffff", "s": "#8ab8ff", "p": "#ffb0d0", "e": "#1a2030"}]}, "Wampus Cat": {"eyes": 5, "move": "walk", "speed": 1.4, "lines": ["*yowl in the hills*", "half cat, half mystery", "my eyes glow in the dark", "the mountains are mine"], "body": [".o............o.", ".oao........oao.", ".oaboooooooobao.", ".obbbbbbbbbbbbo.", "obsbbbbssbbbbsbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbnnbbbbbbo", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "...oo.oooo.oo..."], "colors": [{"name": "Appalachian", "o": "#1a140a", "b": "#5a4a2a", "a": "#8a6a3a", "s": "#3a2a14", "n": "#1a140a", "p": "#c8806a", "e": "#c8ff3a"}, {"name": "Ghostly", "o": "#2a2a3a", "b": "#c8c8d8", "a": "#e8a8c8", "s": "#8a8aa8", "n": "#2a2a3a", "p": "#e8a8c8", "e": "#5affd8"}]}, "Kongamato": {"eyes": 5, "move": "flutter", "speed": 1.3, "feet": False, "mouth": False, "lines": ["*SKREEE*", "the river is my runway", "they say i'm a dinosaur. rude", "beak first!"], "body": ["...h........h...", "..hh........hh..", "w.hooooooooooh.w", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wobbbbbbbbbbbbow", "w.obbkkkkkkbbo.w", "...obkkkkkkbo...", "....okkkkkko....", ".....okkkko.....", "......oooo......"], "colors": [{"name": "River", "o": "#1a0a06", "b": "#a84a2a", "w": "#6a2a14", "h": "#e86a3a", "k": "#e8c86a", "e": "#ffd23a"}, {"name": "Storm", "o": "#0a0a14", "b": "#5a5a7a", "w": "#3a3a5a", "h": "#8a8aff", "k": "#c8c8a0", "e": "#ffffff"}]}, "Altamaha-ha": {"eyes": 4, "move": "float", "speed": 0.9, "feet": False, "mouth": True, "lines": ["*snout bubbles*", "the river delta is my home", "they call me Altie", "*flipper wave*"], "body": ["....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbllllllllbbbo", "fobbllllllllbbof", "ffobbllllllbboff", "f..obbbbbbbbo..f", ".....oooooo....."], "colors": [{"name": "Delta", "o": "#0e1a14", "b": "#4a7a5a", "l": "#c8e0b0", "f": "#2a5a3a", "p": "#e8b0a0", "e": "#0a1a10"}, {"name": "Bronze", "o": "#2a1a0a", "b": "#a87a3a", "l": "#f0d8a8", "f": "#6a4a1a", "p": "#ffb0a0", "e": "#1a0a02"}]}, "Globster": {"eyes": 6, "move": "float", "speed": 0.5, "feet": False, "mouth": True, "lines": ["*squelch*", "i washed up. hi!", "scientists are still confused", "i'm a mystery blob"], "body": ["................", "................", "....oooooooo....", "..oobbbbbbbboo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbsbbbbbbsbbbo", "obbbbbbbbbbbbbbo", "obsbbbbbbbbbbsbo", ".obbbbbbbbbbbbo.", "oo.oooooooooo.oo"], "colors": [{"name": "Beach Blob", "o": "#5a4a4a", "b": "#e8d8d0", "s": "#c8b0a8", "p": "#ffb0c0", "e": "#2a2020"}, {"name": "Glowing", "o": "#1a3a3a", "b": "#a8fff0", "s": "#5ad8c8", "p": "#ff9ad8", "e": "#0a2a2a"}]}})
+KAIJU.update({"Boulderback": {"eyes": 6, "move": "walk", "speed": 0.5, "feet": False, "lines": ["*the ground quakes*", "i'm a mountain that walks", "moss grows on my shell", "slow and steady crushes the race"], "body": ["....gggggggg....", "..gssssssssssg..", ".gssrssssssrssg.", ".ssssssssssssss.", "osssssssssssssso", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbpbbbbbbbbpbbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", ".obbo......obbo.", ".oo..........oo."], "colors": [{"name": "Mossy", "o": "#14140e", "b": "#8a7a5a", "s": "#6a6a6a", "r": "#8a8a8a", "g": "#5aa84a", "p": "#c89a7a", "e": "#ffd23a"}, {"name": "Lava Rock", "o": "#140808", "b": "#5a3a3a", "s": "#3a2a2a", "r": "#ff6a1a", "g": "#ff8a3a", "p": "#ff8a5a", "e": "#ff8a3a"}]}, "Stormcrab": {"eyes": 4, "move": "walk", "speed": 0.7, "feet": False, "mouth": False, "lines": ["*CLACK CLACK* (thunder)", "my claws spark when i'm happy", "sideways is the best way", "lightning is my pinch"], "body": ["cc............cc", "cco..........occ", ".coyy......yyoc.", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbybbybbybbybbo", ".obbbbbbbbbbbbo.", "o.oooooooooooo.o", "o.o.o..oo..o.o.o", "................"], "colors": [{"name": "Thunder", "o": "#0a0a1a", "b": "#3a5ab8", "c": "#5a8aff", "y": "#fff27a", "e": "#fff27a"}, {"name": "Ember", "o": "#1a0606", "b": "#c83a2a", "c": "#ff6a4a", "y": "#ffd23a", "e": "#ffd23a"}]}, "Tremorpede": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": False, "mouth": False, "lines": ["*a hundred stomps at once*", "so many legs, so many shoes", "i tunnel under cities", "skitter skitter SKITTER"], "body": ["a..............a", ".a............a.", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "osssssssssssssso", "obbbbbbbbbbbbbbo", "osssssssssssssso", "obbbbbbbbbbbbbbo", "lololoooooololol", "l.l.l......l.l.l"], "colors": [{"name": "Rust", "o": "#1a0a04", "b": "#b8582a", "s": "#7a3414", "a": "#e8a86a", "l": "#3a1a0a", "e": "#ffd23a"}, {"name": "Toxic", "o": "#0a1a04", "b": "#6ac82a", "s": "#3a7a14", "a": "#c8ff6a", "l": "#1a3a0a", "e": "#ff3aa8"}]}, "Volthorn": {"eyes": 5, "move": "walk", "speed": 0.8, "feet": True, "mouth": False, "lines": ["*crackle* BZZT", "my horn is a lightning rod", "beetle power: maximum", "i charge my batteries at night"], "body": [".......yy.......", "......yyyy......", "......yooy......", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "osbbbbbbbbbbbbso", "obsbbbbbbbbbbsbo", "obbsbbbbbbbbsbbo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Volt", "o": "#0a0a14", "b": "#2a2a5a", "s": "#5a5aff", "y": "#fff27a", "e": "#fff27a", "f": "#0a0a14"}, {"name": "Jewel", "o": "#0a1a0a", "b": "#1a6a3a", "s": "#3ae07a", "y": "#ffd23a", "e": "#ffd23a", "f": "#0a1a0a"}]}, "Tundrox": {"eyes": 5, "move": "walk", "speed": 0.6, "feet": True, "mouth": False, "lines": ["*frosty snort*", "blizzards follow me", "my horns hold up the sky", "moo-ve over, i'm huge"], "body": ["h..............h", "hh............hh", ".hhoooooooooohh.", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "ofbbbbbbbbbbbbfo", "offbbbbbbbbbbffo", "offbbbbbbbbbbffo", "offfbnnbbnnbfffo", "offffbbbbbbffffo", ".offffffffffffo.", "..oooooooooooo.."], "colors": [{"name": "Glacier", "o": "#1a2a3a", "b": "#a8c8e8", "f": "#e8f4ff", "h": "#ffffff", "n": "#1a2a3a", "e": "#1a2a3a"}, {"name": "Musk", "o": "#1a1008", "b": "#6a4a2a", "f": "#9a7a5a", "h": "#f0e8d0", "n": "#1a1008", "e": "#e8d8c8"}]}, "Nebulon": {"eyes": 4, "move": "float", "speed": 0.6, "feet": False, "lines": ["*the stars flicker*", "i swallowed a galaxy", "my tentacles are made of starlight", "cosmic blub"], "body": ["...oooooooooo...", "..obbbbbbbbbbo..", ".obbsbbbbbbsbbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbsbbbbsbbbbo", "obpbbbbbbbbbbpbo", ".oooooooooooooo.", ".t.t.t.tt.t.t.t.", "t..t..t..t..t..t", ".t..t..tt..t..t.", "t.....t..t.....t"], "colors": [{"name": "Galaxy", "o": "#1a0a3a", "b": "#5a3ab8", "s": "#ffffff", "t": "#b87aff", "p": "#ff8ad8", "e": "#fff27a"}, {"name": "Aurora", "o": "#0a2a2a", "b": "#2a8a8a", "s": "#ffffff", "t": "#5affd8", "p": "#ff9ad8", "e": "#fff27a"}]}, "Bramblebeast": {"eyes": 5, "move": "walk", "speed": 0.6, "feet": True, "mouth": True, "lines": ["*rustle… RUSTLE*", "the forest is my body", "flowers bloom where i stomp", "thorny outside, soft inside"], "body": ["t.r..t....t..r.t", ".tt.tt.tt.tt.tt.", "..tttttttttttt..", ".tobbbbbbbbbbot.", "tobbbbbbbbbbbbot", ".obbbbbbbbbbbbo.", "tobbbbbbbbbbbbot", ".obpbbbbbbbbpbo.", "tobbbbbbbbbbbbot", ".obbbbbrrbbbbbo.", "tobbbbbbbbbbbbot", ".oooooooooooooo."], "colors": [{"name": "Thicket", "o": "#0e1a0a", "b": "#4a7a3a", "t": "#2a4a1a", "r": "#ff6a9a", "p": "#ff9a8a", "e": "#ffd23a", "f": "#0e1a0a"}, {"name": "Autumn", "o": "#1a0a04", "b": "#a85a2a", "t": "#6a3a14", "r": "#ffd23a", "p": "#ff9a7a", "e": "#ffd23a", "f": "#1a0a04"}]}, "Sandsnapper": {"eyes": 5, "move": "walk", "speed": 0.7, "feet": False, "mouth": False, "lines": ["*SNAP* from under the dunes", "i dig the biggest pits", "sand in my jaws, always", "the desert is my trap"], "body": ["j..............j", "jj............jj", ".jj..........jj.", "..jooooooooooj..", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obsbbbbbbbbbbsbo", "obbbbbbbbbbbbbbo", "sssbbbbbbbbbbsss", "ssssssssssssssss", ".s.s.s.ss.s.s.s."], "colors": [{"name": "Dune", "o": "#2a1a0a", "b": "#c8985a", "j": "#5a3a1a", "s": "#f0d090", "e": "#1a0a02"}, {"name": "Night Desert", "o": "#0a0a1a", "b": "#5a5a8a", "j": "#2a2a4a", "s": "#c8b890", "e": "#ff5a3a"}]}, "Clockwork Rex": {"eyes": 4, "move": "walk", "speed": 0.8, "feet": True, "mouth": False, "lines": ["*tick… tock… ROAR*", "wind me up and watch me go", "gears for teeth, heart of brass", "*steam whistle roar*"], "body": ["....oooooooo....", "...obbbbbbbbo...", "..obbgbbbbgbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "owwwwwwwwwwwwwwo", "obwbwbwbbwbwbwbo", ".obbbbbbbbbbbbo.", "..obbgbbbbgbbo..", "..obbbbbbbbbbo..", "...oooooooooo..."], "colors": [{"name": "Brass", "o": "#2a1a04", "b": "#c8a03a", "g": "#6a4a1a", "w": "#ffffff", "e": "#ff3a3a", "f": "#2a1a04"}, {"name": "Chrome", "o": "#14141e", "b": "#a8b0c0", "g": "#4a5060", "w": "#ffffff", "e": "#3affd8", "f": "#14141e"}]}, "Deepjaw": {"eyes": 4, "move": "float", "speed": 0.6, "feet": False, "mouth": False, "lines": ["*glows in the deepest dark*", "follow my light~", "my teeth are just for show", "the abyss is cozy"], "body": ["......llll......", ".....l....l.....", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "owbwbwbwwbwbwbwo", "o..............o", "owbwbwbwwbwbwbwo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Abyss", "o": "#020a14", "b": "#14284a", "w": "#e8f0ff", "l": "#7affea", "e": "#7affea"}, {"name": "Ember Deep", "o": "#140202", "b": "#4a1414", "w": "#ffe8d0", "l": "#ffd23a", "e": "#ffd23a"}]}, "Thunderwing": {"eyes": 5, "move": "flutter", "speed": 1.1, "feet": False, "mouth": False, "lines": ["*wingbeats like thunder*", "storms are my wake", "the sky shakes when i fly", "KAW! (thunderclap)"], "body": ["w..............w", "ww............ww", "wwy.oooooooo.yww", "wwwobbbbbbbbowww", "wwwobbbbbbbbowww", "wwobbbbbbbbbboww", "wyobbbbbbbbbboyw", "w.obbkkkkkkbbo.w", "..obbbkkkkbbbo..", "...obbbkkbbbo...", "....oobbbboo....", "......oooo......"], "colors": [{"name": "Storm", "o": "#0a0a1a", "b": "#3a3a6a", "w": "#2a2a4a", "y": "#fff27a", "k": "#ffd23a", "e": "#fff27a"}, {"name": "Golden", "o": "#2a1a04", "b": "#c8902a", "w": "#8a5a14", "y": "#ffffff", "k": "#fff0a0", "e": "#ffffff"}]}, "Coralgon": {"eyes": 5, "move": "walk", "speed": 0.5, "feet": False, "lines": ["*waves crash around me*", "a whole reef lives on my back", "fish say hi to me daily", "slow? i'm 1000 years old"], "body": ["..c..r....r..c..", ".ccr.cc..cc.rcc.", "..ccrcc..ccrcc..", ".cccccrccrccccc.", ".osssssssssssso.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", ".obbo......obbo.", ".oo..........oo."], "colors": [{"name": "Reef", "o": "#0a1a2a", "b": "#3a9a8a", "s": "#2a6a6a", "c": "#ff7a8a", "r": "#ffd23a", "p": "#ffb0c0", "e": "#0a1a2a"}, {"name": "Bleached", "o": "#3a3a4a", "b": "#d8e0e8", "s": "#a8b0c0", "c": "#ffffff", "r": "#c8d0ff", "p": "#ffc0d0", "e": "#1a1a2a"}]}})
+GHOSTS.update({"Wick": {"eyes": 7, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": True, "lines": ["*flicker flicker*", "don't blow me out!", "i'm a candle with a soul", "warm and spooky"], "body": [".......yy.......", "......yyyy......", ".....yryyry.....", "......y..y......", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "..obpbbbbbbpbo..", "..obbbbbbbbbbo..", ".obdbbbbbbbbdbo.", ".oooooooooooooo."], "colors": [{"name": "Wax", "o": "#6a5a5a", "b": "#fff4e8", "d": "#e8d8c8", "y": "#ffd23a", "r": "#ff7a1a", "p": "#ffb0c0", "e": "#3a2a2a"}, {"name": "Blue Flame", "o": "#3a4a6a", "b": "#e8f0ff", "d": "#c8d8f0", "y": "#8ae0ff", "r": "#3a8aff", "p": "#c8b0ff", "e": "#1a2a4a"}]}, "Phantom Knight": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False, "lines": ["*clank… clank…*", "i guard this castle forever", "my armor is empty. and spooky", "halt! who goes there? (a friend)"], "body": ["....r......r....", "...rooo..ooor...", "..ohhhhhhhhhho..", ".ohhhhhhhhhhhho.", ".ohhvvvvvvvvhho.", ".ohhvvvvvvvvhho.", ".ohhhhhhhhhhhho.", ".ohhhhhhhhhhhho.", "ohhhhhhhhhhhhhho", "ohbhhhhhhhhhhbho", ".ohhhhhhhhhhhho.", "..oo.oo..oo.oo.."], "colors": [{"name": "Iron", "o": "#2a2a3a", "h": "#a8b0c8", "v": "#1a1a2a", "b": "#e8f0ff", "r": "#e83a5a", "e": "#5affd8"}, {"name": "Gilded", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "b": "#fff8d0", "r": "#5a8aff", "e": "#ff5a3a"}]}, "Jack-o'-Ghost": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False, "lines": ["*hollow chuckle*", "trick or treat… or both?", "my grin is carved by hand", "pumpkin spice and everything spooky", "i got slam dunked once. never again.", "keep that Blip away from me", "*still has ice in its grin*", "i used to be a regular pumpkin, you know"], "body": [".......ss.......", "......ssss......", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbwbbwwwwbbwbbo", ".obbwwwwwwwwbbo.", "..obbbbbbbbbbo..", "...oooooooooo..."], "colors": [{"name": "Pumpkin", "o": "#3a1a04", "b": "#ff8a1a", "s": "#3a8a3a", "w": "#fff27a", "e": "#fff27a"}, {"name": "Ghost White", "o": "#5a5a7a", "b": "#f0f0ff", "s": "#5a5a7a", "w": "#a87aff", "e": "#a87aff"}]}, "Yurei": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False, "lines": ["*drifts silently*", "i'm waiting for someone…", "the willow tree is my home", "…boo"], "body": ["...hhhhhhhhhh...", "..hhhhhhhhhhhh..", ".hhhhhhhhhhhhhh.", ".hhbbbbbbbbbbhh.", ".hhbbbbbbbbbbhh.", ".hhbbbbbbbbbbhh.", ".hhbbbbbbbbbbhh.", "..hbpbbbbbbpbh..", "..hbbbbbbbbbbh..", "..wwwwwwwwwwww..", "..wwwwwwwwwwww..", "...w.w.ww.w.w..."], "colors": [{"name": "Classic", "o": "#2a2a3a", "h": "#14141e", "b": "#f0f4ff", "w": "#ffffff", "p": "#c8b0d8", "e": "#2a2a3a"}, {"name": "Willow", "o": "#1a2a2a", "h": "#1a3a3a", "b": "#e8fff4", "w": "#d0fff0", "p": "#a8d8c8", "e": "#1a3a3a"}]}, "Mirror Spirit": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": True, "lines": ["*appears in the reflection*", "i copy everything you do", "…do", "behind you! no, in front! no—"], "body": ["..oooooooooooo..", ".oyyyyyyyyyyyyo.", ".oybbbbbbbbbbyo.", ".oybbbbbbbbbbyo.", ".oybbbbbbbbbbyo.", ".oybbbbbbbbbbyo.", ".oybbbbbbbbbbyo.", ".oybpbbbbbbpbyo.", ".oybbbbbbbbbbyo.", ".oybbbbbbbbbbyo.", ".oyyyyyyyyyyyyo.", "..oooooooooooo.."], "colors": [{"name": "Silver", "o": "#2a2a3a", "y": "#c8a03a", "b": "#c8e0ff", "p": "#e8c0ff", "e": "#2a2a5a"}, {"name": "Cracked", "o": "#1a1a2a", "y": "#6a4a8a", "b": "#a8b8e8", "p": "#ff9ad8", "e": "#ff3a6a"}]}, "Bookwraith": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False, "lines": ["*pages rustle by themselves*", "shhh! this is a library", "i haunt the poetry section", "overdue since 1823"], "body": ["................", "..oooooooooooo..", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppwwwwwwwwppo.", ".oowwwwwwwwwwoo.", "..o.wwwwwwww.o..", "....w.w..w.w...."], "colors": [{"name": "Old Tome", "o": "#2a1a0a", "p": "#8a3a2a", "b": "#f4e8c8", "w": "#e8f0ff", "e": "#2a1a0a"}, {"name": "Spellbook", "o": "#1a0a2a", "p": "#5a2a8a", "b": "#e8e0ff", "w": "#d8f0ff", "e": "#5affd8"}]}, "Foxfire Spirit": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": True, "lines": ["*blue flames dance*", "follow my lights into the woods", "i'm a fox made of fire", "*playful flicker*"], "body": [".f............f.", ".ff..........ff.", ".fbf.oooooo.fbf.", ".obbobbbbbbobbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", ".obbbbbbbbbbbbo.", "..obbbbbbbbbbo..", "..fobbbbbbbbof..", ".f..ffffffff..f."], "colors": [{"name": "Kitsune-bi", "o": "#1a3a6a", "b": "#c8f0ff", "f": "#3a8aff", "p": "#ff9ad8", "e": "#1a3a6a"}, {"name": "Ember", "o": "#5a1a04", "b": "#fff0c8", "f": "#ff6a1a", "p": "#ff9a7a", "e": "#5a1a04"}]}, "Ecto Slime": {"eyes": 6, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": True, "lines": ["*gloop*", "i'm 100% ectoplasm", "don't step in me!", "*wobbles spookily*"], "body": ["................", "................", ".....oooooo.....", "...oobbbbbboo...", "..obbbsbbsbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "oboobbobbobboobo", ".o..oo.oo.oo..o."], "colors": [{"name": "Green Goo", "o": "#0a3a1a", "b": "#7aff8a", "s": "#e8ffe8", "e": "#0a3a1a"}, {"name": "Grape Goo", "o": "#2a0a3a", "b": "#c87aff", "s": "#f8e8ff", "e": "#2a0a3a"}]}, "Veil": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": True, "lines": ["*a long veil drifts by*", "the ballroom is still dancing", "one more waltz?", "*twirls*"], "body": ["....rrrrrrrr....", "...wwwwwwwwww...", "..wwwwwwwwwwww..", ".wwbbbbbbbbbbww.", ".wwbbbbbbbbbbww.", ".wwbbbbbbbbbbww.", ".wwbbbbbbbbbbww.", "wwwbpbbbbbbpbwww", "wwwbbbbbbbbbbwww", "wwbbbbbbbbbbbbww", "w.wwbbbbbbbbww.w", "..w.w.wwww.w.w.."], "colors": [{"name": "Lace", "o": "#4a4a6a", "w": "#e8e8ff", "b": "#ffffff", "r": "#ff9ab8", "p": "#ffc0d8", "e": "#2a2a4a"}, {"name": "Midnight", "o": "#1a1a3a", "w": "#6a6aa8", "b": "#d8d8ff", "r": "#c8a0ff", "p": "#ff9ad8", "e": "#1a1a3a"}]}, "Specter Owl": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False, "lines": ["*hoo… hooo…*", "i see through walls", "who? WHO? (it's you)", "the night is my library"], "body": [".o............o.", ".ob..........bo.", ".obboooooooobbo.", ".obbbbbbbbbbbbo.", "obyybbbbbbbbyybo", "obyybbbbbbbbyybo", "obbbbbkkkkbbbbbo", "obbbbbbkkbbbbbbo", "obbwwbbbbbbwwbbo", ".obwwbbbbbbwwbo.", "..obbbbbbbbbbo..", "...oooooooooo..."], "colors": [{"name": "Barn", "o": "#4a4a6a", "b": "#e8e8f8", "y": "#c8c8e0", "k": "#ffd23a", "w": "#ffffff", "e": "#2a2a4a"}, {"name": "Shadow", "o": "#1a1a2a", "b": "#6a6a8a", "y": "#4a4a6a", "k": "#ff8a3a", "w": "#8a8aa8", "e": "#ffd23a"}]}, "Haunted Teacup": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": True, "lines": ["*rattles on its saucer*", "tea… for two… ghosts", "i'm a little teacup, short and spooky", "*steam whispers*"], "body": ["..s..........s..", "...s.s....s.s...", "..s..........s..", "................", ".oooooooooooooo.", ".obbbbbbbbbbbbo.", "hobbbbbbbbbbbboh", "hobpbbbbbbbbpboh", "hobbbbbbbbbbbboh", ".oobbbbbbbbbboo.", ".ssooooooooooss.", "ssssssssssssssss"], "colors": [{"name": "Porcelain", "o": "#4a4a6a", "b": "#ffffff", "h": "#4a4a6a", "s": "#c8d8ff", "p": "#ffb0d0", "e": "#2a2a4a"}, {"name": "Rose Gold", "o": "#6a3a3a", "b": "#ffe8e0", "h": "#c87a6a", "s": "#ffc8b0", "p": "#ff9ab0", "e": "#4a1a1a"}]}, "Boo Bunny": {"eyes": 6, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": True, "lines": ["*hops through walls*", "boo! (hop)", "carrots taste spooky", "i'm a bunny of the beyond"], "body": ["..oo........oo..", ".obbo......obbo.", ".obbo......obbo.", ".obbo......obbo.", ".obboooooooobbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", "oboobbobbobboobo", ".o..oo.oo.oo..o."], "colors": [{"name": "Moonlight", "o": "#6a6a8a", "b": "#f4f4ff", "p": "#ffb0d0", "e": "#2a2a4a"}, {"name": "Mint", "o": "#3a6a5a", "b": "#e8fff4", "p": "#ff9ad8", "e": "#1a3a2a"}]}})
+LEGENDS.update({"Elder Treant": {"eyes": 5, "move": "walk", "feet": True, "mouth": False, "speed": 0.5, "lines": ["*creaks wisely*", "i've watched this forest for ages", "my roots go all the way down", "patience, little sprout"], "body": ["g..g.g....g.g..g", "gggggggggggggggg", ".gggggggggggggg.", "..oooooooooooo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbmbbbbbbmbbo.", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..rr.rrrrrr.rr.."], "colors": [{"name": "Ancient Oak", "o": "#1a0e06", "b": "#8a5a2a", "g": "#4aa83a", "m": "#5a3a14", "r": "#5a3a14", "e": "#ffd23a", "f": "#1a0e06"}, {"name": "Cherry Blossom", "o": "#2a1408", "b": "#6a4a3a", "g": "#ffb0d0", "m": "#3a2418", "r": "#3a2418", "e": "#ffffff", "f": "#2a1408"}]}, "Petal Sprite": {"eyes": 5, "move": "flutter", "feet": False, "mouth": True, "speed": 1.0, "lines": ["*petals swirl around me*", "i paint every flower by hand", "spring is my favorite season", "*tiny laugh like wind chimes*"], "body": ["r.r..........r.r", ".rr..........rr.", "rr.oooooooooo.rr", "..obbbbbbbbbbo..", "w.obbbbbbbbbbo.w", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "w.obpbbbbbbpbo.w", "..obbbbbbbbbbo..", "...obbbbbbbbo...", "....oobbbboo....", "......oooo......"], "colors": [{"name": "Rose", "o": "#3a1a2a", "b": "#e8fff0", "r": "#ff6a9a", "w": "#ffd0e8", "p": "#ff8ab0", "e": "#3a1a2a"}, {"name": "Bluebell", "o": "#1a1a3a", "b": "#f0f4ff", "r": "#6a8aff", "w": "#c8d8ff", "p": "#ff9ad8", "e": "#1a1a3a"}]}, "Fungus Sage": {"eyes": 5, "move": "walk", "feet": True, "mouth": True, "speed": 0.6, "lines": ["*spores sparkle*", "the mycelium tells me everything", "mushrooms are the internet of trees", "hmm, yes, very wise"], "body": ["...oooooooooo...", ".oorrwrrrrwrroo.", "orrrrrrrrrrrrrro", "orwrrrrrrrrrrwro", "oooooooooooooooo", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "..obpbbbbbbpbo..", "..obbbbbbbbbbo..", "..obbbbbbbbbbo..", "...obbbbbbbbo...", "....oooooooo...."], "colors": [{"name": "Toadstool", "o": "#2a0a0a", "r": "#e83a3a", "w": "#ffffff", "b": "#f4e8d0", "p": "#ffb0a0", "e": "#2a1a0a", "f": "#2a0a0a"}, {"name": "Glowcap", "o": "#0a1a2a", "r": "#3ac8ff", "w": "#c8ffff", "b": "#e8f4ff", "p": "#a8c8ff", "e": "#0a2a3a", "f": "#0a1a2a"}]}, "Candy Dragon": {"eyes": 5, "move": "flutter", "feet": True, "mouth": True, "speed": 1.0, "lines": ["*breathes sprinkles*", "my scales are made of hard candy", "sweet but fierce!", "rawr (it smells like strawberries)"], "body": ["h..............h", ".h..oooooooo..h.", "..hobbbbbbbboh..", ".wobbbbbbbbbbow.", "wwobbbbbbbbbboww", "wobbbbbbbbbbbbow", "wobbbbbbbbbbbbow", ".obpbbbbbbbbpbo.", ".obbssssssssbbo.", ".obssssssssssbo.", "..obbbbbbbbbbo..", "...oooooooooo..."], "colors": [{"name": "Strawberry", "o": "#5a0a2a", "b": "#ff7aaa", "s": "#ffe0f0", "w": "#ffd0e0", "h": "#ffffff", "p": "#ff3a7a", "e": "#3a0a1a"}, {"name": "Mint Choc", "o": "#2a1a0a", "b": "#7ae8b8", "s": "#6a3a1a", "w": "#c8ffe8", "h": "#ffffff", "p": "#ff9ab0", "e": "#2a1a0a"}]}, "Sprinkle Unicorn": {"eyes": 5, "move": "walk", "feet": True, "mouth": True, "speed": 1.0, "lines": ["*rainbow sprinkles everywhere*", "i'm frosted, not horned", "every step leaves sprinkles", "sugar rush incoming!"], "body": [".......hh.......", "......hhhh......", ".o...ohhhho...o.", ".oaooooooooooao.", ".obbbbbbbbbbbbo.", "obsbbbbbbbbbbsbo", "obbbbbsbbsbbbbbo", "obpbbbbbbbbbbpbo", "obbbsbbbbbbsbbbo", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Vanilla", "o": "#5a3a5a", "b": "#fff4f8", "a": "#ffb0d0", "s": "#ff5a8a", "h": "#ffd23a", "p": "#ffb0c8", "e": "#3a1a3a"}, {"name": "Blueberry", "o": "#1a1a5a", "b": "#c8d8ff", "a": "#ffd0e8", "s": "#ffd23a", "h": "#ff7ab0", "p": "#ff9ad8", "e": "#1a1a3a"}]}, "Licorice Serpent": {"eyes": 5, "move": "walk", "feet": False, "mouth": False, "speed": 1.0, "lines": ["*sssweet hiss*", "i'm twisty and chewy", "black licorice: love it or hate it", "coil coil coil"], "body": ["....oooooooo....", "...obbbbbbbbo...", "..obsbbbbbbsbo..", "..obbbbbbbbbbo..", "..obpbbbbbbpbo..", "...obbbbbbbbo...", "....obbbbbbo....", ".oooobboobboooo.", "obsbbbo..obbbsbo", "obbbbbboobbbbbbo", ".obbsbbbbbbsbbo.", "..oooooooooooo.."], "colors": [{"name": "Black", "o": "#000000", "b": "#2a2a2a", "s": "#6a6a6a", "p": "#ff5a8a", "e": "#ff3a6a"}, {"name": "Red Vine", "o": "#3a0a0a", "b": "#d82a3a", "s": "#ff8a8a", "p": "#ffd0d0", "e": "#ffffff"}]}, "Coral Queen": {"eyes": 5, "move": "float", "feet": False, "mouth": True, "speed": 1.0, "lines": ["*the reef bows*", "every fish is my royal subject", "my crown is alive!", "bubbles, my dear, bubbles"], "body": ["..c..y....y..c..", ".cc.yyy..yyy.cc.", "..cyoyyooyyoyc..", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "fobbbbbbbbbbbbof", "ffbbbbbbbbbbbbff", "fobpbbbbbbbbpbof", ".obbbbbbbbbbbbo.", "..obbbbbbbbbbo..", "...oooooooooo..."], "colors": [{"name": "Reef", "o": "#0a2a3a", "b": "#5ad8c8", "c": "#ff7a8a", "y": "#ffd23a", "f": "#3a8aff", "p": "#ffb0c0", "e": "#0a2a3a"}, {"name": "Pearl", "o": "#3a2a4a", "b": "#f0e8ff", "c": "#c8a0ff", "y": "#ffffff", "f": "#a8c8ff", "p": "#ffb0d8", "e": "#3a2a4a"}]}, "Tide Leviathan": {"eyes": 5, "move": "float", "feet": False, "mouth": True, "speed": 0.6, "lines": ["*the tide rises when i breathe*", "i'm older than the ocean floor", "waves are my heartbeat", "*rumbling whale song*"], "body": ["................", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbsbbbbbbbbsbbo", "obbbbbbbbbbbbbbo", "obllllllllllllbo", "ollllllllllllllo", ".ollllllllllllo.", "w.oooooooooooo.w", "ww.wwww..wwww.ww"], "colors": [{"name": "Deep Tide", "o": "#06142a", "b": "#2a5a9a", "s": "#8ad8ff", "l": "#a8d8f0", "w": "#5ab8ff", "e": "#fff27a"}, {"name": "Storm Tide", "o": "#0a0a14", "b": "#3a3a5a", "s": "#c8c8ff", "l": "#8a8ab0", "w": "#c8d8ff", "e": "#ff5a8a"}]}, "Crystal Stego": {"eyes": 5, "move": "walk", "feet": True, "mouth": True, "speed": 0.7, "lines": ["*plates glitter*", "my back grows gemstones", "i'm a walking geode", "chomp chomp (ferns)"], "body": ["....c......c....", "..c.cc....cc.c..", "..cccc.cc.cccc..", ".ccoooooooooocc.", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Amethyst", "o": "#1a0a2a", "b": "#7a6a5a", "c": "#c86aff", "p": "#e8a0a0", "e": "#1a0a2a"}, {"name": "Emerald", "o": "#0a1a0a", "b": "#6a7a5a", "c": "#3ae07a", "p": "#e8a0a0", "e": "#0a1a0a"}]}, "Ember Raptor": {"eyes": 5, "move": "walk", "feet": True, "mouth": False, "speed": 1.6, "lines": ["*leaves tiny flames when running*", "fastest dino in the volcano", "hot hot HOT", "*screech* (friendly)"], "body": [".....f....f.....", "....ff....ff....", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", "obbbbbwwwwbbbbbo", "obbbbwwwwwwbbbbo", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Magma", "o": "#1a0402", "b": "#c83a14", "f": "#ffd23a", "w": "#fff0c8", "e": "#ffd23a"}, {"name": "Obsidian", "o": "#06060a", "b": "#2a2a3a", "f": "#ff5a1a", "w": "#ffe0c0", "e": "#ff5a1a"}]}, "Star Whale": {"eyes": 5, "move": "float", "feet": False, "mouth": True, "speed": 0.6, "lines": ["*sings across the galaxy*", "i swim between the stars", "constellations are my freckles", "*cosmic whale song*"], "body": ["..s..........s..", ".....s....s.....", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbsbbbbbbsbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbsbbsbbbpbo", "ollllllllllllllo", ".ollllllllllllo.", "..oooooooooooo..", "s......ss......s"], "colors": [{"name": "Nebula", "o": "#0a0a2a", "b": "#3a2a8a", "s": "#fff27a", "l": "#b8a0ff", "p": "#ff8ad8", "e": "#fff27a"}, {"name": "Aurora", "o": "#04201a", "b": "#1a6a5a", "s": "#ffffff", "l": "#8affd0", "p": "#ff9ad8", "e": "#ffffff"}]}, "Comet Fox": {"eyes": 5, "move": "walk", "feet": True, "mouth": True, "speed": 1.6, "lines": ["*leaves a trail of stardust*", "i'm faster than a shooting star", "make a wish when you see me!", "zoom zoom ✨"], "body": [".o............o.", ".oao........oao.", ".oaboooooooobao.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "olllbbbbbbbblllo", "ollllnnllnnllllo", ".ollllllllllllo.", "..ollllllllllo..", "t..oooooooooo..t"], "colors": [{"name": "Comet", "o": "#0a1a3a", "b": "#5ab8ff", "a": "#c8f0ff", "l": "#ffffff", "n": "#0a1a3a", "t": "#fff27a", "e": "#0a1a3a"}, {"name": "Meteor", "o": "#3a0a04", "b": "#ff7a2a", "a": "#ffd0a0", "l": "#fff4e0", "n": "#3a0a04", "t": "#ffd23a", "e": "#3a0a04"}]}})
+LEGEND_WORLD.update({"Elder Treant": "Plant World", "Petal Sprite": "Plant World", "Fungus Sage": "Plant World", "Candy Dragon": "Sweets World", "Sprinkle Unicorn": "Sweets World", "Licorice Serpent": "Sweets World", "Coral Queen": "Ocean World", "Tide Leviathan": "Ocean World", "Crystal Stego": "Dino World", "Ember Raptor": "Dino World", "Star Whale": "Space World", "Comet Fox": "Space World"})
+
+CRYPTIDS.update({"Ningen": {"eyes": 4, "move": "float", "speed": 0.7, "feet": False, "mouth": True, "lines": ["*glides under the ice*", "i'm big, pale and polite", "antarctica says hi", "*slow blink*"], "body": ["...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", ".obbbbbbbbbbbbo.", "a.obbbbbbbbbbo.a", "aa.obbbbbbbbo.aa", "a...obbbbbbo...a", ".....oooooo....."], "colors": [{"name": "Antarctic", "o": "#6a7a8a", "b": "#f4f8ff", "a": "#c8d8e8", "e": "#1a2030"}, {"name": "Deep Ice", "o": "#3a5a7a", "b": "#d0e8ff", "a": "#8ab0d8", "e": "#0a1a2a"}]}, "Van Meter Visitor": {"eyes": 5, "move": "flutter", "speed": 1.2, "feet": True, "mouth": False, "lines": ["*my horn glows at night*", "i scared a whole town in 1903", "the mine is my home", "*flaps bat wings*"], "body": [".......yy.......", "w......yy......w", "wo....oyyo....ow", "wwooooooooooooww", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wobbbbbbbbbbbbow", "w.obbbbbbbbbbo.w", "..obbbbbbbbbbo..", "...obbbbbbbbo...", "....obbbbbbo....", "....oooooooo...."], "colors": [{"name": "Iowa Night", "o": "#0e0a14", "b": "#5a4a6a", "w": "#2a2236", "y": "#fff27a", "e": "#fff27a", "f": "#0e0a14"}, {"name": "Mine Glow", "o": "#0a140e", "b": "#3a6a4a", "w": "#1a3a24", "y": "#a8ff7a", "e": "#a8ff7a", "f": "#0a140e"}]}, "Tatzelwurm": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True, "lines": ["mrrrow-hiss", "cat head, lizard body, alpine views", "i hide in the mountain caves", "the yodeling scares me"], "body": [".o............o.", ".oao........oao.", ".oaboooooooobao.", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", ".osssssssssssso.", ".osssssssssssso.", "..osssssssssso..", "...oooooooooo..."], "colors": [{"name": "Alpine", "o": "#1a140a", "b": "#c8985a", "a": "#e8b088", "s": "#5a8a3a", "p": "#ff9a7a", "e": "#2a8a3a", "f": "#1a140a"}, {"name": "Snowcap", "o": "#2a2a3a", "b": "#e8e8f0", "a": "#ffc0c8", "s": "#8aa8c8", "p": "#ffb0c0", "e": "#4a8aff", "f": "#2a2a3a"}]}, "Dobhar-chú": {"eyes": 5, "move": "walk", "speed": 1.3, "feet": True, "mouth": True, "lines": ["*splash* i'm the king otter!", "the lakes of Ireland are mine", "bow to your otter overlord", "*holds hands with you*"], "body": ["...yyyyyyyyyy...", "...ryyyrryyyr...", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpllllllllllpbo", "obbllllllllllbbo", "obbllllllllllbbo", ".obbbbbbbbbbbbo.", "..oooooooooooo.."], "colors": [{"name": "Lough", "o": "#1a0e06", "b": "#6a4a2a", "l": "#d8b890", "y": "#ffd23a", "r": "#3ac85a", "p": "#e89a7a", "e": "#0a0604", "f": "#1a0e06"}, {"name": "Silver Lake", "o": "#1a1a24", "b": "#5a6070", "l": "#c8d0d8", "y": "#e8e8f0", "r": "#5ab8ff", "p": "#d8a0a8", "e": "#0a0a10", "f": "#1a1a24"}]}, "Lusca": {"eyes": 4, "move": "float", "speed": 0.9, "feet": False, "mouth": False, "lines": ["*bubbles from the blue hole*", "half shark, half octopus, all hugs", "8 arms AND a fin!", "*swirls in the deep*"], "body": [".......ff.......", "......ffff......", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "owwwwwwwwwwwwwwo", ".oooooooooooooo.", ".t.t.t.tt.t.t.t.", "t..t..t..t..t..t", ".t..t..tt..t..t.", "t.....t..t.....t"], "colors": [{"name": "Blue Hole", "o": "#0a1a3a", "b": "#3a6aa8", "w": "#e8f4ff", "f": "#2a4a8a", "t": "#ff7a6a", "e": "#fff27a"}, {"name": "Reef Glow", "o": "#0a2a2a", "b": "#2a8a7a", "w": "#e8fff8", "f": "#1a6a5a", "t": "#ffd23a", "e": "#ff5a8a"}]}, "Beast of Gévaudan": {"eyes": 5, "move": "walk", "speed": 1.4, "feet": True, "mouth": True, "lines": ["*low growl in french*", "the forests of France fear me", "bonjour! (scary)", "i'm a very big good boy"], "body": ["o..............o", "oo............oo", "oao.oooooooo.oao", "oaaobbbbbbbboaao", "obbbbbbbbbbbbbbo", "obsbbbbbbbbbbsbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbllllllllllbbo", "osblllnnnnlllbso", ".osbllllllllbso.", "..oooooooooooo.."], "colors": [{"name": "Gévaudan", "o": "#1a0a04", "b": "#8a3a1a", "a": "#c86a3a", "s": "#3a1a0a", "l": "#d8a070", "n": "#1a0a04", "e": "#ffd23a", "f": "#1a0a04"}, {"name": "Moonlit", "o": "#0a0a14", "b": "#4a4a5a", "a": "#8a8a9a", "s": "#1a1a24", "l": "#a8a8b8", "n": "#0a0a14", "e": "#ff3a3a", "f": "#0a0a14"}]}, "Goatman": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": False, "lines": ["baaa… (spookily)", "Maryland's woods are my home", "i'm half goat. the cool half", "*clip clop in the dark*"], "body": ["h..............h", "hh............hh", ".hhoooooooooohh.", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "aobbbbbbbbbbbboa", ".obbbbbbbbbbbbo.", ".obbbbbbbbbbbbo.", ".obbnnbbbbnnbbo.", "..obbbbbbbbbbo..", "..obbgbbbbgbbo..", "...oogoooogoo..."], "colors": [{"name": "Woods", "o": "#1a140a", "b": "#7a6a4a", "h": "#e8d8b0", "a": "#5a4a2a", "n": "#1a140a", "g": "#e8d8b0", "e": "#ffd23a", "f": "#1a140a"}, {"name": "Ghostly", "o": "#2a2a3a", "b": "#c8c8d8", "h": "#ffffff", "a": "#8a8aa8", "n": "#2a2a3a", "g": "#ffffff", "e": "#ff3a5a", "f": "#2a2a3a"}]}, "Ropen": {"eyes": 5, "move": "flutter", "speed": 1.2, "feet": False, "mouth": False, "lines": ["*glows over the island at night*", "my tail has a diamond tip", "i light up like a lantern", "SKREE! (glowing)"], "body": ["....h......h....", "...hh......hh...", "w.hooooooooooh.w", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wwobbbbbbbbbboww", "wobbbbbbbbbbbbow", "w.obbkkkkkkbbo.w", "...obkkkkkkbo...", "....okkkkkko....", ".....oyyyyo.....", "......yyyy......"], "colors": [{"name": "Glowing", "o": "#0a0a14", "b": "#3a2a5a", "w": "#1a1430", "h": "#ff7a3a", "k": "#ffd23a", "y": "#ffe66a", "e": "#ffe66a"}, {"name": "Jungle", "o": "#0a140a", "b": "#3a5a2a", "w": "#1a2a14", "h": "#ff5a3a", "k": "#e8c86a", "y": "#a8ff7a", "e": "#a8ff7a"}]}, "Emela-ntouka": {"eyes": 5, "move": "walk", "speed": 0.7, "feet": True, "mouth": True, "lines": ["*splashes through the swamp*", "one horn, many legends", "i'm a gentle giant (mostly)", "the Congo river is my bath"], "body": [".......hh.......", "......hhhh......", ".....oohhoo.....", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "wwwwwwwwwwwwwwww", "w.ww..wwww..ww.w"], "colors": [{"name": "Swamp", "o": "#14140a", "b": "#5a5a3a", "h": "#e8e0c0", "p": "#a89a7a", "w": "#3a6a5a", "e": "#ffd23a", "f": "#14140a"}, {"name": "River Mud", "o": "#1a0e06", "b": "#7a5a3a", "h": "#fff0d0", "p": "#c89a7a", "w": "#4a5a3a", "e": "#1a0a02", "f": "#1a0e06"}]}, "Caddy": {"eyes": 3, "move": "float", "speed": 1.0, "feet": False, "mouth": False, "lines": ["*horse-like whinny… from the sea*", "the BC coast is my home", "i'm a sea serpent with a horse face", "humps ahoy!"], "body": ["..oo.oooooo.oo..", ".obboobbbboobbo.", ".obbbbbbbbbbbbo.", ".obpbbbbbbbbpbo.", "..obbbbbbbbbbo..", "...oobbbbbboo...", ".....obbbbo.....", ".ooo..obbo..ooo.", "obbbo.obbo.obbbo", "wwwwwwwwwwwwwwww", "w.ww..wwww..ww.w", "................"], "colors": [{"name": "Pacific", "o": "#0a1a2a", "b": "#5a7a6a", "p": "#a8c8b0", "w": "#2a5a8a", "e": "#0a1a10"}, {"name": "Kelp", "o": "#1a1a0a", "b": "#8a7a3a", "p": "#d8c890", "w": "#2a6a5a", "e": "#1a1004"}]}, "Orang Pendek": {"eyes": 5, "move": "walk", "speed": 1.1, "feet": True, "mouth": True, "lines": ["*shy little wave*", "i'm short, so what?", "the Sumatran forest is cozy", "you'll never get a photo"], "body": ["................", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", ".obbffffffffbbo.", "obbffffffffffbbo", "obbffffffffffbbo", "obbffffffffffbbo", ".obbffffffffbbo.", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Sumatra", "o": "#1a0a04", "b": "#8a4a1a", "f": "#e8b088", "e": "#1a0a04"}, {"name": "Shadow", "o": "#0a0a0a", "b": "#3a2a24", "f": "#a8806a", "e": "#ffd23a"}]}, "Montauk Monster": {"eyes": 5, "move": "walk", "speed": 0.8, "feet": True, "mouth": True, "lines": ["*washed up on the beach*", "nobody knows what i am", "not even me!", "i'm a mystery from 2008"], "body": ["................", "...oooooooooo...", "..obbbbbbbbbbo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbkkkkbbbbbo", "obpbbkkkkkkbbpbo", "obbbbkkkkkkbbbbo", ".obbbbbbbbbbbbo.", "..obbobbbbobbo..", "..oo.oooooo.oo.."], "colors": [{"name": "Beach Find", "o": "#4a3a3a", "b": "#e8c8b8", "k": "#c8a090", "p": "#ff9ab0", "e": "#1a1010"}, {"name": "Weird Green", "o": "#2a3a2a", "b": "#b8d8a8", "k": "#8ab07a", "p": "#ffb0c0", "e": "#0a1a0a"}]}})
+GHOSTS['Phantom Knight'] = {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "ghost": True, "mouth": False, "lines": ["*clank… clank…*", "i guard this castle forever", "my armor is empty. and spooky", "halt! who goes there? (a friend)", "for the realm!"], "body": [".......rr.......", "......rrrr......", "....oooooooo....", "...ohhhhhhhho...", "..ohhhhhhhhhho..", "..ohvvvvvvvvho..", "..ohhhhhhhhhho..", ".oossssssssssoo.", "oaossssbbssssoao", ".osssssssssssso.", "..wwwwwwwwwwww..", "...w.ww..ww.w..."], "colors": [{"name": "Iron", "o": "#1a1a2a", "h": "#a8b0c8", "v": "#0a0a14", "s": "#8a90a8", "b": "#e83a5a", "a": "#c8d0e8", "r": "#e83a5a", "w": "#c8e0ff", "e": "#5affd8"}, {"name": "Gilded", "o": "#3a2a0a", "h": "#e8c86a", "v": "#2a1a04", "s": "#c8a040", "b": "#5a8aff", "a": "#fff0b0", "r": "#5a8aff", "w": "#fff8d0", "e": "#ff5a3a"}]}   # redrawn for 1.0, with his own Phantom type and 3 Awakenings
+# 🐇 Withered: the same showman as its Prime color, worn down. Torn ear, one ear drooping, bent key, tattered cape.
+GHOSTS['Wind-Up Hare'] = {"eyes": 5, "move": "walk", "speed": 0.7, "feet": True, "ghost": True, "mouth": False, "night": 4, "lines": ["*tick… tick… tick…*", "wind me up and watch me go", "i was the first toy on the night shift", "my key is stuck. help?", "*one ear flops over*", "they forgot me in the old workshop"], "body": ["..oo.....yY.....", ".o*Ao...yooy....", ".oxAo....yY.....", "..obAooogoooooo.", "...obbbbbbbbbbAo", "..obbbbbbbbbBoao", "..obbbbbbbbbSoao", "..opbbLLxLbbpoao", "..oBbBookobbBoo.", ".aAolppllllLo.a.", "RAoXllllllllXoaR", ".r.oXLLLYLLXo.r."], "colors": [{"name": "Patina", "o": "#14201a", "b": "#5a9a8a", "l": "#c8e0c8", "a": "#3a6a5a", "x": "#2a3a2a", "g": "#c8a03a", "y": "#d8b04a", "r": "#a8b0a0", "s": "#2a3a34", "k": "#e8e8d8", "p": "#8a5a5a", "e": "#7affd8"}, {"name": "Rust", "o": "#200c04", "b": "#a8643a", "l": "#e8c8a0", "a": "#6a3414", "x": "#3a1a0a", "g": "#ffd23a", "y": "#c8a03a", "r": "#c8a888", "s": "#3a2014", "k": "#f0e0c8", "p": "#c86a5a", "e": "#ff8a2a"}, {"name": "Brass", "o": "#2a1a04", "b": "#c8a03a", "l": "#fff0c0", "a": "#8a6a1a", "x": "#5a4010", "g": "#7a5a1a", "y": "#e8e8d8", "r": "#fff0c0", "s": "#4a3410", "k": "#fffaf0", "p": "#e88a6a", "e": "#5affd8"}, {"name": "Midnight", "o": "#06060c", "b": "#2a2a3a", "l": "#4a4a62", "a": "#16161f", "x": "#0a0a12", "g": "#5a4a2a", "y": "#8a7a4a", "r": "#7a7a8a", "s": "#12121a", "k": "#d8d8e0", "p": "#5a2a3a", "e": "#ff3b3b"}, {"name": "Shadow", "unlock": "puppet", "o": "#000000", "b": "#14101e", "l": "#2a2240", "a": "#0a0812", "x": "#000000", "g": "#b05aff", "y": "#b05aff", "r": "#b05aff", "s": "#0a0812", "k": "#e0d8ff", "p": "#3a1a4a", "e": "#f4f0ff"}]}   # 🐇 only after Night 4
+# ✨ Prime: the Wind-Up Hare in its prime: polished gold, ears up, flexing in a showman's cape and bow tie. A color with its own drawing.
+# Fully solid (no ghostly see-through), with a split-second glitch back to its old Patina look now and then.
+GHOSTS['Wind-Up Hare']["colors"].append({"name": "Prime", "solid": True, "glitch": 0, "o": "#3a2604", "b": "#f4c84a", "h": "#fffbe8", "s": "#c8902a", "a": "#ff9ab8", "y": "#ffe27a", "g": "#d8d8e8", "k": "#ffffff", "p": "#ff9a7a", "l": "#fff4d8", "e": "#3a8aff", "w": "#ffffff", "d": "#e83a4a", "r": "#a8202e", "art": ["..oo...yY...oo..", ".o*Ao.yooy.oaBo.", ".o*Ao..yY..oaBo.", "k.obAoogGooaBo.k", "wW.ohbbbbbbBo.wW", "wGohhbbbbbbbbsgW", "oobbbbbbbbbbbSoo", ".opbbbLaaLbbbpo.", ".roBbBowWobbBor.", "RrRowddrrddWoRrR", ".roDwwwwwwwwDor.", ".RRoDDWYYWDDoRR."]})
+GHOSTS['Puppet Box'] = {"eyes": 5, "move": "hop", "speed": 0.7, "feet": False, "body": ["...s........s...", ".oooooooooooooo.", ".obbbbbkkbbbbbo.", ".oddddddddddddo.", "..gggggggggggg..", "..gggggggggggg..", "..gggggggggggg..", ".oooooooooooooo.", ".obbbbbkkbbbbbo.", ".obbbbbyybbbbbo.", ".odddddkkdddddo.", ".oooooooooooooo."], "colors": [{"name": "Oak", "o": "#2a1408", "b": "#9a6a3a", "d": "#6a4220", "k": "#e8c04a", "y": "#1a0a04", "g": "#0a0610", "s": "#c8c0d8", "e": "#ff3a4a"}, {"name": "Ebony", "o": "#0e080e", "b": "#3a2a3a", "d": "#241824", "k": "#c8c8d8", "y": "#0a0610", "g": "#050308", "s": "#c8c0d8", "e": "#ff3a4a"}], "ghost": True, "mouth": False, "lines": ["*creak…*", "don't open the lid… (please open the lid)", "*a tiny tune plays from inside*", "the strings are pulling…", "i'm just a box. probably.", "*the keyhole blinks*"]}
+GHOSTS['Puppet Box']["colors"].append({"name": "Black Light", "o": "#000000", "b": "#141020", "d": "#0a0812", "k": "#ffffff", "y": "#b05aff", "g": "#000000", "s": "#e0d8ff", "e": "#f4f0ff"})   # 🔦 Black Light: glows under UV
+# ⭐ Creator Blips: only the people who make Blipville can get these (with the secret creator code). They never show up for anyone
+# else, and save codes don't carry them.
+CREATOR = {"Blipmaker": {"eyes": 5, "move": "hop", "speed": 1.2, "lines": ["i made all of this! 💜", "*adjusts crown*", "welcome to MY Blipville", "the creator has arrived", "every Blip started as my idea"], "body": ["....y..yy..y....", "....yyyyyyyy....", "..oooyyyyyyooo..", ".obbbbbbbbbbbbo.", "cobbbbbbbbbbbboc", "cobbbbbbbbbbbboc", "cobbbbbbbbbbbboc", "cobpbbbbbbbbpboc", "cobbbbbssbbbbboc", "cobbbbssssbbbboc", "cc.obbbssbbbo.cc", "cc..oooooooo..cc"], "colors": [{"name": "Founder", "o": "#2a1a4a", "b": "#8a6aff", "y": "#ffd23a", "c": "#e83a5a", "s": "#ffd23a", "p": "#ff9ad8", "e": "#1a0a3a"}, {"name": "Night Shift", "o": "#0a0a1a", "b": "#3a3a6a", "y": "#ffd23a", "c": "#5affd8", "s": "#5affd8", "p": "#c8a0ff", "e": "#fff27a"}]}, "Byte": {"eyes": 5, "move": "hop", "speed": 1.4, "mouth": False, "lines": ["*beep* i helped build this!", "compiling cuteness…", "0 bugs found (today)", "ship it! 🚀", "i wrote 10,000 lines of Blip"], "body": ["........y.......", "........a.......", "....oooooooo....", "...obbbbbbbbo...", "..obbbbbbbbbbo..", "..oggggggggggo..", "..oggggggggggo..", "..oggggmmggggo..", "..obbbbbbbbbbo..", "..obkbbbbbbkbo..", "...obbbbbbbbo...", "....oo....oo...."], "colors": [{"name": "Terminal", "o": "#0a1a1a", "b": "#5ad8c8", "g": "#0a2a2a", "m": "#5aff8a", "k": "#c8fff0", "a": "#2a4a4a", "y": "#ffd23a", "e": "#5aff8a"}, {"name": "Sunset", "o": "#2a0a0a", "b": "#ff9a6a", "g": "#2a0a14", "m": "#ffd23a", "k": "#fff0d0", "a": "#5a2a1a", "y": "#5affd8", "e": "#ffd23a"}]}}
+CREATOR["Guardian"] = {"eyes": 5, "move": "walk", "speed": 1.1, "mouth": True, "lines": ["🛡️ keeping Blipville safe", "be nice in the Discord!", "*polishes shield*", "mod squad, reporting in", "no spam on my watch"], "body": ["......aaaa......", ".....aa..aa.....", "..oooooooooooo..", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "obbbbbbbbbsssso.", "obbbbbbbbbswwso.", ".obbbbbbbbsswso.", "..ooooooooosso.."], "colors": [{"name": "Guardian", "o": "#0a1a3a", "b": "#5a9aff", "a": "#ffd23a", "s": "#c8d0e8", "w": "#3a6aff", "p": "#ff9ab0", "e": "#0a0a2a"}, {"name": "Night Watch", "o": "#0a0a14", "b": "#3a3a5a", "a": "#5affd8", "s": "#8a90a8", "w": "#5affd8", "p": "#c8a0ff", "e": "#5affd8"}]}   # 🛡️ the moderators' Blip (creators get it too)
+CREATOR["Diamond Ladybug"] = {"eyes": 4, "move": "walk", "speed": 1.1, "mouth": False, "body": ["....a......a....", ".....a....a.....", "....oooooooo....", "...okkkkkkkko...", "..okkkkkkkkkko..", "..okkkkkkkkkko..", "occwccdmmdccwcco", "ocsscccmmcccssco", "ocsscwdmmdwcssco", "occccddmmddcccco", ".ocwcddmmddcwco.", "..oooooooooooo.."], "colors": [{"name": "Diamond", "o": "#1a2a4a", "k": "#22283a", "a": "#5ad8ff", "c": "#bfefff", "d": "#7ac8f0", "w": "#ffffff", "s": "#1a2a4a", "m": "#3a6aa8", "e": "#bff4ff"}, {"name": "Ruby", "o": "#2a0a14", "k": "#1a0a10", "a": "#ff5a7a", "c": "#ff8aa8", "d": "#e83a5a", "w": "#ffffff", "s": "#2a0a14", "m": "#8a1a2a", "e": "#ffd8e0"}, {"name": "Black Diamond", "o": "#000000", "k": "#0a0a12", "a": "#c8c8ff", "c": "#5a5a7a", "d": "#3a3a5a", "w": "#e0e0ff", "s": "#0a0a14", "m": "#1a1a2a", "e": "#c8c8ff"}], "lines": ["✨ *sparkles*", "polished my spots today 💎", "lucky AND shiny", "mod squad, but make it sparkle", "diamonds are a Blip's best friend", "*catches the light*"]}   # 💎 only for one moderator code
+MOD_KINDS = ["Guardian"]
+# Blips that belong to one moderator code only (the code's SHA-256 → its Blips). Nobody else gets them, creators included.
+MOD_CODE_KINDS = {"f7442ad71cf1853b4834396505ec91f5cbba914d1e9c7f208351b22fd8f7f05a": ["Diamond Ladybug"]}
+CREATOR_KINDS = list(CREATOR)
+MOD_HASHES = ["6e6e301874df69891f4ba7711c723a7799ac9379dfad867095bbd7cfdf8d44f0", "f7442ad71cf1853b4834396505ec91f5cbba914d1e9c7f208351b22fd8f7f05a"]   # SHA-256 of each moderator code
+CREATOR_HASH = "93fa66c3b5183cf0d553717e662d951be88789482b1fb136208624c8ab7c6d56"   # SHA-256 of the creator code (the code itself is never in here)
+CREATOR_TIER = {"Blipmaker": 2.0, "Byte": 1.3, "Diamond Ladybug": 1.3}
+CREATOR_BOSS = ["The Blipmaker (boss)", [["Blipmaker", 0, 0], ["Lurker", 0, 3], ["Phantom Knight", 0, 3]]]
+CREATOR_BOSS_REWARD = 50
+# 🤖 Silvertear-03 (she/her): a mecha kaiju (silver plates over a charcoal frame, a brow horn, swept-back fins, a dark visor with wide
+# pixel eyes, crimson tear ridges, a segmented chin guard and a segmented tail sticking out the back).
+KAIJU["Silvertear-03"] = {"eyes": 4, "move": "walk", "speed": 0.55, "feet": True, "mouth": False,
+    # Personality: outside, a hyper-serious tactical bodyguard who talks in clipped mission logs, scans cookies for
+    # "threat levels" and stands guard from 7 PM to 7 AM. Inside: fiercely loyal to her keeper, secretly loves nap time,
+    # and short-circuits (her whole faceplate flushes pink) whenever anyone calls her cute.
+    "lines": ["LOG 0412: perimeter secure. snacks accounted for.", "*scanning* … no threats. continuing patrol.",
+              "keeper status: safe. this unit approves.", "LOG 0413: a leaf moved. it has been dealt with.",
+              "standing by.", "*visor sweeps left… right…*"],
+    "night_lines": ["NIGHT SHIFT: guard mode engaged. sleep well, keeper.",
+                    "LOG 2300: all quiet. this unit does not need sleep. *yawn* …that was a system sound.",
+                    "*stands guard by the door*", "nothing gets past this unit tonight."],
+    "pet_lines": ["…physical contact logged. it was… acceptable.", "*faceplate heats up* t-tactical units do not enjoy head pats.",
+                  "*whirr* LOG: keeper is very kind. do not tell anyone."],
+    "feed_lines": ["scanning cookie… threat level: delicious. engaging.",
+                   "LOG: cookie inspected for hazards. none found. consuming as a precaution.",
+                   "*scans cookie* …chocolate chip detected. morale +3%."],
+    "nap_lines": ["*enters power-saving mode* this is NOT a nap.", "recharging. …five more minutes. that's an order."],
+    "wake_lines": ["LOG: reboot complete. this unit was not napping.", "*visor flickers on* i was guarding. with my eyes closed."],
+    "blush": {"pal": {"s": "#ffa8c0"}, "rows": [3, 8]},   # full-faceplate embarrassment: brow plate down to the chin guard
+    # 💬 her chat portrait: a hand-drawn half torso (32 x 30) in her current colors; "rows" is the face, for blushing
+    "portrait": {"rows": [5, 16], "art": ['..............osso..............', '..............osso..............', '.............osssso.............', '........oooooossssoooooo........', '.......osssssssssssssssSo.......', '.....ooksssssssssssssssSkoo.....', '.o..ohhksssssssssssssssSkHho..o.', 'o*o.ohhksssssssssssssssSkHho.o*o', 'oh*ohhhkkkkkkkkkkkkkkkkkkHhho*ho', '.oh*hhhkvvvvvvvvvvvvvvvvkHhh*ho.', '..ohhhhkvvyeyyvvvvyeyyvvkHhhho..', '...ohhhkvvyyyyvvvvyyyyvvkHhho...', '...ohhhkvvvvvvvvvvvvvvvvkHhho...', '...ohhhksssrrssssssrrssSkHhho...', '...ohhhksssrrssssssrrssSkHhho...', '...ohhhksssrrssssssrrssSkHhho...', '....ohhksssrrssssssrrssSkHho....', '....ohhksssRRssssssRRssSkHho....', '.....oosssssSkSkSkSksssSSoo.....', '.......oooookSkSkSkSooooo.......', '........oooookkkkkkooooo........', '....oooossssskkkkkksssssoooo....', '...oSSSSssssskkyykksssssSSSSo...', '..ooSSSSssssskkkkkksssssSSSSoo..', '.ossSSSSssssssskksssssssSSSSsso.', '.oskkkkkkkkkkkkkkkkkkkkkkkkkkso.', '.ossssssssssssskkssssssssssssso.', '.ossssssssssssskkssssssssssssso.', '.ossssssssssssskkssssssssssssso.', '.ossssssssssssskkssssssssssssso.']},
+    "body": ["..o....oo....o..", "..so..osSo..oS..", ".osSooosSooosSo.", ".oksssssssssSko.", ".okyvvvvvvvvyko.",
+             ".okyvvvvvvvvyko.", ".oksrssssssrSko.", ".oksrssssssrSko.", ".oksRssssssRSko.", ".okSsskSSksSSkoo",
+             "..okkSSSSSSkkokS", "...okkkSSkkko.ko"],
+    "colors": [{"name": "Chrome", "o": "#14141c", "k": "#34343f", "s": "#c8ccd8", "v": "#0a0a12", "y": "#ffd23a", "r": "#d81e3a", "e": "#ffe14a", "f": "#34343f"},
+               {"name": "Gunmetal", "o": "#0a0a10", "k": "#1e1e26", "s": "#6a7080", "v": "#050508", "y": "#5affd8", "r": "#ff3a6a", "e": "#7affe8", "f": "#1e1e26"},
+               {"name": "Gold Plated", "o": "#2a1a04", "k": "#3a2a14", "s": "#ffd27a", "v": "#140a02", "y": "#3aff8a", "r": "#d81e3a", "e": "#5affa0", "f": "#3a2a14"},
+               # 📺 Showa: the 1970s tin-robot model, with its own drawing: bolt antennae, a flat riveted brow, amber eyes
+               # in a wide visor slot, clean riveted cheeks (no tears), a red/yellow/cyan chest strip and a stiff tail
+               {"name": "Showa", "o": "#1a1c20", "s": "#aeb5bd", "k": "#3a3e46", "v": "#14161a", "y": "#ff922b", "e": "#ff922b",
+                "r": "#e83a3a", "u": "#ffd23a", "c": "#3ad8ff", "f": "#3a3e46",
+                "art": ["..o..........o..", "..S..........S..", ".oSooooooooooSo.", ".osksssssssskso.", ".ovyvvvvvvvvyvo.",
+                        ".ovyvvvvvvvvyvo.", ".osksssssssskso.", ".osssssssssssSo.", ".osssrruuccssSo.", ".oSsskSSSSksSSo.",
+                        "..okkSSSSSSkoSkS", "...okkkkkkkko..."]},
+               # 🎟️ Mirror Chrome: merch-only (redeem an AEGIS-CHR code from the physical toy). New colors go at the
+               # end: saves remember colors by position.
+               {"name": "Mirror Chrome", "unlock": "merch", "o": "#10141c", "k": "#2a3040", "s": "#eef4ff", "v": "#060a14", "y": "#7ad8ff",
+                "r": "#d81e3a", "e": "#b8ecff", "f": "#2a3040"}]}
+# 💬 Chats: talk to a Blip by picking ready-made lines. Each node is what the Blip says plus your choices
+# [what you say, next node]; "end" closes the chat. Add a Blip here (and nothing else) to let it chat.
+CHATS = {
+    "Silvertear-03": {
+        "start": {"say": "LOG: keeper approaching. *visor brightens* state your request.",
+                  "options": [["you're so cute!", "cute"], ["why are you crying?", "tears"], ["are you sleepy?", "nap"],
+                              ["what are you?", "origin"], ["wanna stomp something?", "stomp"], ["bye!", "bye"]]},
+        "cute": {"say": "*FULL FACEPLATE OVERHEAT* E-E-ERROR. this unit is NOT cute. this unit is TACTICAL. *steam*", "blush": True,
+                 "options": [["you're blushing!", "cute2"], ["okay, okay. very tactical.", "start"]]},
+        "cute2": {"say": "negative. that is a… coolant leak. please look away while this unit recalibrates.", "blush": True,
+                  "options": [["*pat her head*", "hug"], ["sorry!", "start"]]},
+        "nap": {"say": "negative. guards do not nap. …but if the keeper insists, this unit could perform a strategic recharge.",
+                "options": [["i insist", "napyes"], ["carry on, soldier", "start"]]},
+        "napyes": {"say": "*curls up* …strategic recharge initiated. keeper, stand guard for me? just this once.",
+                   "options": [["always", "hug"], ["bye!", "bye"]]},
+        "tears": {"say": "*a crimson tear rolls down* not sadness. coolant. …mostly.",
+                  "options": [["mostly?", "tears2"], ["that's okay, you know", "hug"]]},
+        "tears2": {"say": "this unit was built to guard a city that isn't there anymore. now this unit guards you. you are… the mission.",
+                   "options": [["thank you, Silvertear", "hug"], ["what happened to the city?", "lost"]]},
+        "lost": {"say": "LOG CORRUPTED. but this unit remembers the lights. your town has nice lights too.",
+                 "options": [["you can stay here", "hug"], ["bye!", "bye"]]},
+        "hug": {"say": "*servos whirr softly* loyalty protocol: permanent. 💚",
+                "options": [["ask something else", "start"], ["bye!", "bye"]]},
+        "origin": {"say": "model AEGIS. serial number scratched off. power source: solar, cookies and the keeper's approval.",
+                   "options": [["cookies??", "cookies"], ["ask something else", "start"]]},
+        "cookies": {"say": "affirmative. every cookie is scanned before consumption. for your safety. …also they are delicious.",
+                    "options": [["your secret's safe", "hug"], ["ask something else", "start"]]},
+        "stomp": {"say": "negative. stomping is reserved for emergencies. …and puddles.",
+                  "options": [["puddles?", "puddles"], ["ask something else", "start"]]},
+        "puddles": {"say": "*stomps a tiny puddle* SPLASH. emergency resolved.",
+                    "options": [["lol", "start"], ["bye!", "bye"]]},
+        "bye": {"say": "LOG: chat ended. this unit will be watching. protectively. not creepily.", "options": [["bye!", "end"]]},
+    },
+}
+# 🗣️ Optional personality for any Blip: its own lines for night (7 PM-7 AM), petting, feeding, napping and waking up,
+# and a "blush" ({"pal": colors its face turns, "rows": [first, last] art rows of the face} when it gets flustered).
+VOICE_KEYS = ("night_lines", "pet_lines", "feed_lines", "nap_lines", "wake_lines", "blush")
+# Every other Blip uses this one. {name}, {kind}, {line} (one of its own lines), {mood} (how it's really doing),
+# {cute} (how it takes a compliment) and {snack} are filled in for each Blip. "action": "feed" really feeds it.
+CHAT_DEFAULT = {
+    "start": {"say": "hi! it's me, {name}! what's up?",
+              "options": [["how are you?", "mood"], ["tell me about yourself", "about"], ["you're so cute!", "cute"],
+                          ["want a snack?", "snack"], ["bye!", "bye"]]},
+    "mood": {"say": "{mood}", "options": [["aw, okay!", "start"], ["bye!", "bye"]]},
+    "about": {"say": "i'm a {kind}! {line}", "options": [["tell me more!", "about2"], ["cool!", "start"]]},
+    "about2": {"say": "{line}", "options": [["haha, nice", "start"], ["bye!", "bye"]]},
+    "cute": {"say": "{cute}", "blush": True, "options": [["you are!", "start"], ["bye!", "bye"]]},
+    "snack": {"say": "{snack}", "options": [["here you go! 🍪", "fed"], ["maybe later", "start"]]},
+    "fed": {"say": "yay!! thank you!", "action": "feed", "options": [["enjoy!", "end"]]},
+    "bye": {"say": "bye bye! come chat again soon!", "options": [["bye!", "end"]]},
+}
+
+
+def scale2x(g):
+    """Smooth pixel-art upscale (EPX): twice the size, with rounder diagonals than a plain zoom."""
+    h, w = len(g), len(g[0])
+    out = [[None] * (w * 2) for _ in range(h * 2)]
+    for y in range(h):
+        for x in range(w):
+            p_ = g[y][x]
+            a = g[y - 1][x] if y else p_
+            b = g[y][x + 1] if x < w - 1 else p_
+            c = g[y][x - 1] if x else p_
+            d = g[y + 1][x] if y < h - 1 else p_
+            out[2 * y][2 * x] = c if c == a and c != d and a != b else p_
+            out[2 * y][2 * x + 1] = a if a == b and a != c and b != d else p_
+            out[2 * y + 1][2 * x] = c if d == c and d != b and c != a else p_
+            out[2 * y + 1][2 * x + 1] = b if b == d and b != a and d != c else p_
+    return out
+
+
+def chat_portrait(pet, now):
+    """The picture in the chat window: a hand-drawn half-torso portrait if the Blip has one, otherwise its own sprite,
+    smoothly upscaled. Either way in its current colors, blushing when it's flustered."""
+    v = VARIANTS[pet.kind]
+    cols = kind_colors(pet.kind)
+    pal = {**cols[pet.palette % len(cols)], **v.get("extra", {})}
+    por = v.get("portrait")
+    if por and not pal.get("art") and not plush_now(pet.kind):
+        pal = {"b": pal.get("s", pal["o"]), "h": pal.get("s", pal["o"]), **pal}   # "*" shines and "h" helmet = the plating
+        blush = v.get("blush") if now < getattr(pet, "blush_until", 0) else None
+        bpal = {**pal, **blush["pal"]} if blush else pal
+        return [[None if ch == "." else px_color(bpal if blush and por["rows"][0] <= y <= por["rows"][1] else pal, ch)
+                 for ch in row] for y, row in enumerate(por["art"])]
+    return scale2x(pet.build_art(now))
+
+
+def chat_tree(kind):
+    return CHATS.get(AWAKEN_BASE.get(kind, kind), CHAT_DEFAULT)
+
+
+def chat_text(pet, text):
+    """Fill in the {blanks} of a chat line for this Blip, right now."""
+    v = VARIANTS[pet.kind]
+    if "{mood}" in text:
+        mood = ("honestly? kinda hungry… *tummy rumbles*" if pet.hunger > 70 else
+                "sleepy… *yawn*" if pet.energy < 30 else
+                "the best! hanging out with you is my favorite" if bond_level(pet.bond) >= 3 else
+                "pretty good! thanks for asking :)")
+        text = text.replace("{mood}", mood)
+    if "{cute}" in text:
+        text = text.replace("{cute}", random.choice(v.get("pet_lines") or ["*happy wiggle* you think so?!", "aww, stop it! (don't stop)", "*blushes* hehe"]))
+    if "{snack}" in text:
+        text = text.replace("{snack}", "ooh, yes please! *hungry eyes*" if pet.hunger > 40 else "i'm pretty full… but i'd never say no to a cookie")
+    if "{line}" in text:
+        text = text.replace("{line}", random.choice(pet.lines()))
+    return text.replace("{name}", pet.name).replace("{kind}", pet.kind)
+
+
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
-                       "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False)}
+                       "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False),
+                       **{k: _a[k] for k in VOICE_KEYS + ("portrait",) if k in _a}}
+
+
+def voice(kind, key, default):
+    """A Blip's own line for this moment (see VOICE_KEYS), or the usual one."""
+    own = VARIANTS.get(kind, {}).get(key)
+    return random.choice(own) if own else default
+
+
+def guard_hours():
+    h = time.localtime().tm_hour
+    return h >= 19 or h < 7
+
+# 🧸 Bad Dreams: plush versions of the Night Shift crew. Until midnight they're harmless plushies that sit very still;
+# from midnight to 6 AM (your clock) they burst out as their Bad Dream selves. Click a Puppet Master 5 times fast and it
+# becomes the Bad Dream Puppet Master, then rewrites a robo into its Bad Dream: fend it off for 5 seconds to keep it.
+# "big" is the 32 x 30 art the fend-off shows ("%" is the glow around the eyes, "h" the eye shine, "c" the claws).
+BAD_DREAMS = {'Bad Dream Bear': {'robo': 'Robo Bear', 'eyes': 4, 'body': ['.oo..ohhhho..oo.', 'oqqoohhyyhhoobbo', 'oqtokkkkkkkkoBbo', '.obbbbbbbbbbbBo.', '.obbbbbbbbbbbBo.', '.obbbbbbbbbbbBo.', '.obpbllllllbpBo.', '..obblxlxlxlBo..', '.oboobbtbbbboobo', '.obobbbbbbbbbobo', '.wwobbbbbbbbbow.', '...obbo..obbo...'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#141428', 'name': 'Bad Dream', 'b': '#8a6878', 's': '#5a4050', 'l': '#d0b8c0', 'q': '#5a5a9a', 'h': '#2a2a50', 'y': '#d8b04a', 'p': '#c87a9a', 'e': '#ff5ad8'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#0a0610', 'k': '#141428', 'name': 'Lights Out', 'b': '#4a3a5a', 's': '#2a2038', 'l': '#8a7a9a', 'q': '#3a6a6a', 'h': '#1a1a30', 'y': '#a88a3a', 'p': '#8a5a7a', 'e': '#7affd8'}], 'xeye': True, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['*stitches creak*', 'the captain never sleeps', 'who turned off the nightlight?', '*button eye rolls around*'], 'plush': {'body': ['.ooo.oooooo.ooo.', 'oqtqohhhhhhoabBo', 'oqqqhhhyyhhhoaBo', '.oookkkkkkkkooo.', 'o*buuuubbbbbbbBo', 'obbubbubbbbbbbBo', 'obbubbubbbbbbbBo', 'obpuuuubtbbbbpBo', 'obbbbllllllbbbBo', 'obbblxlxlxllbbBo', 'oSbbbllllllbwwSo', '..ooBBBtBBBBoo..'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#8a9ad8', 'x': '#2a1a2a', 'k': '#141428', 'name': 'Plush', 'b': '#c89a7a', 'a': '#a87a5a', 's': '#8a6a50', 'l': '#f0e0d0', 'q': '#8a9ad8', 'h': '#3a4a8a', 'y': '#ffd23a', 'p': '#ff9ab0', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a plush bear. just a plush bear.*', '...', '*one button eye seems to follow you*']}, 'big': ['.....oooo.ooooooooooooooooo.....', '....obbBBokkkkkkkkkkkkkbbBBo....', '...obbqqbbkkkkkyyykkkkkbbbBBo...', '...obqtqqbkkkkkkkkkkkkkbbbBBo...', '...obqqtKKKKKKKKKKKKKKKKKbBBo...', '...obbqqtbbbbbbbbbbbbbbbbbBBo...', '....obbbbbbbbbbbbbbbbbbbbBBo....', '.....oobbbxbbxbbbbb%%%%%Boo.....', '......obbbbxxbbbbbb%hee%Bo......', '.....obbbbbxxbbbbbb%eee%BBo.....', '.....obbbbxbbxbbbbb%eee%BBo.....', '.....obbbbbbbbbbbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpbllllnnnlllbbpBo......', '......obbbllllllnlllllbBBo......', '.......obblxlllllllllxBBo.......', '........obblxxxlxlxxxBBo........', '.........obbllxxxxxlBBo.........', '........obbbbbxbxbxbbBBo........', '.......obbbbbbbbbbbbbbwBo.......', '.....oobbbbbbbbbtbbbbbbBBoo.....', '....obwbbbbbbbbbbbbbbbbbbwBo....', '...obbbwbbbbbbbbtbbbbbbbwbbwo...', '..obbbbbbbbbbbbbbbbbbbbbbbwBBo..', '..obbBBoobbbbbbbtbbbbBBoobbBBo..', '.obbBBo.obbbbbbbbbbbbBBo.obbBBo.', '.obbBBo.obbbbbbbtbbbbBBo.obbBBo.', '.obBBo...obbbbbbbbbbBBo...obBBo.', 'ocbcbco...obbbbbtbbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Bunny': {'robo': 'Robo Bunny', 'eyes': 4, 'body': ['..oo.......oo...', '.obAo.....oaBo..', '.ogAoooooozzBo..', '.obbbbbbbbbbbBo.', '.obbbbbbbbbbbBo.', '.obbbbbbbbbbbBo.', '.obpbllllllbpBo.', '..obblxlxlxlBo..', '.oboogbbgbbgoobo', '.obobbbbbbbbbobo', '.wwobbbqqbbbbo.w', '...obbo..obbo...'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#141428', 'name': 'Bad Dream', 'b': '#6aa890', 'a': '#c88aa0', 's': '#3a5a50', 'l': '#c8e0d4', 'q': '#8a6aa8', 'g': '#ffd23a', 'z': '#c8ccd8', 'p': '#c88aa0', 'e': '#ff4a6a'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#0a0610', 'k': '#141428', 'name': 'Lights Out', 'b': '#3a5a54', 'a': '#7a5a6a', 's': '#1e3430', 'l': '#7a948a', 'q': '#4a3a6a', 'g': '#ff8a3a', 'z': '#8a8ca0', 'p': '#7a5a6a', 'e': '#ffd23a'}], 'xeye': True, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['*string lights flicker*', 'lights out… lights out…', "my ear's held on with a pin!", '*hops closer*'], 'plush': {'body': ['..oo........oo..', '.obAo......oaBo.', '.ogAo......ozzo.', '.obRo......otBo.', '.ogboooooooobBo.', '.obbbbqqbbbbbBo.', 'obbbbbqqbbbbbbBo', 'obbbbbbbbbbbbbBo', 'obpbbllllllbbpBo', 'obbbblxlxlxbbbBo', 'oSSwwskkkkksSSSo', '..ooBBBBtBBBoo..'], 'eyes': 6, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#5a5aa8', 'x': '#2a1a2a', 'k': '#ffffff', 'name': 'Plush', 'b': '#9ae0c0', 'a': '#ffb0c8', 'r': '#ffffff', 's': '#5a9a80', 'l': '#eafff4', 'q': '#c8a8ff', 'g': '#ffd23a', 'z': '#d8dce8', 'p': '#ffb0c8', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a plush bunny with a safety pin*', '...', '*did its ear just move?*']}, 'big': ['.......obBBo.........obBBo......', '.......obBBo........obbBBo......', '.......obaBBooooooo.ozzzzo......', '.......obbaBobbbbBBoobbbzo......', '........obbbbbbbbbbbbbBBo.......', '........obbbbbbbbbbbbbBBo.......', '.......obbbbbbbbbbbbbbBBo.......', '......obbbxbbxbbbbb%%%%%Bo......', '......obbbbxxbbbbbb%hee%Bo......', '.....obbbbbxxbbbbbb%eee%BBo.....', '.....obbbbxbbxbbbbb%eee%BBo.....', '.....obbbbbbbbbbbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpbllllnnnlllbbpBo......', '......obbbllllllnlllllbBBo......', '.......obblxlllllllllxBBo.......', '........obblxxxlxlxxxBBo........', '.........obbllxxxxxlBBo.........', '........obbbbbxbxbxbbBBo........', '.......obbbkkkkkkkkkkkBBo.......', '.....oobbbbgbbbbtbbbbgbBBoo.....', '....obwbbbbbbbgbbbgbbbbbbwBo....', '...obbbwbbbbbbbbtbbbbbbbwbBBo...', '..obbbbbbbbbbbbbbbbbbbbbbbbBBo..', '..obbBBoobbbbbbbtbbbbBBoobbBBo..', '.obbBBo.obbbbbbbbbbbbBBo.obbBBo.', '.obbBBo.obbbbqqqtbbbbBBo.obbBBo.', '.obBBo...obbbqqqbbbbBBo...obBBo.', 'ocbcbco...obbbbbtbbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Hen': {'robo': 'Robo Hen', 'eyes': 4, 'body': ['....oowwwoo.....', '....owwwwwo.....', '...oooooooooo...', '..obbbbbbbbbBo..', '.obbbbbbbbbbbBo.', '.obbbbbnnbbbbBo.', '.obpbbnnnnbbpBo.', '..obbxbxbxbbBo..', '.oboobbbbbbboobo', 'kobobbbqqbbbbobo', 'kwwobbbbbbbbbow.', 'z..obbo..obbo...'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#a8b0b8', 'name': 'Bad Dream', 'q': '#7a8ac8', 'b': '#d8ccc0', 'n': '#d8903a', 'z': '#8a5a3a', 'p': '#c87a7a', 'e': '#ff6a3a'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#6a7078', 'name': 'Lights Out', 'q': '#3a4a7a', 'b': '#8a7a88', 'n': '#9a6a2a', 'z': '#5a3a2a', 'p': '#8a5a6a', 'e': '#ffd23a'}], 'xeye': False, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['order up… at midnight', '*crooked smile widens*', 'who wants pancakes?', '*spatula tap tap tap*'], 'plush': {'body': ['....oowwwoo.....', '....owwwwwo.....', '....oooooooo....', '..oo*bbbtbbbBoo.', '.obb*bbbtbbbbBo.', '.obbbbbbbbbbbbo.', 'obpbbbbbbbbbbpBo', 'obbbbnnnnnbbbbBo', 'osssssddnnssssSo', 'oBbbxbxbxbbbbbBo', '.oSBbbbqqbbbBSo.', '..ooBRBBBBRBoo..'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#5a5aa8', 'x': '#2a1a2a', 'k': '#a8b0b8', 'name': 'Plush', 'q': '#a8b8ff', 'b': '#fff8f0', 'c': '#ff7a8a', 's': '#c8c0c8', 'n': '#ffa83a', 'd': '#5a2a10', 'r': '#c8c0c8', 'z': '#8a5a3a', 'p': '#ff9a9a', 'e': '#1a1024'}], 'lines': ['*sits very still*', "*a plush hen in a cook's hat*", '...', '*smells faintly of pancakes*']}, 'big': ['...........oowwwwwwoo...........', '..........owwwwwwwwwwo..........', '..........owwwwwwwwwwo..........', '..........owwbbbbbbwwo..........', '.........obbbbbbbbbbBBo.........', '........obbbbbbbbbbbbBBo........', '.......obbbbbbbbbbbbbbBBo.......', '......obbb%%%%%bbbb%%%%%Bo......', '......obbb%hee%bbbb%hee%Bo......', '.....obbbb%eee%bbbb%eee%BBo.....', '.....obbbb%eee%bbbb%eee%BBo.....', '.....obbbb%%%%%bbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpblllnnnnnllbbpBo......', '......obbbllllnnnnnlllbBBo......', 'ooo....obblxlllnnllllxBBo.......', 'kkko....obblxxxlxlxxxBBo........', 'kkko.....obbllxxxxxlBBo.........', 'kkko....obbbbbxbxbxbbBBo........', 'kkko...obbbbbbbbbbbbbbBBo.......', 'ozo..oobbbbbbbbbtbbbbbbBBoo.....', 'ozo.obwbbbbbbbbbbbbbbbbbbwBo....', 'ozoobbbwbbbbbbbbtbbbbbbbwbBBo...', 'ozobbbbbbbbbbbbbbbbbbbbbbbbBBo..', 'ozobbBBoobbbbbbbtbqqqBBoobbBBo..', 'ozbbBBo.obbbbbbbbbqqqBBo.obbBBo.', 'ozbbBBo.obbbbbbbtbqqqBBo.obbBBo.', 'ozbBBo...obbbbbbbbbbBBo...obBBo.', 'ocbcbco...obbbbbtbbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Fox': {'robo': 'Robo Fox', 'eyes': 4, 'body': ['.oo........oo...', '.oao......oao...', '.oaAoooooooAaBo.', 'kobuuuubbbbbbBo.', '.kbubbubbbbbbBo.', '.obubbubbbbbbBo.', '.obuuuulllllbBo.', '..obbllnnlllBo..', '.orrrrrrrrrrrrr.', '.obrRbbbbbbbbobr', '.wwobbbbbbbbbowr', '...obbo..obbowWw'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#2a1a2a', 'name': 'Bad Dream', 'b': '#c87a5a', 'a': '#e8c0b0', 'l': '#e8d8c8', 'n': '#1a1024', 'r': '#7a4a8a', 'u': '#2a1a2a', 'p': '#d88a9a', 'e': '#ffd23a'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#0a0610', 'name': 'Lights Out', 'b': '#7a4a3a', 'a': '#9a7a70', 'l': '#9a8a80', 'n': '#0a0610', 'r': '#3a6a7a', 'u': '#0a0610', 'p': '#8a5a6a', 'e': '#ff4a5a'}], 'xeye': False, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['*scarf whips around*', 'fastest plush on the shelf', '*eyepatch squeaks*', 'ready… set…'], 'plush': {'body': ['o..............o', 'oo............oo', 'oao..........oao', 'oaAoooooooooooao', 'obkuuuubbbbbbbBo', 'okbubbubbbbbbbBo', 'kbbubbubbbbbbbBo', 'obpuuuubbbbbbpBo', 'obbblllnnlllbbBo', 'orrrrrrrrrrrrrro', '.orRrRbbbbbbrr.r', '..ooBBBBBBBBoowW'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#4a2a3a', 'x': '#2a1a2a', 'k': '#4a2a3a', 'name': 'Plush', 'b': '#f0945a', 'a': '#ffd8c8', 'l': '#fff4e8', 'n': '#1a1024', 'r': '#b87ad8', 'p': '#ffa8b8', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a plush fox with an eyepatch*', '...', '*its tail twitched. probably.*']}, 'big': ['......oBo...............oBo.....', '......oBo...............oBo.....', '.....obBBo...oooooo....obBBo....', '.....obaBoooobbbbBBooooobaBo....', '....obbabbbbbbbbbbbbbuubbaBBo...', '...oubbbbbbbbbbbbbbuubbbbbBBo...', '....ouuobbuuuubbbuubbbBBoooo....', '.....oouuuuuuuuuubb%%%%%Bo......', '......obbuuuuuubbbb%hee%Bo......', '.....obbbuuuuuubbbb%eee%BBo.....', '.....obbbuuuuuubbbb%eee%BBo.....', '.....obbbbuuuu%bbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpbllllnnnlllbbpBo......', '......obbbllllllnlllllbBBo......', '.......obblxlllllllllxBBo.......', '.......oobblxxxlxlxxxBBooo......', '......orrrrrrrrrrrrrrrrrRRo.....', '......orrrrrrrrrrrrrrrrrRRo.....', '.......obbbbbbbbbbbbbbbRRo......', '.....oobbbbbbbbbtbbbbbbrRRo.....', '....obwbbbbbbbbbbbbbbbbbrRRo....', '...obbbwbbbbbbbbtbbbbbbbwrrBo...', '..obbbbbbbbbbbbbbbbbbbbbbbbrBoo.', '..obbBBoobbbbbbbtbbbbBBoorbBBowo', '.obbBBo.obbbbbbbbbbbbBBo.obbbwo.', '.obbBBo.obbbbbbbtbbbbBBo.obbBBo.', '.obBBo...obbbbbbbbbbBBo...obBBo.', 'ocbcbco...obbbbbtbbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Hare': {'robo': 'Wind-Up Hare', 'eyes': 4, 'body': ['..oo......yY....', '.o*Ao....yooy...', '.otAooooooyYo...', '.obbbbbqqbbbbo..', '.obbbbbqqbbbbBo.', '.obbbbbbbbbbbBo.', '.obpbbbllbbbpBo.', '..obblxlxlxlBo..', '.oboollllllloobo', '.obollllllllobo.', '.wwoLLLtLLLLow..', '...obbo..obbo...'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#141428', 'name': 'Bad Dream', 'b': '#8aa89a', 'a': '#5a7a6a', 'l': '#d8e4d0', 'q': '#c8a05a', 'y': '#d8b04a', 'p': '#a87a7a', 'e': '#7affd8'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'x': '#1a1024', 'k': '#141428', 'name': 'Lights Out', 'b': '#4a6058', 'a': '#2a4038', 'l': '#8a9a88', 'q': '#8a6a3a', 'y': '#a88a3a', 'p': '#6a4a4a', 'e': '#ff5ad8'}], 'xeye': False, 'feet': True, 'move': 'walk', 'speed': 0.8, 'lines': ['*tick… tick… tick…*', 'wind me up…', 'the show starts at midnight', '*the felt key turns by itself*'], 'plush': {'body': ['..oo.....yY.....', '.o*Ao...yooy....', '.otAo....yY.....', '..obAooooooooo..', '..obbbbqqbbbbbo.', '.obbbbbqqbbbbbBo', '.obbbbbbbbbbbbBo', '.obpbbbllbbbbpBo', '.obbblxlxlxbbbBo', 'aAobbbbbbbbbbwWa', 'RAollllllllllaoR', '.r.oLLLtLLLLo.r.'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#f4ece4', 'u': '#5a5aa8', 'x': '#2a1a2a', 'k': '#141428', 'name': 'Plush', 'b': '#a8d8c0', 'a': '#7aa890', 'l': '#f0fff0', 'q': '#ffd27a', 'y': '#ffd23a', 'r': '#ff7a8a', 'p': '#ffa8a8', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a plush hare with a felt key*', '...', '*tick.*']}, 'big': ['.......obBBo..oyyyo.obBBo.......', '.......obtBo..oyyyo.obBBo.......', '.......obbtBooyyyyyobbBBo.......', '.......obbBBobbbyBBobbBBo.......', '........obbbbbbbbbbbbBBo........', '........obbbqqqbbbbbbBBo........', '.......obbbbqqqbbbbbbbBBo.......', '......obbb%%%%%bbbb%%%%%Bo......', '......obbb%hee%bbbb%hee%Bo......', '.....obbbb%eee%bbbb%eee%BBo.....', '.....obbbb%eee%bbbb%eee%BBo.....', '.....obbbb%%%%%bbbb%%%%%BBo.....', '.....obbbbbbllllllllbbbbBBo.....', '......obbpbllllnnnlllbbpBo......', '......obbbllllllnlllllbBBo......', '.......obblxlllllllllxBBo.......', '........obblxxxlxlxxxBBo........', '.........obbllxxxxxlBBo.........', '........obbbbbxbxbxbbBBo........', '.......obbbbbbbbbbbbbbBBo.......', '.....oobbbbbbbbbtbbbbbbBBoo.....', '....obwbbbbbbbllllbbbbbbbwBo....', '...obbbwbbbbbllllllbbbbbwbBBo...', '..obbbbbbbbbllllllllbbbbbbbBBo..', '..obbBBoobbbllllllllbBBoobbBBo..', '.obbBBo.obbbllllllllbBBo.obbBBo.', '.obbBBo.obbbllllllllbBBo.obbBBo.', '.obBBo...obbbllllllbBBo...obBBo.', 'ocbcbco...obbbllllbBBo...ocbcbco', 'coocco.....obbbbbbBBo.....occooc']}, 'Bad Dream Puppet Master': {'robo': 'Puppet Master', 'eyes': 4, 'body': ['....oooooooo....', '...owwwwtwwwo...', '..owwwwwtwwwWo..', '.owwwwwwwwwwwWo.', '.owwwwwwwwwwwWo.', '.owwwwwwwwwwwWo.', '.orwwwwwwwwwrWo.', '..owwmmmmmmwWo..', 'yoobbqbbqbbqbooy', 'y.obbbbbbbbbbo.y', 'k..obqbbqbbqo..k', '....oooooooo....'], 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#e8dcd0', 'x': '#1a1024', 'k': '#d8a83a', 'name': 'Bad Dream', 'r': '#c83a5a', 'm': '#2a1020', 'b': '#4a3a6a', 'q': '#8a6aa8', 'y': '#c8a0d8', 'e': '#0a0610'}, {'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#8a8090', 'x': '#1a1024', 'k': '#8a6a2a', 'name': 'Lights Out', 'r': '#7a2a3a', 'm': '#0a0610', 'b': '#2a2038', 'q': '#4a3a6a', 'y': '#7a6a8a', 'e': '#ff4a6a'}], 'xeye': False, 'feet': False, 'move': 'float', 'speed': 0.8, 'lines': ['*yarn strings sway*', 'one more for the collection…', 'the strings go both ways', 'sweet dreams… or not'], 'plush': {'body': ['....oooooooo....', '...owwwwwwwwo...', '..owwwwtwwwwWo..', '..owwwwtwwwwWo..', '.owwwwwwwwwwwWo.', '.owwwwwwwwwwwWo.', '.owwwwwwwwwwwWo.', '.orwwmmmmmmwrWo.', 'oobbbbbbbbbbbBoo', 'kobqbqbqbqbqbok.', 'y.obbbbbbbbbbo.y', 'y..oooooooooo..y'], 'eyes': 5, 'colors': [{'o': '#1a1024', 'f': '#1a1024', 't': '#f0e4c8', 'w': '#fffaf4', 'u': '#5a5aa8', 'x': '#2a1a2a', 'k': '#ffd23a', 'name': 'Plush', 'r': '#ff5a7a', 'm': '#3a1a30', 'b': '#7a6aa8', 'q': '#c8a8f0', 'y': '#e8c8ff', 'e': '#1a1024'}], 'lines': ['*sits very still*', '*a sock puppet. probably.*', '...', '*its strings are tangled*']}}}
+BAD_DREAM_KINDS = list(BAD_DREAMS)
+BAD_DREAM_OF = {a["robo"]: k for k, a in BAD_DREAMS.items()}      # robo (or Puppet Master) → its Bad Dream
+BAD_DREAM_ROBOS = [k for k in BAD_DREAM_KINDS if "big" in BAD_DREAMS[k]]   # the 5 a Puppet Master can rewrite
+for _name, _a in BAD_DREAMS.items():
+    VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": False, "feet": FEET_STD if _a["feet"] else None,
+                       "dx": 0, "move": _a["move"], "colors": _a["colors"], "lines": _a["lines"], "speed": _a["speed"],
+                       "shifty": False, "ghost": False, "xeye": _a["xeye"], "plush": _a["plush"]}
+
+
+def bad_dream_hour():
+    """Bad Dreams are out from midnight until 6 AM (your local time); the rest of the day they're plushies."""
+    return time.localtime().tm_hour < 6
+
+
+def plush_now(kind):
+    return bool(VARIANTS.get(kind, {}).get("plush")) and not bad_dream_hour()
+
+
+def plush_view(kind, pal):
+    """(variant, palette) to draw right now: a Bad Dream's daytime plush look, or the Blip as it is."""
+    v = VARIANTS[kind]
+    if not plush_now(kind):
+        return v, pal
+    pl = v["plush"]
+    return {**v, "body": pl["body"], "eyes": pl["eyes"], "xeye": False}, dict(pl["colors"][0])
+
+
+def draw_xeye(px, pal):
+    """A stitched X where one button eye came off (face coordinates: eyes on row 5)."""
+    for i in range(4):
+        px(3 + i, 4 + i, pal.get("x", pal["o"]))
+        px(6 - i, 4 + i, pal.get("x", pal["o"]))
+
+
+# 🗣️ Personalities for the Blips you meet first: extra idle lines plus their own pet / feed / nap / wake / night lines
+# (see VOICE_KEYS). "more" lines are added to the ones the Blip already has.
+PERSONALITIES = {
+    "Blip": {"more": ["hi hi hi! did you miss me?", "this is the best desktop in the whole world", "*bounces happily*"],
+             "pet_lines": ["eee! more please!", "*happy wiggle* you're the best!", "*melts into a puddle of joy*"],
+             "feed_lines": ["a cookie?! for ME?!", "*nom* best. day. ever."],
+             "nap_lines": ["*curls into a ball* night night…", "just resting my eyes… *snore*"],
+             "wake_lines": ["i'm up! i'm up! what did i miss?", "*stretches* good morning, buddy!"],
+             "night_lines": ["*whispers* it's late… are you still working?", "the stars are out! *gasp*"]},
+    "Bun": {"more": ["*twitches nose*", "um… hi.", "*peeks out from behind your window*"],
+            "pet_lines": ["*ears go pink*", "o-oh! thank you…", "*soft happy thump*"],
+            "feed_lines": ["*nibble nibble* …it's good.", "is this… for me? *tiny nibble*"],
+            "nap_lines": ["*tucks ears down* …g'night", "*flop*"],
+            "wake_lines": ["*ears pop up* oh! sorry, i dozed off", "*nose twitch* …morning?"],
+            "night_lines": ["*ears perk up* did you hear that?", "it's dark… can i sit next to you?"]},
+    "Sprout": {"more": ["*leaves rustle in the sun*", "photosynthesizing… please hold", "i grew a millimeter today!"],
+               "pet_lines": ["*leaves flutter happily*", "careful, my sprout is sensitive!", "hehe, that tickles my roots"],
+               "feed_lines": ["cookies aren't sunlight but i'll allow it", "*nom* mmm, crunchy fertilizer"],
+               "nap_lines": ["*folds leaves* closing for the night", "zzz… dreaming of rain"],
+               "wake_lines": ["*unfurls* good morning, sun!", "i grew while i slept!"],
+               "night_lines": ["no sun… *droops a little*", "the moon is just a nightlight for plants"]},
+    "Boo": {"more": ["boo! …did i scare you? please say yes", "*floats through your folders*", "i'm VERY spooky. very."],
+            "pet_lines": ["hey! ghosts aren't supposed to be pettable! …do it again", "*glows a little*",
+                          "your hand went right through me! hehe"],
+            "feed_lines": ["ghosts can eat cookies?? i can eat cookies!!", "*the cookie floats away mysteriously*"],
+            "nap_lines": ["*fades out for a nap*", "even ghosts need beauty sleep"],
+            "wake_lines": ["*fades back in* BOO! …i'm awake", "did i haunt anything while i was out?"],
+            "night_lines": ["it's spooky o'clock!!", "*wooOOOoo* (that was my best one)"]},
+    "Fuzz": {"more": ["*fluffs up*", "everything is so soft today", "*sneezes a tiny fluffball*"],
+             "pet_lines": ["*purrs like a tiny engine*", "mmm… softer…", "*becomes 20% fluffier*"],
+             "feed_lines": ["*munch* cozy snack", "a cookie and a nap? perfect day"],
+             "nap_lines": ["*already asleep*", "naptime is my favorite time"],
+             "wake_lines": ["five… more… minutes…", "*fluffed up from sleep*"],
+             "night_lines": ["it's blanket weather", "*yawn* is it bedtime yet?"]},
+    "Spike": {"more": ["don't touch the spikes. …unless you want to.", "*tries to look tough*", "i'm not cute. i'm SHARP."],
+              "pet_lines": ["watch the spikes! …okay, that was nice", "hmph. *spikes soften*", "…don't tell anyone i liked that"],
+              "feed_lines": ["cookie acquired. respect.", "*crunch* tough snack for a tough guy"],
+              "nap_lines": ["i'm not tired. *falls asleep instantly*", "guard my spikes while i rest"],
+              "wake_lines": ["i was NOT asleep.", "*spikes stand up* ready!"],
+              "night_lines": ["the night is when spikes are spikiest", "i'm not scared of the dark. you are."]},
+    "Robo Bear": {"pet_lines": ["*creak* the captain appreciates the morale boost", "affection logged. crew morale: high"],
+                  "feed_lines": ["rations received. carry on, crew!", "*whirr* a captain never refuses a cookie"],
+                  "nap_lines": ["captain's log: taking five", "*powers down at the helm*"],
+                  "wake_lines": ["all hands on deck!", "*whirr* captain back on duty"]},
+    "Robo Bunny": {"pet_lines": ["*string lights flicker happily*", "*bzzt* lights at full brightness!"],
+                   "feed_lines": ["fuel for the light show!", "*munch* *the bulbs glow brighter*"],
+                   "nap_lines": ["lights… dimming…", "*powers down the light rig*"],
+                   "wake_lines": ["and… lights UP!", "*flicker flicker* back online!"]},
+    "Robo Hen": {"pet_lines": ["aw, shucks, hon", "*clucks warmly* you're sweet as pie"],
+                 "feed_lines": ["a cookie? who's cookin' for who here?!", "*taste-tests* needs a pinch of salt. kidding!"],
+                 "nap_lines": ["kitchen's closed, hon", "*hangs up the apron* g'night"],
+                 "wake_lines": ["order up! breakfast's on!", "rise and shine, sugar!"]},
+    "Robo Fox": {"pet_lines": ["pit stop! okay, back to it!", "*engine revs happily*"],
+                 "feed_lines": ["refuel complete! zoom!", "*eats it at top speed*"],
+                 "nap_lines": ["*idles at the starting line*", "resting the engine…"],
+                 "wake_lines": ["green light! go go go!", "*vroom* who's ready to race?"]},
+}
+for _k, _p in PERSONALITIES.items():
+    VARIANTS[_k]["lines"] = list(VARIANTS[_k]["lines"]) + _p.get("more", [])
+    VARIANTS[_k].update({k: v for k, v in _p.items() if k in VOICE_KEYS})
+
+# 🔊 Voices: while a speech bubble types itself out, the Blip "talks" in little synthesized blips (sound on only).
+# Each Blip has its own pitch (Hz) and tone; set "voice" on a Blip to pick one, otherwise it is worked out from its name
+# and tier: robots and mechs are square and beepy, ghosts are soft sine waves, kaiju are deep, the rest are triangle.
+VOICES = {"Blip": (520, "tri"), "Bun": (640, "sine"), "Sprout": (480, "tri"), "Boo": (560, "sine"), "Fuzz": (420, "tri"),
+          "Spike": (360, "square"), "Robo Bear": (220, "square"), "Robo Bunny": (440, "square"), "Robo Hen": (380, "square"),
+          "Robo Fox": (500, "square"), "Silvertear-03": (300, "square")}
+TYPE_CPS = 32                     # letters per second a speech bubble types out
+
+
+def voice_of(kind):
+    if kind in VOICES:
+        return VOICES[kind]
+    base = AWAKEN_BASE.get(kind, kind) if "AWAKEN_BASE" in globals() else kind
+    h = 2166136261
+    for b in base.encode("utf-8"):
+        h = ((h ^ b) * 16777619) & 0xFFFFFFFF
+    pitch = 300 + h % 320
+    if base in ROBOTS or base in BAD_DREAMS:
+        return (pitch * 0.8 // 10 * 10, "square")
+    if base in GHOSTS:
+        return (pitch // 10 * 10, "sine")
+    if base in KAIJU:
+        return (pitch * 0.55 // 10 * 10, "square")
+    return (pitch // 10 * 10, "tri")
+
 
 NIGHT_SHIFT = list(ROBOTS)        # the animatronic crew gets its own menu group
 RARE_KINDS = list(RARE)           # hatched from Mystery Eggs
 CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
+for _base, _a in [(b, a) for b, a in AWAKENED.items()] + [(b, st) for b, sts in AWAKEN_STAGES.items() for st in sts]:
+    VARIANTS[_a["name"]] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
+                            "feet": FEET_STD if _a.get("feet", True) else None, "dx": _a.get("dx", 0), "move": _a["move"],
+                            "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0), "shifty": False,
+                            "ghost": _a.get("ghost", False), "awakened": _base, "soul": _a.get("soul", "")}
+# 🖍️ The 1.0 Redraw: every Blip gets a new drawing. The old one lives on in a "Classic" color (added at the end, so
+# nobody's chosen color changes) that shows the new drawing but glitches back to the old one every few seconds.
+# >>> REDRAW DATA (kind: 12 rows of 16; written by tools/redraw_merge.py)
+REDRAW = {
+ "Blip": [".oo..........oo.", ".obo........obo.", ".obpo.oooo.opBo.", ".obbBo*bbBobbBo.", "obbbbb*bbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbllbbbbbBo", ".obbbbllllbbbBo.", ".oBBbllllllbBBo.", "..ooBBBBBBBBoo.."],
+ "Bun": ["..oo........oo..", ".o*Bo......obBo.", ".o*po......opBo.", ".obpo......opBo.", "..oboooooooobo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbllbbbbbBo", ".oBBbbllllbbBBo.", "..ooBBLLLLBBoo.."],
+ "Sprout": [".ooo........ooo.", "oggGo......oggGo", "ogggGoo..oogggGo", ".oggggTootgggGo.", "..oooootTooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbllbbbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Boo": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbBBBbbbbBBBbBo", ".obo.oBBBBo.obo."],
+ "Fuzz": ["...o........o...", "....o......o....", ".oo..oooooo..oo.", "owWoo*bbbbBoowWo", "owlWo*bbbbBowlWo", "owWobbbbbbbbowWo", "oWWobbbbbbbbowWo", ".owopbbbbbbpowo.", "..oobbbllbbBoo..", "...obbllllbBo...", "...oBBllllBBo...", "....ooBBBBoo...."],
+ "Spike": ["..s....sS....s..", "..sS..sssS..sS..", ".ossSosssSossSo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbllbbbbbBo", "oBbbbbllllbbbbBo", ".oBBbllllllbBBo.", "..ooBBBBBBBBoo.."],
+ "Aardvark": [".oo..........oo.", ".oao........oao.", ".oaAo......oaAo.", "..oaooooooooao..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllllllbbbBo", "oBbbblllllllbbBo", ".oBBblLllLllBBo.", "..ooBBoNNoBBoo.."],
+ "Ant": [".o............o.", "..o..........o..", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBpBBbbbbBBpBo.", "..oooobbbBoooo..", "k..obbbbbbbBo..k", "kk.oBBBBBBBBo.kk", "..k.oooooooo.k.."],
+ "Anteater": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbllllbbbbBo", "obpbbbLllLbbbpBo", "obbbbBolLobbbbBo", "oWbbbBolLobbbbWo", ".oWWBBolLoBBWWo.", "..oooooNNooooo.."],
+ "Antelope": [".h............h.", "hH............hH", ".hH..........hH.", "..hooooooooooh..", ".obbbbbbbbbbbBo.", "oabbbbbbbbbbbbAo", "obwbbbbbbbbbbwBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Armadillo": ["..oo........oo..", ".oao.oooooo.oao.", ".oaoosbsbsbSoao.", "..osbsbsbsbsBo..", ".osbsbsbsbsbsBo.", "olllllllllllllLo", "olllllllllllllLo", "olllllllllllllLo", "olpllllllllllpLo", "oLlllllnnlllllLo", ".oLLllllllllLLo.", "..ooLLLLLLLLoo.."],
+ "Axolotl": ["a..............a", ".a.oooooooooo.a.", "aAo*bbbbbbbbBoaA", ".ao*bbbbbbbbBoa.", "aAobbbbbbbbbBoaA", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbbbllllbbbbBo", ".oBBllllllllBBo.", "..ooBBBBBBBBoo.."],
+ "Badger": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbwwbbbbBo.", "o*wbbbbwwbbbbwBo", "o*wbbbbwwbbbbwBo", "obpbbblwwlbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Bat": ["..o..........o..", "..oo........oo..", "..obo.oooo.obo..", "o.obBo*bbBobBo.o", "owobbb*bbbbbBowo", "owWobbbbbbbbowWo", "owWobbbbbbbbowWo", "owWWobbbbbBowWWo", "owowobbllbBowowo", "o.o.oBbllbBo.o.o", ".....oBLBLo.....", "......oooo......"],
+ "Beagle": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", ".oao*bbbbbbBoao.", "oaAobbbbbbbBoaAo", "oaAobbbbbbbboaAo", "oaAobbbbbbbboaAo", "oAAopbbllbbpoaAo", ".oaobllnnllBoao.", ".ooobllllllBooo.", "...oBBLLLLBBo...", "....oooooooo...."],
+ "Bear": [".ooo........ooo.", "oaaAo......oaaAo", "oaaAooooooooaaAo", ".oobbbbbbbbbBoo.", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Beaver": ["................", ".oo..........oo.", "oaAo.oooooo.oaAo", ".oo*bbbbbbbbBoo.", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbblddddlbbbBo", ".oBBbbbkkbbbBBo.", "..ooBBBkkBBBoo.."],
+ "Bee": ["...o........o...", "wW..o......o..wW", "wwwWoooooooowwwW", ".wWo*bbbbbbBowwW", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "osssssssssssssSo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oSSssssssssSSo.", "..ooBBBSSBBBoo.."],
+ "Beluga": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbmbbbbmbbbBo", ".oBBbbmmmmbbBBo.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Bison": ["h..............h", "hH............hH", ".hH.oooooooo.hH.", "..hoaaaaaaaAoh..", ".oaaaaaaaaaaaAo.", "oaabbbbbbbbbbaAo", "oaabbbbbbbbbbaAo", "oabpbbllllbbpbAo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbllllbbBBo.", "..ooBBBBBBBBoo.."],
+ "Bulldog": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbaaaaaaaabpBo", "obaaaannnnaaaaBo", "oaaaaaaaaaaaaaAo", "oAWAwaaaaaawAWAo", ".oooAAAAAAAAooo."],
+ "Butterfly": ["...o........o...", "oo..o......o..oo", "owwWoooooooowwWo", "owkWo*bbbbBowkWo", "owwWo*bbbbBowwWo", "oswWobbbbbbowwSo", ".oSWobbbbbboWSo.", "..ooobbbbbBooo..", ".owWobpbbpBowWo.", "oWkWoBbbbbBowkWo", ".oWWooBBBBooWWo.", "..oo..oooo..oo.."],
+ "Camel": ["................", "......oooo......", ".....oaaaAo.....", ".oo.ooaaaAoo.oo.", "oaAo*bbbbbbBoaAo", ".oobbbbbbbbbBoo.", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbbblkllklbbbBo", "oBbbbllllllbbbBo", ".oBBBLlkklLBBBo.", "..ooooBBBBoooo.."],
+ "Capybara": [".......g........", "......rrrR......", ".oo..orrrRo..oo.", ".oaooooooooooao.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbnnnnnnnnbbBo", "obbnndnnnndnnbBo", "oBbnnnnnnnnnnbBo", ".oBBnnnnnnnnBBo.", "..ooBBBBBBBBoo.."],
+ "Cat": [".o............o.", ".oo..........oo.", ".oao........oao.", ".oaAooooooooaAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbblnnlbbbbBo", "oBbbbbllllbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Caterpillar": ["...o........o...", "....o......o....", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBpbbbbbbbbbbpBo", ".osssssssssssSo.", "oBbbbbbbbbbbbbBo", ".oSSSSSSSSSSSSo.", ".o.o.o.oo.o.o.o."],
+ "Chameleon": ["......oooo......", ".....oaaaAo.....", "....oaaaaaAo....", "..oooaaaaaAooo..", ".olllbbbbbbllLo.", "ollllbbbbbblllLo", "oLlllbbbbbblllLo", ".olllbbbbbbllLo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Cheetah": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbsbbbbsbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbsbllllbsbbBo", "osbbsllnnllsbbSo", "oBbbbllllllbbbBo", ".oBSbbllllbbSBo.", "..ooBBBBBBBBoo.."],
+ "Chick": ["......o..o......", ".......oo.......", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obpbbbbbbbbbbpBo", "obbbbbbkkbbbbbBo", "olbbbbbbbbbbbbLo", "oLlbbbbbbbbbblLo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Chihuahua": ["o..............o", "oo............oo", "oao..........oao", "oaAo........oaAo", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbllbbbbbBo", ".oBbbbllllbbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+ "Chinchilla": [".oooo......oooo.", "oaaaAo....oaaaAo", "oaaaAoooooaaaAo.", ".ooobbbbbbbBooo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpdbbllllbbdpBo", "odbbbllnnllbbbDo", "oBbbbllllllbbbBo", ".oBBbllllllbBBo.", "..ooBBBBBBBBoo.."],
+ "Chipmunk": ["................", ".oo..........oo.", "oaAo...sS...oaAo", "oaAooooooooooaAo", ".obbbsbssbsbbBo.", "owbbbbbssbbbbbWo", "owbbbbbbbbbbbbWo", "obpbbbbbbbbbbpBo", "oppbbbllllbbbppo", "oBbbbllllllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Clownfish": [".......oo.......", "......oaAo......", "....oooaAooo....", "...oo*bssbBoo...", "..obs*bssbbsBo..", ".obbsbbssbbsbBo.", "aobbsbbssbbsbBoa", "aobpsbbssbbspBoa", ".oBbsbbssbbsbBo.", "..oBSbbssbbSBo..", "...ooBBSSBBoo...", ".....oooooo....."],
+ "Corgi": [".oo..........oo.", ".oao........oao.", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbllbbbbBo.", "o*bbbbbllbbbbbBo", "o*bbbbbllbbbbbBo", "obpbbllllllbbpBo", "obbllllnnllllbBo", "oBllllllllllllBo", ".oLLllllllllLLo.", "..ooLLLLLLLLoo.."],
+ "Cow": [".h............h.", ".hH..........hH.", "..hooooooooooh..", "oao*bbbsbbbbBoao", ".ob*bsssbbbbbBo.", "obbbbssbbbbbsbBo", "obbbbbbbbbbssbBo", "obpnnnnnnnnnnpBo", "obnnndnnnndnnnBo", "oBnnnnnnnnnnnnBo", ".oBNnnnnnnnnNBo.", "..ooBBBBBBBBoo.."],
+ "Crab": ["...oooo..oooo...", "...ollo..ollo...", "...ollo..ollo...", "o.o..o....o..o.o", "obo.oooooooo.obo", "obBo*bbbbbbBobBo", ".obb*bbbbbbbbBo.", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Crocodile": ["..oooo....oooo..", ".o*bbbo..obbbBo.", ".o*bbboooobbbBo.", "obbbbbbbbbbbbbBo", "obbsbbbbbbbbsbBo", "obbbbbsbbsbbbbBo", "obbbbbbbbbbbbbBo", "olllllllllllllLo", "okdkdkdkdkdkdkDo", "oDkdkdkdkdkdkdko", ".oLLLLLLLLLLLLo.", "..oooooooooooo.."],
+ "Crow": [".......oo.......", "......obo.......", "...oooobooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBpbbbkkkkbbbpBo", "woBbbbbkkbbbbBow", "WWobbbbbbbbbBowW", ".woBBBBBBBBBBow.", "..oooooooooooo.."],
+ "Dachshund": ["................", ".....oooooo.....", "...oo*bbbbBoo...", ".oaob*bbbbbBoao.", "oaAobbbbbbbBoaAo", "oaAobbbbbbbboaAo", "oaAobbbbbbbboaAo", "oAAopbbbbbbpoaAo", ".oaobbbnnbbBoao.", "..oobbbbbbbBoo..", "...oBBBBBBBBo...", "....oooooooo...."],
+ "Dalmatian": ["...oooooooooo...", "..o*bsbbbbbbBo..", ".oo*bbbbbbsbBoo.", "oaAobbbbbbbBoaAo", "oaAobsbbbbbBoaAo", "oaAobbbbbbbboaAo", ".oaobbsbbbbboao.", "..obbllllllbBo..", "..oblllnnlllBo..", "..obllllllllBo..", "..oBBbbsbbbBBo..", "...ooBBBBBBoo..."],
+ "Deer": ["h.h..........h.h", ".hhH........hhH.", "..hH........hH..", "...hoooooooooh..", "oaoo*bbbbbbBooao", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Dog": ["...oooooooooo...", "..o*bbbbbbbbBo..", ".oa*bbbbbbbbbAo.", "oaAobbbbbbbBoaAo", "oaAobbbbbbbBoaAo", "oaAobbbbbbbboaAo", ".oaobbbbbbbboao.", "..obbllllllbBo..", "..oblllnnlllBo..", "..oBllllllllBo..", "..ooBBLLLLBBoo..", "....oooooooo...."],
+ "Dolphin": [".......oo.......", "......o*Bo......", ".....ob*bBo.....", "..ooobbbbbBooo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbllllbbbbBo", "oBbbbllllllbbbBo", ".oBBBLllllLBBBo.", "..ooooLLLLoooo.."],
+ "Donkey": [".oo..........oo.", ".oao........oao.", ".oao........oao.", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBpbbbbbbbbpBo.", "..obllllllllBo..", "..oblldlldllBo..", "..oBLLLLLLLLBo..", "...oooooooooo..."],
+ "Dragon": [".h............h.", ".hH...h..h...hH.", "..hHooohHooohH..", "o..o*bbbbbbBo..o", "owoo*bbbbbbBoowo", "owWobbbbbbbbowWo", "owWobbbbbbbboWWo", "owobpllllllpBowo", ".oobbldlldlbBoo.", "..obbllllllbBo..", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+ "Duck": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbBokkkkkkoBbBo", "obBokkkkkkkkobBo", "oBbBokkkkkkobbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Eagle": ["................", "....oooooooo....", "..oowwwwwwwWoo..", ".owwwwwwwwwwwWo.", ".owoowwwwwWoowo.", "owwwwwwwwwwwwwWo", "owwwwwwwwwwwwwWo", "obwwwwkkkkwwwwBo", "obbwwwkkkkwwwbBo", "oBbbbwwkkwwbbbBo", ".oBBBBBkoBBBBBo.", "..oooooooooooo.."],
+ "Echidna": ["..t..t....t..t..", "t.sT.sT..tS.tS.t", ".sssssssssssssS.", "tsSoooooooooossT", ".so*bbbbbbbbBos.", "sob*bbbbbbbbbBos", "sobbbbbbbbbbbBos", ".obpbbbnnbbbpBo.", ".oBbbbbnnbbbbBo.", "..oBbBBnnBBbBo..", "..ookoonNookoo..", ".......NN......."],
+ "Elephant": ["....oooooooo....", ".ooo*bbbbbbBooo.", "oaAo*bbbbbbBoaAo", "oaAobbbbbbbBoaAo", "oaAobbbbbbbBoaAo", "oaAobbbbbbbboaAo", "oAAobpbbbbpboaAo", ".oaoBbbbbbbBoao.", "..oooBBbbBBooo..", "..obo.obBo.obo..", "..obo.oBBo.obo..", "..ooo..oo..ooo.."],
+ "Emu": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbkkkkbbbpBo", "obbbbbbkkbbbbbBo", "owbwbwbwwbwbwbWo", ".WbWbWbWWbWbWbW.", "..w.w.w..w.w.w.."],
+ "Fennec": ["o..............o", "oo............oo", "oao..........oao", "oaAo........oaAo", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "olllbbbbbbbbllLo", "oLlllllnnlllllLo", ".oLLlllllllllLo.", "..ooLLLLLLLLLoo.", "....oooooooo...."],
+ "Ferret": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obllllllllllBo.", "osssssllllssssSo", "obssssllllssssBo", "obblllllllllllBo", "oblllllnnlllllBo", "oBbllllllllllbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Flamingo": ["......oo........", ".....o*Bo.......", "...ooo*Booooo...", "..obbbbbbbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "owwbbbbkkbbbbwWo", "owwwbbbkkbbbwwWo", "oBwwbbbddbbbwwBo", ".oBBbbbbdbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Fox": ["o..............o", "oo............oo", "oao..........oao", "oaAooooooooooaAo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oLllbbbbbbbbllLo", ".oLlllllnnllLLo.", "..oLlllllllLo...", "...oLLLLLLLLo...", "....oooooooo...."],
+ "Frilled Lizard": ["f.fF..fF..fF..f.", "fffffffffffffffF", "ffffFoooooofffF.", "fffFo*bbbbBofffF", "fFobb*bbbbbbBofF", "fobbbbbbbbbbbBof", "foBbbbbbbbbbbBof", "fFoBbbbbbbbbBofF", "FfFobbbmmbbBoFfF", ".f.obbbbbbbBo.f.", "...oBBBBBBBBo...", "....oooooooo...."],
+ "Frog": ["..oooo....oooo..", ".o*bbbo..obbbBo.", ".o*bbboooobbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".obbllllllllbBo.", "obbllllllllllbBo", "obBbllllllllbBBo", "oboBBllllllBBobo", ".o.ooBBBBBBoo.o."],
+ "Gecko": ["................", "..oooo....oooo..", ".o*bbBo..obbbBo.", ".o*bbbBooobbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obsbbbbbbbbbbsBo", "oBbbBBBBBBBBbbBo", ".oBBoooooooobBo.", "..oBSBBBBBBSBo..", "...oooooooooo..."],
+ "Giraffe": ["...o........o...", "..oho......oho..", "...h.oooooo.h...", "oaoho*bbbbBohoao", ".oobbsbbbbsbBoo.", "obbsbbbbbbbbsbBo", "oBbbbbbsbbbbbbBo", ".oBpbbbbbbbbpBo.", "..obllllllllBo..", "..oblldlldllBo..", "..oBLLLLLLLLBo..", "...oooooooooo..."],
+ "Goat": [".hH..........hH.", "..hH........hH..", "oaohoooooooohoao", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBpbbbbbbbbpBo.", "..obbbbnnbbbBo..", "..oBbbbbbbbbBo..", "...oBbllllBBo...", "....oLLLLLo....."],
+ "Goldfish": ["......oaAo......", ".....oaaaAo.....", "....oooooooo....", "...o*bbbbbbBo...", "a.ob*bbbbbbbBo.a", "aAobbbbbbbbbBoaA", "aAobbbbbbbbbBoaA", "AAobpbbbbbbpBoaA", ".aobbbbbbbbbBoa.", "..oBBbllllbBBo..", "aA.ooBBBBBBoo.aA", "AAA..oooooo..AAA"],
+ "Goose": ["................", ".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbBokkkkoBbpBo", "obbBokkkkkkobbBo", "oBbbBokkkkobbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Gorilla": ["................", ".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbbbbbbbbbBo.", "obbffffffffffbBo", "obbffffffffffbBo", "obbfffnffnfffbBo", "obbbffffffffbbBo", "oBbbbfmmmmfbbbBo", ".oBBbbffffbbBBo.", "..ooBBBBBBBBoo.."],
+ "Guinea Pig": ["................", "....oooooooo....", "..oosssbbbbBoo..", ".oassbbbbbbbbAo.", "oassbbbbbbbbbbAo", "obssbbbbbbbbbbBo", "obbbbbbbbbbsssBo", "obpbbllllllbbpBo", "obbblllnnlllbbBo", "oBbbbllllllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Hamster": [".oo..........oo.", "oaAo........oaAo", "oaAooooooooooaAo", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "ollllbbbbbblllLo", "olllpllnnllpllLo", "oLllllllllllllLo", ".oLLlllllllllLo.", "..ooLLLLLLLLLoo."],
+ "Hedgehog": [".s..s..sS..s..s.", "ssS.sssssssS.ssS", "sssssssssssssssS", "ssSoooooooooossS", "sSo*bbbbbbbbBosS", "sob*bbbbbbbbbBos", "sobbbbbbbbbbbBos", "sobpbbbbbbbbpBos", "soBbbbbnnbbbbBos", "SSoBBBBbbBBBBosS", ".SSoooooooooosS.", "..SSSSSSSSSSSS.."],
+ "Highland Cow": ["h..............h", "hH............hH", ".hHoooooooooohH.", ".ofbfbfbfbfbfBo.", "offbfbfbfbfbffFo", "obbbfbfbbfbfbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbllllllbbbBo", "oBbblnnllnnlbbBo", ".oBBLLLLLLLLBBo.", "..oooooooooooo.."],
+ "Hippo": ["................", "..oo........oo..", ".oaooooooooooao.", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "oolllllllllllLoo", "ollldlllllldllLo", "olallllllllllaLo", "oLLkDDDDDDDDkLLo", ".oooooooooooooo."],
+ "Horse": ["..o..........o..", ".oao........oao.", ".oaoommmmmMooao.", ".obmmmmmmmmmmBo.", "o*bbbmmmmmmbbbBo", "o*bbbbbmmbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBpbbbbbbbbpBo.", "..obllllllllBo..", "..oblldlldllBo..", "..oBLLLLLLLLBo..", "...oooooooooo..."],
+ "Hummingbird": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", "w.ob*bbbbbbbBo.w", "wWobbbbbbbbbBowW", "wWobbbbbbbbbBowW", "wWobbbbBbbbbBowW", "w.opbbBokkkkkkkk", "..obbbbbbbbbBo..", "..oRrrrrrrrrRo..", "...oRRRRRRRRo...", "....oooooooo...."],
+ "Hyena": ["......s..s......", ".oo..sssssS..oo.", "oaAosssssssSoaAo", "oaAooooooooooaAo", ".obbbbbbbbbbbBo.", "o*sbbsbbbbsbbsBo", "o*bbbbsbbsbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Iguana": [".......sS.......", "......sssS......", "...ooosssSooo...", "..o*bbbssbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbllllllllbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Jaguar": ["................", ".oo..........oo.", "oaAo........oaAo", "oaAooooooooooaAo", ".obsbbbbbbbbsBo.", "o*bsbbsbbsbbsbBo", "osbbsbbbbbbsbbSo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oSbbbllllllbbbSo", ".oSBBBSBBSBBBSo.", "..oooooooooooo.."],
+ "Jellyfish": [".....oooooo.....", "...oo*bbbbBoo...", "..obb*sbbsbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "obBbBbBbbBbBbBBo", "obobobobbobobobo", ".a.a..a..a..a.a.", "a..a.a....a.a..a"],
+ "Kangaroo": [".o............o.", ".oao........oao.", ".oao........oao.", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbblllnnlllbbBo", "oBbbbllllllbbbBo", ".oBBbllllllbBBo.", "..ooBBLLLLBBoo.."],
+ "Kiwi": ["................", ".....oooooo.....", "...oosbbbbSoo...", "..o*bbbssbbbBo..", ".obsbbbbbbbbsBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "osbpbbbkkbbbpbSo", "oBbbsbbkkbbsbbBo", ".oBbbbbkkbbbbBo.", "..oSBBBkkBBBSo..", "...ooookkoooo..."],
+ "Koala": [".oooo......oooo.", "oaaaAo....oaaaAo", "oaaaAoooooaaaaAo", ".oobbbbbbbbbBoo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbnnbbbbbBo", "obpbbbnnnnbbbpBo", "obbbbbnnnnbbbbBo", "oBbbbbbbbbbbbbBo", ".oBBbllllllbBBo.", "..ooBBBBBBBBoo.."],
+ "Koi": ["......oaAo......", ".....oaaaAo.....", "...oooooooooo...", "..owwwbbwwwwWo..", ".owwbbbbbwwwwWo.", "aowwbbbbbbwwwWoa", "aAowwwbbwwwbbBoa", "AAowpwwwwwwbpBoa", ".aowwwwwwwwbBo..", "..oWWwwwwwwWWo..", "aA.ooWWWWWWoo.aA", "AAA..oooooo..AAA"],
+ "Ladybug": ["..o..........o..", "...o........o...", "....oooooooo....", "...ohhhhhhhHo...", "..ohhhhhhhhhHo..", ".o*bbbbbbbbbbBo.", "obsbbbBobbbbbsBo", "obbbbbBobbbbbbBo", "obpbbbBobbbbbpBo", "oBbbsbBobbbsbbBo", ".oBBBBBoBBBBBBo.", "..oooooooooooo.."],
+ "Lemming": ["................", "....oooooooo....", "..ooaaaaaaaAoo..", ".oaaaaaaaaaaaAo.", "oaaaaaaaaaaaaaAo", "obbbbaaaaaabbbBo", "obbbbbbaabbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbllllbbbbBo", "oBbbbllllllbbbBo", ".oBBbllllllbBBo.", "..ooBBBBBBBBoo.."],
+ "Lemur": [".oo..........oo.", ".oao........oao.", ".oaAo......oaAo.", ".oaAooooooooaAo.", "o*llllbbbbllllBo", "ollssssllsssslLo", "ollssssllsssslLo", "olllllllllllllLo", "ollllllsslllllLo", "oBllllssssllllBo", ".oBBllllllllBBo.", "..ooBBBBBBBBoo.."],
+ "Lion": ["..mmmmmmmmmmmM..", ".mmmmmmmmmmmmmM.", "mmmMoooooooommmM", "mmMo*bbbbbbBommM", "mMob*bbbbbbbBomM", "mMobbbbbbbbbBomM", "mMobbbbbbbbbBomM", "mMobpbllllbpBomM", "mMoBbllnnllbBomM", "MmMoBllllllBommM", ".MmMobBBBBBommM.", "..MMMMooooMMMM.."],
+ "Llama": [".oo..........oo.", ".oao..wwwW..oao.", ".oaoowwwwwWooao.", ".obbwwwwwwwwbBo.", "o*bbbwwwwwwbbbBo", "o*bbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBpbbbbbbbbpBo.", "..oblldlldllBo..", "..obllllllllBo..", "..oBBLLLLLLBBo..", "...oooooooooo..."],
+ "Lynx": ["o..............o", "oo............oo", ".oo..........oo.", ".oaooooooooooao.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbllnnllbbbBo", "owbblllbblllbbWo", "oWwBBBBBBBBBBwWo", ".owoooooooooowo."],
+ "Manatee": ["................", "....oooooooo....", "..ooaaaaaaaAoo..", ".oaaaaaaaaaaaAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "oBbblslnnlslbbBo", "foBBlllbblllBBof", "fF.oBBBBBBBBo.FF", "f...oooooooo...f"],
+ "Mantis": ["o..............o", ".o............o.", "..o..........o..", ".oooooooooooooo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBpbbbbbbbbpBo.", "..ooBBbbbbBBoo..", ".okkooBbbBookko.", "okokko.oo.okkoko", ".o..o......o..o."],
+ "Mantis Shrimp": [".yY..........yY.", ".yYo........oyY.", "..o.oooooooo.o..", "...o*bbbbbbBo...", "..ob*bbbbbbbBo..", ".obbbbbbbbbbbBo.", ".orrrrrrrrrrrRo.", "obbbbbbbbbbbbbBo", "ogggggggggggggGo", "oBbbBbbbbbbBbbBo", ".oAAoAAAAAAoAAo.", "..o..o....o..o.."],
+ "Marmot": ["................", "..oo........oo..", ".obooooooooooo..", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbbllnnnnllbbBo", "oBbbbllwwllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Meerkat": ["................", "...oooooooooo...", ".oo*bbbbbbbbBoo.", "oao*bbbbbbbbBoao", ".obbbbbbbbbbbBo.", ".obsssbbbbsssBo.", ".obsssbbbbsssBo.", ".oBbbllllllbbBo.", "..obbblnnlbbBo..", "..obllllllllBo..", "..oBAABBBBAABo..", "..oooooooooooo.."],
+ "Mole": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbnnbbbbbBo", "obbbbbnnnnbbbbBo", "okkbbbbnnbbbbkko", "okkkbbbbbbbbkkko", ".okoBBBBBBBBoko.", "..oooooooooooo.."],
+ "Mongoose": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".osssssssssssSo.", "o*bbbbbbbbbbbbBo", "osbbbbbbbbbbbbSo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbbllllbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Monkey": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "oobbllbbbbllbBoo", "oaoblllbblllBoao", "oaobllllllllBoao", "ooobllllllllBooo", "..obllllllllBo..", "..oblllddlllBo..", "..oBllllllllBo..", "...oBBLLLLBBo...", "....oooooooo...."],
+ "Moose": ["hH.h......h.hH..", "hhhhH....hhhhH..", ".hhH......hhH...", ".oaooooooooooao.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Moth": ["k.k..........k.k", ".kk..........kk.", "..oooooooooooo..", "wWo*bbbbbbbbBowW", "wCo*bbbbbbbbBocW", "wwWobbbbbbbbowwW", "wcWobbbbbbbbowcW", "wwWobpbbbbpBoWwW", "WWobbbbbbbbbBowW", ".wobbbbbbbbbBow.", "..oBBBBBBBBBBo..", "..oooooooooooo.."],
+ "Mouse": [".oooo......oooo.", "oaaaAo....oaaaAo", "oaaaAoooooaaaaAo", ".oobbbbbbbbbBoo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbnnbbbbbBo", "oBbbbbllllbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Octopus": [".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbsbbbbsbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "obBbbBbbbbBbbBBo", "oboBBoBbbBobBobo", "ob.ob.oBBo.bo.bo", ".o..o..oo..o..o."],
+ "Orangutan": ["................", "....oooooooo....", "..ooaaaaaaaAoo..", ".oaaaaaaaaaaaAo.", "aAobbbbbbbbbBoaA", "aAobbbbbbbbbBoaA", "aAobbbbbbbbbBoaA", "AAopbllllllbpoaA", ".aobllllllllBoa.", ".o*llllllllllBo.", "..oBLLLLLLLLBo..", "..oooooooooooo.."],
+ "Ostrich": [".......oo.......", "..ooooo..ooooo..", ".o*bbbBoobbbbBo.", ".o*bBooooooobBo.", ".owwwwwwwwwwwWo.", "owwwwwwwwwwwwwWo", "owwwwwwwwwwwwwWo", "owpwWokkkkowwpWo", "owwwwWokkowwwwWo", "oBbbbbbbbbbbbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Otter": ["................", "...oo......oo...", "..oaooooooooao..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "olllldlllldlllLo", "ollllllnnlllllLo", "oLllllllllllllLo", ".oBLllllllllLBo.", "..ooBBBBBBBBoo.."],
+ "Owl": [".oo..........oo.", ".obo........obo.", ".obBoooooooo*Bo.", ".obbbbbbbbbb*Bo.", "obllllbbbbllllBo", "obllllbbbbllllBo", "obllllbkkbllllBo", "obbllbbkkbbllbBo", "obbbbbbbbbbbbbBo", "oBbsbbsbbsbbsbBo", ".oBSbbsbbsbbSBo.", "..ooBBBBBBBBoo.."],
+ "Panda": [".ooo........ooo.", "oaaAo......oaaAo", "oaaAooooooooaaAo", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*ssssbbbbssssBo", "obssssbbbbssssBo", "obpsssbbbbsssbpo", "obbbbbbnnbbbbbBo", "oBbbbbllllbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Parrot": [".......oo.......", "......oaAo......", "....oooaAooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obllllbbllllBo.", "obbllllbbllllbBo", "obbbbbkkkkbbbbBo", "obbbbbkkkkkbbbBo", "oBbbbbbkkkbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Peacock": ["w.w..w....w..w.w", "wkwkwk.wW.kwkwkW", ".wwko.wkkW.okwW.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbkkkkbbbpBo", "obbbbbbkkbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Pelican": ["................", ".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpBokkkkkkoBpBo", "obBokkkkkkkkobBo", "oBBokkkkkkkkobBo", ".oBBokkkkkkoBBo.", "..oooookkooooo.."],
+ "Penguin": [".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbllllllbbBo.", ".obllllllllllBo.", "obllllllllllllBo", "obpllllllllllpBo", "oBbllllkklllllBo", "oobllllllllllBoo", "oBbllllllllllbBo", ".oBBllllllllBBo.", "..ooBBBBBBBBoo.."],
+ "Pig": ["..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbBBBBbbbbBo", "obpbBooooooBbpBo", "obbBonnnnnNobbBo", "oBbBonDNNDNobbBo", ".oBBbBoooobbBBo.", "..ooBBBBBBBBoo.."],
+ "Pigeon": ["................", ".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbkkkkbbbpBo", "owwwwbbkkbbwwwWo", "oWwwwwwwwwwwwwWo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Platypus": ["................", "................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBpbbbbbbbbbbpBo", ".okkkkkkkkkkkko.", "okkkkkokkokkkkko", "okkkkkkkkkkkkkko", ".oooooooooooooo."],
+ "Polar Bear": [".ooo........ooo.", "o*bBo......obbBo", "o*bBooooooooobBo", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbbllbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Poodle": ["....aaA..aaA....", "..aaaaaaaaaaaA..", ".aaaaAooooaaaaA.", "aaaAobbbbbbaaaaA", "aaAo*bbbbbbBoaaA", "aAobbbbbbbbbBoaA", "aAobbbbbbbbbBoaA", "AAobpbllllbpBoaA", ".aobbllnnllbBoa.", ".aoBbllllllbBoa.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Porcupine": [".k..k..kk..k..k.", "k.kk.kkkkkk.kk.k", ".kkkkkkkkkkkkkk.", "kkooooooooooookk", "ko*bbbbbbbbbbBok", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Possum": ["................", ".oo..........oo.", "oaAo........oaAo", "oaaAooooooooaaAo", ".owwwwwwwwwwwWo.", "owwwwwwwwwwwwwWo", "owwwwwwwwwwwwwWo", "owpwwwwwwwwwwpWo", "owwwwwwnnwwwwwWo", "oBbwwwwwwwwwwbBo", ".oBBBBWWWWBBBBo.", "..oooooooooooo.."],
+ "Pufferfish": [".k..k......k..k.", "..k.oooooooo.k..", "...oo*bbbbBoo...", "k.obb*bbbbbbBo.k", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "kobbbbbbbbbbbBok", "obpbbbbbbbbbbpBo", "oBbbbbllllbbbbBo", ".oBBllllllllBBo.", "k.ooBBBBBBBBoo.k", "..k.oooooooo.k.."],
+ "Puffin": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbwwwwwwwwbBo.", "obbwwwwwwwwwwbBo", "obwwwwwwwwwwwwBo", "obwwwwwwwwwwwwBo", "obwwWoyyyYoWwwBo", "obbWoYrrrrYowbBo", "oBbbWoyRRYowbbBo", ".oBBBWWooWWBBBo.", "..oooooooooooo.."],
+ "Pug": [".oo..........oo.", "osSo.oooooo.osSo", "osSo*bbbbbbBosSo", ".oob*bsbbsbbBoo.", "obbbbbbssbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbssssssbbbBo", "obpbssssssssbpBo", "obbbsssnnsssbbBo", "oBbbbssssssbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Rabbit": [".oo..........oo.", "oaAo........oaAo", "oaAo........oaAo", "oaaAo......oaaAo", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbnnbbbbbBo", ".oBbbbllllbbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+ "Raccoon": [".ooo........ooo.", "oaaAo......oaaAo", "oaaAooooooooaaAo", ".obbbbbbbbbbbBo.", "o*llbbbbbbbbllBo", "osssssbbbbssssSo", "osssssbbbbssssSo", "obbllllllllllbBo", "oBbllllnnllllbBo", ".oBbllllllllbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+ "Rat": ["................", ".ooo........ooo.", "oaaAo......oaaAo", "oaaAooooooooaaAo", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "oBpbbbbbbbbbbpBo", ".oBbbbllllbbbBo.", "..oBbllnnllbBo..", "...oBBBBBBBBo...", "....oooooooo...."],
+ "Red Panda": [".o............o.", ".owo........owo.", ".owWoooooooowWo.", ".obbbbbbbbbbbBo.", "o*bwwbbbbbbwwbBo", "o*wwwwbbbbwwwwBo", "obwwwwbbbbwwwwBo", "obbwwbbnnbbwwbBo", "oBbbbbwwwwbbbbBo", ".obbbbbbbbbbbBo.", ".oDddBBBBBBddDo.", "..oDDooooooDDDo."],
+ "Rhino": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbhhbbbbbBo", "obbbbbbhhbbbbbBo", "obbbbbhhhhbbbbBo", "oBbbldllllldbbBo", ".oBBBLLLLLLBBBo.", "..oooooooooooo.."],
+ "Robin": ["................", ".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "orpbbbkkkkbbbpRo", "orrrrrrkkrrrrrRo", "oRrrrrrrrrrrrrRo", ".oRRRRRRRRRRRRo.", "..oooooooooooo.."],
+ "Rooster": [".....rR..rR.....", "....rrrrrrrR....", "...rrrrrrrrrR...", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbkkkkbbbpBo", "obbbbbrkkrbbbbBo", "oBbbbbrrrrbbbbBo", ".oBBBBBRRBBBBBo.", "..oooooooooooo.."],
+ "Seal": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "odpbdbllllbdbpDo", "obdbbllnnllbbdBo", "oBbbbllllllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Shark": [".......oo.......", "......o*Bo......", ".....ob*bBo.....", "..oooobbbBoooo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "olllllllllllllLo", "oldkdkdkdkdkdkLo", "oLkDkDkDkDkDkDLo", ".oooooooooooooo."],
+ "Sheep": ["..oo.oo..oo.oo..", ".owWowWoowWowWo.", "owwwwwwwwwwwwwWo", "owWobbbbbbbBowWo", "oao*bbbbbbbbBoao", "owo*bbbbbbbbBowo", "owoBbbbbbbbbBowo", "owWobbbbbbbBowWo", "owWoBbbnnbbBowWo", "oWwWoBBbbBBowwWo", ".oWWWoooooowWWo.", "..ooWWoWWoWWoo.."],
+ "Shiba": [".o............o.", ".oao........oao.", ".oaAo......oaAo.", ".oaAooooooooaAo.", "o*bbllbbbbllbbBo", "o*bbbbbbbbbbbbBo", "olbbbbbbbbbbbbLo", "ollbbllllllbblLo", "ollllllnnlllllLo", "oLllllllllllllLo", ".oLLllllllllLLo.", "..ooLLLLLLLLoo.."],
+ "Shoebill": [".......oo.......", "......obo.......", "....oooboooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbkkkkkkbbbBo", "obbbkkkkkkkkbbBo", "oBbbkkkkkkkkbbBo", ".oBBBkkkkkkBBBo.", "..ooookkkkoooo.."],
+ "Skunk": [".ooo........ooo.", "oaaAo......oaaAo", "oaaAooosSoooaaAo", ".obbbbbssbbbbBo.", "o*bbbbbssbbbbbBo", "o*bbbbbssbbbbbBo", "obbbbbbssbbbbbBo", "obpbbllllllbbpBo", "obbblllnnlllbbBo", "oBbbbllllllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Sloth": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbllllllllllbBo", "obllllllllllllBo", "oblsssllllssslBo", "obssslllllsssbBo", "obsslllllllssbBo", "oblllllddlllllBo", "oBbllllllllllbBo", ".oBBllllllllBBo.", "..ooBBBBBBBBoo.."],
+ "Snail": [".....oooooo.....", "...ooaaaaaAoo...", "..oaasssssssAo..", ".oasaaaaaaaasAo.", ".oasassssssasAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oBBBBBbbBBBBBo.", "..oooooooooooo.."],
+ "Snake": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obpbbbbbbbbpBo.", "..oBBbbbbbbBBo..", "...oobbbbbBoo...", ".oobbsbbsbbsBoo.", "obbsbbsbbsbbsbBo", "oLLLLLLLLLLLLLBo", ".oooooooooooooo."],
+ "Squirrel": ["...........aaA..", ".o.......o.aaaaA", "oao.....oaoaaaaA", "oaAooooooaAoaaaA", "obbbbbbbbbBoaaaA", "obbbbbbbbbBoaaAo", "obbbbbbbbbBoaaAo", "obpbllllbpBoaAo.", "obbllnnllbBoaAo.", "oBbllllllbBoao..", ".oBBBBBBBBoo....", "..oooooooo......"],
+ "Starfish": [".......oo.......", "......o*Bo......", "......o*Bo......", "ooooobbbbbBooooo", "obbbbbbbbbbbbbBo", ".obbbbbbbbbbbBo.", "..obbbbbbbbbBo..", "..obpbbbbbbpBo..", "..obbbbbbbbbBo..", ".obbBBBbbBBBbBo.", "oBBBo......oBBBo", "ooo..........ooo"],
+ "Sugar Glider": [".oo..........oo.", "o*Bo........obBo", "o*bBoooooooobbBo", ".obbbbbddbbbbBo.", "obbbbbbddbbbbbBo", "obbbbbbddbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbnnbbbbbBo", "oWwwwwwwwwwwwwWo", ".oWWwwwwwwwwWWo.", "..ooWWWWWWWWoo.."],
+ "Swan": ["......oooo......", ".....o*bbBo.....", "....ob*bbbBo....", "..oobbbbbbbBoo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbBbbBbbbbBo", "obpbbBokkoBbbpBo", "obbbbBokkkobbbBo", "oBbbbbBokkobbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Tapir": ["................", "................", ".ooo........ooo.", ".oaAo......oaAo.", "oabBoooooooobbAo", "obbbbbbbbbbbbbBo", "obbbbbbllbbbbbBo", "obpbbbllllbbbpBo", "obbbbbllllbbbbBo", "oBbbbbbllbbbbbBo", ".oWWWBBllBBWWWo.", "..oooooNNooooo.."],
+ "Tarsier": [".oo..........oo.", "o*Bo........obBo", "o*bBoooooooobbBo", ".obbbbbbbbbbbBo.", "obyyyybbbbyyyyBo", "obyyyybbbbyyyyBo", "obyyyybbbbyyyyBo", "obyyyybbbbyyyyBo", "oBbbbbbnnbbbbbBo", ".obbbbbbbbbbbBo.", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Tiger": [".o............o.", ".oao........oao.", ".oaAo......oaAo.", ".oaAoooooooaaAo.", "osbbsbbssbbsbbSo", "obbbbbbbbbbbbbBo", "osbbbbbbbbbbbbSo", "osbbbllllllbbbSo", "obbblllnnlllbbBo", "oSbbbllllllbbbSo", ".oBSbbbbbbbbSBo.", "..ooBBBBBBBBoo.."],
+ "Toucan": ["................", ".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpBokkkkkkkkkko", "obBokkkkkkkkkkko", "oBbBookkkkkkkoo.", ".oBBBBooooooo...", "..oooooooo......"],
+ "Turkey": ["w.w.w......w.w.w", "wwwwwW....wwwwwW", ".wwWoo....oowwW.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbkkkkbbbpBo", "obbbbbrkkrbbbbBo", "oBbbbbrrrrbbbbBo", ".oBBBBBRRBBBBBo.", "..oooooooooooo.."],
+ "Turtle": ["...oooooooooo...", "..osasasasasAo..", ".osasasasasasAo.", "osobbbbbbbbbBoso", "osobbbbbbbbbBoso", "osobbbbbbbbbBoso", "osobbbbbbbbbBoso", "osobpbbbbbbpBoso", "osobbbbbbbbbBoso", "osoBbbbbbbbbBoso", "oSSoBBBBBBBBoSSo", ".oooooooooooooo."],
+ "Unicorn": ["........h.......", ".......hH.......", ".oo..oohHoo..oo.", ".oaoo*bbbbBooao.", "omobb*bbbbbbBomo", "omobbbbbbbbbBomo", "omobbbbbbbbbBomo", ".oobpbbbbbbpBoo.", "..obllllllllBo..", "..oblldlldllBo..", "..oBLLLLLLLLBo..", "...oooooooooo..."],
+ "Walrus": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbllllllllbpBo", "obblldlllldllbBo", "oBbbwllllllwbbBo", ".oBBwBBBBBBwBBo.", "..oowoooooowoo.."],
+ "Warthog": ["................", ".oo..........oo.", ".oao........oao.", ".oaAooooooooaAo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBwwbllllllbwwBo", ".oBWbbbbbbbbWBo.", "..ooBBBBBBBBoo.."],
+ "Whale": ["......w..w......", ".....w.wW.w.....", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "olllllllllllllLo", "oLslslslslslslSo", ".oLLLLLLLLLLLLo.", "..oooooooooooo.."],
+ "Wolf": ["o..............o", "oo............oo", "oao..........oao", "oaAooooooooooaAo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbllllllbbbBo", "oBbllllnnllllbBo", ".oBllllllllllBo.", "..oBLLLLLLLLBo..", "...oooooooooo..."],
+ "Wombat": ["................", "..oo........oo..", ".oaAo......oaAo.", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllnnllbbpBo", "obbbblnnnnlbbbBo", "oBbbbbllllbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Yak": ["................", "h..............h", "hH............hH", ".hHoooooooooohH.", "oaaaaaaaaaaaaaAo", "oaaaaaaaaaaaaaAo", "obaabbbbbbbbaaBo", "obpbbbllllbbbpBo", "obbbbllnnllbbbBo", "oBbbbllllllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Zebra": ["..o..........o..", ".oao........oao.", ".oaoommmmmMooao.", ".obmmmmmmmmmmBo.", "osbbbmmmmmmbbbSo", "obsbbbbmmbbbbsBo", "oSbbsbbbbbbsbbSo", ".oSbsbbbbbbsbSo.", "..obllllllllBo..", "..oblldlldllBo..", "..oBLLLLLLLLBo..", "...oooooooooo..."],
+ "Triceratops": ["h..............h", ".h............h.", "aaH.h......h.haA", "aaAoooooooooooaA", "aAo*bbbbbbbbBoaA", "obb*bbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbkkbbbbbBo", "oBbbbbkkkkbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Stegosaurus": ["...s..sS..s.....", "..sS.sssS.sS.s..", ".ssS.sssS.ssssS.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obsbbbbbbbbbbsBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbllllllllbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Brachiosaurus": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "..oBpbbbbbbpBo..", "...obbbbbbbBo...", ".oobbbbbbbbbBoo.", "obbbbbbbbbbbbbBo", "oBLLLLLLLLLLLLBo", ".oooooooooooooo."],
+ "Pterodactyl": ["o..............o", ".oo..........oo.", "..oooooooooooo..", "w.o*bbbbbbbbBo.w", "wWo*bbbbbbbbBowW", "wwWobbbbbbbbowwW", "wwWobbbbbbbbowwW", "WwWobpbkkbpBowwW", ".WWobbkkkkbBowW.", "..wobbbkkbbBow..", "...oBBBkkBBBo...", "....oooooooo...."],
+ "Raptor": ["................", ".....oooooo.....", "..ooosbsbsbSoo..", ".osbsbbbbbbsbSo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oWwwwwwwwwwwwwWo", ".oWBWBWBBWBWBWo.", "..oooooooooooo.."],
+ "Ankylosaurus": ["................", "...s..s..s..s...", "..okkokkkkokko..", ".okkkkkkkkkkkko.", "okkokkokkokkokko", "sobbbbbbbbbbbBos", "o*bbbbbbbbbbbbBo", "o*pbbbbbbbbbbpBo", "sobbbbbbbbbbbBos", "oBbbbbllllbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Spinosaurus": [".....s.sS.s.....", "...sssssssssS...", "..sssssssssssS..", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oWwbwwbwwbwwbwWo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Parasaurolophus": [".....hhhhH......", "....hhhhhhH.....", "...hhH...hhH....", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "obbbllllllllbbBo", "oBbbllllllllbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Dimetrodon": ["...s.s.sS.s.s...", "..sssssssssssS..", ".sssssssssssssS.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oWbwwbwwwwbwwbWo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Iguanodon": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbllllllllbbBo", "woBBBBBBBBBBBBow", "..oooooooooooo.."],
+ "Seahorse": ["...s..s.........", "..ssssSoooooo...", "...obbbbbbbbBo..", "..o*bbbbbbbbbBo.", ".ob*bbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".oBpbbbbbbbbpBo.", "..oBbbllllbbBo..", "...oBBbbbbBBo...", "....ooBBbBo.....", "......ooBBo....."],
+ "Stingray": ["................", "................", "....oooooooo....", "..oo*bbbbbbBoo..", "oobb*bbbbbbbbBoo", "obbbbbbbbbbbbbBo", ".oBBbbbbbbbbBBo.", "..oopbbbbbbpoo..", "....oBBbbBBo....", "......oBBo......", ".......oo.......", "........o......."],
+ "Squid": [".......oo.......", "......o*Bo......", ".....ob*bBo.....", "...oobbbbbBoo...", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".obBbBbbbbBbBBo.", ".ob.boboobob.bo.", ".o..o.o..o.o..o."],
+ "Lobster": ["oo............oo", "rRo..........orR", "rrRo........orrR", ".oo.oooooooo.oo.", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBsbbsbbbbsbbsBo", ".oBBBBBBBBBBBBo.", "o.oooooooooooo.o"],
+ "Shrimp": ["k..............k", ".k............k.", "..k.oooooooo.k..", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpsbbbbbbbbspBo", "oBbsbbbbbbbbsbBo", ".oBSbbbbbbbbSBo.", "..ooBSBBBBSBoo..", "..TT.oooooo.TT.."],
+ "Anglerfish": [".......lL.......", ".......lo.......", "........o.......", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "owwbwwbwwbwwbwWo", "oBwbwbbbbbbwbwBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Eel": ["......f..f......", ".....fF..fF.....", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".oBpbbbbbbbbpBo.", "..oBbbllllbbBo..", "...oBbbllbbBo...", "....oBBbbBBo....", ".....ooBBo......"],
+ "Swordfish": [".......wW.......", ".......wW.......", ".......wW.......", "..ooooowWooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbllllllllbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Sea Urchin": ["k..k..k..k..k..k", ".k.k.k....k.k.k.", "..kkkkkkkkkkkk..", "kkooooooooooookk", "ko*bbbbbbbbbbBok", "ko*bbbbbbbbbbBok", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", "koBbbbbbbbbbbBok", "k.oBBBBBBBBBBo.k", "k..oooooooooo..k"],
+ "Hermit Crab": ["....oooooooo....", "..oosksssssSoo..", ".osssskssksssSo.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "rbBBbbbbbbbbBBbR", "RR.oBBBBBBBBo.RR", "...oooooooooo..."],
+ "Donut": ["................", "...oooooooooo...", "..oiiiiiiiiiIo..", ".oiisiiiiiisiIo.", "oiiiiisiisiiiiIo", "oisiiiiiiiiiisIo", "obibbiibbibbibBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Cupcake": [".......r........", "....oooroooo....", "..ooiiiiiiiIoo..", ".oiiiiiiiiiiiIo.", "oiiiiiiiiiiiiiIo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "ocbcbpbccbpbcbCo", "oCbcbcbccbcbcbCo", ".ocbcbcbbcbcbCo.", ".oCBCBCBBCBCBCo.", "..oooooooooooo.."],
+ "Ice Cream": ["....oooooooo....", "..ooiiiiiiiIoo..", ".oiiiiiiiiiiiIo.", "oiiiiiiiiiiiiiIo", "oiiiiiiiiiiiiiIo", "oiiiiiiiiiiiiiIo", "oiiiiiiiiiiiiiIo", "oIipIIiiiiIIpIIo", ".oiooocccCooioo.", "...oCwccccwCo...", "....oCCWWCCo....", ".....oooooo....."],
+ "Macaron": ["................", "................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "ofpffffffffffpFo", "offfffffffffffFo", "oBbbbbbbbbbbbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Pudding": ["................", "...cccccccccC...", "..cccccccccccC..", ".ocwccccccccwCo.", "occcccccccccccCo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBBBBBBBBBBBBBBo", "oooooooooooooooo"],
+ "Gummy Bear": [".ooo........ooo.", "oaaAo......oaaAo", "oaaAooooooooaaAo", ".obbbbbbbbbbbBo.", "ohhbbbbbbbbbbbBo", "ohbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbbllllllbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo.."],
+ "Dumpling": [".......oo.......", ".....oowWoo.....", "..oowowwwWowoo..", ".owwWowwwWowwWo.", "owwwwwwwwwwwwwWo", "owwwwwwwwwwwwwWo", "owwwwwwwwwwwwwWo", "owpwwwwwwwwwwpWo", "owwwwwwwwwwwwwWo", "oWwwwwwwwwwwwwWo", ".oWWWWWWWWWWWWo.", "..oooooooooooo.."],
+ "Toast": ["..oooo....oooo..", ".occcCo..occcCo.", "occcccCoocccccCo", "occbbbbbbbbbbcCo", "ocbbbbbbbbbbbbCo", "ocbbbbbbbbbbbbCo", "ocbbbbbbbbbbbbCo", "ocpbbbbbbbbbbpCo", "ocbbbyyyyyybbbCo", "ocbbbyyyyyybbbCo", "oCCBBBBBBBBBBCCo", ".oooooooooooooo."],
+ "Marshmallow": ["................", "...tttttttttT...", "..tttttttttttT..", ".owwwwwwwwwwwWo.", "owwwwwwwwwwwwwWo", "owwwwwwwwwwwwwWo", "owwwwwwwwwwwwwWo", "owpwwwwwwwwwwpWo", "oWwwwwwwwwwwwwWo", ".oWWWWWwwWWWWWo.", "..oooooooooooo..", ".......kk......."],
+ "Taco": ["................", "..g.r.g..g.r.g..", ".grgrgrggrgrgrG.", "oyyyyyyyyyyyyyYo", "oyyyyyyyyyyyyyYo", "oyyyyyyyyyyyyyYo", "oyyyyyyyyyyyyyYo", "oypyyyyyyyyyypYo", "oYyyyyyyyyyyyyYo", ".oYyyyyyyyyyyYo.", "..oYYYYYYYYYYo..", "...oooooooooo..."],
+ "Space Jelly": ["...oo......oo...", "..o*Bo....obBo..", ".ob*bBo..obbbBo.", ".obbbBoooobbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "obBBbBBbbBBbBBBo", "ob.ob.oBBo.bo.bo", "o..o..o..o..o..o"],
+ "Astronaut": [".......rR.......", "...oooooooooo...", "..owwwwwwwwwWo..", ".owWoooooooowWo.", "owWokkkkkkkkowWo", "owokkkkkkkkkkowo", "owokkkkkkkkkkowo", "owWokkkkkkkkowWo", "owwWoooooooowwWo", "oWwwwwrwwrwwwwWo", ".oWWWWWWWWWWWWo.", "..oooooooooooo.."],
+ "UFO": [".....oooooo.....", "...oogggggGoo...", "..oggggggggggGo.", "..oggggggggggGo.", ".oooooooooooooo.", "o*bbbbbbbbbbbbBo", "oybbybbybbybbyBo", "oLllllllllllllLo", ".oBBBBBBBBBBBBo.", "..oooooooooooo..", "..y..y....y..y..", ".y..y......y..y."],
+ "Star": [".......oo.......", "......o*Bo......", "......o*Bo......", ".....obbbBo.....", "ooooobbbbbBooooo", "obbbbbbbbbbbbbBo", ".oBbbbbbbbbbbBo.", "..oBpbbbbbbpBo..", "...obbbbbbbBo...", "..obbBBbbbBBBo..", ".oBBBoooBBooobo.", ".ooo....oo...oo."],
+ "Moon": ["......rrrR......", ".....rrrrrR.....", "...wwwwwwwwwW...", "..oooooooooooo..", ".o*cbbbbbbbbcBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbcbbbbbbcbBo", ".oBBbbbbcbbbBBo.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Comet": ["w...w..w...w...w", ".w.w.wW.wW.w.w..", ".wwwwwwwwwwwwwW.", "wWoooooooooooowW", "wo*bbbbbbbbbbBow", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Ringed Planet": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "RrrrrrrrrrrrrrrR", "orpbbbbbbbbbbpRo", "oBrrbbbbbbbbrrBo", ".oBBrrrrrrrrBBo.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Rocket": [".......oo.......", "......orRo......", "....orrrrrRo....", "...owwwwwwwWo...", "...owwwwwwwWo...", "..owwwwwwwwwWo..", "..owwwwwwwwwWo..", "..owpwwwwwwpWo..", "..oWwwwrrwwwWo..", ".oroWwwwwwwWoro.", "oRR.owwwwwWo.RRo", "....YYYYYYYY...."],
+ "Space Slug": [".g............g.", "..o..........o..", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*sbbbbbbsbBo.", "obbbbbbbbbbbbbBo", "obbbbbsbbsbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oLllllllllllllLo", ".oLLLLLLLLLLLLLo", "..oooooooooooooo"],
+ "Black Hole": ["...oooooooooo...", "..oyyyyyyyyyYo..", ".oyykkkkkkkkyYo.", "oyykkkkkkkkkkyYo", "oykkkkkkkkkkkkYo", "oykkkkkkkkkkkkYo", "oykkkkkkkkkkkkYo", "oykpkkkkkkkkpkYo", "oykkkkkkkkkkkkYo", "oYykkkkkkkkkkyYo", ".oYYkkkkkkkkYYo.", "..oooooooooooo.."],
+ "Bamboo": ["..g..........g..", "..ggG......ggG..", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", ".odddddddddddDo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obpbbbbbbbbpBo.", ".obbbbbbbbbbbBo.", ".odddddddddddDo.", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Daisy": ["..wW..wwwW..wW..", ".wwwW.wwwW.wwwW.", ".wwwwwwwwwwwwwW.", "wwWoooooooooowwW", "wWo*bbbbbbbbBowW", "wWo*bbbbbbbbBowW", ".wobbbbbbbbbBow.", "wWopbbbbbbbbpowW", "wWoBBBBBBBBBBowW", "WwWoooooooooowwW", ".WwwW.wwwW.WwwW.", "..WW..GGGG..WW.."],
+ "Sunflower": ["..y.yY.yY.yY.y..", ".yyyyyyyyyyyyyY.", "yyyyyyyyyyyyyyyY", "yyYooooooooooyyY", "yYo*bbbbbbbbBoyY", "yYo*bbbbbbbbBoyY", "yYobbbbbbbbbBoyY", "yYopbbbbbbbbpoyY", "yYoBBBBBBBBBBoyY", "YyYooooooooooyyY", ".YyYyYyyyyYyYyY.", "..g.y.GGGG.y.g.."],
+ "Tulip": [".r....r..r....r.", ".rR..rrrrrR..rR.", ".rrrrrrrrrrrrrR.", ".oooooooooooooo.", ".o*bbbbbbbbbbBo.", ".o*bbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".oBpbbbbbbbbpBo.", "..oBBBBBBBBBBo..", "...oooooooooo...", "..g...gggG...g..", ".GG...GGGG...GG."],
+ "Flytrap": ["k.k.k.k..k.k.k.k", "oooooooooooooooo", "orrrrrrrrrrrrrRo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oRRRRRRRRRRRRRRo", "oooooooooooooooo", "k.k.k.k..k.k.k.k", "..GGG......GGG.."],
+ "Acorn": [".......k........", "....kkkkkkkk....", "..kkckckkckckk..", ".kckckckkckckck.", ".oooooooooooooo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo..", ".....oooooo....."],
+ "Pumpkin": [".......gG.......", "......gG........", "..oooooooooooo..", ".o*babbaabbabBo.", "ob*abbabbabbabBo", "obbabbabbabbabBo", "obbabbabbabbabBo", "obpabbabbabbapBo", "obbabbabbabbabBo", "oBbabbabbabbabBo", ".oBBABBAABBABBo.", "..oooooooooooo.."],
+ "Pinecone": ["......oooo......", "....oo*bbBoo....", "..obkb*kkbbkBo..", ".obbbkbbbbkbbBo.", ".okbbbkbbkbbbko.", "obbkbbbkkbbbkbBo", "obbbbkbbbbkbbbBo", "okpbbbkbbkbbbpko", "oBbkbbbbbbbbkbBo", ".oBbbkbbbbkbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+ "Clover": ["..ooo.oooo.ooo..", ".o*bBobbbBobbBo.", ".o*bbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBpbbbbbbbbbbpBo", ".oBbbbbbbbbbbBo.", "..oBBBBbbbBBBo..", "...ooooogGooo...", ".......GG......."],
+ "Lotus": [".......rR.......", "...rR.rrrR.rR...", "r.rrrrrrrrrrrR.r", "rrRoooooooooorrR", "rRo*bbbbbbbbBorR", "rRo*bbbbbbbbBorR", "RRobbbbbbbbbBorR", ".ropbbbbbbbbpor.", "..ooBBBBBBBBoo..", "WwwWoooooooowwwW", ".WWWWWWWWWWWWWW.", "................"],
+ "Robo Bear": [".ooo........ooo.", "oaaAo......oaaAo", "oaaAooooooooaaAo", ".obrbbbbbbbbrBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbblllnnlllbbBo", "oSssskkkkkksssSo", ".oSBbllllllbBSo.", "..ooBRBBBBRBoo.."],
+ "Robo Bunny": ["..oo........oo..", ".o*Ao......oaBo.", ".o*Ao......oaBo.", ".obRo......orBo.", ".obBooooooooobo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllnnllbbpBo", "obbbbllllllbbbBo", "oSSSskkkkkksSSSo", "..ooBRBBBBRBoo.."],
+ "Robo Hen": ["......o..o......", ".......oo.......", "....oooooooo....", "..oo*rbbbbrBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obpbbbbbbbbbbpBo", "obbbbbnnnnbbbbBo", "osssssddddssssSo", "oBbbbbnnnnbbbbBo", ".oSBbbbbbbbbBSo.", "..ooBRBBBBRBoo.."],
+ "Robo Fox": ["o..............o", "oo............oo", "oao..........oao", "oaAoooooooooooao", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbblllnnlllbbBo", "oSssskkkkkksssSo", ".oSBbllllllbBSo.", "..ooBRBBBBRBoo.."],
+ "Phoenix": [".....a.aA.a.....", "....aaaaaaaA....", "....oaaaaaAo....", "..oo*bbbbbbBoo..", "w.ob*bbbbbbbBo.w", "wWobbbbbbbbbBowW", "wWobbbbbbbbbBoWW", "woBpbbbbbbbbpBow", "woobbbbkkbbbBoow", ".oobbbbkkbbbBoo.", "..oBbbBBBBbbBo..", "..aoAAooooAAoa.."],
+ "Griffin": ["..oo........oo..", ".o*Bo......obBo.", ".o*bBooooooobBo.", "w.obbbbbbbbbBo.w", "wWobbbbbbbbbBowW", "wWobbbbbbbbbBowW", "wobbbbBbbBbbbBow", "wobpbBokkoBbpBow", ".obbbBokkkobbBo.", ".oBbbbBokobbbBo.", "..oAaaaaaaaaAo..", "...oAAAAAAAAo..."],
+ "Kitsune": ["aA.o........o.aA", "taAoo......ooaaT", "aAoaAo....oaAoaA", ".oaAooooooooaAo.", "o*bsbbbssbbbsbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "osllbbbbbbbbllSo", "oLlllllnnlllllLo", ".oLllllllllllLo.", "..oLLLLLLLLLLo..", "...oooooooooo..."],
+ "Yeti": ["...oo.oo.oo.oo..", "..o*BobBobBobBo.", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbllllllllllbBo", "obllllllllllllBo", "obllllllllllllBo", "obllpllllllpllBo", "oblllllddlllllBo", "obbllllllllllbBo", "oBbBBbbbbbbBBbBo", ".obooBBBBBBoobo."],
+ "Moon Bunny": ["..oo........oo..", ".o*Bo......obBo.", ".o*po......opBo.", ".obpo......opBo.", "..obooooooooobo.", ".obbbbbssbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbllbbbbbBo", ".oBBbsllllsbBBo.", "..ooBBBBBBBBoo.."],
+ "Pegasus": ["..o..........o..", ".oao........oao.", ".oaoommmmmMooao.", "w.o*mmmmmmmmBo.w", "wWo*bbmmmmbbBowW", "wWobbbbbbbbbBowW", "WWobbbbbbbbbBowW", ".wobpbbbbbbpBow.", "..obllllllllBo..", "..oblldlldllBo..", "..oBLLLLLLLLBo..", "...oooooooooo..."],
+ "Narwhal": [".......h........", ".......hH.......", ".......hH.......", "....oooohHoo....", "..oo*bbbbbbBoo..", ".obbbbbbbbbbbBo.", "obsbbbbbbbbbbsBo", "obpbbbbbbbbbbpBo", "olllllllllllllLo", "oLllllllllllllLo", ".oLLLLLLLLLLLLo.", "..oooooooooooo.."],
+ "Snow Leopard": [".o............o.", ".oao........oao.", ".oaAo......oaAo.", ".oaAooooooooaAo.", "o*bsbbbsbbbbsbBo", "o*bbbbbbbbbbbbBo", "osbbbbbbbbbbbbSo", "obpbbllllllbbpBo", "osbblllnnlllbbSo", "oBbbbllllllbbbBo", ".oBSbbbbbbbbSBo.", "..ooBSBBBBSBoo.."],
+ "Pangolin": ["....oooooooo....", "..oosasasasAoo..", ".osasasasasasAo.", "osasasasasasasAo", "oooobbbbbbbBoooo", "..oobbbbbbbboo..", "...obbbbbbbbo...", "...opbbbbbbpo...", "....obbnnbBo....", "....oBbbbbBo....", ".....oBBBBo.....", "......oooo......"],
+ "Okapi": ["...o........o...", "..oho......oho..", "oaoho.oooo.ohoao", ".oobbbbbbbbbBoo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "oLbbbbbbbbbbbbLo", ".oLlbbbbbbbblLo.", "..olllllllllLo..", "..ollldlldllLo..", "..oSBSBSBSBSBo..", "...oooooooooo..."],
+ "Quokka": [".ooo........ooo.", "oaaAo......oaaAo", "oaaAooooooooaaAo", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbblllnnlllbbBo", "oBbbdlllllldbbBo", ".oBBbddddddbBBo.", "..ooBBBBBBBBoo.."],
+ "Tardigrade": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obs*bbbbbbbsBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "osbbbbbbbbbbbbSo", "obbbbbbBBbbbbbBo", "obbbbbBooBbbbbBo", "obbbbBobBobbbbBo", "oSBBBBBBBBBBBBSo", ".oooooooooooooo."],
+ "Slime": ["................", ".......oo.......", "......o*Bo......", "....oob*bBoo....", "...obllbbbbBo...", "..obllbbbbbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBBBBBBbbBBBBBBo", ".oooooooooooooo."],
+ "Shroomy": ["....oooooooo....", "..oossslsssSoo..", ".osslsssssslsSo.", "osssssslssssssSo", "oslssssssssslsSo", ".oooooooooooooo.", "...obbbbbbbbo...", "...opbbbbbbpo...", "...obbbbbbbBo...", "...obbbbbbbBo...", "...oBBBBBBBBo...", "....oooooooo...."],
+ "Cactus Pal": [".......aA.......", "......aaaA......", "....oooooooo....", "..oo*sbbbbsBoo..", ".obb*bbbbbbbbBo.", "osbbbbbbbbbbbbSo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "osbbbbbbbbbbbbSo", "oBBBBBBbbBBBBBBo", "oooooooooooooooo", ".okkkkkkkkkkkko."],
+ "Nimbus": ["................", ".....oo..oo.....", "..oooboooobooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oBBBBBbbBBBBBo.", "..oooooooooooo..", "...s..s..s..s..."],
+ "Zorp": [".......aA.......", "......aaaA......", ".......oo.......", "....oooooooo....", "..oo*bbbbbbBoo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "T-Rex": [".....h..h..h....", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*ssbbbbssbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbdbbdbbbbBo", "obbbbbbbbbbbbbBo", "obkdkdkdkdkdkdBo", "obDddddddddddDBo", "AAoBbkbbbbkbBoAA", "..ooBBBBBBBBoo.."],
+ "Mammoth": ["....oooooooo....", ".ooo*bbbbbbBooo.", "oaAo*bbbbbbBoaAo", "oaAobbbbbbbBoaAo", "oaAobbbbbbbBoaAo", "oaAobbbbbbbboaAo", "oAAobbbbbbbboaAo", ".oaoHBbbbbBHoao.", "..oh.oBbbBo.ho..", "..h...obBo...h..", "..HH..oBBo..HH..", ".......oo......."],
+ "Golden Blip": [".oo..........oo.", ".obo........obo.", ".obBo.oooo.o*Bo.", ".obbBobbbBob*Bo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbllbbbbbBo", ".obbbbllllbbbBo.", ".oBBbllllllbBBo.", "..ooBBBBBBBBoo.."],
+ "Qilin": ["h..h........h..h", ".hH..........hH.", "..h.oooooooo.h..", "..o*bbbbbbbbBo..", ".ob*bsbbbbsbbBo.", "mobbbbbbbbbbbBom", "mobbbbbbbbbbbBom", "mobpbbbbbbbbpBom", "mobbbsbbbbsbbBom", ".oBbllllllllbBo.", "..oBLLLLLLLLBo..", "...oooooooooo..."],
+ "Pixie": [".....a....a.....", "......a..a......", "wW...oooooo...wW", "wwWoo*bbbbBoowwW", "wWobb*bbbbbbBowW", ".wobbbbbbbbbBow.", "wWobbbbbbbbbBowW", "wWoBpbbbbbbpBoWW", "w..oBbbbbbbBo..w", "....oBbbbbBo....", ".....oBbbBo.....", "......oooo......"],
+ "Baby Kraken": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbsbbbbbbsbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBpbbbbbbbbbbpBo", ".obBbBBbbBBbBBo.", ".oboboobboobobo.", "obo.obo..obo.obo", "ob..obo..obo..bo", ".o...o....o...o."],
+ "Wyvern": ["w..............w", "wW..h......h..wW", "wwWohoooooohowwW", "wwWobbbbbbbBowwW", "wWo*bbbbbbbbBowW", "wWo*bbbbbbbbBowW", ".wobbbbbbbbbBow.", "..obpbbbbbbpBo..", "..obbbllllbbBo..", "..oBbllllllbBo..", "...oBBLLLLBBo...", "....oooooooo...."],
+ "Rock Golem": ["................", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*cbbbbbbcbBo.", "obbbbbcbbcbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obcbbbbrrbbbbcBo", "obbbbbbrrbbbbbBo", "oBbbcbbbbbbcbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Crystal Axolotl": ["g..............g", ".g............g.", "gG.oooooooooo.gG", ".go*bbbbbbbbBog.", "gGo*bbbbbbbbBogG", ".gobbbbbbbbbBog.", "GGobbbbbbbbbBoGG", ".obpbbbbbbbbpBo.", ".obbbbbbbbbbbBo.", ".oBbbbllllbbbBo.", "..oBBLLLLLLBBo..", "...oooooooooo..."],
+ "Sky Whale": ["c..............c", "cC...oooooo...cC", "c..oo*bbbbBoo..c", "..obb*bbbbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oLlbbbbbbbbbblLo", ".oLllbbbbbbllLo.", "..oLLLLLLLLLLo..", "...oooooooooo..."],
+ "Dodo": ["....oooooooo....", "...o*bbbbbbBo...", "..ob*bbbbbbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbkkkkkkbbBo.", ".obbkkkkkkkkbBo.", "obbbkkkkkkkkbbBo", "oBbbBokkkkobbbBo", ".oBBBBokkoBBBBo.", "..oooooooooooo.."],
+ "Saber Kitten": [".o............o.", ".oo..........oo.", ".oao........oao.", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bsbbbbbbbbsbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbNNbbbbbBo", "oBbbbbWoowbbbbBo", ".oBBBBwBBwBBBBo.", "..oooowoowoooo.."],
+ "Lucky Cat": [".o............o.", ".oo..........oo.", ".oao........oao.", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbrrbbbbbBo", "oRrrrrryyrrrrrRo", ".oBBBBBYYBBBBBo.", "..oooooooooooo.."],
+ "Rainbow Blip": [".oo..........oo.", ".oro........oro.", ".orRo.oooo.orRo.", ".oyyYoyyyYoyyYo.", "oyyyyyyyyyyyyyYo", "ogggggggggggggGo", "ogggggggggggggGo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oVvvvvvvvvvvvvVo", ".oVVVVVVVVVVVVo.", "..oooooooooooo.."],
+ "Moon Moth": ["a..............a", ".a............a.", "wW..oooooooo..wW", "wwWo*bbbbbbBowwW", "wwSo*bbbbbbBoswW", "wssWobbbbbbowssW", "wwSobbbbbbbboswW", "WwWobbbbbbbBowwW", ".WWoBbbbbbbBowW.", "..WWoBbbbbBowW..", "...WWoBBBBoWWW..", ".....oooooo....."],
+ "Bigfoot": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbllllllllbBo.", "obbllllllllllbBo", "obllllllllllllBo", "obllllllllllllBo", "obbpllllllllpbBo", "obbbllllllllbbBo", "obbBbllllllbBbBo", "oBBoBbbbbbbBoBBo", ".oo.oBBBBBBo.oo."],
+ "Death Worm": [".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".oBpbbbbbbbbpBo.", "..obbbbbbbbbBo..", "..oDddddddddDo..", "...obbbbbbbBo...", "...oDddddddDo...", "SSSSoBBBBBBoSSSS"],
+ "Mothman": ["..aA........aA..", "w..a.a....a.a..w", "wW...oooooo...wW", "wwWoo*bbbbBoowwW", "wlWob*bbbbbBowlW", "wwLobbrbbrbbolwW", "wwWobbrbbrbbowwW", "wlWoFffffffFowlW", "WwlWofbffbFowlwW", ".WwWoBbffbBowwW.", "..WWWoBBBBoWWW..", "......o..o......"],
+ "Nessie": ["...oooooooooo...", "..o*bbbbbbbbBo..", "..o*bbbbbbbbBo..", "..obbbbbbbbbBo..", "..obpbbbbbbpBo..", "...obbbbbbbBo...", "....ooBbbBoo....", "......obBo......", "..ooo.obBo.ooo..", ".obbBobbbBobbBo.", "wWwwWWwwWWwwWwwW", "w.WW..WW..WW.WW."],
+ "Chupacabra": [".a.a.a.aA.a.a.a.", ".oaoaoaooaoaoao.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbllllbbbpBo", "oBBbbllllllbbBBo", ".ooBblwllwlbBoo.", "...oBBBBBBBBo...", "....oooooooo...."],
+ "Jersey Devil": [".a............a.", ".aA..........aA.", "..aAooooooooaA..", "w..o*bbbbbbBo..w", "wW.o*bbbbbbBo.wW", "wWobbbbbbbbbBowW", "wWobbbbbbbbbBowW", "wWobpbbbbbbpBoWW", "w.obbbllllbbBo.w", "..oBllllllllBo..", "...oBBLLLLBBo...", "....oooooooo...."],
+ "Jackalope": ["a.a..........a.a", ".aA..........aA.", "..a.oo....oo.a..", "...o*Bo..obBo...", "...o*BoooobBo...", "..obbbbbbbbbBo..", ".obbbbbbbbbbbBo.", ".obpbbbbbbbbpBo.", ".oBbbbbllbbbbBo.", "..oBbbllllbbBo..", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Flatwoods Monster": [".......oo.......", "......oaAo......", ".....oaaaAo.....", "...ooaaaaaAoo...", "..oaaaaaaaaaAo..", ".oaallllllllaAo.", ".oAallllllllaAo.", "..oAllllllllAo..", "...oolllllLoo...", "....obbbbbBo....", "...o*bbbbbbBo...", "..oB*BBBBBBBBo.."],
+ "Dover Demon": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBBbbbbbbbbBBo.", "..ooBBbbbbBBoo..", "....ooBbbBoo....", "..oo..obBo..oo..", ".o.o.oBBBBo.o.o."],
+ "Fresno Nightcrawler": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "..obbbbbbbbbBo..", "..oBbbbBBbbbBo..", "...obbBooBbBo...", "...obBo..obBo...", "...obBo..obBo...", "...obBo..obBo...", "..ooBBo..oBBoo.."],
+ "Frogman": ["..ooo......ooo..", ".o*bBo....obbBo.", ".o*bBoooooobbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBpbbbbbbbbbbpBo", ".obbbbbbbbbbbBo.", ".oBbllllllllbBo.", ".ooBLLLLLLLLBoo.", "...oooooooooo..."],
+ "Batsquatch": ["..o..........o..", "..oo.oooooo.oo..", "..obo*bbbbBobo..", "w.obb*llllbbBo.w", "wWobllllllllBowW", "wWobllllllllBowW", "wWobllllllllBowW", "wWobpllllllpBoWW", "w.obbllllllbBo.w", "..oBbbllllbbBo..", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Thunderbird": ["......oooo......", ".....o*bbBo.....", "o...ob*bbbBo...o", "wo.obbbbbbbBo.ow", "wWoobbbbbbbboowW", "wwWobbbbbbbbowwW", "WwWobpbbbbpBowwW", ".WWobbbkkbbBowW.", "..wobbbkkbbBow..", "...oBBbbbbBBo...", "....ooBBBBoo....", ".....oo..oo....."],
+ "Hodag": ["..o..........o..", "..oo.o.oo.o.oo..", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbwWwWwWwWwwbBo", "oBbBowowowowbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Mokele-mbembe": ["....oooooooo....", "..oo*bbbbbbBoo..", "..ob*bbbbbbbBo..", "..obbbbbbbbbBo..", "..obpbbbbbbpBo..", "...obbbbbbbBo...", "....obbbbbBo....", "....obbbbbBo....", ".ooobbbbbbbBooo.", "obbbbbbbbbbbbbBo", "oBLLLLLLLLLLLLBo", ".oooooooooooooo."],
+ "Lizard Man": ["....oooooooo....", "...o*bbbbbbBo...", "..ob*sbbbbsbBo..", "..obbbbbbbbbBo..", "..obbbbbbbbbBo..", "..obpbbbbbbpBo..", "...obbbbbbbBo...", "..oobbllllbBoo..", ".obobllllllBobo.", ".oboBllllllBobo.", "..o.obbBBBBo.o..", "....oBBo.oBBo..."],
+ "Kappa": ["....oooooooo....", "...okkkkkkkko...", "..oohhhhhhhHoo..", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".oBpbbbbbbbbpBo.", "..obbbyyyybbBo..", "..obbBbyybBbBo..", ".ossSobbbBossSo.", ".oSSSoBBBBoSSSo.", "..ooo.oooo.ooo.."],
+ "Tsuchinoko": ["................", "....oooooooo....", "...o*bbbbbbBo...", "..ob*bbbbbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbdlldlldlldbBo", "oBbldlldlldldbBo", ".oBBBBbRRbBBBBoo", "..oooorooroooBBo", "...........oooo."],
+ "Owlman": [".oo..........oo.", ".obo........obo.", ".obBoooooooo*Bo.", "obbbbbbbbbbb*bBo", "obbllllbbllllbBo", "obbllllbbllllbBo", "woBbbbbkkbbbbBow", "wWobbbbkkbbbBowW", "WWobbbbbbbbbBowW", ".woBbbbbbbbbBow.", "..ooBBBBBBBBoo..", "....oo....oo...."],
+ "Beast of Bodmin": ["o..............o", "oo............oo", "obo..........obo", "obBoooooooooo*Bo", "obbbbbbbbbbbb*Bo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbllllbbbbBo", ".oBBbbbllbbbBBo.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Pope Lick Monster": ["h..............h", "hH............hH", ".hH.oooooooo.hH.", "..oo*bbbbbbBoo..", "..ob*bbbbbbbBo..", ".obbbbbbbbbbbBo.", ".oBpbbbbbbbbpBo.", "..obbbbbbbbbBo..", "..oBbbllllbbBo..", "...oBbllllbBo...", "....oBllllBo....", ".....oLLLLo....."],
+ "Bunyip": ["................", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbnnnnbbbbBo", "oBbwbbbbbbbbwbBo", ".obwbbbbbbbbwBo.", "ooBBBBBBBBBBBBoo", "oo.oooooooooo.oo"],
+ "Skunk Ape": ["....oooooooo....", "..oo*bssssbBoo..", ".obb*bssssbbbBo.", ".obbllllllllbBo.", ".obbllllllllbBo.", "obbllllllllllbBo", "obbllllllllllbBo", "obbpllllllllpbBo", "obbbllllllllbbBo", "obbBbllllllbBbBo", "oBBoBbbbbbbBoBBo", ".oo.oBBBBBBo.oo."],
+ "Wendigo": ["h..h........h..h", ".hhH.h....h.hhH.", "...hhH....hhH...", "....oooooooo....", "...olllllllLo...", "..olllllllllLo..", "..olllllllllLo..", "..oLlllkklllLo..", "...olllllllLo...", "...owlwllwlWo...", ".oo*BrbrrbrBBoo.", "ob..oBRBBRBo..bo"],
+ "Snallygaster": ["......o..o......", "...oooooooooo...", "..o*bbbbbbbbBo..", "w.o*bbbbbbbbBo.w", "wWobbbbbbbbbBowW", "wwWobbbbbbbbowwW", "WwWobpbbbbpBowwW", ".WWobbkkkkbBowW.", "..wobbbkkbbBow..", "...oBBBBBBBBo...", "...oo.oooo.oo...", "....o..oo..o...."],
+ "Yowie": ["...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*llllllllbBo.", ".obllllllllllBo.", "obbllllllllllbBo", "obbllllllllllbBo", "obbllllllllllbBo", "obbpllllllllpbBo", "obbbllllllllbbBo", "obbBbllllllbBbBo", "oBBoBbbbbbbBoBBo", ".oo.oBBBBBBo.oo."],
+ "Ogopogo": ["...oooooooooo...", "..o*bbbbbbbbBo..", "..o*bbbbbbbbBo..", "..obpbbbbbbpBo..", "...obbbbbbbbo...", "....oobbbBoo....", "......obBo......", "..ooo.oBBo.ooo..", ".obbBo.oo.obbBo.", "wWwwWWwwwwWWwwWW", "w.WW..WWWW..WW.w", "................"],
+ "Ahool": ["o..............o", "wo...o....o...ow", "wWo.oboooobo.owW", "wwWo*bbbbbbBowwW", "wwWo*bbbbbbBowwW", "wWobbbbbbbbbBowW", "wWobbbbbbbbbBoWW", "w.oBpbbbbbbpBo.w", "w..obbbbbbbBo..w", "...oBBbbbbBBo...", "....ooBBBBoo....", "......oooo......"],
+ "Grootslang": ["................", ".oo..oooooo..oo.", "o*Bo.obbbBo.obBo", "o*bBoobbbBoobbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBpbbbbbbbbpBo.", "..obbbbttbbbBo..", "..oBbbbttbbbBo..", "...oBBBttBBBo...", "....oooTTooo...."],
+ "Teakettler": ["..s..........s..", ".s..s......s..s.", "..s..........s..", ".o.oooooooooo.o.", ".oao*bbbbbbBoao.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oBbbBbbbbBbbBo.", "..oBBoBBBBoBBo..", "..oo.oooooo.oo.."],
+ "Squonk": ["................", "...oooooooooo...", "..o*bwbbbbwbBo..", ".ob*bbbbbbbbbBo.", "obwbbbbbbbbbbwBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbwbbbbwbbpBo", "obbbbbbbbbbbbbBo", "oBwbbbbbbbbbbwBo", ".obBBBBBBBBBBBo.", "..t.oooooooo.t.."],
+ "Hidebehind": ["....o......o....", "...obo....obo...", "..o*bBoooobbBo..", "..o*bbbbbbbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBsbbbbbbbbbbsBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Fur-bearing Trout": ["....f.f..f.f....", "...fffffffffF...", "..offfffffffFo..", ".o*bbbbbbbbbbBo.", "fo*bbbbbbbbbbBof", "ffbbbbbbbbbbbbfF", "fobsbsbbbbsbsBof", ".oBpbbbbbbbbpBo.", "..oBbBbbbbBbBo..", "...ofobbbBofo...", "....FFFFFFFF....", "................"],
+ "Wampus Cat": [".o............o.", ".oo..........oo.", ".oao........oao.", ".oaAooooooooaAo.", "o*sbbbbssbbbbsBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbnnbbbbbBo", ".oBbbBbbbbBbbBo.", "..oBBoBBBBoBBo..", "...oo.oooo.oo..."],
+ "Kongamato": ["...h........h...", "..hH........hH..", "w.hooooooooooh.w", "wWo*bbbbbbbbBowW", "wWo*bbbbbbbbBowW", "wWobbbbbbbbbBowW", "woBbbbbbbbbbbBow", "w.oBbkkkkkkbBo.w", "...oBkkkkkkBo...", "....okkkkkko....", ".....okkkko.....", "......oooo......"],
+ "Altamaha-ha": ["....oooooooo....", "...o*bbbbbbBo...", "..ob*bbbbbbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbllllllllbbBo", "foBbllllllllbBof", "fFoBbllllllbBoFF", "f..oBBBBBBBBo..f", ".....oooooo....."],
+ "Globster": ["................", "................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbsbbbbbbsbbBo", "obbbbbbbbbbbbbBo", "oBsbbbbbbbbbbsBo", ".oBBBBBbbBBBBBo.", "oo.oooooooooo.oo"],
+ "Ningen": ["...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBbbbbbbbbbbBo.", "a.oBbbbbbbbbBo.a", "aA.oBbbbbbbBo.AA", "a...oBBBBBBo...a", ".....oooooo....."],
+ "Van Meter Visitor": [".......yY.......", "w......yY......w", "wo....oyYo....ow", "wWoooooooooooowW", "wWo*bbbbbbbbBowW", "wWo*bbbbbbbbBowW", "woBbbbbbbbbbbBow", "w.obbbbbbbbbBo.w", "..oBbbbbbbbbBo..", "...oBbbbbbbBo...", "....oBBBBBBo....", "....oooooooo...."],
+ "Tatzelwurm": [".o............o.", ".oo..........oo.", ".oao........oao.", ".oaAooooooooaAo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBpbbbbbbbbbbpBo", ".osssssssssssSo.", ".oSssssssssssSo.", "..oSSSSSSSSSSo..", "...oooooooooo..."],
+ "Dobhar-ch\u00fa": ["...yyyyyyyyyY...", "...ryyyrryyyR...", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpllllllllllpBo", "obbllllllllllbBo", "oBbllllllllllbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Lusca": [".......fF.......", "......fffF......", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "oWWWWWWWWWWWWWWo", ".oooooooooooooo.", ".t.t.t.TT.t.t.t.", "t..t..t..t..t..t", ".t..t..TT..t..t.", "t.....t..t.....t"],
+ "Beast of G\u00e9vaudan": ["o..............o", "oo............oo", "oao.oooooooo.oao", "oaAo*bbbbbbBoaAo", "obbb*bbbbbbbbbBo", "obsbbbbbbbbbbsBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbllllllllllbBo", "oSblllnnnnlllbSo", ".oSBLLLLLLLLBSo.", "..oooooooooooo.."],
+ "Goatman": ["h..............h", "hH............hH", ".hHoooooooooohH.", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "aobbbbbbbbbbbBoa", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".oBbnnbbbbnnbBo.", "..obbbbbbbbbBo..", "..oBBgBBBBgBBo..", "...oogoooogoo..."],
+ "Ropen": ["....h......h....", "...hH......hH...", "w.hooooooooooh.w", "wWo*bbbbbbbbBowW", "wWo*bbbbbbbbBowW", "wWobbbbbbbbbBowW", "woBbbbbbbbbbbBow", "w.oBbkkkkkkbBo.w", "...oBkkkkkkBo...", "....okkkkkko....", ".....oyyyYo.....", "......YYYY......"],
+ "Emela-ntouka": [".......hH.......", "......hhhH......", ".....oohHoo.....", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "wWwwWWwwwwWWwwWW", "w.WW..WWWW..WW.w"],
+ "Caddy": ["..oo.oooooo.oo..", ".o*BoobbbBoobBo.", ".o*bbbbbbbbbbBo.", ".obpbbbbbbbbpBo.", "..obbbbbbbbbBo..", "...oobbbbbBoo...", ".....oBbbBo.....", ".ooo..obBo..ooo.", "obbBo.obBo.obbBo", "wWwwWWwwwwWWwwWW", "w.WW..WWWW..WW.w", "................"],
+ "Orang Pendek": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", ".obbffffffffbBo.", "obbffffffffffbBo", "obbffffffffffbBo", "oBbffffffffffbBo", ".obbffffffffbBo.", ".oBbbBbbbbBbbBo.", "..oBBoBBBBoBBo..", "..oo.oooooo.oo.."],
+ "Montauk Monster": ["................", "....oooooooo....", "..oo*bbbbbbBoo..", ".obb*bbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbkkkkbbbbBo", "obpbbkkkkkkbbpBo", "oBbbbkkkkkkbbbBo", ".oBbbBbbbbBbbBo.", "..oBBoBBBBoBBo..", "..oo.oooooo.oo.."],
+ "Tidal Titan": ["..o...o..o...o..", "..oo.oo..oo.oo..", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obgbbbbbbbbbbgBo", "obgbllllllllbgBo", "obbbllllllllbbBo", "oBbbllllllllbbBo", ".obbBBBBBBBBbBo.", ".oBBo......oBBo."],
+ "Magmaw": [".o............o.", ".obo........obo.", ".obBoooooooo*Bo.", ".obbbbbbbbbb*Bo.", "obbbbbbbbbbbbbBo", "obrbbbbbbbbbbrBo", "obbbrbbbbbbrbbBo", "obbbbbbbbbbbbbBo", "obrrrrrrrrrrrrBo", "oBwbwbwbwbwbwbBo", ".obbRBBBBBBRbBo.", ".oBBo......oBBo."],
+ "Gigabot": [".......o........", "......ooo.......", "...oooooooooo...", "..ommmmmmmmmMo..", "..omoommmMoomo..", "..ommmmmmmmmMo..", "...oooooooooo...", "oooo*bbbbbbBoooo", "omMo*bllllbBomMo", "oMMobbbllbbBoMMo", "oo.obbBBBBbBo.oo", "...oBBo..oBBo..."],
+ "Skyray": ["................", "................", "......oooo......", "....oo*bbBoo....", "..oobb*bbbbBoo..", "oobbbbbbbbbbbBoo", "oBbbbbbbbbbbbbBo", ".oBBllllllllBBo.", "..ooLllllllLoo..", "....oBBbbBBo....", "......oooo......", "........oo......"],
+ "Frostback": ["..c...c..c...c..", "..cC.ccC.ccC.cC.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbllllllllbbBo", "oBbbllllllllbbBo", ".obbBBBBBBBBbBo.", ".oBBo......oBBo."],
+ "Boulderback": ["....gggggggG....", "..gssssssssssG..", ".gssrssssssrssG.", ".sssssssssssssS.", "osssssssssssssSo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbpbbbbbbbbpbBo", "oBbbbbbbbbbbbbBo", ".obbBBBBBBBBbBo.", ".oBBo......oBBo.", ".oo..........oo."],
+ "Stormcrab": ["cC............cC", "cCo..........ocC", ".coyY......yYoc.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbybbybbybbybBo", ".oBBBBBBBBBBBBo.", "o.oooooooooooo.o", "o.o.o..oo..o.o.o", "................"],
+ "Tremorpede": ["a..............a", ".a............a.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "osssssssssssssSo", "obbbbbbbbbbbbbBo", "osssssssssssssSo", "oBbBbBBBBBBbBbBo", "lololoooooololol", "l.l.l......l.l.l"],
+ "Volthorn": [".......yY.......", "......yyyY......", "......yooy......", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "osbbbbbbbbbbbbSo", "obsbbbbbbbbbbsBo", "oBbsbbbbbbbbsbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Tundrox": ["h..............h", "hH............hH", ".hHoooooooooohH.", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "ofbbbbbbbbbbbbFo", "offbbbbbbbbbbfFo", "offbbbbbbbbbbfFo", "offfbnnbbnnbffFo", "oFfffbbbbbbfffFo", ".oFFFFFFFFFFFFo.", "..oooooooooooo.."],
+ "Nebulon": ["...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*sbbbbbbsbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbsbbbbsbbbBo", "oBpBBBBBBBBBBpBo", ".oooooooooooooo.", ".t.t.t.tt.t.t.t.", "t..t..t..t..t..t", ".t..t..TT..t..t.", "t.....t..t.....t"],
+ "Bramblebeast": ["t.r..t....t..r.t", ".tT.tT.tT.tT.tT.", "..tttttttttttT..", ".tobbbbbbbbbBot.", "to*bbbbbbbbbbBot", ".o*bbbbbbbbbbBo.", "tobbbbbbbbbbbBot", ".obpbbbbbbbbpBo.", "tobbbbbbbbbbbBot", ".obbbbbrrbbbbBo.", "toBBBBBBBBBBBBot", ".oooooooooooooo."],
+ "Sandsnapper": ["j..............j", "jJ............jJ", ".jJ..........jJ.", "..jooooooooooj..", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obsbbbbbbbbbbsBo", "obbbbbbbbbbbbbBo", "sssbbbbbbbbbbssS", "SsSsSsSssSsSsSsS", ".s.s.s.SS.s.s.s."],
+ "Clockwork Rex": ["....oooooooo....", "...o*bbbbbbBo...", "..ob*gbbbbgbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "owwwwwwwwwwwwwWo", "oBwbwbwbbwbwbwBo", ".oBbbbbbbbbbbBo.", "..obbgbbbbgbBo..", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+ "Deepjaw": ["......lllL......", ".....l....l.....", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oWBWBWBWWBWBWBWo", "o..............o", "oWbwbwbwwbwbwbWo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Thunderwing": ["w..............w", "wW............wW", "wwY.oooooooo.ywW", "wwWo*bbbbbbBowwW", "wwWo*bbbbbbBowwW", "wWobbbbbbbbbBowW", "wYobbbbbbbbbBoYW", "w.obbkkkkkkbBo.w", "..oBbbkkkkbbBo..", "...oBBbkkbBBo...", "....ooBBBBoo....", "......oooo......"],
+ "Coralgon": ["..c..r....r..c..", ".ccR.cC..cC.rcC.", "..ccrcC..ccrcC..", ".cccccrccrccccC.", ".osssssssssssSo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".obbBBBbbBBBbBo.", ".oBBo......oBBo.", ".oo..........oo."],
+ "Mossling": ["...g........g...", "..gG.g....g.gG..", "...oooooooooo...", "..o*dbbbbbbdBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbdbbdbbbpBo", "obbbbbbbbbbbbbBo", "oDbbbbbbbbbbbbDo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Bloomkin": ["..rR..rrrR..rR..", ".rrrrrrrrrrrrrR.", ".rrrryyyyyyrrrR.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "wo*bbbbbbbbbbBow", "wobbbbbbbbbbbBow", "wobpbbbbbbbbpBow", ".obbbbbbbbbbbBo.", ".oBbbbbbbbbbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+ "Gumdrop Golem": ["......oooo......", ".....o*bbBo.....", "....ob*bbbBo....", "...obsbbbbsBo...", "..obbbbbbbbbBo..", ".obbbbsbbsbbbBo.", ".obbbbbbbbbbbBo.", "obsbbbbbbbbbbsBo", "obpbbbbbbbbbbpBo", "obbbbsbbbbsbbbBo", "oBBBBBBbbBBBBBBo", ".oooooooooooooo."],
+ "Cotton Candy Cloud": ["..oo..oooo..oo..", ".o*BoobbbBoobBo.", "ob*bbbbbbbbbbbBo", "obcbbbbbbbbbbcBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oBBCBBbbBBCBBo.", "..oooooooooooo..", ".......kk......."],
+ "Pearlfin": ["......wwwW......", ".....owwwWo.....", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "fobbbbbbbbbbbBof", "fFobbbbbbbbbBoFF", "fobpbbbbbbbbpBof", ".oBbbbllllbbbBo.", "..oBbbllllbbBo..", "...oBBBBBBBBo...", "....oooooooo...."],
+ "Abyss Wisp": [".......lL.......", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obpbbbbbbbbpBo.", ".obbbbbbbbbbbBo.", ".obBbBbbbbBbBBo.", ".oboboboobobobo.", "..o.o.o..o.o.o.."],
+ "Fossilbones": ["................", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbkbbbbbbbbkbBo", "oWbwbwbwwbwbwbWo", ".okkkkkkkkkkkko.", "..oboboBBobobo..", "...oooooooooo..."],
+ "Amber Raptor": ["......f..f......", ".....fF..fF.....", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*sbsbbbbsbsbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oWwwwwwwwwwwwwWo", ".obbbbbbbbbbbBo.", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Nebula Cat": ["................", ".o............o.", ".oo..........oo.", ".oboooooooooobo.", "o*bbsbbbbbbsbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbsbbsbbbpBo", "obbbbbbbbbbbbbBo", "oSbbbbbbbbbbbbSo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Cosmo Pup": ["...hhhhhhhhhH...", "..h..........h..", ".h..oooooooo..h.", "h.oao*bbbbBoao.h", "h.oao*bbbbBoao.h", "h.obbbbbbbbbBo.h", "h.obbbbbbbbbBo.h", "h.obpbbbbbbpBo.h", "h.obbbbbbbbbBo.h", ".hoBBBLllLBBBoh.", ".HHooooooooooHH.", "...RRRRRRRRRR..."],
+ "Elder Treant": ["g..g.g....g.g..g", "gggggggggggggggG", ".gggggggggggggG.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", ".o*bbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbmbbbbbbmbBo.", ".oBbbBbbbbBbbBo.", "..obBobbbBoBBo..", "..RR.RRRRRR.RR.."],
+ "Petal Sprite": ["r.r..........r.r", ".rR..........rR.", "rR.oooooooooo.rR", "..o*bbbbbbbbBo..", "w.o*bbbbbbbbBo.w", "wWobbbbbbbbbBowW", "wWobbbbbbbbbBoWW", "w.obpbbbbbbpBo.w", "..oBbbbbbbbbBo..", "...oBBbbbbBBo...", "....ooBBBBoo....", "......oooo......"],
+ "Fungus Sage": ["....oooooooo....", "..oorrwrrrrwRoo.", ".orrrrrrrrrrrrRo", "orwrrrrrwrrrrwRo", "oooooooooooooooo", "..o*bbbbbbbbBo..", "..o*bbbbbbbbBo..", "..obpbbbbbbpBo..", "..obbbbbbbbbBo..", "..oBbbwwwwbbBo..", "...oBWWWWWWBo...", "....oooooooo...."],
+ "Candy Dragon": ["h..............h", ".h..oooooooo..h.", "..ho*bbbbbbBoh..", ".wob*bbbbbbbBow.", "wWobbbbbbbbbBowW", "wobbbbbbbbbbbBow", "wobbbbbbbbbbbBow", ".obpbbbbbbbbpBo.", ".obbssssssssbBo.", ".oBSssssssssSBo.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Sprinkle Unicorn": [".......hH.......", "......hhhH......", ".o....hhhH....o.", ".oao.oooooo.oao.", ".oaoo*bbbbBooao.", "obsbbbbbbbbbbsBo", "obbbbbsbbsbbbbBo", "obpbbbbbbbbbbpBo", "oBbbsbbbbbbsbbBo", ".oBbbBbbbbBbbBo.", "..oBBoBBBBoBBo..", "..oo.oooooo.oo.."],
+ "Licorice Serpent": ["....oooooooo....", "..oo*bbbbbbBoo..", ".obbsbbbbbbsbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "..obpbbbbbbpBo..", "...obbbbbbbbo...", ".oooobBbbBBoooo.", "obsbbBoBBobbbsBo", "oBbbbbBoobbbbbBo", ".oBBSBBBBBBSBBo.", "..oooooooooooo.."],
+ "Coral Queen": ["..c..y....y..c..", ".cC.yyY..yyY.cC.", "..cYoyYooyYoyC..", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "fobbbbbbbbbbbBof", "fFbbbbbbbbbbbbFF", "fobpbbbbbbbbpBof", ".oBBbbbbbbbbBBo.", "..ooBBBBBBBBoo..", "....oooooooo...."],
+ "Tide Leviathan": ["................", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbsbbbbbbbbsbBo", "obbbbbbbbbbbbbBo", "obllllllllllllBo", "oLllllllllllllLo", ".oLLLLLllLLLLLo.", "w.oooooooooooo.w", "WW.WWWW..WWWW.WW"],
+ "Crystal Stego": ["....c......c....", "..c.cC....cC.c..", "..cccC.cC.cccC..", ".cCoooooooooocC.", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oBbbBbbbbBbbBo.", "..oBBoBBBBoBBo..", "..oo.oooooo.oo.."],
+ "Ember Raptor": [".....f....f.....", "....fF....fF....", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbwwwwbbbbBo", "oBbbbwbwwbwbbbBo", ".oBbbBbbbbBbbBo.", "..oBBoBBBBoBBo..", "..oo.oooooo.oo.."],
+ "Star Whale": ["..s..........s..", ".....s....s.....", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*sbbbbbbsbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbsbbsbbbpBo", "oLllllllllllllLo", ".oLLLLLllLLLLLo.", "..oooooooooooo..", "s......SS......s"],
+ "Comet Fox": ["o..............o", "oo............oo", "oao..........oao", "oaAooooooooooaAo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "olllbbbbbbbbllLo", "oLlllnnllnnlllLo", ".oLllllllllllLo.", "..oLLLLLLLLLLo..", "t..oooooooooo..t"],
+ "Sheetie": ["................", ".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "obbBbbBbbBbbBbBo", "oBBoBBoBBoBBoBBo", ".oo.oo.oo.oo.oo."],
+ "Will-o'-Wisp": [".......oo.......", "......o*Bo......", ".....ob*bBo.....", "....obbllbBo....", "...obbllllbBo...", "..obbllllllbBo..", ".obbllllllllbBo.", "obbllllllllllbBo", "oBpllllllllllpBo", ".oBBllllllllBBo.", "..ooBBBbbBBBoo..", "....oooooooo...."],
+ "Poltergeist": ["................", ".....oooooo.....", "...oo*bbbbBoo...", "..obb*bbbbbbBo..", "o.obbbbbbbbbBo.o", "obobbbbbbbbbBobo", "oBbbbbbbbbbbbbBo", ".oBpbbbbbbbbpBo.", "..obbwwwwwwbBo..", "..obbBwwwwBbBo..", "..oBBoBBBBoBBo..", "...oo.oooo.oo..."],
+ "Banshee": ["....oooooooo....", "...ohhhhhhhHo...", "..ohhhhhhhhhHo..", ".ohhhbbbbbbhhHo.", ".ohhbbbbbbbbhHo.", "ohhbbbbbbbbbbhHo", "ohhbbbbbbbbbbhHo", "ohhbpbbbbbbpbhHo", "ohhbbbbkkbbbbhHo", "oHhhbbbkkbbbhhHo", ".oHHHBBBBBBHHHo.", "..oo.oo..oo.oo.."],
+ "Phantom Cat": ["................", ".o............o.", ".oo..........oo.", ".obo........obo.", ".obBoooooooo*Bo.", "obbbbbbbbbbb*bBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oBbbBbbbbBbbBo.", "..oBBoBBBBoBBo..", "...o..oooo..o..."],
+ "Spectral Pup": ["................", "................", ".ooo..oooo..ooo.", "oaAoo*bbbbBooaAo", "oaAob*bbbbbBoaAo", "oaobbbbbbbbbBoao", ".obbbbbbbbbbbBo.", "obpbbbbbbbbbbpBo", "oBbbbbbnnbbbbbBo", ".oBbcCccccCcbBo.", "..oBBoBBBBoBBo..", "...o..oooo..o..."],
+ "Chochin": [".....kkkkkk.....", "....okkkkkko....", "...o*bbbbbbBo...", "..osssssssssSo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "osssssssssssssSo", "obpbbbbbbbbbbpBo", "oBbbbbbrrbbbbbBo", ".oSsssrrrrsssSo.", "..oBbbbrrbbbBo..", "...okkkkkkkko..."],
+ "Gloom": ["................", "....o.oooo.o....", "...oboo*Booboo..", "..obbbb*bbbbBo..", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBbbBbbBbbBbBo.", "oboBBoBBoBBoBBo.", "o.o.o.o.o.o.o..."],
+ "Grey Lady": ["......oooo......", "....oovvvVoo....", "...ovvvvvvvVo...", "..ovvbbbbbbvVo..", "..ovbbbbbbbbVo..", ".ovvbbbbbbbbvVo.", ".ovbbbbbbbbbbVo.", ".ovbpbbbbbbpbVo.", "ovvbbbbbbbbbbvVo", "ovvvvwwwwwwvvvVo", "oVVVVVVvvVVVVVVo", ".oo.ooo..ooo.oo."],
+ "Ghost Captain": ["................", "..hH.hhhhhH.hH..", ".hhhhhhwwhhhhhH.", "..hhhhhhhhhhhH..", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbBbbBbbBbbBbBo", "oBBoBBobboBBoBBo", ".oo.oo.oo.oo.oo."],
+ "Lurker": ["................", "......oooo......", "....oo*bbBoo....", "...obb*bbbyBo...", "..obbybbbbbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obybbbbbbbbbbyBo", "oBbbbbbbbbbbbbBo", ".oBbBBBbbBBBbBo.", "..obo.oBBo.obo.."],
+ "Wick": [".......yY.......", "......yyyY......", ".....yryyrY.....", "......y..y......", "....oooooooo....", "...o*bbbbbbBo...", "..ob*bbbbbbbBo..", "..obbbbbbbbbBo..", "..obpbbbbbbpBo..", "..obbbbbbbbbBo..", ".oBDBBBBBBBBDBo.", ".oooooooooooooo."],
+ "Phantom Knight": [".......rR.......", "......rrrR......", "....oooooooo....", "...ohhhhhhhHo...", "..ohhhhhhhhhHo..", "..ohvvvvvvvvHo..", "..ohhhhhhhhhHo..", ".oosssssssssSoo.", "oaossssbbsssSoao", ".osssssssssssSo.", "..WwWwwWWwwWwW..", "...w.WW..WW.w..."],
+ "Jack-o'-Ghost": [".......sS.......", "......sssS......", "...oooooooooo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBbwbbwwwwbbwbBo", ".oBbwwwwwwwwbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+ "Yurei": ["...hhhhhhhhhH...", "..hhhhhhhhhhhH..", ".hhhhhhhhhhhhhH.", ".hhbbbbbbbbbbhH.", ".hhbbbbbbbbbbhH.", ".hhbbbbbbbbbbhH.", ".HhbbbbbbbbbbhH.", "..hbpbbbbbbpbH..", "..hbbbbbbbbbbH..", "..wwwwwwwwwwwW..", "..WwWwWwwWwWwW..", "...w.w.WW.w.w..."],
+ "Mirror Spirit": ["..oooooooooooo..", ".oyyyyyyyyyyyYo.", ".oybbbbbbbbbbYo.", ".oybbbbbbbbbbYo.", ".oybbbbbbbbbbYo.", ".oybbbbbbbbbbYo.", ".oybbbbbbbbbbYo.", ".oybpbbbbbbpbYo.", ".oybbbbbbbbbbYo.", ".oybbbbbbbbbbYo.", ".oYYYYYYYYYYYYo.", "..oooooooooooo.."],
+ "Bookwraith": ["................", "..oooooooooooo..", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppbbbbbbbbppo.", ".oppwwwwwwwwppo.", ".ooWwwwwwwwwWoo.", "..o.wWwWWwWW.o..", "....w.w..w.w...."],
+ "Foxfire Spirit": [".f............f.", ".fF..........fF.", ".fbF.oooooo.fbF.", ".obBo*bbbbBobBo.", ".obbb*bbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "oBpbbbbbbbbbbpBo", ".oBbbbbbbbbbbBo.", "..oBbbbbbbbbBo..", "..fobbbbbbbBof..", ".f..FFFFFFFF..f."],
+ "Ecto Slime": ["................", "................", ".....oooooo.....", "...oo*bbbbBoo...", "..obb*sbbsbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obBBbbBbbBbbBBBo", "obooBBobboBBoobo", ".o..oo.oo.oo..o."],
+ "Veil": ["....rrrrrrrR....", "...wwwwwwwwwW...", "..wwwwwwwwwwwW..", ".wwbbbbbbbbbbwW.", ".wwbbbbbbbbbbwW.", ".wwbbbbbbbbbbwW.", ".wwbbbbbbbbbbwW.", "wwwbpbbbbbbpbwwW", "wwwbbbbbbbbbbwwW", "wWbbbbbbbbbbbbWW", "w.wWbBbbbbBbWW.w", "..w.w.WWWW.w.w.."],
+ "Specter Owl": [".o............o.", ".ob..........bo.", ".obBoooooooo*Bo.", ".obbbbbbbbbb*Bo.", "obyybbbbbbbbyyBo", "obyybbbbbbbbyyBo", "obbbbbkkkkbbbbBo", "obbbbbbkkbbbbbBo", "oBbwwbbbbbbwwbBo", ".oBwwbbbbbbwwBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+ "Haunted Teacup": ["..s..........s..", "...s.s....s.s...", "..s..........s..", "................", ".oooooooooooooo.", ".o*bbbbbbbbbbBo.", "ho*bbbbbbbbbbBoh", "hobpbbbbbbbbpBoh", "hoBbbbbbbbbbbBoh", ".ooBBBBbbBBBBoo.", ".sSoooooooooosS.", "SSSSSSSSSSSSSSSS"],
+ "Boo Bunny": ["..oo........oo..", ".o*Bo......obBo.", ".o*Bo......obBo.", ".obBo......obBo.", ".obBoooooooobBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obBBbbBbbBbbBBBo", "obooBBobboBBoobo", ".o..oo.oo.oo..o."],
+ "Puppet Box": ["...s........s...", ".oooooooooooooo.", ".o*bbbbkkbbbbBo.", ".odddddddddddDo.", "..gggggggggggG..", "..gggggggggggG..", "..GGggGGGGggGG..", ".oooooooooooooo.", ".obbbbbkkbbbbBo.", ".obbbbbyybbbbBo.", ".oDDDDDkkDDDDDo.", ".oooooooooooooo."],
+ "Beta Buddy": [".......yY.......", "......hhhH......", ".o...hshhsH...o.", ".ooohhhhhhhHooo.", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+ "Patch": [".....hhhhhH.....", "...hhshhhhhhH...", "..hhshhhhhhhhH..", ".kkkkkkkkkkkkkk.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbbbBo", "oBbbbbbbbbbbbbBo", ".oTTTTTYYTTTTTo.", "..oooooooooooo.."],
+ "Bug Hunter": [".....hhhhhH.....", "....hhhhhhhH....", "..hhhhhhhhhhhH..", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbbbmmM.", "oBbbbbbbbbbmgggM", ".oBBBBBBBBBmgggM", "..oooooooookMMM."],
+ "Liftoff": ["......rrrR......", ".....rwwwwR.....", "....rwwccwwR....", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "fo*bbbbbbbbbbBof", "fobbbbbbbbbbbBof", "fobpbbbbbbbbpBof", ".oBBBBBBBBBBBBo.", "..oooooooooooo..", "....YyllllyY....", ".....YYLLYY....."],
+ "Confetti": ["r......yY.....g.", "......hhhH......", ".g...hhsshH...r.", "....hhhhhhhH....", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbrbbbbbbbbgbBo", "obpbbbbbbbbbbpBo", "obbbbgbbbbrbbbBo", "oBbbbbbbbbbbbbBo", ".oBBBYBBBBBBBBo.", "..oooooooooooo.."],
+ "Astral Blip": [".y.oo......oo.y.", "..yobo....oboy..", ".obbBooooooo*Bo.", ".obbbbbsbbbb*Bo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obsbbbbbbbbbbsBo", "obbbbbllllbbbbBo", "oBbbblllllllbbBo", ".oBbbllllllbbBo.", "..oBBBBBBBBBBo.."],
+ "Nine-Tail Kitsune": ["tT.o........o.tT", "tAoao......oaoaT", "tToaBoooooo*AotT", "t.obbbbbssb*bBo.", "ttbsbbbssbbbsbtT", "tobbbbbbbbbbbBot", "tobbbbbbbbbbbBot", "tsllbbbbbbbbllsT", "TLlllllnnlllllLT", ".oLllllllllllLo.", "..oLLLLLLLLLLo..", "...oooooooooo..."],
+ "Elder Dragon": [".hH..........hH.", "..hH.c.cC.c.hH..", "w..hooooooooh..w", "wW.o*bbbbbbbBo.w", "wwWo*bbbbbbbbbwW", "wWobbbbbbbbbbBow", "wobbbbbbbbbbbBow", "obpbbllllllbbpBo", "obbbldlllldlbbBo", "oBbbbllllllbbbBo", ".oBcbbbbbbbbcBo.", "..oBBBBBBBBBBo.."],
+ "Solar Phoenix": [".a...a.aA.a...a.", "..a.aaaaaaaA.a..", "w...oaaaaaAo...w", "wW.oobbbbbBoo.wW", "wwWo*bbbbbbBowwW", "wWobbbbbbbbbbBow", "wWobbbbbbbbbbBow", "wobpbbbbbbbbpBow", ".obbbbbkkbbbbBo.", ".oBbbbbbbbbbbBo.", "..oBbbBBBBbbBo..", "..aoAAooooAAoa.."],
+ "Moon Wolf": [".o............o.", ".oao...yY...oao.", ".oaBooyYoooo*Ao.", "mobbbbbbybbb*Bom", "mobbbbbbbbbbbBom", "mmbbbbbbbbbbbbmM", "mobbbbbbbbbbbBom", "mobbbllllllbbBom", "mobllllnnllllBom", ".MbllllllllllbM.", "..MBLLLLLLLLBM..", "...oooooooooo..."],
+ "Starlight Unicorn": ["........h.......", "s......hH.....s.", "w.oo.oohHoo.oo.w", "wWoaoo*bbbbBooao", "wwMobb*bbbbbbbmW", "wmMobbbbbbbbBomM", ".omobbbbbbbbBomo", ".oobpbbbbbbpBoo.", "..obllllllllBo..", "..oblldlldllBo..", "..oBLLLLLLLLBo..", "...oooooooooo..."],
+ "Abyssal Titan": ["y.o.y.o..o.y.o.y", "..oo.oo..oo.oo..", "...oooooooooo...", "..o*bsbbbbsbBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obgsbbbbbbbbsgBo", "obgbllslllslbgBo", "obbbllllllllbbBo", "oBsbllslllslbsBo", ".obbBBBBBBBBbBo.", ".oBBo......oBBo."],
+ "Inferno Magmaw": ["..y..........y..", ".oyo........oyo.", ".obRoooooooorBo.", ".obbbbbbbbbbbBo.", "o*bbbbbbbbbbbbBo", "o*rybbbbbbbbyrBo", "obbbrbbbbbbrbbBo", "orbbbrbbbbrbbbRo", "obrrrrrrrrrrrrBo", "oBbwbwbwbwbwbbBo", ".orbBBBBBBBBbRo.", ".oBBo......oBBo."],
+ "Omega Gigabot": [".......y........", "......oyo.......", "...oooooooooo...", "..ommmmmmmmmMo..", "..ommmmmmmmmMo..", "..ommmmmmmmmMo..", "...oooooooooo...", "ooyo*bbbbbbBoyoo", "omMo*bbllbbBomMo", "oMMobbllllbBoMMo", "oo.obbBLLBbBo.oo", "...oBBo..oBBo..."],
+ "Storm Skyray": ["......yyyY......", ".....y.yY.y.....", "......oooo......", "....oo*bbBoo....", "..oobb*bbbbBoo..", "oobbbbbbbbbbbBoo", "YSbbbbbbbbbbbbSY", ".oBBllllllllBBo.", "..ooLllllllLoo..", "....oBBbbBBo....", ".......YY.......", "........y......."],
+ "Blizzard Frostback": ["s.c...c..c...c.s", "..cC.ccC.ccC.cC.", "...oooooooooo...", "..o*cbbbbbbcBo..", ".ob*bbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbllllllllbbBo", "oBcbllllllllbcBo", ".obcBBBBBBBBcBo.", ".oBBo......oBBo."],
+ "King Sheetie": ["....y..yY..y....", ".....yyyyyY.....", "...oobbbbbBoo...", "..o*bbbbbbbbBo..", ".ob*bbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "orbbbbbbbbbbbbRo", "orrBbbBbbBbbBrRo", "oRRoRRoRRoRRoRRo", ".oo.oo.oo.oo.oo."],
+ "Soulfire Wisp": ["..s....oo....s..", "...s..o*Bo..s...", "....sob*bBos....", "...obbbllbbBo...", "..obbllllllbBo..", ".obbllllllllbBo.", "obbllllllllllbBo", "obllllllllllllBo", "oBpllllllllllpBo", ".oBbllllllllbBo.", "..oBBBBbbBBBBo..", "...oooooooooo..."],
+ "Howling Banshee": ["h...oooooooo...h", "hH.ohhhhhhhHo.hH", ".hohhhhhhhhhHoh.", ".ohhhbbbbbbhhHo.", ".ohhbbbbbbbbhHo.", "ohhbbbbbbbbbbhHo", "ohhbbbbbbbbbbhHo", "ohhbpbbbbbbpbhHo", "ohhbbbbkkbbbbhHo", "oHHhbbbkkbbbhhHo", "h.oHHHBBBBBBHHHo", ".h.oo.oo..oo.oo."],
+ "Eclipse Cat": [".......yY.......", ".o............o.", ".oo..........oo.", ".obo........obo.", ".obBoooooooo*Bo.", "obbbbbbbbbbb*bBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "oBbbbbbbbbbbbbBo", ".oBbbBbbbbBbbBot", "..oBBoBBBBoBBotT", "...o..oooo..o.t."],
+ "Phantom Admiral": [".....hhhhhH.....", ".hH.hhhwwhhH.hH.", "hhhhhhwyywhhhhhH", ".yyyyyyyyyyyyyY.", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "yb*bbbbbbbbbbbbY", "YbbbbbbbbbbbbbbY", "obpbbbbbbbbbbpBo", "obbBbbByyBbbBbBo", "oBBoBBobboBBoBBo", ".oo.oo.oo.oo.oo."],
+ "Titan Bigfoot": ["....wwwwwwwW....", "...owwwwwwwWo...", "..o*bwbbbbwbBo..", ".ob*llllllllbBo.", ".obllllllllllBo.", "obbllllllllllbBo", "obbllllllllllbBo", "obbpllllllllpbBo", "obbbllllllllbbBo", "obgBbllllllbBgBo", "oBBoGbbbbbbGoBBo", ".oo.oBBBBBBo.oo."],
+ "Lunar Mothman": ["..yY........yY..", "w..y.a....a.y..w", "wW...oooooo...wW", "wwWoo*bbbbBoowwW", "wlWob*bbbbbBowlW", "wwLobbrbbrbbolwW", "wwWobbrbbrbbowwW", "wlWoFffffffFowlW", "WwlWofbffbFowlwW", ".WwWoBbffbBowwW.", "..WWWoBBBBoWWW..", "......o..o......"],
+ "Ancient Nessie": ["...oyooooooyo...", "..o*bbbbbbbbBo..", "..o*bbbbbbbbBo..", "..obbbbbbbbbBo..", "..obpbbbbbbpBo..", "...obbbbbbbBo...", "....ooBbbBoo....", "......obBo......", "..ssS.obBo.ssS..", ".obbBobbbBobbBo.", "wWwwWWwwWWwwWwwW", "w.WW..WW..WW.WW."],
+ "Mecha Bear": [".oyo........oyo.", "oaaAo......oaaAo", "oaaBoooooooobaAo", ".obrbbbbbbbbrBo.", "o*bbbbbbbbbbbbBo", "o*bbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbllllllbbpBo", "obbblllnnlllbbBo", "oSsyskkkkkksysSo", ".oBbbllllllbbBo.", "..oBRBBBBBBRBo.."],
+ "Wide-Eyed Lurker": ["..y..........y..", ".oo...oooo...oo.", "..oooo*bbBoooo..", "...oby*bbbyBo...", "..obbbbybbbbBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "obybbbbybbbbbyBo", "obbbbbbbbbbbbbBo", "oBbbybbbbbbybbBo", ".oBbBBBbbBBBbBo.", "o.obo.oBBo.obo.o"],
+ "Shadow Lurker": ["...oooooooooo...", "..o*ybbbbbbyBo..", ".ob*bbbybbbbbBo.", ".obybbbbbbbbyBo.", "oobbbbbbbbbbbBoo", "bobbbbbbbbbbbBob", "bobbbbbbbbbbbBob", ".oBbybbbbbbybBo.", "..obbbbybbbbBo..", "..obBbbbbbbBBo..", ".oBBobBBBBBoBBo.", "obo.obo..obo.obo"],
+ "Lurker Eternal": ["...y.y.yY.y.y...", "....oooooooo....", "...o*bbbbbbBo...", "..obybbbbbbyBo..", ".obbbbbbbbbbbBo.", ".obbbbbbbbbbbBo.", "oaBBbmwmwmwmBBAo", "oa.obbbccbbBo.ao", "oa.obbccccbBo.ao", "oa.oBbbccbbBo.ao", "wow.obbbbbBo.wow", "DDDDDDDDDDDDDDDD"],
+ "Spectral Knight": ["......rrrR......", ".....rrrrrR.....", "...oooooooooo...", "..ohhhhhhhhhHo..", ".ohhghhhhhhghHo.", ".ohvvvvvvvvvvHo.", ".ohhhhhhhhhhhHo.", "ooSssssssssssSoo", "AAosgssssssgSoAA", ".osssssssssssSo.", ".WwwWwwWWwwWwwW.", "w.WW.WW..WW.WW.w"],
+ "Phantom Champion": ["f.....rrrR.....f", "fF..o.rrrR.o..fF", "fF.ohooooooho.fF", "f.ohhhhhhhhhHo.f", "fFohhghhhhghHofF", "fohvvvvvvvvvvHof", "fohhhhhhhhhhhHof", "ooSssssssssssSoo", "aAosgssssssgSoaA", "AAosssssssssSoaA", ".FwwWwwWWwwWwwF.", "f.WW.WW..WW.WW.f"],
+ "Phantom Sovereign": ["y.y.y..yY..y.y.y", "yyyyyyyyyyyyyyyY", "cyyyyyyyyyyyyyyC", "cooooooooooooooc", "cohhghhhhhhghHoc", "cohvvvvvvvvvvHoc", "coHhhhhhhhhhhHoc", "cooSssssssssSooc", "caAosgssssgSoAaC", "cAosssgssgssSoaC", "CwWwwWwwwwWwwWwC", ".w.WW.WWWW.WW.w."],
+ "Blipmaker": ["....y..yY..y....", "....yyyyyyyY....", "..oooyyyyyYooo..", ".o*bbbbbbbbbbBo.", "co*bbbbbbbbbbBoc", "cobbbbbbbbbbbBoc", "cobbbbbbbbbbbBoc", "cobpbbbbbbbbpBoc", "cobbbbbssbbbbBoc", "coBBbbssssbbBBoc", "cC.oBBBSSBBBo.cC", "CC..oooooooo..CC"],
+ "Byte": ["........y.......", "........a.......", "....oooooooo....", "...o*bbbbbbBo...", "..ob*bbbbbbbBo..", "..ogggggggggGo..", "..ogggggggggGo..", "..oggggmmgggGo..", "..obbbbbbbbbBo..", "..oBkbbbbbbkBo..", "...oBBBBBBBBo...", "....oo....oo...."],
+ "Guardian": ["......aaaA......", ".....aA..aA.....", "..oooooooooooo..", ".o*bbbbbbbbbbBo.", "ob*bbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbbpBo", "obbbbbbbbbsssSo.", "oBbbbbbbbbswwSo.", ".oBBBBBBBBSswSo.", "..oooooooooSSo.."],
+ "Diamond Ladybug": ["....a......a....", ".....a....a.....", "....oooooooo....", "...okkkkkkkko...", "..okkkkkkkkkko..", "..okkkkkkkkkko..", "occwccdmmdccwcCo", "ocsscccmmcccssCo", "ocsscwdmmdwcssCo", "oCcccddmmddcccCo", ".oCWCDDMMDDCWCo.", "..oooooooooooo.."],
+}
+# <<< REDRAW DATA
+
+
+def _apply_redraws():
+    for kind, rows in REDRAW.items():
+        v = VARIANTS.get(kind)
+        if not v or v["body"] == rows:
+            continue
+        old = v["body"]
+        v["body"] = rows
+        v.pop("alt", None)                      # the old wing-flap frame belongs to the old drawing
+        cols = v.get("colors") or PALETTES
+        base = cols[PALETTE_INDEX[v["palette"]]] if "palette" in v and not v.get("colors") else cols[0]
+        if not v.get("colors"):
+            v["shared_palettes"] = True         # critters keep their usual starting color
+        names = {c.get("name") for c in cols}
+        classic = {k: c for k, c in base.items() if k not in ("art", "unlock", "glitch", "glitch_art", "solid")}
+        classic.update(name="Classic" if "Classic" not in names else "Original", glitch_art=old)
+        v["colors"] = list(cols) + [classic]
+
+
+_apply_redraws()
 GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
 GHOST_KINDS = list(GHOSTS)        # met at night
 LEGEND_KINDS = list(LEGENDS)      # found only while visiting their world
@@ -3313,15 +4356,74 @@ WORLDS = [  # name, the tab it unlocks, cost in hearts, the air while you're vis
     {"name": "Ocean World", "icon": "🌊", "tab": "Ocean 🌊", "cost": 100, "fx": [("bubble", 2.6)]},
     {"name": "Dino World", "icon": "🦕", "tab": "Dinos 🦕", "cost": 125, "fx": [("ash", 2.4), ("leaf", 0.6)]},
     {"name": "Space World", "icon": "🚀", "tab": "Space 🚀", "cost": 150, "fx": [("star", 2.2)]},
+    {"name": "Egypt World", "icon": "🏺", "tab": "Egypt 🏺", "cost": 0, "fx": [("ash", 1.4), ("star", 0.3)]},   # free: you dig for its gods
 ]
 WORLD_OF = {k: w["name"] for w in WORLDS for t, ks in TAB_GROUPS if t == w["tab"] for k in ks}   # kind -> world
 WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
+
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
-KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS + BAD_DREAM_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, even in the daytime)
+
+# 🚧 Parked for after 1.0: the code stays, nothing is removed from anyone's save, and flipping one to True brings it back
+# (menus, trophies and quests included). Keep tools/export_go_data.py in step so the website matches.
+FEATURES = {"arena": False,           # ⚔️ Arena battles, battle codes, rivals, battle music, Pull the Strings
+            "climb": False,           # 🪟 Blips climbing onto your windows (Windows only)
+            "cursor_play": False}     # 🖱️ Blips chasing and "stealing" the mouse pointer (Windows only)
+PARKED_TROPHIES = {"arena-1": "arena", "arena-champ": "arena", "arena-kaiju": "arena", "boss-1": "arena",
+                   "climb-1": "climb", "mouse-10": "cursor_play"}
+PARKED_QUESTS = {"arena_win": "arena"}
+
+# Trophies 🏆: (id, icon, name, how to get it, check, bonus hearts). Checked every few seconds; earned once, kept forever.
+def _all(group):
+    return lambda a: all(a.is_unlocked(k) for k in group)
+
+
+def _any(group):
+    return lambda a: any(a.is_unlocked(k) for k in group)
+
+
+TROPHIES = [
+    ("first-pet", "🐾", "First Friend", "Pet a Blip", lambda a: a.stat("pets") >= 1, 5),
+    ("pets-100", "💖", "Best Friends", "Pet your Blips 100 times", lambda a: a.stat("pets") >= 100, 20),
+    ("cookies-25", "🍪", "Snack Time", "Feed your Blips 25 cookies", lambda a: a.stat("cookies") >= 25, 10),
+    ("days-7", "📅", "Regular", "Play on 7 different days", lambda a: a.stat("days") >= 7, 20),
+    ("full-town", "🏘️", "Full House", "Have a full town of Blips", lambda a: len(a.pets) >= a.MAX_PETS, 15),
+    ("hats-5", "🎩", "Fashionista", "Own 5 hats or outfits", lambda a: len(a.save.get("hats_owned", [])) >= 5, 15),
+    ("egg-1", "🥚", "Egg-cellent", "Hatch a Mystery Egg", _any(RARE_KINDS), 10),
+    ("egg-all", "🪺", "Full Nest", f"Hatch all {len(RARE_KINDS)} rare Blips", _all(RARE_KINDS), 50),
+    ("cryptid-1", "👣", "Cryptid Spotter", "Spot a cryptid", _any(CRYPTID_KINDS), 10),
+    ("cryptid-all", "📸", "Believer", f"Spot all {len(CRYPTID_KINDS)} cryptids", _all(CRYPTID_KINDS), 50),
+    ("kaiju-1", "🦖", "Monster Friend", "Befriend a kaiju", _any(KAIJU_KINDS), 20),
+    ("kaiju-all", "🏙️", "Kaiju Keeper", f"Befriend all {len(KAIJU_KINDS)} kaiju", _all(KAIJU_KINDS), 50),
+    ("ghost-1", "👻", "Ghost Whisperer", "Befriend a ghost", _any(GHOST_KINDS), 10),
+    ("ghost-all", "🕯️", "Spirit Squad", f"Befriend all {len(GHOST_KINDS)} ghosts", _all(GHOST_KINDS), 50),
+    ("world-1", "🌍", "Explorer", "Unlock a world", lambda a: sum(WORLD_BY_NAME[w]["cost"] > 0 for w in a.save.get("worlds", []) if w in WORLD_BY_NAME) >= 1, 10),
+    ("world-all", "🧭", "World Traveler", "Unlock all 5 worlds", lambda a: all(w["name"] in a.save.get("worlds", []) for w in WORLDS if w["cost"] > 0), 50),
+    ("legend-1", "✨", "Legend Hunter", "Find a World Legend", _any(LEGEND_KINDS), 15),
+    ("legend-all", "🌟", "Living Legend", f"Find all {len(LEGEND_KINDS)} World Legends", _all(LEGEND_KINDS), 50),
+    ("night-1", "🌙", "Night Owl", "Survive Night 1 of Night Shift", lambda a: a.nights_won() >= 1, 10),
+    ("night-3", "🏆", "Survivor", "Survive all 3 nights of Night Shift", lambda a: a.nights_won() >= 3, 30),
+    ("awaken-1", "✨", "Awakened", "Awaken a Blip with an Awakening Crystal", lambda a: len(a.save.get("awakened", [])) >= 1, 15),
+    ("arena-1", "⚔️", "Arena Rookie", "Win a battle in the Arena", lambda a: a.stat("arena_wins") >= 1, 10),
+    ("arena-champ", "🥇", "Arena Champion", "Beat Champion Coco", lambda a: "Champion Coco" in a.save.get("rivals_beaten", []), 40),
+    ("awaken-5", "🌠", "Fully Charged", "Awaken 5 different Blips", lambda a: len(a.save.get("awakened", [])) >= 5, 30),
+    ("arena-kaiju", "👑", "Kaiju Slayer", "Beat Kaiju King Kai", lambda a: "Kaiju King Kai" in a.save.get("rivals_beaten", []), 50),
+    ("puppet-1", "🎭", "Curtain Call", "Open the Puppet Box into the Puppet Master", lambda a: a.awaken_level("Puppet Box") >= 1, 25),
+    ("lurker-3", "👁️", "Lights Out", "Awaken the Lurker all 3 times", lambda a: a.awaken_level("Lurker") >= 3, 40),
+    ("knight-3", "⚔️", "The Final Oath", "Awaken the Phantom Knight all 3 times", lambda a: a.awaken_level("Phantom Knight") >= 3, 40),
+    ("bond-5", "💞", "Soulmates", "Reach max friendship (Soulmate) with a Blip", lambda a: any(bond_level(p.bond) >= 5 for p in a.pets), 30),
+    ("catch-40", "🍪", "Cookie Pro", "Score 40 in one game of Cookie Catch", lambda a: a.stat("catch_best") >= 40, 20),
+    ("boss-1", "👑", "Beat the Blipmaker", "Beat the creator's boss team in the Arena", lambda a: bool(a.save.get("beat_creator")), 50),
+    ("dreams-all", "🧸", "Sweet Dreams", "Keep all 6 Bad Dreams", _all(BAD_DREAM_KINDS), 40),
+    ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
+    ("mouse-10", "🖱️", "Cat and Mouse", "Your Blips catch your mouse pointer 10 times", lambda a: a.stat("cursor_catches") >= 10, 15),
+]
+TROPHIES = [t for t in TROPHIES if FEATURES.get(PARKED_TROPHIES.get(t[0]), True)]
+DESKTOP_TROPHIES = {"climb-1", "mouse-10"}     # only the Windows app can earn these (the website leaves them out)
 BEACON_COST = 100                 # hearts per Kaiju Beacon
 KAIJU_HITS = 3                    # clicks it takes to befriend a kaiju
 
@@ -3462,6 +4564,21 @@ def hat_cells(v, hat, shift=0, body=None):
         top = min(v["eyes"] + 5, 11) + shift + hat.get("y", 0)
     return [(top + r, left + c, hat["colors"][ch]) for r, row in enumerate(rows) for c, ch in enumerate(row) if ch != "."]
 
+# Accessory colors: any hat or outfit's main color can be swapped (free). And a 2nd accessory slot, once, for the town.
+ACCESSORY_TINTS = [("Original", None), ("Red", "#e8303a"), ("Blue", "#3a8aff"), ("Green", "#4ac85a"), ("Gold", "#ffd23a"),
+                   ("Pink", "#ff6fae"), ("Purple", "#8a5aff"), ("Black", "#2a2a32"), ("White", "#f4f4fa")]
+SLOT2_COST = 50
+
+
+def tinted(hat, tint):
+    """A copy of an accessory with its main color swapped (tint = index into ACCESSORY_TINTS; 0 = original)."""
+    color = ACCESSORY_TINTS[int(tint or 0) % len(ACCESSORY_TINTS)][1]
+    if not color:
+        return hat
+    main = next(iter(hat["colors"]))
+    return {**hat, "colors": {**hat["colors"], main: color}}
+
+
 NIGHT_LINES = ["*eyes glow in the dark*", "the night shift starts now", "is anyone still awake?",
                "*whirr... click*", "we're more active at night", "don't mind me. just wandering."]
 
@@ -3474,10 +4591,20 @@ def is_night():
 # Events 🎉: for a few days, caring for certain Blips earns event points, and every so many points unlocks an event skin
 # (a color marked event=<id>). Skins you earn stay yours after the event; the rest stay locked.
 EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "2026-11-17", "until": "2026-12-03",
-         "until_text": "Thursday, December 3", "paused": ["2026-11-18", "2026-11-22"],   # closed for the 1.0 drop: the clock stops
-         "paused_text": "Sunday, November 22", "kinds": ["Hedgehog", "Fox", "Echidna"], "per_skin": 10,
+         "until_text": "Thursday, December 3", "paused": ["2026-11-18", "2026-11-20"],   # closed for the 1.0 drop: the clock stops
+         "paused_text": "Friday, November 20", "kinds": ["Hedgehog", "Fox", "Echidna"], "per_skin": 10,
          "rewards": [["Hedgehog", "Pinecone"], ["Fox", "Ember"], ["Echidna", "Opal"], ["Hedgehog", "Midnight"],
                      ["Fox", "Aurora"], ["Hedgehog", "Candy Floss"], ["Fox", "Maple"], ["Echidna", "Golden Spines"]]}
+
+
+# Friendship 💞: every Blip bonds with you as you care for it. Points needed for each level, and its title.
+BOND_LEVELS = [0, 10, 30, 70, 150]
+BOND_TITLES = ["New friend", "Pal", "Buddy", "Best friend", "Soulmate"]
+BOND_GAIN = {"pet": 1, "feed": 3, "nap": 1, "play": 2, "arena": 3, "catch": 2, "chat": 2}
+
+
+def bond_level(points):
+    return sum(1 for need in BOND_LEVELS if points >= need)          # 1-5
 
 
 # Daily quests 📅: 3 a day, the same for everyone that day (picked from the date). Each one gives hearts, and event
@@ -3487,7 +4614,14 @@ QUESTS = [{"id": "pet_spiky", "text": "Pet a Hedgehog, Fox or Echidna 8 times", 
           {"id": "pet_any", "text": "Pet your Blips 20 times", "goal": 20},
           {"id": "naps", "text": "Let 2 Blips finish a nap", "goal": 2},
           {"id": "plays", "text": "Watch your Blips play 2 games together", "goal": 2},
-          {"id": "arena_win", "text": "Win a battle in the Arena", "goal": 1}]
+          {"id": "arena_win", "text": "Win a battle in the Arena", "goal": 1},
+          {"id": "catch", "text": "Score 15 points in Cookie Catch", "goal": 15}]
+QUESTS = [q for q in QUESTS if FEATURES.get(PARKED_QUESTS.get(q["id"]), True)]
+# Cookie Catch 🍪: your Blip catches falling cookies. Golden ones are worth 5; burnt ones cost a life.
+CATCH_SECONDS, CATCH_LIVES, CATCH_MAX_HEARTS = 45, 3, 25
+CATCH_COOKIE = ["..cccc..", ".ccdcccc", "cccccdcc", "cdcccccc", "ccccdccc", ".cccccc.", "..cccc.."]
+CATCH_KINDS = {"cookie": {"c": "#d8954a", "d": "#5a2a0a", "points": 1}, "golden": {"c": "#ffd23a", "d": "#fff6c0", "points": 5},
+               "burnt": {"c": "#3a2a2a", "d": "#140a0a", "points": 0}}
 QUEST_HEARTS, QUEST_POINTS, QUEST_BONUS = 10, 5, 5     # per quest; the bonus is for finishing all 3
 
 
@@ -3516,10 +4650,24 @@ def event_on():
 
 
 def skin_locked(save, kind, idx):
-    """Event skins stay locked until you earn them."""
+    """Event skins (and special unlockable colors, like the Shadow crew) stay locked until you earn them."""
     cols = kind_colors(kind)
     col = cols[idx % len(cols)]
-    return bool(col.get("event")) and f"{kind}:{col['name']}" not in save.get("skins", [])
+    return bool(col.get("event") or col.get("unlock")) and f"{kind}:{col['name']}" not in save.get("skins", [])
+
+
+# 🍬🧪 Changing a Blip's color costs a treat: a Color Candy for everyday colors, a Color Potion for the rare and special
+# ones (event skins, unlockable colors and the fancy looks below). Shifty Blips still change color on their own, for free.
+COLOR_CANDY_COST, COLOR_POTION_COST = 10, 40
+SPECIAL_COLORS = {"Prime", "Midnight", "Black Light", "Shadow", "Holo", "Golden", "Gilded", "Golden Age", "Black Diamond", "Sovereign"}
+
+
+def color_cost(kind, idx):
+    """(icon, item name, hearts) to switch a Blip of this kind to color idx."""
+    col = kind_colors(kind)[idx % len(kind_colors(kind))]
+    if col.get("event") or col.get("unlock") or col["name"] in SPECIAL_COLORS:
+        return "🧪", "Color Potion", COLOR_POTION_COST
+    return "🍬", "Color Candy", COLOR_CANDY_COST
 
 
 def kind_colors(kind):
@@ -3529,23 +4677,17 @@ def kind_colors(kind):
 
 def default_color(kind):
     v = VARIANTS[kind]
-    return PALETTE_INDEX[v["palette"]] if "palette" in v and not v.get("colors") else 0
+    return PALETTE_INDEX[v["palette"]] if "palette" in v and (not v.get("colors") or v.get("shared_palettes")) else 0
 SUGGEST_URL = "https://github.com/Johnblip189/blipville/issues/new?template=new-animal.yml"
 SUPPORT_URL = "https://github.com/Johnblip189/blipville#support-blipville"
-NOTICE_ID = "rc1-0.4"
-NOTICE_TEXT = ("Thank you so much for playing the Blipville beta! 💜\n\n"
-               "Every pet you hatched, cryptid you spotted and idea you sent helped make Blipville what it is.\n\n"
-               "This is Release Candidate 2, the last step before Blipville 1.0! It comes with 100 new Blips and 5 new tabs: "
-               "Dinos, Ocean, Sweets, Space and Plants. Expect lots of new stuff (and the odd bug).\n\n"
-               "Your pets, hearts and unlocks all come with you. Have fun!")
-if REDUX:
-    NOTICE_ID = "redux-0.5.1"
-    NOTICE_TEXT = ("👻 Ghosts are here!\n\n"
-                   "A brand-new tier: 10 ghosts drift past haunted houses and graveyards at night (7 PM to 7 AM). They fade in "
-                   "and out, so you can only befriend one while it's glowing. Click fast!\n\n"
-                   "Can't wait for night? Right-click a pet → 🕯️ Light a Spirit Candle (40 💖) and they'll come out in the "
-                   "daytime for 10 minutes.\n\n"
-                   "And Blipville 1.0 is coming Sunday, November 22. 💜")
+NOTICE_ID = "1.0"
+NOTICE_TITLE = "Blipville 1.0 is here! 💜"
+NOTICE_TEXT = ("Thank you so much for playing Blipville! 💜\n\n"
+               "Every pet you hatched, cryptid you spotted and idea you sent through the betas helped make Blipville what it is. "
+               "This is version 1.0: the real thing.\n\n"
+               "It's built on the Redux engine: every pet window is a real see-through picture now, so no more black flashes "
+               "when you click your pets or open a menu.\n\n"
+               "260 Blips, 5 worlds, 👻 ghosts, 🏆 trophies, cryptids, kaiju, Night Shift and more. Your pets, hearts and unlocks all come with you. Have fun!")
 IDEA_URL = "https://github.com/Johnblip189/blipville/issues/new?template=idea.yml"
 DISCORD_URL = "https://discord.gg/Q3zmYakNZT"
 HELP_URL = "https://github.com/Johnblip189/blipville/issues/new?template=help.yml"   # links live in the README, so they can change anytime
@@ -3595,12 +4737,97 @@ def work_area(root):
     return 0, 0, sw, sh - (70 if sys.platform == "darwin" else 40)
 
 
-# ----------------------------------------------------------------------------- see-through windows, the Redux way
-# The classic app makes pet windows see-through with a "magic pink" color key, and Windows has to repaint those
-# windows whenever anything happens to them (a click, a menu, a window passing over). Sometimes it shows black
-# for a moment before the repaint. Blipville Redux draws each window itself into a picture with real see-through
-# pixels (Pillow) and hands it straight to Windows as a layered window. Nothing is repainted, so nothing flashes.
-LAYERED = REDUX and sys.platform == "win32"
+PX_ICONS = {  # Blipville's pixel icons (14x14 PNGs, made from the masks in go/icons/px), used in menus
+    "arena": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAUklEQVR4nGNgoARIiaj9J1mdlIja/xMnbvwnpBmrOkKa8crjkiTKReiKiPUGhmaiNZHkPKrYKCWi9r8rSgvFj8h8ojQREicsSYxmQt7AJ080AACfI22CN3OUNQAAAABJRU5ErkJggg==",
+    "awaken": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAh0lEQVR4nK1SsQ2AMAxzuSFTWVGPYOQsDuAsjmCjYoWF/mAGBIJSKFR4ipJYtpwAf0OLYRKJXckncpbqSIVsja3sdV65E2FyVgGA0mJ4XNxRNMBQX9p55TA5q5IVg/DD0WJI8hRWNBwthuPcr07mPnymY9OvfUW8GuLmITbShk9fE1OMkt/uLpgmWiF1FlBMAAAAAElFTkSuQmCC",
+    "beacon": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAZ0lEQVR4nGNgoBRIiaj9J1leSkTtf9SK//9xacYrjy6JTOMzFEPziRM3/hOlCVnziRM34JgoTeia8WliIto0Ym0j5FQmdE3rtmxCUbBuyyascciETxM+zYzoNuLywrM3txhxydEHAADyflqr8rKaNQAAAABJRU5ErkJggg==",
+    "candle": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAXUlEQVR4nGNgoDaQElH7j0+eCZemp2UieDVjaIRpYvBgYMCnGauNxABGXE6FsZ+9uYVVDVZN/7+cgGOqO5U6GnE5C5s4I7Lkui2bcNoQ5OOHElAoIYYvwokOXZoBAN+5Kr42oJ/QAAAAAElFTkSuQmCC",
+    "cookie": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAhElEQVR4nGNgIBMwogtIiaj9x6bw2ZtbKGpZ0DWtL1PFakNgF8N/ZM1M2DRNXHUWQ+P6MlUU1zBhsyk/zBjORjYEWTPcRlw2IRuCDJhwKUI3BJ2PohGfTeh8DI2EbIIBePDiiwoYCOy6DY9PuI3P3txiDOy6TZQmFBuRbcamET3l0B8AAHqDPIS4s8JFAAAAAElFTkSuQmCC",
+    "crystal": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAi0lEQVR4nGNgIBMwYhOUElH7j8x/9uYWhjoMASkRtf8JR26iiC2wUcfQzIRNU6s6QuzBBQaGhCM3MVzBhE1TNZKFCgbYNaPYyMCAqgldM1Ybn725xbjARp0BG3hwgYHhQA6qPzFsxKYJG0DRiG4rTBO6bTiBlIja/6ob//9Hrfj/Hz00idJMsqbBCQBENkILQUCJ1gAAAABJRU5ErkJggg==",
+    "discord": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAbklEQVR4nGNgGFAgJaL2X0pE7T8x4ozIknaBZxgYGBgYDq03QdGILP7szS1GuEZkTYQATDMTKV5BBhgal8/iZVg+ixcnH6dGYgELukBk2me8fBQbn725xYgektgAcqhi2IjLALyhji3yiZGjDwAA308tRaZ+VZYAAAAASUVORK5CYII=",
+    "download": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAVUlEQVR4nGNgoDaQElH7LyWi9p9kTTCASzMTuS5iQbcJlwsYGBgYnr25xUjQebjYWK1HVoQOCAYUNs1Ehy4xzmNEVkyMoSgBhM9vuJxNdjxS5lRyAABjAJoWWmz/zgAAAABJRU5ErkJggg==",
+    "egg": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAW0lEQVR4nGNgoDaQElH7LyWi9p9kTTBAtGZkTURrxqYJl2YmXIZsrCbKgbht21BFwMkwjRuqUBUT9Cs+/2HTiNOPMH8S5VdSQpUozdg0MeLSjMx/9uYWVnVkAQAe/dQsi127UQAAAABJRU5ErkJggg==",
+    "friend": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAZElEQVR4nGNgoDaQElH7LyWi9h+XPAsuTQ5bXBgYGBgYDvgw/H/25hYjuhomcl2EYiMup8HEkW1mRJaEOQ8XOOCzB66ZbKeieBrZqYjA2QOXR3Yqih9hEuh+pWqo4gSEEsAQAgB33iak6o84nQAAAABJRU5ErkJggg==",
+    "ghost": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAb0lEQVR4nGNgIBMwYhOUElH7j8x/9uYWVnUYmtABukFEaSKoGZ8mbJqZ0A2QFlXHMBSbGIZGYgGGxqevb2IowiaG00ZpUXWsToQBFlwS2GwhykZCAG+oorOfvr6JkaoYGBgQSU1KRO0/Lja5LoQDAHAeagZP/muxAAAAAElFTkSuQmCC",
+    "gift": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAdklEQVR4nGNgoBaQElH7j48PA0zoip5ah8IVo/ORASM2k59ahzJIH10Np2Hg2ZtbjCgapUTU/j/dJ4JqZK0jA0PzfhQhaac3cM1MDGQCFKdOS7sJl5DY5s/wwmsjnJ81Sx3FqWTbOIQ0MiJzcKUSBgbUOBwYAACjuSvtjRRK5wAAAABJRU5ErkJggg==",
+    "hat": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAY0lEQVR4nGNgoDdgRBeQElH7j03hsze3UNSicKRE1P4npGVhtWHBrGkompnIcueAaGRBF2i9+hqrwgW4NMJCs1pbFLsVRyFqYAHECNOEKzQxbIaGLtl+hMcLrohHB+gJgX4AAL23H83bbthrAAAAAElFTkSuQmCC",
+    "heart": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAhklEQVR4nGNgoAaQElH7LyWi9p8YcSZkyafWoQxPrUMZkBXhEmdClmTY0MLAwMAAVwQXhwJkzSy4nI2sARtgQuEF1OBVjFsjHnDy4WVMjc/e3GKUProaryZzeV0G6aOrGZ69ucWIYiMuzdg0YTgVXTMuTQwMDAwoHBhAjgZsmvACXKlo4AAAnKtNiJ6f5lUAAAAASUVORK5CYII=",
+    "help": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAU0lEQVR4nGNgIBMwYhOUElH7j8x/9uYWVnUYmtABukF4NUmJqP1H5yOrZSLsG+yABZnz7M0tRmlR9f8wNkEnEuNsqmki2494bSXZj2T5jyIbaQoACC1ZBe7VxMoAAAAASUVORK5CYII=",
+    "lure": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAc0lEQVR4nGNgoAaQElH7T5am/5es/uPSjNdQXJqlRNT+nzhxA6ehWDXDNMEwTJwFXeOzN7cYpZ0Y/j/dJ8Ig7cTwf92WTXC5IB8/OJsRn83YND17c4uRgYGBgYkcTVg1EqMJp42ENDEw4PAjcrBj0zTEAACe8k1g9erB3gAAAABJRU5ErkJggg==",
+    "mute": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAcklEQVR4nGNgoDaQElH7T5am/////8enmQldg5SI2v+nr29itRmrQTBbkIGUiNr///7V/2EGwtgMDAwMLIScLX10NcNT61A4+9mbW4wYTiUFENT41DqUQfroarjNOP2J7FcYH1kery3ERAdezSRrGpwAACfjUSvgiZOHAAAAAElFTkSuQmCC",
+    "night": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAYklEQVR4nGNgIBMw4pKQElH7D2M/e3MLQx0LLg1P94nAxaSdGP6ja2ZE14SsAaLpDVYbmcjRhKIRHeDThFcjIUB9jU/3iaBECU6Nz97cYpR2ekO0ZgzPY49HzIAiO+XQHwAAabMyKHLW1mkAAAAASUVORK5CYII=",
+    "pin": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAd0lEQVR4nGNgoAWQElH7LyWi9h+bHBM+TU+tQxmeWocyYNOMVSNMEwxg04yhEV0TLs0YGp+9ucUofXQ1hkbpo6sZnr25xYjXxnUyGihiJx9exjCIBZcmbIqRASO6AK7gR3Ymho3EaIABFD+i24ZLE1aAL7UMLAAALYIys5QYkf8AAAAASUVORK5CYII=",
+    "play": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAUElEQVR4nGNgoBaQElH7LyWi9p9kTTBASDMTLomnr28y4NOMUyMhzXg14tNMUCMuzURplBZVZ3j25hYjSRqxaSKoEZcmvBrxacIKyEo5dAEAVV0r+6+GmYEAAAAASUVORK5CYII=",
+    "share": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAg0lEQVR4nGNgIBMwogtIiaj9h7GfvbmFIY+hEaYhIS0LLrlg1jQMDTDDGGGakDXgAwtmTWN49uYWIwuyoJ+fB7Ga/7Pgkty0aQdeA7Fq3LRpB8MDvXwk/kQMzUz4nLQ0HLccXo3RK3HLYXWqn58Hw6ZNE1H46IDs6MBIAIQAvtREWwAACPwv/LKKKI0AAAAASUVORK5CYII=",
+    "sound": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAXUlEQVR4nGNgoDaQElH7T5am/////0fWjNcgKRG1/zBNMI0wHLUC1SAMW5ABsgZ0zUyEnH0gR53BYcpNDHGCGnEBghodptxkOJCjjl8RWYGDbgBJ0YGumSiFgx8AAHnkWvomA0d/AAAAAElFTkSuQmCC",
+    "spark": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAeUlEQVR4nGNgoDaQElH7j0+eCZemp9aheDVjaIRpIuQCrDYyMDAwMFjvZ4DZis0FKBrhtlnvR9GM16kYmjxQbcapEQV4oNEwwwhqxGYIQY1HHRkYdiDxd0DF0AAjMgdXVDAwMDBIH13N8OzNLbh6RnQFuCIdWdPAAACcAi5x7pSejwAAAABJRU5ErkJggg==",
+    "splash": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAbklEQVR4nGNgoDaQElH7T5amqBX//+PTzESuizA0Somo/XeYcpOBgYGBwWHKTZxOpo6NyLYpGDDgtZUJmyZ0gE0zTqc+uICwlaBTsWkmqPHZm1uMB3LUsSo6kKPO8OzNLUZkMUZ0RdgCAl3TwAAA/j8pC2cfiQYAAAAASUVORK5CYII=",
+    "sprout": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAApUlEQVR4nMWRuw3CMBBAX6yMYJoM4IYCaioXLi3GYAhGYYzIZQqPkCZNBkiDdzCVLYd8hJAQr7vPuzvL8EsaqWIjVSxz9SeSdgYAb4lTGCsAsTe5lAC0M6R6vdbkLTE1Joa253g951hsTS5Jkrcdq6cObT+Tve1WpXzqFMbKW6J2JsvlWe8SwCxIDz/cZM49H2EhbdJIFU/3y+LvSsRW4Wv2tv2HF91DTM0AjyLbAAAAAElFTkSuQmCC",
+    "trophy": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAvElEQVR4nGNgIBMwwhhSImr/idHw7M0tRgYGBgYWmKan+0SIsknaieH/sze3GJmkRNT+n5vyBSr4Bo8GiNy5KV8YpETU/jMhS+Cz9ek+ERSDGWFOPTflC4O4lgJeZ7689oDBKIeH4dmbW4wYgYPLVphtsMBhRFeALaCknd7ANeAFUiJq//9fsvr//5LVf1zRxIRNEzFijOgKCtxYsLpiwq4/KM5lIkYTAwMDQ4EbC4rNGDbi1MnAQFwAEQIAVHRNhJrnjGYAAAAASUVORK5CYII=",
+    "worlds": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAfElEQVR4nGNgIBMwYhOUElH7j8x/9uYWhjoUAZgGhyk3URQdyFHHMIARWRNcg0I2hH4wFcMAmGYmnJrQ2VCXwFzFhM2PcACzUSEbwxBMjTDFaM5EB9htxKYJTQxTIxZnYTOIiYEBEsywIEcxAA0ghyrl8YjNABjAlnLoDwDvZzmd2TTfWwAAAABJRU5ErkJggg==",
+    "zoo": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAdElEQVR4nGNgIBMwwhhSImr/0SWfvbnFiEucBaZJwG0SprG78nCKsyDzry51R5GXFsUU047eycDAwMDAhG6YtKg6g7SoOkExFBsZGBgYnr6+ieEybGLDxUZYVGCzEUUjLKgJiTEwEEg5uMCzN7cYCauiNgAAmw0v8y0PAn0AAAAASUVORK5CYII=",
+    "volt": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAeElEQVR4nGNgoBWQElH7LyWi9h9dnIWQpqf7RBgYGBgYpJ0Y/j97c4sRJsdEjKaX1x4Q77z/l6z+/79k9f/FCimsTsWwEd0moxweuDiyOkZcmtABzBCYP1FsfPbmFqO00xsMP6FrosiP9NeENR6J9hO6rUQ5j1wAAIHPYsn+ySWAAAAAAElFTkSuQmCC",
+    "stone": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAkklEQVR4nGNgoDdgxCYoJaL2H5n/7M0tDHUYAlIiav/7pkxCESvKycMwgAmXpvBwd7h435RJDA5uLiguYcKlaeXKnRheQNbMhM15ME2bNm2Ci/n5+aEYguJUfIqRxbFqRDcZmyYUjdgkN23ahFWcgYGBgYWBARLMB3Yx/MeqAgkc2LUHHiUo8Yge8egAW0KgHwAAcME/eBZIBmgAAAAASUVORK5CYII=",
+    "gust": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAaUlEQVR4nGNgIBMwInOkRNT+41L47M0tRqwSUiJq//EBdEOJtvHp65sM0qLq2G3GZytMDmY4C7pt0qLquCxFASwwTU9f3yRKAwzA3YvPf8gAw48DE6q4bEYPUQwbcdlM0DZcgNiAIwoAAChUmN2Wr14KAAAAAElFTkSuQmCC",
+    "frost": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAeUlEQVR4nGNgoDaQElH7T7IGKRG1/1U3/v+HsbGpY0LXlHDkJoqChCM38dsOk4TZBsPI4hg2wmxCloyTwXQJsjwjNmcia1r0BEIvsFFnePbmFiMDMkAPjKob///f+PIfQwyrX0n1I06b0WmcmpA1ExOPeA0gSQPNAQAbPXP0z7fL1wAAAABJRU5ErkJggg==",
+    "sweet": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAg0lEQVR4nGNgGBAgJaL2n2R1UiJq///PuvEfWVBKRO0/MsamjgWm+GnbJgbpKr//MDYygIkjq2NBVgDXkKrOwDD7JsPDAxcY5B0MMAxiYGBgYMLqGSRNDw9cwKoEq0ZkTfIOBlg1ojhVusoPxckwTejiDAwM5IcqXCFW96ABYtUNMgAAYJ1Q+Osb2IkAAAAASUVORK5CYII=",
+    "cosmic": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAqElEQVR4nGNgIAFIiaj9J0U9XNP/S1b/YZoZiTX56T4ROFva6Q2mRikRtf/T0m6iiGXNUodrlnZ6w/DszS1GJlya/GsOwsVhYjBNDAwMDEwwDeiaNrbYwzXuOrATrhnuRykRtf/I7icGwP0IMwXdbzDbGBgYGNwc3OF+ffbmFiNK4CA7F6YBWRPMfwwMDAgbYYK4QhVZE4ofkUMMPR7RNaE4EUc4DCIAAGwHXF20RBkvAAAAAElFTkSuQmCC",
+    "phantom": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAb0lEQVR4nGNgIBMwYhOUElH7j8x/9uYWVnUYmtABukFEaSKoGZ8mbJqZ0A2QFlXHMBSbGIZGYgGGxqevb2IowiaG00ZpUXWsToQBFlwS2GwhykZCAG+oorOfvr6JkaoYGBgQSU1KRO0/Lja5LoQDAHAeagZP/muxAAAAAElFTkSuQmCC",
+    "candy": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAmklEQVR4nGNgGBAgJaL2n2R1UiJq///PuvEfWVBKRO0/MsamjgWm+GnbJgbpKr//DAwMDE/3iaDYJO3E8B9dHROygqdtmxCadI8ixPeJMDxt24RiGIpGFHDZmoGh1hGCsQAWrKIwxc37cZqLolG6yg/qNFQN0k5vGBgY/FCcy4Ks6dmbW4wQhQwo0fPszS1GWGgiqyMvHocOAABOLUKDJOxsuQAAAABJRU5ErkJggg==",
+    "potion": "iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAlklEQVR4nGNgIBMwYhOUElH7j8x/9uYWhjoMASkRtf8FbiwoYhN2/cGqGauNN778/3/jy///6LbDABNBU4gFyLbhs5UFXdO+BzcZbqShKtr34CaDk4L6f2R/MmHT5L8UVeONNIhmZJux+nFjNIK968JOrF7CGzi4NDEwoMUjzLmTzFA15J1yZ3BSUMcfl8SGKtlJjmwAABZSYzHQqFi3AAAAAElFTkSuQmCC",
+}
+_PX_CACHE = {}
+MENU_ICONS = [("💬 Join", "discord"), ("💖", "heart"), ("🎩", "hat"), ("🥚", "egg"), ("🔦", "lure"), ("📡", "beacon"), ("🕯️", "candle"),
+              ("📖", "zoo"), ("⚔️", "arena"), ("🏆", "trophy"), ("🌍", "worlds"), ("🔄", "download"), ("💬", "help"), ("🐾", "friend"),
+              ("💡", "awaken"), ("🆘", "help"), ("📋", "share"), ("✨", "awaken"), ("💤", "night"), ("👀", "zoo"), ("👻", "ghost"),
+              ("🎁", "gift"), ("Feed a cookie", "cookie"), ("Add a friend", "friend"), ("Play Night Shift", "night"), ("Pet", "heart")]
+
+
+def px_icon(name, master):
+    """A pixel icon as a tk image (kept, so tk doesn't lose it)."""
+    if name not in _PX_CACHE:
+        _PX_CACHE[name] = tk.PhotoImage(master=master, data=PX_ICONS[name])
+    return _PX_CACHE[name]
+
+
+def iconize_menu(menu):
+    """Swap the emoji at the start of menu labels for pixel icons (and do the same in every submenu)."""
+    try:
+        end = menu.index("end")
+    except tk.TclError:
+        return
+    if end is None:
+        return
+    for i in range(end + 1):
+        try:
+            kind = menu.type(i)
+            if kind not in ("command", "cascade", "checkbutton", "radiobutton"):
+                continue
+            label = menu.entrycget(i, "label")
+            for prefix, name in MENU_ICONS:
+                if label == prefix or label.startswith(prefix + " ") or (prefix[0].isalpha() and label.startswith(prefix)):
+                    text = label[len(prefix):].lstrip() if not prefix[0].isalpha() else label
+                    if prefix == "💬 Join":
+                        text = "Join" + label[len(prefix):]
+                    menu.entryconfigure(i, label=text, image=px_icon(name, menu), compound="left")
+                    break
+            if kind == "cascade":
+                iconize_menu(menu.nametowidget(menu.entrycget(i, "menu")))
+        except tk.TclError:
+            continue
+
+
+# ----------------------------------------------------------------------------- see-through windows (the Redux engine)
+# Before 1.0, pet windows were made see-through with a "magic pink" color key, and Windows had to repaint them whenever
+# anything happened (a click, a menu, a window passing over). Sometimes it showed black for a moment before the repaint.
+# Now each window is drawn into a picture with real see-through pixels (Pillow) and handed straight to Windows as a
+# layered window. Nothing is repainted, so nothing flashes. BLIPVILLE_OLD_DRAWING=1 switches back to the color key.
+LAYERED = sys.platform == "win32" and not os.environ.get("BLIPVILLE_OLD_DRAWING")
+if LAYERED:
+    try:                                        # the .exe always has Pillow; running blip.pyw without it uses the color key
+        import PIL.Image, PIL.ImageDraw, PIL.ImageFont  # noqa: E401,F401
+    except ImportError:
+        LAYERED = False
 LAYERED_TEST_DIR = os.environ.get("BLIPVILLE_LAYERED_TEST")   # testing on other systems: frames are saved as PNGs here
 SELFTEST = bool(os.environ.get("BLIPVILLE_SELFTEST"))         # the build's automatic test: logs where pets are and clicks
 _PIL_FONTS = {}
@@ -3631,6 +4858,148 @@ def pil_font(px, bold=False, emoji=False):
                 break
         _PIL_FONTS[key] = font or ImageFont.load_default()
     return _PIL_FONTS[key]
+
+
+class DesktopWindows:
+    """The other apps' windows on the screen, so Blips can climb up and ride on them (Windows only).
+
+    The list is refreshed twice a second. It keeps every visible window in z-order (top first) so we can tell whether
+    a spot on a window's top edge is covered by another window, and marks which ones a Blip may stand on."""
+    BORDER = 7                                   # Windows 10/11 windows have invisible resize borders at the sides
+
+    def __init__(self):
+        self.ok, self.wins, self.at = False, [], -99.0
+        if sys.platform != "win32":
+            return
+        try:
+            import ctypes
+            from ctypes import wintypes as wt
+            u = ctypes.windll.user32
+            HW = ctypes.c_void_p
+            self.ct, self.wt, self.u = ctypes, wt, u
+            self.PROC = ctypes.WINFUNCTYPE(wt.BOOL, HW, wt.LPARAM)
+            for fn, args, res in ((u.EnumWindows, [self.PROC, wt.LPARAM], wt.BOOL), (u.IsWindowVisible, [HW], wt.BOOL),
+                                  (u.IsIconic, [HW], wt.BOOL), (u.IsZoomed, [HW], wt.BOOL), (u.IsWindow, [HW], wt.BOOL),
+                                  (u.GetWindowRect, [HW, ctypes.POINTER(wt.RECT)], wt.BOOL),
+                                  (u.GetWindowTextLengthW, [HW], ctypes.c_int),
+                                  (u.GetWindowTextW, [HW, wt.LPWSTR, ctypes.c_int], ctypes.c_int),
+                                  (u.GetClassNameW, [HW, wt.LPWSTR, ctypes.c_int], ctypes.c_int),
+                                  (u.GetWindowLongW, [HW, ctypes.c_int], wt.LONG),
+                                  (u.GetWindowThreadProcessId, [HW, ctypes.POINTER(wt.DWORD)], wt.DWORD),
+                                  (u.SetCursorPos, [ctypes.c_int, ctypes.c_int], wt.BOOL)):
+                fn.argtypes, fn.restype = args, res
+            try:
+                self.dwm = ctypes.windll.dwmapi
+                self.dwm.DwmGetWindowAttribute.argtypes = [HW, wt.DWORD, ctypes.c_void_p, wt.DWORD]
+            except Exception:  # noqa: BLE001
+                self.dwm = None
+            self.pid = os.getpid()
+            self.ok = True
+        except Exception as e:  # noqa: BLE001
+            log(f"window climbing is off: {e!r}")
+
+    def _cloaked(self, hwnd):
+        if not self.dwm:
+            return False
+        v = self.wt.DWORD()
+        try:
+            return self.dwm.DwmGetWindowAttribute(hwnd, 14, self.ct.byref(v), 4) == 0 and v.value != 0   # DWMWA_CLOAKED
+        except Exception:  # noqa: BLE001
+            return False
+
+    def _rect(self, hwnd):
+        r = self.wt.RECT()
+        if not self.u.GetWindowRect(hwnd, self.ct.byref(r)):
+            return None
+        return r.left + self.BORDER, r.top, r.right - self.BORDER, r.bottom - self.BORDER
+
+    def refresh(self, now, force=False):
+        if not self.ok or (not force and now - self.at < 0.5):
+            return
+        self.at = now
+        found, buf = [], self.ct.create_unicode_buffer(256)
+
+        def visit(hwnd, _):
+            try:
+                if not self.u.IsWindowVisible(hwnd) or self.u.IsIconic(hwnd) or self._cloaked(hwnd):
+                    return True
+                pid = self.wt.DWORD()
+                self.u.GetWindowThreadProcessId(hwnd, self.ct.byref(pid))
+                rect = self._rect(hwnd)
+                if not rect or rect[2] - rect[0] < 60 or rect[3] - rect[1] < 40:
+                    return True
+                self.u.GetClassNameW(hwnd, buf, 256)
+                cls = buf.value
+                if cls in ("Progman", "WorkerW", "Shell_TrayWnd", "Shell_SecondaryTrayWnd"):
+                    return True
+                ex = self.u.GetWindowLongW(hwnd, -20)                 # GWL_EXSTYLE
+                ours = pid.value == self.pid
+                perch = (not ours and not ex & 0x80 and self.u.GetWindowTextLengthW(hwnd) > 0   # not a tool window, has a title
+                         and not self.u.IsZoomed(hwnd) and rect[2] - rect[0] >= 160)
+                title = ""
+                if perch:
+                    self.u.GetWindowTextW(hwnd, buf, 256)
+                    title = buf.value
+                found.append({"hwnd": hwnd, "rect": rect, "perch": perch, "ours": ours, "title": title})
+            except Exception:  # noqa: BLE001
+                pass
+            return True
+
+        try:
+            self.u.EnumWindows(self.PROC(visit), 0)
+            self.wins = [w for w in found if not w["ours"]]           # our own pets/windows never hide a window's edge
+        except Exception as e:  # noqa: BLE001
+            log(f"listing windows failed: {e!r}")
+            self.wins = []
+
+    def live_rect(self, hwnd):
+        """Where that window is right now, or None when it closed, got minimized or went full screen."""
+        try:
+            if not self.u.IsWindow(hwnd) or not self.u.IsWindowVisible(hwnd) or self.u.IsIconic(hwnd) or self.u.IsZoomed(hwnd):
+                return None
+            return self._rect(hwnd)
+        except Exception:  # noqa: BLE001
+            return None
+
+    def uncovered(self, hwnd, x, y):
+        """Is the point (x, y) on this window visible, i.e. not under a window that's in front of it?"""
+        for w in self.wins:
+            if w["hwnd"] == hwnd:
+                return True
+            l, t, r, b = w["rect"]
+            if l <= x < r and t <= y < b:
+                return False
+        return True
+
+    def landing(self, cx, feet0, feet1, top_limit, skip=None):
+        """A falling Blip whose feet go from feet0 down to feet1 at screen x cx: the window top it lands on, if any."""
+        for w in self.wins:                                       # front to back: the first edge in the way wins
+            if not w["perch"] or w["hwnd"] == skip:
+                continue
+            l, t, r, b = w["rect"]
+            if l + 16 <= cx <= r - 16 and feet0 <= t <= feet1 and t >= top_limit and self.uncovered(w["hwnd"], cx, t + 2):
+                return w["hwnd"], t
+        return None
+
+    def pick(self, cx, top_limit, bottom_limit):
+        """A window top a Blip near screen x cx could jump up onto: (hwnd, x of the Blip's center, top), or None."""
+        options = []
+        for w in self.wins:
+            l, t, r, b = w["rect"]
+            if not w["perch"] or t < top_limit or t > bottom_limit - 40:
+                continue
+            for _ in range(5):
+                x = random.uniform(l + 30, r - 30)
+                if abs(x - cx) < 1100 and self.uncovered(w["hwnd"], x, t + 2):
+                    options.append((w["hwnd"], x, t))
+                    break
+        return random.choice(options) if options else None
+
+    def move_cursor(self, x, y):
+        try:
+            self.u.SetCursorPos(int(x), int(y))
+        except Exception:  # noqa: BLE001
+            pass
 
 
 class _Win32:
@@ -4022,10 +5391,22 @@ class Blip:
         self.last_hungry_whine = 0.0
         self.last_pet_reward = -99.0
         self.hat = None                            # what it's wearing (from the hat shop)
+        self.hat2 = None                           # a second item, once the 2nd accessory slot is unlocked
+        self.tints = {}                            # item name -> color (index into ACCESSORY_TINTS)
         self.playing = False                       # busy with a game of catch / tag (the App moves it)
         self.nap_buddy = False                     # walking over to nap next to a sleeping friend
         self.last_play = -99.0
         self.next_shift = time.monotonic() + random.uniform(6, 12)   # chameleons change color now and then
+        self.bond = 0.0                            # friendship points 💞
+        self.perch = None                          # the window it's standing on (Windows app: Blips climb windows)
+        self.perch_rect = None
+        self.skip_perch = (None, 0.0)              # just hopped off this window: don't land right back on it
+        self.jump = None                           # jumping up onto a window
+        self.last_wheee = -99.0
+        self.chase_until = 0.0                     # chasing the mouse pointer until then
+        self.chase_seen = (0, 0, 0.0)              # where the pointer was, and when it last moved
+        self.next_pounce = 0.0
+        self.pouncing = False
 
         self.press = None
         self.drag_hist = []
@@ -4044,13 +5425,15 @@ class Blip:
         self.menu.add_command(label="Nap time", command=self.toggle_sleep)
         self.menu.add_checkbutton(label="Follow my mouse", variable=self.follow, command=self.on_follow)
         self.menu.add_command(label="Say something", command=lambda: self.say(random.choice(self.lines())))
+        self.menu.add_command(label="💬 Chat…", command=self.open_chat)
+        self.chat_entry = self.menu.index("end")
         kinds = tk.Menu(self.menu, tearoff=0)
         n_groups = 6
         size = -(-len(ANIMAL_KINDS) // n_groups)
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
         groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
                   + list(TAB_GROUPS)
-                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Ghosts 👻", GHOST_KINDS), ("Gifts 🎁", GIFT_KINDS)]
+                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Ghosts 👻", GHOST_KINDS), ("Gifts 🎁", GIFT_KINDS), ("Bad Dreams 🧸", BAD_DREAM_KINDS)]
                   + ([("My Blips ⭐", CUSTOM_KINDS)] if CUSTOM_KINDS else []))
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
@@ -4068,6 +5451,8 @@ class Blip:
                 self.legend_menu = sub
             elif members is GHOST_KINDS:
                 self.ghost_menu = sub
+            elif members is BAD_DREAM_KINDS:
+                self.dream_menu = sub
             elif any(members is ks for _, ks in TAB_GROUPS):
                 self.tab_menus = getattr(self, "tab_menus", {})
                 self.tab_menus[group] = (sub, members)
@@ -4083,22 +5468,41 @@ class Blip:
         self.menu.add_separator()
         self.menu.add_command(label="Add a friend", command=lambda: app.add_pet(x=self.wx))
         self.menu.add_command(label="Play Night Shift 🌙…", command=app.open_night_shift)
+        self.menu.add_command(label="🍪 Cookie Catch…", command=lambda: CookieCatch(app, self))
         self.menu.add_command(label="🎩 Hats & outfits…", command=lambda: HatShop(app, self))
+        self.menu.add_command(label="✨ Awaken…", command=self.toggle_awaken)
+        self.awaken_entry = self.menu.index("end")
+        self.menu.add_command(label="💤 Back to normal form", command=lambda: self.toggle_awaken(back=True))
+        self.awaken_back_entry = self.menu.index("end")
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
+        self.menu.add_command(label="🏺 Dig for gods in Egypt World…", command=app.open_dig)
         self.menu.add_command(label=f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", command=lambda: app.set_lure(self.root))
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
         self.menu.add_command(label=f"🕯️ Light a Spirit Candle ({CANDLE_COST} 💖)…", command=lambda: app.light_candle(self.root))
         self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
+        if FEATURES["arena"]:
+            self.menu.add_command(label="⚔️ Arena…", command=lambda: Arena(app))
+        self.menu.add_command(label="🏆 Trophies…", command=lambda: TrophyShelf(app))
+        self.trophy_entry = self.menu.index("end")
         self.world_menu = tk.Menu(self.menu, tearoff=0)
         self.menu.add_cascade(label="🌍 Worlds", menu=self.world_menu)
+        self.menu.add_command(label="💞 New friend", state="disabled")
+        self.bond_entry = self.menu.index("end")
         self.menu.add_command(label="💖 0 hearts", state="disabled")
         self.hearts_entry = self.menu.index("end")
         self.menu.add_checkbutton(label="Show name tags", variable=app.name_tags)
         self.menu.add_checkbutton(label="Sound effects", variable=app.sound_on,
                                   command=lambda: (app.save.update(sound=app.sound_on.get()), write_save(app.save),
                                                    app.sound.play("boop")))
+        self.menu.add_checkbutton(label="🔊 Blip voices (with sound on)", variable=app.voices_on,
+                                  command=lambda: app.save.update(voices=app.voices_on.get()) or write_save(app.save))
         self.menu.add_checkbutton(label="Weather effects", variable=app.weather,
                                   command=lambda: app.save.update(weather=app.weather.get()) or write_save(app.save))
+        if app.desk.ok and FEATURES["climb"]:
+            self.menu.add_checkbutton(label="🪟 Climb on my windows", variable=app.climb_on, command=app.set_climb)
+        if FEATURES["cursor_play"]:
+            self.menu.add_checkbutton(label="🖱️ Play with my mouse (they might steal it!)", variable=app.cursor_play,
+                                      command=lambda: app.save.update(cursor_play=app.cursor_play.get()) or write_save(app.save))
         upd = tk.Menu(self.menu, tearoff=0)
         upd.add_command(label="🔄 Check for updates now", command=lambda: app.updater.check(quiet=False))
         upd.add_checkbutton(label="Update automatically (asks first)", variable=app.updater.auto, command=app.updater.set_auto)
@@ -4106,12 +5510,14 @@ class Blip:
         self.menu.add_cascade(label="🔄 Updates", menu=upd)
         self.menu.add_command(label=f"{EVENT['icon']} {EVENT['name']}…", command=lambda: EventWindow(app))
         self.event_entry = self.menu.index("end")
+        self.menu.add_command(label="💾 Save code (move your town)…", command=lambda: SaveCodeWindow(app))
         talk = tk.Menu(self.menu, tearoff=0)
         talk.add_command(label="💬 Join the Blipville Discord…", command=lambda: self.open_link(DISCORD_URL, "come say hi on discord!"))
         talk.add_command(label="🐾 Suggest an animal…", command=self.suggest)
         talk.add_command(label="💡 Suggest an idea…", command=lambda: self.open_link(IDEA_URL, "ooh, what's your idea?"))
         talk.add_command(label="🆘 Get help / report a problem…", command=lambda: self.open_link(HELP_URL, "let's get you some help!"))
         talk.add_command(label="📋 Copy error log (for bug reports)", command=self.copy_log)
+        talk.add_command(label="🔑 Enter a secret code…", command=lambda: app.enter_secret_code(self.root))
         self.menu.add_cascade(label="💬 Suggestions & help", menu=talk)
         self.menu.add_command(label="💖 Donate / support Blipville…", command=self.support)
         self.menu.add_separator()
@@ -4121,6 +5527,34 @@ class Blip:
         self.place()
 
     # ------------------------------------------------------------------ helpers
+    def worn(self):
+        """What it's wearing, with colors: [(item, tint), ...] (one or two items)."""
+        return [(n, self.tints.get(n, 0)) for n in (self.hat, self.hat2) if n in HATS]
+
+    def wear(self, name):
+        """Put an item on. With the 2nd slot it goes next to the other item, unless both go in the same spot."""
+        if name in (self.hat, self.hat2):
+            return
+        two = bool(self.app.save.get("slot2"))
+        same = next((n for n in (self.hat, self.hat2) if n in HATS and HATS[n]["slot"] == HATS[name]["slot"]), None)
+        if same:                                   # a hat replaces a hat, glasses replace glasses…
+            if self.hat == same:
+                self.hat = name
+            else:
+                self.hat2 = name
+        elif not two or self.hat is None:
+            self.hat, self.hat2 = name, (self.hat2 if two else None)
+        elif self.hat2 is None:
+            self.hat2 = name
+        else:
+            self.hat, self.hat2 = self.hat2, name
+
+    def take_off(self, name):
+        if self.hat == name:
+            self.hat, self.hat2 = self.hat2, None
+        elif self.hat2 == name:
+            self.hat2 = None
+
     def place(self):
         pos = (int(self.wx), int(self.wy))
         if pos == getattr(self, "_placed", None):
@@ -4136,7 +5570,12 @@ class Blip:
         self.state_until = time.monotonic() + seconds
 
     def say(self, text, seconds=3.0):
-        self.bubble = (text, time.monotonic() + seconds)
+        now = time.monotonic()                     # the bubble types itself out; it stays up until it's readable
+        self.bubble = (text, max(now + seconds, now + len(text) / TYPE_CPS + 1.2))
+        self.bubble_t0, self.voiced = now, 0
+
+    def typed(self, now):
+        return min(len(self.bubble[0]), 1 + int((now - getattr(self, "bubble_t0", 0)) * TYPE_CPS)) if self.bubble else 0
 
     def set_face(self, face, seconds):
         self.face, self.face_until = face, time.monotonic() + seconds
@@ -4149,12 +5588,157 @@ class Blip:
                 "born": time.monotonic(),
             })
 
+    def dream_burst(self, plush):
+        if plush:
+            self.say("*flop* …just a plushie again", 2.5)
+            return
+        self.say(random.choice(["*RRRIIIP!* 🌙", "*stitches pop* it's midnight…", "*bursts out of the plush*"]), 3)
+        self.set_face("surprised", 1.2)
+        for _ in range(14):
+            self.particles.append({"kind": "stuffing", "x": W / 2 + random.uniform(-20, 20), "y": H - ART_H * SCALE + random.uniform(0, 20),
+                                   "vx": random.uniform(-3, 3), "vy": random.uniform(-6, -2), "life": random.uniform(0.8, 1.4),
+                                   "born": time.monotonic()})
+        self.app.sound.play("boing")
+
+    def open_chat(self):
+        ChatBox(self)
+
     def show_reward(self, text):
         self.particles.append({"kind": "plus", "text": text, "x": W / 2 + 34, "y": H - ART_H * SCALE - 4,
                                "vx": 0, "vy": -0.6, "life": 1.6, "born": time.monotonic()})
 
+    def befriend(self, how):
+        """A little more friendship from caring for it; a level-up is celebrated (and gives hearts)."""
+        before = bond_level(self.bond)
+        self.bond += BOND_GAIN.get(how, 1)
+        now = bond_level(self.bond)
+        if now > before:
+            self.app.add_hearts(5 * now, self)
+            self.app.sound.play("fanfare")
+            self.say(f"💞 we're {BOND_TITLES[now - 1]}s now!" if now < 5 else "💞 SOULMATES! i'll never leave your side!", 4)
+            self.set_face("happy", 2.5)
+            self.burst("heart", 10)
+            self.app.bump("bond_ups")
+            self._drawn = None
+
+    def walk_bounds(self):
+        """Where it can walk: the whole taskbar, or the top of the window it's standing on."""
+        if self.perch is not None and self.perch_rect:
+            l, t, r, b = self.perch_rect
+            return max(self.left - W / 2, l + 18 - W / 2), min(self.right - W / 2, r - 18 - W / 2)
+        return self.left, self.right - W
+
     def pick_walk_target(self):
-        return random.uniform(self.left + 10, self.right - W - 10)
+        lo, hi = self.walk_bounds()
+        return random.uniform(lo + 5, max(lo + 5, hi - 5))
+
+    # ------------------------------------------------------------------ window climbing (Windows app only)
+    def start_jump(self, hwnd, cx, top, now):
+        x1, y1 = min(max(cx - W / 2, self.left - W / 2), self.right - W / 2), top - H
+        dist = math.hypot(x1 - self.wx, y1 - self.wy)
+        self.jump = {"t0": now, "dur": min(1.3, 0.55 + dist / 1000), "x0": self.wx, "y0": self.wy, "x1": x1, "y1": y1,
+                     "hwnd": hwnd, "arc": 50 + min(dist, 700) * 0.22, "l": None}
+        self.perch = self.perch_rect = None
+        self.facing = 1 if x1 > self.wx else -1
+        self.set_state("jump", 5)
+        self.say(random.choice(["hup!", "up we go!", "ooh, a window!", "*climbs up*", "i wanna see!"]), 1.8)
+        self.app.sound.play("whoosh")
+
+    def jump_step(self, now):
+        j = self.jump
+        rect = self.app.desk.live_rect(j["hwnd"]) if j else None
+        if rect:                                            # the window moved mid-jump: aim for where it is now
+            if j["l"] is not None:
+                j["x1"] += rect[0] - j["l"]
+            j["l"], j["y1"] = rect[0], rect[1] - H
+        u = (now - j["t0"]) / j["dur"] if j else 1
+        if rect is None or u >= 1:
+            self.jump = None
+            if rect and rect[0] + 4 <= j["x1"] + W / 2 <= rect[2] - 4:
+                self.wx, self.wy = j["x1"], j["y1"]
+                self.perch, self.perch_rect = j["hwnd"], rect
+                self.app.bump("climbs")
+                self.squash_until = now + 0.15
+                self.set_state("idle", random.uniform(1.5, 3))
+                self.say(random.choice(["nice view up here!", "i'm on top of the world!", "made it!", "hi from up here!",
+                                        "what are you working on?"]), 2.2)
+                self.app.sound.play("pop")
+            else:
+                self.vx = self.vy = 0
+                self.set_state("fall")
+            self.place()
+            return
+        self.wx = j["x0"] + (j["x1"] - j["x0"]) * u
+        self.wy = j["y0"] + (j["y1"] - j["y0"]) * u - math.sin(math.pi * u) * j["arc"]
+        self.place()
+
+    def hop_down(self, say=True):
+        if self.perch is not None:
+            self.skip_perch = (self.perch, time.monotonic() + 1.5)
+        self.perch = self.perch_rect = None
+        self.vx, self.vy = self.facing * random.uniform(1, 3), -6
+        self.set_state("fall")
+        if say:
+            self.say(random.choice(["wheee!", "coming down!", "*hops off*", "bye, window!"]), 1.6)
+
+    def ride(self, now):
+        """Standing on a window: move along with it, or tumble off when it closes, minimizes, or gets covered."""
+        app = self.app
+        rect = app.desk.live_rect(self.perch) if app.climb_on.get() else None
+        if rect is not None and self.perch_rect:                # the window moved: move with it first
+            dx, dy = rect[0] - self.perch_rect[0], rect[1] - self.perch_rect[1]
+            if dx or dy:
+                self.wx += dx
+                if self.target_x is not None:
+                    self.target_x += dx
+                if abs(dx) + abs(dy) > 18 and now - self.last_wheee > 4 and self.state != "sleep":
+                    self.last_wheee = now
+                    self.say(random.choice(["wheee!", "what a ride!", "faster!!", "hold on tight!"]), 1.5)
+                    self.set_face("happy", 1)
+        cx = self.wx + W / 2
+        if (rect is None or rect[1] < self.top + ART_H * SCALE or not rect[0] + 2 <= cx <= rect[2] - 2
+                or not app.desk.uncovered(self.perch, cx, rect[1] + 2)):
+            walked_off = rect is not None and not rect[0] + 2 <= cx <= rect[2] - 2
+            self.perch = self.perch_rect = None
+            self.vx, self.vy = (self.facing * 2, -2) if walked_off else (0, 0)
+            self.set_state("fall")
+            self.say(random.choice(["whoa!", "eep!", "where'd it go?!", "aaah!"] if not walked_off else ["oops!", "wheee!"]), 1.6)
+            return
+        self.perch_rect = rect
+        self.wy = rect[1] - H
+        self.place()
+
+    # ------------------------------------------------------------------ playing with the mouse pointer
+    def chase_step(self, now):
+        mx, my = self.root.winfo_pointerxy()
+        if (mx, my) != self.chase_seen[:2]:
+            self.chase_seen = (mx, my, now)
+        elif now - self.chase_seen[2] > 2.5:                    # the pointer stopped: lost interest
+            self.chase_until = 0
+            self.say(random.choice(["huh.", "where'd it go?", "...it's sleeping", "i'll get you next time"]), 1.8)
+            self.set_state("idle", random.uniform(1, 2))
+            return
+        cx, feet = self.wx + W / 2, self.wy + H
+        head = feet - ART_H * SCALE
+        dx = mx - cx
+        self.facing = 1 if dx > 0 else -1
+        if abs(dx) < 40 and feet - 260 < my < head + 12 and now > self.next_pounce:
+            reach = max(24, feet - my - ART_H * SCALE / 2)
+            self.vy, self.vx = -min(24, math.sqrt(2 * 1.1 * reach) + 1), dx / 14
+            self.next_pounce = now + 1.3
+            self.pouncing = True
+            self.perch = self.perch_rect = None              # (it lands back on the window if it was on one)
+            self.set_face("surprised", 0.6)
+            self.set_state("fall")
+            self.app.sound.play("boop")
+            return
+        if abs(dx) > 12:
+            self.wx = min(max(self.wx + 4.2 * self.facing * VARIANTS[self.kind].get("speed", 1.0) ** 0.5, self.left - W / 2 + 20),
+                          self.right - W / 2 - 20)
+            self.state = "walk"
+        else:
+            self.state = "idle"
+        self.place()
 
     # ------------------------------------------------------------------ actions
     def pet(self):
@@ -4162,15 +5746,25 @@ class Blip:
             self.wake()
             return
         self.app.sound.play("boop")
+        self.app.bump("pets")
         now = time.monotonic()
         if now - self.last_pet_reward > 6:          # petting earns a heart (not by spam-clicking)
             self.last_pet_reward = now
             self.app.add_hearts(1, self)
+            self.befriend("pet")
             self.app.event_point(self, 1)
             self.app.quest_tick("pet_any")
             if self.kind in EVENT["kinds"]:
                 self.app.quest_tick("pet_spiky")
-        self.say(random.choice(LINES_PET), 2)
+        if self.kind in ("Puppet Master", "Bad Dream Puppet Master"):     # 🎭 5 quick clicks… if you dare
+            self.pm_clicks = [t for t in getattr(self, "pm_clicks", []) if now - t < 2.5] + [now]
+            if len(self.pm_clicks) >= 5:
+                self.pm_clicks = []
+                self.app.bad_dream_rewrite(self)
+                return
+        self.say(voice(self.kind, "pet_lines", random.choice(LINES_PET)), 2.5)
+        if VARIANTS[self.kind].get("blush") and random.random() < 0.4:
+            self.blush_until = time.monotonic() + 1.5               # a head pat can be a little much
         self.set_face("happy", 1.5)
         self.burst("heart", 4)
         if self.state not in ("fall", "held"):
@@ -4183,7 +5777,8 @@ class Blip:
         cx = self.wx + W / 2 + random.choice([-1, 1]) * random.uniform(45, 85)
         cx = min(max(cx, self.left + 30), self.right - 30)
         self.cookie = {"x": cx, "y": 0.0, "vy": 0.0, "landed": False}
-        self.say("ooh! a cookie!", 2)
+        self.app.bump("cookies")
+        self.say(voice(self.kind, "feed_lines", "ooh! a cookie!"), 2.5)
         self.set_face("surprised", 1.0)
 
     def toggle_sleep(self):
@@ -4191,12 +5786,17 @@ class Blip:
             self.wake()
         elif self.state not in ("held", "fall"):
             self.set_state("sleep", 20)
-            self.say("good night...", 2)
+            self.say(voice(self.kind, "nap_lines", "good night..."), 2)
 
     def wake(self):
         self.set_state("idle", 1.5)
-        self.say(random.choice(LINES_WAKE), 2.5)
+        self.say(voice(self.kind, "wake_lines", random.choice(LINES_WAKE)), 2.5)
         self.set_face("surprised", 0.8)
+
+    def following(self):
+        """Following the mouse, unless care comes first: a landed cookie is eaten before following resumes (the menu
+        tick, the player's choice, is never changed here). Running out of energy is handled in update()."""
+        return self.follow.get() and not (self.cookie and self.cookie["landed"])
 
     def on_follow(self):
         if self.follow.get():
@@ -4205,15 +5805,73 @@ class Blip:
                 self.wake()
 
     def next_color(self):
-        self.palette = (self.palette + 1) % len(kind_colors(self.kind))
+        n = len(kind_colors(self.kind))
+        for _ in range(n):                                # skip colors you haven't unlocked yet
+            self.palette = (self.palette + 1) % n
+            if not skin_locked(self.app.save, self.kind, self.palette):
+                break
         self.color_var.set(self.palette)
         self.say(f"{kind_colors(self.kind)[self.palette]['name'].lower()}!", 1.5)
         self.burst("heart", 2)
 
     def lines(self):
+        if plush_now(self.kind):
+            return VARIANTS[self.kind]["plush"]["lines"]
+        own_night = VARIANTS[self.kind].get("night_lines")
+        if own_night and guard_hours():
+            return own_night * 2 + VARIANTS[self.kind]["lines"]
+        if any(VARIANTS[self.kind].get(k) for k in VOICE_KEYS):     # a Blip with its own personality keeps its own voice
+            return VARIANTS[self.kind]["lines"]
         if self.kind in ROBOTS and is_night():
             return NIGHT_LINES * 2 + VARIANTS[self.kind]["lines"]
         return LINES_IDLE + VARIANTS[self.kind]["lines"] * 2 + SEASON_LINES.get(self.app.season, [])
+
+    def toggle_awaken(self, back=False):
+        """Awaken into the powered-up form (the first time needs an Awakening Crystal), awaken again (some Blips can,
+        up to 3 times), or go back to normal."""
+        from tkinter import messagebox
+        app, base = self.app, AWAKEN_BASE.get(self.kind, self.kind)
+        if base not in AWAKEN_CHAIN:
+            return
+        chain, stage = AWAKEN_CHAIN[base], awaken_stage(self.kind)
+        if back or stage >= len(chain):                 # back to normal
+            self.kind = base
+            self.palette %= len(kind_colors(base))
+            self.say("phew, back to normal", 2)
+            self._drawn = None
+            app.save_town()
+            return
+        form, cost = chain[stage], STAGE_COSTS[stage]
+        if app.awaken_level(base) <= stage:
+            nth = ["", "again ", "a third time "][stage]
+            if app.hearts() < cost:
+                messagebox.showinfo("Awakening Crystal ✨", f"Awakening {self.kind} {nth}into {form} takes an Awakening Crystal ({cost} 💖). "
+                                    f"You have {app.hearts()}.", parent=self.root)
+                return
+            if not messagebox.askyesno("Awakening Crystal ✨", f"Use an Awakening Crystal ({cost} 💖) to awaken {self.kind} {nth}into {form}?\n\n"
+                                       "It works for every " + base + " you have, forever, and you can switch back any time."
+                                       + (" In the Arena, Awakened Blips hit harder!" if FEATURES["arena"] else ""), parent=self.root):
+                return
+            app.save["hearts"] = app.hearts() - cost
+            if stage == 0:
+                app.save.setdefault("awakened", []).append(base)
+            else:
+                app.save.setdefault("awaken_level", {})[base] = stage + 1
+            write_save(app.save)
+        self.kind = form
+        self.palette %= len(kind_colors(form))
+        self._drawn = None
+        app.sound.play("fanfare")
+        self.say(random.choice(VARIANTS[form]["lines"]), 3.5)
+        self.set_face("happy", 2)
+        for _ in range(10):
+            self.add_sparkle(time.monotonic())
+        app.save_town()
+
+    def add_sparkle(self, now):
+        self.particles.append({"kind": "star", "x": W / 2 + random.uniform(-36, 36), "y": H - random.uniform(10, ART_H * SCALE + 6),
+                               "vx": 0, "vy": -0.3, "life": random.uniform(0.8, 1.6), "born": now, "phase": random.uniform(0, 6.3),
+                               "color": random.choice(["#ffffff", "#fff27a", "#ffd23a", "#a8d8ff"])})
 
     def change_kind(self):
         self.kind = self.kind_var.get()
@@ -4289,6 +5947,8 @@ class Blip:
             return
         if self.state != "held":
             self.set_state("held")
+            self.perch = self.perch_rect = self.jump = None
+            self.chase_until, self.pouncing = 0, False
             self.say(random.choice(LINES_HELD), 2.5)
             self.set_face("surprised", 9999)
         self.wx, self.wy = wx0 + e.x_root - px, wy0 + e.y_root - py
@@ -4311,9 +5971,23 @@ class Blip:
         self.press = None
 
     def pick_color(self):
-        self.palette = self.color_var.get()
-        self.say(f"{kind_colors(self.kind)[self.palette]['name'].lower()}!", 1.5)
-        self.burst("heart", 2)
+        i = self.color_var.get()
+        if i == self.palette:
+            return
+        icon, item, cost = color_cost(self.kind, i)
+        if not self.app.save.get("creator"):                # creators change colors for free
+            if self.app.hearts() < cost:
+                self.color_var.set(self.palette)
+                from tkinter import messagebox
+                messagebox.showinfo(f"{icon} {item}", f"A {item} costs {cost} 💖. You have {self.app.hearts()}.\n\n"
+                                    "Pet, feed and play with your Blips to earn more hearts!")
+                return
+            self.app.save["hearts"] = self.app.hearts() - cost
+            write_save(self.app.save)
+        self.palette = i
+        self.say(f"*{'sip' if icon == '🧪' else 'munch'}* {kind_colors(self.kind)[i]['name'].lower()}!", 2)
+        self.burst("heart", 3)
+        self.app.sound.play("munch" if icon == "🍬" else "zap")
 
     def on_menu(self, e):
         if SELFTEST:
@@ -4348,6 +6022,14 @@ class Blip:
         self.cryptid_menu.add_command(label=f"🔦 Set out a Cryptid Lure… ({LURE_COST} 💖, {spotted}/{len(CRYPTID_KINDS)} spotted)",
                                       command=lambda: self.app.set_lure(self.root))
         self.cryptid_menu.add_command(label="👀 Peek at locked Blips…", command=lambda: Collection(self.app))
+        self.dream_menu.delete(0, "end")
+        for k in BAD_DREAM_KINDS:
+            if self.app.is_unlocked(k):
+                self.dream_menu.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+            else:
+                self.dream_menu.add_command(label="🔒 ???", state="disabled")
+        self.dream_menu.add_separator()
+        self.dream_menu.add_command(label="🎭 Click a Puppet Master 5 times… if you dare", state="disabled")
         self.ghost_menu.delete(0, "end")
         for k in GHOST_KINDS:
             if self.app.is_unlocked(k):
@@ -4373,6 +6055,15 @@ class Blip:
         for group, (sub, members) in getattr(self, "tab_menus", {}).items():
             sub.delete(0, "end")
             w = WORLD_BY_NAME[WORLD_OF[members[0]]]
+            if members[0] in EGYPT_GODS:                   # 🏺 gods are dug up, not bought
+                sub.add_command(label="🏺 Dig for gods…", command=self.app.open_dig)
+                sub.add_separator()
+                for k in members:
+                    if self.app.is_unlocked(k):
+                        sub.add_radiobutton(label=k, value=k, variable=self.kind_var, command=self.change_kind)
+                    else:
+                        sub.add_command(label="🔒 ???  (dig it up in Egypt World)", state="disabled")
+                continue
             if not self.app.is_unlocked(members[0]):
                 sub.add_command(label=f"🔒 Unlock {w['name']} {w['icon']} ({w['cost']} 💖)…",
                                 command=lambda n=w["name"]: self.app.unlock_world(n, self.root))
@@ -4405,20 +6096,64 @@ class Blip:
             else:
                 self.gift_menu.add_command(label="🔒 ???  (a limited-time gift)", state="disabled")
         self.menu.entryconfigure(self.hearts_entry, label=f"💖 {self.app.hearts()} hearts")
+        lv = bond_level(self.bond)
+        self.menu.entryconfigure(self.bond_entry, label=f"💞 {self.name} is your {BOND_TITLES[lv - 1]}"
+                                 + (f"  ({int(self.bond)}/{BOND_LEVELS[lv]} to {BOND_TITLES[lv]})" if lv < 5 else "  (max!)"))
+        base = AWAKEN_BASE.get(self.kind, self.kind)
+        if base in AWAKEN_CHAIN:
+            chain, stage = AWAKEN_CHAIN[base], awaken_stage(self.kind)
+            again = ["", "again ", "a third time "][min(stage, 2)]
+            label = ("💤 Back to normal form" if stage >= len(chain) else
+                     f"✨ Awaken {again}into {chain[stage]}!" if self.app.awaken_level(base) > stage else
+                     f"✨ Awaken {again}… (Awakening Crystal, {STAGE_COSTS[stage]} 💖)")
+            self.menu.entryconfigure(self.awaken_entry, label=label, state="normal")
+            self.menu.entryconfigure(self.awaken_back_entry, state="normal" if 0 < stage < len(chain) else "disabled")
+        else:
+            self.menu.entryconfigure(self.awaken_entry, label="✨ Awaken (this Blip has no Awakened form)", state="disabled")
+            self.menu.entryconfigure(self.awaken_back_entry, state="disabled")
+        self.menu.entryconfigure(self.trophy_entry, label=f"🏆 Trophies ({len(self.app.save.get('trophies', []))}/{len(TROPHIES)})…")
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
             if skin_locked(self.app.save, self.kind, i):
-                self.color_menu.add_command(label=f"🔒 {col['name']}  ({EVENT['icon']} {EVENT['name']} skin)", state="disabled")
+                why = "fend off its Bad Dream" if col.get("unlock") == "puppet" else "redeem a 🎟️ merch code" if col.get("unlock") == "merch" else f"{EVENT['icon']} {EVENT['name']} skin"
+                self.color_menu.add_command(label=f"🔒 {col['name']}  ({why})", state="disabled")
             else:
-                self.color_menu.add_radiobutton(label=col["name"] + ("  ✨" if col.get("event") else ""), value=i,
+                icon, _, cost = color_cost(self.kind, i)
+                self.color_menu.add_radiobutton(label=col["name"] + ("  ✨" if col.get("event") else "") +
+                                                ("" if i == self.palette else f"   {icon} {cost} 💖"), value=i,
                                                 variable=self.color_var, command=self.pick_color)
         self.menu.entryconfigure(self.event_entry, label=self.app.event_label())
+        if self.app.save.get("mod") and not self.app.save.get("creator") and not getattr(self, "mod_added", False):
+            self.mod_added = True
+            mod = tk.Menu(self.menu, tearoff=0)
+            for label, group in (("👣 Spawn a cryptid", "cryptid"), ("🦖 Spawn a kaiju", "kaiju"), ("👻 Spawn a ghost", "ghost"),
+                                 ("✨ Spawn a World Legend", "legend")):
+                mod.add_command(label=label, command=lambda g=group: self.app.dev_spawn(g))
+            mod.add_command(label="📅 Fresh daily quests", command=self.app.dev_reset_quests)
+            if FEATURES["arena"]:
+                mod.add_command(label="🥊 Copy the Blipmaker boss code", command=lambda: self.app.dev_boss_code(self.root))
+            self.menu.add_cascade(label="🛡️ Mod menu", menu=mod)
+        if self.app.save.get("creator") and not getattr(self, "dev_added", False):
+            self.dev_added = True
+            dev = tk.Menu(self.menu, tearoff=0)
+            dev.add_command(label="💖 +100 hearts", command=lambda: self.app.add_hearts(100, self))
+            for label, group in (("👣 Spawn a cryptid", "cryptid"), ("🦖 Spawn a kaiju", "kaiju"), ("👻 Spawn a ghost", "ghost"),
+                                 ("✨ Spawn a World Legend", "legend")):
+                dev.add_command(label=label, command=lambda g=group: self.app.dev_spawn(g))
+            dev.add_command(label=f"{EVENT['icon']} +10 event points", command=lambda: self.app.event_point(self, 10, any_kind=True))
+            dev.add_command(label="📅 Fresh daily quests", command=self.app.dev_reset_quests)
+            dev.add_command(label="🔓 Unlock everything", command=self.app.dev_unlock_all)
+            dev.add_command(label="⭐ Add my Creator Blips", command=self.app.dev_add_creators)
+            if FEATURES["arena"]:
+                dev.add_command(label="🥊 Copy my boss battle code", command=lambda: self.app.dev_boss_code(self.root))
+            self.menu.add_cascade(label="🛠️ Creator menu", menu=dev)
         self.menu.entryconfigure(2, label="Wake up" if self.state == "sleep" else "Nap time")
         # While a menu is open, Windows pauses the app, so windows can't repaint (a see-through window that needs a
         # repaint then shows black). Hold this pet still while its menu is open, and repaint everything right after.
         if self.state == "walk":
             self.set_state("idle", 3)
         try:
+            iconize_menu(self.menu)
             self.menu.tk_popup(e.x_root, e.y_root)
         finally:
             self.menu.grab_release()
@@ -4426,22 +6161,38 @@ class Blip:
 
     # ------------------------------------------------------------------ brain
     def decide(self, now):
+        if plush_now(self.kind):                          # 🧸 a plushie just sits there… mostly
+            if random.random() < 0.1:
+                self.say(random.choice(self.lines()), 2.5)
+            self.set_state("idle", random.uniform(4, 9))
+            return
         hour = time.localtime().tm_hour
         sleepy = self.energy < 25 or (hour >= 23 or hour < 6) and random.random() < 0.15
         if sleepy:
-            self.say("*yawn* nap time...", 2.5)
+            self.say(voice(self.kind, "nap_lines", "*yawn* nap time..."), 2.5)
             self.set_state("sleep", 20)
             return
         if self.hunger > 70 and now - self.last_hungry_whine > 25:
             self.last_hungry_whine = now
             self.say(random.choice(LINES_HUNGRY), 3)
+        app = self.app
+        if self.perch is not None and random.random() < 0.12:
+            self.hop_down()
+            return
+        if (self.perch is None and app.desk.ok and app.climb_on.get() and random.random() < 0.09
+                and not getattr(self, "visitor", None)):
+            spot = app.desk.pick(self.wx + W / 2, self.top + ART_H * SCALE + 20, self.ground + H)
+            if spot:
+                self.start_jump(*spot, now)
+                return
         r = random.random()
+        lo, hi = self.walk_bounds()
         if r < 0.45:
             self.target_x = self.pick_walk_target()
             self.set_state("walk", 12)
         elif r < 0.60:
             mx = self.root.winfo_pointerx()
-            self.target_x = min(max(mx - W / 2, self.left), self.right - W)
+            self.target_x = min(max(mx - W / 2, lo), hi)
             self.set_state("walk", 6)
         elif r < 0.75:
             self.say(random.choice(self.lines()), 3)
@@ -4464,7 +6215,7 @@ class Blip:
             ck["y"] += ck["vy"]
             if ck["y"] >= H - 6 * 3:
                 ck["y"], ck["landed"] = H - 6 * 3, True
-        if ck and ck["landed"] and self.state in ("idle", "walk") and not self.follow.get():
+        if ck and ck["landed"] and self.state in ("idle", "walk"):    # food beats following and wandering
             self.target_x = ck["x"] - W / 2
             self.state = "walk"
             self.state_until = now + 10
@@ -4478,18 +6229,42 @@ class Blip:
         st = self.state
         if st == "held":
             return
+        if st == "jump":
+            self.jump_step(now)
+            return
+        if self.perch is not None and st != "fall":
+            self.ride(now)
+            st = self.state
         if st == "fall":
+            feet0 = self.wy + H
             self.vy += 1.1
             self.wx += self.vx
             self.wy += self.vy
+            if self.pouncing:                                  # pounced at the mouse pointer: did it catch it?
+                mx, my = self.root.winfo_pointerxy()
+                cx, feet = self.wx + W / 2, self.wy + H
+                if abs(mx - cx) < 36 and feet - ART_H * SCALE - 12 <= my <= feet:
+                    self.pouncing = False
+                    self.app.caught_cursor(self, now)
             if self.wx < self.left:
                 self.wx, self.vx = self.left, -self.vx * 0.6
             elif self.wx > self.right - W:
                 self.wx, self.vx = self.right - W, -self.vx * 0.6
             if self.wy < self.top - H / 2 and self.vy < 0:
                 self.vy *= -0.3
-            if self.wy >= self.ground:
-                self.wy = self.ground
+            floor, on = self.ground, None
+            if self.vy > 0 and self.app.desk.ok and self.app.climb_on.get():
+                skip, until = self.skip_perch
+                hit = self.app.desk.landing(self.wx + W / 2, feet0, self.wy + H, self.top + ART_H * SCALE,
+                                            skip if now < until else None)
+                if hit:
+                    on, floor = hit[0], hit[1] - H
+            if self.wy >= floor:
+                self.wy = floor
+                if on is not None and self.perch != on:
+                    self.app.bump("climbs")
+                self.perch, self.perch_rect = on, (self.app.desk.live_rect(on) if on is not None else None)
+                self.pouncing = False
                 hard = self.vy > 14
                 if self.vy > 6:
                     self.vy = -self.vy * 0.35
@@ -4512,6 +6287,7 @@ class Blip:
             if self.energy >= 100 and now > self.state_until:   # nap at least 20 s, wake when rested
                 self.wake()
                 self.app.add_hearts(2, self)                      # a well-rested pet is a happy pet
+                self.befriend("nap")
                 self.app.quest_tick("naps")
             return
         if st == "eat":
@@ -4520,6 +6296,7 @@ class Blip:
                 gain = 5 if hungry > 60 else 2 if hungry >= 25 else 0
                 if gain:
                     self.app.add_hearts(gain, self)
+                    self.befriend("feed")
                     self.app.event_point(self, 3 if hungry > 60 else 1)
                     self.app.quest_tick("feed_hungry")
                 self.hunger = 0
@@ -4534,8 +6311,20 @@ class Blip:
                                        "vx": random.uniform(-1.5, 1.5), "vy": random.uniform(-3, -1), "life": 0.6, "born": now})
             return
 
+        following = self.following()
+        if following and self.energy < 25 and self.state in ("idle", "walk"):
+            self.say("*yawn* too sleepy to follow... nap first", 2.5)    # rest beats following; it resumes on waking
+            self.set_state("sleep", 20)
+            return
+        if following and self.perch is not None:
+            self.hop_down(say=False)
+            return
+        if now < self.chase_until and self.state in ("idle", "walk") and not self.follow.get():
+            self.chase_step(now)
+            return
+
         # follow-my-mouse mode overrides wandering
-        if self.follow.get():
+        if following:
             mx = self.root.winfo_pointerx()
             goal = min(max(mx - W / 2, self.left), self.right - W)
             if abs(goal - self.wx) > 50:
@@ -4545,7 +6334,7 @@ class Blip:
                 self.state_until = now + 1
 
         if self.state == "walk" and self.target_x is not None:
-            speed = (3.2 if self.follow.get() else 2.0) * VARIANTS[self.kind].get("speed", 1.0)
+            speed = (3.2 if following else 2.0) * VARIANTS[self.kind].get("speed", 1.0)
             d = self.target_x - self.wx
             self.facing = 1 if d > 0 else -1
             if abs(d) <= speed or now > self.state_until:
@@ -4560,7 +6349,7 @@ class Blip:
             else:
                 self.wx += speed * self.facing
             self.place()
-        elif self.state == "idle" and now > self.state_until and not self.follow.get():
+        elif self.state == "idle" and now > self.state_until and not following:
             self.decide(now)
 
     # ------------------------------------------------------------------ drawing
@@ -4590,20 +6379,27 @@ class Blip:
         v = VARIANTS[self.kind]
         colors = kind_colors(self.kind)
         pal = {**colors[self.palette % len(colors)], **v.get("extra", {})}
+        v, pal = plush_view(self.kind, pal)          # 🧸 a Bad Dream is a plushie until midnight
+        if pal.get("glitch") is not None and glitching(now + id(self) % 50 / 10):
+            pal = {**colors[pal["glitch"]], **v.get("extra", {})}   # ⚡ a split-second flicker back to an old look
         g = [[None] * ART_W for _ in range(ART_H)]
         body = pal.get("art") or v["body"]          # some colors come with their own markings
+        if pal.get("glitch_art") and glitching(now + id(self) % 50 / 10):
+            body = pal["glitch_art"]                 # 📼 Classic: a split-second flicker back to the old drawing
         if v.get("alt") and self.state in ("walk", "fall", "held") and int(now * 10) % 2:
             body = v["alt"]                        # wing flap
         squash = now < self.squash_until
         lying = self.state == "sleep" or squash
         shift = 1 if lying else 0
+        blush = v.get("blush") if now < getattr(self, "blush_until", 0) else None     # flustered: only the face flushes
+        bpal = {**pal, **blush["pal"]} if blush else pal
         for y, row in enumerate(body):
             for x, ch in enumerate(row):
                 if ch != "." and y + shift < ART_H:
-                    g[y + shift][x] = pal.get(ch, pal["o"])
+                    g[y + shift][x] = px_color(bpal if blush and blush["rows"][0] <= y <= blush["rows"][1] else pal, ch)
         if not lying and v["feet"]:
             feet_set = v["feet"]
-            if self.state in ("fall", "held") or self.lift(now) > 3:
+            if self.state in ("fall", "held", "jump") or self.lift(now) > 3:
                 feet = feet_set["air"]
             elif self.state == "walk":
                 feet = feet_set["walk1"] if int(now * 6) % 2 else feet_set["walk2"]
@@ -4650,6 +6446,8 @@ class Blip:
                     for xx in range(size):
                         px(ex + ox + xx, 5 + oy + yy, e)
                 px(ex + ox, 5 + oy, white)
+            if v.get("xeye"):
+                draw_xeye(px, pal)
         # mouth (beaks and snouts are part of the art instead)
         if not v.get("mouth", True):
             pass
@@ -4673,11 +6471,13 @@ class Blip:
         ox = (W - ART_W * SCALE) // 2
         oy = H - ART_H * SCALE - self.lift(now)
         art = self.build_art(now)
-        talking = self.bubble[0] if self.bubble and now < self.bubble[1] else None
+        talking = self.bubble[0][:self.typed(now)] if self.bubble and now < self.bubble[1] else None
         if not talking:
             self.bubble = None
-        key = (tuple(tuple(r) for r in art), oy, self.hat, self.state == "sleep" or now < self.squash_until,
-               self.kind, self.name if self.app.name_tags.get() else None, talking)
+        key = (tuple(tuple(r) for r in art), oy, self.hat, self.hat2, tuple(sorted(self.tints.items())),
+               self.state == "sleep" or now < self.squash_until,
+               self.kind, self.name if self.app.name_tags.get() else None, talking, bond_level(self.bond),
+               int(now * 4) if VARIANTS[self.kind].get("soul") else 0)          # a flickering soul needs redrawing
         if key != getattr(self, "_drawn", None):
             self._drawn = key
             c.delete("pet")
@@ -4693,7 +6493,12 @@ class Blip:
     def draw_pet(self, now, art, ox, oy):
         c = self.canvas
         # ghosts stay a little see-through in your town too (with the Redux engine)
-        ghost = {"alpha": 0.8} if VARIANTS[self.kind].get("ghost") and isinstance(c, PixelCanvas) else {}
+        solid = kind_colors(self.kind)[self.palette % len(kind_colors(self.kind))].get("solid")   # some ghost colors are fully solid
+        ghost = {"alpha": 0.8} if VARIANTS[self.kind].get("ghost") and not solid and isinstance(c, PixelCanvas) else {}
+        soul_chars = VARIANTS[self.kind].get("soul", "")
+        pal = kind_colors(self.kind)[self.palette % len(kind_colors(self.kind))] if soul_chars else {}
+        soul = {pal[ch] for ch in soul_chars if ch in pal}           # 🎭 only these colors are see-through
+        soul_alpha = {"alpha": ghost_alpha(now, 0.0) * 0.75} if soul and isinstance(c, PixelCanvas) else {}
         # pixel art, merging runs of the same color into one rectangle per row
         for y, row in enumerate(art):
             x = 0
@@ -4706,14 +6511,14 @@ class Blip:
                 while x2 + 1 < ART_W and row[x2 + 1] == color:
                     x2 += 1
                 c.create_rectangle(ox + x * SCALE, oy + y * SCALE, ox + (x2 + 1) * SCALE, oy + (y + 1) * SCALE,
-                                   fill=color, outline="", tags=("pet",), **ghost)
+                                   fill=color, outline="", tags=("pet",), **(soul_alpha if color in soul else ghost))
                 x = x2 + 1
 
         # hat / glasses / scarf
         hat_top = 0
-        if self.hat in HATS:
-            shift = 1 if (self.state == "sleep" or now < self.squash_until) else 0
-            for row, col, color in hat_cells(VARIANTS[self.kind], HATS[self.hat], shift):
+        shift = 1 if (self.state == "sleep" or now < self.squash_until) else 0
+        for name, tint in self.worn():
+            for row, col, color in hat_cells(VARIANTS[self.kind], tinted(HATS[name], tint), shift):
                 c.create_rectangle(ox + col * SCALE, oy + row * SCALE, ox + (col + 1) * SCALE, oy + (row + 1) * SCALE,
                                    fill=color, outline="", tags=("pet",))
                 hat_top = min(hat_top, row * SCALE)
@@ -4721,7 +6526,9 @@ class Blip:
         # name tag
         tag_h = 0
         if self.app.name_tags.get():
-            t = c.create_text(W / 2, oy + hat_top - 6, text=self.name, font=("Segoe UI", 8, "bold"), fill="#ffffff", anchor="s", tags=("pet", "top"))
+            lv = bond_level(self.bond)
+            t = c.create_text(W / 2, oy + hat_top - 6, text=("💛 " if lv >= 5 else "♥ " if lv >= 4 else "") + self.name,
+                              font=("Segoe UI", 8, "bold"), fill="#ffd23a" if lv >= 5 else "#ffffff", anchor="s", tags=("pet", "top"))
             x1, y1, x2, y2 = c.bbox(t)
             c.create_rectangle(x1 - 4, y1 - 1, x2 + 4, y2 + 1, fill="#1d1b26", outline="#1d1b26", tags=("pet", "top"))
             c.tag_raise(t)
@@ -4729,7 +6536,7 @@ class Blip:
 
         # speech bubble
         if self.bubble and now < self.bubble[1]:
-            t = c.create_text(W / 2, 0, text=self.bubble[0], font=("Segoe UI", 10, "bold"),
+            t = c.create_text(W / 2, 0, text=self.bubble[0][:self.typed(now)], font=("Segoe UI", 10, "bold"),
                               fill="#222222", width=W - 30, justify="center", anchor="s", tags=("pet", "bubble"))
             x1, y1, x2, y2 = c.bbox(t)
             top_of_pet = oy + hat_top - (6 if self.state != "sleep" else 2) - tag_h
@@ -4781,7 +6588,7 @@ class Blip:
                 continue
             p["x"] += p["vx"]
             p["y"] += p["vy"]
-            if p["kind"] == "crumb":
+            if p["kind"] in ("crumb", "stuffing"):
                 p["vy"] += 0.4
             alive.append(p)
             if p["kind"] == "heart":
@@ -4799,6 +6606,8 @@ class Blip:
                             c.create_rectangle(X, Y, X + s, Y + s, fill="#bcd2ff", outline="", tags=("fx",))
             elif p["kind"] == "crumb":
                 c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#c98a4b", outline="", tags=("fx",))
+            elif p["kind"] == "stuffing":
+                c.create_rectangle(p["x"], p["y"], p["x"] + 4, p["y"] + 4, fill="#f4ece4", outline="", tags=("fx",))
             elif p["kind"] == "snow":
                 s_ = 3 if p["phase"] > 2 else 2
                 c.create_rectangle(p["x"], p["y"], p["x"] + s_, p["y"] + s_, fill="#f4f8ff", outline="", tags=("fx",))
@@ -4842,11 +6651,24 @@ class Blip:
 
     # ------------------------------------------------------------------ loop
     def step(self, now):
+        if self.bubble and now < self.bubble[1]:            # 🔊 talk while the bubble types out
+            n = self.typed(now)
+            if n > getattr(self, "voiced", 0):
+                new, self.voiced = self.bubble[0][self.voiced:n], n
+                if any(ch.isalnum() for ch in new):
+                    self.app.sound.voice(self.kind)
+        if VARIANTS[self.kind].get("plush"):              # 🧸 midnight: the plushie bursts out as its Bad Dream
+            mode = plush_now(self.kind)
+            if getattr(self, "plush_mode", mode) != mode:
+                self.dream_burst(mode)
+            self.plush_mode = mode
         if now > self.next_blink:
             self.blink_until = now + 0.15
             self.next_blink = now + random.uniform(2, 6)
         if self.app.weather.get() or self.app.world():
             self.weather(now)
+        if self.kind in AWAKEN_BASE and random.random() < 0.06:     # awakened Blips sparkle a little
+            self.add_sparkle(now)
         self.update(now)
         self.draw(now)
 
@@ -4892,11 +6714,11 @@ class Blip:
 
 
 # ----------------------------------------------------------------------------- save file
-UNLOCKS = {"Robo Bear": 1, "Robo Bunny": 2, "Robo Hen": 3}   # kind -> Night Shift night you must survive
+UNLOCKS = {"Robo Bear": 1, "Robo Bunny": 2, "Robo Hen": 3, "Robo Fox": 4}   # kind -> Night Shift night you must survive
 
 
 def log_path():
-    return os.path.join(os.path.dirname(save_path()), "blipville-redux.log" if REDUX else "blipville.log")
+    return os.path.join(os.path.dirname(save_path()), "blipville.log")
 
 
 def log(message):
@@ -4927,62 +6749,272 @@ def app_dir():
     return os.path.dirname(sys.executable if getattr(sys, "frozen", False) else os.path.abspath(__file__))
 
 
+CUSTOM_MOVES = ("walk", "hop", "float", "flutter")
+
+
+def _hex_color(c):
+    import re
+    return isinstance(c, str) and re.fullmatch(r"#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})", c) is not None
+
+
 def load_custom_blips():
-    """Read my_blips.json (next to the app, or in the save folder) and register each Blip as a kind."""
+    """Read my_blips.json (next to the app, or in the save folder) and register each Blip as a kind.
+    Everything is checked first: a bad file or a bad Blip is skipped (with a note in blipville.log) and the rest still
+    load. Custom Blips can't replace built-in ones, and the file itself is never changed."""
     for path in (os.path.join(app_dir(), "my_blips.json"), os.path.join(os.path.dirname(save_path()), "my_blips.json")):
+        if not os.path.exists(path):
+            continue
         try:
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
-        except Exception:  # noqa: BLE001  (no file, or a typo in it: just skip)
+        except Exception as e:  # noqa: BLE001
+            log(f"my_blips.json: couldn't read {path} ({e})")
             continue
-        for b in data.get("blips", []):
-            try:
-                name, body, colors = str(b["name"])[:20], list(b["body"]), dict(b["colors"])
-                eyes = int(b.get("eyes", 5))
-                if len(body) != 12 or any(len(r) != 16 for r in body) or "o" not in colors or not 0 <= eyes <= 10:
-                    continue
-                colors.setdefault("e", "#1a1024")
-                VARIANTS[name] = {"body": body, "eyes": eyes, "mouth": bool(b.get("mouth", True)), "feet": FEET_STD,
-                                  "dx": 0, "move": b.get("move", "walk"), "lines": list(b.get("lines", [])) or ["hi!"],
-                                  "colors": [{"name": "Original", **colors}], "speed": 1.0}
-                if name not in CUSTOM_KINDS:
-                    CUSTOM_KINDS.append(name)
-                    KINDS.append(name)
-            except Exception:  # noqa: BLE001
+        blips = data.get("blips") if isinstance(data, dict) else None
+        if not isinstance(blips, list):
+            log(f"my_blips.json: {path} needs a \"blips\": [ ... ] list; skipped")
+            continue
+        for i, b in enumerate(blips):
+            why = None
+            if not isinstance(b, dict):
+                why = "not a Blip (should be { ... })"
+            else:
+                name, body, colors = b.get("name"), b.get("body"), b.get("colors")
+                eyes = b.get("eyes", 5)
+                if not isinstance(name, str) or not name.strip():
+                    why = "needs a name"
+                elif name.strip()[:20] in VARIANTS and name.strip()[:20] not in CUSTOM_KINDS:
+                    why = f"the name {name!r} is already a Blipville Blip"
+                elif not isinstance(body, list) or len(body) != 12 or any(not isinstance(r, str) or len(r) != 16 for r in body):
+                    why = "the body must be 12 rows of 16 characters"
+                elif not isinstance(colors, dict) or "o" not in colors:
+                    why = "needs colors, including \"o\" (the outline)"
+                elif any(not isinstance(k, str) or len(k) != 1 or not _hex_color(v) for k, v in colors.items() if k != "name"):
+                    why = "every color must be one letter mapped to a color like \"#ff8800\""
+                elif any(ch != "." and ch not in colors for r in body for ch in r):
+                    why = "the body uses a letter that has no color"
+                elif isinstance(eyes, bool) or not isinstance(eyes, int) or not 0 <= eyes <= 10:
+                    why = "eyes must be a row number from 0 to 10"
+            if why:
+                log(f"my_blips.json: Blip #{i + 1} skipped: {why}")
                 continue
+            name = name.strip()[:20]
+            move = b.get("move") if b.get("move") in CUSTOM_MOVES else "walk"
+            lines = [str(t)[:80] for t in b.get("lines", []) if isinstance(t, (str, int, float))] if isinstance(b.get("lines"), list) else []
+            cols = {k: v for k, v in colors.items() if k != "name"}
+            cols.setdefault("e", "#1a1024")
+            VARIANTS[name] = {"body": list(body), "eyes": eyes, "mouth": bool(b.get("mouth", True)), "feet": FEET_STD,
+                              "dx": 0, "move": move, "lines": lines or ["hi!"], "colors": [{"name": "Original", **cols}], "speed": 1.0}
+            if name not in CUSTOM_KINDS:
+                CUSTOM_KINDS.append(name)
+                KINDS.append(name)
+
+
+# 💾 Save safety: every load is checked field by field (a wrong type is fixed instead of crashing later), the last good
+# save is kept as save.bak.json, a broken save is copied aside before anything replaces it, and a failed write is
+# reported to the player instead of silently forgotten.
+SAVE_LISTS = ("awakened", "bad_dreams", "merch", "merch_kinds", "redeemed", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
+              "rivals_beaten", "skins", "trophies", "unlocked", "worlds")
+SAVE_COUNTS = ("hearts", "nights_won")
+SAVE_FLAGS = ("auto_update", "climb", "cursor_play", "sound", "voices", "weather", "slot2")
+SAVE_DICTS = ("awaken_level", "event_points", "stats", "quests")
+SAVE_NOTES = []                     # what happened while loading, shown to the player once
+SAVE_STATE = {"failed": 0.0, "warned": 0.0, "backed_up": 0.0}
+
+
+def _num(v, default=0.0, lo=None, hi=None):
+    try:
+        v = float(v)
+        if v != v or v in (float("inf"), float("-inf")):
+            raise ValueError
+    except (TypeError, ValueError):
+        return default
+    if lo is not None:
+        v = max(lo, v)
+    if hi is not None:
+        v = min(hi, v)
+    return v
+
+
+KIND_RENAMES = {"Silvertear": "Silvertear-03"}     # old kind name -> new one; saves are updated when they load
+
+
+def rename_kinds(d):
+    """Move a save over to renamed Blips (in the town, every unlock list, skins, friendship and awakening records)."""
+    def ren(name):
+        if not isinstance(name, str):
+            return name
+        base, sep, rest = name.partition(":")                       # skins look like "Kind:Color"
+        return KIND_RENAMES.get(base, base) + sep + rest if sep else KIND_RENAMES.get(name, name)
+    for k, v in list(d.items()):
+        if isinstance(v, list):
+            d[k] = [ren(x) for x in v]
+    for t in d.get("town", []) if isinstance(d.get("town"), list) else []:
+        if isinstance(t, dict) and "kind" in t:
+            t["kind"] = ren(t["kind"])
+    if isinstance(d.get("awaken_level"), dict):
+        d["awaken_level"] = {ren(k): v for k, v in d["awaken_level"].items()}
+    return d
+
+
+def sanitize_save(data):
+    """Return (clean save, list of things that had to be fixed). Missing fields are fine (older saves): the game
+    fills in defaults. Only fields of the wrong type are fixed; everything valid is kept exactly as it was."""
+    fixed = []
+    if not isinstance(data, dict):
+        return {}, ["the save wasn't a list of settings"]
+    d = rename_kinds(dict(data))
+    for k in SAVE_COUNTS:
+        if k in d and (isinstance(d[k], bool) or not isinstance(d[k], int) or d[k] < 0):
+            d[k] = int(_num(d[k], 0, 0)); fixed.append(k)
+    for k in SAVE_LISTS:
+        if k in d:
+            v = d[k] if isinstance(d[k], list) else [d[k]] if isinstance(d[k], str) else []
+            clean = [x for x in v if isinstance(x, str)]
+            if clean != d[k]:
+                fixed.append(k)
+            d[k] = list(dict.fromkeys(clean))           # no duplicates either
+    for k in SAVE_FLAGS:
+        if k in d and not isinstance(d[k], bool):
+            d[k] = bool(d[k]) if isinstance(d[k], (int, float)) else None; fixed.append(k)
+            if d[k] is None:
+                del d[k]
+    for k in SAVE_DICTS:
+        if k in d and not isinstance(d[k], dict):
+            d[k] = {}; fixed.append(k)
+    if isinstance(d.get("stats"), dict):
+        d["stats"] = {str(k): int(_num(v, 0, 0)) for k, v in d["stats"].items()}
+    if isinstance(d.get("awaken_level"), dict):
+        d["awaken_level"] = {str(k): int(_num(v, 0, 0, 10)) for k, v in d["awaken_level"].items()}
+    if "town_saved_at" in d:
+        d["town_saved_at"] = _num(d["town_saved_at"], time.time(), 0, time.time() + 60)
+    for k in ("world", "last_day", "mod_code"):
+        if k in d and d[k] is not None and not isinstance(d[k], str):
+            d[k] = None; fixed.append(k)
+    if "town" in d:
+        town = []
+        for t in d["town"] if isinstance(d["town"], list) else []:
+            if not isinstance(t, dict) or not isinstance(t.get("kind"), str):
+                continue
+            town.append({**t, "name": str(t.get("name") or t["kind"])[:16], "color": int(_num(t.get("color"), 0, 0, 999)),
+                         "hunger": _num(t.get("hunger"), 10, 0, 100), "energy": _num(t.get("energy"), 100, 0, 100),
+                         "bond": _num(t.get("bond"), 0, 0, 1e6), "hat": t.get("hat") if isinstance(t.get("hat"), str) else None,
+                         "hat2": t.get("hat2") if isinstance(t.get("hat2"), str) else None,
+                         "tints": {str(n): int(_num(v, 0, 0, 99)) for n, v in t["tints"].items()} if isinstance(t.get("tints"), dict) else {}})
+        if len(town) != len(d["town"]) if isinstance(d["town"], list) else True:
+            fixed.append("town")
+        d["town"] = town
+    return d, fixed
+
+
+def _read_json(path):
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    if not isinstance(data, dict):
+        raise ValueError("not a dictionary")
+    return data
 
 
 def load_save():
+    path = save_path()
+    if not os.path.exists(path):
+        return {}                                        # first launch
     try:
-        with open(save_path(), encoding="utf-8") as f:
-            data = json.load(f)
-        return data if isinstance(data, dict) else {}
-    except Exception:  # noqa: BLE001  (no save yet, or unreadable: start fresh)
-        return {}
+        data = _read_json(path)
+    except Exception as e:  # noqa: BLE001
+        import shutil
+        keep = path.replace("save.json", time.strftime("save.broken-%Y%m%d-%H%M%S.json"))
+        try:
+            shutil.copyfile(path, keep)                   # never lose the original, even if it's broken
+        except Exception:  # noqa: BLE001
+            keep = None
+        log(f"save could not be read ({e}); kept a copy at {keep}")
+        try:
+            data = _read_json(path.replace("save.json", "save.bak.json"))
+            SAVE_NOTES.append("Your save file was damaged, so Blipville loaded your last backup. 💾"
+                              + (f"\nThe damaged file was kept as {os.path.basename(keep)}." if keep else ""))
+        except Exception:  # noqa: BLE001
+            data = {}
+            SAVE_NOTES.append("Your save file was damaged and there was no backup, so Blipville started a new town."
+                              + (f"\nThe damaged file was kept as {os.path.basename(keep)} in case it can be repaired." if keep else ""))
+    data, fixed = sanitize_save(data)
+    if fixed:
+        log(f"save: fixed fields {fixed}")
+    return data
+
+
+_INSTANCE_LOCK = None
+
+
+def acquire_instance_lock(wait=5.0):
+    """🔒 Only one Blipville at a time. Two copies would each keep their own town and overwrite each other's save.
+    The lock is a file lock the OS drops when the process ends, even after a crash, so it can never get stuck.
+    Waits a few seconds first, so a copy that's restarting after an update can finish closing."""
+    global _INSTANCE_LOCK
+    path = os.path.join(os.path.dirname(save_path()), "blipville.lock")
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        f = open(path, "a+")
+    except Exception:  # noqa: BLE001  (can't even make the file: don't block playing over it)
+        return True
+    deadline = time.monotonic() + wait
+    while True:
+        try:
+            if sys.platform == "win32":
+                import msvcrt
+                f.seek(0)
+                msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            _INSTANCE_LOCK = f                      # keep the handle open for as long as we run
+            return True
+        except OSError:
+            if time.monotonic() >= deadline:
+                f.close()
+                return False
+            time.sleep(0.5)
+        except Exception:  # noqa: BLE001  (no locking on this system)
+            return True
 
 
 def write_save(data):
     try:
         os.makedirs(os.path.dirname(save_path()), exist_ok=True)
-        tmp = save_path() + ".tmp"
+        tmp = f"{save_path()}.{os.getpid()}.tmp"           # unique per process, so writers can never share a temp file
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
-        os.replace(tmp, save_path())
-    except Exception:  # noqa: BLE001  (read-only disk etc.: the game still works, it just won't remember)
-        pass
+        path = save_path()
+        if os.path.exists(path) and time.monotonic() - SAVE_STATE["backed_up"] > 60:
+            try:
+                _read_json(path)                          # only a save that reads fine becomes the backup
+                import shutil
+                shutil.copyfile(path, path.replace("save.json", "save.bak.json"))
+                SAVE_STATE["backed_up"] = time.monotonic()
+            except Exception:  # noqa: BLE001
+                pass
+        os.replace(tmp, path)
+        SAVE_STATE["failed"] = 0.0
+        return True
+    except Exception as e:  # noqa: BLE001  (read-only disk etc.: the game still works, but the player is told)
+        if not SAVE_STATE["failed"]:
+            log(f"save failed: {e}")
+        SAVE_STATE["failed"] = SAVE_STATE["failed"] or time.monotonic()
+        return False
 
 
-def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=(), hat=None, silhouette=None):
+def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False, tags=(), hat=None, silhouette=None, wear=None):
     """Draw a pet's pixel art on any canvas (top-left at x, y). Used by the minigame."""
     v = VARIANTS[kind]
     colors = kind_colors(kind)
     pal = {**colors[color_idx % len(colors)], **v.get("extra", {})}
+    v, pal = plush_view(kind, pal)
     body = pal.get("art") or v["body"]
     g = [[None] * ART_W for _ in range(ART_H)]
     for yy, row in enumerate(body):
         for xx, ch in enumerate(row):
             if ch != ".":
-                g[yy][xx] = pal.get(ch, pal["o"])
+                g[yy][xx] = px_color(pal, ch)
     if v["feet"]:
         for xx, ch in enumerate(v["feet"]["stand"]):
             if ch != "." and 0 <= xx + v.get("dx", 0) < ART_W:
@@ -4999,6 +7031,12 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
                     g[er + b][ex + a] = e
             if not glow:
                 g[er][ex] = "#ffffff"
+    if v.get("xeye") and face != "happy":
+        def _px(xx, yy, col):
+            yy += er - 5
+            if 0 <= xx < ART_W and 0 <= yy < ART_H:
+                g[yy][xx] = col
+        draw_xeye(_px, pal)
     if silhouette:
         g = [[silhouette if col else None for col in row] for row in g]
     for yy, row in enumerate(g):
@@ -5014,8 +7052,10 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
             canvas.create_rectangle(x + xx * scale, y + yy * scale, x + (x2 + 1) * scale, y + (yy + 1) * scale,
                                     fill=col, outline="", tags=tags)
             xx = x2 + 1
-    if hat in HATS:
-        for row, col, color in hat_cells(v, HATS[hat]):
+    for name, tint in (wear if wear is not None else ([(hat, 0)] if hat else [])):     # wear: [(item, tint), ...]
+        if name not in HATS:
+            continue
+        for row, col, color in hat_cells(v, tinted(HATS[name], tint)):
             canvas.create_rectangle(x + col * scale, y + row * scale, x + (col + 1) * scale, y + (row + 1) * scale,
                                     fill=color, outline="", tags=tags)
 
@@ -5269,6 +7309,11 @@ KAIJU_SCENES = {
     "Frostback": {"hint": "it's suddenly freezing… is it snowing?!", "props": [["pine", 12, 0, "back"], ["city", 50, 0, "front"]],
                   "scale": 3, "keys": [[0, -30, 0], [6, 50, 0], [7.5, 50, 0], [12, 130, 0]]},
 }
+CRYPTID_SCENES.update({"Yowie": {"hint": "something hairy is crossing the outback…", "props": [["cactus", 20, 0, "back"], ["sand", 50, 0, "front"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Ogopogo": {"hint": "three humps in the lake… or is it one?", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [6, 40, -1], [7.5, 44, -14], [10, 66, -14], [11.5, 70, 0], [16, 86, 0], [17.5, 90, -14]]}, "Ahool": {"hint": "AHOOOL! something is calling over the jungle…", "props": [["pine", 20, 0, "back"], ["bush", 70, 0, "front"]], "keys": [[0, -12, 30], [5, 34, 40], [9, 54, 28], [13, 78, 42], [17, 115, 32]]}, "Grootslang": {"hint": "a rumble from the cave… and a trumpet?", "props": [["wall", 50, 0, "back"], ["orb", 80, 6, "back"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}, "Teakettler": {"hint": "is that… a kettle whistling in the woods?", "props": [["pine", 70, 0, "back"], ["grass", 50, 0, "front"]], "keys": [[0, 112, 0], [7, 50, 0], [10.5, 50, 0], [19, -12, 0]]}, "Squonk": {"hint": "someone is sniffling in the hemlocks…", "props": [["pine", 24, 0, "back"], ["pine", 78, 0, "back"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Hidebehind": {"hint": "you feel like something is right behind you…", "props": [["pine", 40, 0, "front"], ["pine", 70, 0, "back"]], "keys": [[0, -12, 0], [5, 38, 0], [11, 40, 0], [19, 112, 0]]}, "Fur-bearing Trout": {"hint": "a fuzzy fin just poked out of the water…", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 20, -14], [2, 24, -1], [8, 52, -1], [9.5, 56, -14], [12, 70, -14], [13.5, 74, 0], [17, 84, 0], [18.5, 88, -14]]}, "Wampus Cat": {"hint": "glowing eyes up on the mountain ridge…", "props": [["moon", 84, 40, "back"], ["fence", 50, 0, "front"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}, "Kongamato": {"hint": "a huge beaked shadow over the river!", "props": [["reeds", 50, 0, "front"], ["water", 50, 0, "front"]], "keys": [[0, -12, 30], [5, 34, 40], [9, 54, 28], [13, 78, 42], [17, 115, 32]]}, "Altamaha-ha": {"hint": "bubbles in the river delta…", "props": [["reeds", 50, 0, "front"], ["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Globster": {"hint": "a strange blob washed up on the beach…", "props": [["sand", 50, 0, "front"], ["water", 82, 0, "back"]], "keys": [[0, -12, 0], [9, 46, 0], [13, 48, 0], [22, 112, 0]]}})
+KAIJU_SCENES.update({"Boulderback": {"hint": "the mountain… is moving?!", "props": [["pine", 14, 0, "back"], ["city", 50, 0, "front"]], "scale": 3, "keys": [[0, -30, 0], [6, 46, 0], [8, 46, 0], [14, 130, 0]]}, "Stormcrab": {"hint": "thunder over the harbor… and clacking?!", "props": [["city", 50, 0, "back"], ["water", 50, 0, "front"]], "clip": 3, "scale": 3, "keys": [[0, 24, -40], [2.5, 30, -6], [8, 56, -6], [10.5, 62, -42]]}, "Tremorpede": {"hint": "the street is cracking… something's under it!", "props": [["city", 50, 0, "back"]], "scale": 3, "keys": [[0, 130, 0], [5, 60, 0], [7, 60, 0], [12, -30, 0]]}, "Volthorn": {"hint": "the power just flickered all over town…", "props": [["city", 50, 0, "front"]], "scale": 3, "keys": [[0, -30, 0], [5, 40, 0], [6.5, 40, 0], [11.5, 130, 0]]}, "Tundrox": {"hint": "a blizzard is rolling in… with horns?!", "props": [["pine", 84, 0, "back"], ["city", 50, 0, "front"]], "scale": 3, "keys": [[0, 130, 0], [6, 54, 0], [7.5, 54, 0], [12, -30, 0]]}, "Nebulon": {"hint": "the night sky is… coming closer?", "props": [["city", 50, 0, "back"]], "scale": 3, "keys": [[0, -30, 14], [4, 30, 10], [7, 60, 14], [11, 130, 10]]}, "Bramblebeast": {"hint": "the forest is walking toward town!", "props": [["pine", 20, 0, "back"], ["pine", 80, 0, "back"], ["city", 50, 0, "front"]], "scale": 3, "keys": [[0, -30, 0], [6, 50, 0], [7.5, 50, 0], [12, 130, 0]]}, "Sandsnapper": {"hint": "the sand is swirling into a giant pit…", "props": [["sand", 50, 0, "front"], ["cactus", 84, 0, "back"]], "clip": 3, "scale": 3, "keys": [[0, 30, -40], [2.5, 34, -6], [8, 58, -6], [10.5, 62, -42]]}, "Clockwork Rex": {"hint": "TICK… TOCK… a giant wind-up roar!", "props": [["city", 50, 0, "front"]], "scale": 3, "keys": [[0, 130, 0], [5, 60, 0], [7, 60, 0], [12, -30, 0]]}, "Deepjaw": {"hint": "a light is glowing far out in the sea…", "props": [["city", 50, 0, "back"], ["water", 50, 0, "front"]], "clip": 3, "scale": 3, "keys": [[0, 24, -40], [2.5, 30, -6], [8, 56, -6], [10.5, 62, -42]]}, "Thunderwing": {"hint": "a storm cloud with wings is coming!", "props": [["city", 50, 0, "back"]], "scale": 3, "keys": [[0, -30, 10], [4, 30, 6], [7, 64, 12], [10, 130, 8]]}, "Silvertear-03": {"hint": "something metal is powering up behind the city…", "props": [["city", 50, 0, "back"]], "scale": 3,
+               "keys": [[0, -30, 0], [6, 46, 0], [8, 46, 0], [14, 130, 0]]},
+ "Coralgon": {"hint": "a whole reef is rising from the bay…", "props": [["city", 50, 0, "back"], ["water", 50, 0, "front"]], "clip": 3, "scale": 3, "keys": [[0, 24, -40], [2.5, 30, -6], [8, 56, -6], [10.5, 62, -42]]}})
+CRYPTID_SCENES.update({"Ningen": {"hint": "something huge and pale is under the ice…", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Van Meter Visitor": {"hint": "a glowing horn is flying over the town!", "props": [["lamp", 30, 0, "back"], ["city", 50, 0, "back"]], "keys": [[0, -12, 30], [5, 34, 40], [9, 54, 28], [13, 78, 42], [17, 115, 32]]}, "Tatzelwurm": {"hint": "something hissed from the mountain cave…", "props": [["wall", 50, 0, "back"], ["pine", 86, 0, "back"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Dobhar-chú": {"hint": "a giant otter is swimming across the lough!", "props": [["reeds", 50, 0, "front"], ["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Lusca": {"hint": "the blue hole is bubbling…", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Beast of Gévaudan": {"hint": "a howl from the old forest… in french?", "props": [["pine", 20, 0, "back"], ["pine", 82, 0, "front"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}, "Goatman": {"hint": "clip… clop… something is on the old bridge", "props": [["bridge", 50, 0, "back"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Ropen": {"hint": "a light is gliding over the island…", "props": [["bush", 30, 0, "front"], ["moon", 84, 40, "back"]], "keys": [[0, -12, 30], [5, 34, 40], [9, 54, 28], [13, 78, 42], [17, 115, 32]]}, "Emela-ntouka": {"hint": "something with a horn is wading through the swamp…", "props": [["reeds", 50, 0, "front"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}, "Caddy": {"hint": "humps out in the bay… and a horse face?!", "props": [["water", 50, 0, "front"]], "clip": 3, "keys": [[0, 18, -14], [1.5, 20, -1], [7, 44, -1], [8.5, 48, -14], [11, 64, -14], [12.5, 68, 0], [17, 84, 0], [18.5, 88, -14]]}, "Orang Pendek": {"hint": "a little ape just ducked behind the bushes…", "props": [["bush", 40, 0, "front"], ["pine", 80, 0, "back"]], "keys": [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]]}, "Montauk Monster": {"hint": "something strange washed up on the beach…", "props": [["sand", 50, 0, "front"], ["water", 82, 0, "back"]], "keys": [[0, 112, 0], [7, 52, 0], [10.5, 52, 0], [19, -12, 0]]}})
 LEGEND_SCENES = {k: {"hint": "something sparkly is coming this way… ✨", "legend": True, "sparkle": True,
                      "props": {w: p for w, p in {'Plant World': [['grass', 50, 0, 'front'], ['bush', 20, 0, 'back']], 'Sweets World': [], 'Ocean World': [['water', 50, 0, 'front']], 'Dino World': [['volcano', 70, 0, 'back'], ['smoke', 70, 22, 'back']], 'Space World': []}.items()}[w],
                      "keys": [[0, -12, 0], [6, 46, 0], [10, 48, 0], [17, 112, 0]] if LEGENDS[k]["move"] == "walk" else
@@ -5287,16 +7332,62 @@ GHOST_SCENES = {
     "Gloom": {"hint": "the shadows are moving…", "props": [["deadtree", 24, 0, "back"], ["deadtree", 82, 0, "back"], ["fence", 50, 0, "front"]]},
     "Grey Lady": {"hint": "someone is gliding past the windows…", "props": [["moon", 14, 42, "back"], ["house", 64, 0, "back"]]},
     "Ghost Captain": {"hint": "a ship's bell is ringing out on the water…", "props": [["moon", 78, 40, "back"], ["water", 50, 0, "front"]]},
+    "Lurker": {"hint": "eyes are opening in the dark… lots of eyes…", "props": [["house", 22, 0, "back"], ["deadtree", 80, 0, "back"], ["graves", 50, 0, "front"]]},
 }
+GHOST_SCENES["Wind-Up Hare"] = {"hint": "something is winding itself up in the old workshop… *tick tick tick*", "props": [["house", 30, 0, "back"], ["fence", 60, 0, "front"]]}
+GHOST_SCENES["Puppet Box"] = {"hint": "an old toy chest is creaking open by itself…", "props": [["house", 74, 0, "back"], ["moon", 18, 42, "back"]]}
+GHOST_SCENES.update({"Wick": {"hint": "a candle is floating by on its own…", "props": [["house", 70, 0, "back"], ["fence", 50, 0, "front"]]}, "Phantom Knight": {"hint": "armor is clanking in the empty hall…", "props": [["moon", 84, 40, "back"], ["wall", 50, 0, "back"]]}, "Jack-o'-Ghost": {"hint": "a pumpkin is grinning in the dark…", "props": [["moon", 16, 42, "back"], ["fence", 50, 0, "front"]]}, "Yurei": {"hint": "something pale is drifting by the willow…", "props": [["deadtree", 30, 0, "back"], ["water", 50, 0, "front"]]}, "Mirror Spirit": {"hint": "your reflection just waved… without you", "props": [["house", 30, 0, "back"]]}, "Bookwraith": {"hint": "pages are fluttering out of the window…", "props": [["house", 76, 0, "back"], ["moon", 20, 40, "back"]]}, "Foxfire Spirit": {"hint": "little blue flames are bobbing in the trees…", "props": [["pine", 20, 0, "back"], ["pine", 80, 0, "back"]]}, "Ecto Slime": {"hint": "something is going *gloop* in the graveyard…", "props": [["graves", 50, 0, "front"], ["deadtree", 82, 0, "back"]]}, "Veil": {"hint": "music from an empty ballroom…", "props": [["house", 50, 0, "back"], ["moon", 84, 42, "back"]]}, "Specter Owl": {"hint": "a pale owl is watching from the dead tree…", "props": [["deadtree", 60, 0, "back"], ["moon", 20, 42, "back"]]}, "Haunted Teacup": {"hint": "a teacup is rattling in the old house…", "props": [["house", 24, 0, "back"], ["fence", 50, 0, "front"]]}, "Boo Bunny": {"hint": "a see-through bunny just hopped past…", "props": [["moon", 80, 40, "back"], ["grass", 50, 0, "front"]]}})
 for _i, (_k, _sc) in enumerate(GHOST_SCENES.items()):
     _sc.update({"ghost": True, "keys": _FLOAT_KEYS[_i % len(_FLOAT_KEYS)]})
-SCENES = {**CRYPTID_SCENES, **KAIJU_SCENES, **LEGEND_SCENES, **GHOST_SCENES}
+# 🎭 With the Puppet Master (the Puppet Box's Awakened form) in town, Night Shift robos sometimes wander by on their own,
+# so you can befriend them without playing Night Shift.
+ROBO_SCENES = {
+ "Robo Bear": {"hint": "*servo whirr*… something big is clanking past the window", "props": [["house", 76, 0, "back"], ["fence", 40, 0, "front"]]},
+ "Robo Bunny": {"hint": "*boing* *clank*… a metal bunny just hopped by!", "props": [["grass", 50, 0, "front"], ["moon", 20, 42, "back"]]},
+ "Robo Hen": {"hint": "bawk. boop. something is pecking at the fence…", "props": [["fence", 50, 0, "front"], ["house", 24, 0, "back"]]},
+ "Robo Fox": {"hint": "zip zip… a robot fox is racing through town!", "props": [["lamp", 30, 0, "back"], ["fence", 70, 0, "front"]]},
+}
+for _k, _sc in ROBO_SCENES.items():
+    _sc["keys"] = [[0, -12, 0], [7, 47, 0], [10.5, 47, 0], [19, 112, 0]] if _k != "Robo Fox" else [[0, 112, 0], [4, 50, 0], [5.5, 50, 0], [10, -12, 0]]
+ROBO_PUPPET = "Puppet Master"                      # the Blip that has to be in town
+SCENES = {**CRYPTID_SCENES, **KAIJU_SCENES, **LEGEND_SCENES, **GHOST_SCENES, **ROBO_SCENES}
 
 
 def ghost_hours():
     """Ghosts come out from 7 PM to 7 AM (your computer's clock)."""
     h = time.localtime().tm_hour
     return h >= 19 or h < 7
+
+
+def _mix(c1, c2, f):
+    a, b = int(c1[1:], 16), int(c2[1:], 16)
+    return "#%02x%02x%02x" % tuple(round(((a >> sh) & 255) * (1 - f) + ((b >> sh) & 255) * f) for sh in (16, 8, 0))
+
+
+_PX = {}
+
+
+def px_color(pal, ch):
+    """Sprite letter -> color. A capital letter is a darker shade of its small letter, and * is a shine on the body color
+    (the 1.0 redraws use these for shading, so no palette needs extra colors)."""
+    c = pal.get(ch)
+    if c:
+        return c
+    key = (ch, pal.get(ch.lower()), pal.get("b"), pal["o"])
+    if key not in _PX:
+        if ch == "*":
+            _PX[key] = _mix(pal.get("b", pal["o"]), "#ffffff", 0.5)
+        elif ch.isupper() and ch.lower() in pal:
+            _PX[key] = _mix(pal[ch.lower()], "#000000", 0.25)
+        else:
+            _PX[key] = pal["o"]
+    return _PX[key]
+
+
+def glitching(t):
+    """⚡ Glitchy colors flicker to another look twice, very briefly, every 5 seconds."""
+    p = t % 5.0
+    return p < 0.12 or 0.24 <= p < 0.34
 
 
 def ghost_alpha(t, phase=0.0):
@@ -5395,7 +7486,7 @@ class Sighting:
         v = VARIANTS[self.kind]
         if self.kind in LEGENDS or self.kind in GHOSTS:   # legends and ghosts show up in full color
             pal = {**kind_colors(self.kind)[0], **v.get("extra", {})}
-            g = [[pal.get(ch, pal["o"]) if ch != "." else None for ch in row] + [None] * (ART_W - len(row)) for row in v["body"]]
+            g = [[px_color(pal, ch) if ch != "." else None for ch in row] + [None] * (ART_W - len(row)) for row in v["body"]]
             g.append([None] * ART_W)
             if v.get("feet"):
                 step = v["feet"]["walk1"] if int(now * 6) % 2 else v["feet"]["walk2"]
@@ -5527,7 +7618,10 @@ class Sighting:
                     witness.say(random.choice(["again! click it again!", "it's working!", "keep going!!", "almost!"]), 2)
                 return
         self.caught = True
-        app.save.setdefault("kaiju" if kind in KAIJU else "legends" if kind in LEGENDS else "ghosts" if kind in GHOSTS else "cryptids", []).append(kind)
+        if kind in ROBO_SCENES:                              # 🎭 a wandering Night Shift robo
+            app.unlock(kind)
+        else:
+            app.save.setdefault("kaiju" if kind in KAIJU else "legends" if kind in LEGENDS else "ghosts" if kind in GHOSTS else "cryptids", []).append(kind)
         write_save(app.save)
         app.sound.play("fanfare")
         screen_x = self.wx + x * SCENE_PX - W / 2
@@ -5601,7 +7695,7 @@ def is_newer(tag, asset, my_version=None, my_built=None, my_size=None):
             my_size = os.path.getsize(sys.executable)
         except OSError:
             my_size = None
-    if my_version == "dev":
+    if my_version == "dev" or my_version.endswith("-test"):     # source runs and test builds never "update"
         return False
     if tag != my_version:
         return True
@@ -5832,7 +7926,7 @@ class Updater:
                                 "(right-click a pet → Check for updates), or grab it from the releases page.", parent=self.app.root)
             return
         # A tiny helper script waits for Blipville to close, swaps in the new file and starts it again.
-        bat = os.path.join(os.path.dirname(exe), "blipville-redux-update.bat" if REDUX else "blipville-update.bat")
+        bat = os.path.join(os.path.dirname(exe), "blipville-update.bat")
         with open(bat, "w", encoding="utf-8") as f:
             f.write("@echo off\r\n"
                     "chcp 65001 >nul\r\n"
@@ -5873,7 +7967,165 @@ def fetch_status(app_key):
 
 
 def maintenance_skipped():
-    return APP_VERSION == "dev" or bool(os.environ.get("BLIPVILLE_NO_MAINTENANCE"))
+    # dev copies, test builds (v1.0.0-test) and the build's own test never close, so testing can go on during maintenance
+    return APP_VERSION == "dev" or APP_VERSION.endswith("-test") or bool(os.environ.get("BLIPVILLE_NO_MAINTENANCE"))
+
+# ----------------------------------------------------------------------------- 🎟️ merch codes
+# Physical Blipville merch comes with a code like REX-GRN-7K3M-9QPA. Type it in the 🔑 Secret code box to get that
+# merch's skin. The game never contains the codes, only a slow fingerprint of each one (PBKDF2-SHA256), so codes can't
+# be worked out from the game. New batches go in merch-codes.json in the repo (read online, like status.json), so new
+# codes work without an update. tools/merch_codes.py makes codes and their fingerprints.
+MERCH = {"REX-GRN": {"name": "Classic Dino Green", "kind": "T-Rex"},
+         "REX-MAG": {"name": "Awakened Volcanic", "kind": "T-Rex"},
+         "REX-SLV": {"name": "Mecha / Fossil Silver", "kind": "T-Rex"},
+         "AEGIS-CHR": {"name": "Mirror Chrome", "kind": "Silvertear-03"},
+         # 🧸 Series 1 figures (5 of each): every figure's code unlocks that Blip (if you don't have it) + a merch-only color
+         "FIG-BLIP": {"name": "Figure Holo", "kind": "Blip"},
+         "FIG-BUN": {"name": "Figure Pastel", "kind": "Bun"},
+         "FIG-WENDI": {"name": "Figure Glow", "kind": "Wendigo"},
+         "FIG-BETA": {"name": "Figure Prototype", "kind": "Beta Buddy"}}
+# merch-only colors (added at the end of each Blip's colors: saves remember colors by position)
+MERCH_COLORS = {
+    "T-Rex": [{"name": "Classic Dino Green", "o": "#0c2a14", "b": "#5ac85a", "s": "#2e8a3a", "h": "#2e8a3a", "k": "#ffffff", "d": "#5a1a1a", "l": "#d8f8b0", "a": "#3a9a4a", "e": "#ffd23a"},
+              {"name": "Awakened Volcanic", "o": "#1a0604", "b": "#3a1a14", "s": "#ff5a1a", "h": "#ff8a2a", "k": "#ffd23a", "d": "#ff3a1a", "l": "#ff8a3a", "a": "#2a0e0a", "e": "#ffea5a"},
+              {"name": "Mecha / Fossil Silver", "o": "#1a1c22", "b": "#b8bec8", "s": "#7a828e", "h": "#7a828e", "k": "#ffffff", "d": "#3a3e48", "l": "#e8ecf2", "a": "#8a929e", "e": "#5ad8ff"}],
+    "Blip": [{"name": "Figure Holo", "o": "#2a1040", "b": "#c87aff", "l": "#ffe0ff", "p": "#ff7ad8", "e": "#1a0a2a"}],
+    "Bun": [{"name": "Figure Pastel", "o": "#3a2a4a", "b": "#ffc8e8", "l": "#ffffff", "p": "#ff8ac0", "e": "#2a1a3a"}],
+    "Wendigo": [{"name": "Figure Glow", "o": "#0a1a12", "h": "#b8ffd0", "l": "#e8fff0", "k": "#0a140e", "w": "#ffffff", "b": "#1a3a2a", "r": "#6ad8a0", "e": "#3aff8a"}],
+    "Beta Buddy": [{"name": "Figure Prototype", "o": "#1a1a2a", "b": "#c8ccd8", "h": "#ff5a8a", "s": "#ffffff", "y": "#5ae0ff", "p": "#ff9ab0", "e": "#1a1a2a"}],
+}
+for _k, _cs in MERCH_COLORS.items():
+    VARIANTS[_k]["colors"] = list(kind_colors(_k)) + [{**c, "unlock": "merch"} for c in _cs]
+MERCH_SALT, MERCH_ROUNDS = b"blipville-merch-v1", 60000
+MERCH_HASHES = ["0df3bee4df1cd9a88c43525104cdd46fa7b1180a691b5668419bd97746ba359f", "152c819272e07c901ff80ffe7e984d98dbbecd9fa5c07afc3876ac9b79f972fe", "15418cd6606dca58de2eb6fd8024ed5c8f030e14d0503f052c58c4cef3269d65", "177971b3cb9f5af5bb06de96dccbb06fb2a12d7b43f1394a57d8829b39f3d88a", "1ae3cf2d6144e5baf6f6d8161ed3f5a794c8c1f3bbb360eb05e7bdf722b6c75f", "2ad5d9a2018a054860af001f4c63d80d3a52ef26dc742f25ce24a1999e60d465", "2b18b607b91e701d08486e56dd11045ccd9b54ac5d1b19329198236ee127e819", "2e261873ce71beb251f650b62db880a2ce5cb1db61b3717aacd897d251908d8e", "3dd9114aeede159ac7c14b89d399152e09019bb0cd3bc7bc8c99c203fae96fa4", "597690a49f65c00cd824415d15d0088ed56e9652b433ce3c2343afafd571e2b6", "61c54295b6d1baf443eefa1b8acdbde6adfc98a98efb4051f8d5d821ab4eec72", "6634c81c82940d407808af535edaec9ff9dc35218ad1dc070539cd81426e9ea2", "6d40544780becae006562500a6607637ad0edbf34081be4b56bbccc7649a484d", "78dd33665dbdfad7918c086ca1b853dac95d6122e945baef192807400f43b7d7", "80fbe48fdd002c3dff397b15370f6937887208eb998e372127c93f3b7082fee0", "812fe885722cde93674ca5ee87e96d9c6562c11d3a64df97fd959d7d42bc4719", "8392a2883db6cfc75bfe963d98929ffe701022e43cd556bf1a21d874234ebcbc", "8d09b9b0ec7e2b50108a2d48573da24fc54821538f91f843d058a90a60c89cb3", "ad15c72c6ea2adb95c6c8b9d45a1b000ddd609ac9ef68278cef0a3609d13f017", "aedd54b9b3989ca16271d5433872a4a1fa285c9b827ea284f179170e2d57c978", "b4b915609013ac91e35d42ce5e2aa8f20255bc22a6f4a320edc6746f7eba0624", "b681d20fc4673b29d2f8a674707bb2be0232af24ef7e754223ecd50538daa0b4", "c1e7acd4b009b18d252fc186dfb4b9549683f91047192b902ed467f0d91fcd17", "d74f5b1d1d7768d5a4d3705ad745b7af0d52166b15bde3abc62fe1487274507e", "dc5fef5187718ec36a46a066a148cf70ad7259686ed9f5cf87fa4f50ef3fdf9f", "de05f6ae6797716b48d339f4aa0f3ecf6d2c8a40fb1746ddb305de67f4444093", "e38c1fa7e99140bf41b0a74be188891765b7e60290acb3b88b11148728b86e08", "e468e15e6edffb47aab14a91cb08dc25b064c6bfdbc7af9c80077d2ac5721f17", "e93aefa90b2c0078baa0ef076ff789100ad55d781dbf5783bd1fc48919c1f0ae", "ea57ef981a7a6f040624eccbfdc0ab6f0eb027a176977852b97968a6c8149c80"]   # fingerprints shipped with the game (Series 1 figures); more are read from MERCH_CODES_URL
+MERCH_CODES_URL = "https://raw.githubusercontent.com/Johnblip189/Blipville/main/merch-codes.json"
+
+
+def merch_fingerprint(code):
+    import hashlib
+    return hashlib.pbkdf2_hmac("sha256", code.encode(), MERCH_SALT, MERCH_ROUNDS).hex()
+
+
+def merch_prefix(code):
+    """The MERCH entry a (cleaned-up, letters-and-digits) code is for, or None."""
+    return next((p for p in MERCH if code.startswith(p.replace("-", "")) and len(code) == len(p.replace("-", "")) + 8), None)
+
+
+# ----------------------------------------------------------------------------- save codes
+# The same codes as the website version ("BLIPVILLE1:" + the save as base64 JSON), so a town can move between the Windows
+# app and a browser, phone or Chromebook, both ways. Keys are written the website's way.
+SAVE_CODE_PREFIX = "BLIPVILLE1:"
+SAVE_CODE_KEYS = {"hearts": "hearts", "hatched": "hatched", "hats_owned": "hatsOwned", "peeked": "peeked", "nights_won": "nightsWon",
+                  "cryptids": "cryptids", "kaiju": "kaiju", "gifts": "gifts", "worlds": "worlds", "world": "world", "legends": "legends",
+                  "ghosts": "ghosts", "trophies": "trophies", "stats": "stats", "awakened": "awakened", "awaken_level": "awakenLevel",
+                  "rivals_beaten": "rivalsBeaten", "slot2": "slot2", "skins": "skins", "event_points": "eventPoints",
+                  "gods": "gods", "bad_dreams": "badDreams", "merch": "merch", "merch_kinds": "merchKinds", "redeemed": "redeemed"}
+
+
+def make_save_code(save, town):
+    import base64
+    d = {web: save[k] for k, web in SAVE_CODE_KEYS.items() if k in save}
+    d["pets"] = town
+    d["giftsDelivered"] = list(save.get("gifts", []))
+    raw = json.dumps(d, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    return SAVE_CODE_PREFIX + base64.b64encode(raw).decode("ascii")
+
+
+def read_save_code(text):
+    """A save dict (the Windows app's keys) from a save code made here or on the website, or None if it isn't one."""
+    import base64
+    text = "".join(str(text or "").split())
+    if not text.startswith(SAVE_CODE_PREFIX):
+        return None
+    try:
+        body = text[len(SAVE_CODE_PREFIX):]
+        d = json.loads(base64.b64decode(body + "=" * (-len(body) % 4)).decode("utf-8"))
+        if not isinstance(d, dict) or not isinstance(d.get("pets"), list):
+            return None
+        new = {}
+        for k, web in SAVE_CODE_KEYS.items():
+            v = d.get(web)
+            if v is None:
+                continue
+            if k in ("hearts", "nights_won"):
+                v = max(0, int(v))
+            elif k in ("stats", "awaken_level", "event_points"):
+                v = {str(a): int(b) for a, b in dict(v).items()}
+            elif k == "world":
+                v = str(v) if v else None
+            elif k == "slot2":
+                v = bool(v)
+            else:
+                v = [str(x) for x in v]
+            new[k] = v
+        new["gifts"] = sorted(set(new.get("gifts", [])) | {str(x) for x in d.get("giftsDelivered") or []})
+        town = []
+        for t in d["pets"][:20]:
+            if isinstance(t, dict) and str(t.get("kind")) in VARIANTS:
+                town.append({"kind": str(t["kind"]), "color": int(t.get("color") or 0), "name": str(t.get("name") or t["kind"])[:16],
+                             "hat": t.get("hat") if t.get("hat") in HATS else None, "hat2": t.get("hat2") if t.get("hat2") in HATS else None,
+                             "tints": {n: int(v) for n, v in (t.get("tints") or {}).items() if n in HATS},
+                             "hunger": float(t.get("hunger") or 10), "energy": float(t.get("energy") or 100),
+                             "bond": float(t.get("bond") or 0)})
+        new["town"], new["town_saved_at"] = town, time.time()
+        new["unlocked"] = [k for k, night in UNLOCKS.items() if night <= new.get("nights_won", 0)]
+        return new
+    except Exception:  # noqa: BLE001
+        return None
+
+
+class SaveCodeWindow:
+    """💾 Copy your save code (to move your town to the website or another PC), or paste one to load it here."""
+    BG, CARD, TEXT, GOLD = "#1d1a2e", "#2b2547", "#e8e4ff", "#ffd23a"
+
+    def __init__(self, app):
+        self.app = app
+        app.save_town()
+        w = self.win = tk.Toplevel(app.root)
+        w.title("Blipville save code")
+        w.configure(bg=self.BG, padx=16, pady=14)
+        w.resizable(False, False)
+        w.attributes("-topmost", True)
+        lab = dict(bg=self.BG, fg=self.TEXT, font=("Segoe UI", 10), justify="left", wraplength=470, anchor="w")
+        btn = dict(relief="flat", bd=0, font=("Segoe UI", 10, "bold"), padx=14, pady=6, cursor="hand2", fg="#ffffff")
+        tk.Label(w, text="💾 Save code", bg=self.BG, fg=self.GOLD, font=("Segoe UI", 14, "bold"), anchor="w").pack(fill="x")
+        tk.Label(w, text="Your whole town in one line: pets, hearts, unlocks, worlds and trophies. Copy it to move your town "
+                         "to the website version (? → 💾 Save code), a phone or another PC, or just to keep a backup.", **lab).pack(fill="x", pady=(2, 8))
+        self.mine = tk.Text(w, height=3, width=60, wrap="char", bg=self.CARD, fg=self.TEXT, relief="flat", font=("Consolas", 9),
+                            insertbackground=self.TEXT)
+        self.mine.insert("1.0", make_save_code(app.save, app.town_snapshot()))
+        self.mine.configure(state="disabled")
+        self.mine.pack(fill="x")
+        tk.Button(w, text="📋 Copy my save code", command=self.copy, bg="#5a4ae0", activebackground="#7a6aff", **btn).pack(anchor="w", pady=(6, 14))
+        tk.Label(w, text="Got a code from the website or another PC? Paste it here and load it. "
+                         "This replaces the town on this PC.", **lab).pack(fill="x", pady=(0, 6))
+        self.theirs = tk.Text(w, height=3, width=60, wrap="char", bg=self.CARD, fg=self.TEXT, relief="flat", font=("Consolas", 9),
+                              insertbackground=self.TEXT)
+        self.theirs.pack(fill="x")
+        tk.Button(w, text="📥 Load this code", command=self.load, bg="#e8457a", activebackground="#ff6a9a", **btn).pack(anchor="w", pady=(6, 0))
+        self.msg = tk.Label(w, text="", **lab)
+        self.msg.pack(fill="x", pady=(8, 0))
+
+    def copy(self):
+        code = self.mine.get("1.0", "end").strip()
+        self.win.clipboard_clear()
+        self.win.clipboard_append(code)
+        self.msg.configure(text="✅ Copied! Paste it somewhere safe, or into the website's 💾 Save code box.", fg="#9ad8a8")
+        self.app.sound.play("coin")
+
+    def load(self):
+        from tkinter import messagebox
+        new = read_save_code(self.theirs.get("1.0", "end"))
+        if not new:
+            self.msg.configure(text="That doesn't look like a Blipville save code. Paste the whole thing, starting with BLIPVILLE1:",
+                               fg="#ff9fc0")
+            return
+        n = len(new["town"])
+        if not messagebox.askyesno("Load save code?", f"Load this town ({n} Blip{'s' if n != 1 else ''}, {new.get('hearts', 0)} 💖)?\n\n"
+                                   "It replaces the town on this PC. (Copy your own code first if you want to keep it.)", parent=self.win):
+            return
+        self.app.load_save_data(new)
+        self.win.destroy()
 
 
 class Maintenance:
@@ -5893,7 +8145,7 @@ class Maintenance:
 
             def work():
                 try:
-                    result = fetch_status("redux" if REDUX else "classic")
+                    result = fetch_status("classic")
                 except Exception as e:  # noqa: BLE001
                     log(f"maintenance check failed: {_why(e)}")
                     result = None
@@ -5907,6 +8159,8 @@ class Maintenance:
         if result is None:
             return
         closed, message, link, link_text = result
+        if self.app.save.get("creator") or self.app.save.get("mod"):
+            closed = False                                   # creators and moderators can always play
         if closed and not self.closed:
             self.close(message, link, link_text)
         elif closed:
@@ -5952,6 +8206,7 @@ class Maintenance:
                       cursor="hand2").pack(side="left", padx=5)
         if link:
             button(link_text or "More info", lambda: webbrowser.open(link), primary=True)
+        button("🔑 Code", lambda: app.enter_secret_code(win))
         button("Check for updates", lambda: app.updater.check(quiet=False))
         button("Check again", lambda: self.check(again=False))
         button("Quit", app.quit_all)
@@ -5979,6 +8234,852 @@ class Maintenance:
         app.repaint_now()
         if app.pets:
             app.pets[0].say("we're open again! 🎉", 4)
+
+
+# ----------------------------------------------------------------------------- the Arena ⚔️
+# Teams of 3 battle automatically; you get one ✨ Awaken per battle. There are 10 types: 8 elements that are each strong
+# against 2 others (ARENA_BEATS), plus 👻 Phantom and 🪐 Cosmic, which play by their own rules. Every Blip's type and stats
+# come from here (the website version gets the same table).
+# A battle code is "BLIP1-" + base64 of {"n": name, "t": [[kind, color, can_awaken], ...]}: send it to a friend and
+# they battle your team (the computer plays it).
+ARENA_TYPES = {"spark": ("🔥", "Spark"), "splash": ("💧", "Splash"), "sprout": ("🌿", "Sprout"), "volt": ("⚡", "Volt"),
+               "stone": ("🪨", "Stone"), "gust": ("🌪️", "Gust"), "frost": ("❄️", "Frost"), "sweet": ("🍬", "Sweet"),
+               "phantom": ("👻", "Phantom"), "cosmic": ("🪐", "Cosmic")}
+# Who's strong against whom (x1.5 damage; the other way round it's x0.7). Every element beats 2 and loses to 2 (Spark,
+# Stone and Gust also beat one of the rule-breakers). 👻 Phantom is weak to 🔥 Spark and 🪐 Cosmic; 🪐 Cosmic is weak to
+# 🪨 Stone and 🌪️ Gust.
+ARENA_BEATS = {"spark": ["sprout", "frost", "phantom"],   # burns leaves, melts ice, lights up the dark ghosts hide in
+               "splash": ["spark", "stone"],    # puts out fires, wears down rock
+               "sprout": ["splash", "stone"],   # drinks water, roots crack rock
+               "volt": ["splash", "gust"],      # zaps water, charges up storms
+               "stone": ["spark", "sweet", "cosmic"],     # smothers fire, crunches candy, asteroids knock planets about
+               "gust": ["sprout", "sweet", "cosmic"],     # blows away leaves and sprinkles; solar wind scatters stardust
+               "frost": ["gust", "volt"],       # freezes the wind, jams the circuits
+               "sweet": ["frost", "volt"],      # warm cocoa melts frost, sticky syrup gums up gadgets
+               "phantom": [], "cosmic": ["phantom"]}    # starlight banishes ghosts
+# 🪐 Cosmic: only strong against Phantom, but its hits land as critical hits 1 in 4 times (others: 1 in 10)
+COSMIC_CRIT = 0.25
+# 👻 Phantom (the Phantom Knight's very own type): never super effective, but 1 in 5 hits passes right through it
+PHANTOM_DODGE = 0.2
+TYPE_OF = {"Phantom Knight": "phantom"}
+FORM_MOVES = {"Diamond Ladybug": "Diamond Dazzle", "Puppet Box": "Pull the Strings", "Puppet Master": "Final Curtain", "Blipmaker": "Creator's Spark", "Byte": "Bug Fix", "Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
+              "Phantom Sovereign": "Sovereign's Judgment"}
+ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash": ["Bubble Burst", "Splash Slam", "Tidal Hug"],
+               "sprout": ["Leaf Whirl", "Vine Bop", "Petal Storm"], "phantom": ["Phantom Slash", "Soul Strike", "Spectral Lance"],
+               "volt": ["Zap Bop", "Static Hug", "Thunder Tap"], "stone": ["Pebble Toss", "Boulder Bump", "Rockslide"],
+               "gust": ["Breeze Slap", "Twister Twirl", "Gale Puff"], "frost": ["Snowball", "Icicle Poke", "Frost Nip"],
+               "sweet": ["Sprinkle Shot", "Sugar Rush", "Taffy Tangle"], "cosmic": ["Star Beam", "Meteor Boop", "Moon Drop"]}
+_SPARK = {"Phoenix", "Dragon", "Magmaw", "Will-o'-Wisp", "Jersey Devil", "Fox", "Kitsune", "Chochin", "Amber Raptor", "Comet",
+          "Rocket", "Black Hole", "Star", "Moon", "Fennec", "Tiger", "Lion", "Cheetah", "Gigabot", "Robo Bear", "Robo Bunny",
+          "Robo Hen", "Golden Blip", "Bee", "Pumpkin", "Thunderbird", "Snallygaster", "Hodag", "Taco", "Toast", "Poltergeist"}
+_SPLASH = {"Axolotl", "Clownfish", "Crab", "Dolphin", "Frog", "Goldfish", "Jellyfish", "Koi", "Octopus", "Otter", "Penguin",
+           "Pufferfish", "Seal", "Shark", "Starfish", "Turtle", "Whale", "Walrus", "Narwhal", "Nessie", "Kappa", "Tidal Titan",
+           "Pearlfin", "Abyss Wisp", "Ghost Captain", "Frogman", "Duck", "Swan", "Pelican", "Platypus", "Hippo", "Beaver", "Yeti",
+           "Frostback", "Snow Leopard", "Slime", "Pudding", "Ice Cream"}
+_SPROUT = {"Sprout", "Caterpillar", "Ladybug", "Butterfly", "Mantis", "Mossling", "Bloomkin", "Sloth", "Koala", "Panda",
+           "Chameleon", "Gecko", "Iguana", "Snail", "Bigfoot", "Skunk Ape", "Shroomy", "Cactus Pal", "Deer", "Moose", "Rabbit",
+           "Hedgehog", "Tortoise", "Moth", "Mothman", "Owlman", "Gumdrop Golem"}
+
+
+# The 6 newer types. These lists come first, so a Blip listed here keeps that type even if an older list names it too.
+_NEW_TYPES = {
+ "volt": {"Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox", "Gigabot", "Volthorn", "Thunderwing", "Stormcrab", "Clockwork Rex", "Eel", "Thunderbird",
+          "Byte", "Zorp", "UFO", "Flatwoods Monster", "Dover Demon", "Van Meter Visitor", "Bug Hunter", "Patch", "Jellyfish", "Anglerfish"},
+ "stone": {"Rock Golem", "Boulderback", "Tremorpede", "Sandsnapper", "Armadillo", "Pangolin", "Rhino", "Ankylosaurus",
+           "Triceratops", "Stegosaurus", "Brachiosaurus", "Crystal Stego", "Fossilbones", "Mole", "Death Worm", "Mokele-mbembe",
+           "Tardigrade", "T-Rex", "Echidna", "Porcupine", "Elephant", "Gorilla", "Bison", "Goat", "Guardian", "Grootslang", "Spike"},
+ "gust": {"Skyray", "Nimbus", "Sky Whale", "Pegasus", "Griffin", "Eagle", "Owl", "Crow", "Pigeon", "Parrot", "Toucan", "Hummingbird",
+          "Pterodactyl", "Ahool", "Kongamato", "Ropen", "Batsquatch", "Bat", "Wyvern", "Robin", "Puffin", "Flamingo", "Peacock",
+          "Sugar Glider", "Specter Owl", "Pixie", "Banshee"},
+ "frost": {"Yeti", "Frostback", "Tundrox", "Snow Leopard", "Polar Bear", "Penguin", "Walrus", "Mammoth", "Beluga", "Wendigo", "Yak",
+           "Saber Kitten", "Lemming", "Narwhal", "Grey Lady", "Crystal Axolotl"},
+ "sweet": {"Donut", "Cupcake", "Ice Cream", "Macaron", "Pudding", "Gummy Bear", "Dumpling", "Marshmallow", "Gumdrop Golem",
+           "Cotton Candy Cloud", "Candy Dragon", "Sprinkle Unicorn", "Licorice Serpent", "Bee", "Confetti", "Beta Buddy", "Bun",
+           "Rainbow Blip", "Haunted Teacup", "Lucky Cat"},
+ "cosmic": {"Star", "Moon", "Comet", "Ringed Planet", "Rocket", "Black Hole", "Space Jelly", "Astronaut", "Space Slug", "Nebulon",
+            "Nebula Cat", "Cosmo Pup", "Star Whale", "Comet Fox", "Moon Bunny", "Moon Moth", "Qilin", "Liftoff", "Blipmaker",
+            "Golden Blip", "Unicorn", "Mirror Spirit"},
+}
+_NEW_TYPE_OF = {k: t for t, ks in _NEW_TYPES.items() for k in ks}
+_NEW_TYPE_OF.update({k: ts[0] for k, ts in EGYPT_TYPES.items()})     # 🏺 the gods' types
+# Dual types: these Blips have 2 types. They take both types' strengths and weaknesses when they're hit (so a hit can be
+# super effective twice, x2.25, or cancel out), and attack with whichever of their 2 types works best. Awakened forms keep them.
+DUAL_TYPES = {
+ # kaiju
+ "Magmaw": ("spark", "stone"), "Tidal Titan": ("splash", "stone"), "Gigabot": ("volt", "stone"), "Skyray": ("gust", "splash"),
+ "Frostback": ("frost", "stone"), "Stormcrab": ("volt", "splash"), "Volthorn": ("volt", "sprout"), "Tundrox": ("frost", "stone"),
+ "Nebulon": ("cosmic", "splash"), "Bramblebeast": ("sprout", "stone"), "Sandsnapper": ("stone", "spark"), "Clockwork Rex": ("volt", "stone"),
+ "Thunderwing": ("volt", "gust"), "Coralgon": ("splash", "sprout"), "Silvertear-03": ("volt", "stone"), "Boulderback": ("stone", "sprout"),
+ # legends
+ "Candy Dragon": ("sweet", "spark"), "Cotton Candy Cloud": ("sweet", "gust"), "Gumdrop Golem": ("sweet", "stone"),
+ "Sprinkle Unicorn": ("sweet", "cosmic"), "Star Whale": ("cosmic", "splash"), "Comet Fox": ("cosmic", "spark"), "Crystal Stego": ("stone", "frost"),
+ "Ember Raptor": ("spark", "stone"), "Amber Raptor": ("stone", "spark"), "Mossling": ("sprout", "stone"), "Elder Treant": ("sprout", "stone"),
+ "Coral Queen": ("splash", "sprout"), "Tide Leviathan": ("splash", "gust"), "Licorice Serpent": ("sweet", "stone"),
+ # rare, cryptids, ghosts and friends
+ "Phoenix": ("spark", "gust"), "Dragon": ("spark", "gust"), "Wyvern": ("gust", "spark"), "Thunderbird": ("volt", "gust"),
+ "Yeti": ("frost", "stone"), "Narwhal": ("frost", "splash"), "Crystal Axolotl": ("frost", "splash"), "Sky Whale": ("gust", "splash"),
+ "Kitsune": ("spark", "cosmic"), "Qilin": ("cosmic", "spark"), "Mammoth": ("frost", "stone"), "Rock Golem": ("stone", "cosmic"),
+ "Nessie": ("splash", "stone"), "Mothman": ("gust", "cosmic"), "Pegasus": ("gust", "cosmic"), "Ice Cream": ("sweet", "frost"),
+ "Penguin": ("frost", "splash"), "Polar Bear": ("frost", "splash"), "Walrus": ("frost", "splash"),
+ "Eel": ("volt", "splash"), "Jellyfish": ("volt", "splash"), "Bee": ("sweet", "gust"), "Death Worm": ("stone", "volt"),
+ "Puppet Box": ("phantom", "sweet"), "Wind-Up Hare": ("volt", "phantom"), "Blipmaker": ("cosmic", "volt"), "Byte": ("volt", "cosmic"), "Guardian": ("stone", "cosmic"), "Diamond Ladybug": ("stone", "cosmic"),
+ **{k: tuple(ts) for k, ts in EGYPT_TYPES.items() if len(ts) == 2},     # 🏺 most gods have 2 types
+}
+
+
+def arena_types(st):
+    """A Blip's 1 or 2 types."""
+    return [st["type"]] + ([st["type2"]] if st.get("type2") else [])
+
+
+def type_mult(att_type, dfn_types):
+    """How hard a hit of att_type lands on a Blip with these types (x1.5 per type it beats, x0.7 per type that beats it)."""
+    m = 1.0
+    for d in dfn_types:
+        m *= 1.5 if d in ARENA_BEATS[att_type] else 0.7 if att_type in ARENA_BEATS[d] else 1.0
+    return m
+
+
+def type_label(st):
+    return "".join(ARENA_TYPES[t][0] for t in arena_types(st))
+
+
+def effect_text(mult):
+    return (" · double super effective!!" if mult > 2 else " · super effective!" if mult > 1.1 else " · barely does anything…" if mult < 0.5
+            else " · not very effective…" if mult < 0.9 else "")
+
+
+def shadow_color(kind):
+    """The index of a Night Shift Blip's Shadow color."""
+    return next((i for i, c in enumerate(kind_colors(kind)) if c["name"] == "Shadow"), 0)
+
+
+def _fnv(text):
+    h = 2166136261
+    for b in text.encode("utf-8"):
+        h = ((h ^ b) * 16777619) & 0xFFFFFFFF
+    return h
+
+
+def _arena_stats(kind):
+    base = AWAKEN_BASE.get(kind, kind)
+    h = _fnv(base)
+    tab = next((n for n, ks in TAB_GROUPS if base in ks), "")
+    kind_type = TYPE_OF.get(base) or (DUAL_TYPES[base][0] if base in DUAL_TYPES else None) or _NEW_TYPE_OF.get(base) or ("spark" if base in _SPARK else "splash" if base in _SPLASH or tab.startswith("Ocean") else
+                 "sprout" if base in _SPROUT or tab.startswith("Plants") else ["spark", "splash", "sprout"][h % 3])
+    tier = CREATOR_TIER.get(base) or (1.2 if base in LEGENDS or base in KAIJU else 1.12 if base in RARE or base in CRYPTIDS or base in GHOSTS
+            else 1.15 if base in EGYPT_GODS else 1.1 if base in ROBOTS else 1.05 if base in GIFTS else 1.0)
+    if kind in AWAKEN_BASE:
+        tier *= 1.25 * 1.18 ** (awaken_stage(kind) - 1)
+    v = VARIANTS[base]
+    return {"type": kind_type, **({"type2": DUAL_TYPES[base][1]} if base in DUAL_TYPES else {}), "hp": round((70 + h % 41) * tier), "atk": round((15 + (h >> 8) % 9) * tier),
+            "spd": round((6 + (h >> 16) % 10) * v.get("speed", 1.0) * (1.1 if kind in AWAKEN_BASE else 1)),
+            "move": FORM_MOVES.get(kind) or (f"{kind.split()[0]} Nova" if kind in AWAKEN_BASE else ARENA_MOVES[kind_type][(h >> 4) % 3])}
+
+
+# Every Blip has 4 moves you pick from on your turn:
+#   1. its signature move (its own type)
+#   2. a move of its 2nd type, or a ⚡ quick move (weaker, but always goes first) if it only has 1 type
+#   3. a 💥 big move: hits hard, but can miss
+#   4. 🍪 Snack: heals 35% of its HP, once per Blip per battle
+BIG_MOVES = {"spark": "Blaze Burst", "splash": "Tidal Wave", "sprout": "Bloom Blast", "volt": "Thunder Crash", "stone": "Avalanche",
+             "gust": "Cyclone", "frost": "Blizzard", "sweet": "Sugar Storm", "phantom": "Nightmare", "cosmic": "Supernova"}
+QUICK_MOVES = {"spark": "Flicker Dash", "splash": "Splish Dash", "sprout": "Seed Flick", "volt": "Zip Zap", "stone": "Pebble Flick",
+               "gust": "Swoosh", "frost": "Frost Flick", "sweet": "Sprinkle Flick", "phantom": "Shadow Blink", "cosmic": "Star Dart"}
+# 🎭 Pull the Strings (Puppet Box and Puppet Master): once per battle, 2 Shadow Night Shift Blips join the back of your
+# team. They're puppets, so they're a bit weaker (SUMMON_HP of their HP, SUMMON_ATK of their attack).
+SUMMON_SLOT = {"Puppet Box": 0, "Puppet Master": 1}      # which move button it replaces
+SUMMON_KINDS = ["Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox", "Wind-Up Hare"]
+SUMMON_HP, SUMMON_ATK = 0.6, 0.75
+MOVE_POWER, QUICK_POWER, BIG_POWER, BIG_ACC, SNACK_HEAL = 1.2, 0.8, 1.9, 0.75, 0.35
+
+
+def _arena_moves(kind, st):
+    h = _fnv(AWAKEN_BASE.get(kind, kind))
+    t1, t2 = st["type"], st.get("type2")
+    first = {"name": st["move"], "type": t1, "power": MOVE_POWER, "acc": 1.0}
+    second = ({"name": ARENA_MOVES[t2][(h >> 6) % 3], "type": t2, "power": MOVE_POWER, "acc": 1.0} if t2 else
+              {"name": QUICK_MOVES[t1], "type": t1, "power": QUICK_POWER, "acc": 1.0, "fast": True})
+    big = {"name": BIG_MOVES[t1], "type": t1, "power": BIG_POWER, "acc": BIG_ACC}
+    moves = [first, second, big, {"name": "Snack", "type": "", "power": 0, "acc": 1.0, "heal": SNACK_HEAL}]
+    if kind in SUMMON_SLOT:                               # 🎭 the Puppet's strings: a summon instead of a normal move
+        moves[SUMMON_SLOT[kind]] = {"name": "Pull the Strings", "type": "phantom", "power": 0, "acc": 1.0, "summon": SUMMON_KINDS}
+    return moves
+
+
+ARENA_STATS = {k: _arena_stats(k) for k in VARIANTS}
+for _k, _st in ARENA_STATS.items():
+    _st["moves"] = _arena_moves(_k, _st)
+
+# Arena backgrounds: little scenes 120 x 40 "units" (y down), drawn behind the battle. Shapes: ["rect", color, x, y, w, h],
+# ["poly", color, [x, y, x, y, ...]], ["circ", color, cx, cy, r], ["pix", sprite, x, y, unit] (a sprite from ARENA_PIX).
+ARENA_PIX = {
+ "knight_salute": {"rows": ["...k......k.", "...k......k.", "..kk.oooo.kk", "..ok.ohho.ko", "...oohhhhoo.", "...ohvvvvho.", "...ohhhhhho.",
+                            "..oossssssoo", "..oossssssoo", "...ossssss..", "...wwwwwwww.", "....w.ww.w.."],
+                   "pal": {"o": "#14141e", "h": "#6a7088", "v": "#0a0a12", "s": "#4a5068", "k": "#c8d8ff", "w": "#5a6a8a"},
+                   "dim": {"o": "#0a0a12", "h": "#2e3244", "v": "#06060a", "s": "#242838", "k": "#5a6a8a", "w": "#2a3048"}},
+ "lurker_hold": {"rows": ["ow........wo", "ao........oa", "ao..oooo..oa", "aoobbbbbbooa", ".abbybbybba.", ".obbbbbbbbo.", ".obmwmwmwbo.",
+                          ".obbbccbbbo.", ".obbccccbbo.", ".obbbccbbbo.", "..obbbbbbo..", "..obbbbbbo..", ".dddddddddd."],
+                 "pal": {"o": "#000000", "b": "#0c0816", "a": "#1c1430", "y": "#c8b84a", "w": "#6a6088", "m": "#2a0a20", "c": "#5a1a80", "d": "#1a1030"},
+                 "dim": {"o": "#05040a", "b": "#0a0812", "a": "#100c1c", "y": "#6a6030", "w": "#2a2638", "m": "#0e0610", "c": "#2a0e3a", "d": "#0e0a18"}},
+}
+ARENA_BGS = {
+ "meadow": {"name": "Sunny Meadow", "sky": ["#8ad0ff", "#d8f4ff"], "shapes": [
+    ["circ", "#fff6c0", 100, 8, 5], ["rect", "#ffffff", 12, 6, 12, 3], ["rect", "#ffffff", 15, 4, 6, 2], ["rect", "#ffffff", 60, 9, 14, 3],
+    ["rect", "#ffffff", 64, 7, 7, 2], ["poly", "#7ac87a", [0, 30, 20, 22, 45, 27, 70, 20, 95, 26, 120, 21, 120, 40, 0, 40]],
+    ["rect", "#4aa84a", 0, 32, 120, 8], ["rect", "#ff7ab0", 8, 33, 1, 1], ["rect", "#ff7ab0", 30, 35, 1, 1], ["rect", "#ff7ab0", 52, 34, 1, 1],
+    ["rect", "#ff7ab0", 88, 36, 1, 1], ["rect", "#ff7ab0", 110, 33, 1, 1], ["rect", "#ffe66a", 18, 36, 1, 1], ["rect", "#ffe66a", 70, 33, 1, 1],
+    ["rect", "#ffe66a", 100, 37, 1, 1]]},
+ "beach": {"name": "Sunset Beach", "sky": ["#ff8a5a", "#ffd08a"], "shapes": [
+    ["circ", "#fff0a0", 60, 24, 8], ["rect", "#3a7ad8", 0, 24, 120, 8], ["rect", "#8ad0ff", 10, 26, 14, 1], ["rect", "#8ad0ff", 50, 28, 20, 1],
+    ["rect", "#8ad0ff", 90, 26, 16, 1], ["poly", "#f0d090", [0, 32, 120, 30, 120, 40, 0, 40]], ["rect", "#8a5a2a", 8, 16, 2, 16],
+    ["poly", "#3a9a4a", [9, 16, 1, 20, 9, 14, 17, 20]], ["poly", "#2a8a3a", [9, 15, 4, 12, 9, 14, 14, 12]],
+    ["rect", "#8a5a2a", 108, 18, 2, 13], ["poly", "#3a9a4a", [109, 18, 102, 22, 109, 16, 116, 22]]]},
+ "volcano": {"name": "Volcano Rim", "sky": ["#2a0a0a", "#8a2a1a"], "shapes": [
+    ["poly", "#3a2020", [30, 32, 55, 8, 65, 8, 90, 32]], ["poly", "#ff6a1a", [55, 8, 65, 8, 62, 12, 58, 12]],
+    ["poly", "#ff8a3a", [58, 12, 62, 12, 66, 32, 60, 32]], ["rect", "#1a0a0a", 0, 32, 120, 8], ["rect", "#ff5a1a", 10, 35, 14, 2],
+    ["rect", "#ff5a1a", 96, 36, 16, 2], ["rect", "#ffd23a", 50, 4, 1, 1], ["rect", "#ffd23a", 68, 2, 1, 1], ["rect", "#ffd23a", 61, 1, 1, 1],
+    ["rect", "#ffd23a", 20, 30, 1, 1], ["rect", "#ffd23a", 104, 33, 1, 1]]},
+ "graveyard": {"name": "Moonlit Graveyard", "sky": ["#0a0a24", "#2a2a50"], "shapes": [
+    ["circ", "#f0f0d0", 98, 9, 6], ["rect", "#ffffff", 10, 4, 1, 1], ["rect", "#ffffff", 40, 8, 1, 1], ["rect", "#ffffff", 70, 3, 1, 1],
+    ["rect", "#ffffff", 84, 14, 1, 1], ["rect", "#ffffff", 26, 12, 1, 1], ["rect", "#2a2030", 24, 14, 2, 18],
+    ["poly", "#2a2030", [25, 18, 18, 12, 19, 11, 25, 16]], ["poly", "#2a2030", [25, 20, 32, 14, 33, 15, 25, 22]],
+    ["rect", "#1a1a2a", 0, 31, 120, 9], ["rect", "#5a5a6a", 12, 24, 6, 8], ["rect", "#5a5a6a", 34, 26, 5, 6], ["rect", "#5a5a6a", 84, 25, 6, 7],
+    ["rect", "#5a5a6a", 104, 27, 5, 5], ["rect", "#6a6a7a", 62, 22, 2, 10], ["rect", "#6a6a7a", 59, 25, 8, 2]]},
+ "city": {"name": "Kaiju City", "sky": ["#14082a", "#4a1a5a"], "shapes": [
+    ["rect", "#1a1030", 0, 14, 14, 26], ["rect", "#20143a", 16, 8, 12, 32], ["rect", "#1a1030", 30, 18, 10, 22], ["rect", "#20143a", 44, 12, 14, 28],
+    ["rect", "#1a1030", 62, 20, 10, 20], ["rect", "#20143a", 76, 6, 12, 34], ["rect", "#1a1030", 90, 16, 12, 24], ["rect", "#20143a", 104, 10, 16, 30],
+    ["rect", "#ffd23a", 3, 17, 2, 2], ["rect", "#ffd23a", 19, 12, 2, 2], ["rect", "#3affd8", 23, 20, 2, 2], ["rect", "#ffd23a", 48, 16, 2, 2],
+    ["rect", "#3affd8", 52, 24, 2, 2], ["rect", "#ff5aa8", 79, 10, 2, 2], ["rect", "#ffd23a", 83, 22, 2, 2], ["rect", "#3affd8", 94, 20, 2, 2],
+    ["rect", "#ffd23a", 108, 14, 2, 2], ["rect", "#ff5aa8", 113, 26, 2, 2], ["rect", "#0a0a14", 0, 34, 120, 6],
+    ["rect", "#ffd23a", 10, 37, 8, 1], ["rect", "#ffd23a", 40, 37, 8, 1], ["rect", "#ffd23a", 70, 37, 8, 1], ["rect", "#ffd23a", 100, 37, 8, 1]]},
+ "cave": {"name": "Crystal Cave", "sky": ["#0a0a14", "#1e1a34"], "shapes": [
+    ["poly", "#14141e", [0, 0, 120, 0, 120, 6, 110, 10, 100, 5, 88, 12, 76, 4, 60, 9, 48, 3, 34, 11, 22, 5, 10, 9, 0, 4]],
+    ["rect", "#1e1a2e", 0, 32, 120, 8], ["poly", "#7a5aff", [10, 32, 13, 22, 16, 32]], ["poly", "#b8a0ff", [13, 32, 13, 22, 16, 32]],
+    ["poly", "#3affd8", [100, 32, 104, 20, 108, 32]], ["poly", "#aafff0", [104, 32, 104, 20, 108, 32]],
+    ["poly", "#ff7ac8", [56, 32, 58, 26, 60, 32]], ["poly", "#7a5aff", [30, 32, 32, 28, 34, 32]], ["poly", "#3affd8", [80, 32, 82, 27, 84, 32]]]},
+ # When a Lurker reaches its last form, the battle moves here: a huge dam, held up by a whole row of Lurkers.
+ "dam": {"name": "The Dam", "sky": ["#04040a", "#16162a"], "shapes": [
+    ["rect", "#4a4a58", 0, 0, 120, 14], ["rect", "#5a5a68", 0, 6, 120, 1], ["rect", "#6a6a78", 0, 12, 120, 2],
+    ["rect", "#34343e", 12, 7, 1, 5], ["rect", "#34343e", 36, 7, 1, 5], ["rect", "#34343e", 60, 7, 1, 5], ["rect", "#34343e", 84, 7, 1, 5],
+    ["rect", "#34343e", 108, 7, 1, 5], ["poly", "#2a2a34", [40, 7, 44, 9, 42, 10, 46, 12, 45, 12, 41, 10, 43, 9, 39, 7]],
+    ["poly", "#2a2a34", [88, 7, 91, 9, 89, 11, 92, 12, 91, 12, 88, 11, 90, 9, 87, 7]],
+    ["rect", "#3a8aff", 31, 14, 1, 8], ["rect", "#3a8aff", 55, 14, 1, 12], ["rect", "#3a8aff", 75, 14, 1, 7],
+    ["pix", "lurker_hold", 14, 14, 1.3, "dim"], ["pix", "lurker_hold", 32, 14, 1.3, "dim"], ["pix", "lurker_hold", 50, 14, 1.3, "dim"],
+    ["pix", "lurker_hold", 68, 14, 1.3, "dim"], ["pix", "lurker_hold", 86, 14, 1.3, "dim"], ["rect", "#101020", 0, 31, 120, 2],
+    ["pix", "lurker_hold", -9, 14, 2], ["pix", "lurker_hold", 105, 14, 2],
+    ["rect", "#14284a", 0, 37, 120, 3], ["rect", "#3a6aa8", 20, 38, 10, 1], ["rect", "#3a6aa8", 50, 38, 14, 1], ["rect", "#3a6aa8", 86, 38, 12, 1]]},
+}
+FINAL_FORM_BGS = {"Lurker Eternal": ("dam", "The ground shakes… a wall of Lurkers rises, holding up a giant dam! 🌊"),
+                  "Puppet Master": ("theater", "The house lights dim… red curtains sweep open on the Puppet Theater! 🎭"),
+                  "Phantom Sovereign": ("keep", "The lights go out… a ghostly army of knights raises its swords in the Haunted Keep! ⚔️")}
+ARENA_BGS["theater"] = {"name": "The Puppet Theater", "sky": ["#0a0408", "#2a0a14"], "shapes": [
+    ["rect", "#14060c", 0, 0, 120, 31],                                           # the dark stage
+    ["circ", "#3a1a20", 60, 20, 14], ["circ", "#4a2228", 60, 22, 9],             # spotlight
+    ["rect", "#8a0a1a", 0, 0, 120, 4], ["poly", "#8a0a1a", [0, 4, 120, 4, 110, 7, 96, 4, 82, 7, 68, 4, 52, 7, 38, 4, 24, 7, 10, 4]],   # valance
+    ["rect", "#ffd23a", 0, 4, 120, 0.6],
+    ["poly", "#a8102a", [0, 0, 18, 0, 22, 31, 0, 31]], ["poly", "#6a0a1a", [6, 0, 10, 0, 12, 31, 6, 31]],                     # left curtain
+    ["poly", "#a8102a", [102, 0, 120, 0, 120, 31, 98, 31]], ["poly", "#6a0a1a", [110, 0, 114, 0, 114, 31, 108, 31]],          # right curtain
+    ["rect", "#c8c0d8", 49, 4, 0.4, 9], ["rect", "#c8c0d8", 55, 4, 0.4, 9], ["rect", "#c8c0d8", 65, 4, 0.4, 9], ["rect", "#c8c0d8", 71, 4, 0.4, 9],
+    ["rect", "#3a1a2a", 48, 9, 8, 1.5], ["circ", "#f4efe8", 52, 12.5, 2.2], ["rect", "#d81e3a", 51, 13.5, 0.6, 2], ["rect", "#d81e3a", 53, 13.5, 0.6, 2],   # little puppets
+    ["rect", "#3a1a2a", 64, 9, 8, 1.5], ["circ", "#f4efe8", 68, 12.5, 2.2], ["rect", "#d81e3a", 67, 13.5, 0.6, 2], ["rect", "#d81e3a", 69, 13.5, 0.6, 2],
+    ["rect", "#5a3418", 0, 31, 120, 9], ["rect", "#7a4a24", 0, 31, 120, 1],      # wooden stage floor
+    ["rect", "#4a2a14", 15, 34, 30, 0.5], ["rect", "#4a2a14", 60, 36, 34, 0.5], ["rect", "#4a2a14", 30, 38, 26, 0.5],
+    ["circ", "#ffd23a", 12, 32, 0.8], ["circ", "#ffd23a", 40, 32, 0.8], ["circ", "#ffd23a", 80, 32, 0.8], ["circ", "#ffd23a", 108, 32, 0.8]]}   # footlights
+ARENA_BGS["keep"] = {"name": "The Haunted Keep", "sky": ["#06060e", "#1e1a30"], "shapes": [
+    ["rect", "#24203a", 0, 0, 120, 31], ["rect", "#2c2846", 0, 0, 120, 3],
+    ["rect", "#1a1630", 8, 3, 6, 28], ["rect", "#1a1630", 106, 3, 6, 28], ["rect", "#1a1630", 57, 3, 6, 28],
+    ["rect", "#6a1a2a", 22, 3, 7, 12], ["poly", "#6a1a2a", [22, 15, 25.5, 18, 29, 15]], ["rect", "#ffd23a", 25, 7, 1, 3],
+    ["rect", "#6a1a2a", 91, 3, 7, 12], ["poly", "#6a1a2a", [91, 15, 94.5, 18, 98, 15]], ["rect", "#ffd23a", 94, 7, 1, 3],
+    ["circ", "#5affd8", 42, 8, 1.2], ["circ", "#5affd8", 78, 8, 1.2],
+    ["pix", "knight_salute", 14, 14, 1.4, "dim"], ["pix", "knight_salute", 34, 14, 1.4, "dim"], ["pix", "knight_salute", 70, 14, 1.4, "dim"],
+    ["pix", "knight_salute", 90, 14, 1.4, "dim"], ["rect", "#14121e", 0, 31, 120, 9], ["rect", "#2a2440", 0, 31, 120, 1],
+    ["pix", "knight_salute", -4, 15, 2], ["pix", "knight_salute", 100, 15, 2],
+    ["rect", "#3a1a4a", 30, 34, 60, 6], ["rect", "#5a2a6a", 30, 34, 60, 1]]}
+RIVAL_BGS = {"The Puppet Master": "theater", "Rival Rae": "meadow", "Rival Rex": "volcano", "Champion Coco": "beach", "Nyx the Night Queen": "graveyard", "Kaiju King Kai": "city"}
+FRIEND_BGS = ["meadow", "beach", "volcano", "graveyard", "city", "cave"]
+
+
+def arena_bg_for(foe):
+    return RIVAL_BGS.get(foe) or FRIEND_BGS[_fnv(foe) % len(FRIEND_BGS)]
+
+
+def draw_arena_bg(c, name, width, y0, s, height):
+    """Draw an Arena background on a tk Canvas: sky over 0..height, the scene scaled by s with its top at y0."""
+    bg = ARENA_BGS.get(name) or ARENA_BGS["meadow"]
+    (r0, g0, b0), (r1, g1, b1) = [tuple(int(h[i:i + 2], 16) for i in (1, 3, 5)) for h in bg["sky"]]
+    bands = 16
+    for i in range(bands):
+        t = i / (bands - 1)
+        col = "#%02x%02x%02x" % (round(r0 + (r1 - r0) * t), round(g0 + (g1 - g0) * t), round(b0 + (b1 - b0) * t))
+        c.create_rectangle(0, height * i / bands, width, height * (i + 1) / bands + 1, fill=col, outline="")
+    for sh in bg["shapes"]:
+        kind, rest = sh[0], sh[1:]
+        if kind == "rect":
+            col, x, y, w, h = rest
+            c.create_rectangle(x * s, y0 + y * s if y else 0, (x + w) * s, y0 + (y + h) * s, fill=col, outline="")   # touching the top: reach the top
+        elif kind == "poly":
+            col, pts = rest
+            c.create_polygon(*[(v * s + y0 if v else 0) if i % 2 else v * s for i, v in enumerate(pts)], fill=col, outline="")
+        elif kind == "circ":
+            col, cx, cy, r = rest
+            c.create_oval((cx - r) * s, y0 + (cy - r) * s, (cx + r) * s, y0 + (cy + r) * s, fill=col, outline="")
+        elif kind == "pix":
+            spr, x, y, u = rest[:4]
+            px = ARENA_PIX[spr]
+            pal = px[rest[4]] if len(rest) > 4 else px["pal"]
+            for ry, row in enumerate(px["rows"]):
+                for rx, ch in enumerate(row):
+                    if ch != ".":
+                        c.create_rectangle((x + rx * u) * s, y0 + (y + ry * u) * s, (x + (rx + 1) * u) * s, y0 + (y + (ry + 1) * u) * s,
+                                           fill=pal[ch], outline="")
+ARENA_RIVALS = [("Rival Rae", 5, [["Cat", 0, 0], ["Frog", 0, 0], ["Fox", 0, 0]]),
+                ("Rival Rex", 10, [["Bigfoot", 0, 0], ["Shark", 0, 0], ["Phoenix", 0, 1]]),
+                ("Champion Coco", 20, [["Tidal Titan", 0, 0], ["Kitsune", 0, 1], ["Dragon", 0, 1]]),
+                ("Nyx the Night Queen", 25, [["Banshee", 0, 1], ["Phantom Cat", 0, 1], ["Ghost Captain", 0, 1]]),
+                ("Kaiju King Kai", 30, [["Magmaw", 0, 1], ["Gigabot", 0, 1], ["Tidal Titan", 0, 1]]),
+                ("The Puppet Master", 30, [["Robo Hen", 4, 0], ["Robo Bunny", 4, 0], ["Puppet Box", 0, 1]])]
+# 🎭 beat The Puppet Master to unlock the Shadow colors for the Night Shift crew
+PUPPET_RIVAL = "The Puppet Master"
+SHADOW_SKINS = [f"{k}:Shadow" for k in SUMMON_KINDS]
+
+
+def battle_code(name, team):
+    import base64
+    raw = json.dumps({"n": name[:20], "t": [[k, int(c), int(bool(a))] for k, c, a in team[:3]]}, separators=(",", ":"))
+    return "BLIP1-" + base64.urlsafe_b64encode(raw.encode("utf-8")).decode("ascii").rstrip("=")
+
+
+def read_battle_code(code):
+    """(name, team) from a battle code, or raises ValueError."""
+    import base64
+    code = "".join(str(code).split())
+    if not code.upper().startswith("BLIP1-"):
+        raise ValueError("That's not a Blipville battle code (they start with BLIP1-).")
+    body = code[6:]
+    try:
+        data = json.loads(base64.urlsafe_b64decode(body + "=" * (-len(body) % 4)).decode("utf-8"))
+        team = [[str(k), int(c), int(a)] for k, c, a in data["t"]][:3]
+    except Exception:  # noqa: BLE001
+        raise ValueError("That battle code looks broken. Copy it again, all of it.") from None
+    team = [t for t in team if AWAKEN_BASE.get(t[0], t[0]) in VARIANTS]
+    if not team:
+        raise ValueError("That battle code has no Blips in it.")
+    return str(data.get("n") or "A friend")[:20], team
+
+
+class Fighter:
+    def __init__(self, kind, color, can_awaken):
+        self.base = AWAKEN_BASE.get(kind, kind)
+        self.kind, self.color = self.base, int(color)
+        self.level = min(int(can_awaken), len(AWAKEN_CHAIN.get(self.base, [])))   # how many times it may awaken
+        self.can_awaken = self.level > 0
+        self.stage = 0
+        st = ARENA_STATS[self.kind]
+        self.max_hp = self.hp = st["hp"]
+        self.snacked = False                              # 🍪 one Snack per Blip per battle
+        self.atk_mult = 1.0
+
+    @property
+    def awakened(self):
+        return self.stage > 0
+
+    @property
+    def st(self):
+        return ARENA_STATS[self.kind]
+
+    def awaken(self):
+        frac = self.hp / self.max_hp
+        self.stage += 1
+        self.kind = AWAKEN_CHAIN[self.base][self.stage - 1]
+        self.color %= len(kind_colors(self.kind))
+        self.max_hp = round(self.st["hp"] * (SUMMON_HP if self.atk_mult < 1 else 1))
+        self.hp = min(self.max_hp, round(self.max_hp * frac + self.max_hp * 0.25))
+
+
+class Battle:
+    """One battle, step by step: step() does the next attack and returns a line for the log."""
+    def __init__(self, mine, theirs, seed=None):
+        self.sides = [[Fighter(*f) for f in mine], [Fighter(*f) for f in theirs]]
+        self.idx = [0, 0]
+        self.awaken_left = [1, 1]
+        self.summoned = [False, False]                    # 🎭 Pull the Strings: once per side per battle
+        self.bg = "meadow"
+        self.rng = random.Random(seed)
+        self.turn = 0
+        self.winner = None
+        self.last = None                                  # (attacker side, damage, effective)
+
+    def active(self, side):
+        return self.sides[side][self.idx[side]] if self.idx[side] < len(self.sides[side]) else None
+
+    def can_awaken(self, side):
+        f = self.active(side)
+        # one Awaken per battle, but a Blip that can awaken more than once may keep going (the Lurker!)
+        return bool(f and f.stage < f.level and (self.awaken_left[side] or f.stage > 0))
+
+    def awaken(self, side):
+        if not self.can_awaken(side):
+            return None
+        self.awaken_left[side] = 0
+        f = self.active(side)
+        was = f.kind
+        f.awaken()
+        line = f"✨ {was} awakens into {f.kind}!"
+        bg, msg = FINAL_FORM_BGS.get(f.kind, (None, ""))
+        if bg and self.bg != bg:
+            self.bg = bg
+            line += " " + msg
+        return line
+
+    # ---- turns: each round, you pick a move, the other side picks one, and the faster one goes first
+    def moves(self, side):
+        f = self.active(side)
+        return f.st["moves"] if f else []
+
+    def usable(self, side, i):
+        f = self.active(side)
+        m = self.moves(side)[i] if f else {}
+        return bool(f) and not (m.get("heal") and (f.snacked or f.hp >= f.max_hp)) and not (m.get("summon") and self.summoned[side])
+
+    def ai_move(self, side=1):
+        """The computer's pick: snack when it's low, otherwise the move that should hurt most (with a little randomness)."""
+        f, foe = self.active(side), self.active(1 - side)
+        ms = self.moves(side)
+        if f.hp < f.max_hp * 0.35 and self.usable(side, 3) and self.rng.random() < 0.6:
+            return 3
+        pull = next((i for i, m in enumerate(ms) if m.get("summon")), None)
+        if pull is not None and self.usable(side, pull) and self.rng.random() < 0.7:
+            return pull
+        score = [(m["power"] * m["acc"] * type_mult(m["type"], arena_types(foe.st)) * self.rng.uniform(0.8, 1.2), i)
+                 for i, m in enumerate(ms) if not m.get("heal") and not m.get("summon")]
+        return max(score)[1]
+
+    def plan(self, my_move):
+        """The order this round's moves happen in: [(side, move index, fighter), ...]. The computer may awaken first (a free action)."""
+        pre = []
+        b = self.active(1)
+        if self.can_awaken(1) and b.hp < b.max_hp * 0.5:
+            pre.append((1, "awaken", None))
+        their = self.ai_move(1)
+        def key(side, i):
+            f, m = self.active(side), self.moves(side)[i]
+            return (1 if m.get("fast") else 0, f.st["spd"], self.rng.random())
+        order = sorted([(0, my_move), (1, their)], key=lambda a: key(*a), reverse=True)
+        return pre + [(side, i, self.active(side)) for side, i in order]
+
+    def act(self, side, i, fighter=None):
+        """Do one move. fighter: who picked it (if that Blip is knocked out first, its move doesn't happen)."""
+        if self.winner is not None:
+            return None
+        if i == "awaken":
+            return self.awaken(side)
+        att, dfn = self.active(side), self.active(1 - side)
+        if att is None or dfn is None or (fighter is not None and att is not fighter):
+            return None
+        m = att.st["moves"][i]
+        if m.get("heal"):
+            if att.snacked:
+                return None
+            att.snacked = True
+            gain = min(att.max_hp - att.hp, round(att.max_hp * m["heal"]))
+            att.hp += gain
+            self.last = (side, -gain, 1.0)
+            return f"🍪 {att.kind} had a snack and got {gain} HP back!"
+        if m.get("summon"):
+            if self.summoned[side]:
+                return None
+            self.summoned[side] = True
+            picks = self.rng.sample(m["summon"], 2)
+            for k in picks:
+                pup = Fighter(k, shadow_color(k), 0)
+                pup.atk_mult = SUMMON_ATK
+                pup.max_hp = pup.hp = round(pup.max_hp * SUMMON_HP)
+                self.sides[side].append(pup)
+            self.last = (side, 0, 1.0)
+            return f"🎭 {att.kind} pulls the strings… Shadow {picks[0]} and Shadow {picks[1]} join the team!"
+        if self.rng.random() > m["acc"]:
+            self.last = (side, 0, 1.0)
+            return f"{att.kind} used {m['name']}… but it missed!"
+        if "phantom" in arena_types(dfn.st) and self.rng.random() < PHANTOM_DODGE:
+            self.last = (side, 0, 1.0)
+            return f"{att.kind} used {m['name']}… but it passed right through {dfn.kind}! 👻"
+        mult = type_mult(m["type"], arena_types(dfn.st))
+        crit = self.rng.random() < (COSMIC_CRIT if "cosmic" in arena_types(att.st) else 0.1)
+        dmg = max(1, round(att.st["atk"] * att.atk_mult * m["power"] * mult * self.rng.uniform(0.85, 1.15) * (1.5 if crit else 1)))
+        dfn.hp = max(0, dfn.hp - dmg)
+        self.last = (side, dmg, mult)
+        line = f"{att.kind} used {m['name']}! {dmg} damage" + effect_text(mult) + (" · critical!" if crit else "")
+        if dfn.hp == 0:
+            self.idx[1 - side] += 1
+            line += f" · {dfn.kind} is out!"
+            if self.active(1 - side) is None:
+                self.winner = side
+            else:
+                line += f" {self.active(1 - side).kind} jumps in!"
+        return line
+
+    def round(self, my_move):
+        """A whole round at once (for tests and quick play): returns the log lines."""
+        lines = []
+        for side, i, f in self.plan(my_move):
+            line = self.act(side, i, f)
+            if line:
+                lines.append(line)
+        return lines
+
+
+class Arena:
+    """⚔️ Pick 3 Blips from your town, share your battle code, battle a friend's code or a practice rival."""
+    CW, CH = 780, 520
+    BG, CARD, GOLD, PINK, GREEN = "#1d1a2e", "#2b2547", "#ffd23a", "#ff9fc0", "#9ad8a8"
+
+    def __init__(self, app):
+        self.app = app
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville Arena ⚔️")
+        self.win.resizable(False, False)
+        self.win.configure(bg=self.BG)
+        self.win.attributes("-topmost", True)
+        self.c = tk.Canvas(self.win, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0)
+        self.c.pack(padx=6, pady=6)
+        self.c.bind("<Button-1>", self.on_click)
+        self.buttons, self.battle, self.log, self.after_id, self.queue = [], None, [], None, []
+        self.music = Music(app)
+        self.win.protocol("WM_DELETE_WINDOW", self.close)
+        self.team = [p for p in app.pets][:3]
+        self.lobby()
+
+    # ---- little helpers
+    def button(self, x, y, w, h, text, fn, color=None, fg="#ffffff"):
+        self.c.create_rectangle(x, y, x + w, y + h, fill=color or "#3a3360", outline="", width=0)
+        self.c.create_text(x + w / 2, y + h / 2, text=text, fill=fg, font=("Segoe UI", 10, "bold"))
+        self.buttons.append((x, y, x + w, y + h, fn))
+
+    def on_click(self, e):
+        for x1, y1, x2, y2, fn in reversed(self.buttons):
+            if x1 <= e.x <= x2 and y1 <= e.y <= y2:
+                self.app.sound.play("pop")
+                fn()
+                return
+
+    def team_entry(self, pet):
+        base = AWAKEN_BASE.get(pet.kind, pet.kind)
+        return [base, pet.palette % len(kind_colors(base)), min(self.app.awaken_level(base), len(AWAKEN_CHAIN.get(base, [])))]
+
+    def my_team(self):
+        return [self.team_entry(p) for p in self.team if p in self.app.pets]
+
+    def close(self):
+        self.music.stop()
+        if self.after_id:
+            self.win.after_cancel(self.after_id)
+        self.win.destroy()
+
+    # ---- the lobby
+    def lobby(self):
+        self.music.stop()
+        if self.after_id:
+            self.win.after_cancel(self.after_id)
+            self.after_id = None
+        c = self.c
+        c.delete("all")
+        self.buttons = []
+        wins = self.app.stat("arena_wins")
+        c.create_text(16, 24, anchor="w", text="⚔️ Arena", fill="#ffffff", font=("Segoe UI", 16, "bold"))
+        c.create_text(self.CW - 16, 24, anchor="e", text=f"🏆 {wins} win{'s' if wins != 1 else ''}", fill=self.GOLD, font=("Segoe UI", 12, "bold"))
+        c.create_text(16, 52, anchor="w", fill="#c8c0e0", font=("Segoe UI", 9),
+                      text="Pick a move each turn · 10 types, each element strong against 2 · ✨ one Awaken per battle")
+        self.button(self.CW - 166, 40, 150, 26, "📖 Type chart", self.type_chart, "#3a3360")
+        c.create_text(16, 82, anchor="w", text="Your team (click your Blips below to pick 3)", fill=self.GOLD, font=("Segoe UI", 10, "bold"))
+        for i in range(3):
+            x = 16 + i * 150
+            c.create_rectangle(x, 96, x + 140, 196, fill=self.CARD, outline="#3a3360", width=2)
+            if i < len(self.team) and self.team[i] in self.app.pets:
+                p = self.team[i]
+                base = AWAKEN_BASE.get(p.kind, p.kind)
+                st = ARENA_STATS[base]
+                draw_sprite(c, base, p.palette % len(kind_colors(base)), x + 30, y=104, scale=5)
+                c.create_text(x + 70, 174, text=f"{type_label(st)} {base}", fill="#ffffff", font=("Segoe UI", 9, "bold"), width=132)
+                c.create_text(x + 70, 188, text=f"❤ {st['hp']}  ⚔ {st['atk']}  💨 {st['spd']}" + ("  ✨" if self.team_entry(p)[2] else ""),
+                              fill="#c8c0e0", font=("Segoe UI", 8))
+            else:
+                c.create_text(x + 70, 146, text="empty", fill="#6a6290", font=("Segoe UI", 10, "bold"))
+        # town strip
+        for i, p in enumerate(self.app.pets[:12]):
+            x, y = 16 + i * 62, 212
+            on = p in self.team
+            c.create_rectangle(x, y, x + 56, y + 56, fill=self.CARD, outline=self.GOLD if on else "#3a3360", width=2)
+            base = AWAKEN_BASE.get(p.kind, p.kind)
+            draw_sprite(c, base, p.palette % len(kind_colors(base)), x + 4, y + 6, 3)
+            self.buttons.append((x, y, x + 56, y + 56, lambda p=p: self.toggle(p)))
+        # actions
+        self.button(16, 290, 230, 40, "📋 Copy my battle code", self.copy_code, "#5a4ae0")
+        self.button(256, 290, 250, 40, "📥 Battle a friend's code", self.paste_code, "#e8457a")
+        c.create_text(16, 350, anchor="w", text="Practice rivals", fill=self.GOLD, font=("Segoe UI", 10, "bold"))
+        beaten = self.app.save.get("rivals_beaten", [])
+        for i, (name, reward, team) in enumerate(ARENA_RIVALS):
+            x, y = 16 + (i % 3) * 252, 364 + (i // 3) * 48
+            done = name in beaten
+            self.button(x, y, 240, 40, f"🥊 {name}  ·  +{reward} 💖" + ("  ✓" if done else ""),
+                        lambda r=(name, reward, team): self.start(r[2], r[0], r[1]), "#3a3360")
+        c.create_text(16, 478, anchor="w", fill="#9a92c0", font=("Segoe UI", 9),
+                      text="Share your code on the Blipville Discord and see who can beat your team!")
+
+    def type_chart(self):
+        from tkinter import messagebox
+        name = lambda t: f"{ARENA_TYPES[t][0]} {ARENA_TYPES[t][1]}"
+        lines = [f"{name(t)}  beats  " + " & ".join(name(x) for x in ARENA_BEATS[t]) for t in ARENA_TYPES if ARENA_BEATS[t]]
+        weak = lambda t: " & ".join(name(x) for x in ARENA_TYPES if t in ARENA_BEATS[x])
+        lines += ["", f"{name('phantom')}: beats nothing, but 1 in 5 hits pass right through it. Weak to {weak('phantom')}.",
+                  f"{name('cosmic')}: 1 in 4 of its hits are critical. Weak to {weak('cosmic')}.", "",
+                  "Some Blips have 2 types: they get both types' strengths and weaknesses (a hit can be super effective twice!)",
+                  "and attack with whichever type works best."]
+        messagebox.showinfo("Type chart 📖", "Strong = x1.5 damage. The other way round it's x0.7.\n\n" + "\n".join(lines), parent=self.win)
+
+    def toggle(self, pet):
+        if pet in self.team:
+            self.team.remove(pet)
+        elif len(self.team) < 3:
+            self.team.append(pet)
+        else:
+            self.team = self.team[1:] + [pet]
+        self.lobby()
+
+    def copy_code(self):
+        if not self.my_team():
+            return
+        code = battle_code(self.app.save.get("arena_name") or (self.team[0].name if self.team else "A friend"), self.my_team())
+        self.win.clipboard_clear()
+        self.win.clipboard_append(code)
+        from tkinter import messagebox
+        messagebox.showinfo("Your battle code 📋", f"Copied! Send it to a friend (or post it on the Blipville Discord):\n\n{code}\n\n"
+                            "They paste it into their Arena to battle your team.", parent=self.win)
+
+    def paste_code(self):
+        from tkinter import messagebox, simpledialog
+        try:
+            text = self.win.clipboard_get()
+        except tk.TclError:
+            text = ""
+        if not str(text).strip().upper().startswith("BLIP1-"):
+            text = simpledialog.askstring("Battle a friend", "Paste their battle code (it starts with BLIP1-):", parent=self.win) or ""
+        if not text.strip():
+            return
+        try:
+            name, team = read_battle_code(text)
+        except ValueError as err:
+            messagebox.showinfo("Battle code", str(err), parent=self.win)
+            return
+        self.start(team, name, 10)
+
+    # ---- a battle
+    def start(self, theirs, name, reward):
+        mine = self.my_team()
+        if not mine:
+            from tkinter import messagebox
+            messagebox.showinfo("Arena", "Pick at least one Blip for your team first!", parent=self.win)
+            return
+        self.battle, self.foe, self.reward, self.log, self.done = Battle(mine, theirs), name, reward, [], False
+        self.battle.bg = arena_bg_for(name)
+        self.log.append(f"⚔️ {name} wants to battle! Pick a move.")
+        self.queue = []
+        self.app.sound.play("whoosh")
+        self.draw_battle()
+
+    def pick(self, i):
+        """You picked move i: play out the round one move at a time."""
+        b = self.battle
+        if b is None or b.winner is not None or self.queue or not b.usable(0, i):
+            return
+        self.queue = b.plan(i)
+        self.tick()
+
+    def tick(self):
+        self.after_id = None
+        b = self.battle
+        if b is None:
+            return
+        while self.queue:
+            side, i, f = self.queue.pop(0)
+            line = b.act(side, i, f)
+            if line:
+                self.log.append(line)
+                self.app.sound.play("fanfare" if i == "awaken" else "munch" if line.startswith("🍪") else
+                                    "thud" if b.last and b.last[1] > 30 else "boop")
+                break
+        if b.winner is not None:
+            self.queue = []
+            self.finish()
+        self.draw_battle()
+        if self.queue:
+            self.after_id = self.win.after(850, self.tick)
+
+    def awaken(self):
+        if self.queue:
+            return
+        line = self.battle.awaken(0)
+        if line:
+            self.log.append(line)
+            self.app.sound.play("fanfare")
+            self.draw_battle()
+
+    def finish(self):
+        won = self.battle.winner == 0
+        if won:
+            self.app.bump("arena_wins")
+            self.app.quest_tick("arena_win")
+            for p in self.team:
+                if p in self.app.pets:
+                    p.befriend("arena")
+            if self.foe in [r[0] for r in ARENA_RIVALS] and self.foe not in self.app.save.setdefault("rivals_beaten", []):
+                self.app.save["rivals_beaten"].append(self.foe)
+            reward = self.reward
+            if self.foe == PUPPET_RIVAL:
+                skins = self.app.save.setdefault("skins", [])
+                new = [sk for sk in SHADOW_SKINS if sk not in skins]
+                skins.extend(new)
+                if new:
+                    self.log.append("🎭 The strings are cut! Shadow colors unlocked for the Night Shift crew and the Wind-Up Hare.")
+            if any(f.base == "Blipmaker" for f in self.battle.sides[1]):          # beat the creator's boss team!
+                reward += CREATOR_BOSS_REWARD
+                self.app.save["beat_creator"] = True
+            self.app.add_hearts(reward, self.app.pets[0] if self.app.pets else None)
+            self.log.append(f"🏆 You win! +{reward} 💖" + ("  You beat the Blipmaker! 👑" if reward > self.reward else ""))
+            self.app.sound.play("fanfare")
+        else:
+            self.log.append("💤 Your team needs a nap… try again!")
+        write_save(self.app.save)
+
+    def fighter_card(self, f, x, flip, active):
+        c = self.c
+        st = f.st
+        scale = 8 if active else 3
+        if active:
+            draw_sprite(c, f.kind, f.color, x, 120, scale, face="happy" if f.hp > f.max_hp * 0.5 else "normal")
+            w = 220
+            bx = x - (60 if flip else 0)
+            c.create_text(bx + w / 2, 96, text=f"{type_label(st)} {f.kind}" + (" ✨" if f.awakened else ""), fill="#ffffff",
+                          font=("Segoe UI", 12, "bold"))
+            c.create_rectangle(bx, 236, bx + w, 252, fill="#14121e", outline="")
+            frac = f.hp / f.max_hp
+            c.create_rectangle(bx, 236, bx + w * frac, 252, fill=self.GREEN if frac > 0.5 else "#ffd23a" if frac > 0.2 else "#ff5a7a", outline="")
+            c.create_text(bx + w / 2, 244, text=f"{f.hp} / {f.max_hp}", fill="#14121e" if frac > 0.4 else "#ffffff", font=("Segoe UI", 9, "bold"))
+
+    def draw_battle(self):
+        c, b = self.c, self.battle
+        self.music.play(b.bg if b.winner is None and b.bg in ARENA_MUSIC else None)   # 🎵 special stages have music
+        c.delete("all")
+        self.buttons = []
+        draw_arena_bg(c, b.bg, self.CW, 2, self.CW / 120, 262)
+        c.create_rectangle(0, 0, self.CW, 40, fill="#14121e", outline="")
+        c.create_text(16, 22, anchor="w", text=f"⚔️ You vs {self.foe}  ·  {ARENA_BGS[b.bg]['name']}", fill="#ffffff",
+                      font=("Segoe UI", 15, "bold"))
+        c.create_rectangle(0, 262, self.CW, 266, fill="#3a3360", outline="")
+        for side, x in ((0, 70), (1, 470)):
+            f = b.active(side)
+            if f:
+                self.fighter_card(f, x, side == 1, True)
+            for j, g in enumerate(b.sides[side]):           # the bench: little ones, gray when out
+                gx = (20 if side == 0 else self.CW - 160) + j * 48
+                draw_sprite(c, g.kind, g.color, gx, 50, 2, silhouette="#3a3360" if g.hp == 0 else None)
+        if b.last and b.winner is None:
+            side, dmg, mult = b.last
+            if dmg < 0:                                           # a snack
+                c.create_text(170 if side == 0 else 560, 110, text=f"+{-dmg}", fill=self.GREEN, font=("Segoe UI", 18, "bold"))
+            else:
+                c.create_text(560 if side == 0 else 170, 110, text=f"-{dmg}" if dmg else "miss!", fill="#ff5a7a" if mult >= 1 else "#c8c0e0",
+                              font=("Segoe UI", 18, "bold"))
+        for i, line in enumerate(self.log[-5:]):
+            c.create_text(16, 278 + i * 21, anchor="w", text=line, fill="#ffffff" if i == len(self.log[-5:]) - 1 else "#a8a0c8",
+                          font=("Segoe UI", 10, "bold" if i == len(self.log[-5:]) - 1 else "normal"), width=self.CW - 32)
+        if b.winner is None:
+            me, foe = b.active(0), b.active(1)
+            busy = bool(self.queue)
+            for i, m in enumerate(b.moves(0)):                    # your 4 moves
+                x, w = 16 + i * 190, 178
+                if m.get("heal"):
+                    top, info = "🍪 Snack", "used" if me.snacked else f"heal {round(m['heal'] * 100)}% · once"
+                else:
+                    mult = type_mult(m["type"], arena_types(foe.st))
+                    top = f"{ARENA_TYPES[m['type']][0]} {m['name']}"
+                    info = " · ".join(x for x in ["goes first" if m.get("fast") else "",
+                                                  f"{round(m['acc'] * 100)}% hit" if m["acc"] < 1 else "",
+                                                  "strong!" if mult > 1.1 else "weak" if mult < 0.9 else ""] if x) or "normal"
+                ok = b.usable(0, i) and not busy
+                color = ("#5a4ae0" if i == 0 else "#3a8a6a" if i == 1 else "#c8454a" if i == 2 else "#a8742a") if ok else "#2b2547"
+                c.create_rectangle(x, 386, x + w, 440, fill=color, outline="")
+                c.create_text(x + w / 2, 404, text=top, fill="#ffffff" if ok else "#6a6290", font=("Segoe UI", 10, "bold"), width=w - 8)
+                c.create_text(x + w / 2, 426, text=info, fill="#e8e4ff" if ok else "#6a6290", font=("Segoe UI", 8))
+                if ok:
+                    self.buttons.append((x, 386, x + w, 440, lambda i=i: self.pick(i)))
+            if b.can_awaken(0) and not busy:
+                self.button(16, 456, 220, 44, f"✨ Awaken {b.active(0).base}!", self.awaken, "#c86aff")
+            self.button(self.CW - 136, 456, 120, 44, "🏳️ Give up", self.give_up, "#3a3360")
+        else:
+            self.button(16, 420, 200, 44, "↩ Back to the Arena", self.lobby, "#5a4ae0")
+            self.button(226, 420, 160, 44, "🔁 Rematch", lambda: self.start([[f.base, f.color, f.level] for f in b.sides[1]],
+                                                                        self.foe, self.reward), "#e8457a")
+
+    def give_up(self):
+        if self.battle and self.battle.winner is None:
+            self.queue = []
+            self.battle.winner = 1
+            self.log.append("🏳️ You gave up. Next time!")
+            self.draw_battle()
+
+
+# ----------------------------------------------------------------------------- trophy shelf
+TROPHY_CUP = ["..cccccccc..", "hhcccccccchh", "h.cccccccc.h", "h.cccccccc.h", ".hcccccccch.", "..cccccccc..",
+              "...cccccc...", ".....cc.....", ".....cc.....", "...bbbbbb...", "..bbbbbbbb.."]
+
+
+class TrophyShelf:
+    """Every trophy on wooden shelves: gold when you've earned it, a shadow with a hint when you haven't."""
+    COLS, CELL_W, CELL_H = 7, 150, 128
+
+    def __init__(self, app):
+        self.app = app
+        app.check_trophies()
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville trophies")
+        self.win.resizable(False, False)
+        self.win.configure(bg="#1d1a2e")
+        self.win.attributes("-topmost", True)
+        rows = -(-len(TROPHIES) // self.COLS)
+        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 24, height=rows * self.CELL_H + 64, bg="#1d1a2e",
+                                highlightthickness=0)
+        self.canvas.pack(padx=6, pady=6)
+        self.draw()
+
+    def cup(self, x, y, s, earned):
+        gold = {"c": "#ffd23a", "h": "#e8a81a", "b": "#8a5a2a"} if earned else {"c": "#433b68", "h": "#433b68", "b": "#433b68"}
+        for r, row in enumerate(TROPHY_CUP):
+            for i, ch in enumerate(row):
+                if ch != ".":
+                    self.canvas.create_rectangle(x + i * s, y + r * s, x + (i + 1) * s, y + (r + 1) * s, fill=gold[ch], outline="")
+        if earned:                                                  # a little shine
+            self.canvas.create_rectangle(x + 3 * s, y + 1 * s, x + 4 * s, y + 4 * s, fill="#fff6c0", outline="")
+
+    def draw(self):
+        c, got = self.canvas, self.app.save.get("trophies", [])
+        c.delete("all")
+        earned = sum(1 for t in TROPHIES if t[0] in got)
+        c.create_text(16, 24, anchor="w", text=f"🏆 Trophies  {earned}/{len(TROPHIES)}", fill="#ffffff", font=("Segoe UI", 14, "bold"))
+        c.create_text(self.COLS * self.CELL_W + 8, 24, anchor="e", text="each one earns bonus 💖", fill="#ff9fc0",
+                      font=("Segoe UI", 10, "bold"))
+        for n, (tid, icon, name, how, check, bonus) in enumerate(TROPHIES):
+            x0, y0 = 12 + (n % self.COLS) * self.CELL_W, 50 + (n // self.COLS) * self.CELL_H
+            have = tid in got
+            c.create_rectangle(x0, y0, x0 + self.CELL_W - 10, y0 + self.CELL_H - 10, fill="#2b2547", outline="#3a3360" if have else "#2b2547",
+                               width=2)
+            c.create_rectangle(x0 + 8, y0 + 58, x0 + self.CELL_W - 18, y0 + 63, fill="#6a4a2a" if have else "#241f3a", outline="")
+            self.cup(x0 + (self.CELL_W - 10) / 2 - 18, y0 + 8, 3, have)
+            mid = x0 + (self.CELL_W - 10) / 2
+            c.create_text(mid, y0 + 78, text=f"{icon} {name}", fill="#ffd23a" if have else "#b8b0d8", font=("Segoe UI", 9, "bold"),
+                          width=self.CELL_W - 18)
+            c.create_text(mid, y0 + 99, text=how + ("" if have else f"  (+{bonus} 💖)"), fill="#9ad8a8" if have else "#c8c0e0",
+                          font=("Segoe UI", 8), width=self.CELL_W - 18, justify="center")
 
 
 
@@ -6064,6 +9165,445 @@ class EventWindow:
         self.draw()
 
 
+
+def _mix(a, b, f):
+    A, B = int(a[1:], 16), int(b[1:], 16)
+    return "#%02x%02x%02x" % tuple(round(((A >> sh) & 255) * (1 - f) + ((B >> sh) & 255) * f) for sh in (16, 8, 0))
+
+
+_DREAM_RUNS = {}
+
+
+def dream_runs(kind, eyes_only=False):
+    """The fend-off art of a Bad Dream as runs of one color: [(row, x0, x1, color)], cached."""
+    key = (kind, eyes_only)
+    if key not in _DREAM_RUNS:
+        a = BAD_DREAMS[kind]
+        pal = {"n": "#1a1024", "u": "#1a1024", "z": "#c8ccd8", "g": "#ffd23a", "l": "#f4ece0", **a["colors"][0]}
+        pal.update({"c": pal.get("t", "#f0e4c8"), "h": "#ffffff", "%": _mix(pal["b"], pal["e"], 0.45)})
+        runs = []
+        for y, row in enumerate(a["big"]):
+            x = 0
+            while x < len(row):
+                ch = row[x]
+                if ch == "." or (eyes_only and ch not in "eh%"):
+                    x += 1
+                    continue
+                x2 = x
+                while x2 + 1 < len(row) and row[x2 + 1] == ch:
+                    x2 += 1
+                runs.append((y, x, x2 + 1, px_color(pal, ch)))
+                x = x2 + 1
+        _DREAM_RUNS[key] = runs
+    return _DREAM_RUNS[key]
+
+
+class BadDreamFend:
+    """🧸 A Puppet Master rewrote a robo into its Bad Dream. Your mouse is a flashlight: keep the Bad Dream in the beam
+    for 5 seconds. In the light it backs off; in the dark it creeps closer. Each one moves its own way: the Bear lumbers,
+    the Bunny hops around, the Hen zigzags, the Fox darts and the Hare winds up, then dashes."""
+    CW, CH, LAST, BEAM = 520, 420, 5.0, 56
+    BG = "#0c0b14"
+    HOW = {"Bad Dream Bear": "It's slow… but it never stops.", "Bad Dream Bunny": "It hops! Don't lose it.",
+           "Bad Dream Hen": "It zigzags side to side.", "Bad Dream Fox": "It's FAST. Stay on it!",
+           "Bad Dream Hare": "It winds up… then dashes!"}
+
+    def __init__(self, app, kind):
+        self.app, self.kind = app, kind
+        self.robo = BAD_DREAMS[kind]["robo"]
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville: Bad Dream 🧸")
+        self.win.configure(bg=self.BG)
+        self.win.resizable(False, False)
+        self.win.attributes("-topmost", True)
+        self.c = tk.Canvas(self.win, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0, cursor="none")
+        self.c.pack(padx=6, pady=6)
+        self.c.bind("<Motion>", self.on_move)
+        self.win.protocol("WM_DELETE_WINDOW", self.close)
+        self.mx, self.my = self.CW / 2, self.CH / 2
+        self.state, self.after_id = "intro", None
+        self.t0 = self.last = time.monotonic()
+        self.z, self.lit = 0.25, False
+        self.x, self.y = self.CW / 2, self.CH / 2 + 20
+        self.goal, self.next_move, self.wind = (self.x, self.y), 0.0, 0.0
+        app.sound.play("boing")
+        self.step()
+        self.win.focus_force()
+
+    def on_move(self, e):
+        self.mx, self.my = e.x, e.y
+
+    def scale(self):
+        return 2.5 + self.z * 5
+
+    def spot(self):
+        return random.uniform(70, self.CW - 70), random.uniform(100, self.CH - 80)
+
+    # ----- loop
+    def step(self):
+        try:
+            now = time.monotonic()
+            dt, self.last = min(0.05, now - self.last), now
+            if self.state == "intro" and now - self.t0 > 2.2:
+                self.state, self.t0 = "play", now
+            if self.state == "play":
+                self.update(now - self.t0, dt)
+            self.draw(now)
+        except tk.TclError:
+            return
+        if self.state in ("intro", "play"):
+            self.after_id = self.win.after(16, self.step)
+
+    def move(self, t, dt):
+        """Each Bad Dream moves its own way (x, y is the middle of it)."""
+        k, gx, gy = self.kind, *self.goal
+        if k == "Bad Dream Bear":                                   # slow, steady drift
+            if t >= self.next_move:
+                self.goal, self.next_move = self.spot(), t + 1.6
+            speed = 70
+        elif k == "Bad Dream Bunny":                                # hops to a new spot
+            if t >= self.next_move:
+                self.goal, self.next_move = self.spot(), t + random.uniform(0.75, 1.05)
+                self.app.sound.play("boop")
+            speed = 900
+        elif k == "Bad Dream Hen":                                  # zigzags across
+            self.goal = (self.CW / 2 + math.sin(t * 2.4) * (self.CW / 2 - 100), self.CH / 2 + 20 + math.sin(t * 4.8) * 70)
+            speed = 400
+        elif k == "Bad Dream Fox":                                  # quick darts
+            if t >= self.next_move:
+                self.goal, self.next_move = self.spot(), t + random.uniform(0.45, 0.65)
+            speed = 380
+        else:                                                       # Hare: winds up, then dashes
+            self.wind += dt / 1.1
+            speed = 0
+            if self.wind >= 1:
+                self.wind, self.goal = 0.0, self.spot()
+                self.app.sound.play("whoosh")
+            if math.hypot(gx - self.x, gy - self.y) > 2:
+                speed = 650
+        gx, gy = self.goal
+        d = math.hypot(gx - self.x, gy - self.y)
+        if d > 0.5:
+            f = min(1.0, speed * dt / d)
+            self.x += (gx - self.x) * f
+            self.y += (gy - self.y) * f
+
+    def update(self, t, dt):
+        self.move(t, dt)
+        s = self.scale()
+        self.lit = math.hypot(self.mx - self.x, self.my - self.y) < self.BEAM + 3 * s
+        self.z = max(0.1, self.z - 0.25 * dt) if self.lit else self.z + 0.38 * dt
+        if self.z >= 1:
+            self.state = "lost"
+            self.app.sound.play("boing")
+        elif t >= self.LAST:
+            self.win_()
+
+    def win_(self):
+        self.state = "won"
+        app, got = self.app, self.app.save.setdefault("bad_dreams", [])
+        if self.kind not in got:
+            got.append(self.kind)
+        skins = app.save.setdefault("skins", [])
+        shadow = f"{self.robo}:Shadow"
+        if any(c["name"] == "Shadow" for c in kind_colors(self.robo)) and shadow not in skins:
+            skins.append(shadow)
+        app.add_hearts(15)
+        write_save(app.save)
+        app.sound.play("fanfare")
+        pet = app.add_pet(self.kind, greet=False)
+        if pet:
+            pet.say("…okay. you can keep me. 🧸", 4)
+
+    def close(self):
+        if self.after_id:
+            try:
+                self.win.after_cancel(self.after_id)
+            except tk.TclError:
+                pass
+        self.app.dream_game = None
+        self.win.destroy()
+
+    # ----- drawing
+    def sprite(self, cx, cy, s, eyes_only=False):
+        x0, y0 = cx - 16 * s, cy - 15 * s
+        for y, a, b, col in dream_runs(self.kind, eyes_only):
+            self.c.create_rectangle(x0 + a * s, y0 + y * s, x0 + b * s, y0 + (y + 1) * s, fill=col, outline="")
+
+    def beam(self):
+        r = self.BEAM
+        self.c.create_oval(self.mx - r - 14, self.my - r - 14, self.mx + r + 14, self.my + r + 14, fill="#1e1a24", outline="")
+        self.c.create_oval(self.mx - r, self.my - r, self.mx + r, self.my + r, fill="#3a3424", outline="")
+
+    def draw(self, now):
+        c, W_, H_ = self.c, self.CW, self.CH
+        c.delete("all")
+        name = self.kind.replace("Bad Dream ", "")
+        if self.state == "intro":
+            self.beam()
+            c.create_text(W_ / 2, 50, text="🎭 The strings go taut…", fill="#c8a0d8", font=("Segoe UI", 16, "bold"))
+            c.create_text(W_ / 2, 84, text=f"The Puppet Master rewrote {self.robo} into a Bad Dream!", fill="#e8e4ff",
+                          font=("Segoe UI", 12, "bold"))
+            self.sprite(self.x, self.y, self.scale(), eyes_only=int(now * 4) % 2 == 0)
+            c.create_text(W_ / 2, H_ - 34, text="🔦 Keep it in your flashlight beam for 5 seconds!", fill="#ffd23a",
+                          font=("Segoe UI", 12, "bold"))
+            c.create_text(W_ / 2, H_ - 12, text=self.HOW[self.kind], fill="#9a94c0", font=("Segoe UI", 10, "bold"))
+            return
+        if self.state in ("won", "lost"):
+            won = self.state == "won"
+            c.create_rectangle(0, 0, W_, H_, fill="#1a1630" if won else "#14081a", outline="")
+            self.sprite(W_ / 2, H_ - 120 if won else H_ / 2 + 50, 4 if won else 7)
+            c.create_rectangle(0, 0, W_, 120, fill="#1a1630" if won else "#14081a", outline="")
+            if won:
+                c.create_text(W_ / 2, 40, text=f"You kept the Bad Dream {name}! 🧸", fill="#ffd23a", font=("Segoe UI", 18, "bold"))
+                c.create_text(W_ / 2, 74, text=f"+15 💖  ·  {self.robo}'s Shadow color unlocked", fill="#e8e4ff", font=("Segoe UI", 11, "bold"))
+                c.create_text(W_ / 2, 98, text="(it's a plushie until midnight)", fill="#9a94c0", font=("Segoe UI", 10))
+            else:
+                c.create_text(W_ / 2, 40, text="GOTCHA! 🧸", fill="#ff4a6a", font=("Segoe UI", 22, "bold"))
+                c.create_text(W_ / 2, 76, text=f"The Bad Dream {name} gave you a big stuffed hug.", fill="#e8e4ff", font=("Segoe UI", 11, "bold"))
+                c.create_text(W_ / 2, 98, text="Click a Puppet Master 5 times to try again (after a little rest).", fill="#9a94c0", font=("Segoe UI", 10))
+            return
+        t = now - self.t0
+        self.beam()
+        self.sprite(self.x, self.y, self.scale(), eyes_only=not self.lit)
+        if self.kind == "Bad Dream Hare" and self.wind > 0.6:
+            c.create_text(self.x, self.y - 20 * self.scale(), text="*tick tick tick*", fill="#d8b04a", font=("Segoe UI", 10, "bold"))
+        c.create_rectangle(0, 0, W_, 30, fill="#08070e", outline="")
+        c.create_text(12, 15, anchor="w", text=f"🔦 KEEP IT IN THE LIGHT  {max(0, self.LAST - t):.1f}s", fill="#e8e4ff", font=("Segoe UI", 11, "bold"))
+        c.create_text(W_ - 170, 15, anchor="e", text="TOO CLOSE", fill="#ff4a6a", font=("Segoe UI", 9, "bold"))
+        c.create_rectangle(W_ - 160, 8, W_ - 12, 22, outline="#3a3360", width=2)
+        c.create_rectangle(W_ - 158, 10, W_ - 158 + 144 * min(1, self.z), 20, fill="#ff4a6a", outline="")
+
+
+class ChatBox:
+    """💬 Talk to a Blip: it says something, you pick one of the ready-made answers, and so on (see CHATS)."""
+    BG, PANEL, TEXT = "#1d1a2e", "#2a2540", "#e8e4ff"
+
+    def __init__(self, pet):
+        self.pet, self.tree = pet, chat_tree(pet.kind)
+        self.win = tk.Toplevel(pet.root)
+        self.win.title(f"Chat with {pet.name}")
+        self.win.configure(bg=self.BG)
+        self.win.resizable(False, False)
+        self.win.attributes("-topmost", True)
+        x = int(min(max(pet.wx, 10), pet.root.winfo_screenwidth() - 380))
+        y = int(max(10, pet.wy + H - ART_H * SCALE - 300))
+        self.win.geometry(f"+{x}+{y}")
+        tk.Label(self.win, text=f"💬 {pet.name} ({pet.kind})", bg=self.BG, fg="#ffd23a",
+                 font=("Segoe UI", 11, "bold")).pack(anchor="w", padx=12, pady=(10, 4))
+        row = tk.Frame(self.win, bg=self.BG)
+        row.pack(fill="x", padx=12)
+        self.face = tk.Canvas(row, width=128, height=120, bg=self.PANEL, highlightthickness=0)
+        self.face.pack(side="left", anchor="n")
+        self.line = tk.Label(row, text="", bg=self.PANEL, fg=self.TEXT, font=("Segoe UI", 11), wraplength=230,
+                             justify="left", padx=10, pady=8, width=26, anchor="nw", height=6)
+        self.line.pack(side="left", fill="both", expand=True, padx=(8, 0))
+        self.opts = tk.Frame(self.win, bg=self.BG)
+        self.opts.pack(fill="x", padx=12, pady=(8, 12))
+        self.win.protocol("WM_DELETE_WINDOW", self.close)
+        self.show("start")
+
+    def show(self, node):
+        if node == "end" or node not in self.tree:
+            self.close()
+            return
+        n = self.tree[node]
+        if n.get("blush"):
+            self.pet.blush_until = time.monotonic() + 2.5
+        text = chat_text(self.pet, n["say"])
+        self.line.configure(text=text)
+        self.draw_face()
+        self.pet.say(text, 4)
+        if n.get("action") == "feed":
+            self.pet.feed()                         # a real cookie (its bubble then says its own snack line)
+        self.pet.set_face("happy", 1.2)
+        self.pet.app.sound.play("boop")
+        for w in self.opts.winfo_children():
+            w.destroy()
+        for text, nxt in n["options"]:
+            tk.Button(self.opts, text=f"➜ {text}", anchor="w", command=lambda nx=nxt: self.show(nx), bg="#3a3360",
+                      fg="#ffffff", activebackground="#5a4ae0", activeforeground="#ffffff", relief="flat", bd=0,
+                      font=("Segoe UI", 10, "bold"), padx=10, pady=5, cursor="hand2").pack(fill="x", pady=2)
+
+    def draw_face(self):
+        c = self.face
+        c.delete("all")
+        g = chat_portrait(self.pet, time.monotonic())
+        s = min(128 // len(g[0]), 120 // len(g))
+        x0, y0 = (128 - len(g[0]) * s) // 2, 120 - len(g) * s
+        for y, row in enumerate(g):
+            x = 0
+            while x < len(row):
+                col = row[x]
+                if col is None:
+                    x += 1
+                    continue
+                x2 = x
+                while x2 + 1 < len(row) and row[x2 + 1] == col:
+                    x2 += 1
+                c.create_rectangle(x0 + x * s, y0 + y * s, x0 + (x2 + 1) * s, y0 + (y + 1) * s, fill=col, outline="")
+                x = x2 + 1
+        if getattr(self.pet, "blush_until", 0) > time.monotonic():
+            self.win.after(2600, lambda: self.win.winfo_exists() and self.draw_face())   # cool back down
+
+    def close(self):
+        now = time.monotonic()
+        if now - getattr(self.pet, "last_chat", -999) > 120 and self.pet in self.pet.app.pets:   # chatting makes friends
+            self.pet.last_chat = now
+            self.pet.befriend("chat")
+        try:
+            self.win.destroy()
+        except tk.TclError:
+            pass
+
+
+class CookieCatch:
+    """🍪 Cookie Catch: move your Blip with the mouse or the arrow keys and catch the falling cookies."""
+    CW, CH, S = 480, 440, 4
+    BG = "#1d1a2e"
+
+    def __init__(self, app, pet):
+        self.app, self.pet = app, pet
+        self.kind, self.color = pet.kind, pet.palette
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville: Cookie Catch")
+        self.win.configure(bg=self.BG)
+        self.win.resizable(False, False)
+        self.win.attributes("-topmost", True)
+        self.c = tk.Canvas(self.win, width=self.CW, height=self.CH, bg=self.BG, highlightthickness=0)
+        self.c.pack(padx=6, pady=6)
+        self.c.bind("<Motion>", lambda e: setattr(self, "aim", e.x))
+        self.c.bind("<Button-1>", lambda e: self.start() if not self.running else None)
+        for key, d in (("<Left>", -1), ("<Right>", 1), ("<a>", -1), ("<d>", 1)):
+            self.win.bind(key, lambda e, d=d: self.nudge(d))
+        self.win.bind("<space>", lambda e: self.start() if not self.running else None)
+        self.win.protocol("WM_DELETE_WINDOW", self.close)
+        self.running, self.after_id, self.aim = False, None, None
+        self.x = self.CW / 2
+        self.draw_title()
+        self.win.focus_force()
+
+    def nudge(self, d):
+        self.aim = None
+        self.x = min(max(self.x + d * 28, 32), self.CW - 32)
+
+    def start(self):
+        self.running, self.score, self.lives, self.items = True, 0, CATCH_LIVES, []
+        self.t0 = self.last = time.monotonic()
+        self.next_drop = self.t0 + 0.6
+        self.popups = []
+        self.app.sound.play("boop")
+        self.step()
+
+    def step(self):
+        if not self.running:
+            return
+        now = time.monotonic()
+        dt, self.last = min(0.05, now - self.last), now
+        left = CATCH_SECONDS - (now - self.t0)
+        if left <= 0 or self.lives <= 0:
+            self.finish()
+            return
+        if self.aim is not None:                                 # follow the mouse, a little smoothed
+            self.x += (min(max(self.aim, 32), self.CW - 32) - self.x) * min(1, dt * 14)
+        speed = 150 + (now - self.t0) * 5                       # falls faster and faster
+        if now >= self.next_drop:
+            r = random.random()
+            kind = "golden" if r < 0.06 else "burnt" if r < 0.30 else "cookie"
+            self.items.append({"kind": kind, "x": random.uniform(24, self.CW - 24), "y": 40.0, "v": speed * random.uniform(0.85, 1.2)})
+            self.next_drop = now + max(0.28, 0.75 - (now - self.t0) * 0.01)
+        top = self.CH - 30 - 13 * self.S
+        for it in list(self.items):
+            it["y"] += it["v"] * dt
+            if top - 10 <= it["y"] <= top + 26 and abs(it["x"] - self.x) < 36:
+                self.items.remove(it)
+                if it["kind"] == "burnt":
+                    self.lives -= 1
+                    self.app.sound.play("thud")
+                    self.popups.append([it["x"], top, "ouch!", "#ff5a7a", now])
+                else:
+                    pts = CATCH_KINDS[it["kind"]]["points"]
+                    self.score += pts
+                    self.app.sound.play("coin" if it["kind"] == "golden" else "pop")
+                    self.popups.append([it["x"], top, f"+{pts}", "#ffd23a" if pts > 1 else "#ffffff", now])
+            elif it["y"] > self.CH + 10:
+                self.items.remove(it)
+        self.draw(left, now)
+        self.after_id = self.win.after(16, self.step)
+
+    def cookie(self, x, y, kind, s=3):
+        pal = CATCH_KINDS[kind]
+        for r, row in enumerate(CATCH_COOKIE):
+            for i, ch in enumerate(row):
+                if ch != ".":
+                    self.c.create_rectangle(x + (i - 4) * s, y + (r - 3) * s, x + (i - 3) * s, y + (r - 2) * s, fill=pal[ch], outline="")
+
+    def draw(self, left, now):
+        c = self.c
+        c.delete("all")
+        c.create_rectangle(0, self.CH - 30, self.CW, self.CH, fill="#3a3360", outline="")
+        c.create_text(14, 18, anchor="w", text=f"🍪 {self.score}", fill="#ffd23a", font=("Segoe UI", 14, "bold"))
+        c.create_text(self.CW / 2, 18, text="💖" * self.lives + "🖤" * (CATCH_LIVES - self.lives), font=("Segoe UI", 12))
+        c.create_text(self.CW - 14, 18, anchor="e", text=f"⏱ {int(left) + 1}", fill="#ffffff", font=("Segoe UI", 14, "bold"))
+        for it in self.items:
+            self.cookie(it["x"], it["y"], it["kind"])
+        draw_sprite(c, self.kind, self.color, self.x - 8 * self.S, self.CH - 30 - 13 * self.S, self.S, face="happy")
+        for pop in list(self.popups):
+            age = now - pop[4]
+            if age > 0.7:
+                self.popups.remove(pop)
+                continue
+            c.create_text(pop[0], pop[1] - 20 - age * 40, text=pop[2], fill=pop[3], font=("Segoe UI", 12, "bold"))
+
+    def draw_title(self, result=None):
+        c = self.c
+        c.delete("all")
+        c.create_rectangle(0, self.CH - 30, self.CW, self.CH, fill="#3a3360", outline="")
+        c.create_text(self.CW / 2, 70, text="🍪 Cookie Catch", fill="#ffd23a", font=("Segoe UI", 22, "bold"))
+        self.cookie(self.CW / 2 - 70, 140, "cookie", 4)
+        self.cookie(self.CW / 2, 140, "golden", 4)
+        self.cookie(self.CW / 2 + 70, 140, "burnt", 4)
+        c.create_text(self.CW / 2 - 70, 175, text="+1", fill="#ffffff", font=("Segoe UI", 10, "bold"))
+        c.create_text(self.CW / 2, 175, text="+5", fill="#ffd23a", font=("Segoe UI", 10, "bold"))
+        c.create_text(self.CW / 2 + 70, 175, text="ouch!", fill="#ff5a7a", font=("Segoe UI", 10, "bold"))
+        c.create_text(self.CW / 2, 215, width=self.CW - 60, justify="center", fill="#e8e4ff", font=("Segoe UI", 10),
+                      text=f"Move {self.pet.name} with the mouse (or ← →) and catch the cookies! Burnt ones cost a heart, "
+                           f"and you have {CATCH_SECONDS} seconds.")
+        best = int(self.app.stat("catch_best"))
+        if result:
+            c.create_text(self.CW / 2, 262, text=result, fill="#9ad8a8", font=("Segoe UI", 12, "bold"), width=self.CW - 40, justify="center")
+        c.create_text(self.CW / 2, 300, text=f"Best: {best}" if best else "", fill="#c8c0e8", font=("Segoe UI", 10))
+        c.create_text(self.CW / 2, 340, text="Click (or press Space) to play" + (" again" if result else ""), fill="#ffffff",
+                      font=("Segoe UI", 12, "bold"))
+        draw_sprite(c, self.kind, self.color, self.CW / 2 - 8 * self.S, self.CH - 30 - 13 * self.S, self.S, face="happy")
+
+    def finish(self):
+        self.running = False
+        app, score = self.app, self.score
+        hearts = min(CATCH_MAX_HEARTS, score // 3)
+        if hearts:
+            app.add_hearts(hearts, self.pet if self.pet in app.pets else None)
+        pts = min(10, score // 5) if self.kind in EVENT["kinds"] or AWAKEN_BASE.get(self.kind) in EVENT["kinds"] else 0
+        if pts and self.pet in app.pets:
+            app.event_point(self.pet, pts)
+        if self.pet in app.pets:
+            self.pet.befriend("catch")
+        app.quest_tick("catch", score)
+        new_best = score > app.stat("catch_best")
+        if new_best:
+            app.save.setdefault("stats", {})["catch_best"] = score
+            write_save(app.save)
+        app.sound.play("fanfare" if new_best else "pop")
+        self.draw_title(f"You caught {score} point{'s' if score != 1 else ''}! +{hearts} 💖"
+                        + (f" +{pts} {EVENT['icon']}" if pts else "") + ("  🏆 New best!" if new_best else ""))
+
+    def close(self):
+        self.running = False
+        if self.after_id:
+            self.win.after_cancel(self.after_id)
+        self.win.destroy()
+
+
 # ----------------------------------------------------------------------------- collection (peek at locked Blips)
 class Collection:
     """Every rare and Night Shift Blip. Locked ones are shadows, but you can peek (spoilers!)."""
@@ -6081,7 +9621,8 @@ class Collection:
                        (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS),
                        ("Legends ✨  visit a world and click them when they stroll by", LEGEND_KINDS),
                        ("Ghosts 👻  they drift by at night: click one while it glows!", GHOST_KINDS),
-                       ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS)]
+                       ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS),
+                       ("Bad Dreams 🧸  click a Puppet Master 5 times… then fend them off", BAD_DREAM_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         view_h = min(h, self.win.winfo_screenheight() - 140)        # scroll when the screen is too short to fit it all
         self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=view_h, bg="#1d1a2e", highlightthickness=0,
@@ -6192,7 +9733,11 @@ def _synth(name):
         out.extend([0.0] * int(rate * dur))
 
     random.seed(name)                                                   # same sound every time
-    if name == "boop":
+    if name.startswith("voice-"):                                       # 🔊 a talking blip: voice-<pitch>-<wave>-<0..2>
+        _, pitch, wave, j = name.split("-")
+        f = float(pitch) * (0.94, 1.0, 1.07)[int(j)]
+        tone(f, f * 1.02, 0.045, 0.22, {"tri": "tri", "square": "square", "sine": "sine"}[wave])
+    elif name == "boop":
         tone(520, 820, 0.12)
     elif name == "pop":
         tone(900, 1400, 0.06, 0.3)
@@ -6231,6 +9776,203 @@ def _synth(name):
     return header + b"data" + struct.pack("<I", len(frames)) + frames
 
 
+# 🎵 Music for the special stages: it plays while a battle is on one of these backgrounds (with sound on), on both the
+# Windows app and the website. Original little tunes made for Blipville. Each part is [note, beats]; "-" is a rest.
+ARENA_MUSIC = {
+ "theater": {"name": "Music Box Waltz", "bpm": 138, "lead": "bell", "low": "tri",
+   "melody": [["E5", 1], ["A5", 1], ["C6", 1], ["B5", 1], ["A5", 1], ["E5", 1], ["F5", 1], ["E5", 1], ["D#5", 1], ["E5", 3],
+              ["E5", 1], ["A5", 1], ["C6", 1], ["D6", 1], ["C6", 1], ["B5", 1], ["A5", 1], ["G#5", 1], ["B5", 1], ["A5", 3]],
+   "bass": [["A2", 1], ["E3", 1], ["A3", 1], ["A2", 1], ["E3", 1], ["A3", 1], ["D3", 1], ["F3", 1], ["A3", 1], ["E2", 1], ["G#3", 1], ["B3", 1],
+            ["A2", 1], ["E3", 1], ["A3", 1], ["F2", 1], ["A3", 1], ["C4", 1], ["E2", 1], ["G#3", 1], ["B3", 1], ["A2", 1], ["E3", 1], ["A3", 1]]},
+ "keep": {"name": "March of the Phantom Guard", "bpm": 112, "lead": "square", "low": "tri",
+   "melody": [["D5", 1], ["D5", 0.5], ["D5", 0.5], ["F5", 1], ["A5", 1], ["G5", 1], ["F5", 0.5], ["E5", 0.5], ["F5", 2],
+              ["A5", 1], ["A5", 0.5], ["A5", 0.5], ["A#5", 1], ["A5", 1], ["G5", 1], ["E5", 1], ["D5", 2],
+              ["D5", 1], ["F5", 1], ["A5", 1], ["D6", 1], ["C6", 1], ["A#5", 0.5], ["A5", 0.5], ["G5", 2],
+              ["F5", 1], ["E5", 1], ["D5", 1], ["C#5", 1], ["D5", 3], ["-", 1]],
+   "bass": [["D3", 1], ["A2", 1], ["D3", 1], ["A2", 1], ["A#2", 1], ["F3", 1], ["A#2", 1], ["F3", 1], ["F2", 1], ["C3", 1], ["F2", 1], ["C3", 1],
+            ["G2", 1], ["A2", 1], ["D3", 1], ["A2", 1], ["D3", 1], ["A2", 1], ["D3", 1], ["A2", 1], ["C3", 1], ["G2", 1], ["C3", 1], ["G2", 1],
+            ["A2", 1], ["E3", 1], ["A2", 1], ["E3", 1], ["D3", 1], ["A2", 1], ["D2", 2]]},
+ "dam": {"name": "Deep Water Rising", "bpm": 76, "lead": "tri", "low": "tri",
+   "melody": [["E4", 2], ["G4", 2], ["F#4", 2], ["D#4", 2], ["E4", 3], ["-", 1], ["-", 2], ["B3", 2],
+              ["E4", 2], ["B4", 2], ["C5", 2], ["B4", 1], ["A4", 1], ["G4", 2], ["F#4", 2], ["E4", 4]],
+   "bass": [["E2", 4], ["B1", 4], ["C2", 4], ["B1", 4], ["E2", 4], ["A1", 4], ["B1", 4], ["E2", 4]]},
+}
+
+
+
+def _pulse(*bars):
+    """A driving bass line: per bar (root, fifth), bouncing in eighth notes."""
+    return [n for r, f in bars for n in [[r, 0.5], [f, 0.5]] * 4]
+
+
+ARENA_MUSIC.update({
+ "meadow": {"name": "Sunny Showdown", "bpm": 150, "lead": "square", "low": "tri",
+   "melody": [["G5", .5], ["E5", .5], ["G5", .5], ["C6", .5], ["B5", 1], ["G5", 1], ["A5", .5], ["G5", .5], ["F5", .5], ["E5", .5], ["D5", 2],
+              ["E5", .5], ["F5", .5], ["G5", 1], ["A5", 1], ["G5", 1], ["F5", .5], ["E5", .5], ["D5", .5], ["E5", .5], ["C5", 2],
+              ["G5", .5], ["E5", .5], ["G5", .5], ["C6", .5], ["D6", 1], ["C6", 1], ["B5", .5], ["A5", .5], ["G5", .5], ["A5", .5], ["B5", 2],
+              ["C6", 1], ["G5", .5], ["E5", .5], ["F5", 1], ["D5", 1], ["C5", 3], ["-", 1]],
+   "bass": _pulse(("C3", "G3"), ("G2", "D3"), ("A2", "E3"), ("G2", "D3"), ("C3", "G3"), ("G2", "D3"), ("F2", "C3"), ("C3", "G3"))},
+ "beach": {"name": "Sunset Splash", "bpm": 128, "lead": "tri", "low": "tri",
+   "melody": [["A5", 1], ["C6", .5], ["A5", .5], ["G5", 1], ["F5", 1], ["G5", .5], ["A5", .5], ["G5", .5], ["F5", .5], ["D5", 2],
+              ["F5", 1], ["A5", .5], ["F5", .5], ["E5", 1], ["C5", 1], ["D5", .5], ["E5", .5], ["F5", .5], ["G5", .5], ["A5", 2],
+              ["A5", 1], ["C6", .5], ["A5", .5], ["A#5", 1], ["A5", 1], ["G5", .5], ["F5", .5], ["G5", .5], ["A5", .5], ["G5", 2],
+              ["F5", 1], ["E5", .5], ["D5", .5], ["E5", 1], ["G5", 1], ["F5", 3], ["-", 1]],
+   "bass": _pulse(("F2", "C3"), ("D2", "A2"), ("F2", "C3"), ("C2", "G2"), ("F2", "C3"), ("A#1", "F2"), ("C2", "G2"), ("F2", "C3"))},
+ "volcano": {"name": "Magma Rush", "bpm": 168, "lead": "square", "low": "tri",
+   "melody": [["E5", .5], ["E5", .5], ["G5", .5], ["E5", .5], ["A5", .5], ["G5", .5], ["E5", .5], ["D5", .5],
+              ["E5", .5], ["E5", .5], ["G5", .5], ["E5", .5], ["B5", 1], ["A5", 1],
+              ["C6", .5], ["B5", .5], ["A5", .5], ["G5", .5], ["A5", .5], ["G5", .5], ["F#5", .5], ["D5", .5], ["E5", 2], ["B4", 1], ["D5", 1],
+              ["E5", .5], ["E5", .5], ["G5", .5], ["E5", .5], ["A5", .5], ["G5", .5], ["E5", .5], ["D5", .5],
+              ["E5", .5], ["G5", .5], ["B5", .5], ["E6", .5], ["D6", 1], ["B5", 1], ["C6", 1], ["A5", 1], ["F#5", 1], ["D#5", 1], ["E5", 3], ["-", 1]],
+   "bass": _pulse(("E2", "B2"), ("E2", "B2"), ("A2", "E3"), ("E2", "B2"), ("E2", "B2"), ("E2", "B2"), ("C3", "G3"), ("E2", "B2"))},
+ "graveyard": {"name": "Tombstone Tango", "bpm": 120, "lead": "bell", "low": "tri",
+   "melody": [["D5", 1], ["F5", .5], ["E5", .5], ["D5", 1], ["A4", 1], ["A#4", 1], ["D5", .5], ["C#5", .5], ["D5", 2],
+              ["F5", 1], ["A5", .5], ["G5", .5], ["F5", 1], ["E5", 1], ["D5", .5], ["E5", .5], ["F5", .5], ["E5", .5], ["C#5", 2],
+              ["D5", 1], ["F5", .5], ["E5", .5], ["D5", 1], ["A5", 1], ["A#5", 1], ["A5", .5], ["G5", .5], ["A5", 2],
+              ["G5", .5], ["F5", .5], ["E5", .5], ["D5", .5], ["C#5", 1], ["E5", 1], ["D5", 3], ["-", 1]],
+   "bass": _pulse(("D2", "A2"), ("A#1", "F2"), ("D2", "A2"), ("A1", "E2"), ("D2", "A2"), ("A#1", "F2"), ("A1", "E2"), ("D2", "A2"))},
+ "city": {"name": "Skyscraper Smash", "bpm": 156, "lead": "square", "low": "tri",
+   "melody": [["A4", 1], ["A4", .5], ["C5", .5], ["E5", 1], ["A5", 1], ["G5", .5], ["F5", .5], ["E5", .5], ["D5", .5], ["E5", 2],
+              ["F5", 1], ["F5", .5], ["A5", .5], ["C6", 1], ["F5", 1], ["E5", .5], ["D5", .5], ["C5", .5], ["B4", .5], ["E5", 2],
+              ["A4", 1], ["A4", .5], ["C5", .5], ["E5", 1], ["A5", 1], ["B5", .5], ["C6", .5], ["B5", .5], ["A5", .5], ["G5", 2],
+              ["F5", 1], ["G5", 1], ["G#5", 1], ["B5", 1], ["A5", 3], ["-", 1]],
+   "bass": _pulse(("A2", "E3"), ("A2", "E3"), ("F2", "C3"), ("E2", "B2"), ("A2", "E3"), ("G2", "D3"), ("F2", "C3"), ("A2", "E3"))},
+ "cave": {"name": "Crystal Echoes", "bpm": 100, "lead": "bell", "low": "tri",
+   "melody": [["B5", .5], ["F#5", .5], ["D5", .5], ["F#5", .5], ["B5", 1], ["A5", 1], ["G5", .5], ["D5", .5], ["B4", .5], ["D5", .5], ["G5", 2],
+              ["A5", .5], ["E5", .5], ["C#5", .5], ["E5", .5], ["A5", 1], ["G5", 1], ["F#5", .5], ["C#5", .5], ["A#4", .5], ["C#5", .5], ["F#5", 2],
+              ["B5", .5], ["F#5", .5], ["D5", .5], ["F#5", .5], ["D6", 1], ["C#6", 1], ["B5", .5], ["G5", .5], ["D5", .5], ["G5", .5], ["B5", 2],
+              ["A5", .5], ["G5", .5], ["F#5", .5], ["E5", .5], ["C#5", 1], ["A#4", 1], ["B4", 3], ["-", 1]],
+   "bass": [["B2", 4], ["G2", 4], ["A2", 4], ["F#2", 4], ["B2", 4], ["G2", 4], ["A2", 2], ["F#2", 2], ["B2", 4]]},
+})
+
+def _note_hz(name):
+    if name == "-":
+        return 0.0
+    names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+    n, octave = name[:-1], int(name[-1])
+    return 440.0 * 2 ** ((names.index(n) + 12 * (octave + 1) - 69) / 12)
+
+
+def _music_wav(name):
+    """One loop of a stage's tune as a WAV file (bytes)."""
+    import array, io, wave
+    song, rate = ARENA_MUSIC[name], 22050
+    beat = 60 / song["bpm"]
+    total = int(rate * beat * sum(b for _, b in song["melody"]))
+    mix = array.array("f", [0.0]) * total
+
+    def voice(part, shape, vol):
+        pos = 0
+        for note, beats in part:
+            n, f = int(rate * beat * beats), _note_hz(note)
+            if f:
+                phase, step = 0.0, f / rate
+                for i in range(min(n, total - pos)):
+                    phase = (phase + step) % 1.0
+                    if shape == "square":
+                        v = 1.0 if phase < 0.5 else -1.0
+                        env = max(0.0, 1 - i / n * 0.6) * 0.5
+                    elif shape == "bell":                              # music box: bright, quickly fading
+                        v = math.sin(2 * math.pi * phase) + 0.3 * math.sin(4 * math.pi * phase)
+                        env = math.exp(-5 * i / rate)
+                    else:                                              # triangle
+                        v = 4 * abs(phase - 0.5) - 1
+                        env = 1.0
+                    env *= min(1.0, i / 80, (n - i) / 300)             # no clicks
+                    mix[pos + i] += v * env * vol
+            pos += n
+
+    voice(song["melody"], song["lead"], 0.22)
+    voice(song["bass"], song["low"], 0.18)
+    pcm = array.array("h", (max(-32767, min(32767, int(x * 32767))) for x in mix))
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(rate)
+        w.writeframes(pcm.tobytes())
+    return buf.getvalue()
+
+
+class Music:
+    """Loops one stage tune at a time, alongside the sound effects (Windows: MCI; Mac/Linux: a player process)."""
+    def __init__(self, app):
+        self.app, self.name, self.proc, self.after_id = app, None, None, None
+
+    def path(self, name):
+        p = os.path.join(os.path.dirname(save_path()), "music-v1", name + ".wav")
+        if not os.path.isfile(p):
+            try:
+                os.makedirs(os.path.dirname(p), exist_ok=True)
+                with open(p, "wb") as f:
+                    f.write(_music_wav(name))
+            except OSError:
+                return None
+        return p
+
+    def _mci(self, cmd):
+        import ctypes
+        buf = ctypes.create_unicode_buffer(64)
+        ctypes.windll.winmm.mciSendStringW(cmd, buf, 64, 0)
+        return buf.value
+
+    def play(self, name):
+        if name == self.name:
+            return
+        self.stop()
+        if not name or name not in ARENA_MUSIC or not self.app.sound_on.get():
+            return
+        p = self.path(name)
+        if not p:
+            return
+        self.name = name
+        try:
+            if sys.platform == "win32":
+                self._mci(f'open "{p}" type waveaudio alias blipmusic')
+                self._mci("play blipmusic from 0")
+            else:
+                self._spawn(p)
+        except Exception:  # noqa: BLE001  (no audio: stay quiet)
+            self.name = None
+            return
+        self.after_id = self.app.root.after(500, self._loop)
+
+    def _spawn(self, p):
+        import shutil
+        player = "afplay" if sys.platform == "darwin" else (shutil.which("paplay") or shutil.which("aplay"))
+        self.proc = subprocess.Popen([player, p], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) if player else None
+
+    def _loop(self):
+        self.after_id = None
+        if not self.name:
+            return
+        if not self.app.sound_on.get():
+            self.stop()
+            return
+        try:
+            if sys.platform == "win32":
+                if self._mci("status blipmusic mode") != "playing":
+                    self._mci("play blipmusic from 0")
+            elif self.proc is None or self.proc.poll() is not None:
+                self._spawn(self.path(self.name))
+        except Exception:  # noqa: BLE001
+            pass
+        self.after_id = self.app.root.after(400, self._loop)
+
+    def stop(self):
+        if self.after_id:
+            self.app.root.after_cancel(self.after_id)
+            self.after_id = None
+        if self.name:
+            try:
+                if sys.platform == "win32":
+                    self._mci("close blipmusic")
+                elif self.proc and self.proc.poll() is None:
+                    self.proc.terminate()
+            except Exception:  # noqa: BLE001
+                pass
+        self.name, self.proc = None, None
+
 SOUNDS = ("boop", "pop", "munch", "whoosh", "thud", "coin", "crack", "fanfare", "zap", "boing")
 
 
@@ -6251,6 +9993,26 @@ class Sound:
                 return None
         return p
 
+    def voice(self, kind):
+        """One talking blip in this Blip's voice. Kept light: one at a time, and never over another sound effect."""
+        if not (self.app.sound_on.get() and self.app.voices_on.get()):
+            return
+        now = time.monotonic()
+        if now - self.last.get("_voice", 0) < 0.07 or now - max([t for k, t in self.last.items() if k != "_voice"] or [0]) < 0.7:
+            return
+        self.last["_voice"] = now
+        pitch, wave = voice_of(kind)
+        name = f"voice-{int(pitch)}-{wave}-{random.randrange(3)}"
+        p = os.path.join(self.dir, name + ".wav")
+        if not os.path.isfile(p):
+            try:
+                os.makedirs(self.dir, exist_ok=True)
+                with open(p, "wb") as f:
+                    f.write(_synth(name))
+            except OSError:
+                return
+        self._play_file(p)
+
     def play(self, name):
         if not self.app.sound_on.get():
             return
@@ -6261,6 +10023,9 @@ class Sound:
         p = self.path(name)
         if not p:
             return
+        self._play_file(p)
+
+    def _play_file(self, p):
         try:
             if sys.platform == "win32":
                 import winsound
@@ -6278,8 +10043,9 @@ class Sound:
 
 # ----------------------------------------------------------------------------- hat shop
 class HatShop:
-    """Try on, buy and wear hats & outfits for one pet."""
-    COLS, CELL_W, CELL_H = 4, 132, 150
+    """Try on, buy and wear hats & outfits for one pet. Owned items can be recolored (free), and with the 2nd accessory
+    slot a pet can wear two things at once (in different spots: head, face, neck)."""
+    COLS, CELL_W, CELL_H = 4, 132, 172
 
     def __init__(self, app, pet):
         self.app, self.pet = app, pet
@@ -6290,10 +10056,12 @@ class HatShop:
         self.win.attributes("-topmost", True)
         names = [n for n in HATS if hat_in_shop(n)]
         rows = -(-len(names) // self.COLS)
-        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=rows * self.CELL_H + 70,
+        self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=rows * self.CELL_H + 90,
                                 bg="#1d1a2e", highlightthickness=0)
         self.canvas.pack(padx=6, pady=6)
         self.canvas.tag_bind("cell", "<Button-1>", self.on_click)
+        self.canvas.tag_bind("swatch", "<Button-1>", self.on_swatch)
+        self.canvas.tag_bind("slot2", "<Button-1>", lambda e: self.buy_slot2())
         self.names = names
         self.draw()
 
@@ -6306,37 +10074,93 @@ class HatShop:
         c.create_text(16, 22, anchor="w", text=f"🎩 Dress up {pet.name}", fill="#ffffff", font=("Segoe UI", 14, "bold"))
         c.create_text(self.COLS * self.CELL_W + 4, 22, anchor="e", text=f"💖 {self.app.hearts()}", fill="#ff9fc0",
                       font=("Segoe UI", 13, "bold"))
+        if self.app.save.get("slot2"):
+            c.create_text(16, 48, anchor="w", text="✨ 2 accessory slots: a hat + glasses or a scarf",
+                          fill="#9ad8a8", font=("Segoe UI", 9, "bold"))
+        else:
+            c.create_rectangle(12, 36, 330, 60, fill="#3a2a5a", outline="#ffd23a", width=2, tags=("slot2",))
+            c.create_text(171, 48, text=f"🔓 Unlock a 2nd accessory slot · {SLOT2_COST} 💖", fill="#ffd23a",
+                          font=("Segoe UI", 9, "bold"), tags=("slot2",))
         season = current_season()
         if any(HATS[n].get("season") == season for n in self.names):
-            c.create_text(16, 46, anchor="w", text=f"✨ Seasonal items are here for {season}!", fill="#ffd23a",
+            c.create_text(self.COLS * self.CELL_W + 4, 48, anchor="e", text=f"✨ {season.title()} items are in!", fill="#ffd23a",
                           font=("Segoe UI", 9, "bold"))
+        self.cells, self.swatches = {}, {}
         for i, name in enumerate(self.names):
             hat = HATS[name]
             x0 = 10 + (i % self.COLS) * self.CELL_W
-            y0 = 60 + (i // self.COLS) * self.CELL_H
-            wearing, owned = pet.hat == name, name in self.owned()
+            y0 = 72 + (i // self.COLS) * self.CELL_H
+            wearing, owned = name in (pet.hat, pet.hat2), name in self.owned()
             tag = f"cell{i}"
+            self.cells[tag] = name
             c.create_rectangle(x0, y0, x0 + self.CELL_W - 10, y0 + self.CELL_H - 10, outline="#ffd23a" if wearing else "#3a3360",
                                width=3 if wearing else 2, fill="#2b2547", tags=("cell", tag))
-            draw_sprite(c, pet.kind, pet.palette, x0 + 27, y0 + 34, 4, tags=("cell", tag), hat=name)
+            draw_sprite(c, pet.kind, pet.palette, x0 + 27, y0 + 34, 4, tags=("cell", tag), wear=[(name, pet.tints.get(name, 0))])
             c.create_text(x0 + (self.CELL_W - 10) / 2, y0 + 104, text=name, fill="#ffffff", font=("Segoe UI", 10, "bold"),
                           tags=("cell", tag))
             label = "✓ wearing · click to remove" if wearing else ("owned · click to wear" if owned else f"💖 {hat['price']}")
             color = "#ffd23a" if wearing else ("#9ad8a8" if owned else "#ff9fc0")
             c.create_text(x0 + (self.CELL_W - 10) / 2, y0 + 122, text=label, fill=color, font=("Segoe UI", 7, "bold"),
                           width=self.CELL_W - 18, justify="center", tags=("cell", tag))
-        self.cells = {f"cell{i}": n for i, n in enumerate(self.names)}
+            if owned:                                          # color swatches (free)
+                main = next(iter(hat["colors"].values()))
+                for t, (tname, col) in enumerate(ACCESSORY_TINTS):
+                    sx, sy = x0 + 8 + t * 12, y0 + 138
+                    stag = f"sw{i}_{t}"
+                    self.swatches[stag] = (name, t)
+                    chosen = pet.tints.get(name, 0) == t
+                    c.create_rectangle(sx, sy, sx + 10, sy + 10, fill=col or main, outline="#ffffff" if chosen else "#14121e",
+                                       width=2 if chosen else 1, tags=("swatch", stag))
+
+    def tag_of(self, table):
+        return next((t for t in self.canvas.gettags("current") if t in table), None)
+
+    def on_swatch(self, e):
+        tag = self.tag_of(getattr(self, "swatches", {}))
+        if not tag:
+            return
+        name, t = self.swatches[tag]
+        pet = self.pet
+        pet.tints[name] = t
+        if t == 0:
+            pet.tints.pop(name, None)
+        pet.wear(name)
+        pet.say(f"ooh, {ACCESSORY_TINTS[t][0].lower()}!" if t else "back to the classic look!", 2)
+        pet.set_face("happy", 1.2)
+        self.app.sound.play("pop")
+        self.app.save_town()
+        self.draw()
+
+    def buy_slot2(self):
+        from tkinter import messagebox
+        if self.app.save.get("slot2"):
+            return
+        if self.app.hearts() < SLOT2_COST:
+            messagebox.showinfo("2nd accessory slot", f"The 2nd accessory slot costs {SLOT2_COST} 💖. You have {self.app.hearts()}.",
+                                parent=self.win)
+            return
+        if not messagebox.askyesno("2nd accessory slot", f"Unlock a 2nd accessory slot for {SLOT2_COST} 💖?\n\n"
+                                   "Every Blip in your town can then wear two things at once, like a hat and sunglasses.",
+                                   parent=self.win):
+            return
+        self.app.save["hearts"] = self.app.hearts() - SLOT2_COST
+        self.app.save["slot2"] = True
+        write_save(self.app.save)
+        self.app.sound.play("fanfare")
+        self.pet.say("two accessories?! fancy!", 3)
+        self.pet.set_face("happy", 2)
+        self.draw()
 
     def on_click(self, e):
-        tag = next((t for t in self.canvas.gettags("current") if t in getattr(self, "cells", {})), None)
+        tag = self.tag_of(getattr(self, "cells", {}))
         if not tag:
             return
         name, pet = self.cells[tag], self.pet
-        if pet.hat == name:
-            pet.hat = None
+        if name in (pet.hat, pet.hat2):
+            pet.take_off(name)
             pet.say("back to basics!", 2)
         elif name in self.owned():
-            pet.hat = name
+            pet.wear(name)
             pet.say(random.choice(["how do i look?", "so stylish!", "*strikes a pose*"]), 2.5)
             pet.set_face("happy", 1.5)
         else:
@@ -6349,11 +10173,10 @@ class HatShop:
             self.app.save["hearts"] = self.app.hearts() - price
             self.owned().append(name)
             write_save(self.app.save)
-            pet.hat = name
+            pet.wear(name)
             pet.say(f"a new {name.lower()}! thank you!!", 3)
             self.app.sound.play("coin")
             pet.set_face("happy", 2)
-            pet.burst("heart", 5)
         self.app.save_town()
         self.draw()
 
@@ -6459,7 +10282,8 @@ class NightShiftGame:
     """Survive 12 AM → 6 AM while the Night Shift crew wanders toward your office.
 
     FLASH a doorway to send a robo back to the stage. A robo you're watching on camera can't move,
-    but cameras and flashes use battery. Each night you survive unlocks a new robo pet.
+    but cameras and flashes use battery, and a camera left on one room overheats after a few seconds
+    (it switches off until it cools down). Each night you survive unlocks a new robo pet.
     """
     HOUR = 20.0                                   # seconds per in-game hour (6 hours ≈ 2 minutes)
     CW, CH = 720, 380
@@ -6470,9 +10294,13 @@ class NightShiftGame:
         1: dict(robots=["Robo Bear"], interval=6.0, chance=0.55, grace=3.4),
         2: dict(robots=["Robo Bear", "Robo Bunny"], interval=4.4, chance=0.66, grace=2.2),
         3: dict(robots=["Robo Bear", "Robo Bunny", "Robo Hen"], interval=3.9, chance=0.75, grace=1.9),
+        4: dict(robots=["Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox"], interval=3.7, chance=0.78, grace=1.7),
     }
+    FAST = {"Robo Fox": 0.7}                      # 🦊 the fox moves sooner than the others
+    LAST = max(NIGHTS)
     MIDNIGHT = 3                                  # color index of the spooky glowing-eye look
-    FLASH_COST, DRAIN, CAM_DRAIN = 5.0, 0.2, 0.5  # battery % per flash, per second, extra per second on camera
+    FLASH_COST, DRAIN, CAM_DRAIN = 3.0, 0.18, 0.3  # battery % per flash, per second, extra per second on camera
+    CAM_HOT, CAM_COOL = 8.0, 0.8                  # a camera overheats after 8 s on one room; cools 0.8 s per second off
     BG, PANEL, TEXT, DIM = "#0c0b14", "#1d1a2e", "#e8e4ff", "#7a7598"
 
     def __init__(self, app, speed=1.0):
@@ -6508,7 +10336,7 @@ class NightShiftGame:
             top.bind(str(i), lambda e, r=room: self.open_cam(r))
         self.canvas.tag_bind("click", "<Button-1>", self.on_click)
         self.state, self.clicks = "menu", {}
-        self.night = min(self.app.nights_won() + 1, 3)
+        self.night = min(self.app.nights_won() + 1, self.LAST)
         self.after_id = None
         self.last = time.monotonic()
         self.loop()
@@ -6524,6 +10352,7 @@ class NightShiftGame:
         cfg = self.NIGHTS[night]
         self.night, self.cfg = night, cfg
         self.t, self.battery, self.cam = 0.0, 100.0, None
+        self.heat, self.hot = {room: 0.0 for room in self.ROOMS}, set()   # per-camera heat (s) / overheated cameras
         self.flash_until, self.flash_side, self.flashed = -1.0, None, None
         self.msg, self.msg_until = "Night " + str(night) + " — good luck! 🔦", 3.0
         self.robots = [{"kind": k, "room": "Stage", "next": random.uniform(4, 9) + i * 2.5, "door_since": None}
@@ -6552,8 +10381,12 @@ class NightShiftGame:
         self.app.sound.play("zap")
 
     def open_cam(self, room):
-        if self.state == "play" and self.battery > 0:
-            self.cam = room
+        if self.state != "play" or self.battery <= 0:
+            return
+        if room in self.hot:
+            self.say(f"📷 the {room} camera is still cooling down…")
+            return
+        self.cam = room
 
     def office(self):
         if self.state == "play":
@@ -6592,6 +10425,17 @@ class NightShiftGame:
         if self.battery <= 0 and self.cam:
             self.cam = None
             self.say("the battery died… 🔋 lights out!", 4)
+        for room in self.ROOMS:                   # cameras heat up while watched and cool down while off
+            if room == self.cam:
+                self.heat[room] += dt
+                if self.heat[room] >= self.CAM_HOT:
+                    self.hot.add(room)
+                    self.cam = None
+                    self.say(f"📷 the {room} camera overheated! check another room", 3)
+            else:
+                self.heat[room] = max(0.0, self.heat[room] - self.CAM_COOL * dt)
+                if self.heat[room] == 0:
+                    self.hot.discard(room)
         for r in self.robots:
             if r["room"].startswith("door"):
                 if self.t - r["door_since"] > cfg["grace"]:
@@ -6600,7 +10444,7 @@ class NightShiftGame:
                 continue
             if self.t < r["next"]:
                 continue
-            r["next"] = self.t + cfg["interval"] * random.uniform(0.7, 1.3)
+            r["next"] = self.t + cfg["interval"] * random.uniform(0.7, 1.3) * self.FAST.get(r["kind"], 1)
             if self.cam == r["room"]:
                 continue                          # being watched: frozen
             if random.random() < cfg["chance"]:
@@ -6643,6 +10487,8 @@ class NightShiftGame:
         self.clicks = {}
         for b in self.buttons:
             b.configure(state="normal" if self.state == "play" else "disabled")
+        for room, b in zip(self.ROOMS, self.buttons[2:-1]):       # an overheated camera's button turns red
+            b.configure(fg="#ff4a5a" if self.state == "play" and room in self.hot else self.TEXT)
         getattr(self, "draw_" + self.state)()
 
     def draw_menu(self):
@@ -6652,17 +10498,17 @@ class NightShiftGame:
                       text="Survive from 12 AM to 6 AM. The Night Shift crew wanders toward your office.\n"
                            "Glowing eyes in a doorway? FLASH that side (◀ ▶ or A / D) to send them back to the stage.\n"
                            "Check rooms with the cameras (1–5): a robo you're watching can't move. "
-                           "But cameras and flashes use battery!")
+                           "Cams overheat if left on one room, and everything uses battery!")
         for i, k in enumerate(NIGHT_SHIFT):
-            x = W_ / 2 - 150 + i * 150
+            x = W_ / 2 - 75 * (len(NIGHT_SHIFT) - 1) + i * 150
             unlocked = self.app.is_unlocked(k)
             draw_sprite(c, k, self.MIDNIGHT if unlocked else 3, x - 32, 165, 4, glow=not unlocked)
             c.create_text(x, 236, text=(k if unlocked else "🔒 " + k), fill=self.TEXT if unlocked else self.DIM,
                           font=("Segoe UI", 9, "bold"))
             c.create_text(x, 252, text=f"Night {UNLOCKS[k]}", fill=self.DIM, font=("Segoe UI", 8))
         best = self.app.nights_won()
-        for n in (1, 2, 3):
-            self.button(W_ / 2 - 170 + (n - 1) * 170, 300, f"Night {n}" + (" ✓" if n <= best else ""),
+        for n in self.NIGHTS:
+            self.button(W_ / 2 - 80 * (self.LAST - 1) + (n - 1) * 160, 300, f"Night {n}" + (" ✓" if n <= best else ""),
                         lambda n=n: self.start(n), primary=(n == self.night), enabled=n <= best + 1)
         c.create_text(W_ / 2, 346, text="Close this window anytime. Your progress is saved.", fill=self.DIM,
                       font=("Segoe UI", 8))
@@ -6752,6 +10598,11 @@ class NightShiftGame:
                       fill="#ff4a5a", font=("Segoe UI", 11, "bold"))
         c.create_text(W_ - 16, 52, anchor="e", text=("watching — it can't move" if here else "empty"),
                       fill="#9ad8a8", font=("Segoe UI", 9, "bold"))
+        heat = min(1.0, self.heat[room] / self.CAM_HOT)          # 🌡️ how close this camera is to overheating
+        c.create_text(16, H_ - 46, anchor="w", text="🌡️ CAM HEAT", fill="#9ad8a8", font=("Segoe UI", 9, "bold"))
+        c.create_rectangle(110, H_ - 53, 270, H_ - 39, outline="#3a3360", width=2)
+        c.create_rectangle(112, H_ - 51, 112 + 156 * heat, H_ - 41, outline="",
+                           fill="#5ad87a" if heat < 0.5 else "#ffd23a" if heat < 0.8 else "#ff4a5a")
 
     def draw_caught(self):
         c, W_, H_ = self.canvas, self.CW, self.CH
@@ -6776,13 +10627,97 @@ class NightShiftGame:
         else:
             draw_sprite(c, "Blip", 0, W_ / 2 - 48, 130, 6, face="happy")
             c.create_text(W_ / 2, 222, text="Blip is proud of you.", fill="#ffffff", font=("Segoe UI", 12, "bold"))
-        if self.night < 3:
+        if self.night < self.LAST:
             self.button(W_ / 2 - 100, 300, f"Night {self.night + 1} ▶", lambda: self.start(self.night + 1), primary=True)
             self.button(W_ / 2 + 100, 300, "Menu", lambda: setattr(self, "state", "menu"))
         else:
             c.create_text(W_ / 2, 258, text="You beat every night. The whole crew is yours! 🏆", fill="#3a1a14",
                           font=("Segoe UI", 11, "bold"))
             self.button(W_ / 2, 310, "Menu", lambda: setattr(self, "state", "menu"))
+
+
+class DigSite:
+    """🏺 Dig for the gods of Egypt World: one hidden god per board, hot/cold hints, 8 digs, free new boards."""
+    CELL = 58
+
+    def __init__(self, app):
+        self.app = app
+        if app.world() is None or app.world()["name"] != "Egypt World":
+            app.visit_world("Egypt World")
+        self.win = tk.Toplevel(app.root)
+        self.win.title("🏺 Dig Site")
+        self.win.resizable(False, False)
+        self.win.configure(bg="#3a2a14")
+        self.win.attributes("-topmost", True)
+        self.msg = tk.Label(self.win, bg="#3a2a14", fg="#ffe8b0", font=("Segoe UI", 11, "bold"), wraplength=DIG_COLS * self.CELL)
+        self.msg.pack(padx=10, pady=(10, 4))
+        self.c = tk.Canvas(self.win, width=DIG_COLS * self.CELL, height=DIG_ROWS * self.CELL, bg="#c89a48", highlightthickness=0)
+        self.c.pack(padx=10, pady=4)
+        self.c.bind("<Button-1>", self.click)
+        self.btn = tk.Button(self.win, text="New dig site", command=self.new_board)
+        self.btn.pack(pady=(4, 10))
+        self.new_board()
+
+    def new_board(self):
+        left = [k for k in EGYPT_GODS if not self.app.is_unlocked(k)]
+        cells = [(x, y) for x in range(DIG_COLS) for y in range(DIG_ROWS)]
+        random.shuffle(cells)
+        self.god = random.choice(left) if left else None
+        self.god_at = cells[0]
+        self.treasure = set(cells[1:1 + DIG_TREASURES])
+        self.dug, self.tries, self.over = {}, DIG_TRIES, False
+        self.msg.config(text=(f"A god is hiding in the sand! {DIG_TRIES} digs. Every dig tells you how close you are."
+                              if self.god else "You've found every god! 🏆 Dig for treasure anyway."))
+        self.draw()
+
+    def draw(self):
+        c, s = self.c, self.CELL
+        c.delete("all")
+        for x in range(DIG_COLS):
+            for y in range(DIG_ROWS):
+                x0, y0 = x * s, y * s
+                got = self.dug.get((x, y))
+                c.create_rectangle(x0 + 2, y0 + 2, x0 + s - 2, y0 + s - 2, fill="#a87a30" if got else "#e8c878", outline="#8a6020", width=2)
+                if got == "god":
+                    draw_sprite(c, self.god, 0, x0 + 5, y0 + 4, 3, face="happy")
+                elif got:
+                    c.create_text(x0 + s / 2, y0 + s / 2, text=got, font=("Segoe UI Emoji", 18))
+        c.create_text(DIG_COLS * s - 6, DIG_ROWS * s - 6, anchor="se", text=f"⛏️ {self.tries}", fill="#3a2a14", font=("Segoe UI", 11, "bold"))
+
+    def click(self, e):
+        if self.over:
+            return
+        cell = (int(e.x // self.CELL), int(e.y // self.CELL))
+        if cell in self.dug or not (0 <= cell[0] < DIG_COLS and 0 <= cell[1] < DIG_ROWS):
+            return
+        self.tries -= 1
+        if self.god and cell == self.god_at:
+            self.dug[cell] = "god"
+            self.over = True
+            self.app.save.setdefault("gods", []).append(self.god)
+            self.app.sound.play("fanfare")
+            self.msg.config(text=f"You dug up {self.god}! 🏺✨ They're joining your town.")
+            pet = self.app.add_pet(self.god, greet=False)
+            if pet:
+                pet.say(f"i'm free! thank you! 🏺", 4)
+            self.app.check_trophies()
+            write_save(self.app.save)
+        elif cell in self.treasure:
+            self.dug[cell] = "💖"
+            pet = self.app.pets[0] if self.app.pets else None
+            self.app.add_hearts(DIG_HEARTS, pet)
+            self.msg.config(text=f"Treasure! +{DIG_HEARTS} 💖")
+        else:
+            d = abs(cell[0] - self.god_at[0]) + abs(cell[1] - self.god_at[1]) if self.god else 9
+            icon, word = dig_hint(d)
+            self.dug[cell] = icon
+            self.msg.config(text=f"{word}…" if self.god else "just sand…")
+        if not self.over and self.tries <= 0:
+            self.over = True
+            if self.god:
+                self.dug[self.god_at] = "👣"
+                self.msg.config(text=f"Out of digs! The god slipped away (they were where the 👣 are). Try a new dig site!")
+        self.draw()
 
 
 class App:
@@ -6796,15 +10731,29 @@ class App:
         self.name_tags = tk.BooleanVar(master=self.root, value=True)
         self.season = current_season()
         self.save = load_save()
+        if "Egypt World" not in self.save.setdefault("worlds", []):
+            self.save["worlds"].append("Egypt World")      # 🏺 free for everyone (its gods still have to be dug up)
         self.weather = tk.BooleanVar(master=self.root, value=bool(self.save.get("weather", True)))
         self.sound_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("sound", False)))
+        self.voices_on = tk.BooleanVar(master=self.root, value=bool(self.save.get("voices", True)))
+        self.climb_on = tk.BooleanVar(master=self.root, value=FEATURES["climb"] and bool(self.save.get("climb", True)))
+        self.cursor_play = tk.BooleanVar(master=self.root, value=FEATURES["cursor_play"] and bool(self.save.get("cursor_play", True)))
+        self.desk = DesktopWindows()
+        self.mouse_hist, self.next_chase, self.steal = [], 0.0, None
+        self.last_steal = self.last_cursor_heart = -99.0
         self.sound = Sound(self)
         self.updater = Updater(self)
         self.maintenance = Maintenance(self)
         self.root.report_callback_exception = lambda *exc: log("error in a click or timer:\n" + "".join(__import__("traceback").format_exception(*exc)))
         log(f"started on {sys.platform}, Python {sys.version.split()[0]}")
+        if SAVE_NOTES:
+            def _tell():
+                from tkinter import messagebox
+                messagebox.showinfo("Blipville 💾", "\n\n".join(SAVE_NOTES), parent=self.root)
+            self.root.after(1500, _tell)
         load_custom_blips()
         self.game = None
+        self.dream_game, self.dream_rest = None, 0.0     # 🧸 the Bad Dream fend-off window, and its cooldown
         self.plays = []                            # games of catch / tag going on right now
         self.sightings = []                        # a cryptid sneaking past right now
         self.next_sighting = time.monotonic() + random.uniform(6, 14) * 60
@@ -6833,12 +10782,27 @@ class App:
             cx, cy = int(p.wx + W / 2), int(p.wy + H - ART_H * SCALE / 2)
             log(f"selftest: pet {p.name} state={p.state} click_at={cx},{cy} layered={surf is not None} "
                 f"frames_shown={getattr(surf, 'shown', 0)} failed={getattr(surf, 'failed', None)}")
-        log(f"selftest: {len(self.pets)} pets, LAYERED={LAYERED}, edition={EDITION}")
+        self.root.after(8000, self.selftest_climb)
+
+    def selftest_climb(self):
+        """The build's test opens Notepad: one Blip should be able to jump up onto it."""
+        self.desk.refresh(time.monotonic(), force=True)
+        perch = [w for w in self.desk.wins if w["perch"]]
+        log(f"selftest: windows={len(self.desk.wins)} perchable={[w['title'][:30] for w in perch][:5]}")
+        p = self.pets[0] if self.pets else None
+        spot = p and self.desk.pick(p.wx + W / 2, p.top + ART_H * SCALE + 20, p.ground + H)
+        if not spot:
+            log("selftest: perched=False (no window to climb)")
+            return
+        p.start_jump(*spot, time.monotonic())
+        self.root.after(2500, lambda: log(f"selftest: perched={p.perch is not None} state={p.state} at={int(p.wx)},{int(p.wy)}"))
+        log(f"selftest: {len(self.pets)} pets, LAYERED={LAYERED}, version={APP_VERSION}")
 
     # ----- remembering your town between launches
     def town_snapshot(self):
-        return [{"kind": p.kind, "color": p.palette, "name": p.name, "hat": getattr(p, "hat", None),
-                 "hunger": round(p.hunger), "energy": round(p.energy)} for p in self.pets]
+        return [{"kind": p.kind, "color": p.palette, "name": p.name, "hat": getattr(p, "hat", None), "hat2": p.hat2,
+                 "tints": {n: t for n, t in p.tints.items() if t},
+                 "hunger": round(p.hunger), "energy": round(p.energy), "bond": round(p.bond)} for p in self.pets]
 
     def save_town(self):
         town = self.town_snapshot()
@@ -6861,8 +10825,11 @@ class App:
             pet.palette = int(t.get("color", 0)) % len(kind_colors(kind))
             pet.color_var.set(pet.palette)
             pet.hat = t.get("hat")
+            pet.hat2 = t.get("hat2") if self.save.get("slot2") else None
+            pet.tints = {n: int(v) for n, v in (t.get("tints") or {}).items() if n in HATS}
             pet.hunger = min(100.0, float(t.get("hunger", 10)) + hours_away * 8)    # they got peckish while you were away
             pet.energy = float(t.get("energy", 100))
+            pet.bond = float(t.get("bond", 0))
             pet.say(random.choice(["i'm back!", "missed you!", "*stretches* hi again!", "good to see you!"]), 3)
             back += 1
         return back
@@ -6906,10 +10873,17 @@ class App:
                 self.sightings.append(Sighting(self, random.choice(left)))
                 self.sound.play("thud")
                 return
+        if any(p.kind == ROBO_PUPPET for p in self.pets) and now >= getattr(self, "next_robo", 0):
+            self.next_robo = now + random.uniform(8, 16) * 60
+            left = [k for k in ROBO_SCENES if not self.is_unlocked(k)]
+            if left and random.random() < 0.6:
+                self.sightings.append(Sighting(self, random.choice(left)))
+                self.sound.play("whoosh")
+                return
         candle = now < getattr(self, "candle_until", 0)
         if (ghost_hours() or candle) and now >= getattr(self, "next_ghost", 0):
             self.next_ghost = now + (random.uniform(1, 3) if candle else random.uniform(6, 14)) * 60
-            left = [k for k in GHOST_KINDS if not self.is_unlocked(k)]
+            left = [k for k in GHOST_KINDS if not self.is_unlocked(k) and self.nights_won() >= GHOSTS[k].get("night", 0)]
             if left and self.pets:
                 self.sightings.append(Sighting(self, random.choice(left)))
                 self.sound.play("whoosh")
@@ -6961,8 +10935,12 @@ class App:
         today, given = time.strftime("%Y-%m-%d"), []
         for drop in GIFT_DROPS:
             kind = drop["kind"]
-            if kind in self.save.get("gifts", []) or today > drop["until"]:
+            if kind in self.save.get("gifts", []) or today > drop["until"] or today < drop.get("start", ""):
                 continue
+            if drop.get("countdown"):
+                continue                                  # earned in Countdown Stars on the website (it comes over with a save code)
+            if drop.get("testers") and not (APP_VERSION.endswith("-test") or self.save.get("tester") or self.save.get("mod") or self.save.get("creator")):
+                continue                                  # only for people testing 1.0 early
             self.save.setdefault("gifts", []).append(kind)
             given.append(drop)
             pet = self.add_pet(kind, greet=False)
@@ -6998,7 +10976,7 @@ class App:
         from tkinter import messagebox
         given = self.give_gift()
         text = NOTICE_TEXT + ("\n\n" + self.gift_text(given) if given else "")
-        messagebox.showinfo("Blipville Redux: ghosts! 👻" if REDUX else "Blipville 0.4 RC2: almost 1.0! 💜", text, parent=self.root)
+        messagebox.showinfo(NOTICE_TITLE, text, parent=self.root)
 
     def world(self):
         """The world your town is visiting right now (or None for home)."""
@@ -7015,6 +10993,12 @@ class App:
         if self.pets:
             self.pets[0].say(f"welcome to {name}! {w['icon']}" if w else "home sweet home!", 3)
             self.pets[0].set_face("happy", 1.5)
+
+    def open_dig(self):
+        if getattr(self, "dig_win", None) and self.dig_win.win.winfo_exists():
+            self.dig_win.win.lift()
+            return
+        self.dig_win = DigSite(self)
 
     def unlock_world(self, name, parent):
         from tkinter import messagebox
@@ -7058,8 +11042,23 @@ class App:
                             parent=parent)
 
     def is_unlocked(self, kind):
+        if kind in self.save.get("merch_kinds", []):     # 🎟️ came with a merch code
+            return True
+        owners = [h for h, ks in MOD_CODE_KINDS.items() if kind in ks]
+        if owners:
+            return self.save.get("mod_code") in owners
+        if kind in MOD_KINDS:
+            return bool(self.save.get("creator") or self.save.get("mod"))
+        if kind in CREATOR:
+            return bool(self.save.get("creator"))
+        if kind in AWAKEN_BASE:
+            return self.awaken_level(AWAKEN_BASE[kind]) >= awaken_stage(kind) and self.is_unlocked(AWAKEN_BASE[kind])
         if kind in LEGENDS:
             return kind in self.save.get("legends", [])
+        if kind in EGYPT_GODS:
+            return kind in self.save.get("gods", [])       # 🏺 dug up at the Dig Site
+        if kind in BAD_DREAMS:
+            return kind in self.save.get("bad_dreams", [])  # 🧸 fended off (or a Puppet Master clicked 5 times)
         if kind in WORLD_OF:
             return WORLD_OF[kind] in self.save.get("worlds", [])
         if kind in GIFTS:
@@ -7076,6 +11075,30 @@ class App:
 
     def hearts(self):
         return int(self.save.get("hearts", 0))
+
+    # ----- trophies 🏆
+    def stat(self, name):
+        return int(self.save.get("stats", {}).get(name, 0))
+
+    def bump(self, name, n=1):
+        stats = self.save.setdefault("stats", {})
+        stats[name] = int(stats.get(name, 0)) + n           # saved with the next write_save
+
+    def check_trophies(self):
+        got = self.save.setdefault("trophies", [])
+        for tid, icon, name, how, check, bonus in TROPHIES:
+            if tid in got or not check(self):
+                continue
+            got.append(tid)
+            log(f"trophy: {name}")
+            pet = next((p for p in self.pets if p.state not in ("sleep", "held")), self.pets[0] if self.pets else None)
+            self.add_hearts(bonus, pet)
+            self.sound.play("fanfare")
+            if pet:
+                pet.say(f"🏆 trophy: {name}! +{bonus} 💖", 5)
+                pet.set_face("happy", 2)
+                pet.burst("heart", 6)
+            return                                            # one at a time, so each one gets its moment
 
     def add_hearts(self, n, pet=None):
         self.save["hearts"] = self.hearts() + n
@@ -7155,6 +11178,7 @@ class App:
         today = time.strftime("%Y-%m-%d")
         if self.save.get("last_day") != today:
             self.save["last_day"] = today
+            self.bump("days")
             self.add_hearts(10, self.pets[0] if self.pets else None)
             if self.pets:
                 self.pets[0].say("daily treat! +10 💖", 4)
@@ -7186,6 +11210,80 @@ class App:
             got.append(kind)
             write_save(self.save)
 
+    def bad_dream_rewrite(self, pm):
+        """🎭 A Puppet Master was clicked 5 times fast: the first time it becomes the Bad Dream Puppet Master; then it
+        rewrites a robo into its Bad Dream, which you have to fend off for 5 seconds to keep."""
+        now = time.monotonic()
+        if self.dream_game:
+            return
+        if now < self.dream_rest:
+            pm.say(f"*the strings are tangled…* (try again in {int(self.dream_rest - now) + 1}s)", 2.5)
+            return
+        got = self.save.setdefault("bad_dreams", [])
+        if "Bad Dream Puppet Master" not in got:
+            got.append("Bad Dream Puppet Master")
+            write_save(self.save)
+            pm.kind = "Bad Dream Puppet Master"
+            pm.palette = 0
+            pm.color_var.set(0)
+            pm.kind_var.set(pm.kind)
+            pm.plush_mode = plush_now(pm.kind)
+            pm.dream_burst(False)
+            pm.say("*snip* …the strings go both ways now 🎭", 3)
+        left = [k for k in BAD_DREAM_ROBOS if k not in got]
+        if not left:
+            pm.say("all my Bad Dreams are yours… sweet dreams 🧸", 3)
+            return
+        in_town = [k for k in left if any(p.kind == BAD_DREAMS[k]["robo"] for p in self.pets)]
+        kind = random.choice(in_town or left)
+        for p in self.pets:
+            if p.kind == BAD_DREAMS[kind]["robo"]:
+                p.say("*whirr… rrrip… stitches?*", 2.5)
+        self.dream_rest = now + 30
+        self.dream_game = True
+        self.root.after(1400, lambda: setattr(self, "dream_game", BadDreamFend(self, kind)))
+
+    def redeem_merch(self, code, parent):
+        """🎟️ A code from physical merch: check its fingerprint, then give the skin (once per town and per device)."""
+        from tkinter import messagebox
+        prefix, fp = merch_prefix(code), merch_fingerprint(code)
+        known = set(MERCH_HASHES)
+        try:
+            known |= set(json.loads(http_get(f"{MERCH_CODES_URL}?t={int(time.time() // 60)}", timeout=8).decode("utf-8")).get("hashes", []))
+        except Exception as e:  # noqa: BLE001  (offline: only the codes shipped with the game work)
+            log(f"merch codes: couldn't read the online list ({e!r})")
+        if fp not in known:
+            messagebox.showinfo("🎟️ Merch code", "Hmm, that merch code doesn't work. Check the letters and try again!", parent=parent)
+            return
+        if fp in self.save.get("redeemed", []):
+            messagebox.showinfo("🎟️ Merch code", "That code has already been used in this town. 🎟️", parent=parent)
+            return
+        m = MERCH[prefix]
+        self.save.setdefault("redeemed", []).append(fp)
+        if prefix not in self.save.setdefault("merch", []):
+            self.save["merch"].append(prefix)
+        kind = m.get("kind")
+        if kind:
+            skin = f"{kind}:{m['name']}"
+            if skin not in self.save.setdefault("skins", []):
+                self.save["skins"].append(skin)
+            if kind not in self.save.setdefault("merch_kinds", []):     # the Blip itself is yours too
+                self.save["merch_kinds"].append(kind)
+            write_save(self.save)
+            self.sound.play("fanfare")
+            pet = self.add_pet(kind, greet=False)
+            if pet:
+                pet.palette = next(i for i, c in enumerate(kind_colors(kind)) if c["name"] == m["name"])
+                pet.color_var.set(pet.palette)
+                pet.burst("heart", 10)
+                pet.say("✨ merch link established. hello, keeper. ✨", 4)
+            messagebox.showinfo("🎟️ Merch code", f"✨ {kind}: {m['name']} unlocked! Thanks for supporting Blipville. 💜", parent=parent)
+        else:
+            write_save(self.save)
+            self.sound.play("fanfare")
+            messagebox.showinfo("🎟️ Merch code", f"✨ {m['for']}: {m['name']} is yours! The {m['for']} arrives in an update soon, and this "
+                                "skin will be waiting for you. Thanks for supporting Blipville. 💜", parent=parent)
+
     def nights_won(self):
         return int(self.save.get("nights_won", 0))
 
@@ -7201,6 +11299,25 @@ class App:
         else:
             self.game = NightShiftGame(self)
 
+    def load_save_data(self, new):
+        """Replace this town with one from a save code (keeping this PC's own settings)."""
+        keep = {k: self.save[k] for k in ("auto_update", "climb", "cursor_play", "weather", "sound", "voices", "notice_seen", "arena_name",
+                                          "last_day") if k in self.save}
+        for p in list(self.pets):
+            self.pets.remove(p)
+            if isinstance(p.canvas, PixelCanvas):
+                p.canvas.destroy()
+            p.root.destroy()
+        self.save.clear()
+        self.save.update(new)
+        self.save.update(keep)
+        write_save(self.save)
+        if not self.restore_town():
+            self.add_pet("Blip", "Blip")
+        log(f"loaded a save code: {len(self.pets)} pets, {self.hearts()} hearts")
+        if self.pets:
+            self.pets[0].say("we moved in! 📦", 3)
+
     def remove(self, pet):
         if pet in self.pets:
             self.pets.remove(pet)
@@ -7215,6 +11332,175 @@ class App:
         self.save_town()
         self.root.destroy()
 
+    # ----- desktop-only fun: climbing windows, playing with the mouse pointer
+    # ----- ⭐ creator perks (the secret creator code)
+    def enter_secret_code(self, parent):
+        import hashlib
+        from tkinter import simpledialog, messagebox
+        text = simpledialog.askstring("Secret code", "Enter a secret code or a 🎟️ merch code:", parent=parent) or ""
+        code = "".join(ch for ch in text.upper() if ch.isalnum())
+        if not code:
+            return
+        if merch_prefix(code):
+            self.redeem_merch(code, parent)
+            return
+        digest = hashlib.sha256(code.encode()).hexdigest()
+        if digest in MOD_HASHES:
+            self.save["mod"] = True
+            self.save["mod_code"] = digest
+            write_save(self.save)
+            self.sound.play("fanfare")
+            for kind in MOD_CODE_KINDS.get(digest, []):         # 💎 this code's very own Blip
+                if not any(p.kind == kind for p in self.pets):
+                    pet = self.add_pet(kind, kind, greet=False)
+                    if pet:
+                        pet.say("✨ just for you! 💎", 5)
+                        pet.burst("heart", 8)
+            if not any(p.kind == "Guardian" for p in self.pets):
+                pet = self.add_pet("Guardian", "Guardian", greet=False)
+                if pet:
+                    pet.say("🛡️ mod squad, reporting in!", 4)
+            if self.maintenance.closed:
+                self.maintenance.reopen()
+            messagebox.showinfo("🛡️ Moderator mode", "Welcome to the mod squad! 🛡️\n\nGuardian is yours, you can play during maintenance, "
+                                "and every pet's right-click menu has a 🛡️ Mod menu: spawn sightings and fresh quests" + (" and the creator's boss code." if FEATURES["arena"] else "."),
+                                parent=parent)
+            return
+        if digest != CREATOR_HASH:
+            messagebox.showinfo("Secret code", "Hmm, that code doesn't do anything.", parent=parent)
+            return
+        self.save["creator"] = True
+        write_save(self.save)
+        self.sound.play("fanfare")
+        self.dev_add_creators()
+        if self.maintenance.closed:
+            self.maintenance.reopen()
+        messagebox.showinfo("⭐ Creator mode", "Welcome back, creator! 💜\n\nBlipmaker and Byte are yours (only yours), and every pet's "
+                            "right-click menu now has a 🛠️ Creator menu: hearts, spawns and unlock everything" + (" and your boss battle code." if FEATURES["arena"] else "."),
+                            parent=parent)
+
+    def dev_add_creators(self):
+        have = {p.kind for p in self.pets}
+        for kind, name, line in (("Blipmaker", "Blipmaker", "the creator has arrived! 👑"), ("Byte", "Byte", "*beep* ready to ship!"),
+                                 ("Guardian", "Guardian", "🛡️ on duty!")):
+            if kind not in have:
+                pet = self.add_pet(kind, name, greet=False)
+                if pet:
+                    pet.say(line, 4)
+                    pet.burst("heart", 8)
+
+    def dev_spawn(self, group):
+        pool = {"cryptid": CRYPTID_KINDS, "kaiju": KAIJU_KINDS, "ghost": GHOST_KINDS}.get(group)
+        if group == "legend":
+            w = self.world()
+            pool = [k for k, wn in LEGEND_WORLD.items() if w and wn == w["name"]]
+            if not pool:
+                if self.pets:
+                    self.pets[0].say("legends only show up while visiting a world! 🌍", 3)
+                return
+        locked = [k for k in pool if not self.is_unlocked(k)] or pool
+        for sg in list(self.sightings):
+            sg.leave()
+        self.sightings.append(Sighting(self, random.choice(locked)))
+        self.sound.play("whoosh")
+
+    def dev_reset_quests(self):
+        self.save.pop("quests", None)
+        write_save(self.save)
+        if self.pets:
+            self.pets[0].say("📅 fresh quests: " + ", ".join(q["text"].lower() for q in todays_quests()), 5)
+
+    def dev_unlock_all(self):
+        sv = self.save
+        sv["hatched"] = list(RARE_KINDS)
+        for key, kinds in (("cryptids", CRYPTID_KINDS), ("kaiju", KAIJU_KINDS), ("ghosts", GHOST_KINDS), ("legends", LEGEND_KINDS)):
+            sv[key] = list(kinds)
+        sv["worlds"] = [w["name"] for w in WORLDS]
+        sv["nights_won"] = max(3, int(sv.get("nights_won", 0)))
+        sv["unlocked"] = list(UNLOCKS)
+        sv["awakened"] = list(AWAKEN_CHAIN)
+        sv["awaken_level"] = {b: len(ch) for b, ch in AWAKEN_CHAIN.items()}
+        write_save(sv)
+        self.sound.play("fanfare")
+        if self.pets:
+            self.pets[0].say("🔓 everything's unlocked!", 3)
+
+    def dev_boss_code(self, parent):
+        from tkinter import messagebox
+        code = battle_code(CREATOR_BOSS[0], CREATOR_BOSS[1])
+        self.root.clipboard_clear()
+        self.root.clipboard_append(code)
+        messagebox.showinfo("🥊 Your boss battle code", "Copied! Share it on the Discord: anyone can paste it in the Arena "
+                            f"(📥 Battle a friend's code) to fight your team: Blipmaker, Lurker Eternal and Phantom Sovereign.\n\n"
+                            f"Beating it gives {CREATOR_BOSS_REWARD} 💖 and the 'Beat the Blipmaker' trophy.\n\n{code}", parent=parent)
+
+    def awaken_level(self, base):
+        """How many times this kind of Blip has been awakened (0-3): each needs its own Awakening Crystal."""
+        lv = self.save.get("awaken_level", {}).get(base, 0)
+        return max(int(lv), 1 if base in self.save.get("awakened", []) else 0)
+
+    def set_climb(self):
+        self.save["climb"] = self.climb_on.get()
+        write_save(self.save)
+        if not self.climb_on.get():
+            for p in self.pets:
+                if p.perch is not None or p.state == "jump":
+                    p.jump = None
+                    p.hop_down(say=False)
+
+    def cursor_step(self, now):
+        st = self.steal
+        if st:                                           # a Blip is "stealing" the pointer for a moment
+            p = st["pet"]
+            if now > st["until"] or p not in self.pets or p.state == "held":
+                self.steal = None
+                if p in self.pets:
+                    p.say(random.choice(["hehe, you can have it back", "ok ok, here", "*gives it back*"]), 2)
+            else:
+                self.desk.move_cursor(p.wx + W / 2 + 10 * p.facing, p.wy + H - ART_H * SCALE + 6)
+            return
+        if not self.cursor_play.get() or not self.pets:
+            return
+        x, y = self.root.winfo_pointerxy()
+        h = self.mouse_hist
+        h.append((now, x, y))
+        while h and now - h[0][0] > 1.0:
+            h.pop(0)
+        if now < self.next_chase or len(h) < 6:
+            return
+        turns, travel, last = 0, 0, 0
+        for (_, x0, y0), (_, x1, y1) in zip(h, h[1:]):           # a wiggle: the pointer zig-zags back and forth
+            travel += abs(x1 - x0) + abs(y1 - y0)
+            if abs(x1 - x0) >= 6:
+                d = 1 if x1 > x0 else -1
+                turns += bool(last and d != last)
+                last = d
+        if turns < 3 or travel < 250:
+            return
+        near = [p for p in self.pets if p.state in ("idle", "walk") and not p.playing and not p.nap_buddy and not p.follow.get()
+                and now > p.chase_until and math.hypot(p.wx + W / 2 - x, p.wy + H - 30 - y) < 450]
+        if not near:
+            return
+        self.next_chase = now + 4
+        for i, p in enumerate(sorted(near, key=lambda p: math.hypot(p.wx + W / 2 - x, p.wy + H - y))[:2]):
+            if i and random.random() < 0.5:
+                break
+            p.chase_until, p.chase_seen = now + random.uniform(7, 10), (x, y, now)
+            p.say(random.choice(["!!", "*wiggle wiggle*", "what's that?!", "i'm gonna get it!", "mouse!!"]), 1.5)
+            p.set_face("surprised", 0.8)
+
+    def caught_cursor(self, pet, now):
+        self.bump("cursor_catches")
+        pet.say(random.choice(["got it!!", "gotcha!", "*pounce*", "mine!", "caught the mouse!"]), 1.6)
+        pet.set_face("happy", 1.5)
+        pet.burst("heart", 3)
+        if now - self.last_cursor_heart > 20:
+            self.last_cursor_heart = now
+            self.add_hearts(1, pet)
+        if self.desk.ok and random.random() < 0.3 and now - self.last_steal > 60:
+            self.last_steal = now
+            self.steal = {"pet": pet, "until": now + 0.8}
+
     # ----- pets playing together
     def head_pos(self, pet):
         return pet.wx + W / 2, pet.wy + H - ART_H * SCALE + 6
@@ -7222,23 +11508,30 @@ class App:
     def end_play(self, play, now, happy=True):
         if happy:
             self.quest_tick("plays")
+            for p in play["pets"]:
+                if p in self.pets:
+                    p.befriend("play")
+        if play in self.plays:
+            self.plays.remove(play)
         for pet in play["pets"]:
+            if any(pet in other["pets"] for other in self.plays):
+                continue                        # still in another game: that game owns the flag
             pet.playing = False
             pet.last_play = now
             if happy and pet.state not in ("held", "fall", "sleep"):
                 pet.set_state("idle", random.uniform(1.5, 3))
                 pet.set_face("happy", 1.5)
                 pet.burst("heart", 2)
-        if play in self.plays:
-            self.plays.remove(play)
 
     def play_step(self, now):
         dt = 1 / FPS
         free = [p for p in self.pets if not p.playing and p.state == "idle" and now - p.last_play > 40
-                and not getattr(p, "visitor", None)]
+                and not p.follow.get() and not getattr(p, "visitor", None) and p.perch is None and now > p.chase_until]
         # start a game now and then
         for i, a in enumerate(free):
             for b in free[i + 1:]:
+                if a.playing or b.playing:      # each pet is in one game at a time
+                    continue
                 d = abs(a.wx - b.wx)
                 if 60 < d < 190 and random.random() < dt * 0.04:
                     a.playing = b.playing = True
@@ -7246,17 +11539,21 @@ class App:
                                        "n": random.randint(4, 7)})
                     a.say(random.choice(["catch!", f"heads up, {b.name}!", "wanna play?"]), 2)
                     break
-                if d < 320 and random.random() < dt * 0.015:
+                lurk = [p for p in (a, b) if AWAKEN_BASE.get(p.kind, p.kind) == "Lurker"]
+                if d < 320 and random.random() < dt * (0.05 if lurk else 0.015):
+                    if lurk and lurk[0] is a:
+                        a, b = b, a                     # the Lurker is always "it"
                     a.playing = b.playing = True
                     self.plays.append({"type": "chase", "pets": [a, b], "runner": a, "chaser": b, "until": now + 7,
                                        "swapped": False})
                     a.say(random.choice(["can't catch me!", "tag, you're it!"]), 2)
-                    b.say("hey! get back here!", 2)
+                    b.say("ready or not… 👁️" if lurk else "hey! get back here!", 2)
                     break
         # a sleepy pet sometimes joins a napping friend
         for sleeper in [p for p in self.pets if p.state == "sleep"]:
             for p in self.pets:
-                if (p is not sleeper and not p.playing and not p.nap_buddy and p.state == "idle" and p.energy < 60
+                if (p is not sleeper and not p.playing and not p.nap_buddy and not p.follow.get() and p.state == "idle" and p.energy < 60
+                        and p.perch is None and sleeper.perch is None
                         and abs(p.wx - sleeper.wx) < 600 and random.random() < dt * 0.15):
                     p.nap_buddy = True
                     p.target_x = min(max(sleeper.wx + random.choice([-1, 1]) * 70, self.pets[0].left), self.pets[0].right - W)
@@ -7323,7 +11620,7 @@ class App:
         idle_pets = [p for p in self.pets if not p.playing]
         for i, a in enumerate(idle_pets):
             for b in idle_pets[i + 1:]:
-                if a.state not in calm or b.state not in calm or abs(a.wx - b.wx) > 90:
+                if a.state not in calm or b.state not in calm or abs(a.wx - b.wx) > 90 or a.perch != b.perch:
                     continue
                 if now - a.greeted.get(b.name, -999) < 60:
                     continue
@@ -7344,15 +11641,24 @@ class App:
                 return
         except tk.TclError:
             return                                  # the app is closing
+        if SAVE_STATE["failed"] and now - SAVE_STATE["warned"] > 600 and self.pets:      # 💾 can't save: say so (every 10 min)
+            SAVE_STATE["warned"] = now
+            self.pets[0].say("⚠️ i can't save right now! (is the disk full?)", 5)
         if self.maintenance.closed:                 # closed for maintenance: everything waits
             self.root.after(250, self.tick)
             return
         start = time.perf_counter()
+        if self.climb_on.get():
+            self.safely(self.desk.refresh, now, what="windows")
+        self.safely(self.cursor_step, now, what="mouse play")
         for pet in list(self.pets):
             self.safely(pet.step, now, what=f"{pet.kind}")
         self.safely(self.socialize, now, what="pets playing")
         self.safely(self.play_step, now, what="games")
         self.safely(self.cryptid_step, now, what="sightings")
+        if now - getattr(self, "last_trophy_check", 0) > 3:
+            self.last_trophy_check = now
+            self.safely(self.check_trophies, what="trophies")
         if now - self.last_town_save > 15:         # remember the town every so often
             self.safely(self.save_town, what="saving")
             self.last_town_save = now
@@ -7401,4 +11707,15 @@ class App:
 
 
 if __name__ == "__main__":
+    if not acquire_instance_lock():
+        try:
+            from tkinter import messagebox
+            _r = tk.Tk()
+            _r.withdraw()
+            messagebox.showinfo("Blipville", "Blipville is already running! 🏡\n\nYour Blips are already on your screen. "
+                                "(Only one Blipville can run at a time, so your progress stays safe.)", parent=_r)
+            _r.destroy()
+        except Exception:  # noqa: BLE001
+            pass
+        sys.exit(0)
     App().run()

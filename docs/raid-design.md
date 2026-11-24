@@ -51,3 +51,10 @@ Roster roles from the developer: a starter speedster (Gilded Form → Overdrive)
 (Crimson / Azure / Radiant), a chrome robot rival (Neo-Alloy → Meltdown) and a water elemental with 4 skin tiers (0 / 2 / 4 / 6).
 These four are drawn as **original** Blips so the roles are covered: **Comet Hare**, **Eclipse Panther**, **Mirror Mech** and
 **Tidecore** (`docs/speedsters/sprites-originals.js`, `preview-originals.png`). Drafts only, not in the game yet.
+
+## Speedster roster (final naming: the franchise names were only to explain the inspiration)
+
+Dash-Quill (starter), Eclipse-Quill (3 Eclipses), Chrome-Quill, Rotor-Kit, Rose-Mallet, Pyre-Lynx, Chrono-Quill, Hydro-Core (4 tiers).
+Drafts: `sprites-quills.js` (Dash/Eclipse/Chrome-Quill), `sprites-concepts.js` (Rotor-Kit, Rose-Mallet, Pyre-Lynx, Chrono-Quill) and
+the droplet in `sprites-originals.js` (drawn as "Tidecore", use it as **Hydro-Core**). Comet Hare, Eclipse Panther, Mirror Mech and
+the first four originals are spares.

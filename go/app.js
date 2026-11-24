@@ -195,7 +195,7 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const isUnlocked = (k) => (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -1127,7 +1127,7 @@
       b.appendChild(thumb(p.kind, i, false, 3)); b.append((locked ? "🔒 " : "") + col.name + (col.event && !locked ? " ✨" : ""));
       if (!locked && i !== p.color) { const pr = doc().createElement("small"); pr.className = "price"; pr.append(pxImg(cc.icon), ` ${cc.cost}`); b.appendChild(pr); }
       b.onclick = () => {
-        if (locked) { toast(col.unlock === "puppet" ? `🔒 ${col.name}: fend off this robo's Bad Dream to unlock it! (tap a Puppet Master 5 times)` : col.unlock === "merch" ? `🔒 ${col.name} comes with Blipville merch: type its 🎟️ code in ? → 🔑 Secret code.` : `🔒 ${col.name} is a ${EVENT.icon} ${EVENT.name} skin. Earn it in the event! (tap ${EVENT.icon} at the top)`, 4); return; }
+        if (locked) { toast(col.unlock === "puppet" ? `🔒 ${col.name}: fend off this robo's Bad Dream to unlock it! (tap a Puppet Master 5 times)` : col.unlock === "merch" ? `🔒 ${col.name} comes with Blipville merch: type its 🎟️ code in ? → 🔑 Secret code.` : `🔒 ${col.name} is a ${(EVENTS.find((e) => e.id === col.event) || EVENT).icon} ${(EVENTS.find((e) => e.id === col.event) || EVENT).name} skin.${col.event === EVENT.id ? ` Earn it in the event! (tap ${EVENT.icon} at the top)` : " That event is over."}`, 4); return; }
         if (i === p.color) return;
         if (!isCreator()) {                                   // 🍬🧪 a treat changes the color
           if (save.hearts < cc.cost) { toast(`${cc.icon === "potion" ? "🧪 A Color Potion" : "🍬 A Color Candy"} costs ${cc.cost} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 3.5); return; }
@@ -1556,9 +1556,10 @@
                     ["Legends ✨ (visit a world, tap them when they stroll by)", D.groups.legends || []],
                     ["Ghosts 👻 (they drift by at night: tap one while it glows!)", D.groups.ghosts || []],
                     ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []],
+                    [`Event 🎖️ (earn them in ${EVENT.name})`, D.groups.eventKinds || []],
                     ["Bad Dreams 🧸 (tap a Puppet Master 5 times… then fend them off)", [...DREAMS]]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (EGYPT.has(k) ? "🏺 dig it up in Egypt World" : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (EGYPT.has(k) ? "🏺 dig it up in Egypt World" : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : EVENTK.has(k) ? `🎖️ earn it in ${EVENT.name}` : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const world = WORLDS.find((w) => w.tab === title);
@@ -2184,7 +2185,10 @@
 
 
   // ------------------------------------------------------------------ events 🎉 (the same event as the desktop app)
-  const EVENT = D.event || { id: "", name: "", icon: "🎉", kinds: [], rewards: [], per_skin: 10, start: "9999", until: "0000" };
+  const EVENTS = D.events || (D.event ? [D.event] : []);        // the one that is on, or the next one coming (the last stays up after it ends)
+  const _today = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; })();
+  const EVENT = EVENTS.find((e) => _today <= e.until) || EVENTS[EVENTS.length - 1] || { id: "", name: "", icon: "🎉", kinds: [], rewards: [], per_skin: 10, start: "9999", until: "0000" };
+  const EVENTK = new Set(D.groups.eventKinds || []);
   const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
   const eventPaused = () => !!(EVENT.paused && EVENT.paused[0] <= todayStr() && todayStr() < EVENT.paused[1]);   // closed for maintenance
   const eventOn = () => EVENT.start <= todayStr() && todayStr() <= EVENT.until && !eventPaused();
@@ -2213,7 +2217,7 @@
   }
 
   // daily quests 📅 (the same 3 for everyone each day, like the desktop app)
-  const QUESTS = D.quests || [], QR = D.questRewards || { hearts: 10, points: 5, bonus: 5 };
+  const QUESTS = (D.quests || []).map((q) => (q.id === "pet_spiky" && EVENT.kinds.length ? { ...q, text: `Pet a ${EVENT.kinds.slice(0, -1).join(", ")} or ${EVENT.kinds[EVENT.kinds.length - 1]} 8 times` } : q)), QR = D.questRewards || { hearts: 10, points: 5, bonus: 5 };
   const todaysQuests = (day) => [...QUESTS].sort((a, b) => fnvQ(day + a.id) - fnvQ(day + b.id)).slice(0, 3);
   function fnvQ(t) { let h = 2166136261; for (const b of new TextEncoder().encode(t)) h = Math.imul(h ^ b, 16777619) >>> 0; return h; }
   function questState() {
@@ -2251,7 +2255,7 @@
   function openEvent() {
     drawQuests();
     const tiers = eventTiers(), total = tiers[tiers.length - 1].at, pts = Math.min(eventPts(), total);
-    $("eventTitle").textContent = `${EVENT.icon} ${EVENT.name}`;
+    $("eventTitle").textContent = `${EVENT.icon} ${EVENT.name}`; if (EVENT.blurb) $("eventBlurb").textContent = EVENT.blurb;
     if (eventPaused() && window.CountdownStars && CountdownStars.live()) CountdownStars.mount($("cdHost"));   // while Spiky Week is paused
     $("eventWhen").textContent = eventOn() ? `until ${EVENT.until_text}` : eventPaused() ? `paused until ${EVENT.paused_text}` : todayStr() < EVENT.start ? "starts soon!" : "this event is over";
     const next = tiers.find((t) => pts < t.at), prev = tiers.filter((t) => t.at <= pts).pop(), from = prev ? prev.at : 0;
@@ -2292,10 +2296,11 @@
     openSheet("eventSheet");
   }
   $("eventBtn").hidden = false;           // events and daily quests
+  $("eventBtn").textContent = EVENT.icon; $("eventBtn").title = `${EVENT.name} event`; $("eventBtn").setAttribute("aria-label", EVENT.name);
   $("eventBtn").onclick = openEvent;
   if (eventOn() && save.eventSeen !== EVENT.id) {
     setTimeout(() => { save.eventSeen = EVENT.id; persist(true);
-      toast(`${EVENT.icon} ${EVENT.name} is on! Pet & feed Hedgehogs, Foxes and Echidnas to unlock event skins. Tap ${EVENT.icon} at the top!`, 7); }, 5000);
+      toast(`${EVENT.icon} ${EVENT.name} is on! ${EVENT.hello || ""} Tap ${EVENT.icon} at the top!`, 7); }, 5000);
   }
 
   $("shareBtn").onclick = share;

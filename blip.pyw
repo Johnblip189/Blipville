@@ -433,6 +433,7 @@ ANIMALS.update({
     dict(name="Golden", o="#3a2008", b="#f2c36a", m="#b8642a", l="#fff2d6", p="#ff9f7a", n="#5a2a14", e="#2a1404", f="#3a2008"),
     dict(name="White",  o="#6a6070", b="#fbf6ee", m="#e8dcc8", l="#ffffff", p="#ffb0b0", n="#c08a8a", e="#3a7bd5", f="#6a6070"),
     dict(name="Shadow", o="#14100c", b="#c49a5a", m="#2a1a10", l="#f2dcb4", p="#e08a6a", n="#2a1a10", e="#140c04", f="#14100c"),
+    dict(name="Sunmane", event="prowl-week", o="#3a1004", b="#ffb02a", m="#ff5a1a", l="#fff6d8", p="#ff9f7a", n="#5a1a08", e="#2a0a02", f="#3a1004"),
  ]),
  "Tiger": dict(eyes=5, body=[
     ".o............o.",
@@ -450,6 +451,7 @@ ANIMALS.update({
     dict(name="Bengal", o="#2a1004", b="#f08a2a", s="#1a0a04", l="#fff6ea", a="#fff6ea", n="#ff8f8f", e="#2a1004"),
     dict(name="White",  o="#3a3a44", b="#f6f6f8", s="#2e2e36", l="#ffffff", a="#ffd0d8", n="#ff9fb0", e="#3a7bd5"),
     dict(name="Golden", o="#3a2408", b="#ffd27a", s="#c8803a", l="#fff8e6", a="#fff8e6", n="#ff9f8a", e="#3a2408"),
+    dict(name="Moonstripe", event="prowl-week", o="#14122a", b="#c8c0f0", s="#2a2260", l="#ffffff", a="#ffffff", n="#ff8ad8", e="#14122a"),
  ]),
  "Bat": dict(eyes=5, body=[
     "..o..........o..",
@@ -3076,14 +3078,14 @@ NEW_ANIMALS.update({
  'Badger': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*digs a hole*', "i'm not grumpy, i'm busy", 'stripes are in', 'hole sweet hole'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obwbbbbbbbbwbo.', 'obbwbbbbbbbbwbbo', 'obbwbbbbbbbbwbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Honey', 'o': '#14100a', 'b': '#5a5a5a', 'e': '#0a0a0a', 'w': '#ffffff', 'a': '#3a3a3a', 'p': '#d88a8a', 'l': '#e8e0d0', 'n': '#0a0a0a'}, {'name': 'European', 'o': '#0a0a0a', 'b': '#8a8a8a', 'e': '#0a0a0a', 'w': '#f4f4f4', 'a': '#4a4a4a', 'p': '#d88a8a', 'l': '#dcdcdc', 'n': '#1a1a1a'}, {'name': 'Golden', 'o': '#2a1a06', 'b': '#c8a04a', 'e': '#1a1004', 'w': '#fff4dc', 'a': '#8a6a2a', 'p': '#ff9a7a', 'l': '#f4e0b0', 'n': '#1a1004'}]},
  'Bison': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*snort*', "i'm a big floof", 'stampede! (slowly)', 'prairie life'], 'body': ['................', 'h..............h', 'hh............hh', '.hooooooooooooh.', 'oaaaaaaaaaaaaaao', 'oaabbbbbbbbbbaao', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Plains', 'o': '#1a0e06', 'b': '#7a4a2a', 'e': '#0a0604', 'h': '#e8dcc8', 'a': '#4a2a14', 'p': '#c86a5a', 'l': '#a87a5a', 'n': '#0a0604'}, {'name': 'Snowy', 'o': '#2a2a3a', 'b': '#e8e4e0', 'e': '#1a1a2a', 'h': '#8a8a9a', 'a': '#c8c0b8', 'p': '#ffb0b0', 'l': '#ffffff', 'n': '#2a2a3a'}, {'name': 'Dusk', 'o': '#140a14', 'b': '#5a3a4a', 'e': '#0a040a', 'h': '#d8c8b8', 'a': '#3a2030', 'p': '#d88a9a', 'l': '#8a6a7a', 'n': '#0a040a'}]},
  'Camel': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*chews slowly*', 'my hump is full of snacks', "hot? i'm fine", 'spit? never. ok maybe'], 'body': ['................', '......oooo......', '.....oaaaao.....', '..ooooaaaaoooo..', 'oaobaabbbbaaboao', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbllllllbbpbo', 'obbbblkllklbbbbo', 'obbbbllllllbbbbo', '.obbbllkkllbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Desert', 'o': '#3a2410', 'b': '#d8a868', 'e': '#1a1004', 'a': '#b8884a', 'p': '#ff9a7a', 'l': '#f0d0a0', 'n': '#3a2410', 'k': '#5a3a1a'}, {'name': 'Dark', 'o': '#1a0e06', 'b': '#8a5a3a', 'e': '#0a0604', 'a': '#6a4026', 'p': '#d88a7a', 'l': '#c8a080', 'n': '#1a0e06', 'k': '#2a1408'}, {'name': 'White', 'o': '#5a4a3a', 'b': '#f4ece0', 'e': '#2a1e14', 'a': '#e0d0b8', 'p': '#ffb0a0', 'l': '#ffffff', 'n': '#5a4a3a', 'k': '#8a7a6a'}]},
- 'Cheetah': {'eyes': 5, 'move': 'walk', 'speed': 1.8, 'feet': True, 'mouth': True, 'lines': ['zoom!', 'fastest blip around', '*spots intensify*', 'catch me if you can'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obsbbsbbbbsbbsbo', 'obpbbbllllbbbpbo', 'osbbbllnnllbbbso', 'obbsbllllllbsbbo', '.obbsbbbbbbsbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Savanna', 'o': '#2a1a06', 'b': '#f0c060', 'e': '#1a1004', 'a': '#c89040', 's': '#2a1a06', 'p': '#ff9a6a', 'l': '#fff4dc', 'n': '#1a1004'}, {'name': 'King', 'o': '#1a1006', 'b': '#e8b850', 'e': '#1a1004', 'a': '#a87a30', 's': '#1a1006', 'p': '#ff8a5a', 'l': '#fff0d0', 'n': '#1a1004'}, {'name': 'Snow', 'o': '#2a2a3a', 'b': '#e8e8f0', 'e': '#1a1a2a', 'a': '#b8b8c8', 's': '#4a4a5a', 'p': '#ffb0c0', 'l': '#ffffff', 'n': '#2a2a3a'}]},
+ 'Cheetah': {'eyes': 5, 'move': 'walk', 'speed': 1.8, 'feet': True, 'mouth': True, 'lines': ['zoom!', 'fastest blip around', '*spots intensify*', 'catch me if you can'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obsbbsbbbbsbbsbo', 'obpbbbllllbbbpbo', 'osbbbllnnllbbbso', 'obbsbllllllbsbbo', '.obbsbbbbbbsbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Savanna', 'o': '#2a1a06', 'b': '#f0c060', 'e': '#1a1004', 'a': '#c89040', 's': '#2a1a06', 'p': '#ff9a6a', 'l': '#fff4dc', 'n': '#1a1004'}, {'name': 'King', 'o': '#1a1006', 'b': '#e8b850', 'e': '#1a1004', 'a': '#a87a30', 's': '#1a1006', 'p': '#ff8a5a', 'l': '#fff0d0', 'n': '#1a1004'}, {'name': 'Snow', 'o': '#2a2a3a', 'b': '#e8e8f0', 'e': '#1a1a2a', 'a': '#b8b8c8', 's': '#4a4a5a', 'p': '#ffb0c0', 'l': '#ffffff', 'n': '#2a2a3a'}, {'name': 'Dawnspot', 'event': 'prowl-week', 'o': '#3a1428', 'b': '#ffc890', 's': '#a83a5a', 'a': '#e89060', 'p': '#ff9a6a', 'l': '#fff4ec', 'n': '#3a1428', 'e': '#2a0e1c'}]},
  'Chipmunk': {'eyes': 5, 'move': 'walk', 'speed': 1.4, 'feet': True, 'mouth': True, 'lines': ['*stuffs cheeks*', 'acorns for winter', 'chip chip!', 'my cheeks are pockets'], 'body': ['................', '.oo..........oo.', 'oaao...ss...oaao', 'oaaooooooooooaao', '.obbbbbssbbbbbo.', 'owbbbbbssbbbbbwo', 'owbbbbbbbbbbbbwo', 'obpbbbbbbbbbbpbo', 'opbbbllbbllbbbpo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Eastern', 'o': '#2a1406', 'b': '#c8783a', 'e': '#1a0a04', 'a': '#8a4a20', 'w': '#fff4dc', 'p': '#ff9a7a', 'l': '#f4e0c0', 's': '#3a1a0a'}, {'name': 'Golden', 'o': '#3a2408', 'b': '#e8a84a', 'e': '#1a1004', 'a': '#a8742a', 'w': '#fff8e8', 'p': '#ff9a6a', 'l': '#fff0d0', 's': '#5a3010'}, {'name': 'Gray', 'o': '#2a2a2a', 'b': '#9a9a9a', 'e': '#0a0a0a', 'a': '#6a6a6a', 'w': '#ffffff', 'p': '#ffa0a0', 'l': '#e8e8e8', 's': '#3a3a3a'}]},
  'Crow': {'eyes': 5, 'move': 'hop', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['caw!', 'i like shiny things', 'i remember faces. yours is nice', '*hops*'], 'body': ['................', '.......oo.......', '..oooooooooooo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbkkkkbbbpbo', 'wobbbbkkkkbbbbow', 'wwobbbbkkbbbboww', '.wobbbbbbbbbbow.', '..oooooooooooo..'], 'colors': [{'name': 'Black', 'o': '#06060a', 'b': '#1e1e2a', 'e': '#ffffff', 'k': '#3a3a4a', 'p': '#5a4a6a', 'w': '#0e0e16'}, {'name': 'Raven', 'o': '#04040a', 'b': '#14142a', 'e': '#a8c8ff', 'k': '#2a2a3a', 'p': '#4a3a6a', 'w': '#0a0a1e'}, {'name': 'Hooded', 'o': '#141414', 'b': '#8a8a90', 'e': '#0a0a0a', 'k': '#2a2a2a', 'p': '#c88a9a', 'w': '#5a5a60'}]},
  'Eagle': {'eyes': 5, 'move': 'flutter', 'speed': 1.0, 'feet': False, 'mouth': False, 'lines': ['*screech*', 'freedom!', 'i can see you from way up there', 'soar mode'], 'body': ['................', '.......oo.......', '...oooooooooo...', '..obbbbbbbbbbo..', '.owwwwwwwwwwwwo.', 'owwwwwwwwwwwwwwo', 'owwwwwwwwwwwwwwo', 'obwwwwkkkkwwwwbo', 'obbwwwkkkkwwwbbo', 'obbbbbbkkbbbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Bald', 'o': '#1a1006', 'b': '#5a3a1e', 'e': '#1a1004', 'w': '#ffffff', 'k': '#ffc83a', 'p': '#ffb0a0'}, {'name': 'Golden', 'o': '#1a0e04', 'b': '#8a5a2a', 'e': '#1a0e04', 'w': '#e8b860', 'k': '#3a3a3a', 'p': '#ff9a7a'}, {'name': 'Harpy', 'o': '#14141a', 'b': '#4a4a5a', 'e': '#1a1a1a', 'w': '#d8d8e0', 'k': '#2a2a2a', 'p': '#c88a9a'}]},
  'Emu': {'eyes': 5, 'move': 'walk', 'speed': 1.5, 'feet': True, 'mouth': False, 'lines': ['*bonk*', "i can't fly. i don't need to", 'run run run', "boom boom (that's me talking)"], 'body': ['................', '..ooo......ooo..', '.obbbo....obbbo.', '.obbboooooobbbo.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbkkkkbbbpbo', 'obbbbbbkkbbbbbbo', 'owbwbwbwwbwbwbwo', '.wbwbwbwwbwbwbw.', '..w.w.w..w.w.w..'], 'colors': [{'name': 'Brown', 'o': '#1a1006', 'b': '#7a5a3a', 'e': '#ff8a3a', 'k': '#2a2a2a', 'p': '#c88a7a', 'w': '#a8885a'}, {'name': 'Dusky', 'o': '#0e0a0a', 'b': '#4a3a3a', 'e': '#ffd23a', 'k': '#1a1a1a', 'p': '#a87a7a', 'w': '#6a5a5a'}, {'name': 'White', 'o': '#5a5a5a', 'b': '#ece8e0', 'e': '#2a2a2a', 'k': '#5a5a5a', 'p': '#ffb0b0', 'w': '#ffffff'}]},
  'Hyena': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['hehehe!', '*giggles*', "that's hilarious", 'ha ha ha HAAA'], 'body': ['......s..s......', '.oo..ssssss..oo.', 'oaaossssssssoaao', 'oaaooooooooooaao', '.obbbbbbbbbbbbo.', 'obsbbsbbbbsbbsbo', 'obbbbbsbbsbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Spotted', 'o': '#1a1006', 'b': '#c8a070', 'e': '#1a1004', 'a': '#5a3a1e', 's': '#5a3a1e', 'p': '#d88a7a', 'l': '#a8885a', 'n': '#0a0604'}, {'name': 'Striped', 'o': '#1a1a14', 'b': '#b0a890', 'e': '#0a0a0a', 'a': '#3a3a2a', 's': '#3a3a2a', 'p': '#c88a7a', 'l': '#d8d0b8', 'n': '#0a0a0a'}, {'name': 'Brown', 'o': '#14100a', 'b': '#6a5a4a', 'e': '#0a0604', 'a': '#2a2014', 's': '#3a2a1e', 'p': '#c88a7a', 'l': '#9a8a7a', 'n': '#0a0604'}]},
  'Iguana': {'eyes': 5, 'move': 'walk', 'speed': 0.8, 'feet': True, 'mouth': True, 'lines': ['*basks*', "sun's out, scales out", "i'm a spiky friend", 'warm rock pls'], 'body': ['................', '.......ss.......', '...ooossssooo...', '..obbbbssbbbbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'obbblllbblllbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Green', 'o': '#0a2a10', 'b': '#4ab85a', 'e': '#1a1004', 's': '#2a8a3a', 'l': '#a8e0a0', 'p': '#ff9a8a'}, {'name': 'Blue', 'o': '#0a1a3a', 'b': '#4a8ad8', 'e': '#0a0a1a', 's': '#2a5aa8', 'l': '#a8d0ff', 'p': '#ff9ac0'}, {'name': 'Red', 'o': '#3a0a0a', 'b': '#d85a3a', 'e': '#1a0404', 's': '#a83a1a', 'l': '#ffb8a0', 'p': '#ffd23a'}]},
- 'Jaguar': {'eyes': 5, 'move': 'walk', 'speed': 1.3, 'feet': True, 'mouth': True, 'lines': ['*silent paws*', 'rainforest royalty', 'rrrr', "spots? they're rosettes, thank you"], 'body': ['................', '.oo..........oo.', 'oaao........oaao', 'oaaooooooooooaao', '.obbbbbbbbbbbbo.', 'obbsbbsbbsbbsbbo', 'osbbsbbbbbbsbbso', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.osbbbsbbsbbbso.', '..oooooooooooo..'], 'colors': [{'name': 'Gold', 'o': '#2a1406', 'b': '#e8a848', 'e': '#1a1004', 'a': '#8a5a20', 's': '#3a2006', 'p': '#ff9a6a', 'l': '#fff0d0', 'n': '#2a1406'}, {'name': 'Black', 'o': '#06060a', 'b': '#2a2a34', 'e': '#ffd23a', 'a': '#1a1a20', 's': '#14141a', 'p': '#8a5a6a', 'l': '#4a4a54', 'n': '#06060a'}, {'name': 'Pale', 'o': '#3a2a1a', 'b': '#f0d8b0', 'e': '#2a1a0a', 'a': '#c8a070', 's': '#6a4a2a', 'p': '#ffb0a0', 'l': '#ffffff', 'n': '#3a2a1a'}]},
+ 'Jaguar': {'eyes': 5, 'move': 'walk', 'speed': 1.3, 'feet': True, 'mouth': True, 'lines': ['*silent paws*', 'rainforest royalty', 'rrrr', "spots? they're rosettes, thank you"], 'body': ['................', '.oo..........oo.', 'oaao........oaao', 'oaaooooooooooaao', '.obbbbbbbbbbbbo.', 'obbsbbsbbsbbsbbo', 'osbbsbbbbbbsbbso', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.osbbbsbbsbbbso.', '..oooooooooooo..'], 'colors': [{'name': 'Gold', 'o': '#2a1406', 'b': '#e8a848', 'e': '#1a1004', 'a': '#8a5a20', 's': '#3a2006', 'p': '#ff9a6a', 'l': '#fff0d0', 'n': '#2a1406'}, {'name': 'Black', 'o': '#06060a', 'b': '#2a2a34', 'e': '#ffd23a', 'a': '#1a1a20', 's': '#14141a', 'p': '#8a5a6a', 'l': '#4a4a54', 'n': '#06060a'}, {'name': 'Pale', 'o': '#3a2a1a', 'b': '#f0d8b0', 'e': '#2a1a0a', 'a': '#c8a070', 's': '#6a4a2a', 'p': '#ffb0a0', 'l': '#ffffff', 'n': '#3a2a1a'}, {'name': 'Emberrose', 'event': 'prowl-week', 'o': '#1a0a10', 'b': '#6a2036', 's': '#ff6a3a', 'a': '#ff9a5a', 'p': '#ff9a6a', 'l': '#ffb8a0', 'n': '#1a0a10', 'e': '#ffd23a'}]},
  'Kiwi': {'eyes': 5, 'move': 'walk', 'speed': 1.2, 'feet': True, 'mouth': False, 'lines': ['*sniff sniff* (with my beak)', 'from new zealand!', "i'm round and proud", 'no wings, no problem'], 'body': ['................', '.....oooooo.....', '...oosbbbbsoo...', '..obbbbssbbbbo..', '.obsbbbbbbbbsbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'osbpbbbkkbbbpbso', 'obbbsbbkkbbsbbbo', '.obbbbbkkbbbbbo.', '..osbbbkbbbbso..', '...ooookoooooo..'], 'colors': [{'name': 'Brown', 'o': '#1a1006', 'b': '#8a6a3a', 'e': '#0a0604', 'k': '#e8c890', 'p': '#d88a7a', 's': '#5a3a1a'}, {'name': 'Spotted', 'o': '#140e06', 'b': '#6a5a3a', 'e': '#0a0604', 'k': '#f0d8a0', 'p': '#c88a7a', 's': '#3a2a1a'}, {'name': 'Fruit', 'o': '#1a2a06', 'b': '#8ab83a', 'e': '#1a1004', 'k': '#5a3a1e', 'p': '#ff9a8a', 's': '#5a7a2a'}]},
  'Lynx': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*ear tufts twitch*', 'quiet as snow', 'i see in the dark', 'fluffy feet, big jumps'], 'body': ['o..............o', '.o............o.', '.oo..........oo.', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbllnnllbbbbo', 'owbblllbblllbbwo', '.owbbbbbbbbbbwo.', '..oooooooooooo..'], 'colors': [{'name': 'Canada', 'o': '#2a2014', 'b': '#b8a080', 'e': '#1a1408', 'a': '#3a2a1a', 'w': '#e8e0d0', 'p': '#d88a7a', 'l': '#e8e0d0', 'n': '#2a1a14'}, {'name': 'Bobcat', 'o': '#2a1406', 'b': '#c8885a', 'e': '#1a0a04', 'a': '#3a2010', 'w': '#f0e0c8', 'p': '#ff9a7a', 'l': '#f4e4d0', 'n': '#2a1406'}, {'name': 'Snow', 'o': '#3a3a4a', 'b': '#e0e0e8', 'e': '#2a3a5a', 'a': '#4a4a5a', 'w': '#ffffff', 'p': '#ffb0c0', 'l': '#ffffff', 'n': '#3a3a4a'}]},
  'Manatee': {'eyes': 5, 'move': 'float', 'speed': 0.6, 'feet': False, 'mouth': True, 'lines': ['*slow blink*', 'sea cow, reporting', 'i eat lettuce all day', 'no rush'], 'body': ['................', '................', '...oooooooooo...', '..oaaaaaaaaaao..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbblslnnlslbbbo', 'fobblllbblllbbof', 'ff.obbbbbbbbo.ff', 'f...oooooooo...f'], 'colors': [{'name': 'Gray', 'o': '#2a2e36', 'b': '#8a929e', 'e': '#0a0e14', 'a': '#7a828e', 'p': '#d8a0b0', 'l': '#b0b8c4', 'n': '#2a2e36', 's': '#5a626e', 'f': '#6a727e'}, {'name': 'Mossy', 'o': '#1a2a1a', 'b': '#7a9a7a', 'e': '#0a140a', 'a': '#6a8a6a', 'p': '#d8a0a0', 'l': '#a8c8a8', 'n': '#1a2a1a', 's': '#4a6a4a', 'f': '#5a7a5a'}, {'name': 'Pink', 'o': '#5a2a3a', 'b': '#e8a8b8', 'e': '#2a0a14', 'a': '#d898a8', 'p': '#ff7a9a', 'l': '#ffd0dc', 'n': '#5a2a3a', 's': '#c87a8a', 'f': '#d898a8'}]},
@@ -3785,9 +3787,57 @@ def chat_text(pet, text):
     return text.replace("{name}", pet.name).replace("{kind}", pet.kind)
 
 
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR}.items():
+# 🐆 Prowl Week Blips: earned in the event (see EVENT), not hatched or found. Each one stays yours once unlocked.
+PROWL = {
+ 'Lioness': {"eyes": 5, "move": "walk", "speed": 1.1, "feet": True, "mouth": True,
+  "lines": ['*regal stretch*', "the pride? it's just us. perfect", 'i do the hunting. i do ALL of it', '*tail flick* you may pet me'],
+  "body": ['................', '.oo..........oo.', 'oaao........oaao', 'obbbooooooooobbo', 'obbbbbbbbbbbbbBo', 'obbbbbbbbbbbbbBo', 'obbbbbbbbbbbbbBo', 'obmbllllllllbmBo', 'obmbblllnnllbmBo', '.oBmbllllllbmBo.', '..oBbbllllbbBo..', '...oooooooooo...'],
+  "colors": [dict(name='Savanna', o='#3a2008', b='#f0c878', a='#8a5a20', m='#d8a458', l='#fff4dc', n='#5a2a14', e='#2a1404', f='#3a2008'),
+             dict(name='Dusk Rose', o='#2a1038', b='#e8b0d8', a='#8a3a7a', m='#c880b8', l='#fff0fa', n='#5a1a48', e='#2a0a28', f='#2a1038'),
+             dict(name='Ivory', o='#2a2a3a', b='#f4f0e8', a='#a8a098', m='#d8d0c4', l='#ffffff', n='#a85a5a', e='#1a1a24', f='#2a2a3a')]},
+ 'Cougar': {"eyes": 5, "move": "walk", "speed": 1.1, "feet": True, "mouth": True,
+  "lines": ['*silent paws*', 'puma, cougar, mountain lion. pick one', "shh, i'm stalking a leaf", 'the mountains are my backyard'],
+  "body": ['..o..........o..', '.oto........oto.', '.ottooooooootto.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbtbllllbtbbbo', 'obbbbllnnllbbbbo', '.obbbllllllbbbo.', '..obbbllllbbbo..', '...oooooooooo...'],
+  "colors": [dict(name='Tawny', o='#2a1a08', b='#c89a62', t='#3a2410', l='#f4ead8', n='#3a1c10', e='#2a1a04', f='#2a1a08'),
+             dict(name='Ghost Mountain', o='#1a2230', b='#a8b4c4', t='#2a3448', l='#f4f8ff', n='#3a2a30', e='#10161f', f='#1a2230'),
+             dict(name='Red Rock', o='#3a1408', b='#d8683a', t='#4a1c0a', l='#ffe8d0', n='#3a1408', e='#2a0e04', f='#3a1408')]},
+ 'Panther': {"eyes": 5, "move": "walk", "speed": 1.2, "feet": {'stand': '.....oo..oo.....', 'walk1': '....oo....oo....', 'walk2': '......oo.oo.....', 'air': '.....o....o.....'}, "mouth": False,
+  "lines": ['*blends into the shadows*', "black? i prefer 'midnight'", "my eyes glow. that's just style", 'i was here the whole time'],
+  "body": ['..o..........o..', '.obo........obo.', '.obio......oibo.', '.obbbooooooobbbo', '.obbbbbbbbbbbbo.', '.obbbbbbbbbbbbo.', '..obbbbbbbbbbo..', '..obrbbbbbbrbo..', '...obbbnnbbbo...', '....obbbbbbo....', '.....oBbbBo.....', '......oooo......'],
+  "colors": [dict(name='Midnight', o='#06060e', b='#1e1e2e', r='#34345a', i='#ff8aa8', n='#ff8aa8', e='#7aff5a', f='#06060e'),
+             dict(name='Moonlit', o='#080a1c', b='#232a4a', r='#46549a', i='#8ad8ff', n='#ffb0d8', e='#6ad8ff', f='#080a1c'),
+             dict(name='Ember Black', o='#100604', b='#2a1810', r='#5a3420', i='#ff8a3a', n='#ff6a3a', e='#ffd23a', f='#100604')]},
+ 'Serval': {"eyes": 5, "move": "walk", "speed": 1.3, "feet": True, "mouth": True,
+  "lines": ['*big ears swivel*', 'i can jump HIGH. watch', 'i hear your snacks from a mile away', 'long legs, short patience'],
+  "body": ['..ooo......ooo..', 'obibo......obibo', 'obibo......obibo', 'obbbboo..oobbbbo', 'obbsbbbbbbbbsbbo', 'obbbbbbbbbbbbbbo', 'obbbbsbbbbsbbbbo', 'obsbbllllllbbsbo', 'obbbbllnnllbbbbo', '.obsbllllllbsbo.', '..obbbllllbbbo..', '...oooooooooo...'],
+  "colors": [dict(name='Golden', o='#3a2208', b='#e8b858', l='#fff2d8', i='#ff9f7a', n='#1a1004', e='#1a1004', s='#1a1004'),
+             dict(name='Sandstone', o='#3a2a18', b='#d8c098', l='#fff8ec', i='#ff9f7a', n='#2a1a0c', e='#2a1a0c', s='#2a1a0c'),
+             dict(name='Midnight Spots', o='#10142a', b='#6a78b8', l='#e8ecff', i='#ff9ad8', n='#0a0c1c', e='#0a0c1c', s='#0a0c1c')]},
+ 'Caracal': {"eyes": 5, "move": "walk", "speed": 1.3, "feet": True, "mouth": True,
+  "lines": ['*ear tufts twitch*', 'i can catch a bird mid-air. just saying', 'fancy tufts, fancy me', 'the desert is cooler than you think'],
+  "body": ['..t..........t..', '.oto........oto.', '.obbo......obbo.', 'obbbboo..oobbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbtbbllllbbtbbo', 'obbbbllnnllbbbbo', '.obbbllllllbbbo.', '..obbbllllbbbo..', '...oooooooooo...'],
+  "colors": [dict(name='Desert', o='#2a1608', b='#d08848', l='#fff0dc', i='#ff8f8f', n='#0a0604', e='#0a0604', t='#0a0604'),
+             dict(name='Ember', o='#3a1006', b='#e8582a', l='#ffe4d0', i='#ff9a6a', n='#0a0402', e='#0a0402', t='#0a0402'),
+             dict(name='Smoke', o='#1a1c26', b='#8a90a4', l='#f0f2f8', i='#ff9ab0', n='#06060a', e='#06060a', t='#06060a')]},
+ 'Ocelot': {"eyes": 5, "move": "walk", "speed": 1.1, "feet": True, "mouth": True,
+  "lines": ['*chain-link stripes*', 'nobody does spots like me', 'jungle nights are the best nights', "i'm basically a tiny leopard"],
+  "body": ['................', '.oo..........oo.', 'obbo........obbo', 'obbbboo..oobbbbo', 'obbbsbsbbsbsbbbo', 'obbbbbbbbbbbbbbo', 'obsbbbbbbbbbbsbo', 'obsbbllllllbbsbo', 'obbbbllnnllbbbbo', '.obsbllllllbsbo.', '..obbbllllbbbo..', '...oooooooooo...'],
+  "colors": [dict(name='Jungle', o='#2a1a08', b='#e0a040', l='#fff0d0', i='#ff9f7a', n='#1a0e04', e='#1a0e04', s='#1a0e04'),
+             dict(name='Sunset', o='#3a0e18', b='#f07a6a', l='#ffe8e0', i='#ff9ab8', n='#220608', e='#220608', s='#220608'),
+             dict(name='Moss', o='#10281a', b='#7ab868', l='#f0ffe8', i='#ff9fb0', n='#06140a', e='#06140a', s='#06140a')]},
+ 'Clouded Leopard': {"eyes": 5, "move": "walk", "speed": 0.95, "feet": True, "mouth": True,
+  "lines": ['*cloud-patterned prowl*', 'my tail is longer than my body', 'i climb trees upside down. try it', 'soft clouds, sharp claws'],
+  "body": ['................', '.oo..........oo.', 'obbo........obbo', 'obccboooooobccbo', 'occcbbbbbbbbccco', 'obccbbbbbbbbccbo', 'obbbbccbbccbbbbo', 'obbbbccllccbbbbo', 'obbbbllnnllbbbbo', '.obccllbbllccbo.', '..obbbllllbbbo..', '...oooooooooo...'],
+  "colors": [dict(name='Cloud', o='#2a2418', b='#c8b890', l='#f8f0e0', i='#ff9f7a', n='#14100a', e='#14100a', c='#887850'),
+             dict(name='Dusk Cloud', o='#241438', b='#a890d0', l='#f4ecff', i='#ff9ad8', n='#10081c', e='#10081c', c='#685090'),
+             dict(name='Storm', o='#10182a', b='#7a8aa8', l='#e8eef8', i='#ff9ab0', n='#080c14', e='#080c14', c='#3a4a68')]},
+}
+PROWL_KINDS = list(PROWL)
+
+
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR, **PROWL}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
-                       "feet": FEET_STD if _a.get("feet", True) else None, "dx": 0, "move": _a["move"],
+                       "feet": (_a["feet"] if isinstance(_a.get("feet"), dict) else FEET_STD if _a.get("feet", True) else None), "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
                        "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False),
                        **{k: _a[k] for k in VOICE_KEYS + ("portrait",) if k in _a}}
@@ -3935,7 +3985,7 @@ CRYPTID_KINDS = list(CRYPTIDS)    # spotted in the wild
 KAIJU_KINDS = list(KAIJU)         # spotted in the wild too, but much harder
 for _base, _a in [(b, a) for b, a in AWAKENED.items()] + [(b, st) for b, sts in AWAKEN_STAGES.items() for st in sts]:
     VARIANTS[_a["name"]] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
-                            "feet": FEET_STD if _a.get("feet", True) else None, "dx": _a.get("dx", 0), "move": _a["move"],
+                            "feet": (_a["feet"] if isinstance(_a.get("feet"), dict) else FEET_STD if _a.get("feet", True) else None), "dx": _a.get("dx", 0), "move": _a["move"],
                             "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0), "shifty": False,
                             "ghost": _a.get("ghost", False), "awakened": _base, "soul": _a.get("soul", "")}
 # 🖍️ The 1.0 Redraw: every Blip gets a new drawing. The old one lives on in a "Classic" color (added at the end, so
@@ -4363,7 +4413,7 @@ WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
 
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
-KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS + BAD_DREAM_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS + PROWL_KINDS + BAD_DREAM_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, even in the daytime)
@@ -4597,11 +4647,34 @@ def is_night():
 
 # Events 🎉: for a few days, caring for certain Blips earns event points, and every so many points unlocks an event skin
 # (a color marked event=<id>). Skins you earn stay yours after the event; the rest stay locked.
-EVENT = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "2026-11-17", "until": "2026-12-03",
-         "until_text": "Thursday, December 3", "paused": ["2026-11-18", "2026-11-20"],   # closed for the 1.0 drop: the clock stops
-         "paused_text": "Friday, November 20", "kinds": ["Hedgehog", "Fox", "Echidna"], "per_skin": 10,
-         "rewards": [["Hedgehog", "Pinecone"], ["Fox", "Ember"], ["Echidna", "Opal"], ["Hedgehog", "Midnight"],
-                     ["Fox", "Aurora"], ["Hedgehog", "Candy Floss"], ["Fox", "Maple"], ["Echidna", "Golden Spines"]]}
+SPIKY_WEEK = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start": "2026-11-17", "until": "2026-12-03",
+              "until_text": "Thursday, December 3", "paused": ["2026-11-18", "2026-11-20"],   # closed for the 1.0 drop: the clock stops
+              "paused_text": "Friday, November 20", "kinds": ["Hedgehog", "Fox", "Echidna"], "per_skin": 10,
+              "blurb": "Pet and feed your Hedgehogs, Foxes and Echidnas, and do today's quests! A pet is 1 point (once every few seconds) and a "
+                       "cookie for a hungry Blip up to 3 (full Blips give nothing). Every 10 points unlocks a new event skin, yours forever.",
+              "hello": "Pet & feed Hedgehogs, Foxes and Echidnas for event skins!", "friends": "all three spiky friends",
+              "rewards": [["Hedgehog", "Pinecone"], ["Fox", "Ember"], ["Echidna", "Opal"], ["Hedgehog", "Midnight"],
+                          ["Fox", "Aurora"], ["Hedgehog", "Candy Floss"], ["Fox", "Maple"], ["Echidna", "Golden Spines"]]}
+# 🐆 Prowl Week: big cats. 4 skins at 5 points each, then 7 new Blips at 10 points each (the Blips are in PROWL).
+PROWL_WEEK = {"id": "prowl-week", "name": "Prowl Week", "icon": "🐆", "start": "2026-12-04", "until": "2026-12-17",
+              "until_text": "Thursday, December 17", "paused": None, "paused_text": "", "kinds": ["Lion", "Tiger", "Cheetah", "Jaguar"], "per_skin": 5,
+              "blurb": "Pet and feed your Lions, Tigers, Cheetahs and Jaguars, and do today's quests! A pet is 1 point (once every few seconds) and a "
+                       "cookie for a hungry Blip up to 3 (full Blips give nothing). Skins cost 5 points each, new Blips 10. Everything you earn is yours forever.",
+              "hello": "Pet & feed Lions, Tigers, Cheetahs and Jaguars for skins and new cats!", "friends": "all four big cats",
+              "rewards": [["Lion", "Sunmane"], ["Tiger", "Moonstripe"], ["Cheetah", "Dawnspot"], ["Jaguar", "Emberrose"]],
+              "tiers": [{"type": "skin", "kind": "Lion", "skin": "Sunmane", "at": 5}, {"type": "skin", "kind": "Tiger", "skin": "Moonstripe", "at": 10},
+                        {"type": "skin", "kind": "Cheetah", "skin": "Dawnspot", "at": 15}, {"type": "skin", "kind": "Jaguar", "skin": "Emberrose", "at": 20},
+                        {"type": "blip", "kind": "Lioness", "at": 30}, {"type": "blip", "kind": "Cougar", "at": 40}, {"type": "blip", "kind": "Panther", "at": 50},
+                        {"type": "blip", "kind": "Serval", "at": 60}, {"type": "blip", "kind": "Caracal", "at": 70}, {"type": "blip", "kind": "Ocelot", "at": 80},
+                        {"type": "blip", "kind": "Clouded Leopard", "at": 90}]}
+EVENTS = [SPIKY_WEEK, PROWL_WEEK]
+# the event that is on, or the next one coming (the last one stays up after it ends so its screen still works)
+EVENT = next((e for e in EVENTS if time.strftime("%Y-%m-%d") <= e["until"]), EVENTS[-1])
+
+
+def event_tiers():
+    """The reward track: [{"type": "skin" | "blip", "kind", "skin"?, "at"}]. Older events list only skins, every per_skin points."""
+    return EVENT.get("tiers") or [{"type": "skin", "kind": k, "skin": sk, "at": (i + 1) * EVENT["per_skin"]} for i, (k, sk) in enumerate(EVENT["rewards"])]
 
 
 # Friendship 💞: every Blip bonds with you as you care for it. Points needed for each level, and its title.
@@ -4616,7 +4689,7 @@ def bond_level(points):
 
 # Daily quests 📅: 3 a day, the same for everyone that day (picked from the date). Each one gives hearts, and event
 # points while an event is on.
-QUESTS = [{"id": "pet_spiky", "text": "Pet a Hedgehog, Fox or Echidna 8 times", "goal": 8},
+QUESTS = [{"id": "pet_spiky", "text": "Pet a " + ", ".join(EVENT["kinds"][:-1]) + " or " + EVENT["kinds"][-1] + " 8 times", "goal": 8},
           {"id": "feed_hungry", "text": "Feed 3 hungry Blips", "goal": 3},
           {"id": "pet_any", "text": "Pet your Blips 20 times", "goal": 20},
           {"id": "naps", "text": "Let 2 Blips finish a nap", "goal": 2},
@@ -6122,7 +6195,7 @@ class Blip:
         self.color_menu.delete(0, "end")
         for i, col in enumerate(kind_colors(self.kind)):
             if skin_locked(self.app.save, self.kind, i):
-                why = "fend off its Bad Dream" if col.get("unlock") == "puppet" else "redeem a 🎟️ merch code" if col.get("unlock") == "merch" else f"{EVENT['icon']} {EVENT['name']} skin"
+                why = "fend off its Bad Dream" if col.get("unlock") == "puppet" else "redeem a 🎟️ merch code" if col.get("unlock") == "merch" else "{} {} skin".format(*next(((e["icon"], e["name"]) for e in EVENTS if e["id"] == col.get("event")), (EVENT["icon"], EVENT["name"])))
                 self.color_menu.add_command(label=f"🔒 {col['name']}  ({why})", state="disabled")
             else:
                 icon, _, cost = color_cost(self.kind, i)
@@ -6820,7 +6893,7 @@ def load_custom_blips():
 # 💾 Save safety: every load is checked field by field (a wrong type is fixed instead of crashing later), the last good
 # save is kept as save.bak.json, a broken save is copied aside before anything replaces it, and a failed write is
 # reported to the player instead of silently forgotten.
-SAVE_LISTS = ("awakened", "bad_dreams", "merch", "merch_kinds", "redeemed", "cryptids", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
+SAVE_LISTS = ("awakened", "bad_dreams", "merch", "merch_kinds", "redeemed", "cryptids", "event_kinds", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
               "rivals_beaten", "skins", "trophies", "unlocked", "worlds")
 SAVE_COUNTS = ("hearts", "nights_won")
 SAVE_FLAGS = ("auto_update", "climb", "cursor_play", "sound", "voices", "weather", "slot2")
@@ -8041,7 +8114,7 @@ SAVE_CODE_PREFIX = "BLIPVILLE1:"
 SAVE_CODE_KEYS = {"hearts": "hearts", "hatched": "hatched", "hats_owned": "hatsOwned", "peeked": "peeked", "nights_won": "nightsWon",
                   "cryptids": "cryptids", "kaiju": "kaiju", "gifts": "gifts", "worlds": "worlds", "world": "world", "legends": "legends",
                   "ghosts": "ghosts", "trophies": "trophies", "stats": "stats", "awakened": "awakened", "awaken_level": "awakenLevel",
-                  "rivals_beaten": "rivalsBeaten", "slot2": "slot2", "skins": "skins", "event_points": "eventPoints",
+                  "rivals_beaten": "rivalsBeaten", "slot2": "slot2", "skins": "skins", "event_points": "eventPoints", "event_kinds": "eventKinds",
                   "gods": "gods", "bad_dreams": "badDreams", "merch": "merch", "merch_kinds": "merchKinds", "redeemed": "redeemed"}
 
 
@@ -8292,14 +8365,14 @@ ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash"
                "volt": ["Zap Bop", "Static Hug", "Thunder Tap"], "stone": ["Pebble Toss", "Boulder Bump", "Rockslide"],
                "gust": ["Breeze Slap", "Twister Twirl", "Gale Puff"], "frost": ["Snowball", "Icicle Poke", "Frost Nip"],
                "sweet": ["Sprinkle Shot", "Sugar Rush", "Taffy Tangle"], "cosmic": ["Star Beam", "Meteor Boop", "Moon Drop"]}
-_SPARK = {"Phoenix", "Dragon", "Magmaw", "Will-o'-Wisp", "Jersey Devil", "Fox", "Kitsune", "Chochin", "Amber Raptor", "Comet",
+_SPARK = {"Lioness", "Caracal", "Phoenix", "Dragon", "Magmaw", "Will-o'-Wisp", "Jersey Devil", "Fox", "Kitsune", "Chochin", "Amber Raptor", "Comet",
           "Rocket", "Black Hole", "Star", "Moon", "Fennec", "Tiger", "Lion", "Cheetah", "Gigabot", "Robo Bear", "Robo Bunny",
           "Robo Hen", "Golden Blip", "Bee", "Pumpkin", "Thunderbird", "Snallygaster", "Hodag", "Taco", "Toast", "Poltergeist"}
 _SPLASH = {"Axolotl", "Clownfish", "Crab", "Dolphin", "Frog", "Goldfish", "Jellyfish", "Koi", "Octopus", "Otter", "Penguin",
            "Pufferfish", "Seal", "Shark", "Starfish", "Turtle", "Whale", "Walrus", "Narwhal", "Nessie", "Kappa", "Tidal Titan",
            "Pearlfin", "Abyss Wisp", "Ghost Captain", "Frogman", "Duck", "Swan", "Pelican", "Platypus", "Hippo", "Beaver", "Yeti",
            "Frostback", "Snow Leopard", "Slime", "Pudding", "Ice Cream"}
-_SPROUT = {"Sprout", "Caterpillar", "Ladybug", "Butterfly", "Mantis", "Mossling", "Bloomkin", "Sloth", "Koala", "Panda",
+_SPROUT = {"Ocelot", "Sprout", "Caterpillar", "Ladybug", "Butterfly", "Mantis", "Mossling", "Bloomkin", "Sloth", "Koala", "Panda",
            "Chameleon", "Gecko", "Iguana", "Snail", "Bigfoot", "Skunk Ape", "Shroomy", "Cactus Pal", "Deer", "Moose", "Rabbit",
            "Hedgehog", "Tortoise", "Moth", "Mothman", "Owlman", "Gumdrop Golem"}
 
@@ -8323,6 +8396,9 @@ _NEW_TYPES = {
             "Nebula Cat", "Cosmo Pup", "Star Whale", "Comet Fox", "Moon Bunny", "Moon Moth", "Qilin", "Liftoff", "Blipmaker",
             "Golden Blip", "Unicorn", "Mirror Spirit"},
 }
+_NEW_TYPES["stone"] |= {"Cougar"}
+_NEW_TYPES["gust"] |= {"Panther", "Serval"}
+_NEW_TYPES["frost"] = _NEW_TYPES.get("frost", set()) | {"Clouded Leopard"}
 _NEW_TYPE_OF = {k: t for t, ks in _NEW_TYPES.items() for k in ks}
 _NEW_TYPE_OF.update({k: ts[0] for k, ts in EGYPT_TYPES.items()})     # 🏺 the gods' types
 # Dual types: these Blips have 2 types. They take both types' strengths and weaknesses when they're hit (so a hit can be
@@ -9133,30 +9209,61 @@ class EventWindow:
         c, app = self.c, self.app
         c.delete("all")
         self.buttons = []
-        pts, per, n = app.event_points(), EVENT["per_skin"], len(EVENT["rewards"])
-        got = app.save.get("skins", [])
+        tiers = event_tiers()
+        total = tiers[-1]["at"]
+        pts = min(app.event_points(), total)
+        got, blips = app.save.get("skins", []), app.save.get("event_kinds", [])
         c.create_text(18, 26, anchor="w", text=f"{EVENT['icon']} {EVENT['name']}", fill="#ffd23a", font=("Segoe UI", 18, "bold"))
         c.create_text(self.W - 18, 26, anchor="e", fill="#ff9fc0", font=("Segoe UI", 10, "bold"),
                       text=f"until {EVENT['until_text']}" if event_on() else
                       f"paused until {EVENT['paused_text']}" if event_paused() else
                       "starts soon!" if time.strftime("%Y-%m-%d") < EVENT["start"] else "this event is over")
-        c.create_text(18, 62, anchor="w", width=self.W - 36, fill="#e8e4ff", font=("Segoe UI", 10),
-                      text="Pet and feed your Hedgehogs, Foxes and Echidnas, and do today's quests! A pet is 1 point (once every few "
-                           f"seconds), a cookie for a hungry Blip up to 3 (full ones give nothing). Every {per} points unlocks a skin, yours forever.")
-        bx, by, bw = 18, 100, self.W - 36
+        c.create_text(18, 62, anchor="w", width=self.W - 36, fill="#e8e4ff", font=("Segoe UI", 10), text=EVENT["blurb"])
+        nxt = next((t for t in tiers if pts < t["at"]), None)
+        prev = max([t["at"] for t in tiers if t["at"] <= pts] or [0])
+        c.create_polygon(40, 108, 62, 98, 84, 108, 84, 134, 62, 146, 40, 134, fill="#c85ae0", outline="#ff9fc0", width=2)   # the points badge
+        c.create_text(62, 120, text=str(pts), fill="#ffffff", font=("Segoe UI", 15, "bold"))
+        c.create_text(62, 140, text="POINTS", fill="#ffd8f0", font=("Segoe UI", 7, "bold"))
+        c.create_text(102, 104, anchor="w", fill="#ffd23a", font=("Segoe UI", 10, "bold"),
+                      text=(f"Next: {nxt['kind'] if nxt['type'] == 'blip' else nxt['skin'] + ' ' + nxt['kind']} · {nxt['at'] - pts} to go" if nxt else "🎉 You earned everything!"))
+        bx, by, bw = 102, 120, self.W - 120
         c.create_rectangle(bx, by, bx + bw, by + 18, fill="#2b2547", outline="")
-        c.create_rectangle(bx, by, bx + bw * min(1, pts / (per * n)), by + 18, fill="#ffd23a", outline="")
-        c.create_text(bx + bw / 2, by + 9, text=f"{min(pts, per * n)} / {per * n} points", fill="#14121e" if pts > per * n * 0.45 else "#ffffff",
-                      font=("Segoe UI", 9, "bold"))
-        for i, (kind, skin) in enumerate(EVENT["rewards"]):
-            x, y = 18 + (i % 4) * 148, 132 + (i // 4) * 148
-            have = f"{kind}:{skin}" in got
-            c.create_rectangle(x, y, x + 138, y + 138, fill="#2b2547", outline="#ffd23a" if have else "#3a3360", width=2)
-            idx = next(j for j, col in enumerate(kind_colors(kind)) if col["name"] == skin)
-            draw_sprite(c, kind, idx, x + 21, y + 12, 6)
-            c.create_text(x + 69, y + 104, text=f"{skin}", fill="#ffd23a" if have else "#c8c0e8", font=("Segoe UI", 10, "bold"))
-            c.create_text(x + 69, y + 122, text=(f"✓ {kind} skin" if have else f"🔒 {kind} · {(i + 1) * per} pts"),
-                          fill="#9ad8a8" if have else "#9a92c0", font=("Segoe UI", 9))
+        frac = 1 if not nxt else (pts - prev) / (nxt["at"] - prev)
+        c.create_rectangle(bx, by, bx + bw * frac, by + 18, fill="#ffd23a", outline="")
+        c.create_text(bx + bw / 2, by + 9, text="all rewards unlocked!" if not nxt else f"{pts - prev} / {nxt['at'] - prev}",
+                      fill="#14121e" if frac > 0.45 else "#ffffff", font=("Segoe UI", 9, "bold"))
+        per_page = 4
+        pages = max(1, -(-len(tiers) // per_page))
+        if getattr(self, "page", None) is None:
+            self.page = min(pages - 1, (tiers.index(nxt) if nxt else len(tiers) - 1) // per_page)       # open on the next reward
+        self.page = max(0, min(pages - 1, self.page))
+        for j, t in enumerate(tiers[self.page * per_page:(self.page + 1) * per_page]):
+            i = self.page * per_page + j
+            x, y = 40 + j * 138, 156
+            blip = t["type"] == "blip"
+            have = (t["kind"] in blips) if blip else f"{t['kind']}:{t['skin']}" in got
+            c.create_line(x - 4, y + 14, x + 138, y + 14, fill="#ffd23a" if have else "#3a3360", width=3)
+            c.create_oval(x + 49, y, x + 79, y + 28, fill="#ffd23a" if have else "#2b2547", outline="#ff9fc0" if t is nxt else "#5a5090", width=2)
+            c.create_text(x + 64, y + 14, text=str(i + 1), fill="#3a2a04" if have else "#c8c0e8", font=("Segoe UI", 10, "bold"))
+            c.create_text(x + 64, y + 38, text=f"{t['at']} pts", fill="#9a92c0", font=("Segoe UI", 9))
+            c.create_rectangle(x, y + 50, x + 128, y + 232, fill="#3a2a5a" if blip else "#2b2547",
+                               outline="#ffd23a" if have else "#ff9fc0" if t is nxt else "#3a3360", width=2)
+            if blip:
+                draw_sprite(c, t["kind"], default_color(t["kind"]), x + 16, y + 66, 6, silhouette=None if have else True)
+            else:
+                idx = next(k for k, col in enumerate(kind_colors(t["kind"])) if col["name"] == t["skin"])
+                draw_sprite(c, t["kind"], idx, x + 16, y + 66, 6)
+            c.create_text(x + 64, y + 160, text=t["kind"] if blip else t["skin"], fill="#ffd23a" if have else "#e8e4ff", font=("Segoe UI", 10, "bold"))
+            c.create_text(x + 64, y + 178, text="NEW BLIP" if blip else f"{t['kind']} skin", fill="#ff9fc0" if blip else "#9a92c0", font=("Segoe UI", 8, "bold"))
+            c.create_rectangle(x + 1, y + 200, x + 127, y + 231, fill="#ffd23a" if have else "#ff9fc0" if t is nxt else "#3a3360", outline="")
+            c.create_text(x + 64, y + 216, text="✓ UNLOCKED" if have else ("READY" if pts >= t["at"] else "🔒 LOCKED"),
+                          fill="#3a2a04" if have or t is nxt else "#9a92c0", font=("Segoe UI", 9, "bold"))
+        for label, dx, fn in (("‹", 8, lambda: self.turn(-1)), ("›", self.W - 36, lambda: self.turn(1))):
+            c.create_rectangle(dx, 230, dx + 24, 330, fill="#2b2547", outline="")
+            c.create_text(dx + 12, 280, text=label, fill="#ffffff", font=("Segoe UI", 18, "bold"))
+            self.buttons.append((dx, 230, dx + 24, 330, fn))
+        for p in range(pages):
+            c.create_oval(self.W / 2 - pages * 7 + p * 14, 396, self.W / 2 - pages * 7 + p * 14 + 6, 402, fill="#ffd23a" if p == self.page else "#3a3360", outline="")
         q = app.quest_state()
         c.create_text(18, 438, anchor="w", text="📅 Today's quests", fill="#ffd23a", font=("Segoe UI", 12, "bold"))
         c.create_text(self.W - 18, 438, anchor="e", fill="#9a92c0", font=("Segoe UI", 9),
@@ -9178,13 +9285,17 @@ class EventWindow:
                 c.create_text(x + 94, y + 16, text=f"➕ Add {'an' if kind[0] in 'AEIOU' else 'a'} {kind}", fill="#ffffff", font=("Segoe UI", 10, "bold"))
                 self.buttons.append((x, y, x + 188, y + 32, lambda k=kind: self.add(k)))
         if has >= set(EVENT["kinds"]):
-            c.create_text(18, y + 16, anchor="w", text="Your town has all three spiky friends. Go give them some love! 💖",
+            c.create_text(18, y + 16, anchor="w", text=f"Your town has {EVENT['friends']}. Go give them some love! 💖",
                           fill="#9ad8a8", font=("Segoe UI", 10, "bold"))
+
+    def turn(self, d):
+        self.page = (self.page or 0) + d
+        self.draw()
 
     def add(self, kind):
         pet = self.app.add_pet(kind)
         if pet:
-            pet.say("spiky week, let's go!", 3)
+            pet.say(f"{EVENT['name'].lower()}, let's go!", 3)
         self.draw()
 
 
@@ -9645,6 +9756,7 @@ class Collection:
                        ("Legends ✨  visit a world and click them when they stroll by", LEGEND_KINDS),
                        ("Ghosts 👻  they drift by at night: click one while it glows!", GHOST_KINDS),
                        ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS),
+                       ("Event 🎖️  earn them in Prowl Week", PROWL_KINDS),
                        ("Bad Dreams 🧸  click a Puppet Master 5 times… then fend them off", BAD_DREAM_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         view_h = min(h, self.win.winfo_screenheight() - 140)        # scroll when the screen is too short to fit it all
@@ -9666,7 +9778,7 @@ class Collection:
         return self.app.save.setdefault("peeked", [])
 
     def how(self, k):
-        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "a limited-time gift" if k in GIFTS else f"find it in {LEGEND_WORLD[k]}" if k in LEGENDS else "meet it at night" if k in GHOSTS else "hatch from an egg"
+        return f"survive Night {UNLOCKS[k]}" if k in UNLOCKS else "spot it in the wild" if k in CRYPTIDS else "catch it in the city" if k in KAIJU else "a limited-time gift" if k in GIFTS else "earn it in Prowl Week" if k in PROWL else f"find it in {LEGEND_WORLD[k]}" if k in LEGENDS else "meet it at night" if k in GHOSTS else "hatch from an egg"
 
     def draw(self):
         c = self.canvas
@@ -11087,6 +11199,8 @@ class App:
             return WORLD_OF[kind] in self.save.get("worlds", [])
         if kind in GIFTS:
             return kind in self.save.get("gifts", [])
+        if kind in PROWL:
+            return kind in self.save.get("event_kinds", [])    # 🎖️ earned in the Prowl Week event
         if kind in KAIJU:
             return kind in self.save.get("kaiju", [])
         if kind in CRYPTIDS:
@@ -11135,7 +11249,7 @@ class App:
         return int(self.save.get("event_points", {}).get(EVENT["id"], 0))
 
     def event_label(self):
-        total = len(EVENT["rewards"]) * EVENT["per_skin"]
+        total = event_tiers()[-1]["at"]
         if event_on():
             return f"{EVENT['icon']} {EVENT['name']} event ({min(self.event_points(), total)}/{total})…"
         if event_paused():
@@ -11149,7 +11263,7 @@ class App:
             return
         self.save["event_seen"] = EVENT["id"]
         write_save(self.save)
-        self.pets[0].say(f"{EVENT['icon']} {EVENT['name']} is on! Pet & feed Hedgehogs, Foxes and Echidnas for event skins! "
+        self.pets[0].say(f"{EVENT['icon']} {EVENT['name']} is on! {EVENT['hello']} "
                          "(right-click me → " + EVENT["icon"] + ")", 7)
 
     def quest_state(self):
@@ -11187,15 +11301,24 @@ class App:
         before = int(pts.get(EVENT["id"], 0))
         pts[EVENT["id"]] = before + n
         got = self.save.setdefault("skins", [])
-        for i, (kind, skin) in enumerate(EVENT["rewards"]):
-            key = f"{kind}:{skin}"
-            if before + n >= (i + 1) * EVENT["per_skin"] and key not in got:
+        blips = self.save.setdefault("event_kinds", [])
+        for t in event_tiers():
+            if before + n < t["at"]:
+                continue
+            if t["type"] == "blip":
+                if t["kind"] in blips:
+                    continue
+                blips.append(t["kind"])
+                pet.say(f"🎁 a new friend: {t['kind']}! ✨ (see your Zoo)", 4)
+            else:
+                key = f"{t['kind']}:{t['skin']}"
+                if key in got:
+                    continue
                 got.append(key)
-                self.sound.play("fanfare")
-                pet.say(f"🎁 new skin unlocked: {skin} {kind}! ✨", 4)
-                pet.set_face("happy", 2)
-                pet.burst("heart", 6)
-                break
+                pet.say(f"🎁 new skin unlocked: {t['skin']} {t['kind']}! ✨", 4)
+            self.sound.play("fanfare")
+            pet.set_face("happy", 2)
+            pet.burst("heart", 6)
         write_save(self.save)
 
     def daily_treat(self):

@@ -14,7 +14,7 @@ bl = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(bl)
 
 kinds = {}
-for k in list(bl.KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS", [])) + sorted(getattr(bl, "PARKED_NOW", ())):
+for k in list(bl.KINDS) + list(bl.PROWL_KINDS) + list(bl.AWAKEN_BASE) + list(getattr(bl, "CREATOR_KINDS", [])) + sorted(getattr(bl, "PARKED_NOW", ())):
     v = bl.VARIANTS[k]
     kinds[k] = {
         "body": v["body"], "alt": v.get("alt"), "eyes": v["eyes"], "mouth": v.get("mouth", True),
@@ -36,7 +36,7 @@ data = {
     "egyptGods": list(bl.EGYPT_GODS),
     "badDreams": {k: {"robo": a["robo"], **({"big": a["big"]} if "big" in a else {})} for k, a in bl.BAD_DREAMS.items()},
     "dig": {"cols": bl.DIG_COLS, "rows": bl.DIG_ROWS, "tries": bl.DIG_TRIES, "treasures": bl.DIG_TREASURES, "hearts": bl.DIG_HEARTS},
-    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS, "creator": getattr(bl, "CREATOR_KINDS", [])},
+    "groups": {"critters": bl.CRITTERS, "animals": bl.ANIMAL_KINDS, "nightShift": bl.NIGHT_SHIFT, "rare": bl.RARE_KINDS, "cryptids": bl.CRYPTID_KINDS, "kaiju": bl.KAIJU_KINDS, "tabs": bl.TAB_GROUPS, "gifts": bl.GIFT_KINDS, "eventKinds": bl.PROWL_KINDS, "legends": bl.LEGEND_KINDS, "ghosts": bl.GHOST_KINDS, "creator": getattr(bl, "CREATOR_KINDS", [])},
     "lines": {"idle": bl.LINES_IDLE, "pet": bl.LINES_PET, "held": bl.LINES_HELD, "land": bl.LINES_LAND,
               "eat": bl.LINES_EAT, "wake": bl.LINES_WAKE, "hungry": bl.LINES_HUNGRY},
     "names": bl.NAMES,
@@ -45,6 +45,7 @@ data = {
     "beaconCost": bl.BEACON_COST,
     "candleCost": bl.CANDLE_COST,
     "event": getattr(bl, "EVENT", None),
+    "events": getattr(bl, "EVENTS", None),
     "quests": getattr(bl, "QUESTS", []),
     "features": getattr(bl, "FEATURES", {}),
     "parkedKinds": sorted(getattr(bl, "PARKED_NOW", ())),

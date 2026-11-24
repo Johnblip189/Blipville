@@ -410,3 +410,6 @@ button { touch-action: manipulation; }
 #eventAdd button { flex: 1 1 calc(50% - 8px); white-space: nowrap; font-size: 12px; }
 #eventAdd button:disabled { background: rgba(255,255,255,.08); color: var(--muted); }
 .evSets .evSkins .evCard b { overflow-wrap: normal; font-size: 9.5px; }
+
+#caveLeave { position: fixed; top: 64px; left: 50%; transform: translateX(-50%); z-index: 20; }
+#caveLeave[hidden] { display: none; }

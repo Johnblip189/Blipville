@@ -667,6 +667,7 @@
   }
 
   function sky(t) {
+    if (cave) { caveScene(t); return; }
     const h = new Date().getHours() + new Date().getMinutes() / 60;
     const night = h >= 20 || h < 6, dusk = (h >= 17 && h < 20) || (h >= 6 && h < 8);
     const wl = hereWorld() && WORLD_LOOK[hereWorld()];
@@ -849,11 +850,11 @@
     if (caveTaps > 0 && t - caveLast < 4) { ctx.fillStyle = `rgba(255,170,90,${0.12 * caveTaps})`; ctx.fillRect(b.x, b.y + 4, b.w, b.h - 4); }
   }
   function caveTap(px, py) {
-    if (!hereWorld() || !CAVE_SPOT[hereWorld()]) return false;
+    if (cave || !hereWorld() || !CAVE_SPOT[hereWorld()]) return false;
     const b = caveBox();
     if (px < b.x - 10 || px > b.x + b.w + 10 || py < b.y - 6 || py > b.y + b.h + 6) return false;
     const t = now(); caveTaps = t - caveLast > 4 ? 1 : caveTaps + 1; caveLast = t;
-    if (caveTaps >= 3) { caveTaps = 0; sfx("fanfare"); openCave(hereWorld()); } else sfx("pop");
+    if (caveTaps >= 3) { caveTaps = 0; sfx("fanfare"); enterCave(CAVE_CORE[hereWorld()]); } else sfx("pop");
     return true;
   }
   // ⚡ the Nexus: five dormant Blips, one per Core. Four sleep in hidden caves (a door in Plant, Ocean, Egypt and Magma Ridge); the black one stands in the open in town.
@@ -871,13 +872,59 @@
     art.body.forEach((row, r) => [...row].forEach((ch, k) => { if (ch !== ".") { c.fillStyle = col(ch); c.fillRect(x + k * s, y + r * s, s, s); } }));
     for (const ex of [4, 10]) { c.fillStyle = awake ? pal.e : "#10101a"; if (awake) c.fillRect(x + ex * s, y + 5 * s, 2 * s, 2 * s); else c.fillRect(x + ex * s, y + 6 * s, 2 * s, Math.max(1, s / 2)); }
   }
+  // 🕳️ stepping inside: a real cave scene, coloured by its Core, with the dormant Nexus Blip asleep in the middle
+  let cave = null;
+  const CAVE_LOOK = {
+    emerald: { bg: ["#03120a", "#0d3a22"], rock: "#08200f", floor: "#0b2a18", edge: "#165a34", glow: "#3ae88a" },
+    crimson: { bg: ["#150303", "#4a1208"], rock: "#220808", floor: "#2e0e0a", edge: "#5a1c10", glow: "#ff5a3a" },
+    cobalt:  { bg: ["#030818", "#10285a"], rock: "#08122a", floor: "#0c1a3a", edge: "#1a3a7a", glow: "#4a90ff" },
+    amber:   { bg: ["#120a02", "#4a300a"], rock: "#201406", floor: "#2e1e08", edge: "#5a3c10", glow: "#ffb02a" },
+  };
+  const caveNexus = () => { const u = Math.max(3, Math.round(W / 130)), s = Math.max(4, Math.round(u * 1.25)); return { x: W / 2, s, top: GROUND - 12 * s - u * 3 }; };
+  function enterCave(id) { cave = id; weather = []; $("caveLeave").hidden = false; const p = pets.find((q) => q.state !== "sleep"); if (p) say(p, "whoa… it's glowing in here ✨", 3); }
+  function leaveCave() { cave = null; $("caveLeave").hidden = true; closeSheets(); }
+  $("caveLeave").onclick = leaveCave;
+  function caveScene(t) {
+    const L = CAVE_LOOK[cave], u = Math.max(3, Math.round(W / 130)), g = GROUND, P = _P, nx = caveNexus();
+    const gr = ctx.createLinearGradient(0, 0, 0, g); gr.addColorStop(0, L.bg[0]); gr.addColorStop(1, L.bg[1]); ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = L.glow + "14";                                                  // a shaft of light from a hole in the roof
+    ctx.beginPath(); ctx.moveTo(W * 0.42, 0); ctx.lineTo(W * 0.58, 0); ctx.lineTo(W * 0.72, g); ctx.lineTo(W * 0.28, g); ctx.fill();
+    ctx.fillStyle = L.rock;                                                         // walls and roof
+    ctx.fillRect(0, 0, W, u * 3);
+    for (let x = 0; x < W; x += u * 5) { const h = u * (4 + Math.abs(Math.sin(x * 0.37 + 2)) * 9); ctx.beginPath(); ctx.moveTo(x, u * 2); ctx.lineTo(x + u * 2.5, u * 2 + h); ctx.lineTo(x + u * 5, u * 2); ctx.fill(); }   // stalactites
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(W * 0.1, 0); ctx.quadraticCurveTo(W * 0.02, g * 0.5, W * 0.08, g); ctx.lineTo(0, g); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(W, 0); ctx.lineTo(W * 0.9, 0); ctx.quadraticCurveTo(W * 0.98, g * 0.5, W * 0.92, g); ctx.lineTo(W, g); ctx.fill();
+    const crystal = (x, y, h, k) => { const w = h * 0.45, glow = 0.7 + 0.3 * Math.sin(t * 1.6 + k);
+      ctx.fillStyle = L.glow; ctx.globalAlpha = 0.35 + 0.3 * glow; ctx.beginPath(); ctx.moveTo(x - w, y); ctx.lineTo(x - w * 0.4, y - h); ctx.lineTo(x + w * 0.4, y - h * 0.8); ctx.lineTo(x + w, y); ctx.fill();
+      ctx.globalAlpha = 1; ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.fillRect(x - w * 0.3, y - h * 0.85, Math.max(2, u / 2), h * 0.5); };
+    for (const [fx, h, k] of [[0.1, 20, 1], [0.15, 30, 2], [0.2, 16, 3], [0.8, 18, 4], [0.86, 32, 5], [0.92, 22, 6], [0.32, 12, 7], [0.7, 14, 8]]) crystal(W * fx, g, h * (u / 3), k);   // crystals on the floor
+    for (const [fx, h, k] of [[0.3, 14, 9], [0.62, 18, 10], [0.5, 10, 11]]) { ctx.save(); ctx.translate(W * fx, 0); ctx.scale(1, -1); crystal(0, u * 3, h * (u / 3), k); ctx.restore(); }   // and hanging from the roof
+    ctx.fillStyle = L.floor; ctx.fillRect(0, g, W, H - g); ctx.fillStyle = L.edge; ctx.fillRect(0, g, W, 5);
+    const ringA = 0.35 + 0.25 * Math.sin(t * 1.3);                                  // a glowing rune ring under the sleeper
+    ctx.strokeStyle = L.glow; ctx.globalAlpha = ringA; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(nx.x, g + 12, u * 18, u * 3.4, 0, 0, 7); ctx.stroke();
+    ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(nx.x, g + 12, u * 11, u * 2, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
+    const glow = ctx.createRadialGradient(nx.x, g - u * 6, 4, nx.x, g - u * 6, u * 22); glow.addColorStop(0, L.glow + "55"); glow.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = glow; ctx.fillRect(nx.x - u * 24, g - u * 30, u * 48, u * 36);
+    P(nx.x - u * 8, g - u * 3, u * 16, u * 3, "#3a3a46"); P(nx.x - u * 6, g - u * 5, u * 12, u * 2, "#4a4a58"); P(nx.x - u * 8, g - u * 3, u * 16, 2, "#5a5a68");   // a stone slab
+    drawNexus(ctx, cave, nx.x - 8 * nx.s, g - u * 5 - 12 * nx.s + 2, nx.s, false);
+    ctx.fillStyle = "rgba(255,255,255,.6)"; ctx.font = "700 " + (11 + Math.round(2 * Math.sin(t))) + "px " + FONT; ctx.textAlign = "center";
+    ctx.fillText("z", nx.x + 7 * nx.s, g - u * 5 - 12 * nx.s - 2 - 4 * Math.sin(t)); ctx.fillText("Z", nx.x + 9 * nx.s, g - u * 5 - 12 * nx.s - 10 - 4 * Math.sin(t + 1));
+    ctx.fillStyle = L.glow;                                                         // drifting motes
+    for (let i = 0; i < 22; i++) { const x = ((i * 53.7) % W), y = g - ((t * (8 + (i % 5) * 3) + i * 37) % (g - 10)); ctx.globalAlpha = 0.25 + 0.4 * Math.abs(Math.sin(t + i)); ctx.fillRect(x + Math.sin(t * 0.6 + i) * 8, y, 3, 3); }
+    ctx.globalAlpha = 1;
+  }
+  function nexusTap(px, py) {
+    if (!cave) return false;
+    const nx = caveNexus(), u = Math.max(3, Math.round(W / 130));
+    if (Math.abs(px - nx.x) > 8 * nx.s + 8 || py < GROUND - u * 5 - 13 * nx.s || py > GROUND) return false;
+    sfx("pop"); openCave(null, cave); return true;
+  }
   function openCave(world, id) {
     id = id || CAVE_CORE[world]; const n = NEXUS[id], have = (save.apexNexusCores || []).includes(id);
     $("caveTitle").textContent = `${n.icon} ${n.core.replace(" Core", "")} Cave`; $("caveCard").style.borderColor = n.color;
     const cv2 = $("caveArt"), c = cv2.getContext("2d"); c.clearRect(0, 0, cv2.width, cv2.height);
     const gr = c.createRadialGradient(80, 60, 6, 80, 60, 80); gr.addColorStop(0, n.color + "55"); gr.addColorStop(1, "rgba(0,0,0,0)"); c.fillStyle = gr; c.fillRect(0, 0, cv2.width, cv2.height);
     drawNexus(c, id, 80 - 8 * 6, 12, 6, have);
-    $("caveText").innerHTML = `<b>${have ? n.name + " is awake!" : "A dormant Blip sleeps here…"}</b><br>${have ? "Bring it to town from your Zoo." : `${n.name} is deactivated. Something will wake it one day…<br><small>${n.trial}</small>`}`;
+    $("caveText").innerHTML = `<b>${have ? n.name + " is awake!" : n.name + " sleeps here…"}</b><br>${have ? "Bring it to town from your Zoo." : `${n.name} is deactivated. Something will wake it one day…<br><small>${n.trial}</small>`}`;
     openSheet("caveSheet");
   }
   const GRIFFIN = () => { const u = Math.max(3, Math.round(W / 130)); return { x: W * 0.13, s: Math.max(3, Math.round(u * 0.9)) }; };   // the black one stands out in the open in town
@@ -888,7 +935,7 @@
     ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.font = "700 " + (10 + Math.round(2 * Math.sin(t))) + "px " + FONT; ctx.textAlign = "center"; ctx.fillText("z", gf.x + 6 * gf.s, GROUND - 13 * gf.s - 4 - 4 * Math.sin(t)); ctx.fillText("Z", gf.x + 8 * gf.s, GROUND - 14 * gf.s - 10 - 4 * Math.sin(t + 1));
   }
   function griffinTap(px, py) {
-    if (hereWorld()) return false;
+    if (cave || hereWorld()) return false;
     const gf = GRIFFIN(); if (Math.abs(px - gf.x) > 8 * gf.s || py < GROUND - 13 * gf.s || py > GROUND + 6) return false;
     sfx("pop"); openCave(null, "obsidian"); return true;
   }
@@ -1162,7 +1209,7 @@
   cv.addEventListener("pointerdown", (e) => {
     pointer = { x: e.clientX, y: e.clientY };
     if (sightingAt(e.clientX, e.clientY)) { befriend(); return; }
-    if (!petAt(e.clientX, e.clientY) && (caveTap(e.clientX, e.clientY) || griffinTap(e.clientX, e.clientY))) return;
+    if (!petAt(e.clientX, e.clientY) && (nexusTap(e.clientX, e.clientY) || caveTap(e.clientX, e.clientY) || griffinTap(e.clientX, e.clientY))) return;
     const p = petAt(e.clientX, e.clientY);
     if (!p) return;
     cv.setPointerCapture(e.pointerId);
@@ -1838,6 +1885,7 @@
     return true;
   }
   function visitWorld(name) {
+    if (cave) { cave = null; $("caveLeave").hidden = true; }
     save.world = name; weather = []; persist(true); closeSheets();
     if (name) nextLegend = Math.min(nextLegend, now() + rnd(45, 90));
     const w = WORLDS.find((x) => x.name === name) || (name === "Magma Ridge" ? { name, icon: "🌋" } : null), p = pets.find((q) => q.state !== "sleep");

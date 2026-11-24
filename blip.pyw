@@ -9355,10 +9355,14 @@ class EventWindow:
         for kind in EVENT["kinds"]:
             if kind not in has:
                 x = 18 + EVENT["kinds"].index(kind) * 200
+                if not app.is_unlocked(kind):                    # still locked: unlock it first (no adding it from here)
+                    c.create_rectangle(x, y, x + 188, y + 32, fill="#3a3560", outline="")
+                    c.create_text(x + 94, y + 16, text=f"🔒 {kind} (unlock it)", fill="#a8a2c8", font=("Segoe UI", 10, "bold"))
+                    continue
                 c.create_rectangle(x, y, x + 188, y + 32, fill="#5a4ae0", outline="")
                 c.create_text(x + 94, y + 16, text=f"➕ Add {'an' if kind[0] in 'AEIOU' else 'a'} {kind}", fill="#ffffff", font=("Segoe UI", 10, "bold"))
                 self.buttons.append((x, y, x + 188, y + 32, lambda k=kind: self.add(k)))
-        if has >= set(EVENT["kinds"]):
+        if all(k in has or not app.is_unlocked(k) for k in EVENT["kinds"]):
             c.create_text(18, y + 16, anchor="w", text=f"Your town has {EVENT['friends']}. Go give them some love! 💖",
                           fill="#9ad8a8", font=("Segoe UI", 10, "bold"))
 
@@ -9367,6 +9371,8 @@ class EventWindow:
         self.draw()
 
     def add(self, kind):
+        if not self.app.is_unlocked(kind):
+            return
         pet = self.app.add_pet(kind)
         if pet:
             pet.say(f"{EVENT['name'].lower()}, let's go!", 3)

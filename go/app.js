@@ -2296,7 +2296,9 @@
     const add = $("eventAdd"); add.innerHTML = "";
     const has = new Set(pets.map((q) => AWAKEN_BASE[q.kind] || q.kind));
     EVENT.kinds.filter((k) => !has.has(k)).forEach((k) => {
-      const b = doc().createElement("button"); b.textContent = `➕ Add ${/^[AEIOU]/.test(k) ? "an" : "a"} ${k}`;
+      const b = doc().createElement("button");
+      if (!isUnlocked(k)) { b.textContent = `🔒 ${k}`; b.disabled = true; b.title = "Unlock it first"; add.appendChild(b); return; }   // locked Blips can't be added from here
+      b.textContent = `➕ Add ${/^[AEIOU]/.test(k) ? "an" : "a"} ${k}`;
       b.onclick = () => { const q = addPet(k); if (q) say(q, `${EVENT.name.toLowerCase()}, let's go!`, 3); openEvent(); };
       add.appendChild(b);
     });

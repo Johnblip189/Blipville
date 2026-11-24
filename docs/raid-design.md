@@ -31,3 +31,9 @@ at the top of the file and are **untuned first guesses**.
 
 Try it: creator menu (🛠️) → ⚔️ New battle (beta). It is not visible to players. Next: wardens/boss on top of it (extra fighters,
 big HP, phases), then the peer-to-peer rooms (the host runs `FIGHT.step`, guests send buttons and receive state).
+
+## Speedster sprites (draft, awaiting approval)
+
+Four original recruitable Speedsters, drawn in the game's 16 x 12 sprite format with 3 colors each: **Whippet** (lightning-brow
+dog), **Peregrine** (swift falcon), **Sprinter** (swept-horn gazelle) and **Racer** (striped racing lizard). Source:
+`docs/speedsters/sprites-draft.js`, preview: `docs/speedsters/preview.png`. Not in the game yet.

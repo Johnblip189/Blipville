@@ -146,6 +146,7 @@
       <button id="devGhost">👻 Spawn a ghost</button><button id="devLegend">✨ Spawn a legend</button>
       <button id="devQuests">📅 Fresh quests</button><button id="devUnlock">🔓 Unlock everything</button>
       <button id="devCreators">⭐ Add my Creator Blips</button><button id="devBoss">🥊 Copy my boss code</button>
+      <button id="devFight">⚔️ New battle (beta)</button>
     </div>
     <button class="close" data-close>Close</button>
   </div>
@@ -232,6 +233,24 @@
 <div id="plPad" hidden>
   <div class="plSide"><button data-k="left" aria-label="Left">◀</button><button data-k="right" aria-label="Right">▶</button></div>
   <div class="plSide"><button data-k="up" aria-label="Jump">⤴</button></div>
+</div>
+
+<!-- new real-time battles (beta) -->
+<div class="sheet" id="fightSheet" hidden>
+  <div class="card nsCard">
+    <div id="fightPick">
+      <div class="sheetTitle">⚔️ New battles <span class="muted">(beta)</span></div>
+      <div class="muted small">Real time! Move, jump, dash and use your moves. Tap 🛡️ right as a hit lands to <b>parry</b>. Heavy hits break guards. Keys: ← → ↑ move/jump · J light · K heavy · L dash · H guard · U special · I awaken.</div>
+      <div class="row"><button data-lv="0">Easy</button><button data-lv="1">Normal</button><button data-lv="2">Hard</button></div>
+    </div>
+    <canvas id="fightCanvas" width="360" height="220" hidden></canvas>
+    <div id="fightPad" hidden>
+      <div class="padSide"><button data-k="left">◀</button><button data-k="right">▶</button><button data-k="jump">⤴</button></div>
+      <div class="padAct"><button data-k="light">👊</button><button data-k="heavy">💥</button><button data-k="dash">💨</button><button data-k="guard">🛡️</button><button data-k="special">✨</button><button data-k="awaken">🌟</button></div>
+    </div>
+    <div id="fightResult" hidden></div>
+    <button class="close" data-close>Leave</button>
+  </div>
 </div>
 
 <div class="sheet" id="worldSheet" hidden>
@@ -339,6 +358,7 @@
 </div>
 
 <script src="data.js?v=105"></script>
+<script src="fight.js?v=105"></script>
 <script src="countdown.js?v=105"></script>
 <script src="app.js?v=105"></script>
 </body>

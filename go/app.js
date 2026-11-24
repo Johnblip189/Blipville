@@ -1649,6 +1649,123 @@
   }
   // 🎵 music for the special stages (same tunes as the Windows app): a little note scheduler on the sound-effects audio
   const music = { name: null, timer: null, next: 0, pos: [0, 0], at: [0, 0] };
+  // ------------------------------------------------------------------ 🥊 new real-time battles (beta, creator menu only for now; the engine is fight.js)
+  const FT = window.FIGHT;
+  let fight = null;
+  const fightHeld = {};
+  const FKEYS = { ArrowLeft: "left", a: "left", A: "left", ArrowRight: "right", d: "right", D: "right", ArrowUp: "jump", w: "jump", W: "jump", " ": "jump",
+                  j: "light", J: "light", k: "heavy", K: "heavy", l: "dash", L: "dash", h: "guard", H: "guard", ArrowDown: "guard", u: "special", U: "special", i: "awaken", I: "awaken" };
+  const fstats = (kind) => AR.stats[kind] || { type: "spark", hp: 90, atk: 18, spd: 10 };
+  function fspec(kind, id, team, ai, canAw) {
+    const base = AWAKEN_BASE[kind] || kind, st = fstats(base);
+    return { id, name: id, kind: base, hp: st.hp, atk: st.atk, spd: st.spd, types: typesOf(st), canAw, team, ai };
+  }
+  function startFight(level) {
+    const me = sheetPet || pets[0], base = AWAKEN_BASE[me.kind] || me.kind;
+    const rival = pick(AR.rivals.length ? AR.rivals : [{ team: [["Cat", 0]] }]), foeKind = pick(rival.team)[0], foeBase = AWAKEN_BASE[foeKind] || foeKind;
+    const tm = (ats, ds) => (ats.length ? Math.max(...ats.map((a) => typeMult(a, ds))) : 1);
+    fight = { m: FT.create([fspec(base, "you", "P", null, !!AWAKEN_CHAIN[base] && awLevel(base) > 0), fspec(foeBase, "foe", "E", level, true)], { seed: (Math.random() * 1e9) | 0, typeMult: tm }),
+              look: { you: [base, me.color % KINDS[base].colors.length], foe: [foeBase, 0] }, fx: [], acc: 0, last: 0, t: 0, shown: false, bg: pick(D.friendBgs || ["meadow"]), level };
+    $("fightPick").hidden = true; $("fightCanvas").hidden = false; $("fightPad").hidden = false; $("fightResult").hidden = true;
+    fightLoop(fight);
+  }
+  function openFight() {
+    fight = null; $("fightPick").hidden = false; $("fightCanvas").hidden = true; $("fightPad").hidden = true; $("fightResult").hidden = true;
+    for (const k of Object.keys(fightHeld)) delete fightHeld[k];
+    openSheet("fightSheet");
+  }
+  function fightLoop(f) {
+    const run = (ts) => {
+      if (fight !== f) return;
+      if ($("fightSheet").hidden) { fight = null; return; }
+      const t = ts / 1000, dt = Math.min(0.05, f.last ? t - f.last : 0); f.last = t; f.acc += dt; f.t += dt;
+      while (f.acc >= FT.DT) { f.acc -= FT.DT; FT.step(f.m, { you: fightHeld }); fightEvents(f); }
+      drawFight(f);
+      if (f.m.over && !f.shown) { f.shown = true; setTimeout(() => fight === f && showFightResult(f), 900); }
+      view.requestAnimationFrame(run);
+    };
+    view.requestAnimationFrame(run);
+  }
+  function fightEvents(f) {
+    for (const e of f.m.events) {
+      if (e.type === "HIT") { f.fx.push({ k: "hit", x: e.x, y: e.y, t: f.t }, { k: "num", x: e.x, y: e.y + 10, text: String(e.dmg), t: f.t }); sfx("boop"); vibrate(8); }
+      else if (e.type === "BLOCK") { f.fx.push({ k: "block", x: f.m.fighters.find((q) => q.id === e.who).x, y: 14, t: f.t }); sfx("pop"); }
+      else if (e.type === "GUARD_BREAK") { f.fx.push({ k: "num", x: f.m.fighters.find((q) => q.id === e.to).x, y: 40, text: "GUARD BREAK!", t: f.t }); sfx("zap"); }
+      else if (e.type === "COUNTER" || e.type === "PROJ_COUNTER") { f.fx.push({ k: "num", x: f.m.fighters.find((q) => q.id === e.who).x, y: 44, text: "PARRY!", t: f.t }); sfx("coin"); }
+      else if (e.type === "AWAKEN") { sfx("fanfare"); f.fx.push({ k: "num", x: f.m.fighters.find((q) => q.id === e.who).x, y: 46, text: "✨ AWAKENED", t: f.t }); }
+      else if (e.type === "KO") { sfx("boing"); vibrate([20, 30, 20]); }
+    }
+    f.m.events.length = 0;
+  }
+  function drawFight(f) {
+    const c = $("fightCanvas").getContext("2d"), w = 360, h = 220, G = 190, m = f.m;
+    c.imageSmoothingEnabled = false; c.clearRect(0, 0, w, h);
+    drawArenaBg(c, f.bg, w, h);
+    c.fillStyle = "rgba(0,0,0,.25)"; c.fillRect(0, G, w, h - G);
+    for (const p of m.projectiles) {                                              // ✨ specials
+      c.fillStyle = "#fff6a8"; c.fillRect(p.x - 7, G - p.y - 7, 14, 14); c.fillStyle = "#ffb347"; c.fillRect(p.x - 4, G - p.y - 4, 8, 8);
+    }
+    for (const fi of m.fighters) {
+      if (fi.out) continue;
+      const [kind, color] = f.look[fi.id];
+      if (fi.respawn > 0 || (fi.inv > 0 && Math.floor(f.t * 12) % 2 === 0 && fi.state !== "down")) { if (fi.respawn > 0) continue; c.globalAlpha = 0.45; }
+      const lunge = fi.act && (fi.state === "light" || fi.state === "heavy" || fi.state === "air") ? (fi.t < fi.act.start + fi.act.active ? 4 : 0) * fi.face : 0;
+      const g = grid(kind, color, { t: f.t, live: true, face: fi.hurt > 0 ? "surprised" : fi.state === "guard" ? "normal" : "normal", state: fi.state === "down" ? "sleep" : "idle", look: [fi.face, 0] });
+      const sx = Math.round(fi.x + lunge), top = Math.round(G - fi.y - 36 * fi.big);
+      c.save(); c.translate(sx, 0); if (fi.face < 0) c.scale(-1, 1);
+      if (fi.awakeT > 0) { c.fillStyle = "rgba(255,226,120,.28)"; c.fillRect(-26, top - 4, 52, 46); }
+      if (fi.hurt > 0) c.translate(fi.hurt % 2 ? 2 : -2, 0);
+      drawGrid(c, g, -24, top - 3, 3);
+      c.restore(); c.globalAlpha = 1;
+      if (fi.state === "guard") { c.strokeStyle = fi.t <= FT.BAL.parryFrames ? "#ffffff" : "#8fd0ff"; c.lineWidth = 2; c.beginPath(); c.arc(fi.x + fi.face * 14, top + 20, 24, -1.2, 1.2); c.stroke(); }
+      if (fi.act && fi.t < fi.act.start + fi.act.active && fi.t >= fi.act.start && fi.state !== "special") {          // swoosh
+        c.fillStyle = fi.state === "heavy" ? "rgba(255,160,90,.55)" : "rgba(255,255,255,.5)";
+        const a = fi.act, x0 = fi.face > 0 ? fi.x + 12 : fi.x - 12 - a.reach; c.fillRect(x0, G - fi.y - a.h - (a.lowered || 2), a.reach, a.h);
+      }
+      c.fillStyle = "rgba(0,0,0,.3)"; c.fillRect(fi.x - 18, G + 1, 36, 3);
+    }
+    for (const e of f.fx) {                                                       // sparks and numbers
+      const a = f.t - e.t; if (a > 0.7) continue;
+      if (e.k === "hit") { c.fillStyle = "#fff6a8"; const r = 4 + a * 18; c.fillRect(e.x - r, G - e.y - 1, r * 2, 3); c.fillRect(e.x - 1, G - e.y - r, 3, r * 2); }
+      else if (e.k === "block") { c.fillStyle = "#8fd0ff"; c.fillRect(e.x + 6, G - e.y - 6, 4, 4); }
+      else { c.font = "800 11px " + FONT; c.textAlign = "center"; c.fillStyle = "#fff"; c.strokeStyle = "#2b1b33"; c.lineWidth = 3; c.strokeText(e.text, e.x, G - e.y - a * 24); c.fillText(e.text, e.x, G - e.y - a * 24); }
+    }
+    f.fx = f.fx.filter((e) => f.t - e.t < 0.7);
+    m.fighters.forEach((fi, i) => {                                               // HUD
+      const x = i === 0 ? 8 : w - 8 - 140, hpw = Math.max(0, fi.hp / fi.max) * 140;
+      c.fillStyle = "rgba(0,0,0,.55)"; c.fillRect(x - 2, 6, 144, 30);
+      c.fillStyle = "#3a2a4a"; c.fillRect(x, 8, 140, 8); c.fillStyle = hpw / 140 > 0.35 ? "#7aff8a" : "#ff5a6a"; c.fillRect(x, 8, hpw, 8);
+      c.fillStyle = "#6a5a8a"; c.fillRect(x, 18, 140, 3); c.fillStyle = "#8fd0ff"; c.fillRect(x, 18, fi.g / FT.BAL.guardMax * 140, 3);
+      c.fillStyle = "#4a3a2a"; c.fillRect(x, 23, 140, 3); c.fillStyle = fi.awakeT > 0 ? "#ffe66a" : "#ffb347"; c.fillRect(x, 23, (fi.awakeT > 0 ? fi.awakeT / (FT.BAL.awakenSeconds * FT.FPS) : fi.meter / 100) * 140, 3);
+      c.fillStyle = "#4a3a6a"; c.fillRect(x, 28, 140, 3); c.fillStyle = "#c8a8ff"; c.fillRect(x, 28, fi.sp / 100 * 140, 3);
+      c.font = "800 10px " + FONT; c.textAlign = i === 0 ? "left" : "right"; c.fillStyle = "#fff";
+      c.fillText((i === 0 ? "YOU " : "FOE ") + "♥".repeat(Math.max(0, fi.stocks)), i === 0 ? x : x + 140, 46);
+    });
+    c.font = "800 12px " + FONT; c.textAlign = "center"; c.fillStyle = "#fff"; c.fillText(String(Math.max(0, Math.ceil((m.limit - m.frame) / 60))), w / 2, 20);
+  }
+  function showFightResult(f) {
+    const m = f.m, won = m.over.winner === "P", s = m.stats.you, box = $("fightResult");
+    box.hidden = false; $("fightPad").hidden = true;
+    box.innerHTML = `<div class="sheetTitle">${m.over.winner == null ? "🤝 Draw!" : won ? "🏆 You win!" : "💫 You lost"}</div>
+      <div class="muted small">Hits ${s.hits} · air ${s.airHits} · heavy ${s.heavyHits} · dash ${s.dashHits} · guard breaks ${s.guardBreaks} · parries ${s.counters + s.projCounters} · best combo ${s.maxCombo}</div>
+      <div class="row"><button id="fightAgain">⚔️ Rematch</button><button id="fightMenu">Change level</button></div>`;
+    $("fightAgain").onclick = () => startFight(f.level);
+    $("fightMenu").onclick = openFight;
+    sfx(won ? "fanfare" : "boing");
+  }
+  document.querySelectorAll("#fightPick [data-lv]").forEach((b) => (b.onclick = () => startFight(+b.dataset.lv)));
+  document.querySelectorAll("#fightPad [data-k]").forEach((b) => {
+    const k = b.dataset.k, down = (e) => { e.preventDefault(); fightHeld[k] = true; b.classList.add("down"); }, up = () => { fightHeld[k] = false; b.classList.remove("down"); };
+    b.addEventListener("pointerdown", down); b.addEventListener("pointerup", up); b.addEventListener("pointerleave", up); b.addEventListener("pointercancel", up);
+  });
+  const fightKey = (e, on) => {
+    if ($("fightSheet").hidden || !fight) return;
+    const k = FKEYS[e.key]; if (!k) return;
+    e.preventDefault(); e.stopImmediatePropagation(); fightHeld[k] = on;                  // the town's shortcuts (F, N, E, Z…) stay quiet during a fight
+  };
+  window.addEventListener("keydown", (e) => fightKey(e, true), true);
+  window.addEventListener("keyup", (e) => fightKey(e, false), true);
+
   const NOTE = (n) => { if (n === "-") return 0; const i = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"].indexOf(n.slice(0, -1)); return 440 * 2 ** ((i + 12 * (+n.slice(-1) + 1) - 69) / 12); };
   function musicNote(a, out, f, t, dur, shape, vol) {
     if (!f) return;
@@ -2383,6 +2500,7 @@
   $("devBtn").hidden = !(isCreator() || isMod());
   if (isMod()) modMode();
   $("devBtn").onclick = () => openSheet("devSheet");
+  $("devFight").onclick = () => openFight();
   $("devHearts").onclick = () => { reward(pets[0], 100); toast("💖 +100 hearts", 1.5); };
   $("devCryptid").onclick = () => devSpawn("cryptids");
   $("devKaiju").onclick = () => devSpawn("kaiju");
@@ -3120,7 +3238,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { fight: { open: openFight, start: startFight, state: () => fight, held: fightHeld }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

@@ -117,8 +117,17 @@
     <div id="cdHost"></div>
     <div class="muted small">Pet and feed your Hedgehogs, Foxes and Echidnas, and do today's quests! A pet is 1 point (once every few seconds) and a cookie for a hungry Blip up to 3 (full Blips give nothing).
       Every 10 points unlocks a new event skin. Skins you earn are yours forever (the Windows app has them too).</div>
-    <div class="eventBar"><div id="eventFill"></div><span id="eventPts"></span></div>
-    <div id="eventGrid"></div>
+    <div class="evHead">
+      <div class="evBadge"><b id="eventPtsBig">0</b><span>points</span></div>
+      <div class="evNext"><div class="evNextLabel" id="evNextLabel"></div>
+        <div class="eventBar"><div id="eventFill"></div><span id="eventPts"></span></div></div>
+    </div>
+    <div class="evTrackWrap">
+      <button class="evArrow" id="evPrev" aria-label="Earlier rewards">‹</button>
+      <div id="evTrack"></div>
+      <button class="evArrow" id="evNext" aria-label="Later rewards">›</button>
+    </div>
+    <div id="evDots"></div>
     <div id="eventAdd"></div>
     <div class="sheetTitle small" style="margin-top:14px">📅 Today's quests</div>
     <div class="muted small" id="questNote"></div>

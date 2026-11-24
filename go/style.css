@@ -343,3 +343,38 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 .chatRow .chatLine { margin: 0; flex: 1; }
 /* no double-tap zoom on rapid taps (petting, feeding, tapping kaiju) */
 button { touch-action: manipulation; }
+
+/* 🎖️ event reward track */
+.evHead { display: flex; gap: 14px; align-items: center; margin: 10px 0 6px; }
+.evBadge { flex: none; width: 84px; height: 94px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff;
+  background: linear-gradient(160deg, #ff7ab8, #8a4ae0); clip-path: polygon(50% 0, 100% 22%, 100% 74%, 50% 100%, 0 74%, 0 22%); }
+.evBadge b { font: 900 30px var(--font); line-height: 1; text-shadow: 0 2px 0 rgba(0,0,0,.25); }
+.evBadge span { font: 800 10px var(--font); letter-spacing: .1em; text-transform: uppercase; opacity: .9; }
+.evNext { flex: 1; min-width: 0; }
+.evNextLabel { font: 800 13px var(--font); color: #ffd23a; }
+.evTrackWrap { position: relative; display: flex; align-items: center; gap: 4px; margin-top: 10px; }
+.evArrow { flex: none; width: 30px; height: 64px; border: 0; border-radius: 10px; background: var(--card2); color: var(--text); font: 800 22px var(--font); cursor: pointer; }
+#evTrack { flex: 1; min-width: 0; display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 2px 6px; scrollbar-width: none; touch-action: pan-x; }
+#evTrack::-webkit-scrollbar { display: none; }
+.evTier { flex: none; width: 112px; scroll-snap-align: start; position: relative; padding-top: 4px; text-align: center; }
+.evTier::before { content: ""; position: absolute; left: -10px; right: -10px; top: 17px; height: 3px; background: rgba(255,255,255,.14); }
+.evTier.got::before { background: #ffd23a; }
+.evNum { position: relative; z-index: 1; width: 28px; height: 28px; margin: 0 auto; border-radius: 50%; background: var(--card2); border: 2px solid rgba(255,255,255,.2);
+  color: var(--muted); font: 900 13px var(--font); display: flex; align-items: center; justify-content: center; }
+.evTier.got .evNum { background: #ffd23a; border-color: #fff3b0; color: #3a2a04; }
+.evTier.next .evNum { border-color: #ff9fc0; color: #fff; box-shadow: 0 0 0 3px rgba(255,159,192,.35); }
+.evCost { font: 700 11px var(--font); color: var(--muted); margin: 6px 0 4px; }
+.evCard { background: var(--card2); border-radius: 14px; padding: 8px 4px 0; border: 2px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 2px; overflow: hidden; }
+.evTier.next .evCard { border-color: #ff9fc0; }
+.evTier.got .evCard { border-color: #ffd23a; }
+.evTier.blip .evCard { background: linear-gradient(180deg, #4a2a6a, var(--card2)); }
+.evCard canvas { width: 64px; height: 52px; image-rendering: pixelated; }
+.evCard b { font: 800 12px var(--font); max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.evCard small { font: 700 10px var(--font); color: var(--muted); }
+.evTier.blip .evCard small { color: #ff9fc0; }
+.evTag { align-self: stretch; margin-top: 6px; padding: 5px 0; font: 900 11px var(--font); letter-spacing: .06em; background: rgba(255,255,255,.08); color: var(--muted); }
+.evTier.got .evTag { background: #ffd23a; color: #3a2a04; }
+.evTier.next .evTag { background: #ff9fc0; color: #3a0a22; }
+#evDots { display: flex; justify-content: center; gap: 6px; margin: 4px 0 2px; }
+#evDots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.2); }
+#evDots i.on { background: #ffd23a; }

@@ -45,7 +45,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], badDreams: [], merch: [], merchKinds: [], redeemed: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], badDreams: [], eventKinds: [], merch: [], merchKinds: [], redeemed: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
   // 💾 save safety: check every field when loading, keep the last good save as a backup, never throw away a damaged save,
   // and tell the player when saving fails instead of failing silently
   const SAVE_DEFAULTS = JSON.parse(JSON.stringify(save)), BAK_KEY = SAVE_KEY + "-backup", BROKEN_KEY = SAVE_KEY + "-broken";
@@ -195,7 +195,7 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => (save.merchKinds || []).includes(k) ? true : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const isUnlocked = (k) => (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -2193,18 +2193,20 @@
     return !!(col.event || col.unlock) && !(save.skins || []).includes(`${kind}:${col.name}`);
   }
   const eventPts = () => +((save.eventPoints || {})[EVENT.id] || 0);
+  // the reward track: [{ type: "skin" | "blip", kind, skin?, at }]. An event can list its own `tiers`; the older ones (skins only,
+  // every per_skin points) are turned into tiers here.
+  const eventTiers = () => EVENT.tiers || EVENT.rewards.map(([kind, skin], i) => ({ type: "skin", kind, skin, at: (i + 1) * EVENT.per_skin }));
+  const tierKey = (t) => (t.type === "blip" ? `blip:${t.kind}` : `${t.kind}:${t.skin}`);
+  const tierGot = (t) => (t.type === "blip" ? (save.eventKinds || []).includes(t.kind) : (save.skins || []).includes(tierKey(t)));
   function eventPoint(p, n, anyKind = false) {
     if (n <= 0 || !eventOn() || !p || (!anyKind && !EVENT.kinds.includes(AWAKEN_BASE[p.kind] || p.kind))) return;
-    save.eventPoints = save.eventPoints || {}; save.skins = save.skins || [];
+    save.eventPoints = save.eventPoints || {}; save.skins = save.skins || []; save.eventKinds = save.eventKinds || [];
     const before = eventPts(); save.eventPoints[EVENT.id] = before + n;
-    for (let i = 0; i < EVENT.rewards.length; i++) {
-      const [kind, skin] = EVENT.rewards[i], key = `${kind}:${skin}`;
-      if (before + n >= (i + 1) * EVENT.per_skin && !save.skins.includes(key)) {
-        save.skins.push(key); sfx("fanfare"); vibrate([20, 30, 20]);
-        say(p, `🎁 new skin unlocked: ${skin} ${kind}! ✨`, 4); setFace(p, "happy", 2); burst(p, "heart", 6);
-        toast(`${EVENT.icon} New skin: ${skin} ${kind}! Pick it in its color list. ✨`, 4);
-        break;
-      }
+    for (const t of eventTiers()) {
+      if (before + n < t.at || tierGot(t)) continue;
+      sfx("fanfare"); vibrate([20, 30, 20]); setFace(p, "happy", 2); burst(p, "heart", 6);
+      if (t.type === "blip") { save.eventKinds.push(t.kind); say(p, `🎁 a new friend: ${t.kind}! ✨`, 4); toast(`${EVENT.icon} New Blip unlocked: ${t.kind}! Find it in your 📖 Zoo. ✨`, 5); }
+      else { save.skins.push(tierKey(t)); say(p, `🎁 new skin unlocked: ${t.skin} ${t.kind}! ✨`, 4); toast(`${EVENT.icon} New skin: ${t.skin} ${t.kind}! Pick it in its color list. ✨`, 4); }
     }
     persist(true);
     if (!$("eventSheet").hidden) openEvent();
@@ -2248,25 +2250,43 @@
   }
   function openEvent() {
     drawQuests();
-    const per = EVENT.per_skin, total = per * EVENT.rewards.length, pts = Math.min(eventPts(), total), got = save.skins || [];
+    const tiers = eventTiers(), total = tiers[tiers.length - 1].at, pts = Math.min(eventPts(), total);
     $("eventTitle").textContent = `${EVENT.icon} ${EVENT.name}`;
     if (eventPaused() && window.CountdownStars && CountdownStars.live()) CountdownStars.mount($("cdHost"));   // while Spiky Week is paused
     $("eventWhen").textContent = eventOn() ? `until ${EVENT.until_text}` : eventPaused() ? `paused until ${EVENT.paused_text}` : todayStr() < EVENT.start ? "starts soon!" : "this event is over";
-    $("eventFill").style.width = `${(100 * pts) / total}%`; $("eventPts").textContent = `${pts} / ${total} points`;
-    const g = $("eventGrid"); g.innerHTML = "";
-    EVENT.rewards.forEach(([kind, skin], i) => {
-      const have = got.includes(`${kind}:${skin}`), idx = KINDS[kind].colors.findIndex((c) => c.name === skin);
-      const cell = doc().createElement("div"); cell.className = "trophy" + (have ? " earned" : "");
-      cell.appendChild(thumb(kind, idx, false, 4));
-      const b = doc().createElement("b"); b.textContent = skin; cell.appendChild(b);
-      const sm = doc().createElement("small"); sm.textContent = have ? `✓ ${kind} skin` : `🔒 ${kind} · ${(i + 1) * per} pts`; cell.appendChild(sm);
-      g.appendChild(cell);
+    const next = tiers.find((t) => pts < t.at), prev = tiers.filter((t) => t.at <= pts).pop(), from = prev ? prev.at : 0;
+    $("eventPtsBig").textContent = pts;
+    $("eventFill").style.width = `${next ? (100 * (pts - from)) / (next.at - from) : 100}%`;
+    $("eventPts").textContent = next ? `${pts - from} / ${next.at - from}` : "all rewards unlocked!";
+    $("evNextLabel").textContent = next ? `Next: ${next.type === "blip" ? next.kind : `${next.skin} ${next.kind}`} · ${next.at - pts} to go` : "🎉 You earned everything!";
+    const tr = $("evTrack"), keepScroll = $("eventSheet").hidden ? null : tr.scrollLeft; tr.innerHTML = "";
+    tiers.forEach((t, i) => {
+      const have = tierGot(t), reached = pts >= t.at, cell = doc().createElement("div");
+      cell.className = "evTier" + (have ? " got" : "") + (t.type === "blip" ? " blip" : "") + (t === next ? " next" : "");
+      const badge = doc().createElement("div"); badge.className = "evNum"; badge.textContent = i + 1; cell.appendChild(badge);
+      const cost = doc().createElement("div"); cost.className = "evCost"; cost.textContent = `${t.at} pts`; cell.appendChild(cost);
+      const card = doc().createElement("div"); card.className = "evCard";
+      const idx = t.type === "blip" ? (KINDS[t.kind].default ?? 0) : Math.max(0, KINDS[t.kind].colors.findIndex((c) => c.name === t.skin));
+      card.appendChild(thumb(t.kind, idx, !have && t.type === "blip", 4));
+      const nm = doc().createElement("b"); nm.textContent = t.type === "blip" ? t.kind : t.skin; card.appendChild(nm);
+      const sub = doc().createElement("small"); sub.textContent = t.type === "blip" ? "NEW BLIP" : `${t.kind} skin`; card.appendChild(sub);
+      const tag = doc().createElement("div"); tag.className = "evTag"; tag.textContent = have ? "✓ UNLOCKED" : reached ? "READY" : "🔒 LOCKED"; card.appendChild(tag);
+      cell.appendChild(card); tr.appendChild(cell);
     });
+    const dots = $("evDots"); dots.innerHTML = ""; const pages = Math.max(1, Math.ceil(tiers.length / 2));
+    for (let i = 0; i < pages; i++) { const d = doc().createElement("i"); d.dataset.p = i; dots.appendChild(d); }
+    const go = (dir) => { const w = tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120; tr.scrollBy({ left: dir * w * 2, behavior: "smooth" }); };
+    $("evPrev").onclick = () => go(-1); $("evNext").onclick = () => go(1);
+    const mark = () => { const w = tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120; const pg = Math.round(tr.scrollLeft / (w * 2)); dots.querySelectorAll("i").forEach((d, i) => d.classList.toggle("on", i === pg)); };
+    tr.onscroll = mark; mark();
+    const slot = () => (tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120);
+    if (keepScroll != null) tr.scrollLeft = keepScroll;                                   // a refresh keeps its place
+    else view.requestAnimationFrame(() => view.requestAnimationFrame(() => { tr.scrollLeft = Math.max(0, ((next ? tiers.indexOf(next) : tiers.length - 2) - 1) * slot()); mark(); }));   // opens on the next reward
     const add = $("eventAdd"); add.innerHTML = "";
     const has = new Set(pets.map((q) => AWAKEN_BASE[q.kind] || q.kind));
     EVENT.kinds.filter((k) => !has.has(k)).forEach((k) => {
       const b = doc().createElement("button"); b.textContent = `➕ Add ${/^[AEIOU]/.test(k) ? "an" : "a"} ${k}`;
-      b.onclick = () => { const q = addPet(k); if (q) say(q, "spiky week, let's go!", 3); openEvent(); };
+      b.onclick = () => { const q = addPet(k); if (q) say(q, `${EVENT.name.toLowerCase()}, let's go!`, 3); openEvent(); };
       add.appendChild(b);
     });
     openSheet("eventSheet");

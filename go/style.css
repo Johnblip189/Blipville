@@ -343,19 +343,3 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 .chatRow .chatLine { margin: 0; flex: 1; }
 /* no double-tap zoom on rapid taps (petting, feeding, tapping kaiju) */
 button { touch-action: manipulation; }
-
-/* 🏠 homes */
-#homeView { width: 100%; max-width: 320px; align-self: center; image-rendering: pixelated; border-radius: 14px; margin: 8px 0 2px; flex: none; }
-#homeSheet .homeTabs { margin: 6px 0 0; flex: none; }
-#homeSheet .homeTabs button { min-height: 40px; border: 2px solid transparent; }
-#homeSheet .homeTabs button.on { border-color: #ffd23a; }
-#homeBody { flex: 1 1 auto; min-height: 0; overflow: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; padding-bottom: 6px; }
-#homeBody .chips button { width: 84px; }
-#homeBody .chips canvas { width: 72px; height: auto; image-rendering: pixelated; }
-#homeBody .chips small { font-size: 10px; font-weight: 800; }
-#homeBody .chips small.price { color: #ff9fc0; }
-#homeBody .chips small.owned { color: #9ad8a8; }
-.swatchRow { display: flex; align-items: center; gap: 6px; margin: 8px 2px 0; flex-wrap: wrap; font-size: 12px; font-weight: 800; color: var(--muted); }
-.swatchRow span { min-width: 48px; }
-.swatchRow button { width: 26px; height: 26px; border-radius: 8px; border: 2px solid rgba(255,255,255,.18); padding: 0; }
-.swatchRow button.on { border-color: #ffd23a; box-shadow: 0 0 0 2px rgba(255,210,58,.4); }

@@ -23,10 +23,6 @@ make Blipville what it is. This is the real thing.
   Phantom Knight, Jack-o'-Ghost, Haunted Teacup…) and World Legends (Elder Treant, Candy Dragon, Star Whale, Comet Fox…).
 - 🐾 **12 new Blips:** Red Panda, Polar Bear, Puffin, Beluga, Gorilla, Sugar Glider, Highland Cow, Shoebill, Tarsier,
   Marmot, Mantis Shrimp and Frilled Lizard (plus the Echidna), each with its own colors and lines.
-- 🏠 **Homes (phone and website):** give any Blip its own house on the street behind your town. Tap a house, or press and hold
-  a Blip → 🏠 **Home**. Pick a style (Cottage, Tent, Igloo, Mushroom, Treehouse, Tower), paint the walls, roof and door, add
-  decorations (flags, mailbox, fairy lights, a name post…) and furnish the inside (beds, rugs, lamps…). Blips walk home to nap,
-  and a cozy home pays a few 💖 when its Blip comes back out. Styles and decorations are unlocked with hearts.
 - 💞 **Friendship levels:** every Blip bonds with you as you pet, feed and play with it, from New friend to Pal,
   Buddy, Best friend and **Soulmate**. Each level-up gives hearts, and your closest friends get a heart on their name tag.
 - 🍪 **Cookie Catch:** a new minigame. Move your Blip to catch falling cookies (golden ones are worth 5, burnt ones cost a

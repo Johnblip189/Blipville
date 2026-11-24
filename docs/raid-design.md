@@ -44,3 +44,10 @@ The developer chose to use the original JSON concepts (Rotor-Kit, Rose-Mallet, P
 **one-time exception** to the "everything stays original" rule. Draft sprites with 3 colors each: `docs/speedsters/sprites-concepts.js`
 and `preview-concepts.png`. In data and UI the category is called `SPEEDSTER_RECRUITMENT` (no outside franchise names). The earlier
 original four (Whippet, Peregrine, Sprinter, Racer) are kept in `sprites-draft.js` as spares.
+
+## The other four Speedster roles (original designs)
+
+Roster roles from the developer: a starter speedster (Gilded Form → Overdrive), a dark rival with 3 Eclipse awakenings
+(Crimson / Azure / Radiant), a chrome robot rival (Neo-Alloy → Meltdown) and a water elemental with 4 skin tiers (0 / 2 / 4 / 6).
+These four are drawn as **original** Blips so the roles are covered: **Comet Hare**, **Eclipse Panther**, **Mirror Mech** and
+**Tidecore** (`docs/speedsters/sprites-originals.js`, `preview-originals.png`). Drafts only, not in the game yet.

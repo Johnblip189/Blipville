@@ -433,7 +433,6 @@ ANIMALS.update({
     dict(name="Golden", o="#3a2008", b="#f2c36a", m="#b8642a", l="#fff2d6", p="#ff9f7a", n="#5a2a14", e="#2a1404", f="#3a2008"),
     dict(name="White",  o="#6a6070", b="#fbf6ee", m="#e8dcc8", l="#ffffff", p="#ffb0b0", n="#c08a8a", e="#3a7bd5", f="#6a6070"),
     dict(name="Shadow", o="#14100c", b="#c49a5a", m="#2a1a10", l="#f2dcb4", p="#e08a6a", n="#2a1a10", e="#140c04", f="#14100c"),
-    dict(name="Sunmane", event="prowl-week", o="#3a1004", b="#ffb02a", m="#ff5a1a", l="#fff6d8", p="#ff9f7a", n="#5a1a08", e="#2a0a02", f="#3a1004"),
  ]),
  "Tiger": dict(eyes=5, body=[
     ".o............o.",
@@ -451,7 +450,6 @@ ANIMALS.update({
     dict(name="Bengal", o="#2a1004", b="#f08a2a", s="#1a0a04", l="#fff6ea", a="#fff6ea", n="#ff8f8f", e="#2a1004"),
     dict(name="White",  o="#3a3a44", b="#f6f6f8", s="#2e2e36", l="#ffffff", a="#ffd0d8", n="#ff9fb0", e="#3a7bd5"),
     dict(name="Golden", o="#3a2408", b="#ffd27a", s="#c8803a", l="#fff8e6", a="#fff8e6", n="#ff9f8a", e="#3a2408"),
-    dict(name="Moonstripe", event="prowl-week", o="#14122a", b="#c8c0f0", s="#2a2260", l="#ffffff", a="#ffffff", n="#ff8ad8", e="#14122a"),
  ]),
  "Bat": dict(eyes=5, body=[
     "..o..........o..",
@@ -3078,14 +3076,14 @@ NEW_ANIMALS.update({
  'Badger': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*digs a hole*', "i'm not grumpy, i'm busy", 'stripes are in', 'hole sweet hole'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obwbbbbbbbbwbo.', 'obbwbbbbbbbbwbbo', 'obbwbbbbbbbbwbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Honey', 'o': '#14100a', 'b': '#5a5a5a', 'e': '#0a0a0a', 'w': '#ffffff', 'a': '#3a3a3a', 'p': '#d88a8a', 'l': '#e8e0d0', 'n': '#0a0a0a'}, {'name': 'European', 'o': '#0a0a0a', 'b': '#8a8a8a', 'e': '#0a0a0a', 'w': '#f4f4f4', 'a': '#4a4a4a', 'p': '#d88a8a', 'l': '#dcdcdc', 'n': '#1a1a1a'}, {'name': 'Golden', 'o': '#2a1a06', 'b': '#c8a04a', 'e': '#1a1004', 'w': '#fff4dc', 'a': '#8a6a2a', 'p': '#ff9a7a', 'l': '#f4e0b0', 'n': '#1a1004'}]},
  'Bison': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*snort*', "i'm a big floof", 'stampede! (slowly)', 'prairie life'], 'body': ['................', 'h..............h', 'hh............hh', '.hooooooooooooh.', 'oaaaaaaaaaaaaaao', 'oaabbbbbbbbbbaao', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Plains', 'o': '#1a0e06', 'b': '#7a4a2a', 'e': '#0a0604', 'h': '#e8dcc8', 'a': '#4a2a14', 'p': '#c86a5a', 'l': '#a87a5a', 'n': '#0a0604'}, {'name': 'Snowy', 'o': '#2a2a3a', 'b': '#e8e4e0', 'e': '#1a1a2a', 'h': '#8a8a9a', 'a': '#c8c0b8', 'p': '#ffb0b0', 'l': '#ffffff', 'n': '#2a2a3a'}, {'name': 'Dusk', 'o': '#140a14', 'b': '#5a3a4a', 'e': '#0a040a', 'h': '#d8c8b8', 'a': '#3a2030', 'p': '#d88a9a', 'l': '#8a6a7a', 'n': '#0a040a'}]},
  'Camel': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['*chews slowly*', 'my hump is full of snacks', "hot? i'm fine", 'spit? never. ok maybe'], 'body': ['................', '......oooo......', '.....oaaaao.....', '..ooooaaaaoooo..', 'oaobaabbbbaaboao', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbllllllbbpbo', 'obbbblkllklbbbbo', 'obbbbllllllbbbbo', '.obbbllkkllbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Desert', 'o': '#3a2410', 'b': '#d8a868', 'e': '#1a1004', 'a': '#b8884a', 'p': '#ff9a7a', 'l': '#f0d0a0', 'n': '#3a2410', 'k': '#5a3a1a'}, {'name': 'Dark', 'o': '#1a0e06', 'b': '#8a5a3a', 'e': '#0a0604', 'a': '#6a4026', 'p': '#d88a7a', 'l': '#c8a080', 'n': '#1a0e06', 'k': '#2a1408'}, {'name': 'White', 'o': '#5a4a3a', 'b': '#f4ece0', 'e': '#2a1e14', 'a': '#e0d0b8', 'p': '#ffb0a0', 'l': '#ffffff', 'n': '#5a4a3a', 'k': '#8a7a6a'}]},
- 'Cheetah': {'eyes': 5, 'move': 'walk', 'speed': 1.8, 'feet': True, 'mouth': True, 'lines': ['zoom!', 'fastest blip around', '*spots intensify*', 'catch me if you can'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obsbbsbbbbsbbsbo', 'obpbbbllllbbbpbo', 'osbbbllnnllbbbso', 'obbsbllllllbsbbo', '.obbsbbbbbbsbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Savanna', 'o': '#2a1a06', 'b': '#f0c060', 'e': '#1a1004', 'a': '#c89040', 's': '#2a1a06', 'p': '#ff9a6a', 'l': '#fff4dc', 'n': '#1a1004'}, {'name': 'King', 'o': '#1a1006', 'b': '#e8b850', 'e': '#1a1004', 'a': '#a87a30', 's': '#1a1006', 'p': '#ff8a5a', 'l': '#fff0d0', 'n': '#1a1004'}, {'name': 'Snow', 'o': '#2a2a3a', 'b': '#e8e8f0', 'e': '#1a1a2a', 'a': '#b8b8c8', 's': '#4a4a5a', 'p': '#ffb0c0', 'l': '#ffffff', 'n': '#2a2a3a'}, {'name': 'Dawnspot', 'event': 'prowl-week', 'o': '#3a1428', 'b': '#ffc890', 's': '#a83a5a', 'a': '#e89060', 'p': '#ff9a6a', 'l': '#fff4ec', 'n': '#3a1428', 'e': '#2a0e1c'}]},
+ 'Cheetah': {'eyes': 5, 'move': 'walk', 'speed': 1.8, 'feet': True, 'mouth': True, 'lines': ['zoom!', 'fastest blip around', '*spots intensify*', 'catch me if you can'], 'body': ['................', '................', '..oo........oo..', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obsbbsbbbbsbbsbo', 'obpbbbllllbbbpbo', 'osbbbllnnllbbbso', 'obbsbllllllbsbbo', '.obbsbbbbbbsbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Savanna', 'o': '#2a1a06', 'b': '#f0c060', 'e': '#1a1004', 'a': '#c89040', 's': '#2a1a06', 'p': '#ff9a6a', 'l': '#fff4dc', 'n': '#1a1004'}, {'name': 'King', 'o': '#1a1006', 'b': '#e8b850', 'e': '#1a1004', 'a': '#a87a30', 's': '#1a1006', 'p': '#ff8a5a', 'l': '#fff0d0', 'n': '#1a1004'}, {'name': 'Snow', 'o': '#2a2a3a', 'b': '#e8e8f0', 'e': '#1a1a2a', 'a': '#b8b8c8', 's': '#4a4a5a', 'p': '#ffb0c0', 'l': '#ffffff', 'n': '#2a2a3a'}]},
  'Chipmunk': {'eyes': 5, 'move': 'walk', 'speed': 1.4, 'feet': True, 'mouth': True, 'lines': ['*stuffs cheeks*', 'acorns for winter', 'chip chip!', 'my cheeks are pockets'], 'body': ['................', '.oo..........oo.', 'oaao...ss...oaao', 'oaaooooooooooaao', '.obbbbbssbbbbbo.', 'owbbbbbssbbbbbwo', 'owbbbbbbbbbbbbwo', 'obpbbbbbbbbbbpbo', 'opbbbllbbllbbbpo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Eastern', 'o': '#2a1406', 'b': '#c8783a', 'e': '#1a0a04', 'a': '#8a4a20', 'w': '#fff4dc', 'p': '#ff9a7a', 'l': '#f4e0c0', 's': '#3a1a0a'}, {'name': 'Golden', 'o': '#3a2408', 'b': '#e8a84a', 'e': '#1a1004', 'a': '#a8742a', 'w': '#fff8e8', 'p': '#ff9a6a', 'l': '#fff0d0', 's': '#5a3010'}, {'name': 'Gray', 'o': '#2a2a2a', 'b': '#9a9a9a', 'e': '#0a0a0a', 'a': '#6a6a6a', 'w': '#ffffff', 'p': '#ffa0a0', 'l': '#e8e8e8', 's': '#3a3a3a'}]},
  'Crow': {'eyes': 5, 'move': 'hop', 'speed': 1.0, 'feet': True, 'mouth': False, 'lines': ['caw!', 'i like shiny things', 'i remember faces. yours is nice', '*hops*'], 'body': ['................', '.......oo.......', '..oooooooooooo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbkkkkbbbpbo', 'wobbbbkkkkbbbbow', 'wwobbbbkkbbbboww', '.wobbbbbbbbbbow.', '..oooooooooooo..'], 'colors': [{'name': 'Black', 'o': '#06060a', 'b': '#1e1e2a', 'e': '#ffffff', 'k': '#3a3a4a', 'p': '#5a4a6a', 'w': '#0e0e16'}, {'name': 'Raven', 'o': '#04040a', 'b': '#14142a', 'e': '#a8c8ff', 'k': '#2a2a3a', 'p': '#4a3a6a', 'w': '#0a0a1e'}, {'name': 'Hooded', 'o': '#141414', 'b': '#8a8a90', 'e': '#0a0a0a', 'k': '#2a2a2a', 'p': '#c88a9a', 'w': '#5a5a60'}]},
  'Eagle': {'eyes': 5, 'move': 'flutter', 'speed': 1.0, 'feet': False, 'mouth': False, 'lines': ['*screech*', 'freedom!', 'i can see you from way up there', 'soar mode'], 'body': ['................', '.......oo.......', '...oooooooooo...', '..obbbbbbbbbbo..', '.owwwwwwwwwwwwo.', 'owwwwwwwwwwwwwwo', 'owwwwwwwwwwwwwwo', 'obwwwwkkkkwwwwbo', 'obbwwwkkkkwwwbbo', 'obbbbbbkkbbbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Bald', 'o': '#1a1006', 'b': '#5a3a1e', 'e': '#1a1004', 'w': '#ffffff', 'k': '#ffc83a', 'p': '#ffb0a0'}, {'name': 'Golden', 'o': '#1a0e04', 'b': '#8a5a2a', 'e': '#1a0e04', 'w': '#e8b860', 'k': '#3a3a3a', 'p': '#ff9a7a'}, {'name': 'Harpy', 'o': '#14141a', 'b': '#4a4a5a', 'e': '#1a1a1a', 'w': '#d8d8e0', 'k': '#2a2a2a', 'p': '#c88a9a'}]},
  'Emu': {'eyes': 5, 'move': 'walk', 'speed': 1.5, 'feet': True, 'mouth': False, 'lines': ['*bonk*', "i can't fly. i don't need to", 'run run run', "boom boom (that's me talking)"], 'body': ['................', '..ooo......ooo..', '.obbbo....obbbo.', '.obbboooooobbbo.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbkkkkbbbpbo', 'obbbbbbkkbbbbbbo', 'owbwbwbwwbwbwbwo', '.wbwbwbwwbwbwbw.', '..w.w.w..w.w.w..'], 'colors': [{'name': 'Brown', 'o': '#1a1006', 'b': '#7a5a3a', 'e': '#ff8a3a', 'k': '#2a2a2a', 'p': '#c88a7a', 'w': '#a8885a'}, {'name': 'Dusky', 'o': '#0e0a0a', 'b': '#4a3a3a', 'e': '#ffd23a', 'k': '#1a1a1a', 'p': '#a87a7a', 'w': '#6a5a5a'}, {'name': 'White', 'o': '#5a5a5a', 'b': '#ece8e0', 'e': '#2a2a2a', 'k': '#5a5a5a', 'p': '#ffb0b0', 'w': '#ffffff'}]},
  'Hyena': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['hehehe!', '*giggles*', "that's hilarious", 'ha ha ha HAAA'], 'body': ['......s..s......', '.oo..ssssss..oo.', 'oaaossssssssoaao', 'oaaooooooooooaao', '.obbbbbbbbbbbbo.', 'obsbbsbbbbsbbsbo', 'obbbbbsbbsbbbbbo', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Spotted', 'o': '#1a1006', 'b': '#c8a070', 'e': '#1a1004', 'a': '#5a3a1e', 's': '#5a3a1e', 'p': '#d88a7a', 'l': '#a8885a', 'n': '#0a0604'}, {'name': 'Striped', 'o': '#1a1a14', 'b': '#b0a890', 'e': '#0a0a0a', 'a': '#3a3a2a', 's': '#3a3a2a', 'p': '#c88a7a', 'l': '#d8d0b8', 'n': '#0a0a0a'}, {'name': 'Brown', 'o': '#14100a', 'b': '#6a5a4a', 'e': '#0a0604', 'a': '#2a2014', 's': '#3a2a1e', 'p': '#c88a7a', 'l': '#9a8a7a', 'n': '#0a0604'}]},
  'Iguana': {'eyes': 5, 'move': 'walk', 'speed': 0.8, 'feet': True, 'mouth': True, 'lines': ['*basks*', "sun's out, scales out", "i'm a spiky friend", 'warm rock pls'], 'body': ['................', '.......ss.......', '...ooossssooo...', '..obbbbssbbbbo..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbbbbbbbbbbbo', 'obbblllbblllbbbo', '.obbbbbbbbbbbbo.', '..oooooooooooo..'], 'colors': [{'name': 'Green', 'o': '#0a2a10', 'b': '#4ab85a', 'e': '#1a1004', 's': '#2a8a3a', 'l': '#a8e0a0', 'p': '#ff9a8a'}, {'name': 'Blue', 'o': '#0a1a3a', 'b': '#4a8ad8', 'e': '#0a0a1a', 's': '#2a5aa8', 'l': '#a8d0ff', 'p': '#ff9ac0'}, {'name': 'Red', 'o': '#3a0a0a', 'b': '#d85a3a', 'e': '#1a0404', 's': '#a83a1a', 'l': '#ffb8a0', 'p': '#ffd23a'}]},
- 'Jaguar': {'eyes': 5, 'move': 'walk', 'speed': 1.3, 'feet': True, 'mouth': True, 'lines': ['*silent paws*', 'rainforest royalty', 'rrrr', "spots? they're rosettes, thank you"], 'body': ['................', '.oo..........oo.', 'oaao........oaao', 'oaaooooooooooaao', '.obbbbbbbbbbbbo.', 'obbsbbsbbsbbsbbo', 'osbbsbbbbbbsbbso', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.osbbbsbbsbbbso.', '..oooooooooooo..'], 'colors': [{'name': 'Gold', 'o': '#2a1406', 'b': '#e8a848', 'e': '#1a1004', 'a': '#8a5a20', 's': '#3a2006', 'p': '#ff9a6a', 'l': '#fff0d0', 'n': '#2a1406'}, {'name': 'Black', 'o': '#06060a', 'b': '#2a2a34', 'e': '#ffd23a', 'a': '#1a1a20', 's': '#14141a', 'p': '#8a5a6a', 'l': '#4a4a54', 'n': '#06060a'}, {'name': 'Pale', 'o': '#3a2a1a', 'b': '#f0d8b0', 'e': '#2a1a0a', 'a': '#c8a070', 's': '#6a4a2a', 'p': '#ffb0a0', 'l': '#ffffff', 'n': '#3a2a1a'}, {'name': 'Emberrose', 'event': 'prowl-week', 'o': '#1a0a10', 'b': '#6a2036', 's': '#ff6a3a', 'a': '#ff9a5a', 'p': '#ff9a6a', 'l': '#ffb8a0', 'n': '#1a0a10', 'e': '#ffd23a'}]},
+ 'Jaguar': {'eyes': 5, 'move': 'walk', 'speed': 1.3, 'feet': True, 'mouth': True, 'lines': ['*silent paws*', 'rainforest royalty', 'rrrr', "spots? they're rosettes, thank you"], 'body': ['................', '.oo..........oo.', 'oaao........oaao', 'oaaooooooooooaao', '.obbbbbbbbbbbbo.', 'obbsbbsbbsbbsbbo', 'osbbsbbbbbbsbbso', 'obpbbbllllbbbpbo', 'obbbbllnnllbbbbo', 'obbbbllllllbbbbo', '.osbbbsbbsbbbso.', '..oooooooooooo..'], 'colors': [{'name': 'Gold', 'o': '#2a1406', 'b': '#e8a848', 'e': '#1a1004', 'a': '#8a5a20', 's': '#3a2006', 'p': '#ff9a6a', 'l': '#fff0d0', 'n': '#2a1406'}, {'name': 'Black', 'o': '#06060a', 'b': '#2a2a34', 'e': '#ffd23a', 'a': '#1a1a20', 's': '#14141a', 'p': '#8a5a6a', 'l': '#4a4a54', 'n': '#06060a'}, {'name': 'Pale', 'o': '#3a2a1a', 'b': '#f0d8b0', 'e': '#2a1a0a', 'a': '#c8a070', 's': '#6a4a2a', 'p': '#ffb0a0', 'l': '#ffffff', 'n': '#3a2a1a'}]},
  'Kiwi': {'eyes': 5, 'move': 'walk', 'speed': 1.2, 'feet': True, 'mouth': False, 'lines': ['*sniff sniff* (with my beak)', 'from new zealand!', "i'm round and proud", 'no wings, no problem'], 'body': ['................', '.....oooooo.....', '...oosbbbbsoo...', '..obbbbssbbbbo..', '.obsbbbbbbbbsbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'osbpbbbkkbbbpbso', 'obbbsbbkkbbsbbbo', '.obbbbbkkbbbbbo.', '..osbbbkbbbbso..', '...ooookoooooo..'], 'colors': [{'name': 'Brown', 'o': '#1a1006', 'b': '#8a6a3a', 'e': '#0a0604', 'k': '#e8c890', 'p': '#d88a7a', 's': '#5a3a1a'}, {'name': 'Spotted', 'o': '#140e06', 'b': '#6a5a3a', 'e': '#0a0604', 'k': '#f0d8a0', 'p': '#c88a7a', 's': '#3a2a1a'}, {'name': 'Fruit', 'o': '#1a2a06', 'b': '#8ab83a', 'e': '#1a1004', 'k': '#5a3a1e', 'p': '#ff9a8a', 's': '#5a7a2a'}]},
  'Lynx': {'eyes': 5, 'move': 'walk', 'speed': 1.0, 'feet': True, 'mouth': True, 'lines': ['*ear tufts twitch*', 'quiet as snow', 'i see in the dark', 'fluffy feet, big jumps'], 'body': ['o..............o', '.o............o.', '.oo..........oo.', '.oaooooooooooao.', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbbbbbbbbpbo', 'obbbbllnnllbbbbo', 'owbblllbblllbbwo', '.owbbbbbbbbbbwo.', '..oooooooooooo..'], 'colors': [{'name': 'Canada', 'o': '#2a2014', 'b': '#b8a080', 'e': '#1a1408', 'a': '#3a2a1a', 'w': '#e8e0d0', 'p': '#d88a7a', 'l': '#e8e0d0', 'n': '#2a1a14'}, {'name': 'Bobcat', 'o': '#2a1406', 'b': '#c8885a', 'e': '#1a0a04', 'a': '#3a2010', 'w': '#f0e0c8', 'p': '#ff9a7a', 'l': '#f4e4d0', 'n': '#2a1406'}, {'name': 'Snow', 'o': '#3a3a4a', 'b': '#e0e0e8', 'e': '#2a3a5a', 'a': '#4a4a5a', 'w': '#ffffff', 'p': '#ffb0c0', 'l': '#ffffff', 'n': '#3a3a4a'}]},
  'Manatee': {'eyes': 5, 'move': 'float', 'speed': 0.6, 'feet': False, 'mouth': True, 'lines': ['*slow blink*', 'sea cow, reporting', 'i eat lettuce all day', 'no rush'], 'body': ['................', '................', '...oooooooooo...', '..oaaaaaaaaaao..', '.obbbbbbbbbbbbo.', 'obbbbbbbbbbbbbbo', 'obbbbbbbbbbbbbbo', 'obpbbbllllbbbpbo', 'obbblslnnlslbbbo', 'fobblllbblllbbof', 'ff.obbbbbbbbo.ff', 'f...oooooooo...f'], 'colors': [{'name': 'Gray', 'o': '#2a2e36', 'b': '#8a929e', 'e': '#0a0e14', 'a': '#7a828e', 'p': '#d8a0b0', 'l': '#b0b8c4', 'n': '#2a2e36', 's': '#5a626e', 'f': '#6a727e'}, {'name': 'Mossy', 'o': '#1a2a1a', 'b': '#7a9a7a', 'e': '#0a140a', 'a': '#6a8a6a', 'p': '#d8a0a0', 'l': '#a8c8a8', 'n': '#1a2a1a', 's': '#4a6a4a', 'f': '#5a7a5a'}, {'name': 'Pink', 'o': '#5a2a3a', 'b': '#e8a8b8', 'e': '#2a0a14', 'a': '#d898a8', 'p': '#ff7a9a', 'l': '#ffd0dc', 'n': '#5a2a3a', 's': '#c87a8a', 'f': '#d898a8'}]},
@@ -4396,6 +4394,61 @@ def _apply_redraws():
 
 
 _apply_redraws()
+
+def _hexmix(a, b, f):
+    A, B = int(a[1:], 16), int(b[1:], 16)
+    return "#%02x%02x%02x" % tuple(round(((A >> sh) & 255) * (1 - f) + ((B >> sh) & 255) * f) for sh in (16, 8, 0))
+
+# 🐆 Prowl Week skins: 28 of them for the cats that were already in Blipville (4 each). They are added after every Blip's other colors
+# (Classic included), so nobody's saved color numbers move. The first 4 are hand-picked; the rest are made from a body and accent color.
+PROWL_CATS = ["Lion", "Tiger", "Cheetah", "Jaguar", "Cat", "Lynx", "Snow Leopard"]
+PROWL_SKIN_FIXED = {
+    "Lion": dict(name="Sunmane", o="#3a1004", b="#ffb02a", m="#ff5a1a", l="#fff6d8", p="#ff9f7a", n="#5a1a08", e="#2a0a02", f="#3a1004"),
+    "Tiger": dict(name="Moonstripe", o="#14122a", b="#c8c0f0", s="#2a2260", l="#ffffff", a="#ffffff", n="#ff8ad8", e="#14122a"),
+    "Cheetah": dict(name="Dawnspot", o="#3a1428", b="#ffc890", s="#a83a5a", a="#e89060", p="#ff9a6a", l="#fff4ec", n="#3a1428", e="#2a0e1c"),
+    "Jaguar": dict(name="Emberrose", o="#1a0a10", b="#6a2036", s="#ff6a3a", a="#ff9a5a", p="#ff9a6a", l="#ffb8a0", n="#1a0a10", e="#ffd23a"),
+}
+# (cat, skin name, body color, accent color) in the order they are earned, 4 skins before each new Blip
+PROWL_SKINS = [("Lion", "Sunmane"), ("Tiger", "Moonstripe"), ("Cheetah", "Dawnspot"), ("Jaguar", "Emberrose"),
+               ("Cat", "Alley Prowler", "#4a4a5a", "#38d8c8"), ("Lynx", "Frostfang", "#b8d8f0", "#5a8ac8"), ("Snow Leopard", "Aurora Mist", "#d8f0e8", "#c85ad8"),
+               ("Lion", "Canyon Gold", "#d8683a", "#7a2a10"),
+               ("Tiger", "Midnight Ink", "#2a2a3a", "#7a5aff"), ("Cheetah", "Neon Streak", "#ff5ad8", "#2a0a3a"), ("Jaguar", "Obsidian", "#1c1c24", "#ffd23a"),
+               ("Cat", "Marmalade", "#ff9a3a", "#b85a10"),
+               ("Lynx", "Bobcat Brown", "#a8825a", "#4a3018"), ("Snow Leopard", "Glacier", "#a8c8e8", "#3a5a8a"), ("Lion", "Moonmane", "#d8d8f0", "#6a5ab8"),
+               ("Tiger", "Jade Stripe", "#7ad8a0", "#1a5a3a"),
+               ("Cheetah", "Ember Dash", "#ff7a3a", "#6a1a0a"), ("Jaguar", "Jungle Veil", "#3a8a4a", "#0a2a14"), ("Cat", "Tuxedo", "#2a2a34", "#ffffff"),
+               ("Lynx", "Sunset Tufts", "#ff8a6a", "#8a2a3a"),
+               ("Snow Leopard", "Peach Frost", "#ffd8c8", "#c8683a"), ("Lion", "Cotton Mane", "#fff0d8", "#ff9ab8"), ("Tiger", "Royal Stripe", "#5a4ae0", "#ffd23a"),
+               ("Cheetah", "Cobalt Spots", "#4a8ae8", "#0a1a4a"),
+               ("Jaguar", "Ruby Rosette", "#c82a4a", "#3a0a14"), ("Cat", "Starry Night", "#1a1a4a", "#ffe66a"), ("Lynx", "Spring Fern", "#a8d868", "#3a6a1a"),
+               ("Snow Leopard", "Ghost Moon", "#f4f4ff", "#8a90c8")]
+PROWL_BLIP_ORDER = ["Lioness", "Cougar", "Panther", "Serval", "Caracal", "Ocelot", "Clouded Leopard"]
+
+
+def _prowl_skin(kind, name, body, acc):
+    base = dict(VARIANTS[kind]["colors"][0])
+    lum = 0.299 * int(body[1:3], 16) + 0.587 * int(body[3:5], 16) + 0.114 * int(body[5:7], 16)
+    pal = dict(base, name=name, event="prowl-week", b=body, o=_hexmix(body, "#000000", 0.8), l=_hexmix(body, "#ffffff", 0.78),
+               n=_hexmix(body, "#000000", 0.7), e=acc if lum < 90 else _hexmix(body, "#000000", 0.88))
+    if "f" in pal:
+        pal["f"] = pal["o"]
+    for key in ("s", "m", "w"):
+        if key in pal and key != "w":
+            pal[key] = acc
+    if "a" in pal:
+        pal["a"] = _hexmix(body, acc, 0.55) if kind not in ("Tiger",) else _hexmix(body, "#ffffff", 0.7)
+    return pal
+
+
+def _add_prowl_skins():
+    for sk in PROWL_SKINS:
+        kind, name = sk[0], sk[1]
+        pal = dict(PROWL_SKIN_FIXED[kind]) if len(sk) == 2 else _prowl_skin(kind, name, sk[2], sk[3])
+        pal["name"], pal["event"] = name, "prowl-week"
+        VARIANTS[kind]["colors"] = list(VARIANTS[kind]["colors"]) + [pal]
+
+
+_add_prowl_skins()
 GIFT_KINDS = list(GIFTS)          # thank-you gifts, only for a limited time
 GHOST_KINDS = list(GHOSTS)        # met at night
 LEGEND_KINDS = list(LEGENDS)      # found only while visiting their world
@@ -4657,19 +4710,33 @@ SPIKY_WEEK = {"id": "spiky-week", "name": "Spiky Week", "icon": "🦔", "start":
                           ["Fox", "Aurora"], ["Hedgehog", "Candy Floss"], ["Fox", "Maple"], ["Echidna", "Golden Spines"]]}
 # 🐆 Prowl Week: big cats. 4 skins at 5 points each, then 7 new Blips at 10 points each (the Blips are in PROWL).
 PROWL_WEEK = {"id": "prowl-week", "name": "Prowl Week", "icon": "🐆", "start": "2026-12-04", "until": "2026-12-17",
-              "until_text": "Thursday, December 17", "paused": None, "paused_text": "", "kinds": ["Lion", "Tiger", "Cheetah", "Jaguar"], "per_skin": 5,
-              "blurb": "Pet and feed your Lions, Tigers, Cheetahs and Jaguars, and do today's quests! A pet is 1 point (once every few seconds) and a "
-                       "cookie for a hungry Blip up to 3 (full Blips give nothing). Skins cost 5 points each, new Blips 10. Everything you earn is yours forever.",
-              "hello": "Pet & feed Lions, Tigers, Cheetahs and Jaguars for skins and new cats!", "friends": "all four big cats",
-              "rewards": [["Lion", "Sunmane"], ["Tiger", "Moonstripe"], ["Cheetah", "Dawnspot"], ["Jaguar", "Emberrose"]],
-              "tiers": [{"type": "skin", "kind": "Lion", "skin": "Sunmane", "at": 5}, {"type": "skin", "kind": "Tiger", "skin": "Moonstripe", "at": 10},
-                        {"type": "skin", "kind": "Cheetah", "skin": "Dawnspot", "at": 15}, {"type": "skin", "kind": "Jaguar", "skin": "Emberrose", "at": 20},
-                        {"type": "blip", "kind": "Lioness", "at": 30}, {"type": "blip", "kind": "Cougar", "at": 40}, {"type": "blip", "kind": "Panther", "at": 50},
-                        {"type": "blip", "kind": "Serval", "at": 60}, {"type": "blip", "kind": "Caracal", "at": 70}, {"type": "blip", "kind": "Ocelot", "at": 80},
-                        {"type": "blip", "kind": "Clouded Leopard", "at": 90}]}
+              "until_text": "Thursday, December 17", "paused": None, "paused_text": "", "kinds": ["Lion", "Tiger", "Cheetah", "Jaguar", "Cat", "Lynx", "Snow Leopard"], "per_skin": 5,
+              "blurb": "Pet and feed the big cats (Lions, Tigers, Cheetahs, Jaguars, Cats, Lynxes and Snow Leopards) and do today's quests! A pet is 1 point "
+                       "(once every few seconds) and a cookie for a hungry Blip up to 3 (full Blips give nothing). Every 4 skins (5 points each) lead to a new Blip "
+                       "(10 points). Skins you earn are yours forever, and everyone gets all 7 new Blips for free when Prowl Week ends!",
+              "hello": "Pet & feed the big cats for skins and 7 new Blips (free for everyone when it ends)!", "friends": "all the big cats",
+              "free_after": True, "rewards": [[sk[0], sk[1]] for sk in PROWL_SKINS], "tiers": []}
+_pts = 0
+for _g, _blip in enumerate(PROWL_BLIP_ORDER):
+    for _sk in PROWL_SKINS[_g * 4:_g * 4 + 4]:
+        _pts += 5
+        PROWL_WEEK["tiers"].append({"type": "skin", "kind": _sk[0], "skin": _sk[1], "at": _pts})
+    _pts += 10
+    PROWL_WEEK["tiers"].append({"type": "blip", "kind": _blip, "at": _pts})
 EVENTS = [SPIKY_WEEK, PROWL_WEEK]
 # the event that is on, or the next one coming (the last one stays up after it ends so its screen still works)
 EVENT = next((e for e in EVENTS if time.strftime("%Y-%m-%d") <= e["until"]), EVENTS[-1])
+
+
+def free_event_blips(save):
+    """Blips from an event's track are free for everyone once the event is over."""
+    today = time.strftime("%Y-%m-%d")
+    got = save.setdefault("event_kinds", [])
+    for ev in EVENTS:
+        if ev.get("free_after") and today > ev["until"]:
+            for t in ev.get("tiers", []):
+                if t["type"] == "blip" and t["kind"] not in got:
+                    got.append(t["kind"])
 
 
 def event_tiers():
@@ -10866,6 +10933,7 @@ class App:
         self.name_tags = tk.BooleanVar(master=self.root, value=True)
         self.season = current_season()
         self.save = load_save()
+        free_event_blips(self.save)
         merch_backfill(self.save)
         if "Egypt World" not in self.save.setdefault("worlds", []):
             self.save["worlds"].append("Egypt World")      # 🏺 free for everyone (its gods still have to be dug up)
@@ -11326,6 +11394,7 @@ class App:
         if self.save.get("last_day") != today:
             self.save["last_day"] = today
             self.bump("days")
+            free_event_blips(self.save)
             self.add_hearts(10, self.pets[0] if self.pets else None)
             if self.pets:
                 self.pets[0].say("daily treat! +10 💖", 4)

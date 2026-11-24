@@ -8,3 +8,9 @@ Follows Spiky Week (ends December 3), same rules and pause days.
 - Draft sprites: `sprites-draft.js` and `sprites-draft-batch2.js`, previews: `preview.png` and `preview-batch2.png`. Not in the game yet.
 
 Status: built into `blip.pyw` (PROWL, PROWL_WEEK, event tiers), the web app and the Windows event screen. The event switches on by date (Dec 4 to 17).
+
+## Update: 28 skins, a Blip after every 4
+
+The track is now 7 groups of (4 skins at 5 points, then 1 new Blip at 10 points): 35 tiers, 210 points in all. The 28 skins are spread over the
+7 existing cats (Lion, Tiger, Cheetah, Jaguar, Cat, Lynx, Snow Leopard), 4 each. All 7 new Blips are free for everyone once the event ends
+(December 18). Skins are added after each cat's other colors (Classic included), so saved color numbers never move.

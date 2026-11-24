@@ -1559,7 +1559,7 @@
                     [`Event 🎖️ (earn them in ${EVENT.name})`, D.groups.eventKinds || []],
                     ["Bad Dreams 🧸 (tap a Puppet Master 5 times… then fend them off)", [...DREAMS]]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (EGYPT.has(k) ? "🏺 dig it up in Egypt World" : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : EVENTK.has(k) ? `🎖️ earn it in ${EVENT.name}` : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (EGYPT.has(k) ? "🏺 dig it up in Egypt World" : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : EVENTK.has(k) ? `🎖️ earn it in ${EVENT.name} (free when it ends)` : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const world = WORLDS.find((w) => w.tab === title);
@@ -2189,6 +2189,8 @@
   const _today = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; })();
   const EVENT = EVENTS.find((e) => _today <= e.until) || EVENTS[EVENTS.length - 1] || { id: "", name: "", icon: "🎉", kinds: [], rewards: [], per_skin: 10, start: "9999", until: "0000" };
   const EVENTK = new Set(D.groups.eventKinds || []);
+  save.eventKinds = save.eventKinds || [];
+  for (const ev of EVENTS) if (ev.free_after && _today > ev.until) for (const t of ev.tiers || []) if (t.type === "blip" && !save.eventKinds.includes(t.kind)) save.eventKinds.push(t.kind);   // free for everyone once the event is over
   const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
   const eventPaused = () => !!(EVENT.paused && EVENT.paused[0] <= todayStr() && todayStr() < EVENT.paused[1]);   // closed for maintenance
   const eventOn = () => EVENT.start <= todayStr() && todayStr() <= EVENT.until && !eventPaused();
@@ -2277,11 +2279,13 @@
       const tag = doc().createElement("div"); tag.className = "evTag"; tag.textContent = have ? "✓ UNLOCKED" : reached ? "READY" : "🔒 LOCKED"; card.appendChild(tag);
       cell.appendChild(card); tr.appendChild(cell);
     });
-    const dots = $("evDots"); dots.innerHTML = ""; const pages = Math.max(1, Math.ceil(tiers.length / 2));
-    for (let i = 0; i < pages; i++) { const d = doc().createElement("i"); d.dataset.p = i; dots.appendChild(d); }
-    const go = (dir) => { const w = tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120; tr.scrollBy({ left: dir * w * 2, behavior: "smooth" }); };
+    const dots = $("evDots"); dots.innerHTML = ""; const step = tiers.length > 12 ? 5 : 2, many = tiers.length > 14, pages = Math.max(1, Math.ceil(tiers.length / step));
+    if (!many) for (let i = 0; i < pages; i++) { const d = doc().createElement("i"); d.dataset.p = i; dots.appendChild(d); }
+    const go = (dir) => { const w = tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120; tr.scrollBy({ left: dir * w * step, behavior: "smooth" }); };
     $("evPrev").onclick = () => go(-1); $("evNext").onclick = () => go(1);
-    const mark = () => { const w = tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120; const pg = Math.round(tr.scrollLeft / (w * 2)); dots.querySelectorAll("i").forEach((d, i) => d.classList.toggle("on", i === pg)); };
+    const mark = () => { const w = tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120; const first = Math.round(tr.scrollLeft / w);
+      if (many) dots.textContent = `Rewards ${first + 1}–${Math.min(tiers.length, first + 3)} of ${tiers.length}`;
+      else dots.querySelectorAll("i").forEach((d, i) => d.classList.toggle("on", i === Math.round(tr.scrollLeft / (w * step)))); };
     tr.onscroll = mark; mark();
     const slot = () => (tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120);
     if (keepScroll != null) tr.scrollLeft = keepScroll;                                   // a refresh keeps its place

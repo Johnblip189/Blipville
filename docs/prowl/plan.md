@@ -14,3 +14,8 @@ Status: built into `blip.pyw` (PROWL, PROWL_WEEK, event tiers), the web app and 
 The track is now 7 groups of (4 skins at 5 points, then 1 new Blip at 10 points): 35 tiers, 210 points in all. The 28 skins are spread over the
 7 existing cats (Lion, Tiger, Cheetah, Jaguar, Cat, Lynx, Snow Leopard), 4 each. All 7 new Blips are free for everyone once the event ends
 (December 18). Skins are added after each cat's other colors (Classic included), so saved color numbers never move.
+
+## Update 2: skins for everyday Blips
+
+Each group is now: 1 big-cat skin (Lion, Tiger, Cheetah, Jaguar, Cat, Lynx, Snow Leopard), then 3 big-cat-colored skins for everyday Blips
+(Blip, Bun, Dog, Fox, Bear, Wolf), then the new Blip. The new Prowl Week Blips don't get pass skins; they keep their own colors.

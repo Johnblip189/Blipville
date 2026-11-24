@@ -4408,20 +4408,15 @@ PROWL_SKIN_FIXED = {
     "Cheetah": dict(name="Dawnspot", o="#3a1428", b="#ffc890", s="#a83a5a", a="#e89060", p="#ff9a6a", l="#fff4ec", n="#3a1428", e="#2a0e1c"),
     "Jaguar": dict(name="Emberrose", o="#1a0a10", b="#6a2036", s="#ff6a3a", a="#ff9a5a", p="#ff9a6a", l="#ffb8a0", n="#1a0a10", e="#ffd23a"),
 }
-# (cat, skin name, body color, accent color) in the order they are earned, 4 skins before each new Blip
-PROWL_SKINS = [("Lion", "Sunmane"), ("Tiger", "Moonstripe"), ("Cheetah", "Dawnspot"), ("Jaguar", "Emberrose"),
-               ("Cat", "Alley Prowler", "#4a4a5a", "#38d8c8"), ("Lynx", "Frostfang", "#b8d8f0", "#5a8ac8"), ("Snow Leopard", "Aurora Mist", "#d8f0e8", "#c85ad8"),
-               ("Lion", "Canyon Gold", "#d8683a", "#7a2a10"),
-               ("Tiger", "Midnight Ink", "#2a2a3a", "#7a5aff"), ("Cheetah", "Neon Streak", "#ff5ad8", "#2a0a3a"), ("Jaguar", "Obsidian", "#1c1c24", "#ffd23a"),
-               ("Cat", "Marmalade", "#ff9a3a", "#b85a10"),
-               ("Lynx", "Bobcat Brown", "#a8825a", "#4a3018"), ("Snow Leopard", "Glacier", "#a8c8e8", "#3a5a8a"), ("Lion", "Moonmane", "#d8d8f0", "#6a5ab8"),
-               ("Tiger", "Jade Stripe", "#7ad8a0", "#1a5a3a"),
-               ("Cheetah", "Ember Dash", "#ff7a3a", "#6a1a0a"), ("Jaguar", "Jungle Veil", "#3a8a4a", "#0a2a14"), ("Cat", "Tuxedo", "#2a2a34", "#ffffff"),
-               ("Lynx", "Sunset Tufts", "#ff8a6a", "#8a2a3a"),
-               ("Snow Leopard", "Peach Frost", "#ffd8c8", "#c8683a"), ("Lion", "Cotton Mane", "#fff0d8", "#ff9ab8"), ("Tiger", "Royal Stripe", "#5a4ae0", "#ffd23a"),
-               ("Cheetah", "Cobalt Spots", "#4a8ae8", "#0a1a4a"),
-               ("Jaguar", "Ruby Rosette", "#c82a4a", "#3a0a14"), ("Cat", "Starry Night", "#1a1a4a", "#ffe66a"), ("Lynx", "Spring Fern", "#a8d868", "#3a6a1a"),
-               ("Snow Leopard", "Ghost Moon", "#f4f4ff", "#8a90c8")]
+# (Blip, skin name, body color, accent color) in the order they are earned: a big-cat skin, then 3 skins for everyday Blips in big-cat
+# colors, before each new Blip. The 4 hand-picked ones above have no colors listed.
+PROWL_SKINS = [("Lion", "Sunmane"), ("Blip", "Pridelands", "#f0b848", "#ff7a1a"), ("Bun", "Cheetah Cream", "#f4e0b8", "#3a2a1a"), ("Dog", "Savanna Hound", "#d8a868", "#6a4018"),
+               ("Tiger", "Moonstripe"), ("Blip", "Bengal", "#f08a2a", "#2a1004"), ("Bun", "Tiger Cub", "#ffa85a", "#4a1a04"), ("Fox", "Ember Stripe", "#e86a2a", "#1a0a04"),
+               ("Cheetah", "Dawnspot"), ("Blip", "Midnight Panther", "#2a2a3a", "#7aff5a"), ("Bun", "Shadow Bun", "#1e1e2e", "#ff8aa8"), ("Dog", "Black Hound", "#24242e", "#ffd23a"),
+               ("Jaguar", "Emberrose"), ("Blip", "Serval Gold", "#e8c070", "#2a1a08"), ("Bun", "Spotted Bun", "#f0d8a0", "#4a3018"), ("Fox", "Caracal Fox", "#d89050", "#1a0a04"),
+               ("Cat", "Alley Prowler", "#4a4a5a", "#38d8c8"), ("Blip", "Caracal Tuft", "#c8783a", "#1a0a04"), ("Bear", "Cougar Cub", "#c8a070", "#3a2410"), ("Wolf", "Plains Wolf", "#b8a888", "#4a3a28"),
+               ("Lynx", "Frostfang", "#b8d8f0", "#5a8ac8"), ("Blip", "Jungle Ocelot", "#e8a850", "#2a4a1a"), ("Bun", "Rosette Bun", "#e0b878", "#6a3a18"), ("Dog", "Marsh Hound", "#98a868", "#2a3a14"),
+               ("Snow Leopard", "Aurora Mist", "#d8f0e8", "#c85ad8"), ("Blip", "Cloud Cat", "#b8b4a0", "#4a4438"), ("Bun", "Snowy Bun", "#e8ecf4", "#6a78a0"), ("Bear", "Cloud Bear", "#a8a8b8", "#3a3a4a")]
 PROWL_BLIP_ORDER = ["Lioness", "Cougar", "Panther", "Serval", "Caracal", "Ocelot", "Clouded Leopard"]
 
 
@@ -4436,7 +4431,9 @@ def _prowl_skin(kind, name, body, acc):
         if key in pal and key != "w":
             pal[key] = acc
     if "a" in pal:
-        pal["a"] = _hexmix(body, acc, 0.55) if kind not in ("Tiger",) else _hexmix(body, "#ffffff", 0.7)
+        pal["a"] = _hexmix(body, acc, 0.55)
+    if not any(key in pal for key in ("s", "m", "a")) and "p" in pal:
+        pal["p"] = acc                                           # simple Blips: the accent shows in the ears and cheeks
     return pal
 
 

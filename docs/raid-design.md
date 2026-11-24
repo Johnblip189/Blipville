@@ -13,3 +13,11 @@ Decisions so far (from the developer):
 Still to decide: how long the alert stays up (suggested 10 minutes), the hearts rewards (solo vs room), the controls of the new battle system.
 
 Build order: 1) the connection layer (invite/reply codes, a two-browser test screen), 2) the raid alert and spawn timer, 3) Wardens and boss on top of the new battle system.
+
+## Next event after Spiky Week: the Speedsters
+
+- The next event is a **speedster** recruitment event (the quest chain from the developer's draft JSON: four recruitable fast Blips with
+  heart rewards, plus the Hydro-style evolution tiers and the dojo mastery quest).
+- The Speedsters must be **original** characters and names. The draft's names and the `SONIC_RECRUITMENT` category are placeholders only.
+- Its objectives (air hits, dash hits, guard breaks, counters) need the new real-time battle system, so the event follows it.
+- Spiky Week runs until December 3.

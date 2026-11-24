@@ -28,7 +28,7 @@ make Blipville what it is. This is the real thing.
 - 🍪 **Cookie Catch:** a new minigame. Move your Blip to catch falling cookies (golden ones are worth 5, burnt ones cost a
   heart). Earns hearts, friendship and event points. Right-click a pet → 🍪 Cookie Catch.
 - 🐆 **Prowl Week (event, December 4 to 17):** pet and feed the big cats (Lions, Tigers, Cheetahs, Jaguars, Cats, Lynxes and Snow
-  Leopards) to climb a 35-tier reward track: **28 new skins** (5 points each) for Blip, Bun, Dog, Fox, Bear, Wolf and the big cats,
+  Leopards) to climb a 35-tier reward track: **28 new skins** (5 points each) for Blip, Bun, Dog, Bear, Wolf, the big cats and a few from the Dino, Sweets, Plant, Ocean and Space worlds,
   with a brand-new Blip after every 4 skins (10 points each): Lioness, Cougar, Panther, Serval, Caracal, Ocelot and Clouded
   Leopard. **When Prowl Week ends, everyone gets all 7 new Blips for free.** Right-click a pet → 🐆 Prowl Week.
 - 🦔 **Spiky Week (event, until December 3):** pet and feed Hedgehogs, Foxes and the brand-new **Echidna** to earn

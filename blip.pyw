@@ -4411,12 +4411,12 @@ PROWL_SKIN_FIXED = {
 # (Blip, skin name, body color, accent color) in the order they are earned: a big-cat skin, then 3 skins for everyday Blips in big-cat
 # colors, before each new Blip. The 4 hand-picked ones above have no colors listed.
 PROWL_SKINS = [("Lion", "Sunmane"), ("Blip", "Pridelands", "#f0b848", "#ff7a1a"), ("Bun", "Cheetah Cream", "#f4e0b8", "#3a2a1a"), ("Dog", "Savanna Hound", "#d8a868", "#6a4018"),
-               ("Tiger", "Moonstripe"), ("Blip", "Bengal", "#f08a2a", "#2a1004"), ("Bun", "Tiger Cub", "#ffa85a", "#4a1a04"), ("Fox", "Ember Stripe", "#e86a2a", "#1a0a04"),
-               ("Cheetah", "Dawnspot"), ("Blip", "Midnight Panther", "#2a2a3a", "#7aff5a"), ("Bun", "Shadow Bun", "#1e1e2e", "#ff8aa8"), ("Dog", "Black Hound", "#24242e", "#ffd23a"),
-               ("Jaguar", "Emberrose"), ("Blip", "Serval Gold", "#e8c070", "#2a1a08"), ("Bun", "Spotted Bun", "#f0d8a0", "#4a3018"), ("Fox", "Caracal Fox", "#d89050", "#1a0a04"),
+               ("Tiger", "Moonstripe"), ("Blip", "Bengal", "#f08a2a", "#2a1004"), ("Bun", "Tiger Cub", "#ffa85a", "#4a1a04"), ("Raptor", "Tiger Raptor", "#e8802a", "#1a0a04"),
+               ("Cheetah", "Dawnspot"), ("Blip", "Midnight Panther", "#2a2a3a", "#7aff5a"), ("Bun", "Shadow Bun", "#1e1e2e", "#ff8aa8"), ("Gummy Bear", "Cheetah Gummy", "#f0c050", "#3a1a08"),
+               ("Jaguar", "Emberrose"), ("Blip", "Serval Gold", "#e8c070", "#2a1a08"), ("Bun", "Spotted Bun", "#f0d8a0", "#4a3018"), ("Sunflower", "Jaguar Bloom", "#e0a030", "#3a1a08"),
                ("Cat", "Alley Prowler", "#4a4a5a", "#38d8c8"), ("Blip", "Caracal Tuft", "#c8783a", "#1a0a04"), ("Bear", "Cougar Cub", "#c8a070", "#3a2410"), ("Wolf", "Plains Wolf", "#b8a888", "#4a3a28"),
-               ("Lynx", "Frostfang", "#b8d8f0", "#5a8ac8"), ("Blip", "Jungle Ocelot", "#e8a850", "#2a4a1a"), ("Bun", "Rosette Bun", "#e0b878", "#6a3a18"), ("Dog", "Marsh Hound", "#98a868", "#2a3a14"),
-               ("Snow Leopard", "Aurora Mist", "#d8f0e8", "#c85ad8"), ("Blip", "Cloud Cat", "#b8b4a0", "#4a4438"), ("Bun", "Snowy Bun", "#e8ecf4", "#6a78a0"), ("Bear", "Cloud Bear", "#a8a8b8", "#3a3a4a")]
+               ("Lynx", "Frostfang", "#b8d8f0", "#5a8ac8"), ("Blip", "Jungle Ocelot", "#e8a850", "#2a4a1a"), ("Bun", "Rosette Bun", "#e0b878", "#6a3a18"), ("Seahorse", "Lynx Seahorse", "#b8d0e8", "#3a5a88"),
+               ("Snow Leopard", "Aurora Mist", "#d8f0e8", "#c85ad8"), ("Blip", "Cloud Cat", "#b8b4a0", "#4a4438"), ("Bun", "Snowy Bun", "#e8ecf4", "#6a78a0"), ("Star", "Snow Star", "#d8e8f0", "#7a8ad8")]
 PROWL_BLIP_ORDER = ["Lioness", "Cougar", "Panther", "Serval", "Caracal", "Ocelot", "Clouded Leopard"]
 
 
@@ -4723,6 +4723,16 @@ for _g, _blip in enumerate(PROWL_BLIP_ORDER):
 EVENTS = [SPIKY_WEEK, PROWL_WEEK]
 # the event that is on, or the next one coming (the last one stays up after it ends so its screen still works)
 EVENT = next((e for e in EVENTS if time.strftime("%Y-%m-%d") <= e["until"]), EVENTS[-1])
+EARLY_EVENT = False
+
+
+def set_event_for(save):
+    """Creators and moderators get the next event early (before its start date); everyone else gets the one that is on."""
+    global EVENT, EARLY_EVENT
+    today = time.strftime("%Y-%m-%d")
+    nxt = next((e for e in EVENTS if today < e["start"]), None) if (save.get("creator") or save.get("mod")) else None
+    EARLY_EVENT = bool(nxt)
+    EVENT = nxt or next((e for e in EVENTS if today <= e["until"]), EVENTS[-1])
 
 
 def free_event_blips(save):
@@ -4790,7 +4800,7 @@ def event_paused():
 
 def event_on():
     today = time.strftime("%Y-%m-%d")
-    return EVENT["start"] <= today <= EVENT["until"] and not event_paused()
+    return (EVENT["start"] <= today or EARLY_EVENT) and today <= EVENT["until"] and not event_paused()
 
 
 def skin_locked(save, kind, idx):
@@ -10930,6 +10940,7 @@ class App:
         self.name_tags = tk.BooleanVar(master=self.root, value=True)
         self.season = current_season()
         self.save = load_save()
+        set_event_for(self.save)
         free_event_blips(self.save)
         merch_backfill(self.save)
         if "Egypt World" not in self.save.setdefault("worlds", []):
@@ -11562,6 +11573,7 @@ class App:
             self.save["mod"] = True
             self.save["mod_code"] = digest
             write_save(self.save)
+            set_event_for(self.save)                            # 🐆 mods get the next event early
             self.sound.play("fanfare")
             for kind in MOD_CODE_KINDS.get(digest, []):         # 💎 this code's very own Blip
                 if not any(p.kind == kind for p in self.pets):
@@ -11584,6 +11596,7 @@ class App:
             return
         self.save["creator"] = True
         write_save(self.save)
+        set_event_for(self.save)                                # 🐆 creators get the next event early
         self.sound.play("fanfare")
         self.dev_add_creators()
         if self.maintenance.closed:

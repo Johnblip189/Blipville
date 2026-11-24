@@ -2100,6 +2100,7 @@
       try { localStorage.setItem("blipville-creator", h); } catch (e) { /* private mode */ }
       sfx("fanfare"); $("secretMsg").textContent = "⭐ Welcome back, creator! Blipmaker and Byte are yours. Tap 🛠️ at the top.";
       $("devBtn").hidden = false; devAddCreators(); persist(true);
+      if (EVENTS.some((e) => _today < e.start)) { $("secretMsg").textContent += " 🐆 Reloading for your early event…"; setTimeout(() => location.reload(), 1400); }
     } else if ((D.modHashes || []).includes(h)) {
       try { localStorage.setItem("blipville-mod", h); } catch (e) { /* private mode */ }
       sfx("fanfare"); $("secretMsg").textContent = "🛡️ Welcome to the mod squad! Guardian is yours. Tap 🛠️ at the top.";
@@ -2107,6 +2108,7 @@
       if (!pets.some((p) => p.kind === "Guardian")) { const p = addPet("Guardian", { name: "Guardian", quiet: true }); if (p) say(p, "🛡️ mod squad, reporting in!", 4); }
       giveCodeKinds();
       persist(true);
+      if (EVENTS.some((e) => _today < e.start)) { $("secretMsg").textContent += " 🐆 Reloading for your early event…"; setTimeout(() => location.reload(), 1400); }
     } else if (EARLY_HASHES.includes(h)) {
       try { localStorage.setItem(EARLY_KEY, code); } catch (e) { /* private mode */ }
       $("secretMsg").textContent = "🎟️ Early access code saved on this device!";
@@ -2187,13 +2189,14 @@
   // ------------------------------------------------------------------ events 🎉 (the same event as the desktop app)
   const EVENTS = D.events || (D.event ? [D.event] : []);        // the one that is on, or the next one coming (the last stays up after it ends)
   const _today = (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; })();
-  const EVENT = EVENTS.find((e) => _today <= e.until) || EVENTS[EVENTS.length - 1] || { id: "", name: "", icon: "🎉", kinds: [], rewards: [], per_skin: 10, start: "9999", until: "0000" };
+  const EARLY_EV = (isCreator() || isMod()) ? EVENTS.find((e) => _today < e.start) : null;   // creators and mods get the next event early
+  const EVENT = EARLY_EV || EVENTS.find((e) => _today <= e.until) || EVENTS[EVENTS.length - 1] || { id: "", name: "", icon: "🎉", kinds: [], rewards: [], per_skin: 10, start: "9999", until: "0000" };
   const EVENTK = new Set(D.groups.eventKinds || []);
   save.eventKinds = save.eventKinds || [];
   for (const ev of EVENTS) if (ev.free_after && _today > ev.until) for (const t of ev.tiers || []) if (t.type === "blip" && !save.eventKinds.includes(t.kind)) save.eventKinds.push(t.kind);   // free for everyone once the event is over
   const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
   const eventPaused = () => !!(EVENT.paused && EVENT.paused[0] <= todayStr() && todayStr() < EVENT.paused[1]);   // closed for maintenance
-  const eventOn = () => EVENT.start <= todayStr() && todayStr() <= EVENT.until && !eventPaused();
+  const eventOn = () => (EVENT.start <= todayStr() || !!EARLY_EV) && todayStr() <= EVENT.until && !eventPaused();
   function skinLocked(kind, i) {
     const cols = KINDS[kind].colors, col = cols[i % cols.length];
     return !!(col.event || col.unlock) && !(save.skins || []).includes(`${kind}:${col.name}`);

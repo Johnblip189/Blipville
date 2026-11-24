@@ -1834,7 +1834,8 @@
   };
   $("friendBtn").onclick = () => {
     const pool = D.groups.critters.concat(D.groups.animals, ...(D.groups.tabs || []).map(([, ks]) => ks)).filter(isUnlocked);
-    addPet(pick(pool), { x: rnd(40, W - 40) });
+    const evPool = eventOn() ? EVENT.kinds.filter(isUnlocked) : [];            // while an event is on, half of the new friends are its Blips
+    addPet(pick(evPool.length && Math.random() < 0.5 ? evPool : pool), { x: rnd(40, W - 40) });
   };
   $("eggBtn").onclick = openEgg;
   $("collectionBtn").onclick = () => openZoo(null);
@@ -2329,6 +2330,13 @@
   $("eventBtn").hidden = false;           // events and daily quests
   $("eventBtn").textContent = EVENT.icon; $("eventBtn").title = `${EVENT.name} event`; $("eventBtn").setAttribute("aria-label", EVENT.name);
   $("eventBtn").onclick = openEvent;
+  // event Blips wander in on their own, so there's always someone to pet: if none are in town, one arrives
+  setInterval(() => {
+    if (!eventOn() || pets.length >= maxPets()) return;
+    const open = EVENT.kinds.filter(isUnlocked);
+    if (!open.length || pets.some((q) => open.includes(AWAKEN_BASE[q.kind] || q.kind))) return;
+    const q = addPet(pick(open), { quiet: true }); if (q) say(q, `${EVENT.name.toLowerCase()}, let's go!`, 3);
+  }, 45000);
   if (eventOn() && save.eventSeen !== EVENT.id) {
     setTimeout(() => { save.eventSeen = EVENT.id; persist(true);
       toast(`${EVENT.icon} ${EVENT.name} is on! ${EVENT.hello || ""} Tap ${EVENT.icon} at the top!`, 7); }, 5000);

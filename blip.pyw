@@ -11059,6 +11059,8 @@ class App:
             return None
         if not kind and self.world() and random.random() < 0.5:
             kind = random.choice([k for k, wn in WORLD_OF.items() if wn == self.world()["name"]])
+        if not kind and event_on() and random.random() < 0.5:          # while an event is on, half of the new friends are its Blips
+            kind = random.choice([k for k in EVENT["kinds"] if self.is_unlocked(k)] or [None])
         kind = kind or random.choice([k for k in KINDS if self.is_unlocked(k)])
         used = {p.name for p in self.pets}
         name = name or random.choice([n for n in NAMES if n not in used] or NAMES)
@@ -11071,7 +11073,22 @@ class App:
         return pet
 
     # ----- unlocks & Night Shift
+    def event_visitor(self, now):
+        """While an event is on, one of its Blips wanders in if none is in town (so there's always someone to pet)."""
+        if now < getattr(self, "next_event_visit", 0) or not event_on():
+            return
+        self.next_event_visit = now + 45
+        if len(self.pets) >= self.MAX_PETS:
+            return
+        open_kinds = [k for k in EVENT["kinds"] if self.is_unlocked(k)]
+        base = globals().get("AWAKEN_BASE", {})
+        if open_kinds and not any(base.get(p.kind, p.kind) in open_kinds for p in self.pets):
+            pet = self.add_pet(random.choice(open_kinds), greet=False)
+            if pet:
+                pet.say(f"{EVENT['name'].lower()}, let's go!", 3)
+
     def cryptid_step(self, now):
+        self.event_visitor(now)
         for s in list(self.sightings):
             s.step(now)
         if self.sightings:

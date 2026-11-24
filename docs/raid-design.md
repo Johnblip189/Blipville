@@ -58,3 +58,6 @@ Dash-Quill (starter), Eclipse-Quill (3 Eclipses), Chrome-Quill, Rotor-Kit, Rose-
 Drafts: `sprites-quills.js` (Dash/Eclipse/Chrome-Quill), `sprites-concepts.js` (Rotor-Kit, Rose-Mallet, Pyre-Lynx, Chrono-Quill) and
 the droplet in `sprites-originals.js` (drawn as "Tidecore", use it as **Hydro-Core**). Comet Hare, Eclipse Panther, Mirror Mech and
 the first four originals are spares.
+
+Redo (v2): **Dash-Quill** now has three quills swept hard to one side, a long muzzle and sneaker-colored feet; **Eclipse-Quill** has
+quills pointing straight up with glowing tips. Source: `docs/speedsters/sprites-dash-eclipse-v2.js` (these replace the two in `sprites-quills.js`).

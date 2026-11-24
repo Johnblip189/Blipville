@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=102">
+<link rel="stylesheet" href="style.css?v=103">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -25,6 +25,7 @@
     <button class="pill" id="installBtn" title="Install Blipville as an app on this laptop or phone" hidden><img class="px" src="icons/px/download.png" alt=""> <span>Install app</span></button>
     <button class="pill icon" id="arenaBtn" aria-label="Arena" title="Arena"><img class="px" src="icons/px/arena.png" alt=""></button>
     <button class="pill icon" id="devBtn" aria-label="Creator menu" title="Creator menu" hidden>🛠️</button>
+    <button class="pill icon" id="meBtn" aria-label="Your character" title="Your character" hidden>🧍</button>
     <button class="pill icon" id="eventBtn" aria-label="Event" title="Spiky Week event" hidden>🦔</button>
     <button class="pill icon" id="trophyBtn" aria-label="Trophies" title="Trophies"><img class="px" src="icons/px/trophy.png" alt=""></button>
     <button class="pill icon" id="soundBtn" aria-label="Sound off"><img class="px" src="icons/px/mute.png" alt=""></button>
@@ -218,6 +219,21 @@
   </div>
 </div>
 
+<div class="sheet" id="playerSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle">🧍 Your character</div>
+    <canvas id="plPreview" width="180" height="190" style="display:block;margin:4px auto;image-rendering:pixelated"></canvas>
+    <div id="plBody"></div>
+    <div class="row"><button id="plRandom">🎲 Random</button><button id="plShow">Show my character in town</button></div>
+    <button class="close" data-close>Done</button>
+  </div>
+</div>
+
+<div id="plPad" hidden>
+  <div class="plSide"><button data-k="left" aria-label="Left">◀</button><button data-k="right" aria-label="Right">▶</button></div>
+  <div class="plSide"><button data-k="up" aria-label="Jump">⤴</button></div>
+</div>
+
 <div class="sheet" id="worldSheet" hidden>
   <div class="card">
     <div class="sheetTitle">🌍 Worlds</div>
@@ -322,8 +338,8 @@
   </div>
 </div>
 
-<script src="data.js?v=102"></script>
-<script src="countdown.js?v=102"></script>
-<script src="app.js?v=102"></script>
+<script src="data.js?v=103"></script>
+<script src="countdown.js?v=103"></script>
+<script src="app.js?v=103"></script>
 </body>
 </html>

@@ -1192,6 +1192,7 @@
     playStep(t, dt);
     drawCookies(t);
     for (const p of [...pets].sort((a, b) => (a === held ? 1 : 0) - (b === held ? 1 : 0))) drawPet(p, t);
+    playerStep(t, dt); plRefreshPad();
     drawBalls();
     sightingStep(t);
     view.requestAnimationFrame(() => frame(id));
@@ -2564,6 +2565,118 @@
   setSound(!!save.sound, true);
   $("helpEggCost").textContent = EGG_COST;
 
+
+  // ------------------------------------------------------------------ 🧍 your character (customisable; arrow keys or the on-screen pad to move)
+  const PL = {
+    skins: ["#ffe3cf", "#f6cba6", "#e1a877", "#c68a5c", "#9a6a42", "#6b4429", "#ffd1dc", "#cfe9ff", "#c8f0c8"],
+    hairColors: ["#2a1c14", "#5a3a22", "#a8642a", "#e8c060", "#d8d8e0", "#e8483a", "#4a6ae8", "#a84ae8", "#ff8ab8", "#3ae8a0"],
+    topColors: ["#e8483a", "#ff9a3a", "#ffd23a", "#5ac85a", "#38c8e8", "#4a6ae8", "#a84ae8", "#ff8ab8", "#f4f4f4", "#3a3a4a"],
+    bottomColors: ["#3a4a8a", "#2a2a3a", "#6a4a2a", "#8a8a98", "#e8e0c8", "#5a2a4a", "#2a6a4a", "#a83a3a"],
+    shoeColors: ["#2a2a2a", "#f4f4f4", "#e8483a", "#4a6ae8", "#ffd23a", "#5a3a22"],
+    hairs: [["short", "Short"], ["long", "Long"], ["spiky", "Spiky"], ["bun", "Bun"], ["bob", "Bob"], ["none", "None"]],
+    tops: [["tee", "T-shirt"], ["hoodie", "Hoodie"], ["stripes", "Stripes"], ["overalls", "Overalls"]],
+    bottoms: [["pants", "Pants"], ["shorts", "Shorts"], ["skirt", "Skirt"]],
+    extras: [["none", "None"], ["glasses", "Glasses"], ["cap", "Cap"], ["scarf", "Scarf"], ["band", "Headband"]],
+  };
+  const plDefault = () => ({ skin: 1, hair: "short", hairColor: 1, top: "tee", topColor: 4, bottom: "pants", bottomColor: 0, shoes: 0, extra: "none" });
+  const plRandom = () => ({ skin: Math.floor(rnd(0, 6)), hair: pick(PL.hairs)[0], hairColor: Math.floor(rnd(0, PL.hairColors.length)), top: pick(PL.tops)[0], topColor: Math.floor(rnd(0, PL.topColors.length)), bottom: pick(PL.bottoms)[0], bottomColor: Math.floor(rnd(0, PL.bottomColors.length)), shoes: Math.floor(rnd(0, PL.shoeColors.length)), extra: pick(PL.extras)[0] });
+  const plLook = () => ({ ...plDefault(), ...((save.player || {}).look || {}) });
+  const plShade = (h, f) => "#" + [1, 3, 5].map((i) => Math.max(0, Math.min(255, Math.round(parseInt(h.slice(i, i + 2), 16) * f))).toString(16).padStart(2, "0")).join("");
+  // draws a 12 x 18 character with its top-left at (ox, oy), one pixel = u. o = { face: 1 | -1, step: 0 | 1 | 2, air: bool }
+  function drawAvatar(c, ox, oy, u, look, o = {}) {
+    const f = o.face === -1 ? -1 : 1, st = o.step || 0, air = !!o.air, bob = st && !air ? 1 : 0;
+    const skin = PL.skins[look.skin % PL.skins.length], hair = PL.hairColors[look.hairColor % PL.hairColors.length], topC = PL.topColors[look.topColor % PL.topColors.length];
+    const botC = PL.bottomColors[look.bottomColor % PL.bottomColors.length], shoe = PL.shoeColors[look.shoes % PL.shoeColors.length], dark = "#1a1226";
+    const parts = [];
+    const R = (x, y, w, h, col) => parts.push([x, y + 0, w, h, col]);
+    const RB = (x, y, w, h, col) => parts.push([x, y + bob, w, h, col]);            // bobs with the body
+    // hair behind the head
+    if (look.hair === "long") RB(2, 2, 8, 9, hair); else if (look.hair === "bob") RB(2, 2, 8, 6, hair); else if (look.hair === "bun") RB(5, 0, 2, 2, hair);
+    // arms (swing when walking) and legs
+    const swing = st === 1 ? 1 : st === 2 ? -1 : 0, long = look.top === "hoodie" || look.top === "stripes";
+    R(1, 9 + bob + (air ? -2 : -swing), 2, 4, long ? topC : skin); R(9, 9 + bob + (air ? -2 : swing), 2, 4, long ? topC : skin);
+    if (long) { R(1, 12 + bob + (air ? -2 : -swing), 2, 1, skin); R(9, 12 + bob + (air ? -2 : swing), 2, 1, skin); }
+    const legH = air ? 3 : 4, lL = st === 1 ? legH - 1 : legH, lR = st === 2 ? legH - 1 : legH;
+    const legCol = look.bottom === "shorts" || look.bottom === "skirt" ? skin : botC, short = look.bottom === "shorts" ? 2 : look.bottom === "skirt" ? 0 : 99;
+    for (const [lx, lh] of [[3, lL], [6, lR]]) {
+      const top = 14 + (4 - lh) - 0 + (air ? -1 : 0);
+      R(lx, top, 3, lh - 1, legCol);
+      if (short < 99 && short > 0) R(lx, top, 3, short, botC);
+      R(lx, top + lh - 1, 3, 1, shoe);
+    }
+    // body
+    RB(3, 8, 6, 6, topC);
+    if (look.top === "hoodie") { RB(3, 7, 6, 2, plShade(topC, 0.8)); RB(5, 11, 2, 2, plShade(topC, 0.85)); }
+    else if (look.top === "stripes") { RB(3, 9, 6, 1, "#ffffff"); RB(3, 11, 6, 1, "#ffffff"); }
+    else if (look.top === "overalls") { RB(3, 8, 6, 3, topC); RB(3, 11, 6, 3, botC); RB(4, 9, 1, 2, botC); RB(7, 9, 1, 2, botC); RB(5, 11, 2, 1, plShade(botC, 1.25)); }
+    if (look.bottom === "skirt") { R(2, 13 + bob, 8, 2, botC); }
+    else if (look.top !== "overalls") R(3, 13 + bob, 6, 1, botC);
+    // head
+    RB(3, 2, 6, 6, skin); RB(2, 4, 1, 2, skin); RB(9, 4, 1, 2, skin);
+    // hair in front
+    if (look.hair !== "none") { RB(3, 1, 6, 2, hair); if (look.hair !== "bun") { RB(3, 3, 1, 2, hair); RB(8, 3, 1, 2, hair); } }
+    if (look.hair === "spiky") { RB(3, 0, 1, 1, hair); RB(5, 0, 1, 1, hair); RB(7, 0, 1, 1, hair); RB(8, 0, 1, 1, hair); }
+    if (look.hair === "bob" || look.hair === "long") RB(3, 3, 6, 1, hair);
+    // face
+    const ex = f > 0 ? 5 : 4;
+    RB(ex - 1, 5, 1, 1, dark); RB(ex + 2, 5, 1, 1, dark); RB(ex, 7, 2, 1, plShade(skin, 0.72)); RB(ex - 1, 6, 1, 1, "#ff9ab0"); RB(ex + 2, 6, 1, 1, "#ff9ab0");
+    // extras
+    if (look.extra === "glasses") { RB(3, 4, 3, 1, "#2a2438"); RB(3, 6, 3, 1, "#2a2438"); RB(6, 4, 3, 1, "#2a2438"); RB(6, 6, 3, 1, "#2a2438"); RB(5, 5, 1, 1, "#2a2438"); }
+    else if (look.extra === "cap") { RB(2, 1, 8, 2, "#e8483a"); RB(f > 0 ? 8 : 0, 2, 3, 1, plShade("#e8483a", 0.8)); }
+    else if (look.extra === "scarf") { RB(3, 8, 6, 1, "#ff9a3a"); RB(f > 0 ? 3 : 8, 9, 1, 3, "#ff9a3a"); }
+    else if (look.extra === "band") RB(3, 2, 6, 1, "#ff5a8a");
+    const fx = (p) => f > 0 ? p[0] : 12 - p[0] - p[2];
+    c.fillStyle = dark; for (const p of parts) c.fillRect(Math.round(ox + (fx(p) - 0.5) * u), Math.round(oy + (p[1] - 0.5) * u), Math.round((p[2] + 1) * u), Math.round((p[3] + 1) * u));
+    for (const p of parts) { c.fillStyle = p[4]; c.fillRect(Math.round(ox + fx(p) * u), Math.round(oy + p[1] * u), Math.round(p[2] * u), Math.round(p[3] * u)); }
+  }
+  const plKeys = { left: false, right: false, up: false };
+  let plLast = 0;
+  const plOn = () => !!(save.player && save.player.on);
+  const plU = () => Math.max(3, Math.round(S * 0.8));
+  function playerStep(t, dt) {
+    const pp = save.player; if (!plOn()) return;
+    const st = (window.__pl = window.__pl || { x: clamp(pp.x ?? W * 0.5, 20, W - 20), y: 0, vy: 0, face: 1, walk: 0 });
+    const dir = (plKeys.right ? 1 : 0) - (plKeys.left ? 1 : 0);
+    if (dir) { st.face = dir; st.x = clamp(st.x + dir * plU() * 38 * dt, 20, W - 20); st.walk += dt * 9; } else st.walk = 0;
+    if (plKeys.up && st.y <= 0) { st.vy = plU() * 95; sfx("pop"); }
+    if (st.y > 0 || st.vy > 0) { st.vy -= plU() * 260 * dt; st.y = Math.max(0, st.y + st.vy * dt); if (st.y === 0) st.vy = 0; }
+    pp.x = st.x;
+    const u = plU(), step = dir && st.y <= 0 ? (Math.floor(st.walk) % 2 ? 1 : 2) : 0;
+    drawAvatar(ctx, st.x - 6 * u, GROUND - 18 * u - st.y + 3, u, plLook(), { face: st.face, step, air: st.y > 2 });
+    ctx.fillStyle = "rgba(0,0,0,.18)"; ctx.beginPath(); ctx.ellipse(st.x, GROUND + 4, 6 * u * (1 - Math.min(0.4, st.y / 300)), u * 1.2, 0, 0, 7); ctx.fill();
+  }
+  const plSheetOpen = () => [...doc().querySelectorAll(".sheet")].some((s) => !s.hidden);
+  function plKeyEvent(e, down) {
+    if (!plOn() || (e.target && (e.target.tagName === "INPUT" || e.target.isContentEditable)) || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (down && plSheetOpen()) return;
+    const k = { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up" }[e.key]; if (!k) return;
+    e.preventDefault(); plKeys[k] = down;
+  }
+  document.addEventListener("keydown", (e) => plKeyEvent(e, true)); document.addEventListener("keyup", (e) => plKeyEvent(e, false));
+  window.addEventListener("blur", () => { plKeys.left = plKeys.right = plKeys.up = false; });
+  for (const b of document.querySelectorAll("#plPad button")) {
+    const k = b.dataset.k, on = (v) => (e) => { e.preventDefault(); plKeys[k] = v; };
+    b.addEventListener("pointerdown", on(true)); b.addEventListener("pointerup", on(false)); b.addEventListener("pointerleave", on(false)); b.addEventListener("pointercancel", on(false));
+  }
+  const plRefreshPad = () => { const show = plOn() && !plSheetOpen(); if ($("plPad").hidden === show) $("plPad").hidden = !show; };
+  function openPlayer() {
+    if (!save.player) save.player = { on: false, look: plRandom() };
+    const pp = save.player, body = $("plBody"); body.innerHTML = "";
+    const look = () => (pp.look = { ...plDefault(), ...pp.look });
+    const redraw = () => { const c = $("plPreview").getContext("2d"); c.clearRect(0, 0, 180, 190); c.fillStyle = "rgba(255,255,255,.06)"; c.fillRect(0, 160, 180, 30); drawAvatar(c, 90 - 6 * 8, 8, 8, look(), { face: 1 }); persist(); };
+    const row = (label) => { const d = doc().createElement("div"); d.className = "plRow"; const l = doc().createElement("b"); l.textContent = label; const w = doc().createElement("div"); w.className = "plChips"; d.append(l, w); body.appendChild(d); return w; };
+    const chips = (label, key, opts) => { const w = row(label); for (const [v, n] of opts) { const b = doc().createElement("button"); b.textContent = n; b.className = look()[key] === v ? "on" : ""; b.onclick = () => { look()[key] = v; w.querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); redraw(); }; w.appendChild(b); } };
+    const swatches = (label, key, cols) => { const w = row(label); cols.forEach((col, i) => { const b = doc().createElement("button"); b.className = "plSw" + (look()[key] === i ? " on" : ""); b.style.background = col; b.setAttribute("aria-label", col); b.onclick = () => { look()[key] = i; w.querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); redraw(); }; w.appendChild(b); }); };
+    swatches("Skin", "skin", PL.skins); chips("Hair", "hair", PL.hairs); swatches("Hair color", "hairColor", PL.hairColors);
+    chips("Top", "top", PL.tops); swatches("Top color", "topColor", PL.topColors);
+    chips("Bottoms", "bottom", PL.bottoms); swatches("Bottoms color", "bottomColor", PL.bottomColors);
+    swatches("Shoes", "shoes", PL.shoeColors); chips("Extra", "extra", PL.extras);
+    $("plRandom").onclick = () => { pp.look = plRandom(); openPlayer(); };
+    $("plShow").textContent = pp.on ? "Hide my character" : "Show my character in town";
+    $("plShow").onclick = () => { pp.on = !pp.on; if (pp.on) { window.__pl = null; pp.x = W * 0.5; toast("🧍 Arrow keys ◀ ▶ walk, ▲ jumps (or use the pad on a phone)", 4); } persist(true); closeSheets(); };
+    redraw(); openSheet("playerSheet");
+  }
+  $("meBtn").onclick = openPlayer; $("meBtn").hidden = false;
   function onKey(e) {
     if (e.target && (e.target.tagName === "INPUT" || e.target.isContentEditable) || e.ctrlKey || e.metaKey || e.altKey) return;
     const open = [...doc().querySelectorAll(".sheet")].some((s) => !s.hidden);

@@ -1,4 +1,4 @@
-// Pride Week, second batch: 4 more new Blips.
+// Prowl Week, second batch: 4 more new Blips.
 const SKINS = {};
 const F4 = { stand: "...oo......oo...", walk1: "..oo........oo..", walk2: "....oo....oo....", air: "....o......o..." };
 const NEW = {

@@ -1,4 +1,4 @@
-// Pride Week draft: 4 event skins for existing cats + 3 new Blips (Lioness, Cougar, Panther).
+// Prowl Week draft: 4 event skins for existing cats + 3 new Blips (Lioness, Cougar, Panther).
 const SKINS = {
   Lion:    { name: "Sunmane",    o: "#3a1004", b: "#ffb02a", m: "#ff5a1a", l: "#fff6d8", p: "#ff9f7a", n: "#5a1a08", e: "#2a0a02", f: "#3a1004" },
   Tiger:   { name: "Moonstripe", o: "#14122a", b: "#c8c0f0", s: "#2a2260", l: "#ffffff", a: "#ffffff", n: "#ff8ad8", e: "#14122a" },
@@ -22,7 +22,7 @@ const NEW = {
       "...oooooooooo..." ],
     colors: [
       { name: "Savanna", o: "#3a2008", b: "#f0c878", a: "#8a5a20", m: "#d8a458", l: "#fff4dc", n: "#5a2a14", e: "#2a1404", f: "#3a2008" },
-      { name: "Dusk Pride", o: "#2a1038", b: "#e8b0d8", a: "#8a3a7a", m: "#c880b8", l: "#fff0fa", n: "#5a1a48", e: "#2a0a28", f: "#2a1038" },
+      { name: "Dusk Rose", o: "#2a1038", b: "#e8b0d8", a: "#8a3a7a", m: "#c880b8", l: "#fff0fa", n: "#5a1a48", e: "#2a0a28", f: "#2a1038" },
       { name: "Ivory", o: "#2a2a3a", b: "#f4f0e8", a: "#a8a098", m: "#d8d0c4", l: "#ffffff", n: "#a85a5a", e: "#1a1a24", f: "#2a2a3a" } ] },
   Cougar: { eyes: 5, mouth: true, feet: F4, body: [
       "..o..........o..",

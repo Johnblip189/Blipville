@@ -1,4 +1,4 @@
-# Pride Week (event plan, draft)
+# Prowl Week (event plan, draft)
 
 Follows Spiky Week (ends December 3), same rules and pause days.
 

@@ -45,7 +45,7 @@
   const $ = (id) => doc().getElementById(id) || document.getElementById(id);
 
   // ------------------------------------------------------------------ save (per device)
-  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], badDreams: [], merch: [], merchKinds: [], redeemed: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
+  let save = { hearts: 0, hatched: [], pets: [], lastDay: null, lastSeen: null, hatsOwned: [], sound: false, peeked: [], nightsWon: 0, cryptids: [], kaiju: [], gifts: [], worlds: [], world: null, legends: [], ghosts: [], badDreams: [], homeOwned: [], houses: {}, merch: [], merchKinds: [], redeemed: [], trophies: [], stats: {}, awakened: [], awakenLevel: {}, rivalsBeaten: [], skins: [], eventPoints: {} };
   // 💾 save safety: check every field when loading, keep the last good save as a backup, never throw away a damaged save,
   // and tell the player when saving fails instead of failing silently
   const SAVE_DEFAULTS = JSON.parse(JSON.stringify(save)), BAK_KEY = SAVE_KEY + "-backup", BROKEN_KEY = SAVE_KEY + "-broken";
@@ -68,8 +68,10 @@
       else out[k] = v === null || typeof v === "string" || typeof v === "number" ? v : null;
     }
     for (const [k, def] of Object.entries(SAVE_DEFAULTS)) if (Array.isArray(def) && k !== "pets") out[k] = [...new Set((out[k] || []).filter((x) => typeof x === "string"))];
+    out.homeOwned = (out.homeOwned || []).filter((x) => /^[sdf]:[a-z]+$/.test(x));
+    out.houses = Object.fromEntries(Object.entries(out.houses && typeof out.houses === "object" ? out.houses : {}).slice(0, 40).map(([id, h]) => [String(id).slice(0, 12), HOUSES.clean(h)]));
     out.pets = (out.pets || []).filter((p) => p && typeof p === "object" && typeof p.kind === "string").map((p) => ({ ...p,
-      name: String(p.name || p.kind).slice(0, 16), color: numOr(p.color, 0, 0, 999) | 0, hunger: numOr(p.hunger, 10, 0, 100),
+      id: typeof p.id === "string" && /^[a-z0-9]{4,12}$/.test(p.id) ? p.id : undefined, name: String(p.name || p.kind).slice(0, 16), color: numOr(p.color, 0, 0, 999) | 0, hunger: numOr(p.hunger, 10, 0, 100),
       energy: numOr(p.energy, 100, 0, 100), bond: numOr(p.bond, 0), tints: p.tints && typeof p.tints === "object" ? p.tints : {} }));
     return out;
   }
@@ -98,7 +100,8 @@
   function persist(now = false) {
     if (frozen) return;
     const write = () => {
-      save.pets = pets.map((p) => ({ kind: p.kind, color: p.color, name: p.name, hat: p.hat || null, hat2: p.hat2 || null, tints: p.tints || {}, hunger: Math.round(p.hunger), energy: Math.round(p.energy), bond: Math.round(p.bond || 0) }));
+      for (const id of Object.keys(save.houses || {})) if (!pets.some((p) => p.id === id)) delete save.houses[id];     // a Blip that left takes its layout (not the items you bought)
+      save.pets = pets.map((p) => ({ id: p.id, homeAt: p.homeAt || 0, kind: p.kind, color: p.color, name: p.name, hat: p.hat || null, hat2: p.hat2 || null, tints: p.tints || {}, hunger: Math.round(p.hunger), energy: Math.round(p.energy), bond: Math.round(p.bond || 0) }));
       save.lastSeen = Date.now();
       try {
         const prev = localStorage.getItem(SAVE_KEY);
@@ -219,10 +222,10 @@
   const now = () => performance.now() / 1000;
   const FONT = getComputedStyle(document.body).fontFamily;
 
-  function makePet(kind, color, name, x) {
+  function makePet(kind, color, name, x, id) {
     const k = KINDS[kind];
     const p = {
-      kind, color: color ?? k.default ?? 0, name: name || pick(D.names), x: x ?? rnd(60, W - 60), y: rnd(140, 260), vx: 0, vy: 0,
+      id: id || Math.random().toString(36).slice(2, 10), kind, color: color ?? k.default ?? 0, name: name || pick(D.names), x: x ?? rnd(60, W - 60), y: rnd(140, 260), vx: 0, vy: 0,
       state: "fall", until: 0, target: null, facing: 1, energy: 100, hunger: 10, face: "normal", faceUntil: 0,
       bubble: null, blinkUntil: 0, nextBlink: now() + rnd(1, 4), lastPetReward: -99, nextShift: now() + rnd(6, 12),
       playing: false, napBuddy: false, lastPlay: -99, bond: 0,
@@ -270,6 +273,7 @@
     }
   }
   function petIt(p) {
+    ensureOut(p);
     if (p.state === "sleep") { wake(p); return; }
     sfx("boop"); bump("pets");
     const t = now();
@@ -287,6 +291,7 @@
     vibrate(10);
   }
   function feed(p) {
+    ensureOut(p);
     if (p.state === "sleep") wake(p);
     const cx = clamp(p.x + pick([-1, 1]) * rnd(50, 90), 20, W - 20);
     cookies = cookies.filter((c) => c.owner !== p || p.eating === c);   // 🍪 one waiting cookie per Blip: a new one replaces it
@@ -295,6 +300,7 @@
     say(p, voice(p, "feed_lines", "ooh! a cookie!"), 2.5); setFace(p, "surprised", 1);
   }
   function nap(p) {
+    ensureOut(p);
     if (p.state === "sleep") { wake(p); return; }
     if (p.state !== "held" && p.state !== "fall") { setState(p, "sleep", 20); say(p, voice(p, "nap_lines", "good night..."), 2); }
   }
@@ -311,7 +317,11 @@
   function decide(p, t) {
     if (plushNow(p.kind)) { if (Math.random() < 0.1) say(p, pick(linesFor(p)), 2.5); setState(p, "idle", rnd(4, 9)); return; }   // 🧸 it just sits there… mostly
     const hour = new Date().getHours();
-    if (p.energy < 25 || ((hour >= 23 || hour < 6) && Math.random() < 0.15)) { say(p, voice(p, "nap_lines", "*yawn* nap time..."), 2.5); setState(p, "sleep", 20); return; }
+    if (p.energy < 25 || ((hour >= 23 || hour < 6) && Math.random() < 0.15)) {
+      if (homeTrip(p, true)) { say(p, pick(["*yawn* off to bed...", "time to go home and sleep", "my cozy bed is calling"]), 2.5); return; }    // 🏠 sleeps at home if it has one
+      say(p, voice(p, "nap_lines", "*yawn* nap time..."), 2.5); setState(p, "sleep", 20); return;
+    }
+    if (Math.random() < HM.visitChance && Date.now() - (p.homeAt || 0) > HM.cooldown * 1000 && homeTrip(p, false)) { say(p, pick(["brb, home time!", "i'll be home for a bit", "going to check on my house"]), 2.5); return; }
     if (p.hunger > 70 && Math.random() < 0.35) say(p, pick(D.lines.hungry), 3);
     const r = Math.random();
     if (r < 0.45) { p.target = rnd(30, W - 30); setState(p, "walk", 12); }
@@ -361,6 +371,10 @@
         if (Math.random() < dt * 0.8) p.particles.push({ kind: "z", x: 18 * S / 4, y: 13 * S, vx: 14, vy: -22, life: 2.5, born: t });
         if (p.energy >= 100 && t > p.until) { wake(p); reward(p, 2); bondUp(p, "nap"); questTick("naps"); }
         return;
+      case "inside":                                  // 🏠 at home: resting, out of sight
+        p.energy = Math.min(100, p.energy + dt * 3);
+        if (t > p.until && (!p.homeNap || p.energy >= 100)) leaveHome(p, t);
+        return;
       case "eat":
         if (t > p.until) {
           const hungry = p.hunger, gain = hungry > 60 ? 5 : hungry >= 25 ? 2 : 0;   // a full Blip still eats, but gives nothing
@@ -375,7 +389,7 @@
     }
     // a landed cookie for this pet? go get it
     const ck = cookies.find((c) => c.owner === p && c.landed);
-    if (ck && (p.state === "idle" || p.state === "walk")) { p.target = ck.x; p.state = "walk"; p.until = t + 10; }
+    if (ck && (p.state === "idle" || p.state === "walk")) { p.goHome = false; p.target = ck.x; p.state = "walk"; p.until = t + 10; }
     if (p.state === "walk" && p.target != null) {
       const d = p.target - p.x;
       p.facing = d > 0 ? 1 : -1;
@@ -383,6 +397,7 @@
         if (Math.abs(d) <= speed * dt) p.x = p.target;
         p.target = null;
         if (ck && Math.abs(ck.x - p.x) < 30) { p.eating = ck; setState(p, "eat", 1.8); setFace(p, "munch", 1.8); sfx("munch"); }
+        else if (p.goHome) { p.goHome = false; if (Math.abs(p.x - p.homeDoor) < 4 * S) enterHome(p, t); else setState(p, "idle", rnd(1, 3)); }
         else setState(p, "idle", rnd(1, 3));
       } else p.x += speed * dt * p.facing;
     } else if (p.state === "idle" && t > p.until) decide(p, t);
@@ -752,6 +767,7 @@
   }
 
   function drawPet(p, t) {
+    if (p.state === "inside") return;                   // 🏠 at home
     const l = lift(p, t);
     const left = Math.round(p.x - 8 * S), top = Math.round(GROUND - 13 * S - p.y - l);
     const dx = pointer.x - p.x, dy = pointer.y - (top + 6 * S);
@@ -973,6 +989,7 @@
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     ctx.imageSmoothingEnabled = false;
     sky(t);
+    drawStreet(t);
     for (const p of pets) update(p, t, dt);
     tidyCookies();
     socialize(t);
@@ -989,6 +1006,7 @@
   function petAt(x, y) {
     for (let i = pets.length - 1; i >= 0; i--) {
       const p = pets[i], top = GROUND - 13 * S - p.y - lift(p, now());
+      if (p.state === "inside") continue;
       if (x > p.x - 8 * S - 6 && x < p.x + 8 * S + 6 && y > top - 6 && y < top + 13 * S + 6) return p;
     }
     return null;
@@ -997,7 +1015,7 @@
     pointer = { x: e.clientX, y: e.clientY };
     if (sightingAt(e.clientX, e.clientY)) { befriend(); return; }
     const p = petAt(e.clientX, e.clientY);
-    if (!p) return;
+    if (!p) { const h = houseAt(e.clientX, e.clientY); if (h) { vibrate(10); openHome(h.p); } return; }     // 🏠 tap a house to decorate it
     cv.setPointerCapture(e.pointerId);
     press = { p, x: e.clientX, y: e.clientY, moved: false, opened: false };
     trail = [[now(), e.clientX, e.clientY]];
@@ -1033,11 +1051,11 @@
   cv.addEventListener("pointerup", endPress);
   cv.addEventListener("contextmenu", (e) => {
     e.preventDefault();
-    const p = petAt(e.clientX, e.clientY);
+    const p = petAt(e.clientX, e.clientY), h = !p && houseAt(e.clientX, e.clientY);
     clearTimeout(holdTimer); press = null;
-    if (p) openPetSheet(p);
+    if (p) openPetSheet(p); else if (h) openHome(h.p);
   });
-  cv.addEventListener("pointermove", (e) => { if (!press) cv.style.cursor = petAt(e.clientX, e.clientY) ? "pointer" : "default"; });
+  cv.addEventListener("pointermove", (e) => { if (!press) cv.style.cursor = petAt(e.clientX, e.clientY) || houseAt(e.clientX, e.clientY) ? "pointer" : "default"; });
   cv.addEventListener("pointercancel", endPress);
 
   // ------------------------------------------------------------------ UI: hearts, toast, sheets
@@ -1199,6 +1217,147 @@
     pets.splice(pets.indexOf(sheetPet), 1); tidyCookies(); toast(`👋 ${sheetPet.name} waved goodbye.`); closeSheets();
   };
   $("sheetKind").onclick = () => openZoo(sheetPet);
+
+  // ------------------------------------------------------------------ 🏠 homes (the art and rules are in houses.js)
+  // Every Blip can have a house on the street behind your town. Tap a house (or press and hold a Blip → 🏠 Home) to decorate it.
+  // A Blip sometimes walks home to nap or visit, and a cozy home pays a few hearts when it comes back out.
+  const HM = HOUSES.BALANCE;
+  const hScale = () => clamp(Math.round(S * 0.6), 2, 5);
+  const streetCap = () => Math.max(1, Math.floor((W - 12) / (HOUSES.SPACING * hScale())));
+  const homeOf = (p) => (save.houses || {})[p.id] || null;
+  const homeBase = () => GROUND - Math.round(S * 0.5);
+  function street() {                                     // the homes you can see, left to right
+    const hs = hScale(), cap = streetCap(), out = [];
+    for (const p of pets) { const h = homeOf(p); if (h && out.length < cap) out.push({ p, h, hs, cx: Math.round((W * (out.length + 0.5)) / cap) }); }
+    return out;
+  }
+  const doorX = (e) => e.cx + (HOUSES.entryCell(e.h) - HOUSES.HW / 2) * e.hs;
+  function drawStreet(t) {
+    const night = ghostHours(), base = homeBase();
+    for (const e of street()) {
+      const inside = e.p.state === "inside";
+      HOUSES.draw(ctx, e.h, e.cx, base, e.hs, t, { lit: inside, night, name: e.p.name, font: FONT });
+      if (inside) {                                       // a sleepy z drifts up while someone's home
+        const ph = (t * 0.45) % 1; ctx.globalAlpha = 1 - ph;
+        drawMask(ZED, e.cx + 3 * e.hs, base - 21 * e.hs - ph * 5 * e.hs, 2, "#bcd2ff"); ctx.globalAlpha = 1;
+      }
+    }
+  }
+  const houseAt = (x, y) => street().find((e) => x > e.cx - 16 * e.hs && x < e.cx + 16 * e.hs && y > homeBase() - 30 * e.hs && y < homeBase() + 2) || null;
+  function homeTrip(p, nap) {                             // walk to the door (true if it has a home on screen)
+    const e = street().find((q) => q.p === p); if (!e || p.state === "inside") return false;
+    p.goHome = true; p.homeNap = !!nap; p.homeDoor = clamp(doorX(e), 12 * S, W - 12 * S); p.target = p.homeDoor; setState(p, "walk", 16);
+    return true;
+  }
+  function enterHome(p, t) {
+    p.goHome = false; p.target = null; p.x = p.homeDoor; p.state = "inside"; sfx("pop");
+    p.until = t + rnd(HM.visitSeconds[0], HM.visitSeconds[1]);
+  }
+  function leaveHome(p, t, quiet = false) {
+    const h = homeOf(p); p.state = "idle"; p.until = t + 1.5; p.y = 0;
+    if (quiet) { p.homeNap = false; return; }
+    say(p, pick(["home sweet home!", "*stretch* that was nice", "thanks for the cozy house!", "ahh, so comfy"]), 2.5); setFace(p, "happy", 1.5);
+    if (p.homeNap) { reward(p, 2); bondUp(p, "nap"); questTick("naps"); }
+    const b = h ? HM.bonus(HOUSES.cozy(h)) : 0;
+    if (b && Date.now() - (p.homeAt || 0) > HM.cooldown * 1000) { p.homeAt = Date.now(); reward(p, b); burst(p, "heart", 4); }
+    p.homeNap = false; persist();
+  }
+  function ensureOut(p) { if (p.state === "inside") leaveHome(p, now(), true); p.goHome = false; }
+
+  let homePet = null, homeTab = "out", homeImg = null, homeTimer = null;
+  const ownedKey = { style: "s:", out: "d:", in: "f:" };
+  function homeCozyNote(h) {
+    const c = HOUSES.cozy(h), b = HM.bonus(c);
+    return `🛋️ Cozy ${c}/9 · ` + (b ? `${homePet.name} earns +${b} 💖 each time it comes home (at most every ${Math.round(HM.cooldown / 60)} minutes).` : "Add a decoration or some furniture and this home will start earning hearts!");
+  }
+  function homeChip(key, name, cost, on, canvas, apply, say_) {
+    const owned = cost === 0 || save.homeOwned.includes(key), b = doc().createElement("button"); b.className = on ? "on" : "";
+    b.appendChild(canvas); b.append(name);
+    const tag = doc().createElement("small"); tag.textContent = on ? "✓ on" : owned ? "owned" : `💖 ${cost}`; tag.className = owned || on ? "owned" : "price"; b.appendChild(tag);
+    b.onclick = () => {
+      if (!owned) {
+        if (save.hearts < cost) { toast(`${name} costs ${cost} 💖. You have ${save.hearts}. Care for your Blips to earn more!`, 3.5); return; }
+        save.hearts -= cost; save.homeOwned.push(key); updateHearts(true); sfx("coin");
+      } else sfx("pop");
+      apply(); persist(true); renderHome();
+    };
+    return b;
+  }
+  const noneChip = (on, apply) => { const c = doc().createElement("canvas"); c.width = 68; c.height = 36; const b = homeChip("-", "None", 0, on, c, apply); b.querySelector("small").remove(); return b; };
+  function thumbCanvas(w, h, fn) { const c = doc().createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.imageSmoothingEnabled = false; fn(x); return c; }
+  function renderHome() {
+    const p = homePet, body = $("homeBody"), home = homeOf(p), c = $("homeView");
+    body.innerHTML = ""; $("homeWho").textContent = `${p.name}'s home`;
+    $("homeTabs").hidden = !home; c.hidden = !home;
+    $("homeTabOut").className = homeTab === "out" ? "on" : ""; $("homeTabIn").className = homeTab === "in" ? "on" : "";
+    const el = (tag, cls, text) => { const e = doc().createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; };
+    if (!home) {
+      body.appendChild(el("div", "muted small", `${p.name} doesn't have a home yet. Build one: pick a style, colors, decorations and furniture. A Blip with a home walks back to nap and visit, and cozy homes earn hearts!`));
+      const go = el("button", "bigBtn", "🏠 Build a home (free)");
+      go.onclick = () => {
+        if (street().length >= streetCap()) { toast(`The street on this screen only has room for ${streetCap()} home${streetCap() === 1 ? "" : "s"}. Tear one down, or try a bigger screen.`, 4.5); return; }
+        save.houses[p.id] = HOUSES.defaultHouse(); sfx("fanfare"); say(p, "i have a house!!", 3); setFace(p, "happy", 2); burst(p, "heart", 6); persist(true); renderHome();
+      };
+      body.appendChild(go); return;
+    }
+    $("homeNote").textContent = homeCozyNote(home);
+    const sec = (t) => body.appendChild(el("div", "label", t)), chips = () => body.appendChild(el("div", "chips"));
+    if (homeTab === "out") {
+      sec("Style"); const sc = chips();
+      for (const st of HOUSES.STYLES) sc.appendChild(homeChip("s:" + st.id, st.name, st.cost, home.style === st.id,
+        thumbCanvas(64, 56, (x) => HOUSES.draw(x, { ...HOUSES.defaultHouse(), style: st.id, wall: home.wall, roof: home.roof, door: home.door }, 32, 54, 2, 0, {})), () => { home.style = st.id; }));
+      sec("Colors (free)");
+      for (const [label, field, list] of [["Walls", "wall", HOUSES.WALLS], ["Roof", "roof", HOUSES.ROOFS], ["Door", "door", HOUSES.DOORS]]) {
+        const row = el("div", "swatchRow"); row.appendChild(el("span", "", label));
+        for (const col of list) { const sw = el("button", home[field] === col ? "on" : ""); sw.style.background = col; sw.setAttribute("aria-label", `${label} ${col}`);
+          sw.onclick = () => { home[field] = col; sfx("pop"); persist(); renderHome(); }; row.appendChild(sw); }
+        body.appendChild(row);
+      }
+      for (const [slot, label] of HOUSES.OUT_SLOTS) {
+        sec(label); const row = chips();
+        row.appendChild(noneChip(!home.decor[slot], () => { delete home.decor[slot]; }));
+        for (const it of HOUSES.DECOR.filter((d) => d.slots.includes(slot)))
+          row.appendChild(homeChip("d:" + it.id, it.name, it.cost, home.decor[slot] === it.id,
+            thumbCanvas(64, 56, (x) => HOUSES.draw(x, { ...HOUSES.defaultHouse(), decor: { [slot]: it.id } }, 32, 54, 2, 0, { name: p.name, font: FONT })), () => { home.decor[slot] = it.id; }));
+      }
+    } else {
+      for (const [slot, label] of HOUSES.IN_SLOTS) {
+        sec(label); const row = chips();
+        if (slot !== "bed") row.appendChild(noneChip(!home.furn[slot], () => { delete home.furn[slot]; }));
+        for (const it of HOUSES.FURN.filter((f) => f.slot === slot))
+          row.appendChild(homeChip("f:" + it.id, it.name, it.cost, home.furn[slot] === it.id,
+            thumbCanvas(68, 36, (x) => HOUSES.drawRoom(x, { ...HOUSES.defaultHouse(), furn: { bed: slot === "bed" ? it.id : null, [slot]: it.id } }, 2, 2, 2, 0, {})), () => { home.furn[slot] = it.id; }));
+      }
+    }
+    const td = el("button", "peekAll", "🧹 Tear down this home (what you bought stays yours)");
+    td.onclick = () => { if (!confirm(`Tear down ${p.name}'s home? Everything you bought stays yours, so you can rebuild it for free.`)) return; ensureOut(p); delete save.houses[p.id]; persist(true); renderHome(); };
+    body.appendChild(td);
+  }
+  function drawHomeView() {
+    const p = homePet, home = p && homeOf(p); if (!home) return;
+    const c = $("homeView").getContext("2d"), w = 320, h = 190, t = now(), night = ghostHours();
+    c.imageSmoothingEnabled = false; c.clearRect(0, 0, w, h);
+    if (homeTab === "out") {
+      c.fillStyle = night ? "#1c1840" : "#8fd0f0"; c.fillRect(0, 0, w, h);
+      c.fillStyle = night ? "#2a5a3a" : "#6cc070"; c.fillRect(0, 158, w, 32);
+      HOUSES.draw(c, home, w / 2, 162, 5, t, { lit: p.state === "inside", night, name: p.name, font: FONT });
+    } else {
+      c.fillStyle = night ? "#120f2a" : "#3a2f55"; c.fillRect(0, 0, w, h);
+      HOUSES.drawRoom(c, home, 32, 31, 8, t, { night, pet: homeImg });
+    }
+  }
+  function openHome(p, tab) {
+    if (!p || !p.id) return;
+    homePet = p; if (tab) homeTab = tab;
+    homeImg = thumb(p.kind, p.color, false, 4);
+    renderHome(); openSheet("homeSheet");
+    if (!homeTimer) homeTimer = setInterval(() => { if ($("homeSheet").hidden) { clearInterval(homeTimer); homeTimer = null; return; } drawHomeView(); }, 90);
+    drawHomeView();
+  }
+  $("homeTabOut").onclick = () => { homeTab = "out"; renderHome(); drawHomeView(); };
+  $("homeTabIn").onclick = () => { homeTab = "in"; renderHome(); drawHomeView(); };
+  $("sheetHome").onclick = () => sheetPet && openHome(sheetPet, "out");
+
   const toNormal = (p) => { const base = AWAKEN_BASE[p.kind]; if (!base) return; p.kind = base; p.color %= KINDS[base].colors.length; say(p, "phew, back to normal", 2); persist(true); openPetSheet(p); };
   $("sheetAwakenBack").onclick = () => sheetPet && toNormal(sheetPet);
   $("sheetAwaken").onclick = () => {
@@ -2366,8 +2525,8 @@
     const away = save.lastSeen ? (Date.now() - save.lastSeen) / 3.6e6 : 0;   // hours away
     for (const s of save.pets) {
       if (!KINDS[s.kind] || !(isUnlocked(s.kind) || WORLD_OF[s.kind])) continue;   // world Blips you had stay yours
-      const p = makePet(s.kind, s.color, s.name);
-      p.hunger = Math.min(100, (s.hunger ?? 10) + away * 8); p.energy = s.energy ?? 100; p.hat = s.hat || null; p.hat2 = save.slot2 ? (s.hat2 || null) : null; p.tints = s.tints || {}; p.bond = +s.bond || 0;
+      const p = makePet(s.kind, s.color, s.name, undefined, s.id);
+      p.hunger = Math.min(100, (s.hunger ?? 10) + away * 8); p.energy = s.energy ?? 100; p.hat = s.hat || null; p.hat2 = save.slot2 ? (s.hat2 || null) : null; p.tints = s.tints || {}; p.bond = +s.bond || 0; p.homeAt = +s.homeAt || 0;
       pets.push(p);
     }
   }
@@ -2726,7 +2885,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { homes: { street, openHome, trip: homeTrip, petInside: () => pets.find((p) => p.state === "inside") }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

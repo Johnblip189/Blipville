@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=95">
+<link rel="stylesheet" href="style.css?v=96">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -88,6 +88,7 @@
     <div id="hatTints"></div>
     <button class="peekAll lure" id="slot2Btn" hidden>🔓 Unlock a 2nd accessory slot</button>
     <div class="row">
+      <button id="sheetHome">🏠 Home</button>
       <button id="sheetAwaken" hidden>✨ Awaken</button>
       <button id="sheetAwakenBack" hidden>💤 Normal form</button>
       <button id="sheetKind">🔄 Change kind</button>
@@ -199,6 +200,18 @@
   </div>
 </div>
 
+<!-- a Blip's home -->
+<div class="sheet" id="homeSheet" hidden>
+  <div class="card tall">
+    <div class="sheetTitle">🏠 <span id="homeWho"></span></div>
+    <div class="muted small" id="homeNote"></div>
+    <canvas id="homeView" width="320" height="190"></canvas>
+    <div class="row homeTabs" id="homeTabs"><button id="homeTabOut">🏡 Outside</button><button id="homeTabIn">🛋️ Inside</button></div>
+    <div id="homeBody"></div>
+    <button class="close" data-close>Done</button>
+  </div>
+</div>
+
 <div class="sheet" id="worldSheet" hidden>
   <div class="card">
     <div class="sheetTitle">🌍 Worlds</div>
@@ -265,6 +278,7 @@
       <li>👻 At night (7 PM to 7 AM) <b>ghosts</b> drift by. They fade in and out: tap one while it glows! A 🕯️ <b>Spirit Candle</b> (in the 📖 Zoo) calls them in the daytime.</li>
       <li>👁️ Watch out for the <b>Lurker</b>, a shadow ghost with lots of eyes. It's the only Blip that can <b>✨ Awaken 3 times</b>, all the way to Lurker Eternal!</li>
       <li>Some Blips can <b>✨ Awaken</b> into a new form with an Awakening Crystal (in their menu).</li>
+      <li>🏠 Give a Blip a <b>home</b>: tap a house (or press and hold a Blip → <b>🏠 Home</b>) to pick its style, colors, decorations and furniture. Blips walk home to nap, and cozy homes earn hearts!</li>
       <li>🏆 Tap the <b>trophy</b> at the top to see your trophies. Each one earns bonus hearts.</li>
       <li>Brave enough? Tap <b>🌙 Night</b> to play <b>Night Shift</b>. Survive until 6 AM to unlock the robo crew!</li>
       <li>Buy <b>hats &amp; outfits</b> from a Blip's menu. Tap <b>🔇</b> at the top to turn on sound effects.</li>
@@ -303,8 +317,9 @@
   </div>
 </div>
 
-<script src="data.js?v=95"></script>
-<script src="countdown.js?v=95"></script>
-<script src="app.js?v=95"></script>
+<script src="data.js?v=96"></script>
+<script src="houses.js?v=96"></script>
+<script src="countdown.js?v=96"></script>
+<script src="app.js?v=96"></script>
 </body>
 </html>

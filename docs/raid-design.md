@@ -37,3 +37,10 @@ big HP, phases), then the peer-to-peer rooms (the host runs `FIGHT.step`, guests
 Four original recruitable Speedsters, drawn in the game's 16 x 12 sprite format with 3 colors each: **Whippet** (lightning-brow
 dog), **Peregrine** (swift falcon), **Sprinter** (swept-horn gazelle) and **Racer** (striped racing lizard). Source:
 `docs/speedsters/sprites-draft.js`, preview: `docs/speedsters/preview.png`. Not in the game yet.
+
+## Speedster concept sprites (developer-approved exception)
+
+The developer chose to use the original JSON concepts (Rotor-Kit, Rose-Mallet, Pyre-Lynx, Chrono-Quill) for the Speedster event, as a
+**one-time exception** to the "everything stays original" rule. Draft sprites with 3 colors each: `docs/speedsters/sprites-concepts.js`
+and `preview-concepts.png`. In data and UI the category is called `SPEEDSTER_RECRUITMENT` (no outside franchise names). The earlier
+original four (Whippet, Peregrine, Sprinter, Racer) are kept in `sprites-draft.js` as spares.

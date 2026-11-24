@@ -21,3 +21,13 @@ Build order: 1) the connection layer (invite/reply codes, a two-browser test scr
 - The Speedsters must be **original** characters and names. The draft's names and the `SONIC_RECRUITMENT` category are placeholders only.
 - Its objectives (air hits, dash hits, guard breaks, counters) need the new real-time battle system, so the event follows it.
 - Spiky Week runs until December 3.
+
+## Real-time battle engine (started)
+
+`go/fight.js` is the engine: a deterministic sim (60 steps a second) with light/heavy/air attacks, dash, guard with a parry window,
+guard breaks, a projectile special, an awakening meter and stocks. It records the stats the quests need (air hits, heavy hits, dash
+hits, guard breaks, parries, blocks, awakenings, KOs, combos). Computer fighters have 3 levels. All numbers are in `BAL` and `MOVES`
+at the top of the file and are **untuned first guesses**.
+
+Try it: creator menu (🛠️) → ⚔️ New battle (beta). It is not visible to players. Next: wardens/boss on top of it (extra fighters,
+big HP, phases), then the peer-to-peer rooms (the host runs `FIGHT.step`, guests send buttons and receive state).

@@ -343,3 +343,13 @@ img.px { width: 24px; height: 24px; image-rendering: pixelated; vertical-align: 
 .chatRow .chatLine { margin: 0; flex: 1; }
 /* no double-tap zoom on rapid taps (petting, feeding, tapping kaiju) */
 button { touch-action: manipulation; }
+
+/* ⚔️ new battles (beta) */
+#fightCanvas { width: 100%; max-width: 360px; image-rendering: pixelated; border-radius: 12px; background: #1c1840; touch-action: none; display: block; margin: 0 auto; }
+#fightPad { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; user-select: none; -webkit-user-select: none; touch-action: none; }
+#fightPad button { min-width: 48px; min-height: 48px; border: 0; border-radius: 14px; background: var(--card2); color: var(--text); font: 800 20px var(--font); touch-action: none; }
+#fightPad button.down { background: #5a4ae0; transform: scale(.94); }
+#fightPad .padSide, #fightPad .padAct { display: flex; flex-wrap: wrap; gap: 8px; }
+#fightPad .padAct { justify-content: flex-end; max-width: 190px; }
+#fightResult { text-align: center; margin-top: 10px; }
+#fightCanvas[hidden], #fightPad[hidden], #fightResult[hidden], #fightPick[hidden] { display: none; }

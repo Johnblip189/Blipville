@@ -379,3 +379,34 @@ button { touch-action: manipulation; }
 #evDots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.2); }
 #evDots i.on { background: #ffd23a; }
 #evDots { font: 700 11px var(--font); color: var(--muted); }
+
+/* event pass: 5-slot pages (4 skins + the new Blip) */
+#evTrack.evSets { display: block; overflow: visible; scroll-snap-type: none; padding: 2px 0 4px; }
+.evSetHead { font: 800 12px var(--font); color: #ffd23a; text-align: center; margin: 0 0 6px; }
+.evSetRow { display: flex; gap: 8px; align-items: stretch; }
+.evSkins { flex: 1.25; min-width: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.evSets .evTier { width: auto; padding-top: 0; display: flex; flex-direction: column; min-width: 0; }
+.evSets .evTier::before { display: none; }
+.evSets .evTier .evCard { flex: 1; }
+.evSets .evSkins .evCard canvas { width: 56px; height: 46px; }
+.evSets .evSkins .evNum { position: absolute; top: 4px; left: 4px; z-index: 1; width: 18px; height: 18px; font-size: 10px; }
+.evSets .evSkins .evCost { position: absolute; top: 4px; right: 6px; z-index: 1; font-size: 10px; }
+.evSetRow > .evTier.blip { flex: 1; border-radius: 14px; }
+.evSetRow > .evTier.blip .evCard { border-color: #b07aff; justify-content: center; gap: 4px; }
+.evSetRow > .evTier.blip .evCard canvas { width: 96px; height: 78px; }
+.evSetRow > .evTier.blip .evCard b { font-size: 15px; }
+.evSetRow > .evTier.blip.got .evCard { border-color: #ffd23a; }
+.evSetRow > .evTier.blip.next .evCard { border-color: #ff9fc0; }
+.evSetRow > .evTier.blip .evNum, .evSetRow > .evTier.blip .evCost { position: static; align-self: center; }
+#evDots i { cursor: pointer; }
+#evDots i.done { background: #ffd23a; opacity: .55; }
+#evDots i.on { opacity: 1; background: #fff; }
+.evSets .evSkins .evCard { padding-top: 24px; }
+.evSets .evSkins .evCard b { white-space: normal; text-align: center; line-height: 1.1; font-size: 11px; }
+.evSets .evSkins .evTag { font-size: 9px; letter-spacing: 0; padding: 3px 0; }
+.evSets .evSkins .evCard canvas { width: 52px; height: 42px; }
+.evSets .evSkins .evCost { color: var(--text); opacity: .75; }
+.evSets .evSkins .evCard b { font-size: 10px; letter-spacing: -.02em; overflow-wrap: anywhere; }
+#eventAdd button { flex: 1 1 calc(50% - 8px); white-space: nowrap; font-size: 12px; }
+#eventAdd button:disabled { background: rgba(255,255,255,.08); color: var(--muted); }
+.evSets .evSkins .evCard b { overflow-wrap: normal; font-size: 9.5px; }

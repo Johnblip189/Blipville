@@ -2257,6 +2257,7 @@
       row.append(t, n); box.appendChild(row);
     }
   }
+  let evSetIdx = null;
   function openEvent() {
     drawQuests();
     const tiers = eventTiers(), total = tiers[tiers.length - 1].at, pts = Math.min(eventPts(), total);
@@ -2268,31 +2269,52 @@
     $("eventFill").style.width = `${next ? (100 * (pts - from)) / (next.at - from) : 100}%`;
     $("eventPts").textContent = next ? `${pts - from} / ${next.at - from}` : "all rewards unlocked!";
     $("evNextLabel").textContent = next ? `Next: ${next.type === "blip" ? next.kind : `${next.skin} ${next.kind}`} · ${next.at - pts} to go` : "🎉 You earned everything!";
-    const tr = $("evTrack"), keepScroll = $("eventSheet").hidden ? null : tr.scrollLeft; tr.innerHTML = "";
-    tiers.forEach((t, i) => {
+    const tr = $("evTrack"), keepScroll = $("eventSheet").hidden ? null : tr.scrollLeft;
+    const mkCell = (t, i) => {
       const have = tierGot(t), reached = pts >= t.at, cell = doc().createElement("div");
       cell.className = "evTier" + (have ? " got" : "") + (t.type === "blip" ? " blip" : "") + (t === next ? " next" : "");
       const badge = doc().createElement("div"); badge.className = "evNum"; badge.textContent = i + 1; cell.appendChild(badge);
       const cost = doc().createElement("div"); cost.className = "evCost"; cost.textContent = `${t.at} pts`; cell.appendChild(cost);
       const card = doc().createElement("div"); card.className = "evCard";
       const idx = t.type === "blip" ? (KINDS[t.kind].default ?? 0) : Math.max(0, KINDS[t.kind].colors.findIndex((c) => c.name === t.skin));
-      card.appendChild(thumb(t.kind, idx, !have && t.type === "blip", 4));
+      card.appendChild(thumb(t.kind, idx, false, t.type === "blip" ? 6 : 4));
       const nm = doc().createElement("b"); nm.textContent = t.type === "blip" ? t.kind : t.skin; card.appendChild(nm);
       const sub = doc().createElement("small"); sub.textContent = t.type === "blip" ? "NEW BLIP" : `${t.kind} skin`; card.appendChild(sub);
       const tag = doc().createElement("div"); tag.className = "evTag"; tag.textContent = have ? "✓ UNLOCKED" : reached ? "READY" : "🔒 LOCKED"; card.appendChild(tag);
-      cell.appendChild(card); tr.appendChild(cell);
-    });
-    const dots = $("evDots"); dots.innerHTML = ""; const step = tiers.length > 12 ? 5 : 2, many = tiers.length > 14, pages = Math.max(1, Math.ceil(tiers.length / step));
-    if (!many) for (let i = 0; i < pages; i++) { const d = doc().createElement("i"); d.dataset.p = i; dots.appendChild(d); }
-    const go = (dir) => { const w = tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120; tr.scrollBy({ left: dir * w * step, behavior: "smooth" }); };
-    $("evPrev").onclick = () => go(-1); $("evNext").onclick = () => go(1);
-    const mark = () => { const w = tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120; const first = Math.round(tr.scrollLeft / w);
-      if (many) dots.textContent = `Rewards ${first + 1}–${Math.min(tiers.length, first + 3)} of ${tiers.length}`;
-      else dots.querySelectorAll("i").forEach((d, i) => d.classList.toggle("on", i === Math.round(tr.scrollLeft / (w * step)))); };
-    tr.onscroll = mark; mark();
-    const slot = () => (tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120);
-    if (keepScroll != null) tr.scrollLeft = keepScroll;                                   // a refresh keeps its place
-    else view.requestAnimationFrame(() => view.requestAnimationFrame(() => { tr.scrollLeft = Math.max(0, ((next ? tiers.indexOf(next) : tiers.length - 2) - 1) * slot()); mark(); }));   // opens on the next reward
+      cell.appendChild(card); return cell;
+    };
+    const dots = $("evDots"); dots.innerHTML = "";
+    const sets = []; let cur = []; tiers.forEach((t) => { cur.push(t); if (t.type === "blip") { sets.push(cur); cur = []; } }); if (cur.length) sets.push(cur);
+    if (tiers.some((t) => t.type === "blip")) {
+      // 5-slot pages: 4 skins and the new Blip they lead to, all on one screen
+      tr.className = "evSets"; tr.innerHTML = ""; tr.onscroll = null;
+      const ofNext = Math.max(0, sets.findIndex((s) => s.includes(next || tiers[tiers.length - 1])));
+      if ($("eventSheet").hidden || evSetIdx == null) evSetIdx = ofNext;
+      evSetIdx = Math.max(0, Math.min(sets.length - 1, evSetIdx));
+      const set = sets[evSetIdx], blipT = set.find((t) => t.type === "blip"), skinsT = set.filter((t) => t.type !== "blip");
+      const head = doc().createElement("div"); head.className = "evSetHead";
+      head.textContent = blipT ? `Set ${evSetIdx + 1} of ${sets.length} · 4 skins, then ${blipT.kind}` : `Set ${evSetIdx + 1} of ${sets.length}`; tr.appendChild(head);
+      const row = doc().createElement("div"); row.className = "evSetRow";
+      const grid = doc().createElement("div"); grid.className = "evSkins";
+      skinsT.forEach((t) => grid.appendChild(mkCell(t, tiers.indexOf(t)))); row.appendChild(grid);
+      if (blipT) row.appendChild(mkCell(blipT, tiers.indexOf(blipT)));
+      tr.appendChild(row);
+      sets.forEach((s, k) => { const d = doc().createElement("i"); if (k === evSetIdx) d.className = "on"; if (s.every(tierGot)) d.classList.add("done"); d.onclick = () => { evSetIdx = k; openEvent(); }; dots.appendChild(d); });
+      $("evPrev").onclick = () => { evSetIdx = Math.max(0, evSetIdx - 1); openEvent(); };
+      $("evNext").onclick = () => { evSetIdx = Math.min(sets.length - 1, evSetIdx + 1); openEvent(); };
+    } else {
+      tr.className = ""; tr.innerHTML = "";
+      tiers.forEach((t, i) => tr.appendChild(mkCell(t, i)));
+      const step = 2, pages = Math.max(1, Math.ceil(tiers.length / step));
+      for (let i = 0; i < pages; i++) { const d = doc().createElement("i"); d.dataset.p = i; dots.appendChild(d); }
+      const wOf = () => (tr.firstElementChild ? tr.firstElementChild.getBoundingClientRect().width + 10 : 120);
+      const go = (dir) => tr.scrollBy({ left: dir * wOf() * step, behavior: "smooth" });
+      $("evPrev").onclick = () => go(-1); $("evNext").onclick = () => go(1);
+      const mark = () => dots.querySelectorAll("i").forEach((d, i) => d.classList.toggle("on", i === Math.round(tr.scrollLeft / (wOf() * step))));
+      tr.onscroll = mark; mark();
+      if (keepScroll != null) tr.scrollLeft = keepScroll;
+      else view.requestAnimationFrame(() => view.requestAnimationFrame(() => { tr.scrollLeft = Math.max(0, ((next ? tiers.indexOf(next) : tiers.length - 1) - 1) * wOf()); mark(); }));
+    }
     const add = $("eventAdd"); add.innerHTML = "";
     const has = new Set(pets.map((q) => AWAKEN_BASE[q.kind] || q.kind));
     EVENT.kinds.filter((k) => !has.has(k)).forEach((k) => {

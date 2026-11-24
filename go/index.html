@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=100">
+<link rel="stylesheet" href="style.css?v=101">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -207,6 +207,15 @@
   </div>
 </div>
 
+<div class="sheet" id="caveSheet" hidden>
+  <div class="card" id="caveCard" style="border:2px solid #888">
+    <div class="sheetTitle" id="caveTitle">🕳️ A hidden cave</div>
+    <canvas id="caveArt" width="160" height="110" style="display:block;margin:6px auto;image-rendering:pixelated"></canvas>
+    <div id="caveText" style="text-align:center"></div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
 <div class="sheet" id="worldSheet" hidden>
   <div class="card">
     <div class="sheetTitle">🌍 Worlds</div>
@@ -311,8 +320,8 @@
   </div>
 </div>
 
-<script src="data.js?v=100"></script>
-<script src="countdown.js?v=100"></script>
-<script src="app.js?v=100"></script>
+<script src="data.js?v=101"></script>
+<script src="countdown.js?v=101"></script>
+<script src="app.js?v=101"></script>
 </body>
 </html>

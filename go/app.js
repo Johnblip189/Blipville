@@ -28,7 +28,9 @@
     "Dino World":   { sky: ["#c8582a", "#ffc87a"], land: ["#5a7a3a", "#6a4a2a", "#4a3418"], fx: [["ash", 5], ["leaf", 1]], sun: "#ffe08a", volcano: true },
     "Space World":  { sky: ["#06061a", "#2a1a5a"], land: ["#5a5a7a", "#8a8aa8", "#6a6a88"], fx: [["star", 5]], sun: null, planet: true },
     "Egypt World":  { sky: ["#e88a3a", "#ffe8b0"], land: ["#e8c878", "#d8b060", "#c89a48"], fx: [["ash", 3]], sun: "#fff4c0" },
+    "Magma Ridge":  { sky: ["#1a0606", "#8a2a10"], land: ["#2a1818", "#3a2020", "#ff6a1a"], fx: [["ash", 9]], sun: null, magma: true },     // 🌋 a sub-world inside Dino World
   };
+  const SUBWORLD = { "Magma Ridge": "Dino World" };
   const WORLDS = D.worlds || [], WORLD_OF = {};          // world Blips are locked until you unlock their world
   for (const w of WORLDS) for (const [t, ks] of D.groups.tabs || []) if (t === w.tab) for (const k of ks) WORLD_OF[k] = w.name;
   const EGG_COST = D.eggCost;
@@ -624,7 +626,7 @@
   const season = () => seasonOverride || currentSeason();
   let weather = [], lastWeather = 0;
   const BAT = ["x...x", "xx.xx", ".xxx."], BAT_FLAP = [".x.x.", "xxxxx", ".x.x."];
-  const hereWorld = () => (save.world && save.worlds.includes(save.world) ? save.world : null);
+  const hereWorld = () => (save.world && save.worlds.includes(SUBWORLD[save.world] || save.world) ? save.world : null);
   function weatherStep(t, night) {
     const dt = Math.min(0.05, t - (lastWeather || t)); lastWeather = t;
     const sz = Math.max(2, Math.round(S * 0.6)), scaleW = W / 400;
@@ -698,6 +700,7 @@
     if (sea === "spring" && !night) {                // little flowers in the grass
       for (let x = 13; x < W; x += 47) { ctx.fillStyle = ["#ffb0d8", "#ffd23a", "#ffffff"][x % 3]; ctx.fillRect(x, GROUND + 14 + (x % 17), 4, 4); }
     }
+    townGriffin(t);
     weatherStep(t, night);
   }
   function worldSky(t, wl) {
@@ -720,11 +723,174 @@
       ctx.fillStyle = "#ff6a2a"; ctx.fillRect(W * 0.74, GROUND * 0.45, W * 0.06, 6);
       ctx.fillStyle = "rgba(90,80,90,.6)"; for (let i = 0; i < 3; i++) { const yy = GROUND * 0.4 - ((t * 12 + i * 30) % 90); ctx.fillRect(W * 0.75 + Math.sin(t + i) * 10, yy, 24, 12); }
     }
+    const wn = hereWorld();
+    sceneBack(t, wn);
     ctx.fillStyle = wl.land[0];
-    for (let x = 0; x < W; x += 6) { const hh = 26 + 14 * Math.sin(x / 70) + 8 * Math.sin(x / 23); ctx.fillRect(x, GROUND - hh, 6, hh); }
+    for (let x = 0; x < W; x += 6) { const hh = (wl.magma ? 18 : 26) + 14 * Math.sin(x / 70) + 8 * Math.sin(x / 23); ctx.fillRect(x, GROUND - hh, 6, hh); }
     ctx.fillStyle = wl.land[1]; ctx.fillRect(0, GROUND, W, H - GROUND);
     ctx.fillStyle = wl.land[2]; ctx.fillRect(0, GROUND, W, 6);
+    sceneFront(t, wn);
     weatherStep(t, false);
+  }
+
+  // ------------------------------------------------------------------ world scenery 🌍 (each world looks like itself)
+  const _P = (x, y, w, h, c) => { ctx.fillStyle = c; ctx.fillRect(Math.round(x), Math.round(y), Math.max(1, Math.round(w)), Math.max(1, Math.round(h))); };
+  const _fill = (c) => { ctx.fillStyle = c; ctx.fill(); };
+  function sceneBack(t, name) {
+    const u = Math.max(3, Math.round(W / 130)), g = GROUND, P = _P;
+    if (name === "Plant World") {
+      for (let i = 0; i < 6; i++) {
+        const x = W * (0.07 + i * 0.18);
+        if (i % 2 === 0) {                                                              // giant mushrooms
+          const h = u * 11; P(x - u, g - h, u * 2, h, "#f4e8d0");
+          ctx.beginPath(); ctx.ellipse(x, g - h, u * 7, u * 5, 0, Math.PI, 0); _fill(i % 4 === 0 ? "#e8483a" : "#b86ae8");
+          for (const [dx, dy] of [[-4, -2], [0, -4], [4, -2]]) P(x + dx * u - u / 2, g - h + dy * u, u, u, "#fff");
+        } else {                                                                        // big round trees
+          P(x - u, g - u * 12, u * 2, u * 12, "#7a5a3a");
+          ctx.beginPath(); ctx.arc(x, g - u * 15, u * 7, 0, 7); ctx.arc(x - u * 5, g - u * 11, u * 4.5, 0, 7); ctx.arc(x + u * 5, g - u * 11, u * 4.5, 0, 7); _fill("#2f9a4a");
+          P(x - u * 3, g - u * 17, u, u, "#ff8ab0"); P(x + u * 2, g - u * 14, u, u, "#ffd23a");
+        }
+      }
+    } else if (name === "Sweets World") {
+      for (let i = 0; i < 5; i++) {                                                     // gumdrop mounds
+        const x = W * (0.05 + i * 0.24); ctx.beginPath(); ctx.arc(x, g, u * (7 + (i % 3) * 2), Math.PI, 0); _fill(["#ff9ac8", "#9ae8ff", "#ffe28a", "#b8ff9a", "#e8b8ff"][i]);
+        P(x - u * 3, g - u * (7 + (i % 3) * 2) + u * 2, u, u, "rgba(255,255,255,.7)");
+      }
+      for (let i = 0; i < 4; i++) {                                                     // lollipop trees and candy canes
+        const x = W * (0.13 + i * 0.25);
+        if (i % 2 === 0) {
+          P(x, g - u * 16, u, u * 16, "#fff0f8"); ctx.beginPath(); ctx.arc(x + u / 2, g - u * 18, u * 5, 0, 7); _fill(["#ff5a9a", "#5ad8ff"][i / 2]);
+          ctx.strokeStyle = "#fff"; ctx.lineWidth = Math.max(2, u / 2); ctx.beginPath(); ctx.arc(x + u / 2, g - u * 18, u * 3, 0, 4.5); ctx.arc(x + u / 2, g - u * 18, u * 1.2, 0, 4.5); ctx.stroke();
+        } else {
+          for (let k = 0; k < 12; k++) P(x, g - k * u * 1.2 - u, u * 1.6, u * 1.2, k % 2 ? "#fff" : "#ff4a6a");
+          for (let k = 0; k < 3; k++) P(x + k * u, g - u * 15 - (k === 2 ? -u : 0), u * 1.6, u * 1.2, k % 2 ? "#fff" : "#ff4a6a");
+        }
+      }
+    } else if (name === "Ocean World") {
+      for (let i = 0; i < 3; i++) {                                                     // sunken ruins
+        const x = W * (0.12 + i * 0.36), h = u * (11 - i * 2);
+        P(x, g - h, u * 3, h, "#8aa8c0"); P(x - u / 2, g - h, u * 4, u, "#b8d0e0"); P(x + u, g - h + u * 3, u / 2, u * 2, "#6a88a0");
+        if (i === 1) { P(x + u * 6, g - h + u * 2, u * 3, h - u * 2, "#8aa8c0"); P(x, g - h - u, u * 9, u * 1.5, "#b8d0e0"); }
+      }
+      for (let i = 0; i < 7; i++) {                                                     // kelp
+        const x = W * (0.04 + i * 0.15);
+        for (let k = 0; k < 11; k++) P(x + Math.sin(t * 1.4 + k * 0.55 + i) * u * 1.6, g - k * u * 1.8, u, u * 1.9, k % 3 ? "#2a9a5a" : "#3ab86a");
+      }
+      for (let j = 0; j < 5; j++) {                                                     // little fish
+        const x = ((t * (18 + j * 8) + j * 170) % (W + 90)) - 45, y = g * (0.2 + j * 0.13) + Math.sin(t + j) * 6;
+        ctx.beginPath(); ctx.ellipse(x, y, u * 2.4, u * 1.4, 0, 0, 7); _fill(["#ffb02a", "#ff7a9a", "#8aff9a", "#ffe23a", "#b8a0ff"][j]);
+        ctx.beginPath(); ctx.moveTo(x - u * 2, y); ctx.lineTo(x - u * 4, y - u * 1.4); ctx.lineTo(x - u * 4, y + u * 1.4); _fill(["#ffb02a", "#ff7a9a", "#8aff9a", "#ffe23a", "#b8a0ff"][j]);
+        P(x + u, y - u * 0.4, u * 0.6, u * 0.6, "#10202a");
+      }
+    } else if (name === "Dino World") {
+      ctx.fillStyle = "rgba(110,70,60,.55)";
+      for (const [fx, fw, fh] of [[0.05, 0.2, 0.4], [0.3, 0.25, 0.3], [0.95, 0.25, 0.42]]) { ctx.beginPath(); ctx.moveTo(W * (fx - fw / 2), g); ctx.lineTo(W * fx, g * (1 - fh)); ctx.lineTo(W * (fx + fw / 2), g); ctx.fill(); }
+      for (let i = 0; i < 5; i++) {                                                     // tall cycads and conifers
+        const x = W * (0.1 + i * 0.2);
+        if (i % 2) { P(x - u / 2, g - u * 12, u, u * 12, "#5a3a1a"); for (let k = 0; k < 4; k++) { P(x - u * (6 - k), g - u * (12 - k), u * (12 - 2 * k), u, "#3a8a3a"); } }
+        else for (let k = 0; k < 6; k++) P(x - u * (1 + k * 0.9), g - u * (14 - k * 2), u * (2 + k * 1.8), u * 2, k % 2 ? "#2f7a3a" : "#3a8a44");
+      }
+      const px = ((t * 26) % (W + 120)) - 60, py = g * 0.2 + Math.sin(t * 0.9) * 10, fl = Math.sin(t * 7) * u;   // a pterodactyl
+      P(px, py, u * 2, u, "#4a2a1a"); P(px - u * 3, py - fl, u * 3, u, "#4a2a1a"); P(px + u * 2, py - fl, u * 3, u, "#4a2a1a"); P(px + u * 2, py + u, u * 3, u / 2, "#4a2a1a");
+    } else if (name === "Space World") {
+      for (const [cx, cy, r, c] of [[0.2, 0.3, 90, "rgba(160,80,255,.18)"], [0.65, 0.5, 120, "rgba(255,90,170,.14)"], [0.9, 0.2, 80, "rgba(80,200,255,.14)"]]) {
+        const gr = ctx.createRadialGradient(W * cx, g * cy, 4, W * cx, g * cy, r); gr.addColorStop(0, c); gr.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = gr; ctx.fillRect(0, 0, W, g);
+      }
+      ctx.beginPath(); ctx.arc(W * 0.42, g * 0.55, u * 3, 0, 7); _fill("#ff8a5a"); ctx.beginPath(); ctx.arc(W * 0.55, g * 0.3, u * 2, 0, 7); _fill("#5ad8ff");
+      const sx = ((t * 90) % (W * 3)) - W, sy = g * 0.12 + (sx % 40);                   // shooting star
+      if (sx > 0 && sx < W) { ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx - 40, sy - 14); ctx.stroke(); }
+      P(W * 0.12, g - u * 9, u, u * 9, "#d8d8e8"); P(W * 0.12 + u, g - u * 9, u * 5, u * 3, "#ff5a8a");   // a flag
+      ctx.beginPath(); ctx.ellipse(W * 0.7, g - u * 3, u * 6, u * 3, 0, Math.PI, 0); _fill("#c8d0e8"); P(W * 0.7 - u, g - u * 3, u * 2, u * 2, "#38d8ff");   // a lander
+    } else if (name === "Egypt World") {
+      for (const [fx, w, h, c] of [[0.26, 17, 14, "#e8b858"], [0.74, 12, 10, "#e0a848"]]) {
+        const cx = W * fx; ctx.beginPath(); ctx.moveTo(cx - u * w, g); ctx.lineTo(cx, g - u * h * 1.4); ctx.lineTo(cx + u * w, g); _fill(c);
+        ctx.beginPath(); ctx.moveTo(cx, g - u * h * 1.4); ctx.lineTo(cx + u * w, g); ctx.lineTo(cx, g); _fill("rgba(120,70,20,.35)");
+      }
+      for (const fx of [0.46, 0.9]) { P(W * fx - u, g - u * 16, u * 2, u * 16, "#d8b060"); ctx.beginPath(); ctx.moveTo(W * fx - u, g - u * 16); ctx.lineTo(W * fx, g - u * 19); ctx.lineTo(W * fx + u, g - u * 16); _fill("#ffd23a"); }   // obelisks
+      for (const fx of [0.08, 0.6]) {                                                    // palm trees
+        const x = W * fx; P(x - u / 2, g - u * 11, u, u * 11, "#8a5a2a");
+        for (let k = -2; k <= 2; k++) P(x + k * u * 2 - u, g - u * 11 - Math.abs(k) * -u * 0.5 + u * Math.abs(k), u * 3, u, "#3a9a4a");
+      }
+    } else if (name === "Magma Ridge") {
+      for (let i = 0; i < 7; i++) {                                                     // black basalt peaks with glowing seams
+        const x = W * (0.03 + i * 0.16), h = u * (14 + (i * 7) % 12);
+        ctx.beginPath(); ctx.moveTo(x - u * 7, g); ctx.lineTo(x, g - h); ctx.lineTo(x + u * 7, g); _fill("#1a1214");
+        P(x - u / 2, g - h * 0.6, u, h * 0.4, `rgba(255,${100 + 60 * Math.sin(t * 2 + i)},30,.85)`);
+      }
+      ctx.beginPath(); ctx.arc(W * 0.7, g * 0.5, u * 14, 0, 7); _fill("rgba(255,90,30,.18)");
+    }
+  }
+  function sceneFront(t, name) {
+    const u = Math.max(3, Math.round(W / 130)), g = GROUND, P = _P;
+    const rs = (i) => Math.abs(Math.sin(i * 127.1 + 311.7) * 43758.5453) % 1;
+    if (name === "Plant World") for (let i = 0; i < 26; i++) { const x = rs(i) * W, y = g + 12 + rs(i + 40) * (H - g - 20); P(x, y, u, u, ["#ffb0d8", "#ffd23a", "#fff", "#b88aff"][i % 4]); P(x + u / 3, y - u, u / 3, u, "#2f7a3a"); }
+    else if (name === "Sweets World") for (let i = 0; i < 40; i++) P(rs(i) * W, g + 10 + rs(i + 50) * (H - g - 14), u, u / 2, ["#ff5a9a", "#5ad8ff", "#ffe23a", "#9aff7a", "#fff"][i % 5]);
+    else if (name === "Ocean World") { for (let i = 0; i < 12; i++) { const x = rs(i) * W; P(x, g + 8 + rs(i + 9) * 12, u, u, "#fff0d0"); } for (let i = 0; i < 4; i++) { const x = W * (0.15 + i * 0.25); P(x, g - u * 2, u * 2, u * 2, "#ff9a6a"); P(x + u, g - u * 3, u, u, "#ff9a6a"); } }
+    else if (name === "Dino World") { for (let i = 0; i < 6; i++) { const x = W * (0.08 + i * 0.17); for (let k = -2; k <= 2; k++) P(x + k * u * 1.5, g - u * (3 - Math.abs(k)), u, u * (3 - Math.abs(k)) + 1, "#2f7a3a"); } for (const fx of [0.33, 0.78]) { ctx.beginPath(); ctx.ellipse(W * fx, g + 6, u * 3, u * 2, 0, 0, 7); _fill("#e8e0c0"); P(W * fx - u, g + 1, u, u, "#b8b090"); } }
+    else if (name === "Space World") for (const [fx, w] of [[0.15, 7], [0.4, 5], [0.62, 9], [0.88, 6]]) { ctx.beginPath(); ctx.ellipse(W * fx, g + 20 + (fx * 90) % 20, u * w, u * 1.6, 0, 0, 7); _fill("rgba(40,40,70,.45)"); }
+    else if (name === "Egypt World") { for (let x = 0; x < W; x += u * 10) { P(x + 3, g + 12 + (x % 3) * 8, u * 4, u / 2, "rgba(120,80,30,.25)"); } for (let x = 0; x < W; x += u * 4) P(x, g + 1, u * 2, u * 2, x % (u * 8) ? "#3a7ae0" : "#ffd23a"); }   // a stripe of sand patterns and painted tiles
+    else if (name === "Magma Ridge") {
+      for (let x = 0; x < W; x += 5) { const w = Math.sin(x / 34 + t * 1.2) * 0.5 + 0.5; P(x, g + 10 + (x % 7) * 2 + Math.sin(x / 20) * 4, 5, 4, `rgba(255,${80 + 120 * w},20,${0.55 + 0.4 * w})`); }
+    }
+    if (name) caveFront(t, name);
+  }
+  // 🕳️ the hidden cave: a barely-there seam in the Magma Ridge rock. Tap it 3 times and it opens.
+  let caveTaps = 0, caveLast = 0;
+  // where each world hides its way into the cave: [x as a share of the width, width and height in pixel units]. Each sits on a scenery object.
+  const CAVE_SPOT = { "Plant World": [0.61, 2.2, 6], "Ocean World": [0.48, 3, 9], "Egypt World": [0.26, 3.5, 5.5], "Magma Ridge": [0.9, 8, 15] };   // only four worlds hide a door; each one has its own Core cave
+  const CAVE_CORE = { "Plant World": "emerald", "Ocean World": "cobalt", "Egypt World": "amber", "Magma Ridge": "crimson" };
+  const caveBox = (name) => { const u = Math.max(3, Math.round(W / 130)), [fx, w, h] = CAVE_SPOT[name || hereWorld()] || CAVE_SPOT["Magma Ridge"]; return { x: W * fx - (w * u) / 2, y: GROUND - h * u, w: w * u, h: h * u }; };
+  function caveFront(t, name) {
+    if (!CAVE_SPOT[name]) return;
+    const b = caveBox(name), pulse = 0.04 + 0.05 * Math.max(0, Math.sin(t * 0.7));
+    if (name === "Magma Ridge") { ctx.fillStyle = "#241a1c"; ctx.fillRect(b.x - 3, b.y - 3, b.w + 6, b.h + 3); }   // a flat patch of rock
+    ctx.strokeStyle = `rgba(255,170,90,${pulse})`; ctx.lineWidth = 2;                             // the seam of a door, almost invisible
+    ctx.beginPath(); ctx.moveTo(b.x, b.y + b.h); ctx.lineTo(b.x, b.y + b.h * 0.3); ctx.quadraticCurveTo(b.x + b.w / 2, b.y - 4, b.x + b.w, b.y + b.h * 0.3); ctx.lineTo(b.x + b.w, b.y + b.h); ctx.stroke();
+    if (caveTaps > 0 && t - caveLast < 4) { ctx.fillStyle = `rgba(255,170,90,${0.12 * caveTaps})`; ctx.fillRect(b.x, b.y + 4, b.w, b.h - 4); }
+  }
+  function caveTap(px, py) {
+    if (!hereWorld() || !CAVE_SPOT[hereWorld()]) return false;
+    const b = caveBox();
+    if (px < b.x - 10 || px > b.x + b.w + 10 || py < b.y - 6 || py > b.y + b.h + 6) return false;
+    const t = now(); caveTaps = t - caveLast > 4 ? 1 : caveTaps + 1; caveLast = t;
+    if (caveTaps >= 3) { caveTaps = 0; sfx("fanfare"); openCave(hereWorld()); } else sfx("pop");
+    return true;
+  }
+  // ⚡ the Nexus: five dormant Blips, one per Core. Four sleep in hidden caves (a door in Plant, Ocean, Egypt and Magma Ridge); the black one stands in the open in town.
+  const NEXUS_ART = {"cobalt":{"name":"Nexus Manta","body":["...oo......oo...","..obbo....obbo..",".oobbbooooobbboo","obbbbbbaabbbbbbo","obbbbbbbbbbbbbbo","obbbbbbbbbbbbbbo",".obbbbbbbbbbbbo.","..obbbllllbbbo..","...obbllllbbo...","....obllllbo....",".....obbbbo.....","......oooo......"],"pal":{"name":"Cobalt","o":"#0c1a3a","b":"#3a78e0","l":"#cfe4ff","a":"#38f0ff","m":"#8aa0c0","e":"#0a1428"}},"amber":{"name":"Nexus Scorpion","body":["......oaao......","oo....obbo....oo","obbo..obbo..obbo","obbbo.obbo.obbbo",".obbboobboobbbo.","..obbbbbbbbbbo..","..obbbbbbbbbbo..","..obmbllllbmbo..","...obbllllbbo...","...obbllllbbo...","....obbbbbbo....",".....oooooo....."],"pal":{"name":"Amber","o":"#3a2008","b":"#d8942a","l":"#ffe2a8","a":"#ff6a1a","m":"#8a8a98","s":"#ff3a1a","e":"#2a1404"}},"crimson":{"name":"Nexus Cobra","body":[".....oooooo.....","....obbbbbbo....","...obbbbbbbbo...",".oobbmbbbbmbboo.","obbbbbbbbbbbbbbo","obbbbbbbbbbbbbbo",".obbbbbbbbbbbbo.","..obbbbllbbbbo..","...obbbllbbbo...","....obbllbbo....","....obbllbbo....","..oooooooooooo.."],"pal":{"name":"Crimson","o":"#2a0606","b":"#d83a2a","l":"#ffe0d0","a":"#ffb02a","m":"#8a98a0","e":"#ffe23a"}},"obsidian":{"name":"Nexus Griffin","body":["ow...oooooo...wo","oww.obbbbbbo.wwo","owwobbbbbbbbowwo","owwobbbbbbbbowwo",".owobbbbbbbbowo.",".owobbbbbbbbowo.","..wobbbbbbbbow..","..wobbbnnbbbow..","...obbbnnbbbo...","...obbbbnbbbo...","..obBbbbbbbBbo..","...oooooooooo..."],"pal":{"name":"Obsidian","o":"#05050c","b":"#2e2e40","l":"#55556e","w":"#1a1a28","n":"#ffd23a","e":"#ffd23a"}},"emerald":{"name":"Nexus Dragon","body":["..oo........oo..","..obo......obo..","...oboooooobo...","..obbbbbbbbbbo..",".obbbbbbbbbbbbo.","wobbbbbbbbbbbbow","wobbbbbbbbbbbbow","obbbbbllllbbbbbo",".obbbblnnlbbbbo.","..obbbllllbbbo..","....obllggllbo..",".....oooooooo..."],"pal":{"name":"Emerald","o":"#062a18","b":"#2ab86a","l":"#d8ffe4","w":"#1a8a4a","n":"#062a18","g":"#5affd8","e":"#0a1a10"}}};
+  const NEXUS = {
+    obsidian: { icon: "⬛", name: "Nexus Griffin", core: "Obsidian Core", color: "#8a8aa8", where: "the Town Workshop Vault", trial: "Not yet. Nobody can wake it for now." },
+    crimson:  { icon: "🟥", name: "Nexus Cobra", core: "Crimson Core", color: "#ff5a3a", where: "Magma Ridge", trial: "Not yet. Nobody can wake it for now." },
+    cobalt:   { icon: "🟦", name: "Nexus Manta", core: "Cobalt Core", color: "#4a90ff", where: "the Sunken Ruins", trial: "Not yet. Nobody can wake it for now." },
+    amber:    { icon: "🟧", name: "Nexus Scorpion", core: "Amber Core", color: "#ffb02a", where: "the Sandstone Temple", trial: "Not yet. Nobody can wake it for now." },
+    emerald:  { icon: "🟩", name: "Nexus Dragon", core: "Emerald Core", color: "#3ae88a", where: "the Prehistoric Canopy", trial: "Not yet. Nobody can wake it for now." },
+  };
+  function drawNexus(c, id, x, y, s, awake) {                      // a dormant Nexus Blip (greyed, eyes shut) or an awake one
+    const art = NEXUS_ART[id], pal = art.pal, mixHex = (h, g, f) => "#" + [1, 3, 5].map((i) => Math.round(parseInt(h.slice(i, i + 2), 16) * (1 - f) + parseInt(g.slice(i, i + 2), 16) * f).toString(16).padStart(2, "0")).join("");
+    const col = (ch) => { let h = pal[ch] || (ch !== ch.toLowerCase() && pal[ch.toLowerCase()] ? mixHex(pal[ch.toLowerCase()], "#000000", 0.25) : pal.o); return awake ? h : mixHex(h, "#3a3a4c", 0.7); };
+    art.body.forEach((row, r) => [...row].forEach((ch, k) => { if (ch !== ".") { c.fillStyle = col(ch); c.fillRect(x + k * s, y + r * s, s, s); } }));
+    for (const ex of [4, 10]) { c.fillStyle = awake ? pal.e : "#10101a"; if (awake) c.fillRect(x + ex * s, y + 5 * s, 2 * s, 2 * s); else c.fillRect(x + ex * s, y + 6 * s, 2 * s, Math.max(1, s / 2)); }
+  }
+  function openCave(world, id) {
+    id = id || CAVE_CORE[world]; const n = NEXUS[id], have = (save.apexNexusCores || []).includes(id);
+    $("caveTitle").textContent = `${n.icon} ${n.core.replace(" Core", "")} Cave`; $("caveCard").style.borderColor = n.color;
+    const cv2 = $("caveArt"), c = cv2.getContext("2d"); c.clearRect(0, 0, cv2.width, cv2.height);
+    const gr = c.createRadialGradient(80, 60, 6, 80, 60, 80); gr.addColorStop(0, n.color + "55"); gr.addColorStop(1, "rgba(0,0,0,0)"); c.fillStyle = gr; c.fillRect(0, 0, cv2.width, cv2.height);
+    drawNexus(c, id, 80 - 8 * 6, 12, 6, have);
+    $("caveText").innerHTML = `<b>${have ? n.name + " is awake!" : "A dormant Blip sleeps here…"}</b><br>${have ? "Bring it to town from your Zoo." : `${n.name} is deactivated. Something will wake it one day…<br><small>${n.trial}</small>`}`;
+    openSheet("caveSheet");
+  }
+  const GRIFFIN = () => { const u = Math.max(3, Math.round(W / 130)); return { x: W * 0.13, s: Math.max(3, Math.round(u * 0.9)) }; };   // the black one stands out in the open in town
+  function townGriffin(t) {
+    const gf = GRIFFIN(), id = "obsidian", have = (save.apexNexusCores || []).includes(id);
+    if (have) return;
+    drawNexus(ctx, id, gf.x - 8 * gf.s, GROUND - 12 * gf.s + 2, gf.s, false);
+    ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.font = "700 " + (10 + Math.round(2 * Math.sin(t))) + "px " + FONT; ctx.textAlign = "center"; ctx.fillText("z", gf.x + 6 * gf.s, GROUND - 13 * gf.s - 4 - 4 * Math.sin(t)); ctx.fillText("Z", gf.x + 8 * gf.s, GROUND - 14 * gf.s - 10 - 4 * Math.sin(t + 1));
+  }
+  function griffinTap(px, py) {
+    if (hereWorld()) return false;
+    const gf = GRIFFIN(); if (Math.abs(px - gf.x) > 8 * gf.s || py < GROUND - 13 * gf.s || py > GROUND + 6) return false;
+    sfx("pop"); openCave(null, "obsidian"); return true;
   }
   function pixCloud(x, y) { for (const [dx, dy, w] of [[0, 8, 70], [12, 0, 40], [20, 14, 60]]) ctx.fillRect(Math.round(x + dx), Math.round(y + dy), w, 12); }
 
@@ -866,7 +1032,7 @@
     if (!sighting) {
       if (hereWorld() && t >= nextLegend) {
         nextLegend = t + rnd(2, 5) * 60;
-        const leftL = (D.groups.legends || []).filter((k) => LEGEND_WORLD[k] === hereWorld() && !isUnlocked(k));
+        const leftL = (D.groups.legends || []).filter((k) => LEGEND_WORLD[k] === (SUBWORLD[hereWorld()] || hereWorld()) && !isUnlocked(k));
         if (leftL.length && $("nsSheet").hidden) { startSighting(pick(leftL)); return; }
       }
       if (t >= nextKaiju) {
@@ -996,6 +1162,7 @@
   cv.addEventListener("pointerdown", (e) => {
     pointer = { x: e.clientX, y: e.clientY };
     if (sightingAt(e.clientX, e.clientY)) { befriend(); return; }
+    if (!petAt(e.clientX, e.clientY) && (caveTap(e.clientX, e.clientY) || griffinTap(e.clientX, e.clientY))) return;
     const p = petAt(e.clientX, e.clientY);
     if (!p) return;
     cv.setPointerCapture(e.pointerId);
@@ -1673,7 +1840,7 @@
   function visitWorld(name) {
     save.world = name; weather = []; persist(true); closeSheets();
     if (name) nextLegend = Math.min(nextLegend, now() + rnd(45, 90));
-    const w = WORLDS.find((x) => x.name === name), p = pets.find((q) => q.state !== "sleep");
+    const w = WORLDS.find((x) => x.name === name) || (name === "Magma Ridge" ? { name, icon: "🌋" } : null), p = pets.find((q) => q.state !== "sleep");
     if (p) say(p, w ? `welcome to ${w.name}! ${w.icon}` : "home sweet home!", 3);
   }
   function openWorlds() {
@@ -1691,6 +1858,7 @@
       if (!w.cost) row(w.icon, w.name, `free! dig up its ${n} gods (${n - Object.keys(WORLD_OF).filter((k) => WORLD_OF[k] === w.name && !isUnlocked(k)).length} found)`, "🏺 Dig", "", () => openDig());
       else if (save.worlds.includes(w.name)) row(w.icon, w.name, `${n} Blips unlocked`, here === w.name ? "You're here" : "Visit", here === w.name ? "here" : "", () => here !== w.name && visitWorld(w.name));
       else row(w.icon, w.name, `unlocks ${n} Blips in ${w.tab}`, `🔒 ${w.cost} 💖`, "locked", (b) => unlockWorld(w, b));
+      if (w.name === "Dino World" && save.worlds.includes(w.name)) row("🌋", "Magma Ridge", "a lava ridge inside Dino World. Something is hidden here…", here === "Magma Ridge" ? "You're here" : "Visit", here === "Magma Ridge" ? "here" : "", () => here !== "Magma Ridge" && visitWorld("Magma Ridge"));
     }
     openSheet("worldSheet");
   }
@@ -2152,7 +2320,7 @@
   }
   function devSpawn(group) {
     let pool = (D.groups[group] || []).slice();
-    if (group === "legends") pool = pool.filter((k) => save.world && LEGEND_WORLD[k] === save.world);
+    if (group === "legends") pool = pool.filter((k) => save.world && LEGEND_WORLD[k] === (SUBWORLD[save.world] || save.world));
     if (!pool.length) { toast("Legends only show up while you're visiting a world! 🌍", 3); return; }
     const locked = pool.filter((k) => !isUnlocked(k)); closeSheets();
     startSighting(pick(locked.length ? locked : pool));

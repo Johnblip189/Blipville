@@ -1727,6 +1727,37 @@
     for (let r = 0; r < wa.h; r++) for (let k = 0; k < wa.w; k++) if (g[r][k]) for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (!at(r + dy, k + dx)) c.fillRect(Math.round(x + (k + dx) * s), Math.round(y + (r + dy) * s), s, s);
     for (let r = 0; r < wa.h; r++) for (let k = 0; k < wa.w; k++) if (g[r][k]) { c.fillStyle = g[r][k]; c.fillRect(Math.round(x + k * s), Math.round(y + r * s), s, s); }
   }
+
+  // 🌟 the Nexus form: a mech with the torso Core's body and wings, two Cores as arms and two as legs (the Star wheel decides which Core is the torso)
+  const FORM_RECTS = [   // [x, y, w, h, part + shade]  parts: t torso, p left arm, q right arm, u left leg, v right leg, w wings. shades: m main, d dark, l light, g glow
+    [0, 5, 4, 2, "wd"], [0, 7, 5, 2, "wm"], [1, 9, 5, 2, "wd"], [2, 11, 5, 2, "wm"], [3, 13, 4, 2, "wd"],
+    [9, 1, 6, 5, "tm"], [10, 3, 4, 2, "td"], [10, 3, 1, 1, "tg"], [13, 3, 1, 1, "tg"], [11, 0, 2, 1, "tl"],
+    [8, 6, 8, 9, "tm"], [9, 7, 6, 3, "tl"], [11, 10, 2, 2, "tg"], [8, 15, 8, 1, "td"],
+    [5, 6, 3, 3, "pl"], [5, 9, 2, 4, "pm"], [4, 13, 3, 4, "pd"], [3, 17, 4, 2, "pm"], [3, 19, 1, 1, "pg"],
+    [16, 6, 3, 3, "ql"], [17, 9, 2, 4, "qm"], [17, 13, 3, 4, "qd"], [17, 17, 1, 2, "qg"], [19, 17, 1, 2, "qg"],
+    [8, 16, 3, 2, "ud"], [8, 18, 3, 4, "um"], [8, 22, 3, 4, "ud"], [6, 26, 5, 2, "ul"],
+    [13, 16, 3, 2, "vd"], [13, 18, 3, 4, "vm"], [13, 22, 3, 4, "vd"], [13, 26, 6, 2, "vl"], [18, 25, 2, 1, "vg"],
+  ];
+  const FORM_PRIORITY = ["crimson", "emerald", "obsidian", "amber", "cobalt"];
+  function formRoles(torso) { const rest = FORM_PRIORITY.filter((id) => id !== torso); return { t: torso, p: rest[0], q: rest[1], u: rest[2], v: rest[3] }; }
+  function drawNexusForm(c, torso, x, y, s, t = 0, flap = true) {
+    const roles = formRoles(torso), col = (part, sh) => {
+      const id = part === "w" ? torso : roles[part], [main, light, glow] = CORE_PAL[id];
+      return sh === "m" ? main : sh === "l" ? light : sh === "g" ? glow : plShade(main, 0.6);
+    };
+    const wob = flap ? Math.round(Math.sin(t * 6)) : 0, cells = [];
+    for (const [rx, ry, rw, rh, pc] of FORM_RECTS) {
+      const wing = pc[0] === "w";
+      for (const side of wing ? [0, 1] : [0]) {                                         // wings are drawn on both sides
+        const gx = side ? 24 - rx - rw : rx, gy = ry + (wing ? -wob : 0);
+        for (let j = 0; j < rh; j++) for (let i = 0; i < rw; i++) cells.push([gx + i, gy + j, col(pc[0], pc[1])]);
+      }
+    }
+    const map = new Map(cells.map(([cx, cy, cc]) => [cx + "," + cy, cc]));
+    c.fillStyle = "#14101e";
+    for (const [cx, cy] of cells) for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (!map.has((cx + dx) + "," + (cy + dy))) c.fillRect(Math.round(x + (cx + dx) * s), Math.round(y + (cy + dy) * s), s, s);
+    for (const [cx, cy, cc] of cells) { c.fillStyle = cc; c.fillRect(Math.round(x + cx * s), Math.round(y + cy * s), s, s); }
+  }
   const WEAPON_OF = { obsidian: "greatsword", crimson: "pistols", cobalt: "trident", amber: "maces", emerald: "shielddaggers" };
   const STAGE_BG = { town: null, ocean: "beach", ice: "cave", desert: "city", dino: "meadow", magma: "volcano" };
   const TRIALS = {
@@ -1746,7 +1777,7 @@
     const tm = (ats, ds) => (ats.length ? Math.max(...ats.map((a) => typeMult(a, ds))) : 1);
     const center = opts.loan || apexHave()[0] || null, weapon = center ? WEAPON_OF[center] : null;
     const foe = fspec(foeBase, "foe", "E", level, true); if (opts.drone) { foe.hp = Math.round(foe.hp * 1.25); foe.name = "Crimson Drone"; }
-    fight = { m: FT.create([fspec(base, "you", "P", null, !!AWAKEN_CHAIN[base] && awLevel(base) > 0, weapon), foe], { seed: (Math.random() * 1e9) | 0, typeMult: tm }),
+    fight = { m: FT.create([fspec(base, "you", "P", null, (!!AWAKEN_CHAIN[base] && awLevel(base) > 0) || hasItem("nexusStar"), weapon), foe], { seed: (Math.random() * 1e9) | 0, typeMult: tm }),
               look: { you: [base, me.color % KINDS[base].colors.length], foe: [foeBase, opts.drone ? 1 : 0] }, fx: [], acc: 0, last: 0, t: 0, shown: false, bg: (opts.stage && STAGE_BG[opts.stage]) || pick(D.friendBgs || ["meadow"]), level,
               stage: opts.stage || "town", trial: opts.trial || null, drone: !!opts.drone, loan: opts.loan || null, base };
     fight.m.fighters[0].center = center;
@@ -1825,6 +1856,11 @@
       const b = document.createElement("button"); b.textContent = "✨ Join"; b.onclick = () => { for (const id of ["obsidian", "crimson", "cobalt", "amber", "emerald"]) takeItem(id + "Core"); giveItem("nexusStar"); sfx("fanfare"); toast("⭐ The Cores join into the Nexus Star!", 5); openNexus(); };
       d.append(info, b); list.appendChild(d);
     }
+    const fr = $("nexusForms"); fr.innerHTML = "";
+    if (have.length) for (const id of STAR_ORDER) {                                         // the five forms the Star can take
+      const d = document.createElement("div"); d.className = "formCell" + (have.includes(id) ? "" : " dim"); const cv2 = document.createElement("canvas"); cv2.width = 52; cv2.height = 60;
+      drawNexusForm(cv2.getContext("2d"), id, 2, 2, 2, 0, false); const l = document.createElement("small"); l.textContent = id; d.append(cv2, l); fr.appendChild(d);
+    }
     $("nexusWeapons").textContent = weaponsOwned().length ? `Weapons: ${weaponsOwned().map((w) => FT.WEAPONS[w].icon + " " + FT.WEAPONS[w].name).join(" · ")}. Use 🔁 in a fight (or tap the wheel) to switch your center.` : "No weapons yet. Finish a trial to earn one!";
     openSheet("nexusSheet");
   }
@@ -1869,6 +1905,11 @@
       const [kind, color] = f.look[fi.id];
       if (fi.respawn > 0 || (fi.inv > 0 && Math.floor(f.t * 12) % 2 === 0 && fi.state !== "down")) { if (fi.respawn > 0) continue; c.globalAlpha = 0.45; }
       const lunge = fi.act && (fi.state === "light" || fi.state === "heavy" || fi.state === "air") ? (fi.t < fi.act.start + fi.act.active ? 4 : 0) * fi.face : 0;
+      const formOn = fi.id === "you" && fi.awakeT > 0 && fi.center && hasItem("nexusStar");
+      if (formOn) {                                                                     // 🌟 awakened with the Star: the Blip joins the Cores into the Nexus form
+        c.save(); c.translate(Math.round(fi.x), 0); if (fi.face < 0) c.scale(-1, 1); drawNexusForm(c, fi.center, -24, Math.round(G - fi.y - 56), 2, f.t); c.restore(); c.globalAlpha = 1;
+        c.fillStyle = "rgba(0,0,0,.3)"; c.fillRect(fi.x - 18, G + 1, 36, 3); continue;
+      }
       const g = grid(kind, color, { t: f.t, live: true, face: fi.hurt > 0 ? "surprised" : fi.state === "guard" ? "normal" : "normal", state: fi.state === "down" ? "sleep" : "idle", look: [fi.face, 0] });
       const sx = Math.round(fi.x + lunge), top = Math.round(G - fi.y - 36 * fi.big);
       c.save(); c.translate(sx, 0); if (fi.face < 0) c.scale(-1, 1);
@@ -3414,7 +3455,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { bag: { weapon: drawWeaponSprite, give: giveItem, take: takeItem, has: hasItem, open: openBag, items: ITEMS }, apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS }, fight: { open: openFight, start: startFight, state: () => fight, held: fightHeld }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { bag: { form: drawNexusForm, weapon: drawWeaponSprite, give: giveItem, take: takeItem, has: hasItem, open: openBag, items: ITEMS }, apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS }, fight: { open: openFight, start: startFight, state: () => fight, held: fightHeld }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

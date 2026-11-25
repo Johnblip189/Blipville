@@ -439,3 +439,6 @@ button { touch-action: manipulation; }
 .bagItem { display: flex; gap: 12px; align-items: center; background: var(--card2); border-radius: 14px; padding: 8px 10px; margin: 8px 0; }
 .bagItem canvas { width: 60px; height: 60px; image-rendering: pixelated; flex: none; }
 .bagItem b { display: block; font: 800 14px var(--font); } .bagItem small { color: var(--muted); font: 600 12px var(--font); }
+
+#nexusForms { display: flex; gap: 6px; justify-content: center; margin: 10px 0 4px; }
+.formCell { text-align: center; } .formCell canvas { width: 52px; height: 60px; image-rendering: pixelated; display: block; } .formCell small { color: var(--muted); font: 700 10px var(--font); text-transform: capitalize; } .formCell.dim { opacity: .35; filter: grayscale(.8); }

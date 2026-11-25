@@ -435,3 +435,7 @@ button { touch-action: manipulation; }
 #fightPad .padAct { justify-content: flex-end; max-width: 190px; }
 #fightResult { text-align: center; margin-top: 10px; }
 #fightCanvas[hidden], #fightPad[hidden], #fightResult[hidden], #fightPick[hidden] { display: none; }
+
+.bagItem { display: flex; gap: 12px; align-items: center; background: var(--card2); border-radius: 14px; padding: 8px 10px; margin: 8px 0; }
+.bagItem canvas { width: 60px; height: 60px; image-rendering: pixelated; flex: none; }
+.bagItem b { display: block; font: 800 14px var(--font); } .bagItem small { color: var(--muted); font: 600 12px var(--font); }

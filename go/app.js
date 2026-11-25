@@ -1661,6 +1661,42 @@
     return { id, name: id, kind: base, hp: st.hp, atk: st.atk, spd: st.spd, types: typesOf(st), canAw, team, ai, weapon: weapon || null };
   }
   // ⚡ Apex Nexus: five Cores, each unlocked by a trial in the real-time battles (beta: creator menu only for now). Everything is saved in save.apexNexusCores / save.apexProgress.
+
+  // ------------------------------------------------------------------ 🎒 the bag: quest items (Cores, the Nexus Star, and whatever future quests ask for)
+  const CORE_PAL = { obsidian: ["#2a2e44", "#6a7090", "#ffd23a"], crimson: ["#c8342a", "#ff8a6a", "#ffe08a"], cobalt: ["#2a62c8", "#7ab0ff", "#aaffff"], amber: ["#c8801a", "#ffd88a", "#fff4c0"], emerald: ["#1f8a50", "#7affc0", "#d8fff0"] };
+  const CORE_ORB = ["....oooo....", "..oobbbboo..", ".obbllbbbbo.", ".oblllbbbbo.", "obbllbggbbBo", "obbbbgggbbBo", "obbbbgggbbBo", "obbbbbggbBBo", ".obbbbbbbBo.", ".oBbbbbbBBo.", "..ooBBBBoo..", "....oooo...."];
+  const STAR_ART = [".....ee.....", ".....ee.....", "....eeee....", "kkkkeeeeaaaa", ".kkkkeeaaaa.", "..kkkwwaaa..", "...kkwwaa...", "..ccwwwwrr..", "..ccc..rrr..", ".cccc..rrrr.", ".ccc....rrr.", ".cc......rr."];
+  const ITEMS = {
+    obsidianCore: { name: "Obsidian Core", art: CORE_ORB, pal: { o: "#0a0a14", b: "#2a2e44", B: "#1a1c2c", l: "#6a7090", g: "#ffd23a" }, text: "The black Core. It woke the griffin." },
+    crimsonCore:  { name: "Crimson Core", art: CORE_ORB, pal: { o: "#2a0606", b: "#c8342a", B: "#8a1c14", l: "#ff8a6a", g: "#ffe08a" }, text: "Warm as magma. It woke the cobra." },
+    cobaltCore:   { name: "Cobalt Core", art: CORE_ORB, pal: { o: "#06101e", b: "#2a62c8", B: "#1a3a80", l: "#7ab0ff", g: "#aaffff" }, text: "Cold and bright. It woke the manta." },
+    amberCore:    { name: "Amber Core", art: CORE_ORB, pal: { o: "#2a1604", b: "#c8801a", B: "#8a5410", l: "#ffd88a", g: "#fff4c0" }, text: "Heavy as sandstone. It woke the scorpion." },
+    emeraldCore:  { name: "Emerald Core", art: CORE_ORB, pal: { o: "#04140a", b: "#1f8a50", B: "#0e5a30", l: "#7affc0", g: "#d8fff0" }, text: "Green as the canopy. It woke the dragon." },
+    nexusStar:    { name: "Nexus Star", art: STAR_ART, pal: { e: "#3ae88a", a: "#ffb02a", r: "#ff5a3a", c: "#4a90ff", k: "#8a90b8", w: "#ffffff" }, text: "The five Cores, joined into one. It points somewhere…" },
+  };
+  const inv = () => (save.inventory = save.inventory || {});
+  const hasItem = (id, n = 1) => (inv()[id] || 0) >= n;
+  function giveItem(id, n = 1) { inv()[id] = (inv()[id] || 0) + n; persist(true); bagBtnShow(); }
+  function takeItem(id, n = 1) { if (!hasItem(id, n)) return false; inv()[id] -= n; if (inv()[id] <= 0) delete inv()[id]; persist(true); bagBtnShow(); return true; }
+  function drawItem(c, id, x, y, s) {                                       // an item sprite with an automatic dark outline
+    const it = ITEMS[id], rows = it.art, filled = (r, k) => rows[r] && rows[r][k] && rows[r][k] !== ".";
+    c.fillStyle = "#14101e";
+    rows.forEach((row, r) => [...row].forEach((ch, k) => { if (ch === ".") return; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (!filled(r + dy, k + dx) && it.art !== CORE_ORB) c.fillRect(x + (k + dx) * s, y + (r + dy) * s, s, s); }));
+    rows.forEach((row, r) => [...row].forEach((ch, k) => { if (ch !== ".") { c.fillStyle = it.pal[ch] || "#ff00ff"; c.fillRect(x + k * s, y + r * s, s, s); } }));
+  }
+  const bagBtnShow = () => { $("bagBtn").hidden = !(isCreator() || isMod() || Object.keys(inv()).length); };
+  function openBag() {
+    const list = $("bagList"); list.innerHTML = ""; const ids = Object.keys(inv()).filter((k) => ITEMS[k]);
+    $("bagEmpty").hidden = ids.length > 0;
+    for (const id of ids) {
+      const d = document.createElement("div"); d.className = "bagItem";
+      const cv2 = document.createElement("canvas"); cv2.width = cv2.height = 60; drawItem(cv2.getContext("2d"), id, 6, 6, 4);
+      const t = document.createElement("div"); t.innerHTML = `<b>${ITEMS[id].name}${inv()[id] > 1 ? ` ×${inv()[id]}` : ""}</b><small>${ITEMS[id].text}</small>`;
+      d.append(cv2, t); list.appendChild(d);
+    }
+    openSheet("bagSheet");
+  }
+  $("bagBtn").onclick = openBag; bagBtnShow();
   const WEAPON_OF = { obsidian: "greatsword", crimson: "pistols", cobalt: "trident", amber: "maces", emerald: "shielddaggers" };
   const STAGE_BG = { town: null, ocean: "beach", ice: "cave", desert: "city", dino: "meadow", magma: "volcano" };
   const TRIALS = {
@@ -1695,7 +1731,7 @@
   }
   function apexAward(id) {
     const list = apexHave(); if (list.includes(id)) return false;
-    list.push(id); persist(true); sfx("fanfare");
+    list.push(id); giveItem(id + "Core"); sfx("fanfare");
     const w = FT.WEAPONS[WEAPON_OF[id]];
     toast(`⚡ The ${id[0].toUpperCase() + id.slice(1)} Core is yours! ${w.icon} ${w.name} unlocked. Something in the dark stirs…`, 6);
     return true;
@@ -1723,6 +1759,12 @@
       if (locked) info.innerHTML = `<b>${n.icon} ${n.core} 🔒</b><small>Wake the Obsidian Core (the black griffin) first.</small>`;
       const b = document.createElement("button"); b.textContent = done ? "Done" : locked ? "🔒" : "⚔️ Start"; b.disabled = done || locked;
       b.onclick = () => { closeSheets(); openSheet("fightSheet"); startFight(t.level, { stage: t.stage, trial: id, drone: !!t.drone, loan: t.loan }); };
+      d.append(info, b); list.appendChild(d);
+    }
+    if (have.length === 5 && !hasItem("nexusStar")) {                                      // the five Cores join into the Nexus Star
+      const d = document.createElement("div"); d.className = "worldRow"; const info = document.createElement("div");
+      info.innerHTML = "<b>⭐ The five Cores hum together…</b><small>Join them into the Nexus Star.</small>";
+      const b = document.createElement("button"); b.textContent = "✨ Join"; b.onclick = () => { for (const id of ["obsidian", "crimson", "cobalt", "amber", "emerald"]) takeItem(id + "Core"); giveItem("nexusStar"); sfx("fanfare"); toast("⭐ The Cores join into the Nexus Star!", 5); openNexus(); };
       d.append(info, b); list.appendChild(d);
     }
     $("nexusWeapons").textContent = weaponsOwned().length ? `Weapons: ${weaponsOwned().map((w) => FT.WEAPONS[w].icon + " " + FT.WEAPONS[w].name).join(" · ")}. Use 🔁 in a fight to switch.` : "No weapons yet. Finish a trial to earn one!";
@@ -3301,7 +3343,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS }, fight: { open: openFight, start: startFight, state: () => fight, held: fightHeld }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { bag: { give: giveItem, take: takeItem, has: hasItem, open: openBag, items: ITEMS }, apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS }, fight: { open: openFight, start: startFight, state: () => fight, held: fightHeld }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

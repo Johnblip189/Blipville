@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.14:** ✨ A new face on the squad. 👀
+>
 > **1.0.13:** ✨ Everything arrives at once. 👀
 >
 > **1.0.12:** ✨ Polished up. 👀

@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.6:** ✨ Some fights feel more at home now. 👀
+>
 > **1.0.5:** ✨ A little something got a lot better. 👀
 >
 > **1.0.4:** ✨ Added something new. Some doors aren't where you'd expect. 👀

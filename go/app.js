@@ -1687,16 +1687,46 @@
   const bagBtnShow = () => { $("bagBtn").hidden = !(isCreator() || isMod() || Object.keys(inv()).length); };
   function openBag() {
     const list = $("bagList"); list.innerHTML = ""; const ids = Object.keys(inv()).filter((k) => ITEMS[k]);
-    $("bagEmpty").hidden = ids.length > 0;
+    const wps = weaponsOwned();
+    $("bagEmpty").hidden = ids.length > 0 || wps.length > 0;
     for (const id of ids) {
       const d = document.createElement("div"); d.className = "bagItem";
       const cv2 = document.createElement("canvas"); cv2.width = cv2.height = 60; drawItem(cv2.getContext("2d"), id, 6, 6, 4);
       const t = document.createElement("div"); t.innerHTML = `<b>${ITEMS[id].name}${inv()[id] > 1 ? ` ×${inv()[id]}` : ""}</b><small>${ITEMS[id].text}</small>`;
       d.append(cv2, t); list.appendChild(d);
     }
+    for (const w of wps) {
+      const d = document.createElement("div"); d.className = "bagItem";
+      const cv2 = document.createElement("canvas"); cv2.width = cv2.height = 60; const wa = WEAPON_ART[w], s = Math.max(1, Math.floor(52 / Math.max(wa.w, wa.h))); drawWeaponSprite(cv2.getContext("2d"), w, Math.round((60 - wa.w * s) / 2), Math.round((60 - wa.h * s) / 2), s);
+      const t = document.createElement("div"); t.innerHTML = `<b>${FT.WEAPONS[w].name}</b><small>${WEAPON_TEXT[w]}</small>`;
+      d.append(cv2, t); list.appendChild(d);
+    }
     openSheet("bagSheet");
   }
   $("bagBtn").onclick = openBag; bagBtnShow();
+
+  // ⚔️ weapon sprites (one per Nexus weapon), built from little rectangles: [x, y, w, h, colour letter]
+  const WEAPON_ART = {
+    greatsword: { w: 16, h: 7, pal: { h: "#5a3a22", m: "#c8cfe0", l: "#ffffff", g: "#ff9a2a", k: "#8a6a3a" },
+      r: [[0, 1, 1, 5, "h"], [1, 2, 3, 3, "h"], [3, 0, 1, 7, "k"], [4, 1, 11, 5, "m"], [4, 0, 11, 1, "g"], [4, 6, 11, 1, "g"], [5, 3, 9, 1, "l"], [15, 2, 1, 3, "m"], [15, 3, 1, 1, "l"]] },
+    pistols: { w: 14, h: 8, pal: { m: "#8a8f9c", l: "#c8ccd8", g: "#ff6a1a", h: "#4a3326" },
+      r: [[3, 1, 10, 3, "m"], [3, 0, 10, 1, "l"], [5, 2, 2, 1, "g"], [9, 2, 2, 1, "g"], [13, 1, 1, 3, "g"], [3, 4, 3, 4, "h"], [6, 4, 2, 1, "m"]] },
+    trident: { w: 18, h: 7, pal: { m: "#aee0ff", l: "#ffffff", h: "#4a6ab8" },
+      r: [[2, 3, 14, 1, "h"], [15, 1, 1, 5, "m"], [16, 1, 2, 1, "m"], [16, 3, 2, 1, "l"], [16, 5, 2, 1, "m"], [2, 1, 1, 5, "m"], [0, 1, 2, 1, "m"], [0, 3, 2, 1, "l"], [0, 5, 2, 1, "m"]] },
+    maces: { w: 13, h: 11, pal: { h: "#6a4a22", m: "#9a8a78", l: "#d8c8a8", c: "#8a8a98" },
+      r: [[0, 5, 2, 1, "c"], [2, 5, 7, 2, "h"], [9, 2, 3, 7, "m"], [8, 2, 1, 1, "l"], [8, 8, 1, 1, "l"], [12, 3, 1, 1, "l"], [12, 7, 1, 1, "l"], [10, 1, 1, 1, "l"], [10, 9, 1, 1, "l"], [10, 4, 1, 3, "l"]] },
+    shielddaggers: { w: 16, h: 9, pal: { s: "#2a8a5a", g: "#7affc0", m: "#d8e8e0", l: "#ffffff", h: "#5a3a22" },
+      r: [[0, 1, 7, 8, "s"], [1, 0, 5, 1, "s"], [2, 3, 3, 4, "g"], [7, 3, 1, 4, "h"], [8, 4, 7, 2, "m"], [8, 4, 6, 1, "l"], [15, 4, 1, 2, "m"]] },
+  };
+  const WEAPON_TEXT = { greatsword: "A blade with a glowing solar edge.", pistols: "Two pistols that spit magma. Quick shots from far away.", trident: "Long reach, ice-cold, sharp at both ends.", maces: "Heavy and slow. Great at cracking guards.", shielddaggers: "A shield and a pair of fast daggers." };
+  function drawWeaponSprite(c, id, x, y, s) {
+    const wa = WEAPON_ART[id], g = Array.from({ length: wa.h }, () => Array(wa.w).fill(null));
+    for (const [rx, ry, rw, rh, ch] of wa.r) for (let j = 0; j < rh; j++) for (let i = 0; i < rw; i++) if (g[ry + j] && ry + j < wa.h && rx + i < wa.w) g[ry + j][rx + i] = wa.pal[ch];
+    const at = (r, k) => g[r] && g[r][k];
+    c.fillStyle = "#14101e";
+    for (let r = 0; r < wa.h; r++) for (let k = 0; k < wa.w; k++) if (g[r][k]) for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (!at(r + dy, k + dx)) c.fillRect(Math.round(x + (k + dx) * s), Math.round(y + (r + dy) * s), s, s);
+    for (let r = 0; r < wa.h; r++) for (let k = 0; k < wa.w; k++) if (g[r][k]) { c.fillStyle = g[r][k]; c.fillRect(Math.round(x + k * s), Math.round(y + r * s), s, s); }
+  }
   const WEAPON_OF = { obsidian: "greatsword", crimson: "pistols", cobalt: "trident", amber: "maces", emerald: "shielddaggers" };
   const STAGE_BG = { town: null, ocean: "beach", ice: "cave", desert: "city", dino: "meadow", magma: "volcano" };
   const TRIALS = {
@@ -1818,6 +1848,12 @@
       if (fi.hurt > 0) c.translate(fi.hurt % 2 ? 2 : -2, 0);
       drawGrid(c, g, -24, top - 3, 3);
       c.restore(); c.globalAlpha = 1;
+      if (fi.weapon && WEAPON_ART[fi.weapon]) {                                         // the held weapon, swinging when it attacks
+        const wa = WEAPON_ART[fi.weapon], busy = fi.act && ["light", "heavy", "air"].includes(fi.state), prog = busy ? Math.min(1, fi.t / (fi.act.start + fi.act.active + 1)) : 0;
+        const ang = busy ? (fi.state === "heavy" ? -1.3 + prog * 2.4 : -0.5 + prog * 1.1) : -0.35, big = Math.max(2, Math.round(40 / wa.w));
+        c.save(); c.translate(Math.round(fi.x + fi.face * 12), Math.round(top + 26)); c.scale(fi.face, 1); c.rotate(ang);
+        drawWeaponSprite(c, fi.weapon, -2 * big, -Math.round(wa.h * big / 2), big); c.restore();
+      }
       if (fi.state === "guard") { c.strokeStyle = fi.t <= FT.BAL.parryFrames ? "#ffffff" : "#8fd0ff"; c.lineWidth = 2; c.beginPath(); c.arc(fi.x + fi.face * 14, top + 20, 24, -1.2, 1.2); c.stroke(); }
       if (fi.act && fi.t < fi.act.start + fi.act.active && fi.t >= fi.act.start && fi.state !== "special") {          // swoosh
         c.fillStyle = fi.state === "heavy" ? "rgba(255,160,90,.55)" : "rgba(255,255,255,.5)";
@@ -3343,7 +3379,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { bag: { give: giveItem, take: takeItem, has: hasItem, open: openBag, items: ITEMS }, apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS }, fight: { open: openFight, start: startFight, state: () => fight, held: fightHeld }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { bag: { weapon: drawWeaponSprite, give: giveItem, take: takeItem, has: hasItem, open: openBag, items: ITEMS }, apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS }, fight: { open: openFight, start: startFight, state: () => fight, held: fightHeld }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

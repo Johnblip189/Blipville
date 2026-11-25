@@ -3490,7 +3490,12 @@ GIFTS = {
   "body": ["r......yy.....g.", "......hhhh......", ".g...hhsshh...r.", "....hhhhhhhh....", ".obbbbbbbbbbbbo.", "obbbbbbbbbbbbbbo",
            "obbrbbbbbbbbgbbo", "obpbbbbbbbbbbpbo", "obbbbgbbbbrbbbbo", "obbbbbbbbbbbbbbo", ".obbbybbbbbbbbo.", "..oooooooooooo.."],
   "colors": [{"name": "Party", "o": "#3a1a3a", "b": "#ffd0e8", "h": "#5a8aff", "s": "#ffd23a", "y": "#ffd23a", "r": "#ff5a7a", "g": "#5ae07a", "p": "#ff8ab8", "e": "#2a0a2a"},
-             {"name": "Gold", "o": "#5a3a06", "b": "#ffe8a0", "h": "#ff5a8a", "s": "#ffffff", "y": "#ffffff", "r": "#ff5a7a", "g": "#5ab8ff", "p": "#ff9a7a", "e": "#2a1a04"}]}
+             {"name": "Gold", "o": "#5a3a06", "b": "#ffe8a0", "h": "#ff5a8a", "s": "#ffffff", "y": "#ffffff", "r": "#ff5a7a", "g": "#5ab8ff", "p": "#ff9a7a", "e": "#2a1a04"}]},
+ "Cakeling": {"eyes": 6, "move": "hop", "speed": 1.1,
+  "lines": ["make a wish!", "*candle flickers*", "it's a party day!", "i'm 100% cake. ask me anything", "please don't blow me out. thanks."],
+  "body": [".......yy.......", ".......rw.......", "...oooooooooo...", "..owwwwwwwwwwo..", ".owwrwwwwgwwwyo.", "owwbwwwwwbwwwwwo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "ojjjjjjjjjjjjjjo", "obbbbbbbbbbbbbbo", ".oooooooooooooo."],
+  "colors": [{"name": "Vanilla", "o": "#4a2a3a", "b": "#ffd9a0", "w": "#fff4f0", "r": "#ff4a6a", "y": "#ffd23a", "g": "#5ae07a", "j": "#ff7a9a", "p": "#ff8ab8", "e": "#2a0a1a"},
+             {"name": "Chocolate", "o": "#1e0c06", "b": "#7a4a2a", "w": "#ffb8d8", "r": "#ffd23a", "y": "#ffe27a", "g": "#5ab8ff", "j": "#fff0e0", "p": "#ff8a9a", "e": "#1a0a04"}]}
 }
 # World Legends ✨: two legendary Blips per world. They only show up while you're visiting that world: they stroll
 # past in full color with sparkles, and you click them before they leave.
@@ -3521,6 +3526,8 @@ GIFT_DROPS = [
      "why": "You caught 200 Countdown Stars and helped launch Blipville 1.0! 🚀"},
     {"kind": "Confetti", "start": "2026-11-20", "until": "2026-11-22", "until_text": "the end of launch weekend (Sunday, November 22)",
      "why": "Happy launch weekend! Thanks for playing Blipville 1.0 right away! 🎉"},
+    {"kind": "Cakeling", "start": "2026-12-08", "until": "2026-12-08", "until_text": "Tuesday, December 8",
+     "why": "A little gift for a special day. Thanks for being here!"},
 ]
 GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest one (the website version reads these)
 GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
@@ -8465,7 +8472,7 @@ _NEW_TYPES = {
  "frost": {"Yeti", "Frostback", "Tundrox", "Snow Leopard", "Polar Bear", "Penguin", "Walrus", "Mammoth", "Beluga", "Wendigo", "Yak",
            "Saber Kitten", "Lemming", "Narwhal", "Grey Lady", "Crystal Axolotl"},
  "sweet": {"Donut", "Cupcake", "Ice Cream", "Macaron", "Pudding", "Gummy Bear", "Dumpling", "Marshmallow", "Gumdrop Golem",
-           "Cotton Candy Cloud", "Candy Dragon", "Sprinkle Unicorn", "Licorice Serpent", "Bee", "Confetti", "Beta Buddy", "Bun",
+           "Cotton Candy Cloud", "Candy Dragon", "Sprinkle Unicorn", "Licorice Serpent", "Bee", "Confetti", "Cakeling", "Beta Buddy", "Bun",
            "Rainbow Blip", "Haunted Teacup", "Lucky Cat"},
  "cosmic": {"Star", "Moon", "Comet", "Ringed Planet", "Rocket", "Black Hole", "Space Jelly", "Astronaut", "Space Slug", "Nebulon",
             "Nebula Cat", "Cosmo Pup", "Star Whale", "Comet Fox", "Moon Bunny", "Moon Moth", "Qilin", "Liftoff", "Blipmaker",

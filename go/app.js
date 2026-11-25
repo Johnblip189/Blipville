@@ -1656,18 +1656,74 @@
   const FKEYS = { ArrowLeft: "left", a: "left", A: "left", ArrowRight: "right", d: "right", D: "right", ArrowUp: "jump", w: "jump", W: "jump", " ": "jump",
                   j: "light", J: "light", k: "heavy", K: "heavy", l: "dash", L: "dash", h: "guard", H: "guard", ArrowDown: "guard", u: "special", U: "special", i: "awaken", I: "awaken" };
   const fstats = (kind) => AR.stats[kind] || { type: "spark", hp: 90, atk: 18, spd: 10 };
-  function fspec(kind, id, team, ai, canAw) {
+  function fspec(kind, id, team, ai, canAw, weapon) {
     const base = AWAKEN_BASE[kind] || kind, st = fstats(base);
-    return { id, name: id, kind: base, hp: st.hp, atk: st.atk, spd: st.spd, types: typesOf(st), canAw, team, ai };
+    return { id, name: id, kind: base, hp: st.hp, atk: st.atk, spd: st.spd, types: typesOf(st), canAw, team, ai, weapon: weapon || null };
   }
-  function startFight(level) {
+  // ⚡ Apex Nexus: five Cores, each unlocked by a trial in the real-time battles (beta: creator menu only for now). Everything is saved in save.apexNexusCores / save.apexProgress.
+  const WEAPON_OF = { obsidian: "greatsword", crimson: "pistols", cobalt: "trident", amber: "maces", emerald: "shielddaggers" };
+  const STAGE_BG = { town: null, ocean: "beach", ice: "cave", desert: "city", dino: "meadow", magma: "volcano" };
+  const TRIALS = {
+    obsidian: { stage: "town", level: 1, text: (p) => `Win 3 battles with a tech Blip (a Robo or a spark / cosmic type). ${Math.min(3, p.obsidianWins || 0)}/3`, tip: "Pick a tech Blip as your fighter first." },
+    crimson:  { stage: "magma", level: 2, drone: true, loan: "pistols", text: (p) => `Land 15 ranged hits in one match ${p.rangedDone ? "✅" : "⬜"} and defeat the rogue Crimson Drone ${p.droneDown ? "✅" : "⬜"}`, tip: "You borrow the Magma Pistols for this trial." },
+    cobalt:   { stage: "ocean", level: 1, text: () => "Win an Ocean or Ice fight taking under 30% damage", tip: "Dodge and block. Stay clean!" },
+    amber:    { stage: "desert", level: 1, text: () => "Land 10 heavy slams or guard-breaks in one match", tip: "Heavy attacks (💥) break guards." },
+    emerald:  { stage: "dino", level: 1, text: () => "Dodge (💨) or parry (🛡️) 8 attacks in one match", tip: "Dash through hits, or guard right as they land." },
+  };
+  const apexHave = () => (save.apexNexusCores = save.apexNexusCores || []);
+  const apexProg = () => (save.apexProgress = save.apexProgress || {});
+  const weaponsOwned = () => apexHave().map((id) => WEAPON_OF[id]).filter(Boolean);
+  const isTech = (kind) => { const base = AWAKEN_BASE[kind] || kind; return /^Robo /.test(base) || ["spark", "cosmic"].includes((fstats(base) || {}).type) || (typesOf(fstats(base)) || []).some((t) => t === "spark" || t === "cosmic"); };
+  function startFight(level, opts = {}) {
     const me = sheetPet || pets[0], base = AWAKEN_BASE[me.kind] || me.kind;
-    const rival = pick(AR.rivals.length ? AR.rivals : [{ team: [["Cat", 0]] }]), foeKind = pick(rival.team)[0], foeBase = AWAKEN_BASE[foeKind] || foeKind;
+    const rival = pick(AR.rivals.length ? AR.rivals : [{ team: [["Cat", 0]] }]), foeKind = opts.drone ? "Robo Fox" : pick(rival.team)[0], foeBase = AWAKEN_BASE[foeKind] || foeKind;
     const tm = (ats, ds) => (ats.length ? Math.max(...ats.map((a) => typeMult(a, ds))) : 1);
-    fight = { m: FT.create([fspec(base, "you", "P", null, !!AWAKEN_CHAIN[base] && awLevel(base) > 0), fspec(foeBase, "foe", "E", level, true)], { seed: (Math.random() * 1e9) | 0, typeMult: tm }),
-              look: { you: [base, me.color % KINDS[base].colors.length], foe: [foeBase, 0] }, fx: [], acc: 0, last: 0, t: 0, shown: false, bg: pick(D.friendBgs || ["meadow"]), level };
-    $("fightPick").hidden = true; $("fightCanvas").hidden = false; $("fightPad").hidden = false; $("fightResult").hidden = true;
+    const owned = weaponsOwned(), weapon = opts.loan || owned[0] || null;
+    const foe = fspec(foeBase, "foe", "E", level, true); if (opts.drone) { foe.hp = Math.round(foe.hp * 1.25); foe.name = "Crimson Drone"; }
+    fight = { m: FT.create([fspec(base, "you", "P", null, !!AWAKEN_CHAIN[base] && awLevel(base) > 0, weapon), foe], { seed: (Math.random() * 1e9) | 0, typeMult: tm }),
+              look: { you: [base, me.color % KINDS[base].colors.length], foe: [foeBase, opts.drone ? 1 : 0] }, fx: [], acc: 0, last: 0, t: 0, shown: false, bg: (opts.stage && STAGE_BG[opts.stage]) || pick(D.friendBgs || ["meadow"]), level,
+              stage: opts.stage || "town", trial: opts.trial || null, drone: !!opts.drone, loan: opts.loan || null, weapons: [null, ...new Set([...(opts.loan ? [opts.loan] : []), ...owned])], wi: 0, base };
+    fight.wi = Math.max(0, fight.weapons.indexOf(weapon));
+    $("fightPick").hidden = true; $("fightCanvas").hidden = false; $("fightPad").hidden = false; $("fightResult").hidden = true; $("nexusSheet").hidden = true;
     fightLoop(fight);
+  }
+  function switchWeapon() {                                                       // 🔁 the Center-Switch: cycle the weapons you hold (or bare hands)
+    const f = fight; if (!f || f.m.over || f.weapons.length < 2) return;
+    f.wi = (f.wi + 1) % f.weapons.length; const w = f.weapons[f.wi], me = f.m.fighters[0];
+    me.weapon = w; me.moves = w ? { ...FT.MOVES, ...FT.WEAPONS[w] } : FT.MOVES;
+    f.fx.push({ k: "num", x: me.x, y: 56, text: w ? `${FT.WEAPONS[w].icon} ${FT.WEAPONS[w].name}` : "✊ Bare hands", t: f.t }); sfx("pop");
+  }
+  function apexAward(id) {
+    const list = apexHave(); if (list.includes(id)) return false;
+    list.push(id); persist(true); sfx("fanfare");
+    const w = FT.WEAPONS[WEAPON_OF[id]];
+    toast(`⚡ The ${id[0].toUpperCase() + id.slice(1)} Core is yours! ${w.icon} ${w.name} unlocked. Something in the dark stirs…`, 6);
+    return true;
+  }
+  function apexCheck(f) {                                                          // after a trial fight: did it count?
+    const m = f.m, won = m.over.winner === "P", s = m.stats.you, you = m.fighters[0], p = apexProg(), have = apexHave(), got = [];
+    if (!have.includes("obsidian") && won && isTech(f.base)) { p.obsidianWins = (p.obsidianWins || 0) + 1; if (p.obsidianWins >= 3 && apexAward("obsidian")) got.push("obsidian"); }
+    if (!have.includes("crimson")) {
+      if (s.rangedHits >= 15) p.rangedDone = true;
+      if (won && f.drone) p.droneDown = true;
+      if (p.rangedDone && p.droneDown && apexAward("crimson")) got.push("crimson");
+    }
+    if (!have.includes("cobalt") && won && (f.stage === "ocean" || f.stage === "ice") && s.taken < 0.3 * you.max && apexAward("cobalt")) got.push("cobalt");
+    if (!have.includes("amber") && s.guardBreaks + s.slams >= 10 && apexAward("amber")) got.push("amber");
+    if (!have.includes("emerald") && s.dodges + s.counters + s.projCounters >= 8 && apexAward("emerald")) got.push("emerald");
+    persist(); return got;
+  }
+  function openNexus() {
+    const list = $("nexusList"); list.innerHTML = ""; const have = apexHave(), p = apexProg();
+    for (const id of ["obsidian", "crimson", "cobalt", "amber", "emerald"]) {
+      const n = NEXUS[id], t = TRIALS[id], done = have.includes(id), d = document.createElement("div"); d.className = "worldRow";
+      const info = document.createElement("div"); info.innerHTML = `<b>${n.icon} ${n.core}${done ? " ✅" : ""}</b><small>${done ? `${n.name} sleeps no more. ${FT.WEAPONS[WEAPON_OF[id]].icon} ${FT.WEAPONS[WEAPON_OF[id]].name}` : t.text(p)}<br>${done ? "" : t.tip}</small>`;
+      const b = document.createElement("button"); b.textContent = done ? "Done" : "⚔️ Start"; b.disabled = done;
+      b.onclick = () => { closeSheets(); openSheet("fightSheet"); startFight(t.level, { stage: t.stage, trial: id, drone: !!t.drone, loan: t.loan }); };
+      d.append(info, b); list.appendChild(d);
+    }
+    $("nexusWeapons").textContent = weaponsOwned().length ? `Weapons: ${weaponsOwned().map((w) => FT.WEAPONS[w].icon + " " + FT.WEAPONS[w].name).join(" · ")}. Use 🔁 in a fight to switch.` : "No weapons yet. Finish a trial to earn one!";
+    openSheet("nexusSheet");
   }
   function openFight() {
     fight = null; $("fightPick").hidden = false; $("fightCanvas").hidden = true; $("fightPad").hidden = true; $("fightResult").hidden = true;
@@ -1744,22 +1800,25 @@
     c.font = "800 12px " + FONT; c.textAlign = "center"; c.fillStyle = "#fff"; c.fillText(String(Math.max(0, Math.ceil((m.limit - m.frame) / 60))), w / 2, 20);
   }
   function showFightResult(f) {
-    const m = f.m, won = m.over.winner === "P", s = m.stats.you, box = $("fightResult");
+    const m = f.m, won = m.over.winner === "P", s = m.stats.you, box = $("fightResult"), got = apexCheck(f);
     box.hidden = false; $("fightPad").hidden = true;
     box.innerHTML = `<div class="sheetTitle">${m.over.winner == null ? "🤝 Draw!" : won ? "🏆 You win!" : "💫 You lost"}</div>
       <div class="muted small">Hits ${s.hits} · air ${s.airHits} · heavy ${s.heavyHits} · dash ${s.dashHits} · guard breaks ${s.guardBreaks} · parries ${s.counters + s.projCounters} · best combo ${s.maxCombo}</div>
+      <div class="muted small">Ranged ${s.rangedHits} · slams ${s.slams} · dodges ${s.dodges}</div>
+      ${got.length ? `<div class="sheetTitle">⚡ ${got.map((g) => NEXUS[g].core).join(", ")} unlocked!</div>` : ""}
       <div class="row"><button id="fightAgain">⚔️ Rematch</button><button id="fightMenu">Change level</button></div>`;
-    $("fightAgain").onclick = () => startFight(f.level);
+    $("fightAgain").onclick = () => startFight(f.level, { stage: f.stage, trial: f.trial, drone: f.drone, loan: f.loan });
     $("fightMenu").onclick = openFight;
     sfx(won ? "fanfare" : "boing");
   }
   document.querySelectorAll("#fightPick [data-lv]").forEach((b) => (b.onclick = () => startFight(+b.dataset.lv)));
   document.querySelectorAll("#fightPad [data-k]").forEach((b) => {
-    const k = b.dataset.k, down = (e) => { e.preventDefault(); fightHeld[k] = true; b.classList.add("down"); }, up = () => { fightHeld[k] = false; b.classList.remove("down"); };
+    const k = b.dataset.k, down = (e) => { e.preventDefault(); if (k === "switch") { switchWeapon(); return; } fightHeld[k] = true; b.classList.add("down"); }, up = () => { fightHeld[k] = false; b.classList.remove("down"); };
     b.addEventListener("pointerdown", down); b.addEventListener("pointerup", up); b.addEventListener("pointerleave", up); b.addEventListener("pointercancel", up);
   });
   const fightKey = (e, on) => {
     if ($("fightSheet").hidden || !fight) return;
+    if ((e.key === "c" || e.key === "C") && on) { e.preventDefault(); e.stopImmediatePropagation(); switchWeapon(); return; }
     const k = FKEYS[e.key]; if (!k) return;
     e.preventDefault(); e.stopImmediatePropagation(); fightHeld[k] = on;                  // the town's shortcuts (F, N, E, Z…) stay quiet during a fight
   };
@@ -2501,6 +2560,7 @@
   if (isMod()) modMode();
   $("devBtn").onclick = () => openSheet("devSheet");
   $("devFight").onclick = () => openFight();
+  $("devNexus").onclick = () => openNexus();
   $("devHearts").onclick = () => { reward(pets[0], 100); toast("💖 +100 hearts", 1.5); };
   $("devCryptid").onclick = () => devSpawn("cryptids");
   $("devKaiju").onclick = () => devSpawn("kaiju");
@@ -3238,7 +3298,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { fight: { open: openFight, start: startFight, state: () => fight, held: fightHeld }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS }, fight: { open: openFight, start: startFight, state: () => fight, held: fightHeld }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

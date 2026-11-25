@@ -23,15 +23,25 @@
     special: { start: 10, active: 0,  rec: 16, dmg: 0.3, kb: 90, stun: 18, speed: 230, life: 90 },   // a projectile
   };
 
+  // ⚔️ Nexus weapons (each Core unlocks one). A weapon replaces some of the moves for whoever holds it. All numbers are untuned first guesses.
+  //   shoot: the light attack fires a small projectile instead of swinging (a ranged hit).
+  const WEAPONS = {
+    greatsword: { name: "Solar-Edge Greatsword", icon: "🗡️", light: { start: 6, active: 3, rec: 11, reach: 50, h: 38, dmg: 0.22, kb: 80, stun: 15 }, heavy: { start: 14, active: 4, rec: 22, reach: 62, h: 52, dmg: 0.52, kb: 70, stun: 28, launch: 360, guardBreak: true } },
+    pistols:    { name: "Dual Magma Pistols", icon: "🔫", light: { start: 5, active: 0, rec: 8, dmg: 0.09, kb: 40, stun: 10, speed: 360, life: 55, shoot: true }, heavy: { start: 12, active: 4, rec: 20, reach: 36, h: 44, dmg: 0.34, kb: 60, stun: 24, launch: 300, guardBreak: true } },
+    trident:    { name: "Double-Sided Glacial Trident", icon: "🔱", light: { start: 5, active: 4, rec: 9, reach: 64, h: 30, dmg: 0.17, kb: 80, stun: 16 }, heavy: { start: 12, active: 5, rec: 20, reach: 70, h: 44, dmg: 0.4, kb: 60, stun: 28, launch: 330, guardBreak: true } },
+    maces:      { name: "Twin Grappling Wrecking-Maces", icon: "🔨", light: { start: 7, active: 3, rec: 12, reach: 40, h: 40, dmg: 0.24, kb: 70, stun: 18, guardBreak: true }, heavy: { start: 16, active: 5, rec: 26, reach: 52, h: 54, dmg: 0.6, kb: 70, stun: 34, launch: 380, guardBreak: true } },
+    shielddaggers: { name: "Boomerang Shield & Twin Daggers", icon: "🛡️", light: { start: 3, active: 3, rec: 7, reach: 32, h: 32, dmg: 0.15, kb: 60, stun: 12 } },
+  };
+
   const NO = {};
   const KEYS = ["left", "right", "jump", "light", "heavy", "dash", "guard", "special", "awaken"];
   function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
-  const newStats = () => ({ hits: 0, airHits: 0, heavyHits: 0, dashHits: 0, specialHits: 0, guardBreaks: 0, counters: 0, blocks: 0, projCounters: 0, awakenings: 0, kos: 0, damage: 0, taken: 0, maxCombo: 0 });
+  const newStats = () => ({ hits: 0, airHits: 0, heavyHits: 0, dashHits: 0, specialHits: 0, guardBreaks: 0, slams: 0, rangedHits: 0, dodges: 0, counters: 0, blocks: 0, projCounters: 0, awakenings: 0, kos: 0, damage: 0, taken: 0, maxCombo: 0 });
 
   // spec: { id, name, kind, hp, atk, spd, types:[], canAw, team, ai: 0|1|2|null, big }
   function fighter(spec, x, face) {
     return { id: spec.id, name: spec.name || spec.id, kind: spec.kind, team: spec.team, hp: spec.hp, max: spec.hp, atk: spec.atk, spd: spec.spd, types: spec.types || [],
-      canAw: !!spec.canAw, ai: spec.ai == null ? null : { level: spec.ai, tick: 0, plan: "approach", planT: 0 }, big: spec.big || 1, stocks: spec.stocks || BAL.stocks,
+      canAw: !!spec.canAw, weapon: spec.weapon || null, moves: spec.weapon && WEAPONS[spec.weapon] ? { ...MOVES, ...WEAPONS[spec.weapon] } : MOVES, ai: spec.ai == null ? null : { level: spec.ai, tick: 0, plan: "approach", planT: 0 }, big: spec.big || 1, stocks: spec.stocks || BAL.stocks,
       x, y: 0, vx: 0, vy: 0, face, home: x, state: "idle", t: 0, stunT: 0, act: null, hit: [], combo: 0, comboWindow: 0, g: BAL.guardMax, meter: 0, awakeT: 0,
       sp: 100, dashCool: 0, inv: 60, respawn: 0, out: false, prev: {}, hurt: 0, takenCombo: 0 };
   }
@@ -56,7 +66,7 @@
   const typeMult = (m, f, d) => (m.opts.typeMult ? m.opts.typeMult(f.types, d.types) : 1);
   const ev = (m, type, data) => m.events.push({ type, frame: m.frame, ...data });
 
-  function startAct(f, name) { f.state = name; f.t = 0; f.act = MOVES[name]; f.hit = []; }
+  function startAct(f, name) { f.state = name; f.t = 0; f.act = f.moves[name]; f.hit = []; }
   function free(f) { return f.state === "idle" || f.state === "walk" || f.state === "jump"; }
 
   function updateFighter(m, f, inp) {
@@ -90,7 +100,11 @@
         const a = f.act;
         if (f.state === "special" && f.t === a.start) {
           const d = f.face, dmg = f.atk * a.dmg * BAL.dmgScale * (f.awakeT > 0 ? BAL.awakenDmg : 1);
-          m.projectiles.push({ x: f.x + d * 22, y: f.y + 18 * f.big, vx: d * a.speed, owner: f.id, team: f.team, dmg, life: a.life, from: f });
+          m.projectiles.push({ x: f.x + d * 22, y: f.y + 18 * f.big, vx: d * a.speed, owner: f.id, team: f.team, dmg, life: a.life, from: f, ranged: true });
+        }
+        if (f.state === "light" && a.shoot && f.t === a.start) {                    // 🔫 pistols: the light attack is a quick shot
+          const d = f.face, dmg = f.atk * a.dmg * BAL.dmgScale * (f.awakeT > 0 ? BAL.awakenDmg : 1);
+          m.projectiles.push({ x: f.x + d * 20, y: f.y + 20 * f.big, vx: d * a.speed, owner: f.id, team: f.team, dmg, life: a.life, from: f, ranged: true, small: true, mv: a });
         }
         if (f.state === "light" && f.t >= a.start + 2 && pressed(f, inp, "light") && f.combo < 3 && f.t < a.start + a.active + a.rec) { f.combo++; f.t = 0; f.hit = []; if (dir) f.face = dir; }
         if (f.t >= a.start + a.active + a.rec) { f.state = grounded ? "idle" : "jump"; f.act = null; f.combo = 0; }
@@ -124,6 +138,7 @@
   // an attack lands (or is blocked / parried). att = { x, fighter|null }, mv = the move, dmg = full damage
   function strike(m, att, d, mv, dmg, kind) {
     const f = att.fighter, st = m.stats[att.owner], dst = m.stats[d.id], towards = Math.sign(att.x - d.x) || 1;
+    if (d.state === "dash" && d.t <= 8) { dst.dodges++; ev(m, "DODGE", { who: d.id }); return false; }          // 💨 dashing through an attack
     if (d.state === "guard" && d.face === towards) {
       if (d.t <= BAL.parryFrames) {                                         // 🛡️ perfect guard
         if (att.proj) { att.proj.vx *= -1.25; att.proj.owner = d.id; att.proj.team = d.team; att.proj.dmg *= 1.2; att.proj.from = d; dst.projCounters++; ev(m, "PROJ_COUNTER", { who: d.id }); }
@@ -140,7 +155,7 @@
     const mult = f ? typeMult(m, f, d) : 1, dealt = dmg * mult;
     d.hp -= dealt; d.hurt = 8; d.takenCombo++; d.comboWindow = 50;
     const air = !!(f && f.y > 2 && kind === "air"), heavy = kind === "heavy", dash = kind === "dash", spec = kind === "special";
-    if (st) { st.hits++; st.damage += dealt; if (air) st.airHits++; if (heavy) st.heavyHits++; if (dash) st.dashHits++; if (spec) st.specialHits++; st.maxCombo = Math.max(st.maxCombo, d.takenCombo); }
+    if (st) { st.hits++; st.damage += dealt; if (air) st.airHits++; if (heavy) { st.heavyHits++; st.slams++; } if (att.proj && att.proj.ranged) st.rangedHits++; if (dash) st.dashHits++; if (spec) st.specialHits++; st.maxCombo = Math.max(st.maxCombo, d.takenCombo); }
     dst.taken += dealt;
     const f0 = m.fighters.find((x) => x.id === att.owner); if (f0) f0.meter = Math.min(100, f0.meter + dealt * BAL.meterPerDmg); d.meter = Math.min(100, d.meter + dealt * BAL.meterPerDmgTaken);
     d.state = mv.launch ? "launched" : "hitstun"; d.t = 0; d.stunT = mv.stun; d.act = null;
@@ -186,7 +201,7 @@
       for (const d of m.fighters) {
         if (p.life <= 0) break;
         if (d.team === p.team || d.out || d.respawn > 0 || !overlap(box, hurtbox(d))) continue;
-        const hitIt = strike(m, { x: p.x, fighter: null, owner: p.owner, proj: p }, d, MOVES.special, p.dmg, "special");
+        const hitIt = strike(m, { x: p.x, fighter: null, owner: p.owner, proj: p }, d, p.mv || MOVES.special, p.dmg, "special");
         if (hitIt) p.life = 0;
         break;
       }
@@ -239,5 +254,5 @@
     return inp;
   }
 
-  window.FIGHT = { FPS, DT, W, LEFT, RIGHT, BAL, MOVES, KEYS, create, step, hurtbox, newStats };
+  window.FIGHT = { FPS, DT, W, LEFT, RIGHT, BAL, MOVES, WEAPONS, KEYS, create, step, hurtbox, newStats };
 })();

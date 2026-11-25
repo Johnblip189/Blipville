@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=105">
+<link rel="stylesheet" href="style.css?v=106">
 </head>
 <body>
 <canvas id="world"></canvas>
@@ -147,6 +147,7 @@
       <button id="devQuests">📅 Fresh quests</button><button id="devUnlock">🔓 Unlock everything</button>
       <button id="devCreators">⭐ Add my Creator Blips</button><button id="devBoss">🥊 Copy my boss code</button>
       <button id="devFight">⚔️ New battle (beta)</button>
+      <button id="devNexus">⚡ Nexus quests (beta)</button>
     </div>
     <button class="close" data-close>Close</button>
   </div>
@@ -211,6 +212,16 @@
 
 <button id="caveLeave" class="pill" hidden>⬅ Leave the cave</button>
 
+<div class="sheet" id="nexusSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle">⚡ Apex Nexus <span class="muted">(beta)</span></div>
+    <div class="muted small">Five Cores, five trials. Each Core wakes a sleeping Nexus Blip and gives you a weapon for the new battles.</div>
+    <div id="nexusList"></div>
+    <div class="muted small" id="nexusWeapons"></div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
+
 <div class="sheet" id="caveSheet" hidden>
   <div class="card" id="caveCard" style="border:2px solid #888">
     <div class="sheetTitle" id="caveTitle">🕳️ A hidden cave</div>
@@ -246,7 +257,7 @@
     <canvas id="fightCanvas" width="360" height="220" hidden></canvas>
     <div id="fightPad" hidden>
       <div class="padSide"><button data-k="left">◀</button><button data-k="right">▶</button><button data-k="jump">⤴</button></div>
-      <div class="padAct"><button data-k="light">👊</button><button data-k="heavy">💥</button><button data-k="dash">💨</button><button data-k="guard">🛡️</button><button data-k="special">✨</button><button data-k="awaken">🌟</button></div>
+      <div class="padAct"><button data-k="switch" aria-label="Switch weapon">🔁</button><button data-k="light">👊</button><button data-k="heavy">💥</button><button data-k="dash">💨</button><button data-k="guard">🛡️</button><button data-k="special">✨</button><button data-k="awaken">🌟</button></div>
     </div>
     <div id="fightResult" hidden></div>
     <button class="close" data-close>Leave</button>
@@ -357,9 +368,9 @@
   </div>
 </div>
 
-<script src="data.js?v=105"></script>
-<script src="fight.js?v=105"></script>
-<script src="countdown.js?v=105"></script>
-<script src="app.js?v=105"></script>
+<script src="data.js?v=106"></script>
+<script src="fight.js?v=106"></script>
+<script src="countdown.js?v=106"></script>
+<script src="app.js?v=106"></script>
 </body>
 </html>

@@ -3848,6 +3848,15 @@ PROWL = {
              dict(name='Dusk Cloud', o='#241438', b='#a890d0', l='#f4ecff', i='#ff9ad8', n='#10081c', e='#10081c', c='#685090'),
              dict(name='Storm', o='#10182a', b='#7a8aa8', l='#e8eef8', i='#ff9ab0', n='#080c14', e='#080c14', c='#3a4a68')]},
 }
+NEW_ANIMALS.update({
+ "Isopod": {"eyes": 5, "move": "walk", "speed": 0.9, "mouth": True,
+  "feet": {"stand": "..o.o.o..o.o.o..", "walk1": ".o.o..o..o..o.o.", "walk2": "..o.o..oo..o.o..", "air": ".o...o....o...o."},
+  "lines": ["*curls up into a ball*", "i'm not a bug. i'm a crustacean!", "pill bug, roly-poly, same thing", "*tiny legs, big plans*", "armor on. snacks on."],
+  "body": ["...a........a...", "....a......a....", "....oooooooo....", "..ooblllllbboo..", ".oBBBBBBBBBBBBo.", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", ".oBBBBBBBBBBBBo.", ".obbbbbbbbbbbbo.", "..oBBBBBBBBBBo..", "..oooooooooooo.."],
+  "colors": [{"name": "Roly-Poly", "o": "#1a1e28", "b": "#7a8296", "B": "#5a6276", "l": "#b8c0d4", "a": "#4a5266", "p": "#ff9ab0", "e": "#10121a"},
+             {"name": "Orange", "o": "#3a1a08", "b": "#f09a3a", "B": "#c8701a", "l": "#ffd89a", "a": "#8a4a14", "p": "#ff8a7a", "e": "#2a1004"},
+             {"name": "Magic Potion", "o": "#140a2a", "b": "#6a5ad8", "B": "#4a3aa8", "l": "#b8a8ff", "a": "#3a2a88", "p": "#ff8ad0", "e": "#0a0618"}]},
+})
 PROWL_KINDS = list(PROWL)
 
 
@@ -8543,7 +8552,7 @@ _SPROUT = {"Ocelot", "Sprout", "Caterpillar", "Ladybug", "Butterfly", "Mantis", 
 _NEW_TYPES = {
  "volt": {"Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox", "Gigabot", "Volthorn", "Thunderwing", "Stormcrab", "Clockwork Rex", "Eel", "Thunderbird",
           "Byte", "Zorp", "UFO", "Flatwoods Monster", "Dover Demon", "Van Meter Visitor", "Bug Hunter", "Patch", "Jellyfish", "Anglerfish"},
- "stone": {"Rock Golem", "Boulderback", "Tremorpede", "Sandsnapper", "Armadillo", "Pangolin", "Rhino", "Ankylosaurus",
+ "stone": {"Isopod", "Rock Golem", "Boulderback", "Tremorpede", "Sandsnapper", "Armadillo", "Pangolin", "Rhino", "Ankylosaurus",
            "Triceratops", "Stegosaurus", "Brachiosaurus", "Crystal Stego", "Fossilbones", "Mole", "Death Worm", "Mokele-mbembe",
            "Tardigrade", "T-Rex", "Echidna", "Porcupine", "Elephant", "Gorilla", "Bison", "Goat", "Guardian", "Grootslang", "Spike"},
  "gust": {"Skyray", "Nimbus", "Sky Whale", "Pegasus", "Griffin", "Eagle", "Owl", "Crow", "Pigeon", "Parrot", "Toucan", "Hummingbird",

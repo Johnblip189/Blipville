@@ -3539,7 +3539,7 @@ GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
 # 🎂 Cake Day (Dec 8): gift boxes pop up in town all day. Each box you open is a roll: `chance` to win one of the Blips that
 # aren't out yet (never one you already have), otherwise a few hearts. `every` = seconds between boxes, `max` = boxes per player.
-CAKE_DAY = {"day": "2026-12-08", "chance": 0.08, "pool": ["Silvertear-03", "Mythkeeper"], "max": 15, "every": 120, "hearts": 5}
+CAKE_DAY = {"day": "2026-12-08", "chance": 0.08, "pool": ["Mythkeeper"], "max": 15, "every": 120, "hearts": 5}
 
 # 12 new animals for Blipville 1.0
 NEW_ANIMALS.update({

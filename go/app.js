@@ -1483,7 +1483,7 @@
     const lvl = Math.min(+canAw || 0, (AWAKEN_CHAIN[base] || []).length);
     return { base, kind: base, color: +color, lvl, stage: 0, canAw: lvl > 0, hp: st.hp, max: st.hp, aw: false, snacked: false, atkMult: 1 };
   }
-  const fst = (f) => AR.stats[f.kind];
+  const fst = (f) => f.so || AR.stats[f.kind];
   // backgrounds: little scenes 120 x 40 units, the same as the desktop app's (from blip.pyw)
   const fnv = (t) => { let h = 2166136261; for (const b of new TextEncoder().encode(t)) h = Math.imul(h ^ b, 16777619) >>> 0; return h; };
   const arenaBgFor = (foe) => (D.rivalBgs || {})[foe] || (D.friendBgs || ["meadow"])[fnv(foe) % (D.friendBgs || ["meadow"]).length];
@@ -1777,15 +1777,15 @@
   const CORE_WEAPON = { obsidian: "greatsword", crimson: "pistols", cobalt: "trident", amber: "maces", emerald: "shielddaggers" };   // each Core move is shown with its weapon
   const STAGE_BG = { town: null, ocean: "beach", ice: "cave", desert: "city", dino: "meadow", magma: "volcano" };
   const TRIALS = {
-    obsidian: { stage: "town", text: (p) => `Win 3 Arena battles with a tech Blip (a Robo, or a spark / cosmic type). ${Math.min(3, p.obsidianWins || 0)}/3`, tip: "A tech Blip must be in your town." },
-    crimson:  { stage: "magma", drone: true, loan: "crimson", text: (p) => `Land 5 Magma Barrages in one battle ${p.rangedDone ? "✅" : "⬜"} and defeat the rogue Crimson Drone ${p.droneDown ? "✅" : "⬜"}`, tip: "Your Nexus Blip borrows the Crimson move for this trial." },
-    cobalt:   { stage: "ocean", text: () => "Win an Ocean battle taking under 30% damage", tip: "Glacial Lunge goes first. Stay clean!" },
-    amber:    { stage: "desert", loan: "amber", text: () => "Land 4 Wrecking Slams in one battle", tip: "Your Nexus Blip borrows Wrecking Slam. It can miss!" },
-    emerald:  { stage: "dino", loan: "emerald", text: () => "Counter 4 attacks with Shield Counter in one battle", tip: "Brace, and the attacker takes some of it back." },
+    obsidian: { stage: "town", foeType: "volt", foeName: "Workshop Bots", text: (p) => `Win 3 Arena battles with a tech Blip (a Robo, or a volt / spark / cosmic type). ${Math.min(3, p.obsidianWins || 0)}/3`, tip: "A tech Blip must be in your town." },
+    crimson:  { stage: "magma", drone: true, foeType: "spark", foeName: "Crimson Drone", loan: "crimson", text: (p) => `Land 5 Magma Barrages in one battle ${p.rangedDone ? "✅" : "⬜"} and defeat the rogue Crimson Drone ${p.droneDown ? "✅" : "⬜"}`, tip: "Your Nexus Blip borrows the Crimson move for this trial." },
+    cobalt:   { stage: "ocean", foeType: "splash", foeName: "Ocean Patrol", text: () => "Win an Ocean battle taking under 30% damage", tip: "Glacial Lunge goes first. Stay clean!" },
+    amber:    { stage: "desert", foeType: "stone", foeName: "Temple Guardians", loan: "amber", text: () => "Land 4 Wrecking Slams in one battle", tip: "Your Nexus Blip borrows Wrecking Slam. It can miss!" },
+    emerald:  { stage: "dino", foeType: "sprout", foeName: "Canopy Beasts", loan: "emerald", text: () => "Counter 4 attacks with Shield Counter in one battle", tip: "Brace, and the attacker takes some of it back." },
   };
   const apexHave = () => (save.apexNexusCores = save.apexNexusCores || []);
   const apexProg = () => (save.apexProgress = save.apexProgress || {});
-  const isTech = (kind) => { const base = AWAKEN_BASE[kind] || kind, st = AR.stats[base] || {}; return /^Robo /.test(base) || typesOf(st).some((t) => t === "spark" || t === "cosmic"); };
+  const isTech = (kind) => { const base = AWAKEN_BASE[kind] || kind, st = AR.stats[base] || {}; return /^Robo /.test(base) || typesOf(st).some((t) => t === "volt" || t === "spark" || t === "cosmic"); };
   const STAR_ORDER = ["emerald", "amber", "crimson", "cobalt", "obsidian"];                  // clockwise from the top, like the star's points
   const centersAvail = (b) => STAR_ORDER.filter((id) => apexHave().includes(id) || (b && b.loan === id));
   function centerOf(f, b) {                                                                 // which Core is in this Nexus Blip's torso
@@ -1820,14 +1820,16 @@
   function startTrial(id) {
     const t = TRIALS[id];
     const me = id === "obsidian" ? pets.find((q) => isTech(q.kind) && !isNexusKind(q.kind)) : pets.find((q) => isNexusKind(q.kind));
-    if (!me) { toast(id === "obsidian" ? "⚡ Bring a tech Blip to town first (a Robo, or a spark / cosmic type)." : "⚡ Bring a Nexus Blip to town first (Zoo → Nexus ⚡).", 4); return; }
-    const foe = t.drone ? ["Crimson Drone", [["Robo Fox", 1, 0]]] : (() => { const r = pick(AR.rivals.filter((x) => x.name !== D.puppetRival) || AR.rivals); return [r.name, r.team.slice(0, 2)]; })();
+    if (!me) { toast(id === "obsidian" ? "⚡ Bring a tech Blip to town first (a Robo, or a volt / spark / cosmic type)." : "⚡ Bring a Nexus Blip to town first (Zoo → Nexus ⚡).", 4); return; }
+    const pool = [...(D.groups.critters || []), ...(D.groups.animals || []), ...(D.groups.tabs || []).flatMap(([, ks]) => ks)].filter((k) => { const s = AR.stats[k]; return s && !NEXUS_ID[k] && typesOf(s).includes(t.foeType) && s.hp <= 130; });
+    const picks = pool.sort(() => Math.random() - 0.5).slice(0, t.drone ? 1 : 2);
+    const foe = [t.foeName, t.drone ? [["Robo Fox", 1, 0]] : picks.map((k) => [k, 0, 0])];
     closeSheets();
     arenaBattle = newBattle([arenaEntry(me)], foe[1], foe[0], 0);
     const b = arenaBattle; b.trial = id; b.stage = t.stage; b.drone = !!t.drone; b.loan = t.loan || null; if (STAGE_BG[t.stage]) b.bg = STAGE_BG[t.stage];
-    if (t.drone) { const d = b.sides[1][0]; d.max = d.hp = Math.round(d.max * 1.25); }
+    if (t.drone) { const d = b.sides[1][0]; d.max = d.hp = Math.round(d.max * 1.25); d.so = { ...AR.stats[d.kind], type: "spark", type2: "volt" }; }     // the Crimson Drone runs hot: spark + volt
     b.maxSum0 = b.sides[0].reduce((s, f) => s + f.max, 0);
-    b.log = [`⚡ ${id[0].toUpperCase() + id.slice(1)} trial: ${t.text(apexProg()).replace(/ [0-9]\/3$/, "")}`];
+    b.log = [`⚡ ${id[0].toUpperCase() + id.slice(1)} trial vs ${t.foeName} (${t.drone ? "spark + volt" : t.foeType} types): ${t.text(apexProg()).replace(/ [0-9]\/3$/, "")}`];
     openSheet("arenaSheet"); $("arenaLobby").hidden = true; $("arenaFight").hidden = false; sfx("whoosh"); drawBattle();
   }
   function openNexus() {

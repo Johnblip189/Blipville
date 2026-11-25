@@ -1,0 +1,2 @@
+version v1.0.10, commit 1f0a5f1b6f19f193a013fa2914ab0d0a74bd371c, ref refs/heads/main, publish true
+result: success

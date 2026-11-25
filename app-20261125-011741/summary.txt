@@ -1,0 +1,2 @@
+version v1.0.8, commit 99f54d9d107ecc9d022892e13a38d71489f365a2, ref refs/heads/main, publish true
+result: success

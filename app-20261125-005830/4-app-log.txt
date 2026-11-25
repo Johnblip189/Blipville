@@ -1,0 +1,6 @@
+[2026-11-25 00:57:57] v1.0.7-test 2026-11-25T00:57:33Z | started on win32, Python 3.12.10
+[2026-11-25 00:58:07] v1.0.7-test 2026-11-25T00:57:33Z | selftest: pet Blip state=idle click_at=387,694 layered=True frames_shown=238 failed=False
+[2026-11-25 00:58:07] v1.0.7-test 2026-11-25T00:57:33Z | selftest: pet Taco state=idle click_at=536,694 layered=True frames_shown=238 failed=False
+[2026-11-25 00:58:15] v1.0.7-test 2026-11-25T00:57:33Z | selftest: windows=2 perchable=['Untitled - Notepad', 'C:\\ProgramData\\GitHub\\HostedCo']
+[2026-11-25 00:58:15] v1.0.7-test 2026-11-25T00:57:33Z | selftest: 2 pets, LAYERED=True, version=v1.0.7-test
+[2026-11-25 00:58:17] v1.0.7-test 2026-11-25T00:57:33Z | selftest: perched=False state=fall at=393,507

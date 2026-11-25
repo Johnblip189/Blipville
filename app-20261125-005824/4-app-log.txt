@@ -1,0 +1,7 @@
+[2026-11-25 00:57:49] v1.0.7 2026-11-25T00:57:29Z | started on win32, Python 3.12.10
+[2026-11-25 00:57:58] v1.0.7 2026-11-25T00:57:29Z | selftest: pet Blip state=idle click_at=343,694 layered=True frames_shown=240 failed=False
+[2026-11-25 00:57:58] v1.0.7 2026-11-25T00:57:29Z | selftest: pet Jellybean state=idle click_at=178,694 layered=True frames_shown=234 failed=False
+[2026-11-25 00:57:58] v1.0.7 2026-11-25T00:57:29Z | selftest: pressed Blip at 110,154
+[2026-11-25 00:57:59] v1.0.7 2026-11-25T00:57:29Z | trophy: First Friend
+[2026-11-25 00:57:59] v1.0.7 2026-11-25T00:57:29Z | selftest: menu for Blip
+[2026-11-25 00:58:05] v1.0.7 2026-11-25T00:57:29Z | slow frame: 319 ms with 2 pets, 0 sightings

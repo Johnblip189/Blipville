@@ -568,7 +568,7 @@
     if (md >= 922 && md <= 1130) return "autumn";
     return "summer";
   }
-  const hatInShop = (n) => !HATS[n].season || HATS[n].season === currentSeason();
+  const hatInShop = (n) => HATS[n].gift ? save.hatsOwned.includes(n) : (!HATS[n].season || HATS[n].season === currentSeason());
   // accessory colors: a tint swaps an item's main color (0 = original); a 2nd slot lets a Blip wear two things
   const TINTS = D.accessoryTints || [["Original", null]];
   function tintedColors(hat, tint) {
@@ -1293,7 +1293,7 @@
     "kaiju-1": anyU(D.groups.kaiju), "kaiju-all": allU(D.groups.kaiju), "ghost-1": anyU(D.groups.ghosts), "ghost-all": allU(D.groups.ghosts), "dreams-all": allU([...DREAMS]),
     "world-1": () => WORLDS.some((w) => w.cost > 0 && save.worlds.includes(w.name)), "world-all": () => WORLDS.every((w) => !w.cost || save.worlds.includes(w.name)),
     "awaken-1": () => save.awakened.length >= 1, "arena-1": () => stat("arena_wins") >= 1,
-    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "knight-3": () => awLevel("Phantom Knight") >= 3, "boss-1": () => !!save.beatCreator, "bond-5": () => pets.some((q) => bondLevel(q.bond || 0) >= 5), "catch-40": () => stat("catch_best") >= 40, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
+    "arena-champ": () => save.rivalsBeaten.includes("Champion Coco"), "awaken-5": () => save.awakened.length >= 5, "lurker-3": () => awLevel("Lurker") >= 3, "knight-3": () => awLevel("Phantom Knight") >= 3, "boss-1": () => !!save.beatCreator, "month-1": () => !!save.month1, "bond-5": () => pets.some((q) => bondLevel(q.bond || 0) >= 5), "catch-40": () => stat("catch_best") >= 40, "arena-kaiju": () => save.rivalsBeaten.includes("Kaiju King Kai"), "legend-1": anyU(D.groups.legends), "legend-all": allU(D.groups.legends), "night-1": () => save.nightsWon >= 1, "night-3": () => save.nightsWon >= 3,
   };
   function checkTrophies() {
     for (const tr of D.trophies || []) {
@@ -2794,6 +2794,24 @@
   $("eventBtn").hidden = false;           // events and daily quests
   $("eventBtn").textContent = EVENT.icon; $("eventBtn").title = `${EVENT.name} event`; $("eventBtn").setAttribute("aria-label", EVENT.name);
   $("eventBtn").onclick = openEvent;
+  // 🎂 "months since launch" mini event: a one-time gift for anyone who plays inside the window (no points, nothing to grind)
+  const M1 = D.month1 || null;
+  const m1Day = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
+  const m1Open = () => !!M1 && !save.month1 && m1Day() >= M1.start && m1Day() <= M1.until;
+  function m1Refresh() { $("monthBtn").hidden = !m1Open(); }
+  function m1Claim() {
+    if (!m1Open()) return;
+    save.month1 = true;
+    if (!save.hatsOwned.includes(M1.hat)) save.hatsOwned.push(M1.hat);
+    const p = pets.find((q) => !["sleep", "held"].includes(q.state)) || pets[0];
+    reward(p, M1.hearts); sfx("fanfare"); vibrate([20, 30, 20]);
+    if (p) { say(p, `🎂 ${M1.text}`, 6); setFace(p, "happy", 3); burst(p, "heart", 8); wearItem(p, M1.hat); }
+    toast(`🎂 ${M1.text} +${M1.hearts} 💖 and a ${M1.hat}!`, 6);
+    m1Refresh(); persist(true);
+  }
+  $("monthBtn").onclick = m1Claim;
+  m1Refresh(); setInterval(m1Refresh, 60000);
+  if (m1Open()) setTimeout(() => toast("🎂 It's been a month! Tap the cake to get a gift.", 6), 3000);
   // event Blips wander in on their own, so there's always someone to pet: if none are in town, one arrives
   setInterval(() => {
     if (!eventOn() || pets.length >= maxPets()) return;

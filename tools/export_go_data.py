@@ -70,6 +70,7 @@ data = {
                        if t[0] not in getattr(bl, "DESKTOP_TROPHIES", ())],
     "trophyCup": bl.TROPHY_CUP,
     "cakeDay": bl.CAKE_DAY,
+    "month1": bl.MONTH_ONE,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,
     "modHashes": bl.MOD_HASHES, "modKinds": bl.MOD_KINDS, "modCodeKinds": bl.MOD_CODE_KINDS, "roboScenes": list(bl.ROBO_SCENES), "roboPuppet": bl.ROBO_PUPPET, "colorCost": {"candy": bl.COLOR_CANDY_COST, "potion": bl.COLOR_POTION_COST, "special": sorted(bl.SPECIAL_COLORS)}, "ghostNights": {k: g["night"] for k, g in bl.GHOSTS.items() if g.get("night")},

@@ -4545,6 +4545,7 @@ TROPHIES = [
     ("boss-1", "👑", "Beat the Blipmaker", "Beat the creator's boss team in the Arena", lambda a: bool(a.save.get("beat_creator")), 50),
     ("dreams-all", "🧸", "Sweet Dreams", "Keep all 6 Bad Dreams", _all(BAD_DREAM_KINDS), 40),
     ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
+    ("month-1", "🎂", "Month One", "Join the 1-month celebration (Dec 1-16)", lambda a: bool(a.save.get("month1")), 10),
     ("mouse-10", "🖱️", "Cat and Mouse", "Your Blips catch your mouse pointer 10 times", lambda a: a.stat("cursor_catches") >= 10, 15),
 ]
 TROPHIES = [t for t in TROPHIES if FEATURES.get(PARKED_TROPHIES.get(t[0]), True)]
@@ -4554,7 +4555,10 @@ KAIJU_HITS = 3                    # clicks it takes to befriend a kaiju
 
 # ----------------------------------------------------------------------------- hats & outfits
 # slot: head (sits on the head), face (over the eyes), neck (under the chin). Bought with hearts.
-HATS = {'Party Hat': {'slot': 'head',
+HATS = {'Birthday Crown': {'slot': 'head', 'price': 0, 'gift': 'month-1', 'overlap': 1,
+               'colors': {'y': '#ffd23a', 'r': '#ff5f95', 'b': '#5ab8ff'},
+               'rows': ['y...y...y', 'yy.yyy.yy', 'yyyyyyyyy', 'yrybyryby']},
+ 'Party Hat': {'slot': 'head',
                'price': 15,
                'overlap': 1,
                'colors': {'p': '#ff5f95', 'y': '#ffd23a', 'w': '#ffffff'},
@@ -4668,7 +4672,9 @@ def current_season(day=None):
     return "summer"
 
 
-def hat_in_shop(name):
+def hat_in_shop(name, owned=()):
+    if HATS[name].get("gift"):                       # gift items aren't sold: they show up once you own them
+        return name in owned
     season = HATS[name].get("season")
     return season is None or season == current_season()
 
@@ -4770,6 +4776,9 @@ def event_tiers():
 
 
 # Friendship 💞: every Blip bonds with you as you care for it. Points needed for each level, and its title.
+# 🎂 "Months since launch" mini event: a one-time gift for anyone who plays Dec 1-16 (no points, nothing to grind).
+MONTH_ONE = {"id": "month-1", "start": "2026-12-01", "until": "2026-12-16", "hat": "Birthday Crown", "hearts": 20,
+             "text": "1 month of Blipville! Thank you for being here!"}
 BOND_LEVELS = [0, 10, 30, 70, 150]
 BOND_TITLES = ["New friend", "Pal", "Buddy", "Best friend", "Soulmate"]
 BOND_GAIN = {"pet": 1, "feed": 3, "nap": 1, "play": 2, "arena": 3, "catch": 2, "chat": 2}
@@ -10292,7 +10301,7 @@ class HatShop:
         self.win.resizable(False, False)
         self.win.configure(bg="#1d1a2e")
         self.win.attributes("-topmost", True)
-        names = [n for n in HATS if hat_in_shop(n)]
+        names = [n for n in HATS if hat_in_shop(n, self.app.save.get('hats_owned', []))]
         rows = -(-len(names) // self.COLS)
         self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=rows * self.CELL_H + 90,
                                 bg="#1d1a2e", highlightthickness=0)
@@ -11452,6 +11461,15 @@ class App:
             self.add_hearts(10, self.pets[0] if self.pets else None)
             if self.pets:
                 self.pets[0].say("daily treat! +10 💖", 4)
+        m = MONTH_ONE
+        if m["start"] <= today <= m["until"] and not self.save.get("month1"):
+            self.save["month1"] = True
+            owned = self.save.setdefault("hats_owned", [])
+            if m["hat"] not in owned:
+                owned.append(m["hat"])
+            self.add_hearts(m["hearts"], self.pets[0] if self.pets else None)
+            if self.pets:
+                self.pets[0].say(f"🎂 {m['text']} +{m['hearts']} 💖 and a {m['hat']}!", 7)
 
     def open_egg(self, parent):
         from tkinter import messagebox

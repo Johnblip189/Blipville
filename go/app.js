@@ -1731,7 +1731,7 @@
   const STAGE_BG = { town: null, ocean: "beach", ice: "cave", desert: "city", dino: "meadow", magma: "volcano" };
   const TRIALS = {
     obsidian: { stage: "town", level: 1, text: (p) => `Win 3 battles with a tech Blip (a Robo or a spark / cosmic type). ${Math.min(3, p.obsidianWins || 0)}/3`, tip: "Pick a tech Blip as your fighter first." },
-    crimson:  { stage: "magma", level: 2, drone: true, loan: "pistols", text: (p) => `Land 15 ranged hits in one match ${p.rangedDone ? "✅" : "⬜"} and defeat the rogue Crimson Drone ${p.droneDown ? "✅" : "⬜"}`, tip: "You borrow the Magma Pistols for this trial." },
+    crimson:  { stage: "magma", level: 2, drone: true, loan: "crimson", text: (p) => `Land 15 ranged hits in one match ${p.rangedDone ? "✅" : "⬜"} and defeat the rogue Crimson Drone ${p.droneDown ? "✅" : "⬜"}`, tip: "You borrow the Magma Pistols for this trial." },
     cobalt:   { stage: "ocean", level: 1, text: () => "Win an Ocean or Ice fight taking under 30% damage", tip: "Dodge and block. Stay clean!" },
     amber:    { stage: "desert", level: 1, text: () => "Land 10 heavy slams or guard-breaks in one match", tip: "Heavy attacks (💥) break guards." },
     emerald:  { stage: "dino", level: 1, text: () => "Dodge (💨) or parry (🛡️) 8 attacks in one match", tip: "Dash through hits, or guard right as they land." },
@@ -1744,21 +1744,49 @@
     const me = sheetPet || pets[0], base = AWAKEN_BASE[me.kind] || me.kind;
     const rival = pick(AR.rivals.length ? AR.rivals : [{ team: [["Cat", 0]] }]), foeKind = opts.drone ? "Robo Fox" : pick(rival.team)[0], foeBase = AWAKEN_BASE[foeKind] || foeKind;
     const tm = (ats, ds) => (ats.length ? Math.max(...ats.map((a) => typeMult(a, ds))) : 1);
-    const owned = weaponsOwned(), weapon = opts.loan || owned[0] || null;
+    const center = opts.loan || apexHave()[0] || null, weapon = center ? WEAPON_OF[center] : null;
     const foe = fspec(foeBase, "foe", "E", level, true); if (opts.drone) { foe.hp = Math.round(foe.hp * 1.25); foe.name = "Crimson Drone"; }
     fight = { m: FT.create([fspec(base, "you", "P", null, !!AWAKEN_CHAIN[base] && awLevel(base) > 0, weapon), foe], { seed: (Math.random() * 1e9) | 0, typeMult: tm }),
               look: { you: [base, me.color % KINDS[base].colors.length], foe: [foeBase, opts.drone ? 1 : 0] }, fx: [], acc: 0, last: 0, t: 0, shown: false, bg: (opts.stage && STAGE_BG[opts.stage]) || pick(D.friendBgs || ["meadow"]), level,
-              stage: opts.stage || "town", trial: opts.trial || null, drone: !!opts.drone, loan: opts.loan || null, weapons: [null, ...new Set([...(opts.loan ? [opts.loan] : []), ...owned])], wi: 0, base };
-    fight.wi = Math.max(0, fight.weapons.indexOf(weapon));
+              stage: opts.stage || "town", trial: opts.trial || null, drone: !!opts.drone, loan: opts.loan || null, base };
+    fight.m.fighters[0].center = center;
     $("fightPick").hidden = true; $("fightCanvas").hidden = false; $("fightPad").hidden = false; $("fightResult").hidden = true; $("nexusSheet").hidden = true;
     fightLoop(fight);
   }
-  function switchWeapon() {                                                       // 🔁 the Center-Switch: cycle the weapons you hold (or bare hands)
-    const f = fight; if (!f || f.m.over || f.weapons.length < 2) return;
-    f.wi = (f.wi + 1) % f.weapons.length; const w = f.weapons[f.wi], me = f.m.fighters[0];
-    me.weapon = w; me.moves = w ? { ...FT.MOVES, ...FT.WEAPONS[w] } : FT.MOVES;
-    f.fx.push({ k: "num", x: me.x, y: 56, text: w ? `${FT.WEAPONS[w].icon} ${FT.WEAPONS[w].name}` : "✊ Bare hands", t: f.t }); sfx("pop");
+  // 🔁 the Center-Switch: the Nexus Star is a wheel, and whichever Core sits in your torso decides your form (its weapon and its glow)
+  const STAR_ORDER = ["emerald", "amber", "crimson", "cobalt", "obsidian"];                  // clockwise from the top, like the star's points
+  const centersAvail = (f) => STAR_ORDER.filter((id) => apexHave().includes(id) || (f && f.loan === id));
+  function setCenter(id) {
+    const f = fight; if (!f || f.m.over) return; const me = f.m.fighters[0], w = id ? WEAPON_OF[id] : null;
+    if (id && !centersAvail(f).includes(id)) return;
+    me.center = id; me.weapon = w; me.moves = w ? { ...FT.MOVES, ...FT.WEAPONS[w] } : FT.MOVES;
+    f.fx.push({ k: "num", x: me.x, y: 56, text: id ? `${NEXUS[id].icon} ${FT.WEAPONS[w].name}` : "✊ Bare hands", t: f.t }); sfx("pop");
   }
+  function switchWeapon() {                                                       // the 🔁 button / C key: next form around the wheel
+    const f = fight; if (!f || f.m.over) return; const av = centersAvail(f); if (!av.length) return;
+    const cur = f.m.fighters[0].center, order = [...av, null], nx = order[(order.indexOf(cur) + 1) % order.length]; setCenter(nx);
+  }
+  function drawWheel(c, cx, cy, r, f) {
+    const av = centersAvail(f), cur = f.m.fighters[0].center, star = hasItem("nexusStar");
+    c.save(); c.fillStyle = "rgba(10,8,24,.75)"; c.beginPath(); c.arc(cx, cy, r + 3, 0, 7); c.fill();
+    STAR_ORDER.forEach((id, i) => {
+      const a0 = -Math.PI / 2 + i * 2 * Math.PI / 5 - Math.PI / 5, a1 = a0 + 2 * Math.PI / 5, on = av.includes(id), sel = id === cur;
+      c.beginPath(); c.moveTo(cx, cy); c.arc(cx, cy, sel ? r + 2 : r, a0 + 0.04, a1 - 0.04); c.closePath();
+      c.fillStyle = on ? NEXUS[id].color : "#2a2840"; c.globalAlpha = on ? (sel ? 1 : 0.55) : 0.8; c.fill(); c.globalAlpha = 1;
+      if (sel) { c.strokeStyle = "#fff"; c.lineWidth = 2; c.stroke(); }
+    });
+    c.fillStyle = "#14101e"; c.beginPath(); c.arc(cx, cy, r * 0.42, 0, 7); c.fill();
+    c.fillStyle = star ? "#ffe66a" : "#4a4660"; c.beginPath();
+    for (let k = 0; k < 10; k++) { const rr = k % 2 ? r * 0.17 : r * 0.36, an = -Math.PI / 2 + k * Math.PI / 5; c.lineTo(cx + Math.cos(an) * rr, cy + Math.sin(an) * rr); }
+    c.closePath(); c.fill(); c.restore();
+  }
+  const wheelSpot = () => ({ cx: 180, cy: 205, r: 15 });
+  $("fightCanvas").addEventListener("pointerdown", (e) => {                       // tap a slice of the wheel to pick that form
+    const f = fight; if (!f || f.m.over) return; const rc = $("fightCanvas").getBoundingClientRect(), x = (e.clientX - rc.left) * 360 / rc.width, y = (e.clientY - rc.top) * 220 / rc.height, w = wheelSpot();
+    const dx = x - w.cx, dy = y - w.cy; if (Math.hypot(dx, dy) > w.r + 6) return;
+    if (Math.hypot(dx, dy) < w.r * 0.4) { setCenter(null); return; }
+    const ang = (Math.atan2(dy, dx) + Math.PI / 2 + Math.PI / 5 + 4 * Math.PI) % (2 * Math.PI), idx = Math.floor(ang / (2 * Math.PI / 5)); setCenter(STAR_ORDER[idx]);
+  });
   function apexAward(id) {
     const list = apexHave(); if (list.includes(id)) return false;
     list.push(id); giveItem(id + "Core"); sfx("fanfare");
@@ -1797,7 +1825,7 @@
       const b = document.createElement("button"); b.textContent = "✨ Join"; b.onclick = () => { for (const id of ["obsidian", "crimson", "cobalt", "amber", "emerald"]) takeItem(id + "Core"); giveItem("nexusStar"); sfx("fanfare"); toast("⭐ The Cores join into the Nexus Star!", 5); openNexus(); };
       d.append(info, b); list.appendChild(d);
     }
-    $("nexusWeapons").textContent = weaponsOwned().length ? `Weapons: ${weaponsOwned().map((w) => FT.WEAPONS[w].icon + " " + FT.WEAPONS[w].name).join(" · ")}. Use 🔁 in a fight to switch.` : "No weapons yet. Finish a trial to earn one!";
+    $("nexusWeapons").textContent = weaponsOwned().length ? `Weapons: ${weaponsOwned().map((w) => FT.WEAPONS[w].icon + " " + FT.WEAPONS[w].name).join(" · ")}. Use 🔁 in a fight (or tap the wheel) to switch your center.` : "No weapons yet. Finish a trial to earn one!";
     openSheet("nexusSheet");
   }
   function openFight() {
@@ -1848,6 +1876,12 @@
       if (fi.hurt > 0) c.translate(fi.hurt % 2 ? 2 : -2, 0);
       drawGrid(c, g, -24, top - 3, 3);
       c.restore(); c.globalAlpha = 1;
+      if (fi.center && NEXUS[fi.center]) {                                              // the Core glowing in the torso
+        const col = NEXUS[fi.center].color, pulse = 0.6 + 0.4 * Math.sin(f.t * 5);
+        c.fillStyle = col; c.globalAlpha = 0.25 + 0.25 * pulse; c.beginPath(); c.arc(fi.x, top + 22, 11, 0, 7); c.fill(); c.globalAlpha = 1;
+        drawItem(c, fi.center + "Core", Math.round(fi.x - 6), Math.round(top + 16), 1);
+        if (fi.awakeT > 0) { c.strokeStyle = col; c.lineWidth = 2; c.globalAlpha = 0.8; c.strokeRect(fi.x - 24, top - 4, 48, 46); c.globalAlpha = 1; }
+      }
       if (fi.weapon && WEAPON_ART[fi.weapon]) {                                         // the held weapon, swinging when it attacks
         const wa = WEAPON_ART[fi.weapon], busy = fi.act && ["light", "heavy", "air"].includes(fi.state), prog = busy ? Math.min(1, fi.t / (fi.act.start + fi.act.active + 1)) : 0;
         const ang = busy ? (fi.state === "heavy" ? -1.3 + prog * 2.4 : -0.5 + prog * 1.1) : -0.35, big = Math.max(2, Math.round(40 / wa.w));
@@ -1879,6 +1913,7 @@
       c.fillText((i === 0 ? "YOU " : "FOE ") + "♥".repeat(Math.max(0, fi.stocks)), i === 0 ? x : x + 140, 46);
     });
     c.font = "800 12px " + FONT; c.textAlign = "center"; c.fillStyle = "#fff"; c.fillText(String(Math.max(0, Math.ceil((m.limit - m.frame) / 60))), w / 2, 20);
+    if (apexHave().length || f.loan) { const ws = wheelSpot(); drawWheel(c, ws.cx, ws.cy, ws.r, f); }
   }
   function showFightResult(f) {
     const m = f.m, won = m.over.winner === "P", s = m.stats.you, box = $("fightResult"), got = apexCheck(f);

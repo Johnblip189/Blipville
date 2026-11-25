@@ -24,7 +24,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Gather the site's files
         run: |
           mkdir _site
@@ -33,7 +33,7 @@ jobs:
           git fetch -q --depth=1 origin release-1.0 && mkdir -p _site/early && git archive FETCH_HEAD go | tar -x -C /tmp && cp -r /tmp/go/* _site/early/ || echo "no release branch: no early access"
           ls -la _site
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
       - name: Deploy
@@ -45,7 +45,7 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Save the result to the ci-logs branch
         env:
           GH_TOKEN: ${{ github.token }}

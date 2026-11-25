@@ -1779,7 +1779,7 @@
   const TRIALS = {
     obsidian: { stage: "town", foeType: "volt", foeName: "Workshop Bots", text: (p) => `Win 3 Arena battles with a tech Blip (a Robo, or a volt / spark / cosmic type). ${Math.min(3, p.obsidianWins || 0)}/3`, tip: "A tech Blip must be in your town." },
     crimson:  { stage: "magma", drone: true, foeType: "spark", foeName: "Crimson Drone", loan: "crimson", text: (p) => `Land 5 Magma Barrages in total, over any number of tries (${Math.min(5, p.rangedHits || 0)}/5) ${p.rangedDone ? "✅" : "⬜"} and defeat the rogue Crimson Drone ${p.droneDown ? "✅" : "⬜"}`, tip: "Your Nexus Blip borrows the Crimson move for this trial." },
-    cobalt:   { stage: "ocean", foeType: "splash", foeName: "Ocean Patrol", loan: "cobalt", text: () => "Win an Ocean battle landing 4 Glacial Lunges", tip: "Your Nexus Blip borrows Glacial Lunge. It always goes first!" },
+    cobalt:   { stage: "ocean", foeType: "splash", foeName: "Ocean Patrol", loan: "cobalt", text: (p) => `Land 4 Glacial Lunges in the Ocean, over any number of tries (${Math.min(4, p.lungeHits || 0)}/4)`, tip: "Your Nexus Blip borrows Glacial Lunge. It always goes first!" },
     amber:    { stage: "desert", foeType: "stone", foeName: "Temple Guardians", loan: "amber", text: () => "Land 4 Wrecking Slams in one battle", tip: "Your Nexus Blip borrows Wrecking Slam. It can miss!" },
     emerald:  { stage: "dino", foeType: "sprout", foeName: "Canopy Beasts", loan: "emerald", text: () => "Counter 4 attacks with Shield Counter in one battle", tip: "Brace, and the attacker takes some of it back." },
   };
@@ -1813,7 +1813,10 @@
       if (won && b.drone) p.droneDown = true;
       if (p.rangedDone && p.droneDown && apexAward("crimson")) got.push("crimson");
     }
-    if (!have.includes("cobalt") && won && (b.stage === "ocean" || b.stage === "ice") && st.lunges >= 4 && apexAward("cobalt")) got.push("cobalt");
+    if (!have.includes("cobalt") && (b.stage === "ocean" || b.stage === "ice")) {
+      p.lungeHits = (p.lungeHits || 0) + st.lunges;                                       // Glacial Lunges add up across tries
+      if (p.lungeHits >= 4 && apexAward("cobalt")) got.push("cobalt");
+    }
     if (!have.includes("amber") && st.slams >= 4 && apexAward("amber")) got.push("amber");
     if (!have.includes("emerald") && st.counters >= 4 && apexAward("emerald")) got.push("emerald");
     persist(); return got;

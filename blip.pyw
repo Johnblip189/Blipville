@@ -4528,7 +4528,7 @@ TROPHIES = [
     ("boss-1", "👑", "Beat the Blipmaker", "Beat the creator's boss team in the Arena", lambda a: bool(a.save.get("beat_creator")), 50),
     ("dreams-all", "🧸", "Sweet Dreams", "Keep all 6 Bad Dreams", _all(BAD_DREAM_KINDS), 40),
     ("climb-1", "🪟", "Window Climber", "A Blip climbs onto one of your windows", lambda a: a.stat("climbs") >= 1, 10),
-    ("month-1", "🎂", "Month One", "Join the 1-month celebration (Dec 1-3)", lambda a: bool(a.save.get("month1")), 10),
+    ("month-1", "🎂", "Month One", "Join the 1-month celebration (Dec 1-16)", lambda a: bool(a.save.get("month1")), 10),
     ("mouse-10", "🖱️", "Cat and Mouse", "Your Blips catch your mouse pointer 10 times", lambda a: a.stat("cursor_catches") >= 10, 15),
 ]
 TROPHIES = [t for t in TROPHIES if FEATURES.get(PARKED_TROPHIES.get(t[0]), True)]
@@ -4759,8 +4759,8 @@ def event_tiers():
 
 
 # Friendship 💞: every Blip bonds with you as you care for it. Points needed for each level, and its title.
-# 🎂 "Months since launch" mini event: a one-time gift for anyone who plays Dec 1-3 (no points, nothing to grind).
-MONTH_ONE = {"id": "month-1", "start": "2026-12-01", "until": "2026-12-03", "hat": "Birthday Crown", "hearts": 20,
+# 🎂 "Months since launch" mini event: a one-time gift for anyone who plays Dec 1-16 (no points, nothing to grind).
+MONTH_ONE = {"id": "month-1", "start": "2026-12-01", "until": "2026-12-16", "hat": "Birthday Crown", "hearts": 20,
              "text": "1 month of Blipville! Thank you for being here!"}
 BOND_LEVELS = [0, 10, 30, 70, 150]
 BOND_TITLES = ["New friend", "Pal", "Buddy", "Best friend", "Soulmate"]

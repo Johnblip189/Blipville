@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.5:** ✨ A little something got a lot better. 👀
+>
 > **1.0.4:** ✨ Added something new. Some doors aren't where you'd expect. 👀
 >
 > **1.0.3:** ✨ Added something new. Go exploring… 👀

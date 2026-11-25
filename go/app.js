@@ -3053,8 +3053,9 @@
       st.opened++;
       const left = (CAKE.pool || []).filter((k) => !st.got.includes(k) && !pets.some((p) => p.kind === k) && !(save.eventKinds || []).includes(k) && !save.gifts.includes(k));
       const p = pets.find((q) => !["sleep", "held"].includes(q.state)) || pets[0];
-      if (left.length && Math.random() < CAKE.chance) {
-        const kind = left[Math.floor(Math.random() * left.length)];
+      const hit = left.find(() => Math.random() < CAKE.chance);      // each unreleased Blip gets its own roll
+      if (hit) {
+        const kind = hit;
         st.got.push(kind); save.eventKinds = save.eventKinds || []; if (!save.eventKinds.includes(kind)) save.eventKinds.push(kind);
         const g = addPet(kind, { quiet: true });
         sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);

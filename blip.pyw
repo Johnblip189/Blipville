@@ -3537,9 +3537,9 @@ GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest on
 GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
 GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
-# 🎂 Cake Day (Dec 8): gift boxes pop up in town all day. Each box you open is a roll: `chance` to win one of the Blips that
-# aren't out yet (never one you already have), otherwise a few hearts. `every` = seconds between boxes, `max` = boxes per player.
-CAKE_DAY = {"day": "2026-12-08", "chance": 0.08, "pool": ["Mythkeeper"], "max": 15, "every": 120, "hearts": 5,
+# 🎂 Cake Day (Dec 8): gift boxes pop up in town all day. Each box you open rolls `chance` (1%) separately for each Blip in the
+# pool that isn't out yet (never one you already have), then the cursed-color roll below, otherwise a few hearts. `every` = seconds between boxes, `max` = boxes per player.
+CAKE_DAY = {"day": "2026-12-08", "chance": 0.01, "pool": ["Mythkeeper", "Silvertear-03"], "max": 15, "every": 120, "hearts": 5,
             # a second, separate roll: the "Cursed Figure" colors of the Series 1 figures (the Blip comes with its color)
             "skin_chance": 0.08, "skin_name": "Cursed Figure", "skin_kinds": ["Blip", "Bun", "T-Rex", "Wendigo", "Beta Buddy"]}
 

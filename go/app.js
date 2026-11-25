@@ -1778,7 +1778,7 @@
   const STAGE_BG = { town: null, ocean: "beach", ice: "cave", desert: "city", dino: "meadow", magma: "volcano" };
   const TRIALS = {
     obsidian: { stage: "town", foeType: "volt", foeName: "Workshop Bots", text: (p) => `Win 3 Arena battles with a tech Blip (a Robo, or a volt / spark / cosmic type). ${Math.min(3, p.obsidianWins || 0)}/3`, tip: "A tech Blip must be in your town." },
-    crimson:  { stage: "magma", drone: true, foeType: "spark", foeName: "Crimson Drone", loan: "crimson", text: (p) => `Land 5 Magma Barrages in one battle ${p.rangedDone ? "✅" : "⬜"} and defeat the rogue Crimson Drone ${p.droneDown ? "✅" : "⬜"}`, tip: "Your Nexus Blip borrows the Crimson move for this trial." },
+    crimson:  { stage: "magma", drone: true, foeType: "spark", foeName: "Crimson Drone", loan: "crimson", text: (p) => `Land 5 Magma Barrages in total, over any number of tries (${Math.min(5, p.rangedHits || 0)}/5) ${p.rangedDone ? "✅" : "⬜"} and defeat the rogue Crimson Drone ${p.droneDown ? "✅" : "⬜"}`, tip: "Your Nexus Blip borrows the Crimson move for this trial." },
     cobalt:   { stage: "ocean", foeType: "splash", foeName: "Ocean Patrol", text: () => "Win an Ocean battle taking under 30% damage", tip: "Glacial Lunge goes first. Stay clean!" },
     amber:    { stage: "desert", foeType: "stone", foeName: "Temple Guardians", loan: "amber", text: () => "Land 4 Wrecking Slams in one battle", tip: "Your Nexus Blip borrows Wrecking Slam. It can miss!" },
     emerald:  { stage: "dino", foeType: "sprout", foeName: "Canopy Beasts", loan: "emerald", text: () => "Counter 4 attacks with Shield Counter in one battle", tip: "Brace, and the attacker takes some of it back." },
@@ -1808,7 +1808,8 @@
     if (!have.includes("obsidian") && won && isTech(lead.base)) { p.obsidianWins = (p.obsidianWins || 0) + 1; if (p.obsidianWins >= 3 && apexAward("obsidian")) got.push("obsidian"); }
     if (!have.includes("obsidian") && !got.includes("obsidian")) { persist(); return got; }       // nothing else counts until the black Core is awake
     if (!have.includes("crimson")) {
-      if (st.ranged >= 5) p.rangedDone = true;
+      p.rangedHits = (p.rangedHits || 0) + st.ranged;                                   // Barrages add up across tries
+      if (p.rangedHits >= 5) p.rangedDone = true;
       if (won && b.drone) p.droneDown = true;
       if (p.rangedDone && p.droneDown && apexAward("crimson")) got.push("crimson");
     }

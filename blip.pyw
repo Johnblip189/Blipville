@@ -7588,6 +7588,59 @@ def scene_pos(keys, t):
     return keys[-1][1], keys[-1][2]
 
 
+class GiftBox:
+    """🎁 Cake Day: a gift box floats onto your screen. Click it to open it (the roll is in App.open_cake_box)."""
+    ART = ["..rr....rr..", ".rrrrrrrrrr.", "..rrr..rrr..", "yyyyyyyyyyyy", "bbbbbyybbbbb", "bbbbbyybbbbb", "yyyyyyyyyyyy", "bbbbbyybbbbb", "bbbbbyybbbbb", "bbbbbyybbbbb", "bbbbbyybbbbb", "dddddddddddd"]
+    COLORS = {"r": "#ff5f95", "y": "#ffd23a", "b": "#6a8aff", "d": "#3a4aa8"}
+    PX, LIFE = 6, 25.0
+
+    def __init__(self, app):
+        self.app, self.alive, self.born = app, True, time.monotonic()
+        self.root = root = tk.Toplevel(app.root)
+        root.withdraw()
+        root.overrideredirect(True)
+        root.attributes("-topmost", True)
+        bg = KEY
+        if sys.platform == "win32" and not LAYERED:
+            root.attributes("-transparentcolor", KEY)
+        elif sys.platform == "darwin":
+            try:
+                root.attributes("-transparent", True)
+                bg = "systemTransparent"
+            except tk.TclError:
+                pass
+        root.config(bg=bg)
+        self.cw, self.ch = 12 * self.PX, 12 * self.PX
+        self.canvas = make_canvas(root, self.cw, self.ch, bg)
+        self.canvas.pack()
+        for r, row in enumerate(self.ART):
+            for c, ch in enumerate(row):
+                if ch != ".":
+                    self.canvas.create_rectangle(c * self.PX, r * self.PX, (c + 1) * self.PX, (r + 1) * self.PX,
+                                                 fill=self.COLORS[ch], outline="")
+        self.canvas.bind("<ButtonPress-1>", self.on_click)
+        left, top, right, bottom = work_area(root)
+        x = random.uniform(left + 40, max(left + 41, right - self.cw - 40))
+        y = bottom - self.ch - random.uniform(120, 320)
+        show_window(root, self.canvas, self.cw, self.ch, x, max(top + 20, y))
+
+    def on_click(self, _e=None):
+        if self.alive:
+            self.close()
+            self.app.open_cake_box()
+
+    def step(self, now):
+        if self.alive and now - self.born > self.LIFE:
+            self.close()
+
+    def close(self):
+        self.alive = False
+        try:
+            self.root.destroy()
+        except Exception:  # noqa: BLE001
+            pass
+
+
 class Sighting:
     """A cryptid appears in its own little scene near the bottom of the screen. Click it before it gets away!"""
     SHADOW, GLOW = "#16121f", "#ffe66a"
@@ -11011,6 +11064,7 @@ class App:
         self.next_legend = time.monotonic() + random.uniform(1, 3) * 60      # world legends, while visiting a world
         self.next_ghost = time.monotonic() + random.uniform(2, 5) * 60       # ghosts, at night or with a Spirit Candle
         self.candle_until = 0.0
+        self.cake_box, self.next_cake = None, time.monotonic() + 9      # 🎂 Cake Day gift boxes
         self.root.after(2500, self.show_notice)
         self.updater.start()
         self.pets = []
@@ -11119,8 +11173,80 @@ class App:
             if pet:
                 pet.say(f"{EVENT['name'].lower()}, let's go!", 3)
 
+    # ----- 🎂 Cake Day (CAKE_DAY): gift boxes pop up all day; every box is a roll
+    def cake_state(self):
+        cd = self.save.get("cake_day")
+        if not cd or cd.get("day") != CAKE_DAY["day"]:
+            cd = self.save["cake_day"] = {"day": CAKE_DAY["day"], "opened": 0, "got": []}
+        return cd
+
+    def cake_day_step(self, now):
+        if self.cake_box is not None:
+            self.cake_box.step(now)
+            if not self.cake_box.alive:
+                self.cake_box = None
+        if time.strftime("%Y-%m-%d") != CAKE_DAY["day"] or SELFTEST or self.maintenance.closed or not self.pets:
+            return
+        if self.cake_box is not None or now < self.next_cake or self.cake_state()["opened"] >= CAKE_DAY["max"]:
+            return
+        self.next_cake = now + CAKE_DAY["every"]
+        self.cake_box = GiftBox(self)
+        self.sound.play("whoosh")
+        if not self.save.get("cake_seen"):
+            self.save["cake_seen"] = CAKE_DAY["day"]
+            self.pets[0].say("🎁 it's Cake Day! click the gift boxes!", 5)
+
+    def open_cake_box(self):
+        from tkinter import messagebox
+        cd, st = CAKE_DAY, self.cake_state()
+        if st["opened"] >= cd["max"]:
+            return
+        st["opened"] += 1
+        have = {p.kind for p in self.pets}
+        left = [k for k in cd["pool"] if k not in st["got"] and k not in have and k not in self.save.get("merch_kinds", [])
+                and k not in self.save.get("gifts", [])]
+        hit = next((k for k in left if random.random() < cd["chance"]), None)        # each unreleased Blip gets its own roll
+        pet = next((p for p in self.pets if p.state not in ("sleep", "held")), self.pets[0] if self.pets else None)
+        if hit:
+            st["got"].append(hit)
+            self.save.setdefault("merch_kinds", []).append(hit)
+            new = self.add_pet(hit, greet=False)
+            write_save(self.save)
+            self.sound.play("fanfare")
+            if new:
+                new.say("surprise!! i was hiding in the box!", 5)
+                new.set_face("happy", 2)
+                new.burst("heart", 10)
+            messagebox.showinfo("A gift box! 🎁✨", f"WOW! A Blip that isn't out yet: {hit}!\n\n"
+                                + ("It's in your town." if new else "Your town is full, so free a spot and find it under Change kind."), parent=self.root)
+            return
+        open_skins = [k for k in cd["skin_kinds"] if f"{k}:{cd['skin_name']}" not in self.save.get("skins", [])]
+        if open_skins and random.random() < cd["skin_chance"]:
+            kind = random.choice(open_skins)
+            self.save.setdefault("skins", []).append(f"{kind}:{cd['skin_name']}")
+            st["got"].append(f"{kind}:{cd['skin_name']}")
+            if kind not in self.save.setdefault("merch_kinds", []):
+                self.save["merch_kinds"].append(kind)
+            target = next((p for p in self.pets if p.kind == kind), None) or self.add_pet(kind, greet=False)
+            write_save(self.save)
+            self.sound.play("fanfare")
+            if target:
+                idx = next(i for i, c in enumerate(kind_colors(kind)) if c["name"] == cd["skin_name"])
+                target.palette = idx
+                target.color_var.set(idx)
+                target.say("...i feel strange. cursed, even.", 5)
+                target.set_face("happy", 2)
+                target.burst("heart", 10)
+            messagebox.showinfo("A cursed figure! 🎁💀", f"{kind}: {cd['skin_name']} is yours, forever.", parent=self.root)
+            return
+        self.add_hearts(cd["hearts"], pet)
+        self.sound.play("coin")
+        if pet:
+            pet.say(f"just some treats! ({cd['max'] - st['opened']} boxes left today)", 3)
+
     def cryptid_step(self, now):
         self.event_visitor(now)
+        self.cake_day_step(now)
         for s in list(self.sightings):
             s.step(now)
         if self.sightings:

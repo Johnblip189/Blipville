@@ -1,0 +1,9 @@
+[2026-11-25 01:39:11] v1.0.12-test 2026-11-25T01:38:42Z | started on win32, Python 3.12.10
+[2026-11-25 01:39:20] v1.0.12-test 2026-11-25T01:38:42Z | selftest: pet Blip state=idle click_at=311,694 layered=True frames_shown=240 failed=False
+[2026-11-25 01:39:20] v1.0.12-test 2026-11-25T01:38:42Z | selftest: pet Taco state=idle click_at=329,694 layered=True frames_shown=227 failed=False
+[2026-11-25 01:39:22] v1.0.12-test 2026-11-25T01:38:42Z | selftest: pressed Taco at 92,154
+[2026-11-25 01:39:23] v1.0.12-test 2026-11-25T01:38:42Z | selftest: menu for Taco
+[2026-11-25 01:39:25] v1.0.12-test 2026-11-25T01:38:42Z | trophy: First Friend
+[2026-11-25 01:39:28] v1.0.12-test 2026-11-25T01:38:42Z | selftest: windows=2 perchable=['Untitled - Notepad', 'C:\\ProgramData\\GitHub\\HostedCo']
+[2026-11-25 01:39:28] v1.0.12-test 2026-11-25T01:38:42Z | selftest: 2 pets, LAYERED=True, version=v1.0.12-test
+[2026-11-25 01:39:31] v1.0.12-test 2026-11-25T01:38:42Z | selftest: perched=False state=fall at=680,517

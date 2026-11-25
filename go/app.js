@@ -4,6 +4,22 @@
   "use strict";
   const D = window.BLIP_DATA;
   const KINDS = D.kinds;
+  const NEXUS_ART = {"obsidian":{"name":"Nexus Griffin","body":["ww..oooooooo..ww","wkw.obbbbbbo.wkw","wwwobbbbbbbbowww","kwwobbbbbbbbowwk","kwwobllbbllbowwk",".kwovvvvvvvvowk.",".kwovvvvvvvvowk.","..wobbbnnbbbow..","..womnnnnnnmow..","...obmggggmbo...","...obkkllkkbo...",".aaooooooooooaa."],"pal":{"o":"#04040a","b":"#3a3e52","l":"#6a7090","k":"#20222e","v":"#10121c","w":"#4a5278","n":"#ffd23a","m":"#8a90a8","g":"#ffd23a","a":"#ffd23a","e":"#ffd23a","name":"Nexus Griffin"}},"cobalt":{"name":"Nexus Manta","body":["..oo........oo..",".okbo.oooo.obko.","owwbbbboobbbbwwo","owwbbbkkkkbbbwwo","wwwbbbbllbbbbwww","wwbvvvvvvvvvvbww","wwbvvvvvvvvvvbww",".wobbkkkkkkbbow.","..owbbggggbbwo..","...owbbggbbwo...","....owbkkbwo....",".....ooggoo....."],"pal":{"o":"#06101e","b":"#2a62c8","l":"#7ab0ff","k":"#14306a","v":"#0a1630","w":"#1c4a9a","g":"#38f0ff","m":"#8aa0c0","e":"#38f0ff","name":"Nexus Manta"}},"amber":{"name":"Nexus Scorpion","body":["......oggo......","oo....obbo....oo","okko..okko..okko","okbko.okko.okbko",".okbboobboobbko.","..obvvvvvvvvbo..","..obvvvvvvvvbo..","..obmbllllbmbo..","...obbgllgbbo...","...obbkkkkbbo...","....obbkkbbo....",".....oooooo....."],"pal":{"o":"#2a1604","b":"#c8801a","l":"#ffd88a","k":"#7a4a0a","v":"#1a0e02","g":"#ff6a1a","m":"#9a9aa8","e":"#ff6a1a","name":"Nexus Scorpion"}},"crimson":{"name":"Nexus Cobra","body":[".....oooooo.....","....obbbbbbo....","...obkbbbbkbo...",".oobkbbllbbkboo.","obbbbbbllbbbbbbo","obvvvvvvvvvvvvbo","obvvvvvvvvvvvvbo",".obbkgkkkkgkbbo.","..obbmggggmbbo..","...obbggggbbo...","....obmkkmbo....","..oooooooooooo.."],"pal":{"o":"#2a0606","b":"#c8342a","l":"#ff8a6a","k":"#6a1410","v":"#1a0404","g":"#ffb02a","m":"#9aa0a8","e":"#ffe23a","name":"Nexus Cobra"}},"emerald":{"name":"Nexus Dragon","body":[".oo..........oo.",".oko........oko.","..okooobboooko..","..obbbbbbbbbbo..",".owbbbbllbbbbwo.","wwobvvvvvvvvboww","wwobvvvvvvvvboww",".wobbnnkknnbbow.","..obbllllllbbo..","...obbggggbbo...","....obbggbbo....",".....oooooo....."],"pal":{"o":"#04140a","b":"#1f8a50","l":"#7affc0","k":"#0e4a2a","v":"#06180e","w":"#0e5a34","n":"#0a2a18","g":"#5affd8","m":"#8ab8a0","e":"#5affd8","name":"Nexus Dragon"}}};
+  // ⚡ the five Nexus Blips are real kinds (mechs). Each wakes when its Core does (save.apexNexusCores). Only they can use the Cores in battle.
+  const NEXUS_ID = {}, NEXUS_NAME = {};
+  {
+    const tpl = D.kinds.Lioness || Object.values(D.kinds)[0], types = { obsidian: "cosmic", crimson: "spark", cobalt: "splash", amber: "stone", emerald: "sprout" };
+    const lines = { obsidian: ["*wings click open*", "Nexus online… mostly", "i'm the first Core. i'm kind of a big deal", "*polishes talons*"], crimson: ["*hood flares, vents glow*", "running warm. as usual", "ssss-ystems nominal", "don't poke the Core"],
+      cobalt: ["*glides silently*", "tide levels: nominal", "wing span: excellent", "bzzzt… hello"], amber: ["*clamps open and shut*", "sandstorm protocol: standby", "my tail is a cannon. don't worry about it", "armor integrity 100%"],
+      emerald: ["*sniffs, steam from the nostrils*", "i'm a very serious dragon", "canopy scan: all clear", "*vents crackle*"] };
+    for (const [id, art] of Object.entries(NEXUS_ART)) {
+      NEXUS_ID[art.name] = id; NEXUS_NAME[id] = art.name;
+      D.kinds[art.name] = { body: art.body, alt: null, eyes: 5, mouth: false, feet: tpl.feet, dx: 0, move: "walk", speed: 1.0, shifty: false, extra: {}, ghost: false, soul: "", lines: lines[id], colors: [art.pal], default: 0, voice: tpl.voice };
+      (D.arena.stats = D.arena.stats || {})[art.name] = { type: types[id], hp: 100, atk: 24, spd: 12, move: "Core Strike", moves: [{ name: "Core Strike", type: types[id], power: 1.3, acc: 1.0 }, { name: "Nexus Dash", type: types[id], power: 0.8, acc: 1.0, fast: true }, { name: "Core Burst", type: types[id], power: 1.9, acc: 0.75 }, { name: "Snack", type: "", power: 0, acc: 1.0, heal: 0.35 }] };
+    }
+    D.groups.nexus = Object.values(NEXUS_NAME);
+  }
+  const isNexusKind = (k) => !!NEXUS_ID[k];                       // only the five Nexus Blips can use the Cores
   const RARE = new Set(D.groups.rare);
   const NIGHT = new Set(D.groups.nightShift);
   const CRYPT = new Set(D.groups.cryptids);
@@ -197,7 +213,7 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const isUnlocked = (k) => NEXUS_ID[k] ? (save.apexNexusCores || []).includes(NEXUS_ID[k]) : (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -858,7 +874,6 @@
     return true;
   }
   // ⚡ the Nexus: five dormant Blips, one per Core. Four sleep in hidden caves (a door in Plant, Ocean, Egypt and Magma Ridge); the black one stands in the open in town.
-  const NEXUS_ART = {"obsidian":{"name":"Nexus Griffin","body":["ww..oooooooo..ww","wkw.obbbbbbo.wkw","wwwobbbbbbbbowww","kwwobbbbbbbbowwk","kwwobllbbllbowwk",".kwovvvvvvvvowk.",".kwovvvvvvvvowk.","..wobbbnnbbbow..","..womnnnnnnmow..","...obmggggmbo...","...obkkllkkbo...",".aaooooooooooaa."],"pal":{"o":"#04040a","b":"#3a3e52","l":"#6a7090","k":"#20222e","v":"#10121c","w":"#4a5278","n":"#ffd23a","m":"#8a90a8","g":"#ffd23a","a":"#ffd23a","e":"#ffd23a","name":"Nexus Griffin"}},"cobalt":{"name":"Nexus Manta","body":["..oo........oo..",".okbo.oooo.obko.","owwbbbboobbbbwwo","owwbbbkkkkbbbwwo","wwwbbbbllbbbbwww","wwbvvvvvvvvvvbww","wwbvvvvvvvvvvbww",".wobbkkkkkkbbow.","..owbbggggbbwo..","...owbbggbbwo...","....owbkkbwo....",".....ooggoo....."],"pal":{"o":"#06101e","b":"#2a62c8","l":"#7ab0ff","k":"#14306a","v":"#0a1630","w":"#1c4a9a","g":"#38f0ff","m":"#8aa0c0","e":"#38f0ff","name":"Nexus Manta"}},"amber":{"name":"Nexus Scorpion","body":["......oggo......","oo....obbo....oo","okko..okko..okko","okbko.okko.okbko",".okbboobboobbko.","..obvvvvvvvvbo..","..obvvvvvvvvbo..","..obmbllllbmbo..","...obbgllgbbo...","...obbkkkkbbo...","....obbkkbbo....",".....oooooo....."],"pal":{"o":"#2a1604","b":"#c8801a","l":"#ffd88a","k":"#7a4a0a","v":"#1a0e02","g":"#ff6a1a","m":"#9a9aa8","e":"#ff6a1a","name":"Nexus Scorpion"}},"crimson":{"name":"Nexus Cobra","body":[".....oooooo.....","....obbbbbbo....","...obkbbbbkbo...",".oobkbbllbbkboo.","obbbbbbllbbbbbbo","obvvvvvvvvvvvvbo","obvvvvvvvvvvvvbo",".obbkgkkkkgkbbo.","..obbmggggmbbo..","...obbggggbbo...","....obmkkmbo....","..oooooooooooo.."],"pal":{"o":"#2a0606","b":"#c8342a","l":"#ff8a6a","k":"#6a1410","v":"#1a0404","g":"#ffb02a","m":"#9aa0a8","e":"#ffe23a","name":"Nexus Cobra"}},"emerald":{"name":"Nexus Dragon","body":[".oo..........oo.",".oko........oko.","..okooobboooko..","..obbbbbbbbbbo..",".owbbbbllbbbbwo.","wwobvvvvvvvvboww","wwobvvvvvvvvboww",".wobbnnkknnbbow.","..obbllllllbbo..","...obbggggbbo...","....obbggbbo....",".....oooooo....."],"pal":{"o":"#04140a","b":"#1f8a50","l":"#7affc0","k":"#0e4a2a","v":"#06180e","w":"#0e5a34","n":"#0a2a18","g":"#5affd8","m":"#8ab8a0","e":"#5affd8","name":"Nexus Dragon"}}};
   const NEXUS = {
     obsidian: { icon: "⬛", name: "Nexus Griffin", core: "Obsidian Core", color: "#8a8aa8", where: "the Town Workshop Vault", trial: "Not yet. Nobody can wake it for now." },
     crimson:  { icon: "🟥", name: "Nexus Cobra", core: "Crimson Core", color: "#ff5a3a", where: "Magma Ridge", trial: "Not yet. Nobody can wake it for now." },
@@ -1772,14 +1787,19 @@
   const weaponsOwned = () => apexHave().map((id) => WEAPON_OF[id]).filter(Boolean);
   const isTech = (kind) => { const base = AWAKEN_BASE[kind] || kind; return /^Robo /.test(base) || ["spark", "cosmic"].includes((fstats(base) || {}).type) || (typesOf(fstats(base)) || []).some((t) => t === "spark" || t === "cosmic"); };
   function startFight(level, opts = {}) {
-    const me = sheetPet || pets[0], base = AWAKEN_BASE[me.kind] || me.kind;
+    let me = sheetPet || pets[0];
+    if (opts.trial && opts.trial !== "obsidian") {                                  // the other trials are fought with a Nexus Blip
+      me = pets.find((q) => isNexusKind(q.kind));
+      if (!me) { toast("⚡ Bring a Nexus Blip to town first (Zoo → Nexus ⚡).", 4); return; }
+    }
+    const base = AWAKEN_BASE[me.kind] || me.kind, nex = isNexusKind(base);
     const rival = pick(AR.rivals.length ? AR.rivals : [{ team: [["Cat", 0]] }]), foeKind = opts.drone ? "Robo Fox" : pick(rival.team)[0], foeBase = AWAKEN_BASE[foeKind] || foeKind;
     const tm = (ats, ds) => (ats.length ? Math.max(...ats.map((a) => typeMult(a, ds))) : 1);
-    const center = opts.loan || apexHave()[0] || null, weapon = center ? WEAPON_OF[center] : null;
+    const center = nex ? (opts.loan || (apexHave().includes(NEXUS_ID[base]) ? NEXUS_ID[base] : apexHave()[0]) || null) : null, weapon = center ? WEAPON_OF[center] : null;
     const foe = fspec(foeBase, "foe", "E", level, true); if (opts.drone) { foe.hp = Math.round(foe.hp * 1.25); foe.name = "Crimson Drone"; }
-    fight = { m: FT.create([fspec(base, "you", "P", null, (!!AWAKEN_CHAIN[base] && awLevel(base) > 0) || hasItem("nexusStar"), weapon), foe], { seed: (Math.random() * 1e9) | 0, typeMult: tm }),
+    fight = { m: FT.create([fspec(base, "you", "P", null, (!!AWAKEN_CHAIN[base] && awLevel(base) > 0) || (nex && hasItem("nexusStar")), weapon), foe], { seed: (Math.random() * 1e9) | 0, typeMult: tm }),
               look: { you: [base, me.color % KINDS[base].colors.length], foe: [foeBase, opts.drone ? 1 : 0] }, fx: [], acc: 0, last: 0, t: 0, shown: false, bg: (opts.stage && STAGE_BG[opts.stage]) || pick(D.friendBgs || ["meadow"]), level,
-              stage: opts.stage || "town", trial: opts.trial || null, drone: !!opts.drone, loan: opts.loan || null, base };
+              stage: opts.stage || "town", trial: opts.trial || null, drone: !!opts.drone, loan: opts.loan || null, base, nexus: nex };
     fight.m.fighters[0].center = center;
     $("fightPick").hidden = true; $("fightCanvas").hidden = false; $("fightPad").hidden = false; $("fightResult").hidden = true; $("nexusSheet").hidden = true;
     fightLoop(fight);
@@ -1788,13 +1808,13 @@
   const STAR_ORDER = ["emerald", "amber", "crimson", "cobalt", "obsidian"];                  // clockwise from the top, like the star's points
   const centersAvail = (f) => STAR_ORDER.filter((id) => apexHave().includes(id) || (f && f.loan === id));
   function setCenter(id) {
-    const f = fight; if (!f || f.m.over) return; const me = f.m.fighters[0], w = id ? WEAPON_OF[id] : null;
+    const f = fight; if (!f || f.m.over || !f.nexus) return; const me = f.m.fighters[0], w = id ? WEAPON_OF[id] : null;
     if (id && !centersAvail(f).includes(id)) return;
     me.center = id; me.weapon = w; me.moves = w ? { ...FT.MOVES, ...FT.WEAPONS[w] } : FT.MOVES;
     f.fx.push({ k: "num", x: me.x, y: 56, text: id ? `${NEXUS[id].icon} ${FT.WEAPONS[w].name}` : "✊ Bare hands", t: f.t }); sfx("pop");
   }
   function switchWeapon() {                                                       // the 🔁 button / C key: next form around the wheel
-    const f = fight; if (!f || f.m.over) return; const av = centersAvail(f); if (!av.length) return;
+    const f = fight; if (!f || f.m.over || !f.nexus) return; const av = centersAvail(f); if (!av.length) return;
     const cur = f.m.fighters[0].center, order = [...av, null], nx = order[(order.indexOf(cur) + 1) % order.length]; setCenter(nx);
   }
   function drawWheel(c, cx, cy, r, f) {
@@ -1822,6 +1842,7 @@
     const list = apexHave(); if (list.includes(id)) return false;
     list.push(id); giveItem(id + "Core"); sfx("fanfare");
     const w = FT.WEAPONS[WEAPON_OF[id]];
+    if (pets.length < maxPets() && !pets.some((q) => q.kind === NEXUS_NAME[id])) { const q = addPet(NEXUS_NAME[id], { quiet: true }); if (q) say(q, `${NEXUS_NAME[id]} online! ⚡`, 4); }     // the Blip wakes and joins your town
     toast(`⚡ The ${id[0].toUpperCase() + id.slice(1)} Core is yours! ${w.icon} ${w.name} unlocked. Something in the dark stirs…`, 6);
     return true;
   }
@@ -1905,7 +1926,7 @@
       const [kind, color] = f.look[fi.id];
       if (fi.respawn > 0 || (fi.inv > 0 && Math.floor(f.t * 12) % 2 === 0 && fi.state !== "down")) { if (fi.respawn > 0) continue; c.globalAlpha = 0.45; }
       const lunge = fi.act && (fi.state === "light" || fi.state === "heavy" || fi.state === "air") ? (fi.t < fi.act.start + fi.act.active ? 4 : 0) * fi.face : 0;
-      const formOn = fi.id === "you" && fi.awakeT > 0 && fi.center && hasItem("nexusStar");
+      const formOn = fi.id === "you" && f.nexus && fi.awakeT > 0 && fi.center && hasItem("nexusStar");
       if (formOn) {                                                                     // 🌟 awakened with the Star: the Blip joins the Cores into the Nexus form
         c.save(); c.translate(Math.round(fi.x), 0); if (fi.face < 0) c.scale(-1, 1); drawNexusForm(c, fi.center, -24, Math.round(G - fi.y - 56), 2, f.t); c.restore(); c.globalAlpha = 1;
         c.fillStyle = "rgba(0,0,0,.3)"; c.fillRect(fi.x - 18, G + 1, 36, 3); continue;
@@ -1954,7 +1975,7 @@
       c.fillText((i === 0 ? "YOU " : "FOE ") + "♥".repeat(Math.max(0, fi.stocks)), i === 0 ? x : x + 140, 46);
     });
     c.font = "800 12px " + FONT; c.textAlign = "center"; c.fillStyle = "#fff"; c.fillText(String(Math.max(0, Math.ceil((m.limit - m.frame) / 60))), w / 2, 20);
-    if (apexHave().length || f.loan) { const ws = wheelSpot(); drawWheel(c, ws.cx, ws.cy, ws.r, f); }
+    if (f.nexus && (apexHave().length || f.loan)) { const ws = wheelSpot(); drawWheel(c, ws.cx, ws.cy, ws.r, f); }
   }
   function showFightResult(f) {
     const m = f.m, won = m.over.winner === "P", s = m.stats.you, box = $("fightResult"), got = apexCheck(f);
@@ -2106,9 +2127,10 @@
                     ["Ghosts 👻 (they drift by at night: tap one while it glows!)", D.groups.ghosts || []],
                     ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []],
                     [`Event 🎖️ (earn them in ${EVENT.name})`, D.groups.eventKinds || []],
+                    ...(isCreator() || isMod() || (save.apexNexusCores || []).length ? [["Nexus ⚡ (wake the Cores)", D.groups.nexus || []]] : []),
                     ["Bad Dreams 🧸 (tap a Puppet Master 5 times… then fend them off)", [...DREAMS]]];
     let found = 0, total = 0, armed = null;     // armed = the locked Blip waiting for a second tap (spoiler check)
-    const how = (k) => (EGYPT.has(k) ? "🏺 dig it up in Egypt World" : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : EVENTK.has(k) ? `🎖️ earn it in ${EVENT.name} (free when it ends)` : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
+    const how = (k) => (NEXUS_ID[k] ? "⚡ wake its Core" : EGYPT.has(k) ? "🏺 dig it up in Egypt World" : GHOST.has(k) ? "👻 meet it at night" : LEG.has(k) ? `✨ find it in ${LEGEND_WORLD[k]}` : WORLD_OF[k] ? `🌍 unlock ${WORLD_OF[k]}` : GIFTS.has(k) ? "🎁 a limited-time gift" : EVENTK.has(k) ? `🎖️ earn it in ${EVENT.name} (free when it ends)` : RARE.has(k) ? "🥚 hatch from an egg" : KAIJU.has(k) ? "🦖 catch it in the city" : CRYPT.has(k) ? "👣 spot it in town" : `🌙 survive Night ${D.unlocks[k]}`);
     for (const [title, kinds] of groups) {
       const h = document.createElement("div"); h.className = "zooGroup"; h.textContent = title; grid_.appendChild(h);
       const world = WORLDS.find((w) => w.tab === title);

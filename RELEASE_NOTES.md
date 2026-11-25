@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.8:** ✨ A stuck door finally opens. 👀
+>
 > **1.0.7:** ✨ Bring friends. 👀
 >
 > **1.0.6:** ✨ Some fights feel more at home now. 👀

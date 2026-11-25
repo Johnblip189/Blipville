@@ -15,7 +15,7 @@
     for (const [id, art] of Object.entries(NEXUS_ART)) {
       NEXUS_ID[art.name] = id; NEXUS_NAME[id] = art.name;
       D.kinds[art.name] = { body: art.body, alt: null, eyes: 5, mouth: false, feet: tpl.feet, dx: 0, move: "walk", speed: 1.0, shifty: false, extra: {}, ghost: false, soul: "", lines: lines[id], colors: [art.pal], default: 0, voice: tpl.voice };
-      (D.arena.stats = D.arena.stats || {})[art.name] = { type: types[id], hp: 100, atk: 24, spd: 12, move: "Core Strike", moves: [{ name: "Core Strike", type: types[id], power: 1.3, acc: 1.0 }, { name: "Nexus Dash", type: types[id], power: 0.8, acc: 1.0, fast: true }, { name: "Core Burst", type: types[id], power: 1.9, acc: 0.75 }, { name: "Snack", type: "", power: 0, acc: 1.0, heal: 0.35 }] };
+      (D.arena.stats = D.arena.stats || {})[art.name] = { type: types[id], hp: 140, atk: 24, spd: 12, move: "Core Strike", moves: [{ name: "Core Strike", type: types[id], power: 1.3, acc: 1.0 }, { name: "Nexus Dash", type: types[id], power: 0.8, acc: 1.0, fast: true }, { name: "Core Burst", type: types[id], power: 1.9, acc: 0.75 }, { name: "Snack", type: "", power: 0, acc: 1.0, heal: 0.35 }] };
     }
     D.groups.nexus = Object.values(NEXUS_NAME);
   }

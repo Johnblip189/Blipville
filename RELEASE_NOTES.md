@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.13:** ✨ Everything arrives at once. 👀
+>
 > **1.0.12:** ✨ Polished up. 👀
 >
 > **1.0.11:** ✨ Easier to ride the wave. 👀

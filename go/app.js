@@ -1822,14 +1822,14 @@
     const me = id === "obsidian" ? pets.find((q) => isTech(q.kind) && !isNexusKind(q.kind)) : pets.find((q) => isNexusKind(q.kind));
     if (!me) { toast(id === "obsidian" ? "⚡ Bring a tech Blip to town first (a Robo, or a volt / spark / cosmic type)." : "⚡ Bring a Nexus Blip to town first (Zoo → Nexus ⚡).", 4); return; }
     const pool = [...(D.groups.critters || []), ...(D.groups.animals || []), ...(D.groups.tabs || []).flatMap(([, ks]) => ks)].filter((k) => { const s = AR.stats[k]; return s && !NEXUS_ID[k] && typesOf(s).includes(t.foeType) && s.hp <= 130; });
-    const picks = pool.sort(() => Math.random() - 0.5).slice(0, t.drone ? 1 : 1);
-    const foe = [t.foeName, t.drone ? [["Robo Fox", 1, 0]] : picks.map((k) => [k, 0, 0])];
+    const picks = pool.sort(() => Math.random() - 0.5).slice(0, 1);
+    const foe = [t.foeName, t.drone ? [["Robo Fox", 1, 0]] : picks.map((k) => [k, 0, 0])];     // the drone is sturdy (2.5x HP) and hits a bit softer, so the fight lasts long enough for 5 Barrages
     closeSheets();
     const mates = (arenaTeam.length ? arenaTeam : pets).filter((q) => pets.includes(q) && q !== me), team = [me, ...mates].slice(0, 3);     // the same team size as a normal battle (up to 3), with the required Blip in front
     if (!t.drone && foe[1].length < team.length) { const more = pool.filter((k) => !foe[1].some(([x]) => x === k)).sort(() => Math.random() - 0.5).slice(0, team.length - foe[1].length); foe[1].push(...more.map((k) => [k, 0, 0])); }   // as many foes as you bring
     arenaBattle = newBattle(team.map(arenaEntry), foe[1], foe[0], 0);
     const b = arenaBattle; b.trial = id; b.stage = t.stage; b.drone = !!t.drone; b.loan = t.loan || null; if (STAGE_BG[t.stage]) b.bg = STAGE_BG[t.stage];
-    if (t.drone) { const d = b.sides[1][0]; d.max = d.hp = Math.round(d.max * 1.25); d.so = { ...AR.stats[d.kind], type: "spark", type2: "volt" }; }     // the Crimson Drone runs hot: spark + volt
+    if (t.drone) for (const d of b.sides[1]) { d.max = d.hp = Math.round(d.max * 2.5); d.atkMult = 0.7; d.so = { ...AR.stats[d.kind], type: "spark", type2: "volt" }; }     // the Crimson Drone runs hot: spark + volt
     b.maxSum0 = b.sides[0].reduce((s, f) => s + f.max, 0);
     b.log = [`⚡ ${id[0].toUpperCase() + id.slice(1)} trial vs ${t.foeName} (${t.drone ? "spark + volt" : t.foeType} types): ${t.text(apexProg()).replace(/ [0-9]\/3$/, "")}`];
     openSheet("arenaSheet"); $("arenaLobby").hidden = true; $("arenaFight").hidden = false; sfx("whoosh"); drawBattle();

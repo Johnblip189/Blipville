@@ -1703,6 +1703,7 @@
   function apexCheck(f) {                                                          // after a trial fight: did it count?
     const m = f.m, won = m.over.winner === "P", s = m.stats.you, you = m.fighters[0], p = apexProg(), have = apexHave(), got = [];
     if (!have.includes("obsidian") && won && isTech(f.base)) { p.obsidianWins = (p.obsidianWins || 0) + 1; if (p.obsidianWins >= 3 && apexAward("obsidian")) got.push("obsidian"); }
+    if (!have.includes("obsidian") && !got.includes("obsidian")) { persist(); return got; }       // nothing else counts until the black Core is awake
     if (!have.includes("crimson")) {
       if (s.rangedHits >= 15) p.rangedDone = true;
       if (won && f.drone) p.droneDown = true;
@@ -1718,7 +1719,9 @@
     for (const id of ["obsidian", "crimson", "cobalt", "amber", "emerald"]) {
       const n = NEXUS[id], t = TRIALS[id], done = have.includes(id), d = document.createElement("div"); d.className = "worldRow";
       const info = document.createElement("div"); info.innerHTML = `<b>${n.icon} ${n.core}${done ? " ✅" : ""}</b><small>${done ? `${n.name} sleeps no more. ${FT.WEAPONS[WEAPON_OF[id]].icon} ${FT.WEAPONS[WEAPON_OF[id]].name}` : t.text(p)}<br>${done ? "" : t.tip}</small>`;
-      const b = document.createElement("button"); b.textContent = done ? "Done" : "⚔️ Start"; b.disabled = done;
+      const locked = id !== "obsidian" && !have.includes("obsidian");                // the black Core comes first
+      if (locked) info.innerHTML = `<b>${n.icon} ${n.core} 🔒</b><small>Wake the Obsidian Core (the black griffin) first.</small>`;
+      const b = document.createElement("button"); b.textContent = done ? "Done" : locked ? "🔒" : "⚔️ Start"; b.disabled = done || locked;
       b.onclick = () => { closeSheets(); openSheet("fightSheet"); startFight(t.level, { stage: t.stage, trial: id, drone: !!t.drone, loan: t.loan }); };
       d.append(info, b); list.appendChild(d);
     }

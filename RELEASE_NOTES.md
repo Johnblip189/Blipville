@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.4:** ✨ Added something new. Some doors aren't where you'd expect. 👀
+>
 > **1.0.3:** ✨ Added something new. Go exploring… 👀
 
 > **1.0.1:** 🤖 Silvertear-03, the mecha kaiju, is saving her big debut for **1.1**. If you already caught her, she stays

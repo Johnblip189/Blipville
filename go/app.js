@@ -3040,6 +3040,45 @@
       persist(true);
   };
   drops.forEach((d, i) => setTimeout(() => deliverGift(d), 2600 + i * 7500));
+  // 🎂 Cake Day: on one day, gift boxes pop up in town. Every box you open is a roll: a small chance to win a Blip that
+  // isn't out yet (the pool and the odds come from blip.pyw), otherwise a few hearts.
+  const CAKE = D.cakeDay || null;
+  function cakeState() { if (!save.cakeDay || save.cakeDay.day !== CAKE.day) save.cakeDay = { day: CAKE.day, opened: 0, got: [] }; return save.cakeDay; }
+  if (CAKE && localDay() === CAKE.day) {
+    let lastBox = 0, boxEl = null, boxTimer = 0;
+    const leave = () => { if (boxEl) { boxEl.remove(); boxEl = null; } clearTimeout(boxTimer); };
+    function openBox() {
+      const st = cakeState(); leave();
+      if (st.opened >= CAKE.max) return;
+      st.opened++;
+      const left = (CAKE.pool || []).filter((k) => !st.got.includes(k) && !pets.some((p) => p.kind === k) && !(save.eventKinds || []).includes(k) && !save.gifts.includes(k));
+      const p = pets.find((q) => !["sleep", "held"].includes(q.state)) || pets[0];
+      if (left.length && Math.random() < CAKE.chance) {
+        const kind = left[Math.floor(Math.random() * left.length)];
+        st.got.push(kind); save.eventKinds = save.eventKinds || []; if (!save.eventKinds.includes(kind)) save.eventKinds.push(kind);
+        const g = addPet(kind, { quiet: true });
+        sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);
+        if (g) { say(g, "surprise!! i was hiding in the box!", 5); setFace(g, "happy", 2); burst(g, "heart", 10); }
+        toast(`🎁✨ WOW! A Blip that isn't out yet: ${kind}! ${g ? "It's in your town." : "Your town is full, so it's waiting in your 📖 Zoo."}`, 8);
+      } else {
+        reward(p, CAKE.hearts); sfx("coin");
+        toast(`🎁 Just some treats! +${CAKE.hearts} 💖 (${CAKE.max - st.opened} boxes left today)`, 3.5);
+      }
+      persist(true);
+    }
+    function dropBox() {
+      const st = cakeState();
+      if (boxEl || st.opened >= CAKE.max || document.hidden || [...doc().querySelectorAll(".sheet")].some((s) => !s.hidden)) return;
+      lastBox = Date.now();
+      boxEl = doc().createElement("button"); boxEl.className = "cakeBox"; boxEl.textContent = "🎁"; boxEl.setAttribute("aria-label", "Open the gift box");
+      boxEl.style.left = (8 + Math.random() * 78) + "vw"; boxEl.style.top = (22 + Math.random() * 38) + "vh";
+      boxEl.onclick = openBox; doc().body.appendChild(boxEl); sfx("pop");
+      boxTimer = setTimeout(leave, 25000);
+    }
+    setTimeout(() => toast("🎂 Cake Day! Gift boxes pop up all day. Open them for treats and a chance at Blips that aren't out yet!", 7), 5000);
+    setTimeout(dropBox, 9000);
+    setInterval(() => { if (!boxEl && Date.now() - lastBox > CAKE.every * 1000) dropBox(); }, 4000);
+  }
   if (window.CountdownStars) CountdownStars.onDone = () => {         // ⭐ finished Countdown Stars right here: Liftoff now
     const d = (D.giftDrops || []).find((x) => x.countdown);
     if (d) setTimeout(() => deliverGift(d), 600);

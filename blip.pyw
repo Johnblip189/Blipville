@@ -3495,7 +3495,11 @@ GIFTS = {
   "lines": ["make a wish!", "*candle flickers*", "it's a party day!", "i'm 100% cake. ask me anything", "please don't blow me out. thanks."],
   "body": [".......yy.......", ".......rw.......", "...oooooooooo...", "..owwwwwwwwwwo..", ".owwrwwwwgwwwyo.", "owwbwwwwwbwwwwwo", "obbbbbbbbbbbbbbo", "obbbbbbbbbbbbbbo", "obpbbbbbbbbbbpbo", "ojjjjjjjjjjjjjjo", "obbbbbbbbbbbbbbo", ".oooooooooooooo."],
   "colors": [{"name": "Vanilla", "o": "#4a2a3a", "b": "#ffd9a0", "w": "#fff4f0", "r": "#ff4a6a", "y": "#ffd23a", "g": "#5ae07a", "j": "#ff7a9a", "p": "#ff8ab8", "e": "#2a0a1a"},
-             {"name": "Chocolate", "o": "#1e0c06", "b": "#7a4a2a", "w": "#ffb8d8", "r": "#ffd23a", "y": "#ffe27a", "g": "#5ab8ff", "j": "#fff0e0", "p": "#ff8a9a", "e": "#1a0a04"}]}
+             {"name": "Chocolate", "o": "#1e0c06", "b": "#7a4a2a", "w": "#ffb8d8", "r": "#ffd23a", "y": "#ffe27a", "g": "#5ab8ff", "j": "#fff0e0", "p": "#ff8a9a", "e": "#1a0a04"}]},
+ "Mythkeeper": {"eyes": 5, "move": "float", "speed": 0.9,
+  "lines": ["*the lantern glows*", "i keep the myths. and the lantern.", "the House of Myths is always open", "mind the lantern. it bites. (no it doesn't)"],
+  "body": ["......oooo......", "....oohhhhoo....", "...ohhhhhhhho...", "..ohhhssssshho..", "..ohffffffffho..", "..ohffffffffho..", ".ohhffffffffhho.", ".ohcHffffffHcho.", "ohccHHHHHHHHccho", "oyyocccsscccccco", "ylloccccccccccco", ".yy.ooccccccoo.."],
+  "colors": [{"name": "Lantern", "o": "#1a1030", "h": "#4a2f7a", "H": "#34205a", "c": "#5b3a96", "f": "#120a20", "e": "#ffd86b", "s": "#e8d8ff", "l": "#ffe27a", "y": "#c08a2a"}]}
 }
 # World Legends ✨: two legendary Blips per world. They only show up while you're visiting that world: they stroll
 # past in full color with sparkles, and you click them before they leave.
@@ -3532,6 +3536,10 @@ GIFT_DROPS = [
 GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest one (the website version reads these)
 GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
 GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
+
+# 🎂 Cake Day (Dec 8): gift boxes pop up in town all day. Each box you open is a roll: `chance` to win one of the Blips that
+# aren't out yet (never one you already have), otherwise a few hearts. `every` = seconds between boxes, `max` = boxes per player.
+CAKE_DAY = {"day": "2026-12-08", "chance": 0.08, "pool": ["Silvertear-03", "Mythkeeper"], "max": 15, "every": 120, "hearts": 5}
 
 # 12 new animals for Blipville 1.0
 NEW_ANIMALS.update({
@@ -8439,7 +8447,7 @@ ARENA_BEATS = {"spark": ["sprout", "frost", "phantom"],   # burns leaves, melts 
 COSMIC_CRIT = 0.25
 # 👻 Phantom (the Phantom Knight's very own type): never super effective, but 1 in 5 hits passes right through it
 PHANTOM_DODGE = 0.2
-TYPE_OF = {"Phantom Knight": "phantom"}
+TYPE_OF = {"Phantom Knight": "phantom", "Mythkeeper": "cosmic"}
 FORM_MOVES = {"Lead Javelin": "Javelin Strike", "Diamond Ladybug": "Diamond Dazzle", "Puppet Box": "Pull the Strings", "Puppet Master": "Final Curtain", "Blipmaker": "Creator's Spark", "Byte": "Bug Fix", "Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
               "Phantom Sovereign": "Sovereign's Judgment"}
 ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash": ["Bubble Burst", "Splash Slam", "Tidal Hug"],

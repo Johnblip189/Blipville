@@ -3060,6 +3060,15 @@
         sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);
         if (g) { say(g, "surprise!! i was hiding in the box!", 5); setFace(g, "happy", 2); burst(g, "heart", 10); }
         toast(`🎁✨ WOW! A Blip that isn't out yet: ${kind}! ${g ? "It's in your town." : "Your town is full, so it's waiting in your 📖 Zoo."}`, 8);
+      } else if (Math.random() < (CAKE.skin_chance || 0) && (CAKE.skin_kinds || []).some((k) => !save.skins.includes(`${k}:${CAKE.skin_name}`))) {
+        const open = CAKE.skin_kinds.filter((k) => !save.skins.includes(`${k}:${CAKE.skin_name}`));
+        const kind = open[Math.floor(Math.random() * open.length)];
+        save.skins.push(`${kind}:${CAKE.skin_name}`); st.got.push(`${kind}:${CAKE.skin_name}`);
+        save.merchKinds = save.merchKinds || []; if (!save.merchKinds.includes(kind)) save.merchKinds.push(kind);
+        let g = pets.find((q) => q.kind === kind) || addPet(kind, { quiet: true });
+        if (g) { g.color = KINDS[kind].colors.findIndex((c) => c.name === CAKE.skin_name); say(g, "...i feel strange. cursed, even.", 5); setFace(g, "happy", 2); burst(g, "heart", 10); sparkle(g, 12); }
+        sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);
+        toast(`🎁💀 A cursed figure! ${kind}: ${CAKE.skin_name} is yours, forever.`, 8);
       } else {
         reward(p, CAKE.hearts); sfx("coin");
         toast(`🎁 Just some treats! +${CAKE.hearts} 💖 (${CAKE.max - st.opened} boxes left today)`, 3.5);

@@ -3539,7 +3539,9 @@ GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
 # 🎂 Cake Day (Dec 8): gift boxes pop up in town all day. Each box you open is a roll: `chance` to win one of the Blips that
 # aren't out yet (never one you already have), otherwise a few hearts. `every` = seconds between boxes, `max` = boxes per player.
-CAKE_DAY = {"day": "2026-12-08", "chance": 0.08, "pool": ["Mythkeeper"], "max": 15, "every": 120, "hearts": 5}
+CAKE_DAY = {"day": "2026-12-08", "chance": 0.08, "pool": ["Mythkeeper"], "max": 15, "every": 120, "hearts": 5,
+            # a second, separate roll: the "Cursed Figure" colors of the Series 1 figures (the Blip comes with its color)
+            "skin_chance": 0.08, "skin_name": "Cursed Figure", "skin_kinds": ["Blip", "Bun", "T-Rex", "Wendigo", "Beta Buddy"]}
 
 # 12 new animals for Blipville 1.0
 NEW_ANIMALS.update({
@@ -8174,11 +8176,16 @@ def merch_backfill(save):
 MERCH_COLORS = {
     "T-Rex": [{"name": "Classic Dino Green", "o": "#0c2a14", "b": "#5ac85a", "s": "#2e8a3a", "h": "#2e8a3a", "k": "#ffffff", "d": "#5a1a1a", "l": "#d8f8b0", "a": "#3a9a4a", "e": "#ffd23a"},
               {"name": "Awakened Volcanic", "o": "#1a0604", "b": "#3a1a14", "s": "#ff5a1a", "h": "#ff8a2a", "k": "#ffd23a", "d": "#ff3a1a", "l": "#ff8a3a", "a": "#2a0e0a", "e": "#ffea5a"},
-              {"name": "Mecha / Fossil Silver", "o": "#1a1c22", "b": "#b8bec8", "s": "#7a828e", "h": "#7a828e", "k": "#ffffff", "d": "#3a3e48", "l": "#e8ecf2", "a": "#8a929e", "e": "#5ad8ff"}],
-    "Blip": [{"name": "Figure Holo", "o": "#2a1040", "b": "#c87aff", "l": "#ffe0ff", "p": "#ff7ad8", "e": "#1a0a2a"}],
-    "Bun": [{"name": "Figure Pastel", "o": "#3a2a4a", "b": "#ffc8e8", "l": "#ffffff", "p": "#ff8ac0", "e": "#2a1a3a"}],
-    "Wendigo": [{"name": "Figure Glow", "o": "#0a1a12", "h": "#b8ffd0", "l": "#e8fff0", "k": "#0a140e", "w": "#ffffff", "b": "#1a3a2a", "r": "#6ad8a0", "e": "#3aff8a"}],
-    "Beta Buddy": [{"name": "Figure Prototype", "o": "#1a1a2a", "b": "#c8ccd8", "h": "#ff5a8a", "s": "#ffffff", "y": "#5ae0ff", "p": "#ff9ab0", "e": "#1a1a2a"}],
+              {"name": "Mecha / Fossil Silver", "o": "#1a1c22", "b": "#b8bec8", "s": "#7a828e", "h": "#7a828e", "k": "#ffffff", "d": "#3a3e48", "l": "#e8ecf2", "a": "#8a929e", "e": "#5ad8ff"},
+              {"name": "Cursed Figure", "o": "#0e0814", "b": "#4a5a3a", "s": "#2a3a28", "h": "#2a3a28", "k": "#d8d0b8", "d": "#8a1a1a", "l": "#a8b890", "a": "#3a4a30", "e": "#ff2a2a"}],
+    "Blip": [{"name": "Figure Holo", "o": "#2a1040", "b": "#c87aff", "l": "#ffe0ff", "p": "#ff7ad8", "e": "#1a0a2a"},
+              {"name": "Cursed Figure", "o": "#0e0814", "b": "#6b7a5a", "l": "#c8d4a8", "p": "#a82a3a", "e": "#ff2a2a"}],
+    "Bun": [{"name": "Figure Pastel", "o": "#3a2a4a", "b": "#ffc8e8", "l": "#ffffff", "p": "#ff8ac0", "e": "#2a1a3a"},
+            {"name": "Cursed Figure", "o": "#0e0814", "b": "#7a6a8a", "l": "#d8cce0", "p": "#a82a3a", "e": "#ff2a2a"}],
+    "Wendigo": [{"name": "Figure Glow", "o": "#0a1a12", "h": "#b8ffd0", "l": "#e8fff0", "k": "#0a140e", "w": "#ffffff", "b": "#1a3a2a", "r": "#6ad8a0", "e": "#3aff8a"},
+                {"name": "Cursed Figure", "o": "#0a0610", "h": "#c8c0b0", "l": "#e8e0d0", "k": "#14101a", "w": "#ffffff", "b": "#2a1a30", "r": "#8a2a3a", "e": "#ff2a2a"}],
+    "Beta Buddy": [{"name": "Figure Prototype", "o": "#1a1a2a", "b": "#c8ccd8", "h": "#ff5a8a", "s": "#ffffff", "y": "#5ae0ff", "p": "#ff9ab0", "e": "#1a1a2a"},
+                   {"name": "Cursed Figure", "o": "#0e0814", "b": "#6a6a7a", "h": "#8a1a2a", "s": "#d8d8e0", "y": "#ff2a2a", "p": "#a82a3a", "e": "#ff2a2a"}],
 }
 for _k, _cs in MERCH_COLORS.items():
     VARIANTS[_k]["colors"] = list(kind_colors(_k)) + [{**c, "unlock": "merch"} for c in _cs]

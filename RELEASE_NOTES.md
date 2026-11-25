@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.11:** ✨ Easier to ride the wave. 👀
+>
 > **1.0.10:** ✨ The tide turns. 👀
 >
 > **1.0.9:** ✨ Something stronger woke up. 👀

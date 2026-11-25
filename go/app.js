@@ -3058,8 +3058,8 @@
       persist(true);
   };
   drops.forEach((d, i) => setTimeout(() => deliverGift(d), 2600 + i * 7500));
-  // 🎂 Cake Day: on one day, gift boxes pop up in town. Every box you open is a roll: a small chance to win a Blip that
-  // isn't out yet (the pool and the odds come from blip.pyw), otherwise a few hearts.
+  // 🎂 Cake Day: on one day, gift boxes pop up in town. No chance involved (our motto: no gambling): every box gives hearts, and some
+  // boxes are a guaranteed prize (box number -> the figure whose "Cursed Figure" color you get). The numbers come from blip.pyw.
   const CAKE = D.cakeDay || null;
   function cakeState() { if (!save.cakeDay || save.cakeDay.day !== CAKE.day) save.cakeDay = { day: CAKE.day, opened: 0, got: [] }; return save.cakeDay; }
   if (CAKE && localDay() === CAKE.day) {
@@ -3069,28 +3069,18 @@
       const st = cakeState(); leave();
       if (st.opened >= CAKE.max) return;
       st.opened++;
-      const left = (CAKE.pool || []).filter((k) => !st.got.includes(k) && !pets.some((p) => p.kind === k) && !(save.eventKinds || []).includes(k) && !save.gifts.includes(k));
       const p = pets.find((q) => !["sleep", "held"].includes(q.state)) || pets[0];
-      const hit = left.find(() => Math.random() < CAKE.chance);      // each unreleased Blip gets its own roll
-      if (hit) {
-        const kind = hit;
-        st.got.push(kind); save.eventKinds = save.eventKinds || []; if (!save.eventKinds.includes(kind)) save.eventKinds.push(kind);
-        const g = addPet(kind, { quiet: true });
-        sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);
-        if (g) { say(g, "surprise!! i was hiding in the box!", 5); setFace(g, "happy", 2); burst(g, "heart", 10); }
-        toast(`🎁✨ WOW! A Blip that isn't out yet: ${kind}! ${g ? "It's in your town." : "Your town is full, so it's waiting in your 📖 Zoo."}`, 8);
-      } else if (Math.random() < (CAKE.skin_chance || 0) && (CAKE.skin_kinds || []).some((k) => !save.skins.includes(`${k}:${CAKE.skin_name}`))) {
-        const open = CAKE.skin_kinds.filter((k) => !save.skins.includes(`${k}:${CAKE.skin_name}`));
-        const kind = open[Math.floor(Math.random() * open.length)];
-        save.skins.push(`${kind}:${CAKE.skin_name}`); st.got.push(`${kind}:${CAKE.skin_name}`);
+      const kind = CAKE.prizes[String(st.opened)], skin = kind ? `${kind}:${CAKE.skin_name}` : null;
+      if (kind && !save.skins.includes(skin)) {
+        save.skins.push(skin); st.got.push(skin);
         save.merchKinds = save.merchKinds || []; if (!save.merchKinds.includes(kind)) save.merchKinds.push(kind);
-        let g = pets.find((q) => q.kind === kind) || addPet(kind, { quiet: true });
+        const g = pets.find((q) => q.kind === kind) || addPet(kind, { quiet: true });
         if (g) { g.color = KINDS[kind].colors.findIndex((c) => c.name === CAKE.skin_name); say(g, "...i feel strange. cursed, even.", 5); setFace(g, "happy", 2); burst(g, "heart", 10); sparkle(g, 12); }
         sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);
-        toast(`🎁💀 A cursed figure! ${kind}: ${CAKE.skin_name} is yours, forever.`, 8);
+        toast(`🎁💀 A cursed figure! ${kind}: ${CAKE.skin_name} is yours, forever. (${CAKE.max - st.opened} boxes left today)`, 8);
       } else {
         reward(p, CAKE.hearts); sfx("coin");
-        toast(`🎁 Just some treats! +${CAKE.hearts} 💖 (${CAKE.max - st.opened} boxes left today)`, 3.5);
+        toast(`🎁 Treats! +${CAKE.hearts} 💖 (${CAKE.max - st.opened} boxes left today)`, 3.5);
       }
       persist(true);
     }
@@ -3103,7 +3093,7 @@
       boxEl.onclick = openBox; doc().body.appendChild(boxEl); sfx("pop");
       boxTimer = setTimeout(leave, 25000);
     }
-    setTimeout(() => toast("🎂 Cake Day! Gift boxes pop up all day. Open them for treats and a chance at Blips that aren't out yet!", 7), 5000);
+    setTimeout(() => toast("🎂 Cake Day! Gift boxes pop up all day. Open them for treats and cursed figure colors!", 7), 5000);
     setTimeout(dropBox, 9000);
     setInterval(() => { if (!boxEl && Date.now() - lastBox > CAKE.every * 1000) dropBox(); }, 4000);
   }

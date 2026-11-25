@@ -3537,11 +3537,11 @@ GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest on
 GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
 GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
-# 🎂 Cake Day (Dec 8): gift boxes pop up in town all day. Each box you open rolls `chance` (1%) separately for each Blip in the
-# pool that isn't out yet (never one you already have), then the cursed-color roll below, otherwise a few hearts. `every` = seconds between boxes, `max` = boxes per player.
-CAKE_DAY = {"day": "2026-12-08", "chance": 0.01, "pool": ["Mythkeeper", "Silvertear-03"], "max": 15, "every": 120, "hearts": 5,
-            # a second, separate roll: the "Cursed Figure" colors of the Series 1 figures (the Blip comes with its color)
-            "skin_chance": 0.08, "skin_name": "Cursed Figure", "skin_kinds": ["Blip", "Bun", "T-Rex", "Wendigo", "Beta Buddy"]}
+# 🎂 Cake Day (Dec 8): gift boxes pop up in town all day, so staying active pays. No chance involved (our motto: no
+# gambling): every box gives `hearts`, and some boxes are a guaranteed prize: box number -> the Series 1 figure whose
+# "Cursed Figure" color you get. `max` = boxes per player, `every` = seconds between boxes.
+CAKE_DAY = {"day": "2026-12-08", "max": 15, "every": 120, "hearts": 5, "skin_name": "Cursed Figure",
+            "prizes": {"3": "Blip", "6": "Bun", "9": "T-Rex", "12": "Wendigo", "15": "Beta Buddy"}}
 
 # 12 new animals for Blipville 1.0
 NEW_ANIMALS.update({
@@ -8217,9 +8217,12 @@ MERCH = {"REX-GRN": {"name": "Classic Dino Green", "kind": "T-Rex"},
          "FIG-BLIP": {"name": "Figure Holo", "kind": "Blip"},
          "FIG-BUN": {"name": "Figure Pastel", "kind": "Bun"},
          "FIG-WENDI": {"name": "Figure Glow", "kind": "Wendigo"},
-         "FIG-BETA": {"name": "Figure Prototype", "kind": "Beta Buddy"}}
+         "FIG-BETA": {"name": "Figure Prototype", "kind": "Beta Buddy"},
+         # 🎁 Dec 8 giveaway (10 codes each, handed out by hand): the Blip itself, even the parked one
+         "MYTH-FREE": {"name": "Lantern", "kind": "Mythkeeper", "free": True},
+         "TEAR-FREE": {"name": "Chrome", "kind": "Silvertear-03", "free": True}}
 for _p, _m in MERCH.items():                  # 🚧 a parked Blip's code is kept and its skin waits until the Blip arrives
-    if _m.get("kind") in PARKED_NOW:
+    if _m.get("kind") in PARKED_NOW and not _m.get("free"):
         MERCH[_p] = {"name": _m["name"], "for": _m["kind"], "waits": _m["kind"]}
 
 
@@ -11202,29 +11205,12 @@ class App:
         if st["opened"] >= cd["max"]:
             return
         st["opened"] += 1
-        have = {p.kind for p in self.pets}
-        left = [k for k in cd["pool"] if k not in st["got"] and k not in have and k not in self.save.get("merch_kinds", [])
-                and k not in self.save.get("gifts", [])]
-        hit = next((k for k in left if random.random() < cd["chance"]), None)        # each unreleased Blip gets its own roll
         pet = next((p for p in self.pets if p.state not in ("sleep", "held")), self.pets[0] if self.pets else None)
-        if hit:
-            st["got"].append(hit)
-            self.save.setdefault("merch_kinds", []).append(hit)
-            new = self.add_pet(hit, greet=False)
-            write_save(self.save)
-            self.sound.play("fanfare")
-            if new:
-                new.say("surprise!! i was hiding in the box!", 5)
-                new.set_face("happy", 2)
-                new.burst("heart", 10)
-            messagebox.showinfo("A gift box! 🎁✨", f"WOW! A Blip that isn't out yet: {hit}!\n\n"
-                                + ("It's in your town." if new else "Your town is full, so free a spot and find it under Change kind."), parent=self.root)
-            return
-        open_skins = [k for k in cd["skin_kinds"] if f"{k}:{cd['skin_name']}" not in self.save.get("skins", [])]
-        if open_skins and random.random() < cd["skin_chance"]:
-            kind = random.choice(open_skins)
-            self.save.setdefault("skins", []).append(f"{kind}:{cd['skin_name']}")
-            st["got"].append(f"{kind}:{cd['skin_name']}")
+        kind = cd["prizes"].get(str(st["opened"]))                  # a guaranteed prize on certain boxes
+        skin = f"{kind}:{cd['skin_name']}" if kind else None
+        if kind and skin not in self.save.setdefault("skins", []):
+            self.save["skins"].append(skin)
+            st["got"].append(skin)
             if kind not in self.save.setdefault("merch_kinds", []):
                 self.save["merch_kinds"].append(kind)
             target = next((p for p in self.pets if p.kind == kind), None) or self.add_pet(kind, greet=False)
@@ -11237,12 +11223,13 @@ class App:
                 target.say("...i feel strange. cursed, even.", 5)
                 target.set_face("happy", 2)
                 target.burst("heart", 10)
-            messagebox.showinfo("A cursed figure! 🎁💀", f"{kind}: {cd['skin_name']} is yours, forever.", parent=self.root)
+            messagebox.showinfo("A cursed figure! 🎁💀", f"{kind}: {cd['skin_name']} is yours, forever.\n\n"
+                                f"({cd['max'] - st['opened']} boxes left today)", parent=self.root)
             return
         self.add_hearts(cd["hearts"], pet)
         self.sound.play("coin")
         if pet:
-            pet.say(f"just some treats! ({cd['max'] - st['opened']} boxes left today)", 3)
+            pet.say(f"treats! ({cd['max'] - st['opened']} boxes left today)", 3)
 
     def cryptid_step(self, now):
         self.event_visitor(now)

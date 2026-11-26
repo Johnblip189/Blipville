@@ -1027,14 +1027,19 @@
     const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;
     drawEyeGlow(p, t, left, top, shiftH);
     const hatTop = Math.min(0, ...worn(p).map(([n, tint]) => drawHat(ctx, p.kind, n, left, top, S, shiftH, tint)));
+    if (K.smoke && p.state !== "sleep" && t > (p.smokeNext || 0)) {                  // 🕳️ black smoke curls out of one eye
+      p.smokeNext = t + 0.11; p.particles.push({ kind: "smoke", x: (K.smoke[0] + 0.5 - 8) * S + rnd(-2, 2), y: (13 - K.smoke[1]) * S + 2, vx: rnd(-10, 14), vy: rnd(-55, -35), life: rnd(1.1, 1.8), born: t });
+    }
     // particles
     p.particles = p.particles.filter((q) => t - q.born < q.life);
     for (const q of p.particles) {
-      const a = t - q.born, qx = p.x + q.x + q.vx * a, qy = GROUND - p.y - q.y + q.vy * a + (q.kind === "crumb" || q.kind === "stuffing" ? 300 * a * a : 0);
+      const a = t - q.born, qx = p.x + q.x + q.vx * a, qy = GROUND - p.y - q.y + q.vy * a + (q.kind === "crumb" || q.kind === "stuffing" || q.kind === "shard" ? 300 * a * a : 0);
       if (q.kind === "heart") drawMask(HEART, qx, qy, 3, "#ff4f7b");
       else if (q.kind === "z") drawMask(ZED, qx, qy, 2 + Math.floor(a), "#bcd2ff");
       else if (q.kind === "crumb") { ctx.fillStyle = "#c98a4b"; ctx.fillRect(qx, qy, 3, 3); }
       else if (q.kind === "stuffing") { ctx.fillStyle = "#f4ece4"; ctx.fillRect(qx, qy, 4, 4); }
+      else if (q.kind === "shard") { ctx.fillStyle = "#cfcfdc"; ctx.fillRect(qx, qy, 4, 4); }
+      else if (q.kind === "smoke") { const k = a / q.life, sz = 4 + k * 10; ctx.fillStyle = k < 0.6 ? `rgba(14,10,22,${0.85 - k * 0.5})` : `rgba(52,46,70,${0.55 * (1 - k)})`; ctx.fillRect(Math.round(qx - sz / 2), Math.round(qy - sz / 2), Math.round(sz), Math.round(sz)); }
       else if (q.kind === "spark") { ctx.fillStyle = q.color; ctx.fillRect(qx, qy - 2, 2, 6); ctx.fillRect(qx - 2, qy, 6, 2); }
       else if (q.kind === "plus") {
         ctx.font = "800 12px " + FONT;
@@ -1581,7 +1586,9 @@
       if (stg === 0) save.awakened.push(base); else (save.awakenLevel = save.awakenLevel || {})[base] = stg + 1;
     }
     p.kind = form; p.color %= KINDS[form].colors.length; sfx("fanfare"); vibrate([30, 40, 30]);
-    say(p, pick(KINDS[form].lines), 3.5); setFace(p, "happy", 2); sparkle(p, 12); persist(true); openPetSheet(p);
+    say(p, pick(KINDS[form].lines), 3.5); setFace(p, "happy", 2); sparkle(p, 12);
+    if (KINDS[form].smoke) { burst(p, "shard", 18); sfx("crack"); setTimeout(() => sfx("crack"), 160); vibrate([60, 40, 90]); }     // the shell cracks open
+    persist(true); openPetSheet(p);
   };
 
   // ------------------------------------------------------------------ the Arena ⚔️ (same rules and battle codes as the desktop app)

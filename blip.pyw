@@ -3408,6 +3408,10 @@ AWAKENED = {
            "obbbbbbbbbbbbbbo", "obpbbllllllbbpbo", "obbblllnnlllbbbo", "ossyskkkkkksysso", ".obbbllllllbbbo.", "..obrbbbbbbrbo.."],
   "colors": [{"name": "Mecha", "o": "#0a0a1a", "b": "#3a3a5a", "l": "#8ae0ff", "a": "#ff3a8a", "r": "#ffd23a", "s": "#2a2a3a", "k": "#8ae0ff", "n": "#0a0a1a", "y": "#ff3a8a", "p": "#ff3a8a", "e": "#ff3a3a"},
              {"name": "Golden", "o": "#2a1a04", "b": "#e8b83a", "l": "#fff4c8", "a": "#ff8a3a", "r": "#ffffff", "s": "#8a5a1a", "k": "#fff27a", "n": "#2a1a04", "y": "#3affd8", "p": "#ff8a8a", "e": "#3affd8"}]},
+ "Mimic": {"name": "Unmasked", "eyes": 5, "move": "walk", "speed": 1.1, "feet": True, "mouth": False, "noeyes": True, "smoke": [11, 5],
+  "lines": ["...it cracked", "you wore my face first", "the mask never fit", "*black smoke curls from its eye*", "i remember being you", "look closer. i dare you"],
+  "body": [".oo..........oo.", ".obo........obo.", ".obpo.oooo.opBo.", ".obbBo*bXBobbBo.", "obbbWW*bXbWWbbBo", "obbWWKWXbWWRWXBo", "obbbWWbXbbWWXbBo", "obpXbbbKXbbbXpBo", "oBbKXKKKKKKKKXBo", ".obKXKNKNKNKNBo.", ".oBBKKKKKKKKBBo.", "..ooBBBBBBBBoo.."],
+  "colors": [{"name": "Cracked", "o": "#0a0420", "b": "#3a2aa8", "l": "#6a58e8", "p": "#3a2aa8", "W": "#ffffff", "K": "#0a0420", "N": "#fff2b0", "X": "#ff4a2a", "R": "#ff1a2a", "e": "#0a0420"}]}
 }
 AWAKENED["Lurker"] = {"name": "Wide-Eyed Lurker", "eyes": 5, "move": "float", "speed": 1.3, "feet": False, "mouth": False, "ghost": True,
   "lines": ["now i see EVERYTHING", "*more eyes open*", "you can't hide from me (in tag)", "the walls are watching too", "blink. blink. blink."],
@@ -4198,7 +4202,8 @@ for _base, _a in [(b, a) for b, a in AWAKENED.items()] + [(b, st) for b, sts in 
     VARIANTS[_a["name"]] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                             "feet": (_a["feet"] if isinstance(_a.get("feet"), dict) else FEET_STD if _a.get("feet", True) else None), "dx": _a.get("dx", 0), "move": _a["move"],
                             "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0), "shifty": False,
-                            "ghost": _a.get("ghost", False), "awakened": _base, "soul": _a.get("soul", "")}
+                            "ghost": _a.get("ghost", False), "awakened": _base, "soul": _a.get("soul", ""),
+                            "noeyes": _a.get("noeyes", False), "smoke": _a.get("smoke")}
 # 🖍️ The 1.0 Redraw: every Blip gets a new drawing. The old one lives on in a "Classic" color (added at the end, so
 # nobody's chosen color changes) that shows the new drawing but glitches back to the old one every few seconds.
 # >>> REDRAW DATA (kind: 12 rows of 16; written by tools/redraw_merge.py)
@@ -6242,6 +6247,10 @@ class Blip:
         app.sound.play("fanfare")
         self.say(random.choice(VARIANTS[form]["lines"]), 3.5)
         self.set_face("happy", 2)
+        if VARIANTS[form].get("smoke"):                  # the shell cracks open
+            for _ in range(16):
+                self.particles.append({"kind": "shard", "x": W / 2 + random.uniform(-30, 30), "y": H - random.uniform(20, ART_H * SCALE),
+                                       "vx": random.uniform(-2, 2), "vy": random.uniform(-3, -0.5), "life": random.uniform(0.8, 1.4), "born": time.monotonic()})
         for _ in range(10):
             self.add_sparkle(time.monotonic())
         app.save_town()
@@ -6981,7 +6990,7 @@ class Blip:
                 continue
             p["x"] += p["vx"]
             p["y"] += p["vy"]
-            if p["kind"] in ("crumb", "stuffing"):
+            if p["kind"] in ("crumb", "stuffing", "shard"):
                 p["vy"] += 0.4
             alive.append(p)
             if p["kind"] == "heart":
@@ -6999,6 +7008,11 @@ class Blip:
                             c.create_rectangle(X, Y, X + s, Y + s, fill="#bcd2ff", outline="", tags=("fx",))
             elif p["kind"] == "crumb":
                 c.create_rectangle(p["x"], p["y"], p["x"] + 3, p["y"] + 3, fill="#c98a4b", outline="", tags=("fx",))
+            elif p["kind"] == "smoke":                                      # 🕳️ black smoke from the Unmasked's eye
+                sz = 4 + int(age * 6)
+                c.create_rectangle(p["x"], p["y"], p["x"] + sz, p["y"] + sz, fill=("#14101c" if age < p["life"] * 0.6 else "#3a3448"), outline="", stipple=("" if age < p["life"] * 0.5 else "gray50"), tags=("fx",))
+            elif p["kind"] == "shard":
+                c.create_rectangle(p["x"], p["y"], p["x"] + 4, p["y"] + 4, fill="#cfcfdc", outline="", tags=("fx",))
             elif p["kind"] == "stuffing":
                 c.create_rectangle(p["x"], p["y"], p["x"] + 4, p["y"] + 4, fill="#f4ece4", outline="", tags=("fx",))
             elif p["kind"] == "snow":

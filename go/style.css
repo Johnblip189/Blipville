@@ -476,3 +476,7 @@ button { touch-action: manipulation; }
 #chaseCv { width: min(100vw, 177.8vh); height: min(56.25vw, 100vh); image-rendering: pixelated; background: #000; }
 #chaseLeave { position: absolute; top: 14px; right: 14px; padding: 8px 14px; border-radius: 10px; border: 0; background: rgba(255,255,255,.15); color: #fff; font: inherit; cursor: pointer; }
 #chase[hidden] { display: none; }
+
+#mimicCut { position: fixed; inset: 0; z-index: 170; background: #000; touch-action: none; cursor: pointer; }
+#mimicCut[hidden] { display: none; }
+#mimicCv { width: 100%; height: 100%; display: block; }

@@ -1221,8 +1221,47 @@
     if (t < nextMimic || held || [...doc().querySelectorAll(".sheet")].some((s) => !s.hidden)) return;
     const cand = pets.filter((p) => !["sleep", "held"].includes(p.state) && !p.playing && p.kind !== "Mimic");
     if (!cand.length) return;
-    const p = pick(cand); p.mimicUntil = t + 8; nextMimic = t + rnd(240, 420); sfx("zap");
+    const p = pick(cand); nextMimic = t + rnd(240, 420);
+    startMimicCut(p, () => { p.mimicUntil = now() + 10; });      // a short cutscene, then the Blip starts to slip
   }, 4000);
+  // 🎬 the cutscene when the Mimic shows up: the screen goes dark and glitchy, the chosen Blip turns into the Mimic and tells you what to do.
+  // The first one is longer; later ones are short. Tap to skip (after a second).
+  const MCUT = { open: false };
+  function startMimicCut(p, done) {
+    if (MCUT.open) return;
+    const ov = $("mimicCut"), cv = $("mimicCv"), g = cv.getContext("2d"); ov.hidden = false; MCUT.open = true;
+    cv.width = view.innerWidth; cv.height = view.innerHeight;
+    const first = !save.mimicCutSeen; save.mimicCutSeen = true; persist(true);
+    const dur = first ? 5.4 : 2.8, name = p.name || p.kind, kind = p.kind, color = p.color;
+    const lines = first ? [[0.9, `${name}?`], [2.1, `...that isn't ${name}.`], [3.6, "it knows you saw it."], [4.5, "tap it. if you dare."]] : [[0.5, `${name}?`], [1.5, "...not again."]];
+    const SC = Math.floor(Math.min(cv.width, cv.height) / 22);
+    let tt = 0, alive = true, last = performance.now(), raf = 0, rev = false, flash = 0;
+    sfx("zap");
+    const finish = () => { if (!alive) return; alive = false; cancelAnimationFrame(raf); ov.hidden = true; MCUT.open = false; ov.onpointerdown = null; done(); };
+    ov.onpointerdown = () => { if (tt > 0.9) finish(); };
+    function frame(nowT) {
+      if (!alive) return; const dt = Math.min(0.05, (nowT - last) / 1000); last = nowT; tt += dt; const ph = tt / dur;
+      const W2 = cv.width, H2 = cv.height; g.fillStyle = "#000"; g.fillRect(0, 0, W2, H2);
+      const glitch = Math.max(0, Math.min(1, (ph - 0.18) / 0.4)), full = ph > 0.58;       // the glitch builds, then it is the Mimic for good
+      if (full && !rev) { rev = true; sfx("thud"); vibrate([40, 30, 60]); }
+      const showM = full || (Math.random() < glitch * 0.55);
+      const gr = grid(showM ? "Mimic" : kind, showM ? 0 : color, { t: tt, state: "idle" });
+      const sx = Math.round(W2 / 2 - 8 * SC), sy = Math.round(H2 * 0.42 - 6 * SC), shake = glitch * SC * 0.12;
+      gr.forEach((row, r) => { const off = Math.random() < glitch * 0.25 ? Math.round((Math.random() - 0.5) * SC * 3) : 0;
+        row.forEach((c, i) => { if (c) { g.fillStyle = c; g.fillRect(sx + i * SC + off + Math.round((Math.random() - 0.5) * shake), sy + r * SC, SC + 1, SC + 1); } }); });
+      if (full) { const pulse = 0.5 + 0.5 * Math.sin(tt * 9); g.fillStyle = `rgba(255,30,60,${0.05 + 0.07 * pulse})`; g.fillRect(0, 0, W2, H2); }
+      for (let i = 0; i < 160 * (0.3 + glitch); i++) { g.fillStyle = Math.random() < 0.5 ? "rgba(255,255,255,.18)" : "rgba(255,40,90,.22)"; g.fillRect(Math.random() * W2, Math.random() * H2, 2 + Math.random() * 6, 1); }
+      for (let i = 0; i < 4 * glitch; i++) { g.fillStyle = "rgba(90,200,255,.25)"; g.fillRect(0, Math.random() * H2, W2, 2 + Math.random() * 8); }
+      const vg = g.createRadialGradient(W2 / 2, H2 * 0.42, H2 * 0.15, W2 / 2, H2 * 0.42, H2 * 0.8); vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,.9)"); g.fillStyle = vg; g.fillRect(0, 0, W2, H2);
+      const L = lines.filter(([at]) => tt >= at).pop();
+      if (L) { const shown = Math.min(L[1].length, Math.floor((tt - L[0]) * 28)); g.font = `700 ${Math.round(SC * 1.1)}px ui-monospace, monospace`; g.textAlign = "center"; g.fillStyle = full ? "#ff9aa8" : "#e8e8f0";
+        g.fillText(L[1].slice(0, shown), W2 / 2, H2 * 0.82); }
+      g.font = `${Math.round(SC * 0.5)}px ui-monospace, monospace`; g.fillStyle = "rgba(255,255,255,.25)"; if (tt > 0.9) g.fillText("tap to skip", W2 / 2, H2 - 18);
+      if (tt >= dur) { flash = flash || tt; g.fillStyle = `rgba(255,70,90,${Math.max(0, 0.6 - (tt - flash) * 4)})`; g.fillRect(0, 0, W2, H2); if (tt - flash > 0.18) { finish(); return; } }
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+  }
   function startChase(fromPet) {
     if (CHASE.open) return;
     const ov = $("chase"), cv = $("chaseCv"), g = cv.getContext("2d"), GW = 320, GH = 180, GY = 140;
@@ -3669,7 +3708,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { chase: { start: () => startChase(null), debug: () => CHASE.debug, slip: () => { if (pets[0]) pets[0].mimicUntil = now() + 8; } }, bag: { form: drawNexusForm, weapon: drawWeaponSprite, give: giveItem, take: takeItem, has: hasItem, open: openBag, items: ITEMS }, apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS, start: startTrial, battle: () => arenaBattle, draw: () => drawBattle() }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { chase: { cut: () => startMimicCut(pets[0], () => { pets[0].mimicUntil = now() + 10; }), cutOpen: () => MCUT.open, start: () => startChase(null), debug: () => CHASE.debug, slip: () => { if (pets[0]) pets[0].mimicUntil = now() + 8; } }, bag: { form: drawNexusForm, weapon: drawWeaponSprite, give: giveItem, take: takeItem, has: hasItem, open: openBag, items: ITEMS }, apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS, start: startTrial, battle: () => arenaBattle, draw: () => drawBattle() }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

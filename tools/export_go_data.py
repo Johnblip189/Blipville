@@ -33,8 +33,6 @@ for k in list(bl.KINDS) + list(bl.PROWL_KINDS) + list(bl.AWAKEN_BASE) + list(get
         kinds[k]["xeyes"] = True
     if v.get("noeyes"):
         kinds[k]["noeyes"] = True
-    if v.get("smoke"):
-        kinds[k]["smoke"] = v["smoke"]
     if v.get("fade"):
         kinds[k]["fade"] = True
     if v.get("plush"):

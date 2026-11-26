@@ -1,0 +1,9 @@
+[2026-11-26 13:13:05] v1.0.19-test 2026-11-26T13:12:36Z | started on win32, Python 3.12.10
+[2026-11-26 13:13:14] v1.0.19-test 2026-11-26T13:12:36Z | selftest: pet Blip state=idle click_at=760,694 layered=True frames_shown=236 failed=False
+[2026-11-26 13:13:14] v1.0.19-test 2026-11-26T13:12:36Z | selftest: pet Ziggy state=idle click_at=360,694 layered=True frames_shown=225 failed=False
+[2026-11-26 13:13:15] v1.0.19-test 2026-11-26T13:12:36Z | selftest: pressed Blip at 110,154
+[2026-11-26 13:13:16] v1.0.19-test 2026-11-26T13:12:36Z | selftest: menu for Blip
+[2026-11-26 13:13:18] v1.0.19-test 2026-11-26T13:12:36Z | trophy: First Friend
+[2026-11-26 13:13:22] v1.0.19-test 2026-11-26T13:12:36Z | selftest: windows=2 perchable=['Untitled - Notepad', 'C:\\ProgramData\\GitHub\\HostedCo']
+[2026-11-26 13:13:22] v1.0.19-test 2026-11-26T13:12:36Z | selftest: 2 pets, LAYERED=True, version=v1.0.19-test
+[2026-11-26 13:13:25] v1.0.19-test 2026-11-26T13:12:36Z | selftest: perched=False state=fall at=487,498

@@ -10204,6 +10204,7 @@ class Collection:
                        ("Legends ✨  visit a world and click them when they stroll by", LEGEND_KINDS),
                        ("Ghosts 👻  they drift by at night: click one while it glows!", GHOST_KINDS),
                        ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS),
+                       ("Gizmos ⚙️  buy a quest in the Workshop (right-click a Blip)", GIZMO_KINDS + SHOPKEEPER_KINDS),
                        ("Event 🎖️  earn them in Prowl Week", PROWL_KINDS),
                        ("Bad Dreams 🧸  click a Puppet Master 5 times… then fend them off", BAD_DREAM_KINDS)]
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)

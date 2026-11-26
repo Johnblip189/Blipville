@@ -449,7 +449,11 @@ button { touch-action: manipulation; }
 
 #glitch404 { position: fixed; inset: 0; z-index: 200; background: #000; color: #f4f6fa; display: flex; flex-direction: column; align-items: center;
   justify-content: center; gap: 14px; font-family: ui-monospace, "Courier New", monospace; text-align: center; padding: 24px; cursor: pointer; }
-#glitch404 canvas { width: 320px; height: 80px; image-rendering: pixelated; }
+#glitch404 canvas { image-rendering: pixelated; }
+#glitch404 .g4eyes { position: relative; width: 320px; height: 80px; }
+#glitch404 .g4bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+#glitch404 .g4t, #glitch404 .g4s, #glitch404 .g4h { position: relative; text-shadow: 0 0 8px #000; }
+#glitch404 .g4h { position: absolute; }
 #glitch404 .g4t { font-size: 34px; letter-spacing: 6px; color: #ff4a5a; }
 #glitch404 .g4s { font-size: 18px; max-width: 520px; }
 #glitch404 .g4h { position: absolute; bottom: 18px; font-size: 12px; opacity: .35; }

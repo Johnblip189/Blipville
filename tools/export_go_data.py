@@ -52,7 +52,7 @@ data = {
     "events": getattr(bl, "EVENTS", None),
     "quests": getattr(bl, "QUESTS", []),
     "features": getattr(bl, "FEATURES", {}),
-    "parkedKinds": sorted(getattr(bl, "PARKED_NOW", ())),
+    "parkedKinds": sorted(k for k in getattr(bl, "PARKED_NOW", ()) if bl.PARKED_KINDS.get(k) != "worlds"),     # (world Blips are paused with the worlds, not "kaiju")
     "chats": getattr(bl, "CHATS", {}),
     "chatDefault": getattr(bl, "CHAT_DEFAULT", None),
     "typeCps": getattr(bl, "TYPE_CPS", 32),

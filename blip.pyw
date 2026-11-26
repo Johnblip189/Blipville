@@ -4508,15 +4508,17 @@ CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, e
 FEATURES = {"arena": False,           # ⚔️ Arena battles, battle codes, rivals, battle music, Pull the Strings
             "climb": False,           # 🪟 Blips climbing onto your windows (Windows only)
             "cursor_play": False,     # 🖱️ Blips chasing and "stealing" the mouse pointer (Windows only)
-            "silvertear": False}      # 🤖 Silvertear-03, the mecha kaiju (coming in 1.1)
+            "silvertear": False,      # 🤖 Silvertear-03, the mecha kaiju (coming in 1.1)
+            "worlds": False}          # 🌍 the worlds, their Legends, the Egypt Dig Site and (on the website) the Apex Nexus: paused for a rework in 1.2
 # 🚧 Parked Blips: their art and chats stay in the game (anyone who already caught one keeps it), but they don't show up
 # in the wild, the collection, trophies or the creator/mod tools. A merch code for one is saved and its skin waits for it.
-PARKED_KINDS = {"Silvertear-03": "silvertear"}
+PARKED_KINDS = {"Silvertear-03": "silvertear", **{k: "worlds" for k in TAB_KINDS_ALL + LEGEND_KINDS}}      # world Blips you own stay yours
 PARKED_NOW = {k for k, f in PARKED_KINDS.items() if not FEATURES.get(f, True)}
 KAIJU_KINDS[:] = [k for k in KAIJU_KINDS if k not in PARKED_NOW]
 KINDS[:] = [k for k in KINDS if k not in PARKED_NOW]
 PARKED_TROPHIES = {"arena-1": "arena", "arena-champ": "arena", "arena-kaiju": "arena", "boss-1": "arena",
-                   "climb-1": "climb", "mouse-10": "cursor_play"}
+                   "climb-1": "climb", "mouse-10": "cursor_play",
+                   "world-1": "worlds", "world-all": "worlds", "legend-1": "worlds", "legend-all": "worlds"}
 PARKED_QUESTS = {"arena_win": "arena"}
 
 # Trophies 🏆: (id, icon, name, how to get it, check, bonus hearts). Checked every few seconds; earned once, kept forever.
@@ -5626,12 +5628,13 @@ class Blip:
         self.menu.add_command(label="💬 Chat…", command=self.open_chat)
         self.chat_entry = self.menu.index("end")
         kinds = tk.Menu(self.menu, tearoff=0)
+        self.legend_menu = tk.Menu(kinds, tearoff=0)         # (only added to the menu while worlds are on)
         n_groups = 6
         size = -(-len(ANIMAL_KINDS) // n_groups)
         chunks = [ANIMAL_KINDS[i:i + size] for i in range(0, len(ANIMAL_KINDS), size)]
         groups = ([("Critters", CRITTERS)] + [(f"Animals: {c[0]} – {c[-1]}", c) for c in chunks]
-                  + list(TAB_GROUPS)
-                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS), ("Legends ✨", LEGEND_KINDS), ("Ghosts 👻", GHOST_KINDS), ("Gifts 🎁", GIFT_KINDS), ("Bad Dreams 🧸", BAD_DREAM_KINDS)]
+                  + (list(TAB_GROUPS) if FEATURES["worlds"] else [])
+                  + [("Night Shift 🌙", NIGHT_SHIFT), ("Rare 🥚", RARE_KINDS), ("Cryptids 👣", CRYPTID_KINDS), ("Kaiju 🦖", KAIJU_KINDS)] + ([("Legends ✨", LEGEND_KINDS)] if FEATURES["worlds"] else []) + [("Ghosts 👻", GHOST_KINDS), ("Gifts 🎁", GIFT_KINDS), ("Bad Dreams 🧸", BAD_DREAM_KINDS)]
                   + ([("My Blips ⭐", CUSTOM_KINDS)] if CUSTOM_KINDS else []))
         for group, members in groups:
             sub = tk.Menu(kinds, tearoff=0)
@@ -5673,7 +5676,8 @@ class Blip:
         self.menu.add_command(label="💤 Back to normal form", command=lambda: self.toggle_awaken(back=True))
         self.awaken_back_entry = self.menu.index("end")
         self.menu.add_command(label=f"🥚 Hatch a Mystery Egg ({EGG_COST} 💖)…", command=lambda: app.open_egg(self.root))
-        self.menu.add_command(label="🏺 Dig for gods in Egypt World…", command=app.open_dig)
+        if FEATURES["worlds"]:
+            self.menu.add_command(label="🏺 Dig for gods in Egypt World…", command=app.open_dig)
         self.menu.add_command(label=f"🔦 Set out a Cryptid Lure ({LURE_COST} 💖)…", command=lambda: app.set_lure(self.root))
         self.menu.add_command(label=f"📡 Switch on a Kaiju Beacon ({BEACON_COST} 💖)…", command=lambda: app.set_beacon(self.root))
         self.menu.add_command(label=f"🕯️ Light a Spirit Candle ({CANDLE_COST} 💖)…", command=lambda: app.light_candle(self.root))
@@ -5683,7 +5687,8 @@ class Blip:
         self.menu.add_command(label="🏆 Trophies…", command=lambda: TrophyShelf(app))
         self.trophy_entry = self.menu.index("end")
         self.world_menu = tk.Menu(self.menu, tearoff=0)
-        self.menu.add_cascade(label="🌍 Worlds", menu=self.world_menu)
+        if FEATURES["worlds"]:
+            self.menu.add_cascade(label="🌍 Worlds", menu=self.world_menu)
         self.menu.add_command(label="💞 New friend", state="disabled")
         self.bond_entry = self.menu.index("end")
         self.menu.add_command(label="💖 0 hearts", state="disabled")
@@ -9956,11 +9961,12 @@ class Collection:
         self.groups = [("Rare ✨  hatch them from Mystery Eggs", RARE_KINDS), ("Night Shift 🌙  survive the nights", NIGHT_SHIFT),
                        ("Cryptids 👣  spot them wandering by, then click them!", CRYPTID_KINDS),
                        (f"Kaiju 🦖  super rare! click one {KAIJU_HITS} times before it stomps off", KAIJU_KINDS),
-                       ("Legends ✨  visit a world and click them when they stroll by", LEGEND_KINDS),
                        ("Ghosts 👻  they drift by at night: click one while it glows!", GHOST_KINDS),
                        ("Gifts 🎁  limited-time thank-you Blips", GIFT_KINDS),
                        ("Event 🎖️  earn them in Prowl Week", PROWL_KINDS),
                        ("Bad Dreams 🧸  click a Puppet Master 5 times… then fend them off", BAD_DREAM_KINDS)]
+        if FEATURES["worlds"]:
+            self.groups.insert(4, ("Legends ✨  visit a world and click them when they stroll by", LEGEND_KINDS))
         h = 60 + sum(34 + -(-len(k) // self.COLS) * self.CELL_H for _, k in self.groups)
         view_h = min(h, self.win.winfo_screenheight() - 140)        # scroll when the screen is too short to fit it all
         self.canvas = tk.Canvas(self.win, width=self.COLS * self.CELL_W + 20, height=view_h, bg="#1d1a2e", highlightthickness=0,
@@ -11396,6 +11402,8 @@ class App:
     def world(self):
         """The world your town is visiting right now (or None for home)."""
         w = self.save.get("world")
+        if not FEATURES["worlds"]:                       # 🌍 paused for 1.2: everyone is at home (nothing is lost from the save)
+            return None
         return WORLD_BY_NAME.get(w) if w in self.save.get("worlds", []) else None
 
     def visit_world(self, name):

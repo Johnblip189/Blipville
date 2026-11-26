@@ -24,6 +24,7 @@
   const NIGHT = new Set(D.groups.nightShift);
   const CRYPT = new Set(D.groups.cryptids);
   const KAIJU = new Set([...(D.groups.kaiju || []), ...(D.parkedKinds || [])]), HITS = D.kaijuHits || 3;
+  const WORLDS_ON = (D.features || {}).worlds !== false;      // 🌍 paused for 1.2 (blip.pyw FEATURES): no worlds, Legends, Dig Site or Apex Nexus
   const GIFTS = new Set(D.groups.gifts || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
@@ -650,7 +651,7 @@
   const season = () => seasonOverride || currentSeason();
   let weather = [], lastWeather = 0;
   const BAT = ["x...x", "xx.xx", ".xxx."], BAT_FLAP = [".x.x.", "xxxxx", ".x.x."];
-  const hereWorld = () => (save.world && save.worlds.includes(SUBWORLD[save.world] || save.world) ? save.world : null);
+  const hereWorld = () => (WORLDS_ON && save.world && save.worlds.includes(SUBWORLD[save.world] || save.world) ? save.world : null);
   function weatherStep(t, night) {
     const dt = Math.min(0.05, t - (lastWeather || t)); lastWeather = t;
     const sz = Math.max(2, Math.round(S * 0.6)), scaleW = W / 400;
@@ -953,13 +954,14 @@
   }
   const GRIFFIN = () => { const u = Math.max(3, Math.round(W / 130)); return { x: W * 0.13, s: Math.max(3, Math.round(u * 0.9)) }; };   // the black one stands out in the open in town
   function townGriffin(t) {
+    if (!WORLDS_ON) return;                                   // the Apex Nexus waits with the worlds
     const gf = GRIFFIN(), id = "obsidian", have = (save.apexNexusCores || []).includes(id);
     if (have) return;
     drawNexus(ctx, id, gf.x - 8 * gf.s, GROUND - 12 * gf.s + 2, gf.s, false);
     ctx.fillStyle = "rgba(255,255,255,.55)"; ctx.font = "700 " + (10 + Math.round(2 * Math.sin(t))) + "px " + FONT; ctx.textAlign = "center"; ctx.fillText("z", gf.x + 6 * gf.s, GROUND - 13 * gf.s - 4 - 4 * Math.sin(t)); ctx.fillText("Z", gf.x + 8 * gf.s, GROUND - 14 * gf.s - 10 - 4 * Math.sin(t + 1));
   }
   function griffinTap(px, py) {
-    if (cave || hereWorld()) return false;
+    if (!WORLDS_ON || cave || hereWorld()) return false;
     const gf = GRIFFIN(); if (Math.abs(px - gf.x) > 8 * gf.s || py < GROUND - 13 * gf.s || py > GROUND + 6) return false;
     sfx("pop"); openCave(null, "obsidian"); return true;
   }
@@ -1740,7 +1742,7 @@
     rows.forEach((row, r) => [...row].forEach((ch, k) => { if (ch === ".") return; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (!filled(r + dy, k + dx) && it.art !== CORE_ORB) c.fillRect(x + (k + dx) * s, y + (r + dy) * s, s, s); }));
     rows.forEach((row, r) => [...row].forEach((ch, k) => { if (ch !== ".") { c.fillStyle = it.pal[ch] || "#ff00ff"; c.fillRect(x + k * s, y + r * s, s, s); } }));
   }
-  const bagBtnShow = () => { $("bagBtn").hidden = !(isCreator() || isMod() || Object.keys(inv()).length); };
+  const bagBtnShow = () => { $("bagBtn").hidden = !WORLDS_ON || !(isCreator() || isMod() || Object.keys(inv()).length); };
   function openBag() {
     const list = $("bagList"); list.innerHTML = ""; const ids = Object.keys(inv()).filter((k) => ITEMS[k]);
     $("bagEmpty").hidden = ids.length > 0;
@@ -2052,10 +2054,10 @@
   // collection
   function openZoo(swapPet = null) {
     const grid_ = $("zooGrid"); grid_.innerHTML = "";
-    const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ...(D.groups.tabs || []), ["Rare ✨ (hatch from eggs)", D.groups.rare],
+    const groups = [["Critters", D.groups.critters], ["Animals", D.groups.animals], ...(WORLDS_ON ? D.groups.tabs || [] : []), ["Rare ✨ (hatch from eggs)", D.groups.rare],
                     ["Night Shift 🌙 (survive the nights)", D.groups.nightShift], ["Cryptids 👣 (spot them in town)", D.groups.cryptids],
                     [`Kaiju 🦖 (super rare! tap one ${HITS} times)`, D.groups.kaiju || []],
-                    ["Legends ✨ (visit a world, tap them when they stroll by)", D.groups.legends || []],
+                    ...(WORLDS_ON ? [["Legends ✨ (visit a world, tap them when they stroll by)", D.groups.legends || []]] : []),
                     ["Ghosts 👻 (they drift by at night: tap one while it glows!)", D.groups.ghosts || []],
                     ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []],
                     [`Event 🎖️ (earn them in ${EVENT.name})`, D.groups.eventKinds || []],
@@ -2199,7 +2201,7 @@
     }
     openSheet("worldSheet");
   }
-  $("worldBtn").onclick = openWorlds;
+  $("worldBtn").onclick = openWorlds; if (!WORLDS_ON) { $("worldBtn").hidden = true; const hw = $("helpWorlds"); if (hw) hw.hidden = true; }
 
   // 🏺 Dig Site: one hidden god per board, hot/cold hints, a few heart treasures, free new boards
   let dig = null;

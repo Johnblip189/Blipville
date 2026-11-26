@@ -4030,6 +4030,13 @@ SHOPKEEPERS = {
   "colors": [{"name": "Workshop", "o": "#2a1408", "b": "#f0a43a", "B": "#b8701a", "l": "#ffe0a0", "p": "#ff8a7a", "e": "#1a0e04", "k": "#5a3a1a", "m": "#b8c0cc", "c": "#8ae8ff", "a": "#8a5a2a", "y": "#ffd23a"}]},
 }
 SHOPKEEPER_KINDS = list(SHOPKEEPERS)
+RARE.update({
+ "Starblip": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "mouth": True,
+  "lines": ["up, up and... blip!", "*strikes a heroic pose*", "i can see the whole town from up here", "sunrise looks good on me", "have no fear! i brought snacks", "*cape flutters dramatically*"],
+  "body": [".oo.y..YY..y.oo.", ".obo..yYYy..obo.", ".obpoyooooyopBo.", ".RbbBo*bbBobbBR.", "Rrbbbb*bbbbbbbBR", "RrbbbbbbbbbbbbBR", "RrbbbbbbbbbbbbBR", "RrpbbbbYYbbbbpBR", "RBbbbyyYYyybbbBR", ".RbbbbyYYybbbBR.", ".RBBbyyllyybBBR.", "..ooBBBBBBBBoo.."],
+  "colors": [{"name": "Hero", "o": "#0c1a3a", "b": "#2f6fe0", "B": "#1c448f", "l": "#9fd0ff", "r": "#e03a3a", "R": "#8a1a2a", "y": "#ffc93a", "Y": "#fff1a0", "p": "#ff9a8a", "e": "#10142a"},
+             {"name": "Sunrise", "o": "#2a0a3a", "b": "#8a5ad8", "B": "#5a3a98", "l": "#ffd0f0", "r": "#ff8a3a", "R": "#a83a1a", "y": "#ffd23a", "Y": "#ffffff", "p": "#ff9ac0", "e": "#1a0a2a"}]}
+})
 PROWL_KINDS = list(PROWL)
 
 
@@ -8757,7 +8764,7 @@ _NEW_TYPES = {
  "sweet": {"Donut", "Cupcake", "Ice Cream", "Macaron", "Pudding", "Gummy Bear", "Dumpling", "Marshmallow", "Gumdrop Golem",
            "Cotton Candy Cloud", "Candy Dragon", "Sprinkle Unicorn", "Licorice Serpent", "Bee", "Confetti", "Cakeling", "Beta Buddy", "Bun",
            "Rainbow Blip", "Haunted Teacup", "Lucky Cat"},
- "cosmic": {"Star", "Moon", "Comet", "Ringed Planet", "Rocket", "Black Hole", "Space Jelly", "Astronaut", "Space Slug", "Nebulon",
+ "cosmic": {"Starblip", "Star", "Moon", "Comet", "Ringed Planet", "Rocket", "Black Hole", "Space Jelly", "Astronaut", "Space Slug", "Nebulon",
             "Nebula Cat", "Cosmo Pup", "Star Whale", "Comet Fox", "Moon Bunny", "Moon Moth", "Qilin", "Liftoff", "Blipmaker",
             "Golden Blip", "Unicorn", "Mirror Spirit"},
 }

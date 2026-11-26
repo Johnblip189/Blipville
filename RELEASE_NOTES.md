@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.19:** ✨ The workshop is open. 🛠️
+>
 > **1.0.18:** ✨ Something's watching. 👀
 >
 > **1.0.17:** ✨ Two new faces. One of them is hiding. 👀

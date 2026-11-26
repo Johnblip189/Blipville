@@ -3848,6 +3848,14 @@ PROWL = {
              dict(name='Dusk Cloud', o='#241438', b='#a890d0', l='#f4ecff', i='#ff9ad8', n='#10081c', e='#10081c', c='#685090'),
              dict(name='Storm', o='#10182a', b='#7a8aa8', l='#e8eef8', i='#ff9ab0', n='#080c14', e='#080c14', c='#3a4a68')]},
 }
+NEW_ANIMALS.update({
+ "Error 404": {"eyes": 3, "move": "float", "speed": 1.0, "feet": False, "mouth": False, "shifty": True,
+  "lines": ["page not found.", "have you tried turning me off and on?", "404: motivation not found", "*buffering...*", "i'm not lost. i'm just... not here.", "*glitches politely*"],
+  "body": ["................", ".oooooooooooooo.", ".oryghhhhhhhhho.", ".owwwwwwwwwwwwo.", "cowwwwwwwwwwwwo.", ".opwwwwwwwwwwpo.", ".owxwxwxxxwxwxo.", ".owxwxwxwxwxwxom", ".owxxxwxwxwxxxo.", "mowwwxwxwxwwwxo.", ".owwwxwxxxwwwxo.", ".oooooooooooooo."],
+  "colors": [{"name": "Not Found", "o": "#1a1030", "b": "#f4f6fa", "h": "#3a5ad8", "r": "#ff5a5a", "y": "#ffd23a", "g": "#5ae07a", "w": "#f4f6fa", "x": "#e8304a", "c": "#3ae8ff", "m": "#ff3ad8", "p": "#ffb0c8", "e": "#10121a"},
+             {"name": "Blue Screen", "o": "#06103a", "b": "#1a4ad8", "h": "#0a2a90", "r": "#ff5a5a", "y": "#ffd23a", "g": "#5ae07a", "w": "#1a4ad8", "x": "#ffffff", "c": "#3ae8ff", "m": "#ff3ad8", "p": "#7aa8ff", "e": "#ffffff"},
+             {"name": "Dark Mode", "o": "#04040a", "b": "#14161e", "h": "#2a2e3e", "r": "#ff5a5a", "y": "#ffd23a", "g": "#5ae07a", "w": "#14161e", "x": "#4aff7a", "c": "#3ae8ff", "m": "#ff3ad8", "p": "#3a8a5a", "e": "#4aff7a"}]},
+})
 PROWL_KINDS = list(PROWL)
 
 
@@ -8541,7 +8549,7 @@ _SPROUT = {"Ocelot", "Sprout", "Caterpillar", "Ladybug", "Butterfly", "Mantis", 
 
 # The 6 newer types. These lists come first, so a Blip listed here keeps that type even if an older list names it too.
 _NEW_TYPES = {
- "volt": {"Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox", "Gigabot", "Volthorn", "Thunderwing", "Stormcrab", "Clockwork Rex", "Eel", "Thunderbird",
+ "volt": {"Error 404", "Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox", "Gigabot", "Volthorn", "Thunderwing", "Stormcrab", "Clockwork Rex", "Eel", "Thunderbird",
           "Byte", "Zorp", "UFO", "Flatwoods Monster", "Dover Demon", "Van Meter Visitor", "Bug Hunter", "Patch", "Jellyfish", "Anglerfish"},
  "stone": {"Rock Golem", "Boulderback", "Tremorpede", "Sandsnapper", "Armadillo", "Pangolin", "Rhino", "Ankylosaurus",
            "Triceratops", "Stegosaurus", "Brachiosaurus", "Crystal Stego", "Fossilbones", "Mole", "Death Worm", "Mokele-mbembe",

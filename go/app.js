@@ -3112,7 +3112,7 @@
         save.merchKinds = save.merchKinds || []; save.merchKinds.push(FIND404.kind);
         const p = addPet(FIND404.kind, { quiet: true }); sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);
         if (p) { burst(p, "heart", 12); setTimeout(() => { say(p, "finally after being frozen in the lines of code im free", 9); setFace(p, "happy", 4); }, 1700); }   // after he lands
-        toast("🕳️ You found Error 404!", 6);
+        toast("finally after being frozen in the lines of code im free", 7);
       }
       persist(true);
     };

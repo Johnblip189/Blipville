@@ -1,0 +1,5 @@
+still running after start-up: True (exit code )
+clicking a pet at 705,694
+still running at the end: True
+WARNING: no Blip climbed onto Notepad
+size: 15548962

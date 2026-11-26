@@ -462,3 +462,10 @@ button { touch-action: manipulation; }
   border: 1px solid #1e5a4a; text-shadow: -2px 0 #ff2a5a, 2px 0 #2a8aff; animation: toastGlitch 0.45s steps(2, end) infinite; }
 @keyframes toastGlitch { 0% { transform: translateX(-50%) translateY(0); } 25% { transform: translateX(calc(-50% + 3px)) translateY(0); }
   50% { transform: translateX(calc(-50% - 2px)) translateY(-1px); } 75% { transform: translateX(calc(-50% + 1px)) translateY(1px); } 100% { transform: translateX(-50%) translateY(0); } }
+
+#encounter { position: fixed; inset: 0; z-index: 150; background: #000; touch-action: none; }
+#encCv { width: 100%; height: 100%; image-rendering: pixelated; display: block; cursor: crosshair; }
+#encHint { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); max-width: min(560px, 92vw); text-align: center; background: rgba(8,10,26,.85);
+  border: 1px solid rgba(255,255,255,.15); color: #fff; padding: 10px 14px; border-radius: 12px; font: 600 15px var(--font); pointer-events: none; }
+#encClose { position: absolute; top: 16px; right: 16px; padding: 8px 14px; border-radius: 10px; border: 0; background: rgba(255,255,255,.15); color: #fff; font: inherit; cursor: pointer; }
+#encAct { position: absolute; bottom: 3vh; left: 50%; transform: translateX(-50%); padding: 14px 34px; border-radius: 14px; border: 0; background: #5ae07a; color: #06210f; font: 800 20px var(--font); cursor: pointer; }

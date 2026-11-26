@@ -1150,6 +1150,8 @@
       if (left.length && $("nsSheet").hidden) startSighting(pick(left));
       return;
     }
+    if (ENC.open) sighting.t0 += t - (ENC.t || t);              // the creature waits while you investigate
+    ENC.t = t;
     const sg = sighting, st = t - sg.t0, k = KINDS[sg.kind];
     if (st > sg.keys[sg.keys.length - 1][0]) {
       const witness = pets.find((p) => !["sleep", "held"].includes(p.state));
@@ -1206,14 +1208,98 @@
     const s = sighting.s;
     return Math.abs(ux - x) <= 10 * s + 1 && uy >= Math.max(y, sighting.clip) - 3 && uy <= y + 16 * s + 1;
   }
+  // ------------------------------------------------------------------ encounters 🔍 (no spam-clicking, no luck)
+  // Cryptids and ghosts: investigate. Search the dark with your light for 3 clues (tracks, claw marks, glowing eyes), then the creature
+  // shows itself. Kaiju: a steady-hand moment: stop the marker inside the zone 3 times. You can always leave and come back.
+  const ENC = { open: false, t: 0 };
+  const encounterKind = (kind) => (KAIJU.has(kind) ? "skill" : GHOST.has(kind) || (D.groups.cryptids || []).includes(kind) ? "clues" : null);
+  function startEncounter(type, kind, done) {
+    const ov = $("encounter"), cv = $("encCv"), g = cv.getContext("2d"), hint = $("encHint"), act = $("encAct");
+    ENC.open = true; ov.hidden = false; act.hidden = type !== "skill";
+    const PXs = 5; cv.width = Math.ceil(view.innerWidth / PXs); cv.height = Math.ceil(view.innerHeight / PXs);
+    const w = cv.width, h = cv.height; let alive = true, raf = 0, tt = 0;
+    const close = (ok) => { alive = false; cancelAnimationFrame(raf); ov.hidden = true; ENC.open = false; ov.onpointerdown = ov.onpointermove = null; act.onclick = null; if (ok) done(); };
+    $("encClose").onclick = () => close(false);
+    const rr = (a0, b0) => a0 + Math.random() * (b0 - a0);
+    // a night backdrop, drawn once
+    const bg = document.createElement("canvas"); bg.width = w; bg.height = h; const b = bg.getContext("2d");
+    const gr = b.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, "#05081a"); gr.addColorStop(1, "#16213a"); b.fillStyle = gr; b.fillRect(0, 0, w, h);
+    for (let i = 0; i < 70; i++) { b.fillStyle = i % 5 ? "#8aa0d0" : "#ffffff"; b.fillRect(Math.floor(rr(0, w)), Math.floor(rr(0, h * 0.55)), 1, 1); }
+    const gy = Math.floor(h * 0.78); b.fillStyle = "#0b1226"; b.fillRect(0, gy, w, h - gy);
+    const trees = []; for (let i = 0; i < 7; i++) { const tx = Math.floor((i + 0.5) * w / 7 + rr(-6, 6)), th = Math.floor(rr(h * 0.28, h * 0.4)), tw = 3; trees.push([tx, th]);
+      b.fillStyle = "#0e1830"; b.fillRect(tx - 1, gy - th, tw, th); for (let j = 0; j < 5; j++) b.fillRect(tx - 6 + j, gy - th + j * 3, 13 - j * 2, 3); }
+    // the clues: ground, tree, sky (each in its own part of the scene)
+    const T = trees.slice().sort((p, q) => p[0] - q[0]);
+    const zone = (i) => Math.floor(w * (0.12 + 0.28 * i + rr(0, 0.1)));
+    const clues = type === "clues" ? [
+      { x: zone(0), y: gy + 6, hint: "Something has passed by here… sweep your light over the ground and tap what you find.", found: "Tracks! They head into the trees. Look at the trunks for scratch marks.", draw: (c, t) => { c.fillStyle = "#c8d4f0"; for (const [dx, dy] of [[0, 0], [-3, -3], [0, -4], [3, -3]]) c.fillRect(c.x + dx, c.y + dy, 2, 2); } },
+      { x: zone(1), y: gy - Math.floor(h * 0.14), hint: "", found: "Deep claw marks! Whatever it is, it's tall. Look up, into the branches…", draw: (c) => { c.fillStyle = "#e8d8b0"; for (let i = 0; i < 3; i++) for (let j = 0; j < 6; j++) c.fillRect(c.x + i * 3 + (j >> 1), c.y + j, 1, 1); } },
+      { x: zone(2), y: Math.floor(h * 0.22), hint: "", found: "Two glowing eyes… it's right there!", draw: (c, t) => { c.fillStyle = Math.floor(t * 2) % 4 ? "#ffe45a" : "#7a6a2a"; c.fillRect(c.x - 3, c.y, 2, 2); c.fillRect(c.x + 2, c.y, 2, 2); } }] : [];
+    let step = 0, px = w / 2, py = h / 2, revealed = false, flash = 0; const R = 20;
+    hint.textContent = type === "clues" ? clues[0].hint : "A giant is coming! Stop the marker in the green zone, three times.";
+    const stompBox = { pos: 0, dir: 1, zone: 0.26, hits: 0, shake: 0, msg: "" };
+    const setPtr = (e) => { const r = cv.getBoundingClientRect(); px = (e.clientX - r.left) / r.width * w; py = (e.clientY - r.top) / r.height * h; };
+    ov.onpointermove = (e) => { if (type === "clues") setPtr(e); };
+    ov.onpointerdown = (e) => {
+      if (e.target.closest("button")) return;
+      if (type === "skill") return stomp();
+      setPtr(e);
+      if (revealed) { if (Math.hypot(px - clues[2].x, py - clues[2].y) < 22) { sfx("pop"); close(true); } return; }
+      const c = clues[step];
+      if (c && Math.hypot(px - c.x, py - c.y) < 9) {
+        sfx("coin"); vibrate(15); flash = tt + 0.5; step++;
+        if (step >= clues.length) { revealed = true; hint.textContent = "There it is! Tap it gently, it wants to meet you."; }
+        else hint.textContent = c.found;
+      } else if (c) { sfx("pop"); }
+    };
+    function stomp() {
+      const s = stompBox, lo = 0.5 - s.zone / 2, hi = 0.5 + s.zone / 2;
+      if (s.pos >= lo && s.pos <= hi) { s.hits++; s.zone = Math.max(0.12, s.zone - 0.05); s.shake = 14; sfx("thud"); vibrate(40);
+        s.msg = s.hits >= 3 ? "" : `Direct hit! ${s.hits}/3`; if (s.hits >= 3) { hint.textContent = "It's calm now… it wants to be friends."; setTimeout(() => alive && close(true), 900); alive = alive; s.done = true; } }
+      else { s.msg = s.pos < lo ? "Too early… wait for the marker." : "Too late… try again."; sfx("pop"); }
+    }
+    act.onclick = stomp;
+    function frame() {
+      if (!alive) return; tt += 0.016; g.imageSmoothingEnabled = false;
+      if (type === "clues") {
+        g.drawImage(bg, 0, 0);
+        const lit = (c) => Math.hypot(px - c.x, py - c.y) < R + 3;
+        clues.forEach((c, i) => { if (i < step || (i === step && lit(c)) || (revealed)) { g.save(); c.draw(Object.assign(g, { x: Math.round(c.x), y: Math.round(c.y) }), tt); g.restore(); } });
+        if (revealed) { const gg = grid(kind, 0, { t: tt, silhouette: false, state: "idle" }), sx = Math.round(clues[2].x) - 8, sy = Math.round(clues[2].y) - 4;
+          gg.forEach((row, r) => row.forEach((cc, i) => { if (cc) { g.fillStyle = cc; g.fillRect(sx + i, sy + r, 1, 1); } })); }
+        const dk = g.createRadialGradient(px, py, R * 0.5, px, py, R * 1.5); dk.addColorStop(0, "rgba(0,0,0,0)"); dk.addColorStop(1, "rgba(0,2,10,0.93)");
+        g.fillStyle = dk; g.fillRect(0, 0, w, h);
+        if (!revealed) { g.fillStyle = "rgba(255,240,170,0.10)"; g.beginPath(); g.arc(px, py, R, 0, 6.3); g.fill(); }
+        if (tt < flash) { g.fillStyle = "rgba(255,255,200,0.25)"; g.fillRect(0, 0, w, h); }
+      } else {
+        const s = stompBox; s.pos += s.dir * 0.012 * (1 + s.hits * 0.25); if (s.pos >= 1) { s.pos = 1; s.dir = -1; } if (s.pos <= 0) { s.pos = 0; s.dir = 1; }
+        if (s.shake > 0) s.shake -= 1; const sh = s.shake > 0 ? Math.round((Math.random() - 0.5) * 4) : 0;
+        g.fillStyle = "#1a1030"; g.fillRect(0, 0, w, h); g.fillStyle = "#2a1c48"; g.fillRect(0, Math.floor(h * 0.78), w, h);
+        const gg = grid(kind, 0, { t: tt, silhouette: true, state: "walk" }), K = 3, sx = Math.round(w / 2 - 8 * K) + sh, sy = Math.round(h * 0.78 - 13 * K);
+        gg.forEach((row, r) => row.forEach((cc, i) => { if (cc) { g.fillStyle = s.hits >= 3 ? "#5c8a6a" : "#3a2c5a"; g.fillRect(sx + i * K, sy + r * K, K, K); } }));
+        const bw = Math.floor(w * 0.7), bx = Math.floor((w - bw) / 2), by = Math.floor(h * 0.8), bh = 6;
+        g.fillStyle = "#0a0816"; g.fillRect(bx - 1, by - 1, bw + 2, bh + 2); g.fillStyle = "#3a3358"; g.fillRect(bx, by, bw, bh);
+        g.fillStyle = "#5ae07a"; g.fillRect(bx + Math.floor(bw * (0.5 - s.zone / 2)), by, Math.floor(bw * s.zone), bh);
+        g.fillStyle = "#ffffff"; g.fillRect(bx + Math.floor(bw * s.pos) - 1, by - 3, 3, bh + 6);
+        g.fillStyle = "#ffffff"; g.font = "8px monospace"; g.textAlign = "center"; g.fillText(s.msg, w / 2, by - 8);
+      }
+      raf = requestAnimationFrame(frame);
+    }
+    frame();
+  }
   function befriend() {
     const kind = sighting.kind, x = sceneLeft() + sighting.pos[0] * sceneU();
-    if (!solid()) {                                           // a faded ghost: your tap goes right through
+    const enc = encounterKind(kind);
+    if (enc && !sighting.cleared) {                           // 🔍 an encounter instead of tapping and praying
+      if (!ENC.open) startEncounter(enc, kind, () => { if (sighting && sighting.kind === kind) { sighting.cleared = true; befriend(); } });
+      return;
+    }
+    if (!solid() && !sighting.cleared) {                                           // a faded ghost: your tap goes right through
       const w = pets.find((p) => !["sleep", "held"].includes(p.state));
       if (w && now() - (sighting.fadeHint || 0) > 3) { sighting.fadeHint = now(); say(w, pick(["it faded out! wait till it glows…", "your hand went right through!", "now you see it, now you don't…"]), 2.5); }
       return;
     }
-    if (KAIJU.has(kind) && ++sighting.hits < HITS) {          // not yet! it flinches and keeps going
+    if (KAIJU.has(kind) && !sighting.cleared && ++sighting.hits < HITS) {          // not yet! it flinches and keeps going
       sighting.flash = now() + 0.15; sfx("thud"); vibrate(25);
       const w = pets.find((p) => !["sleep", "held"].includes(p.state));
       if (w) say(w, pick(["again! tap it again!", "it's working!", "keep going!!", "almost!"]), 2);

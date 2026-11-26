@@ -457,3 +457,8 @@ button { touch-action: manipulation; }
 #glitch404 .g4t { font-size: 34px; letter-spacing: 6px; color: #ff4a5a; }
 #glitch404 .g4s { font-size: 18px; max-width: 520px; }
 #glitch404 .g4h { position: absolute; bottom: 18px; font-size: 12px; opacity: .35; }
+
+#toast.morse { font: 700 22px ui-monospace, "Courier New", monospace; letter-spacing: 4px; color: #7affc8; background: #02080a;
+  border: 1px solid #1e5a4a; text-shadow: -2px 0 #ff2a5a, 2px 0 #2a8aff; animation: toastGlitch 0.45s steps(2, end) infinite; }
+@keyframes toastGlitch { 0% { transform: translateX(-50%) translateY(0); } 25% { transform: translateX(calc(-50% + 3px)) translateY(0); }
+  50% { transform: translateX(calc(-50% - 2px)) translateY(-1px); } 75% { transform: translateX(calc(-50% + 1px)) translateY(1px); } 100% { transform: translateX(-50%) translateY(0); } }

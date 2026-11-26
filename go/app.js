@@ -1285,9 +1285,20 @@
     if (bump) { const h = $("hearts"); h.classList.remove("bump"); void h.offsetWidth; h.classList.add("bump"); }
   }
   let toastTimer = null;
-  function toast(text, secs = 3) {
-    const el = $("toast"); el.textContent = text; el.classList.add("show");
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), secs * 1000);
+  // 🕳️ once Error 404 has been found, every pop-up is glitched morse code (it spells out when the next update is coming)
+  const MORSE_MSG = "UPDATE JAN 1";
+  const MORSE = { A: ".-", B: "-...", C: "-.-.", D: "-..", E: ".", F: "..-.", G: "--.", H: "....", I: "..", J: ".---", K: "-.-", L: ".-..", M: "--", N: "-.", O: "---", P: ".--.", Q: "--.-", R: ".-.", S: "...", T: "-", U: "..-", V: "...-", W: ".--", X: "-..-", Y: "-.--", Z: "--..", 1: ".----", 2: "..---", 3: "...--", 4: "....-", 5: ".....", 6: "-....", 7: "--...", 8: "---..", 9: "----.", 0: "-----" };
+  const morseText = [...MORSE_MSG].map((c) => (c === " " ? "/" : MORSE[c])).join(" ");
+  let glitchTimer = 0;
+  function toast(text, secs = 3, plain = false) {
+    const el = $("toast"); clearInterval(glitchTimer);
+    if (!plain && (save.merchKinds || []).includes("Error 404")) {
+      el.classList.add("morse"); secs = Math.max(secs, 4.5);
+      const junk = "▒░▓█/\\|#", paint = () => { el.textContent = [...morseText].map((c) => (c !== " " && Math.random() < 0.09 ? junk[Math.floor(Math.random() * junk.length)] : c)).join(""); };
+      paint(); glitchTimer = setInterval(paint, 90);
+    } else { el.classList.remove("morse"); el.textContent = text; }
+    el.classList.add("show");
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.classList.remove("show"); clearInterval(glitchTimer); }, secs * 1000);
   }
   const vibrate = (ms) => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* not supported */ } };
   // ------------------------------------------------------------------ trophies 🏆 (the list comes from blip.pyw)
@@ -3112,7 +3123,7 @@
         save.merchKinds = save.merchKinds || []; save.merchKinds.push(FIND404.kind);
         const p = addPet(FIND404.kind, { quiet: true }); sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);
         if (p) { burst(p, "heart", 12); setFace(p, "happy", 4); }
-        toast("finally after being frozen in the lines of code im free", 7);
+        toast("finally after being frozen in the lines of code im free", 7, true);
       }
       persist(true);
     };

@@ -3538,7 +3538,7 @@ GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
 GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
 # 🕳️ Secret Blips: locked for everyone until found (found = added to merch_kinds, which saves and save codes already carry).
-SECRET_KINDS = {"Error 404"}      # found by tapping a screen corner on the website (see go/app.js)
+SECRET_KINDS = {"Error 404", "Mimic"}      # found by tapping a screen corner on the website (see go/app.js)
 
 # 🎂 Cake Day (Dec 8): gift boxes pop up in town all day, so staying active pays. No chance involved (our motto: no
 # gambling): every box gives `hearts`, and some boxes are a guaranteed prize: box number -> the Series 1 figure whose
@@ -4037,6 +4037,12 @@ RARE.update({
   "colors": [{"name": "Hero", "o": "#0c1a3a", "b": "#2f6fe0", "B": "#1c448f", "l": "#9fd0ff", "r": "#e03a3a", "R": "#8a1a2a", "y": "#ffc93a", "Y": "#fff1a0", "p": "#ff9a8a", "e": "#10142a"},
              {"name": "Sunrise", "o": "#2a0a3a", "b": "#8a5ad8", "B": "#5a3a98", "l": "#ffd0f0", "r": "#ff8a3a", "R": "#a83a1a", "y": "#ffd23a", "Y": "#ffffff", "p": "#ff9ac0", "e": "#1a0a2a"}]}
 })
+NEW_ANIMALS.update({
+ "Mimic": {"eyes": 5, "move": "walk", "speed": 1.0, "mouth": False, "noeyes": True,
+  "lines": ["...", "i look just like you", "don't look at my smile", "i'm you. no, YOU'RE me", "*smiles a little too wide*", "you ran. nobody ever runs"],
+  "body": [".oo..........oo.", ".obo........obo.", ".obpo.oooo.opBo.", ".obbBo*bbBobbBo.", "obbbWW*bbbWWbbBo", "obbWWKWbbWWKWbBo", "obbbWWbbbbWWbbBo", "obpbbbbKKbbbbpBo", "oBbKKKKKKKKKKbBo", ".obKNKNKNKNKNBo.", ".oBBKKKKKKKKBBo.", "..ooBBBBBBBBoo.."],
+  "colors": [{"name": "Hollow", "o": "#07070f", "b": "#34344c", "l": "#5a5a7a", "p": "#34344c", "W": "#ececf0", "K": "#0a0a14", "N": "#e2e2e6", "e": "#0a0a14"}]}
+})
 PROWL_KINDS = list(PROWL)
 
 
@@ -4045,7 +4051,7 @@ for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIF
                        "feet": (_a["feet"] if isinstance(_a.get("feet"), dict) else FEET_STD if _a.get("feet", True) else None), "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
                        "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False),
-                       **{k: _a[k] for k in VOICE_KEYS + ("portrait", "xeyes", "fade") if k in _a}}
+                       **{k: _a[k] for k in VOICE_KEYS + ("portrait", "xeyes", "fade", "noeyes") if k in _a}}
 
 
 def voice(kind, key, default):
@@ -6820,7 +6826,9 @@ class Blip:
                 px(ex, 6, e); px(ex + 1, 6, e)
         else:
             ox, oy = (0, 0) if face == "surprised" else self.eye_offset()
-            if v.get("xeyes"):                                # x_x: a 3x3 X for each eye
+            if v.get("noeyes"):                               # the Mimic's eyes are part of its drawing
+                pass
+            elif v.get("xeyes"):                              # x_x: a 3x3 X for each eye
                 for ex in (4, 9):
                     for xx, yy in ((0, 0), (2, 0), (1, 1), (0, 2), (2, 2)):
                         px(ex + ox + xx, 4 + oy + yy, e)
@@ -7410,6 +7418,8 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
             g[er + 1][ex] = g[er][ex + 1] = e
             if ex + 2 < ART_W:
                 g[er + 1][ex + 2] = e
+        elif v.get("noeyes"):
+            pass
         elif v.get("xeyes"):                                  # x_x
             xx0 = ex if ex < 8 else ex - 1
             for ax, ay in ((0, 0), (2, 0), (1, 1), (0, 2), (2, 2)):

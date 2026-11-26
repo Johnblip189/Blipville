@@ -471,3 +471,8 @@ button { touch-action: manipulation; }
 .gzBuy { flex: none; padding: 6px 10px; border-radius: 10px; border: 0; background: #7a5aff; color: #fff; font: inherit; cursor: pointer; } .gzBuy:disabled { opacity: .5; cursor: default; }
 
 .gzHello { display: flex; align-items: center; gap: 10px; margin: 6px 0 4px; } .gzSay { background: rgba(255,255,255,.1); border-radius: 12px; padding: 6px 10px; font-style: italic; }
+
+#chase { position: fixed; inset: 0; z-index: 160; background: #000; touch-action: none; display: flex; align-items: center; justify-content: center; }
+#chaseCv { width: min(100vw, 177.8vh); height: min(56.25vw, 100vh); image-rendering: pixelated; background: #000; }
+#chaseLeave { position: absolute; top: 14px; right: 14px; padding: 8px 14px; border-radius: 10px; border: 0; background: rgba(255,255,255,.15); color: #fff; font: inherit; cursor: pointer; }
+#chase[hidden] { display: none; }

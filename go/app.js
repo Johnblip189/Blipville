@@ -555,7 +555,8 @@
     else if (face === "munch") { for (const ex of [4, 10]) { px(ex, 6, e); px(ex + 1, 6, e); } }
     else {
       const [ox, oy] = face === "surprised" ? [0, 0] : (opt.look || [0, 0]);
-      if (k.xeyes) { for (const ex of [4, 9]) for (const [xx, yy] of [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]]) px(ex + ox + xx, 4 + oy + yy, e); }   // x_x
+      if (k.noeyes) { /* the Mimic's eyes are part of its drawing */ }
+      else if (k.xeyes) { for (const ex of [4, 9]) for (const [xx, yy] of [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]]) px(ex + ox + xx, 4 + oy + yy, e); }   // x_x
       else for (const ex of [4, 10]) { for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) px(ex + ox + a, 5 + oy + b, e); px(ex + ox, 5 + oy, shine); }
       if (k.xeye) for (let i = 0; i < 4; i++) { px(3 + i, 4 + i, pal.x || pal.o); px(6 - i, 4 + i, pal.x || pal.o); }   // a stitched X where a button came off
     }
@@ -1013,13 +1014,14 @@
   }
   function drawPet(p, t) {
     const l = lift(p, t);
-    const left = Math.round(p.x - 8 * S), top = Math.round(GROUND - 13 * S - p.y - l);
+    const slip = t < (p.mimicUntil || 0) && Math.floor(t * 9) % 3 !== 0;      // 🕳️ the Mimic's disguise slips
+    const left = Math.round(p.x - 8 * S) + (slip ? Math.round((Math.random() - 0.5) * 5) : 0), top = Math.round(GROUND - 13 * S - p.y - l);
     const dx = pointer.x - p.x, dy = pointer.y - (top + 6 * S);
     const look = Math.hypot(dx, dy) < 30 ? [0, 0] : [dx < -40 ? -1 : dx > 40 ? 1 : 0, dy < -80 ? -1 : dy > 40 ? 1 : 0];
     const face = t < p.faceUntil ? p.face : "normal";
     if (KINDS[p.kind].ghost && !KINDS[p.kind].colors[p.color % KINDS[p.kind].colors.length].solid) ctx.globalAlpha = 0.8;   // ghosts stay a little see-through (unless the color is solid)
     const K = KINDS[p.kind], soul = K.soul ? new Set([...K.soul].map((ch) => K.colors[p.color % K.colors.length][ch]).filter(Boolean)) : null;
-    drawGrid(ctx, grid(p.kind, p.color, { t, live: true, fade: p.fadeFrom != null ? [p.fadeFrom, p.fadeT0] : null, blush: t < (p.blushUntil || 0), state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
+    drawGrid(ctx, grid(slip ? "Mimic" : p.kind, slip ? 0 : p.color, { t, live: true, fade: p.fadeFrom != null ? [p.fadeFrom, p.fadeT0] : null, blush: t < (p.blushUntil || 0), state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
              soul, soul ? ghostAlpha(t, p.x * 0.01) * 0.75 : 1);
     ctx.globalAlpha = 1;
     const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;
@@ -1207,6 +1209,96 @@
     const s = sighting.s;
     return Math.abs(ux - x) <= 10 * s + 1 && uy >= Math.max(y, sighting.clip) - 3 && uy <= y + 16 * s + 1;
   }
+  // ------------------------------------------------------------------ 🕳️ the Mimic: a chase through a bad future
+  // Once Error 404 has been found, now and then one of your Blips' disguise slips (it glitches into the Mimic). Tap it and you're dragged
+  // into a ruined future and chased. Nothing is random: the obstacles come in the same order every time. The first run is easy.
+  const CHASE = { open: false };
+  const found404 = () => (save.merchKinds || []).includes("Error 404"), mimicFound = () => (save.merchKinds || []).includes("Mimic");
+  let nextMimic = 0;
+  setInterval(() => {
+    const t = now(); if (!found404() || mimicFound() || CHASE.open || !D.kinds.Mimic) return;
+    if (!nextMimic) { nextMimic = t + rnd(90, 180); return; }
+    if (t < nextMimic || held || [...doc().querySelectorAll(".sheet")].some((s) => !s.hidden)) return;
+    const cand = pets.filter((p) => !["sleep", "held"].includes(p.state) && !p.playing && p.kind !== "Mimic");
+    if (!cand.length) return;
+    const p = pick(cand); p.mimicUntil = t + 8; nextMimic = t + rnd(240, 420); sfx("zap");
+  }, 4000);
+  function startChase(fromPet) {
+    if (CHASE.open) return;
+    const ov = $("chase"), cv = $("chaseCv"), g = cv.getContext("2d"), GW = 320, GH = 180, GY = 140;
+    cv.width = GW; cv.height = GH; ov.hidden = false; CHASE.open = true; if (fromPet) fromPet.mimicUntil = 0;
+    const runs = save.mimicRuns = (save.mimicRuns || 0) + 1; persist(true);
+    const easy = runs === 1;                                      // the very first run is easy
+    const SPEED = easy ? 62 : 84, GOAL = easy ? 1250 : 1900, GAP0 = easy ? 120 : 84, HIT = easy ? 16 : 30, DRIFT = easy ? 0 : 1.4;
+    // the obstacles: same order every time. g = a girder (jump), c = a crate stack (jump), w = a hanging wire (slide)
+    const seq = easy ? "g g g w g g w g c g w g" : "g c w g g w c g w c g w w g c g w c g g w";
+    const obs = seq.split(" ").map((c, i) => ({ type: c, x: 280 + i * (easy ? 98 : 80), hit: false }));
+    const who = fromPet ? fromPet.kind : "Blip", whoColor = fromPet ? fromPet.color : 0;
+    const P = { y: 0, vy: 0, slide: 0 }; let dist = 0, gap = GAP0, state = "run", endAt = 0, tt = 0, alive = true, raf = 0, hint = easy ? 7 : 0, shake = 0, win = false;
+    const jump = () => { if (state === "run" && P.y === 0) { P.vy = 285; P.slide = 0; sfx("pop"); } };
+    const slide = () => { if (state === "run" && P.y === 0) { P.slide = 0.55; sfx("whoosh"); } };
+    const key = (e) => { if (["ArrowUp", " ", "w", "W"].includes(e.key)) { e.preventDefault(); jump(); } if (["ArrowDown", "s", "S"].includes(e.key)) { e.preventDefault(); slide(); } };
+    ov.onpointerdown = (e) => { if (e.target.closest("button")) return; const r = cv.getBoundingClientRect(); (e.clientY - r.top < r.height / 2 ? jump : slide)(); };
+    doc().addEventListener("keydown", key);
+    const close = () => { alive = false; cancelAnimationFrame(raf); ov.hidden = true; CHASE.open = false; ov.onpointerdown = null; doc().removeEventListener("keydown", key);
+      if (win && !mimicFound()) { save.merchKinds = save.merchKinds || []; save.merchKinds.push("Mimic"); const m = addPet("Mimic", { quiet: true }); sfx("fanfare"); vibrate([30, 40, 30]);
+        if (m) { say(m, "you ran. nobody ever runs", 6); setFace(m, "happy", 3); burst(m, "heart", 10); } }
+      persist(true); };
+    $("chaseLeave").onclick = close;
+    CHASE.debug = { obs, jump, slide, get dist() { return dist; }, get gap() { return gap; }, get state() { return state; }, P, SPEED, get win() { return win; } };
+    // the bad future: a ruined skyline in two layers, drawn once
+    const sky = (seed, base, hmin, hmax, col) => { const c = document.createElement("canvas"); c.width = 640; c.height = GH; const x = c.getContext("2d"); let s = seed; const r = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+      let px = 0; while (px < 640) { const w = 22 + Math.floor(r() * 36), h = hmin + Math.floor(r() * (hmax - hmin)); x.fillStyle = col; x.fillRect(px, base - h, w, h);
+        if (r() < 0.5) { x.beginPath(); x.moveTo(px, base - h); x.lineTo(px + w / 2, base - h - 8 - r() * 18); x.lineTo(px + w, base - h); x.fill(); }
+        for (let wy = base - h + 8; wy < base - 6; wy += 11) for (let wx = px + 4; wx < px + w - 4; wx += 9) if (r() < 0.2) { x.fillStyle = "#ffaa46"; x.fillRect(wx, wy, 3, 4); x.fillStyle = col; }
+        px += w + Math.floor(r() * 6); } return c; };
+    const far = sky(11, 150, 50, 110, "#46163c"), near = sky(23, 156, 30, 80, "#240c28");
+    const sprite = (kind, color, x, y, sc, flip) => { const gr = grid(kind, color, { t: tt, state: "walk" }); gr.forEach((row, r) => row.forEach((c, i) => { if (c) { g.fillStyle = c; g.fillRect(Math.round(x + i * sc), Math.round(y + r * sc), sc, sc); } })); };
+    const msg = (t1, t2) => { g.fillStyle = "rgba(8,2,12,.78)"; g.fillRect(0, 56, GW, 62); g.fillStyle = "#fff"; g.font = "bold 14px monospace"; g.textAlign = "center"; g.fillText(t1, GW / 2, 82); g.font = "10px monospace"; g.fillStyle = "#ffb0a0"; g.fillText(t2, GW / 2, 102); g.textAlign = "left"; };
+    let last = performance.now();
+    function frame(nowT) {
+      if (!alive) return; const dt = Math.min(0.05, (nowT - last) / 1000); last = nowT; tt += dt; hint = Math.max(0, hint - dt); shake = Math.max(0, shake - dt * 30);
+      if (state === "run") {
+        dist += SPEED * dt * (1 + dist / 4000); gap = Math.min(GAP0, gap + 3 * dt) - DRIFT * dt;
+        P.vy -= 700 * dt; P.y = Math.max(0, P.y + P.vy * dt); if (P.y === 0) P.vy = 0; P.slide = Math.max(0, P.slide - dt);
+        const px0 = 68, pw = 10, ph = P.slide > 0 ? 12 : 26, top = GY - P.y - ph;       // (a forgiving hitbox)
+        for (const o of obs) {
+          const ox = 66 + (o.x - dist) + 8; if (o.hit || ox < 40 || ox > 130) continue;
+          const [ow, y0, y1] = o.type === "g" ? [18, GY - 12, GY] : o.type === "c" ? [14, GY - 24, GY] : [16, GY - 46, GY - 21];
+          if (px0 + pw > ox && px0 < ox + ow && top < y1 && top + ph > y0) { o.hit = true; gap -= HIT; shake = 6; sfx("thud"); vibrate(30); }
+        }
+        if (gap <= 0) { state = "caught"; endAt = tt + 2.6; sfx("crack"); }
+        else if (dist >= GOAL) { state = "won"; win = true; endAt = tt + 3; sfx("fanfare"); }
+      } else if (tt > endAt) { close(); return; }
+      // draw
+      const sx = state === "caught" || shake > 0 ? Math.round((Math.random() - 0.5) * 3) : 0;
+      const sg = g.createLinearGradient(0, 0, 0, GH); sg.addColorStop(0, "#28082e"); sg.addColorStop(0.75, "#c0403a"); sg.addColorStop(1, "#3a1030"); g.fillStyle = sg; g.fillRect(0, 0, GW, GH);
+      g.fillStyle = "#ff9650"; g.beginPath(); g.arc(240, 54, 24, 0, 6.3); g.fill(); g.fillStyle = "#ffd08c"; g.beginPath(); g.arc(240, 54, 16, 0, 6.3); g.fill();
+      for (let i = 0; i < 5; i++) { const by = Math.floor((tt * 40 + i * 37) % GH); g.fillStyle = `rgba(255,60,120,${0.1 + 0.1 * ((i + Math.floor(tt * 3)) % 2)})`; g.fillRect(0, by, GW, 1 + (i % 2)); }
+      const o1 = Math.floor(dist * 0.2) % 640, o2 = Math.floor(dist * 0.5) % 640;
+      g.drawImage(far, -o1 + sx, 0); g.drawImage(far, 640 - o1 + sx, 0); g.drawImage(near, -o2 + sx, 0); g.drawImage(near, 640 - o2 + sx, 0);
+      g.fillStyle = "#180820"; g.fillRect(0, GY, GW, GH - GY); g.fillStyle = "#783a4a"; g.fillRect(0, GY, GW, 3);
+      for (let x = -((dist | 0) % 40); x < GW; x += 40) { g.fillStyle = "#46183a"; g.fillRect(x, GY + 16, 20, 2); }
+      for (const o of obs) {
+        const ox = 66 + (o.x - dist) + 8; if (ox < -30 || ox > GW + 10) continue;
+        if (o.type === "g") { g.fillStyle = "#5a3246"; g.fillRect(ox, GY - 12, 18, 12); g.fillStyle = "#96606a"; g.fillRect(ox, GY - 12, 18, 3); }
+        else if (o.type === "c") { g.fillStyle = "#5a3246"; g.fillRect(ox, GY - 24, 14, 24); g.fillStyle = "#96606a"; g.fillRect(ox, GY - 24, 14, 3); g.fillRect(ox, GY - 12, 14, 2); }
+        else { g.fillStyle = "#2a1030"; g.fillRect(ox + 7, 0, 2, GY - 46); g.fillStyle = "#c8506a"; g.fillRect(ox, GY - 46, 16, 25); g.fillStyle = "#2a1030"; g.font = "bold 7px monospace"; g.fillText("BLIP", ox + 1, GY - 32); g.fillText("VILLE", ox, GY - 24); }
+      }
+      if (GOAL - dist < 260) { const tx = 66 + (GOAL - dist) + 8; g.fillStyle = "#3a1840"; g.fillRect(tx, 20, 34, GY - 20); g.fillStyle = "#ffcc70"; for (let y = 28; y < GY - 8; y += 12) { g.fillRect(tx + 6, y, 5, 6); g.fillRect(tx + 22, y, 5, 6); } g.fillStyle = "#fff"; g.font = "bold 6px monospace"; g.fillText("BLIP TOWER", tx - 4, 14); }
+      const sl = P.slide > 0, py = GY - P.y - (sl ? 14 : 26);
+      sprite(who, whoColor, 62 + sx, sl ? py - 4 : py, 2);
+      const mx = 64 - gap - 60; sprite("Mimic", 0, mx + sx * 2, GY - 78 + Math.sin(tt * 8) * 2, 6);
+      g.fillStyle = "rgba(10,2,14,.78)"; g.fillRect(8, 8, 204, 22); g.fillStyle = "#ffe8cc"; g.font = "bold 10px monospace";
+      g.fillText(`RUN!  ${Math.min(100, Math.round(dist / GOAL * 100))}%   ·   2031: nobody updated Blipville`, 14, 23);
+      if (gap < 60 && state === "run") { g.fillStyle = "#ff7a9a"; g.fillText("it's getting closer...", 12, 44); }
+      if (hint > 0 && state === "run") { g.fillStyle = "rgba(10,2,14,.8)"; g.fillRect(40, 104, 240, 26); g.fillStyle = "#fff"; g.font = "9px monospace"; g.fillText("tap the TOP to jump · the BOTTOM to slide", 48, 121); }
+      if (state === "caught") msg("It caught you...", "you wake up back in town. nothing was lost.");
+      if (state === "won") msg("You reached the Blip Tower.", "the Mimic drops its mask...");
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+  }
   function befriend() {
     const kind = sighting.kind, x = sceneLeft() + sighting.pos[0] * sceneU();
     if (!solid()) {                                           // a faded ghost: your tap goes right through
@@ -1290,7 +1382,7 @@
       setFace(held, "surprised", 0.6); setState(held, "fall");
       if (Math.abs(held.vx) + Math.abs(held.vy) > 700) sfx("whoosh");
       held = null;
-    } else if (!press.opened) petIt(press.p);
+    } else if (!press.opened) { if (now() < (press.p.mimicUntil || 0)) startChase(press.p); else petIt(press.p); }
     press = null;
   };
   cv.addEventListener("pointerup", endPress);
@@ -3577,7 +3669,7 @@
   $("maintRetry").onclick = () => { $("maintRetry").textContent = "Checking…"; checkStatus().finally(() => { $("maintRetry").textContent = "Check again"; }); };
   checkStatus(); setInterval(checkStatus, 2 * 60 * 1000);
 
-  window.blipvilleGo = { bag: { form: drawNexusForm, weapon: drawWeaponSprite, give: giveItem, take: takeItem, has: hasItem, open: openBag, items: ITEMS }, apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS, start: startTrial, battle: () => arenaBattle, draw: () => drawBattle() }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
+  window.blipvilleGo = { chase: { start: () => startChase(null), debug: () => CHASE.debug, slip: () => { if (pets[0]) pets[0].mimicUntil = now() + 8; } }, bag: { form: drawNexusForm, weapon: drawWeaponSprite, give: giveItem, take: takeItem, has: hasItem, open: openBag, items: ITEMS }, apex: { open: openNexus, check: apexCheck, award: apexAward, trials: TRIALS, start: startTrial, battle: () => arenaBattle, draw: () => drawBattle() }, cookies: () => cookies, chat: { open: openChat, show: chatShow }, dream: { open: openDream, game: () => dreamGame, rewrite: badDreamRewrite, rest: (v) => { dreamRest = v; } }, pets, save, addPet, grid, glitching, petIt, feed, nap, openEgg, openZoo, openPetSheet, hatCells, currentSeason,
                          nightShift: NS, checkStatus, sighting: () => sighting, tapSighting: () => sighting && befriend(), checkTrophies, openTrophies, ghostAlpha, openArena, battleCodeFor, readBattleCode, arena: () => arenaBattle, arenaTick, arenaPick, aiMove, musicNow: () => music.name, spawnSighting: () => { nextSighting = 0; }, startSighting: (k, ago = 0) => { startSighting(k); sighting.t0 -= ago; },
                          setSeason: (s) => { seasonOverride = s; weather = []; }, plays: () => plays,
                          startPlay: (type, a, b) => { const t = now(); a.playing = b.playing = true;

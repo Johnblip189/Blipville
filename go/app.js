@@ -988,6 +988,28 @@
     return 20;
   }
 
+  // 🕳️ after Error 404 is found, every so often all eyes glow red and blue for a few seconds (the glitch is spreading)
+  const EYEGLOW = { next: 0, until: 0 };
+  function eyeGlow(t) {
+    if (!(save.merchKinds || []).includes("Error 404")) return 0;
+    if (!EYEGLOW.next) EYEGLOW.next = t + rnd(40, 70);
+    if (t > EYEGLOW.next && t > EYEGLOW.until) { EYEGLOW.until = t + 7; EYEGLOW.next = t + 7 + rnd(60, 120); }
+    if (t >= EYEGLOW.until) return 0;
+    const u = (EYEGLOW.until - t) / 7; return Math.max(0, Math.min(1, (1 - u) * 5, u * 5));
+  }
+  function drawEyeGlow(p, t, left, top, shift) {
+    const e = eyeGlow(t); if (!e || p.state === "sleep") return;
+    const K = KINDS[p.kind], x = K.xeyes ? [5.5, 10.5] : [5, 11], cy = top + ((K.eyes + (K.xeyes ? 0.5 : 1)) + shift) * S;
+    const swap = Math.floor(t * 0.8) % 2, pulse = 0.65 + 0.35 * Math.sin(t * 7);
+    ctx.save(); ctx.globalCompositeOperation = "lighter";
+    x.forEach((ex, i) => {
+      const col = (i + swap) % 2 ? "42,106,255" : "255,42,58", cx = left + (ex + (K.dx || 0)) * S, r = 3.2 * S;
+      const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, r); gr.addColorStop(0, `rgba(${col},${0.85 * e * pulse})`); gr.addColorStop(1, `rgba(${col},0)`);
+      ctx.fillStyle = gr; ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+      ctx.fillStyle = `rgba(${col},${0.9 * e})`; ctx.fillRect(Math.round(cx - S * (K.xeyes ? 1.5 : 1)), Math.round(cy - S * (K.xeyes ? 1.5 : 1)), S * (K.xeyes ? 3 : 2), S * (K.xeyes ? 3 : 2));
+    });
+    ctx.restore();
+  }
   function drawPet(p, t) {
     const l = lift(p, t);
     const left = Math.round(p.x - 8 * S), top = Math.round(GROUND - 13 * S - p.y - l);
@@ -1000,6 +1022,7 @@
              soul, soul ? ghostAlpha(t, p.x * 0.01) * 0.75 : 1);
     ctx.globalAlpha = 1;
     const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;
+    drawEyeGlow(p, t, left, top, shiftH);
     const hatTop = Math.min(0, ...worn(p).map(([n, tint]) => drawHat(ctx, p.kind, n, left, top, S, shiftH, tint)));
     // particles
     p.particles = p.particles.filter((q) => t - q.born < q.life);

@@ -3849,10 +3849,11 @@ PROWL = {
              dict(name='Storm', o='#10182a', b='#7a8aa8', l='#e8eef8', i='#ff9ab0', n='#080c14', e='#080c14', c='#3a4a68')]},
 }
 NEW_ANIMALS.update({
- "Error 404": {"eyes": 5, "move": "walk", "speed": 1.0, "mouth": True, "xeyes": True,
+ "Error 404": {"eyes": 5, "move": "walk", "speed": 1.0, "mouth": True, "xeyes": True, "shifty": True,
   "lines": ["x_x", "error 404: friend not found", "have you tried turning me off and on?", "404: motivation not found", "*glitches politely*", "i'm fine. everything is fine. x_x"],
   "body": [".oo..........oo.", ".o1o........o1o.", ".o2po.oooo.op0o.", ".o331oW331o331o.", "o44444W44444442o", "o55555555555553o", "o66666666666664o", "o7p7777777777p5o", "o688888CC888886o", ".o9999CCCC9997o.", ".o88ACCCCCCA88o.", "..oo99999999oo.."],
-  "colors": [{"name": "Glitch Purple", "o": "#12062a", "p": "#ff5ad8", "e": "#0a0418", "W": "#f4e6ff", "b": "#7950b5", "0": "#2c0a78", "1": "#3b1884", "2": "#4a2690", "3": "#5a349c", "4": "#6942a9", "5": "#7950b5", "6": "#885ec1", "7": "#986ccd", "8": "#a77ada", "9": "#b788e6", "A": "#c696f2", "C": "#d6a4ff"}]},
+  "colors": [{"name": "Blue Screen", "o": "#06103a", "p": "#ff9ac0", "e": "#ff2a3a", "W": "#e6f0ff", "b": "#3c68c7", "0": "#0a2a9a", "1": "#1436a3", "2": "#1e43ac", "3": "#284fb5", "4": "#325cbe", "5": "#3c68c7", "6": "#4775d1", "7": "#5181da", "8": "#5b8ee3", "9": "#659aec", "A": "#6fa7f5", "C": "#7ab4ff"},
+             {"name": "Red Screen", "o": "#3a0610", "p": "#ffd0a0", "e": "#2a6aff", "W": "#fff0e6", "b": "#c74445", "0": "#9a0a1a", "1": "#a31522", "2": "#ac212b", "3": "#b52c34", "4": "#be383c", "5": "#c74445", "6": "#d14f4e", "7": "#da5b57", "8": "#e3675f", "9": "#ec7268", "A": "#f57e71", "C": "#ff8a7a"}]},
 })
 PROWL_KINDS = list(PROWL)
 

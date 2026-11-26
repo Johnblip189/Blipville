@@ -25,6 +25,7 @@
     <button class="pill" id="installBtn" title="Install Blipville as an app on this laptop or phone" hidden><img class="px" src="icons/px/download.png" alt=""> <span>Install app</span></button>
     <button class="pill icon" id="arenaBtn" aria-label="Arena" title="Arena"><img class="px" src="icons/px/arena.png" alt=""></button>
     <button class="pill icon" id="devBtn" aria-label="Creator menu" title="Creator menu" hidden>🛠️</button>
+    <button class="pill icon" id="workshopBtn" aria-label="Workshop" title="Workshop: gizmo quests" hidden>⚙️</button>
     <button class="pill icon" id="bagBtn" aria-label="Bag" title="Your bag" hidden>🎒</button>
     <button class="pill icon" id="meBtn" aria-label="Your character" title="Your character" hidden>🧍</button>
     <button class="pill icon" id="monthBtn" aria-label="Month one gift" title="1 month of Blipville: claim your gift" hidden>🎂</button>
@@ -212,6 +213,15 @@
 </div>
 
 <button id="caveLeave" class="pill" hidden>⬅ Leave the cave</button>
+
+<div class="sheet" id="workshopSheet" hidden>
+  <div class="card">
+    <div class="sheetTitle">⚙️ Workshop <span class="muted small" id="workshopCount"></span></div>
+    <div class="muted small">Every Gizmo has a quest. Pay its price in hearts to start it. Finish it and the Gizmo joins your town.</div>
+    <div id="workshopList"></div>
+    <button class="close" data-close>Close</button>
+  </div>
+</div>
 
 <div class="sheet" id="bagSheet" hidden>
   <div class="card">

@@ -25,6 +25,7 @@
   const CRYPT = new Set(D.groups.cryptids);
   const KAIJU = new Set([...(D.groups.kaiju || []), ...(D.parkedKinds || [])]), HITS = D.kaijuHits || 3;
   const GIFTS = new Set(D.groups.gifts || []);
+  const GIZMOS = new Set(D.groups.gizmos || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
   const DREAMS = new Set(Object.keys(D.badDreams || {}));          // 🧸 Bad Dreams (plushies until midnight)
@@ -214,7 +215,7 @@
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
   const SECRET = new Set(D.secretKinds || []);
-  const isUnlocked = (k) => SECRET.has(k) ? (save.merchKinds || []).includes(k) : NEXUS_ID[k] ? (save.apexNexusCores || []).includes(NEXUS_ID[k]) : (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const isUnlocked = (k) => SECRET.has(k) ? (save.merchKinds || []).includes(k) : NEXUS_ID[k] ? (save.apexNexusCores || []).includes(NEXUS_ID[k]) : (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIZMOS.has(k) ? (save.gizmos || []).includes(k) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -2058,6 +2059,7 @@
                     ["Legends ✨ (visit a world, tap them when they stroll by)", D.groups.legends || []],
                     ["Ghosts 👻 (they drift by at night: tap one while it glows!)", D.groups.ghosts || []],
                     ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []],
+                    ["Gizmos ⚙️ (buy a quest in the Workshop)", D.groups.gizmos || []],
                     [`Event 🎖️ (earn them in ${EVENT.name})`, D.groups.eventKinds || []],
                     ...(isCreator() || isMod() || (save.apexNexusCores || []).length ? [["Nexus ⚡ (wake the Cores)", D.groups.nexus || []]] : []),
                     ["Bad Dreams 🧸 (tap a Puppet Master 5 times… then fend them off)", [...DREAMS]]];
@@ -3100,6 +3102,53 @@
       persist(true);
   };
   drops.forEach((d, i) => setTimeout(() => deliverGift(d), 2600 + i * 7500));
+  // ⚙️ The Workshop: every Gizmo has a quest. Pay its price in hearts to start it, finish it, and the Gizmo joins your town.
+  // No luck involved: the price and the goal are the same for everyone.
+  const GQ = D.gizmoQuests || {};
+  const gizmoState = () => { save.gizmos = save.gizmos || []; save.gizmoQuests = save.gizmoQuests || {}; return save; };
+  const gizmoProgress = (k) => { const q = GQ[k], s = gizmoState().gizmoQuests[k]; return !s ? 0 : Math.min(q.goal, stat(q.stat) - s.base); };
+  function checkGizmos() {
+    gizmoState();
+    for (const k of Object.keys(save.gizmoQuests)) {
+      if (save.gizmos.includes(k) || !GQ[k] || gizmoProgress(k) < GQ[k].goal) continue;
+      save.gizmos.push(k);
+      const p = addPet(k, { quiet: true }); sfx("fanfare"); vibrate([20, 30, 20]);
+      if (p) { say(p, "quest complete! i'm built!", 4); setFace(p, "happy", 2); burst(p, "heart", 8); }
+      toast(`⚙️ Quest complete! ${k} joined your town.${p ? "" : " (Your town is full: find it in the 📖 Zoo.)"}`, 5);
+      persist(true);
+    }
+  }
+  setInterval(() => { try { checkGizmos(); } catch (e) { /* never stop the game */ } }, 2500);
+  function openWorkshop() {
+    gizmoState(); const list = $("workshopList"); list.innerHTML = "";
+    const own = (D.groups.gizmos || []).filter((k) => save.gizmos.includes(k)).length;
+    $("workshopCount").textContent = `${own}/${(D.groups.gizmos || []).length}`;
+    for (const k of D.groups.gizmos || []) {
+      const q = GQ[k], done = save.gizmos.includes(k), started = !!save.gizmoQuests[k], prog = gizmoProgress(k);
+      const row = doc().createElement("div"); row.className = "gzRow" + (done ? " done" : started ? " going" : "");
+      row.appendChild(thumb(k, 0, !done && !started, 4));
+      const info = doc().createElement("div"); info.className = "gzInfo";
+      info.innerHTML = `<b></b><small></small>`; info.querySelector("b").textContent = done || started ? k : "???";
+      info.querySelector("small").textContent = done ? "✓ in your town" : started ? `${q.text}: ${prog}/${q.goal}` : q.text;
+      row.appendChild(info);
+      if (!done) {
+        const b = doc().createElement("button"); b.className = "gzBuy";
+        if (started) { b.textContent = "in progress"; b.disabled = true; }
+        else {
+          b.textContent = `Start · ${q.cost} 💖`;
+          b.onclick = () => {
+            if (save.hearts < q.cost) { toast(`That quest costs ${q.cost} 💖. You have ${save.hearts}.`, 3.5); return; }
+            save.hearts -= q.cost; save.gizmoQuests[k] = { base: stat(q.stat) }; updateHearts(true); sfx("coin"); persist(true);
+            toast(`⚙️ Quest started: ${q.text}`, 4); openWorkshop();
+          };
+        }
+        row.appendChild(b);
+      }
+      list.appendChild(row);
+    }
+    openSheet("workshopSheet");
+  }
+  $("workshopBtn").hidden = false; $("workshopBtn").onclick = openWorkshop;
   // 🕳️ a hidden Blip: tap the bottom-right corner of the screen. Every time it's a black screen with some text and his eyes, and the
   // background slowly turns into an ice-covered cavern. The 3rd time he's found. (Nothing random: every tap counts.)
   const FIND404 = { kind: "Error 404", taps: 3, lines: ["page not found.", "it's getting cold in here...", "found."], ice: [0, 0.34, 0.67, 1] };

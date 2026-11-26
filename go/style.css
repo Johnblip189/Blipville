@@ -462,3 +462,10 @@ button { touch-action: manipulation; }
   border: 1px solid #1e5a4a; text-shadow: -2px 0 #ff2a5a, 2px 0 #2a8aff; animation: toastGlitch 0.45s steps(2, end) infinite; }
 @keyframes toastGlitch { 0% { transform: translateX(-50%) translateY(0); } 25% { transform: translateX(calc(-50% + 3px)) translateY(0); }
   50% { transform: translateX(calc(-50% - 2px)) translateY(-1px); } 75% { transform: translateX(calc(-50% + 1px)) translateY(1px); } 100% { transform: translateX(-50%) translateY(0); } }
+
+#workshopList { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; max-height: 52vh; overflow-y: auto; }
+.gzRow { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 2px solid rgba(255,255,255,.12); border-radius: 12px; background: rgba(255,255,255,.04); }
+.gzRow.going { border-color: rgba(122,255,200,.35); } .gzRow.done { border-color: rgba(255,210,58,.4); }
+.gzRow canvas { flex: none; }
+.gzInfo { flex: 1; display: flex; flex-direction: column; text-align: left; } .gzInfo small { opacity: .7; }
+.gzBuy { flex: none; padding: 6px 10px; border-radius: 10px; border: 0; background: #7a5aff; color: #fff; font: inherit; cursor: pointer; } .gzBuy:disabled { opacity: .5; cursor: default; }

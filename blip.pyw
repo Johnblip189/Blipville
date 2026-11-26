@@ -3865,10 +3865,167 @@ NEW_ANIMALS.update({
   "colors": [{"name": "Blue Screen", "o": "#06103a", "p": "#ff9ac0", "e": "#ff2a3a", "W": "#e6f0ff", "b": "#3c68c7", "0": "#0a2a9a", "1": "#1436a3", "2": "#1e43ac", "3": "#284fb5", "4": "#325cbe", "5": "#3c68c7", "6": "#4775d1", "7": "#5181da", "8": "#5b8ee3", "9": "#659aec", "A": "#6fa7f5", "C": "#7ab4ff"},
              {"name": "Red Screen", "o": "#3a0610", "p": "#ffd0a0", "e": "#2a6aff", "W": "#fff0e6", "b": "#c74445", "0": "#9a0a1a", "1": "#a31522", "2": "#ac212b", "3": "#b52c34", "4": "#be383c", "5": "#c74445", "6": "#d14f4e", "7": "#da5b57", "8": "#e3675f", "9": "#ec7268", "A": "#f57e71", "C": "#ff8a7a"}]},
 })
+# ⚙️ Gizmos: machines and gadgets. Each one is earned by buying its quest in the Workshop (hearts) and finishing it.
+GIZMOS = {
+ "Toaster": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*pop!*", "i'm toasty", "bread? bring me bread", "two slices, no regrets"],
+  "body": ["....ooo..ooo....", "...oyyyooyyyo...", "..okyyykkyyyko..", ".ollllllllllllo.", "olbssssssssssbBo", "olbssssssssssbro", "olbssssssssssbrr", "olbssssssssssbBo", "olbSSSSSSSSSSbBo", "olbbbbbbbbbbbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#c8ccd6", "l": "#eef0f6", "B": "#8a90a0", "s": "#f4e8c8", "S": "#f4e8c8", "a": "#ff7a3a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Kettle": {"eyes": 5, "move": "hop", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*whistles*", "tea time!", "i'm steaming (happily)", "pour me a cup of friendship"],
+  "body": ["....owoooowo....", ".....oommoo.....", "o..oooommoooo...", "moollllllllllooo", "mmlssssssssssBkk", "oolssssssssssBok", ".olssssssssssBok", ".olssssssssssBok", ".olSSSSSSSSSSBko", ".olbbbbbbbbbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#e8503a", "l": "#ff9a80", "B": "#a82a1e", "s": "#fff2e0", "S": "#fff2e0", "a": "#ffd23a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Radio": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*static*", "...and now the weather", "tune in!", "this next song is for you"],
+  "body": [".............oro", "............omo.", "...........omo..", "..ooooooooomoo..", ".olsssssssssslo.", "olbssssssssssbBo", "olbssssssssssbBo", "olbssssssssssbBo", "olbSSSSSSSSSSbBo", "olbkbkbkbkbkbbBo", ".oBBBBBBBBBByBo.", "..oooooooooooo.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#a8642a", "l": "#d89a58", "B": "#6a3a14", "s": "#c8f0d0", "S": "#c8f0d0", "a": "#ffd23a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Desk Fan": {"eyes": 5, "move": "float", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*whirrr*", "stay cool", "spinning is my cardio", "breeze incoming"],
+  "body": [".oaaaammmmaaaao.", ".oaaaamkkmaaaao.", "..ollllllllllo..", ".olbbbbbbbbbbBo.", ".olssssssssssBo.", ".olmssssssssmBo.", ".olssssssssssBo.", ".olmssssssssmBo.", ".olSSSSSSSSSSBo.", ".olbbbbbbbbbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#58b8e8", "l": "#a8e0ff", "B": "#2a7aa8", "s": "#e8f8ff", "S": "#e8f8ff", "a": "#ff7aa8", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Microwave": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*ding!*", "3... 2... 1...", "reheating feelings", "don't put a fork in me"],
+  "body": ["................", "................", "..oooooooooooo..", ".ollllllllllllo.", "olbsssssssssskko", "olbssssssssssggo", "olbsssssssssskko", "olbssssssssssggo", "olbSSSSSSSSSSkko", "olbbbbbbbbbbbkro", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#d8dce4", "l": "#ffffff", "B": "#9aa0b0", "s": "#243040", "S": "#243040", "a": "#4ae0ff", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Washing Machine": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*sloshing*", "spin cycle!", "i love a clean sock", "bubbles everywhere"],
+  "body": ["................", "...oooooooooo...", "..ollllllllllo..", ".olrbrbbbaaaaBo.", ".olmssssssssmBo.", ".omssssssssssmo.", ".omssssssssssmo.", ".omssssssssssmo.", ".olmSSSSSSSSmBo.", ".olbbbbbbbbbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#e8ecf4", "l": "#ffffff", "B": "#a8b0c8", "s": "#8ad0f0", "S": "#8ad0f0", "a": "#4a7aff", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Camera": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*click*", "say cheese!", "hold still...", "i'll remember this"],
+  "body": ["................", "...ooo.....oo...", "..okkkooo.oyyo..", "..okkkorrooyyo..", ".olsssssssssslo.", "olbssssssssssbBo", "olbssssssssssbBo", "olbssssssssssbBo", "olbSSSSSSSSSSbBo", "olbbbbbbbbbbbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#3a3e50", "l": "#6a708a", "B": "#1c1e2a", "s": "#a8c8ff", "S": "#a8c8ff", "a": "#ff4a4a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Typewriter": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*clack clack ding*", "dear friend...", "once upon a time...", "every word counts"],
+  "body": ["...owwwwwwwwo...", "...owkkkwkwwo...", "...owkkwkkkwo...", "...owkwkwwwwo...", "..oowwwwwwwwoo..", ".olsssssssssslo.", "olbssssssssssbBo", "olbssssssssssbBo", "olbSSSSSSSSSSbBo", "olbkbkbkbkbkbbBo", ".oBBkBkBkBkBBBo.", "..oooooooooooo.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#4a6a5a", "l": "#8ab0a0", "B": "#2a4034", "s": "#f4ecd0", "S": "#f4ecd0", "a": "#c0a060", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Gramophone": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*crackly waltz*", "a song from long ago", "needle's sharp, i'm sharper", "dance with me"],
+  "body": ["............oyyy", "...........oyyyy", "..........oyyyyo", ".........oyyyyo.", "...oooooommooo..", "..osssssssssso..", ".olssssssssssBo.", ".olssssssssssBo.", ".olSSSSSSSSSSBo.", ".olbbbbbbbbbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#6a3a24", "l": "#a8704a", "B": "#3a1a0e", "s": "#f4e4c0", "S": "#f4e4c0", "a": "#ffd23a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Walkie-Talkie": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*krrk* copy that", "over!", "roger roger", "this is blip control"],
+  "body": ["...........oko..", "....oo.....oko..", "...orrooooooko..", "...ollllllllo...", "..osssssssssso..", "..osssssssssso..", "..osssssssssso..", "..osssssssssso..", "..oSSSSSSSSSSo..", "..olkbkbkbkbBo..", "...oBBBBBBBBo...", "....oooooooo...."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#e8a02a", "l": "#ffd078", "B": "#a86a10", "s": "#d0f4c0", "S": "#d0f4c0", "a": "#2a2a3a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Cassette": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*rewinding*", "side A or side B?", "mixtape just for you", "press play"],
+  "body": ["................", "................", "..oooooooooooo..", ".olrllllllllrlo.", "olbssssssssssbBo", "olbssssssssssbBo", "olbssssssssssbBo", "olbssssssssssbBo", "olbSSSSSSSSSSbBo", "olbbwkwkwkwwbbBo", ".oBBwwkwkwwwBBo.", "..oooooooooooo.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#e84a8a", "l": "#ff9ac0", "B": "#9a1e58", "s": "#fff0f4", "S": "#fff0f4", "a": "#4ae0ff", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Floppy Disk": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "mouth": True,
+  "lines": ["*save icon noises*", "1.44 megabytes of love", "please don't bend me", "insert disk to continue"],
+  "body": ["................", "..ooooooooooo...", ".obllmmmmkmllo..", ".olbbmmmmkmbbo..", ".olssssssssssBo.", ".olssssssssssBo.", ".olssssssssssBo.", ".olSSSSSSSSSSBo.", ".olbbbbbbbbbbBo.", ".olbwkwkwkwwbBo.", ".obBwwwwwwwwBbo.", "..oooooooooooo.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#4a6aff", "l": "#9ab0ff", "B": "#2a3aa8", "s": "#f4f4ff", "S": "#f4f4ff", "a": "#ff4a4a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "CRT Monitor": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*static hiss*", "no signal... just kidding", "good old days", "buffering since 1994"],
+  "body": ["..omo......omo..", "..oomoooooomoo..", ".ollllllllllllo.", "olssssssssssssBo", "olssssssssssssBo", "olssssssssssssBo", "olssssssssssssBo", "olssssssssssssBo", "olSSSSSSSSSSSSBo", ".oBBBBBBBBBBBBo.", "..oookkkkkkooo..", "....okkkkkko...."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#c8c0a8", "l": "#f0ead0", "B": "#8a8268", "s": "#58e8a8", "S": "#58e8a8", "a": "#ff4a4a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Handheld": {"eyes": 4, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*8-bit jingle*", "one more level...", "low battery!", "game over? never"],
+  "body": ["...oooooooooo...", "..ollllllllllo..", ".olssssssssssBo.", ".olssssssssssBo.", ".olssssssssssBo.", ".olssssssssssBo.", ".olssssssssssBo.", ".olSSSSSSSSSSBo.", ".olbbbbbbbbbbBo.", ".olbkbbbbbbrbBo.", "..okkkBBBBBBao..", "...okoooooooo..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#a8a8c0", "l": "#e0e0f0", "B": "#6a6a88", "s": "#a8c898", "S": "#a8c898", "a": "#8a2aff", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Calculator": {"eyes": 4, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*beep* 5318008", "carry the one", "i'm good with numbers", "equals: happiness"],
+  "body": ["....oooooooo....", "...ollllllllo...", "..olssssssssBo..", "..olssssssssBo..", "..olssssssssBo..", "..olssssssssBo..", "..olssssssssBo..", "..olSSSSSSSSBo..", "..olabkbkbabBo..", "..olbbbbbbbbBo..", "...okBkBaBkBo...", "....oooooooo...."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#2a8a7a", "l": "#5ad0b8", "B": "#145048", "s": "#c8f0d8", "S": "#c8f0d8", "a": "#ff7a3a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Alarm Clock": {"eyes": 5, "move": "hop", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*RRRING*", "wake up! wake up!", "it's snooze o'clock", "5 more minutes..."],
+  "body": ["...oooommoooo...", "..oyyyommoyyyo..", "..oyyyommoyyyo..", "..ollllllllllo..", ".olssssssssssBo.", ".olssssrrssssBo.", ".olssssssssssBo.", ".olssssssssssBo.", ".olSSSSSSSSSSBo.", ".olbbbbbbbbbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#4aa8e8", "l": "#9adcff", "B": "#2a6a9a", "s": "#fff8e0", "S": "#fff8e0", "a": "#ff4a4a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Desk Lamp": {"eyes": 5, "move": "hop", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*click* let there be light", "bright idea!", "i read late with you", "glowing review"],
+  "body": ["....oaaaaaao....", "...oaaaaaaaao...", "..oaaaaaaaaaao..", "..oaayyyyyyaao..", "..osssssssssso..", ".olssssssssssBo.", ".olssssssssssBo.", ".olssssssssssBo.", ".olSSSSSSSSSSBo.", ".olbbbbbbbbbbBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#7a8a9a", "l": "#b8c4d0", "B": "#4a5a6a", "s": "#fff4c8", "S": "#fff4c8", "a": "#ff9a3a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Vacuum": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": False, "mouth": True,
+  "lines": ["*vroom*", "i suck at... dust", "clean sweep!", "nom nom crumbs"],
+  "body": ["................", ".......oo.......", "...oooommoooo.o.", "..olllllllllloko", ".olssssssssssBok", ".olssssssssssBok", ".olssssssssssBok", ".olssssssssssBko", ".olSSSSSSSSSSBo.", ".olbbbbbbbbbbBo.", "..oBBBBBBBBBBo..", "..okkkooookkko.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#e84a4a", "l": "#ff9a9a", "B": "#9a1e1e", "s": "#fff2e0", "S": "#fff2e0", "a": "#ffd23a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Drone": {"eyes": 5, "move": "float", "speed": 1.2, "feet": False, "mouth": True,
+  "lines": ["*bzzzzz*", "aerial view looks great", "battery at 12%", "filming everything"],
+  "body": [".o............o.", "oaoo........ooao", "mmmmo......ommmm", "ooookooooookoooo", "....ollllllo....", "...osssssssso...", "...osssssssso...", "...oSSSSSSSSo...", "...olbbbbbbBo...", "....oBBBBBBo....", "....oooooooo....", "...oko....oko..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#3a3e48", "l": "#6a7080", "B": "#1a1c24", "s": "#8ad8ff", "S": "#8ad8ff", "a": "#ff4a4a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Rover": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": False, "mouth": True,
+  "lines": ["*beep boop* exploring", "found a rock!", "phoning home", "this planet is cozy"],
+  "body": [".....okmmko.....", "......ommo......", "...oooommoooo...", "..ollllllllllo..", ".olssssssssssBo.", ".olssssssssssBo.", ".olssssssssssBo.", ".olssssssssssBo.", ".olSSSSSSSSSSBo.", "..oBBBBBBBBBBo..", ".okkkookkookkko.", ".okkkookkookkko."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#d8a868", "l": "#f8d8a0", "B": "#9a6a38", "s": "#c8e8f0", "S": "#c8e8f0", "a": "#ff7a3a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Satellite": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "mouth": True,
+  "lines": ["*orbit noises*", "i see your house!", "signal strength: love", "spinning round and round"],
+  "body": ["......ommo......", "......ommo......", ".....omoomo.....", "ooooollllllooooo", "lalasssssssslala", "alalssssssssalal", "lalasssssssslala", "alalssssssssalal", "lalaSSSSSSSSlala", "alallbbbbbbBalal", "oooooBBBBBBooooo", ".....oooooo....."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#c0c8d8", "l": "#f0f4ff", "B": "#8a92a8", "s": "#a8e0ff", "S": "#a8e0ff", "a": "#2a4aff", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Printer": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*chk-chk-chk*", "paper jam! kidding", "printing... printing...", "low on ink and feelings"],
+  "body": ["....oooooooo....", "...owwwwwwwwo...", "...owkkkwkkwo...", "...owkwwkwwwo...", "..oowwwwwwwwoo..", ".olsssssssssslo.", "olbssssssssssbBo", "olbssssssssssbBo", "olbSSSSSSSSSSbBo", "olbbbbbbbbbbbbBo", ".oBBBBBBBBBBBBo.", "..ooowwwwwwooo.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#d8dce8", "l": "#ffffff", "B": "#98a0b8", "s": "#2a3a5a", "S": "#2a3a5a", "a": "#4ae08a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Robot Arm": {"eyes": 6, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*servo whirr*", "i can pick that up", "precision is my thing", "need a hand? i have one"],
+  "body": ["....omaamo......", ".....omamo......", "....oaaoo.......", "....oaro........", "...oaao.........", "...oaaoooooo....", "...osssssssso...", "..olssssssssBo..", "..olSSSSSSSSBo..", "..olbbbbbbbbBo..", "...oBBBBBBBBo...", "....oooooooo...."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#e8a02a", "l": "#ffd078", "B": "#a86a10", "s": "#2a3a50", "S": "#2a3a50", "a": "#ff4a4a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Compass": {"eyes": 5, "move": "hop", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*needle spins*", "north is that way... i think", "adventure awaits", "i always find my way"],
+  "body": [".......oo.......", "......orro......", "...oooorroooo...", "..ollllllllllo..", ".olssssssssssBo.", ".olssssssssssBo.", ".okssssssssssko.", ".olssssssssssBo.", ".olSSSSSSSSSSBo.", ".olbbbbbbbbbbBo.", "..oBBBBkkBBBBo..", "...oooooooooo..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#b8923a", "l": "#f0d078", "B": "#7a5a14", "s": "#f4ecd0", "S": "#f4ecd0", "a": "#ff4a4a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Metronome": {"eyes": 5, "move": "hop", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*tick tock tick tock*", "keep the beat", "allegro!", "i'm always on time"],
+  "body": [".......omo......", "......ooomo.....", ".....olllmyo....", "....obbbbbyo....", "...osssssssso...", "..osssssssssso..", "..osssssssssso..", "..osssssssssso..", "..oSSSSSSSSSSo..", "..olbbbbbbbbBo..", "...oBkkkkkkBo...", "....oooooooo...."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#6a4a8a", "l": "#b090d0", "B": "#3a2458", "s": "#f0e8ff", "S": "#f0e8ff", "a": "#ffd23a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Joystick": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*click click*", "up, up, down, down...", "insert coin", "player one ready"],
+  "body": [".....orrrro.....", ".....orkkro.....", "......okko......", "......okko......", "...oooooooooo...", "..osssssssssso..", ".olssssssssssBo.", ".olssssssssssBo.", ".olSSSSSSSSSSBo.", ".olybbbbbbbbyBo.", "..oBBBBBBBBBBo..", "...oooooooooo..."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#2a2a3a", "l": "#5a5a70", "B": "#12121a", "s": "#a8f0c8", "S": "#a8f0c8", "a": "#ff4a4a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Light Bulb": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "mouth": True,
+  "lines": ["*bzzt* bright idea!", "i'm glowing with pride", "screw it, let's go", "lights on!"],
+  "body": ["..o..oooooo..o..", ".oyoollllllooyo.", "..oobbbbbbbboo..", ".oossssssssssoo.", "oyossssssssssoyo", "yoossssssssssooy", "o.osssssssssso.o", "..osssssssssso..", "..oSSSSSSSSSSo..", "...oBBBBBBBBo...", "....ommmmmmo....", "....okmkmkmo...."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#ffe66a", "l": "#fff8b8", "B": "#d8b020", "s": "#fffbe0", "S": "#fffbe0", "a": "#ff9a3a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Battery": {"eyes": 5, "move": "hop", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*charging...*", "full of energy!", "+ and - make a pair", "recharge me with snacks"],
+  "body": [".....ommmmo.....", "....oommmmoo....", "...oaaawwaaao...", "..olaaaaaaaaBo..", "..osssssssssso..", "..osssssssssso..", "..osssssssssso..", "..osssssssssso..", "..oSSSSSSSSSSo..", "..olgggbgggbBo..", "...oBBBBBBBBo...", "....oooooooo...."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#4a4a58", "l": "#8a8aa0", "B": "#24242e", "s": "#d8f4d0", "S": "#d8f4d0", "a": "#4ae08a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Telephone": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*ring ring*", "hello? yes, it's me", "wrong number? never", "call me maybe"],
+  "body": ["................", "..oooooooooooo..", ".okkkkkkkkkkkko.", "okkkkkkkkkkkkkko", "oakooooooooookao", ".olsssssssssslo.", "olbssssssssssbBo", "olbssssssssssbBo", "olbSSSSSSSSSSbBo", "olbbkbbkbbkbbbBo", ".oBBBBBBBBBBBBo.", "..oooooooooooo.."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#e84a4a", "l": "#ff9a9a", "B": "#9a1e1e", "s": "#f8ecd8", "S": "#f8ecd8", "a": "#ffd23a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+ "Cuckoo Clock": {"eyes": 5, "move": "hop", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["*cuckoo! cuckoo!*", "it's... time!", "tick tock, birdie talk", "i pop out for fun"],
+  "body": [".....oaaaao.....", "....oaaaaaao....", "...oaaaaaaaao...", "..oaaaayyaaaao..", "...osssssssso...", "..olssssssssBo..", "..olssssssssBo..", "..olssssssssBo..", "..olSSSSSSSSBo..", "..olbbbbbbbbBo..", "...oBBBBBBBBo...", "....ooommooo...."],
+  "colors": [{"name": "Factory", "o": "#0e1018", "b": "#8a5a2a", "l": "#c89458", "B": "#503010", "s": "#f8ecd0", "S": "#f8ecd0", "a": "#c03a2a", "m": "#aab4c4", "k": "#2a2a3a", "y": "#ffd23a", "r": "#ff4a4a", "e": "#14161e", "w": "#ffffff", "g": "#4ae08a"}]},
+}
+# Wave 1 of the Gizmos. The quest price (hearts) and goals are proposals: easy ones first, harder and pricier later.
+GIZMO_QUESTS = {
+ "Toaster": {"stat": "pets", "goal": 15, "cost": 25, "text": "Pet your Blips 15 times"},
+ "Kettle": {"stat": "cookies", "goal": 7, "cost": 29, "text": "Feed your Blips 7 cookies"},
+ "Radio": {"stat": "days", "goal": 1, "cost": 33, "text": "Play on 1 more different days"},
+ "Desk Fan": {"stat": "bond_ups", "goal": 3, "cost": 37, "text": "Raise your friendship level 3 times"},
+ "Microwave": {"stat": "pets", "goal": 35, "cost": 41, "text": "Pet your Blips 35 times"},
+ "Washing Machine": {"stat": "cookies", "goal": 15, "cost": 45, "text": "Feed your Blips 15 cookies"},
+ "Camera": {"stat": "days", "goal": 1, "cost": 49, "text": "Play on 1 more different days"},
+ "Typewriter": {"stat": "bond_ups", "goal": 4, "cost": 53, "text": "Raise your friendship level 4 times"},
+ "Gramophone": {"stat": "pets", "goal": 55, "cost": 57, "text": "Pet your Blips 55 times"},
+ "Walkie-Talkie": {"stat": "cookies", "goal": 23, "cost": 61, "text": "Feed your Blips 23 cookies"},
+ "Cassette": {"stat": "days", "goal": 2, "cost": 65, "text": "Play on 2 more different days"},
+ "Floppy Disk": {"stat": "bond_ups", "goal": 5, "cost": 69, "text": "Raise your friendship level 5 times"},
+ "CRT Monitor": {"stat": "pets", "goal": 75, "cost": 73, "text": "Pet your Blips 75 times"},
+ "Handheld": {"stat": "cookies", "goal": 31, "cost": 77, "text": "Feed your Blips 31 cookies"},
+ "Calculator": {"stat": "days", "goal": 2, "cost": 81, "text": "Play on 2 more different days"},
+ "Alarm Clock": {"stat": "bond_ups", "goal": 7, "cost": 85, "text": "Raise your friendship level 7 times"},
+ "Desk Lamp": {"stat": "pets", "goal": 95, "cost": 89, "text": "Pet your Blips 95 times"},
+ "Vacuum": {"stat": "cookies", "goal": 39, "cost": 93, "text": "Feed your Blips 39 cookies"},
+ "Drone": {"stat": "days", "goal": 3, "cost": 97, "text": "Play on 3 more different days"},
+ "Rover": {"stat": "bond_ups", "goal": 8, "cost": 101, "text": "Raise your friendship level 8 times"},
+ "Satellite": {"stat": "pets", "goal": 115, "cost": 105, "text": "Pet your Blips 115 times"},
+ "Printer": {"stat": "cookies", "goal": 47, "cost": 109, "text": "Feed your Blips 47 cookies"},
+ "Robot Arm": {"stat": "days", "goal": 3, "cost": 113, "text": "Play on 3 more different days"},
+ "Compass": {"stat": "bond_ups", "goal": 9, "cost": 117, "text": "Raise your friendship level 9 times"},
+ "Metronome": {"stat": "pets", "goal": 135, "cost": 121, "text": "Pet your Blips 135 times"},
+ "Joystick": {"stat": "cookies", "goal": 55, "cost": 125, "text": "Feed your Blips 55 cookies"},
+ "Light Bulb": {"stat": "days", "goal": 4, "cost": 129, "text": "Play on 4 more different days"},
+ "Battery": {"stat": "bond_ups", "goal": 11, "cost": 133, "text": "Raise your friendship level 11 times"},
+ "Telephone": {"stat": "pets", "goal": 155, "cost": 137, "text": "Pet your Blips 155 times"},
+ "Cuckoo Clock": {"stat": "cookies", "goal": 63, "cost": 141, "text": "Feed your Blips 63 cookies"},
+}
+GIZMO_KINDS = list(GIZMOS)
 PROWL_KINDS = list(PROWL)
 
 
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR, **PROWL}.items():
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR, **PROWL, **GIZMOS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": (_a["feet"] if isinstance(_a.get("feet"), dict) else FEET_STD if _a.get("feet", True) else None), "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
@@ -4498,7 +4655,7 @@ WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
 
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
-KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS + PROWL_KINDS + BAD_DREAM_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS + PROWL_KINDS + GIZMO_KINDS + BAD_DREAM_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, even in the daytime)
@@ -7025,10 +7182,10 @@ def load_custom_blips():
 # save is kept as save.bak.json, a broken save is copied aside before anything replaces it, and a failed write is
 # reported to the player instead of silently forgotten.
 SAVE_LISTS = ("awakened", "bad_dreams", "merch", "merch_kinds", "redeemed", "cryptids", "event_kinds", "ghosts", "gifts", "gods", "hatched", "hats_owned", "kaiju", "legends", "peeked",
-              "rivals_beaten", "skins", "trophies", "unlocked", "worlds")
+              "rivals_beaten", "skins", "trophies", "unlocked", "worlds", "gizmos")
 SAVE_COUNTS = ("hearts", "nights_won")
 SAVE_FLAGS = ("auto_update", "climb", "cursor_play", "sound", "voices", "weather", "slot2")
-SAVE_DICTS = ("awaken_level", "event_points", "stats", "quests")
+SAVE_DICTS = ("awaken_level", "event_points", "stats", "quests", "gizmo_quests")
 SAVE_NOTES = []                     # what happened while loading, shown to the player once
 SAVE_STATE = {"failed": 0.0, "warned": 0.0, "backed_up": 0.0}
 
@@ -8312,7 +8469,8 @@ SAVE_CODE_KEYS = {"hearts": "hearts", "hatched": "hatched", "hats_owned": "hatsO
                   "cryptids": "cryptids", "kaiju": "kaiju", "gifts": "gifts", "worlds": "worlds", "world": "world", "legends": "legends",
                   "ghosts": "ghosts", "trophies": "trophies", "stats": "stats", "awakened": "awakened", "awaken_level": "awakenLevel",
                   "rivals_beaten": "rivalsBeaten", "slot2": "slot2", "skins": "skins", "event_points": "eventPoints", "event_kinds": "eventKinds",
-                  "gods": "gods", "bad_dreams": "badDreams", "merch": "merch", "merch_kinds": "merchKinds", "redeemed": "redeemed"}
+                  "gods": "gods", "bad_dreams": "badDreams", "merch": "merch", "merch_kinds": "merchKinds", "redeemed": "redeemed",
+                  "gizmos": "gizmos", "gizmo_quests": "gizmoQuests"}
 
 
 def make_save_code(save, town):
@@ -8554,7 +8712,7 @@ ARENA_BEATS = {"spark": ["sprout", "frost", "phantom"],   # burns leaves, melts 
 COSMIC_CRIT = 0.25
 # 👻 Phantom (the Phantom Knight's very own type): never super effective, but 1 in 5 hits passes right through it
 PHANTOM_DODGE = 0.2
-TYPE_OF = {"Phantom Knight": "phantom", "Mythkeeper": "cosmic"}
+TYPE_OF = {"Phantom Knight": "phantom", "Mythkeeper": "cosmic", **{k: "volt" for k in GIZMOS}}      # machines are Volt
 FORM_MOVES = {"Lead Javelin": "Javelin Strike", "Diamond Ladybug": "Diamond Dazzle", "Puppet Box": "Pull the Strings", "Puppet Master": "Final Curtain", "Blipmaker": "Creator's Spark", "Byte": "Bug Fix", "Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
               "Phantom Sovereign": "Sovereign's Judgment"}
 ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash": ["Bubble Burst", "Splash Slam", "Tidal Hug"],
@@ -11482,6 +11640,8 @@ class App:
             return kind in self.save.get("gifts", [])
         if kind in PROWL:
             return kind in self.save.get("event_kinds", [])    # 🎖️ earned in the Prowl Week event
+        if kind in GIZMOS:
+            return kind in self.save.get("gizmos", [])         # ⚙️ finished its quest in the Workshop
         if kind in KAIJU:
             return kind in self.save.get("kaiju", [])
         if kind in CRYPTIDS:

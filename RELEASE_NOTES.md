@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.21:** ✨ Smile. 🙂
+>
 > **1.0.20:** ✨ Is that really your Blip? 👀
 >
 > **1.0.19:** ✨ The workshop is open. 🛠️

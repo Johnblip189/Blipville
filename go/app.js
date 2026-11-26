@@ -213,7 +213,8 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => NEXUS_ID[k] ? (save.apexNexusCores || []).includes(NEXUS_ID[k]) : (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const SECRET = new Set(D.secretKinds || []);
+  const isUnlocked = (k) => SECRET.has(k) ? (save.merchKinds || []).includes(k) : NEXUS_ID[k] ? (save.apexNexusCores || []).includes(NEXUS_ID[k]) : (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -3065,6 +3066,41 @@
       persist(true);
   };
   drops.forEach((d, i) => setTimeout(() => deliverGift(d), 2600 + i * 7500));
+  // 🕳️ a hidden Blip: tap the bottom-right corner of the screen. Every time it's a black screen with some text and his eyes.
+  // The 5th time he's found. (Nothing random: every tap counts.)
+  const FIND404 = { kind: "Error 404", taps: 5, lines: ["page not found.", "still not found.", "are you looking for someone?", "...he's closer than you think.", "found."] };
+  function show404() {
+    if (doc().getElementById("glitch404")) return;
+    save.find404 = (save.find404 || 0) + 1;
+    const n = save.find404, have = (save.merchKinds || []).includes(FIND404.kind);
+    const text = have ? "404: friend found. you already have him." : n >= FIND404.taps ? FIND404.lines[4] : FIND404.lines[Math.min(n, 4) - 1];
+    const ov = doc().createElement("div"); ov.id = "glitch404";
+    ov.innerHTML = `<canvas width="160" height="40"></canvas><div class="g4t">ERROR 404</div><div class="g4s"></div><div class="g4h">tap anywhere to close</div>`;
+    ov.querySelector(".g4s").textContent = text; doc().body.appendChild(ov);
+    const cv = ov.querySelector("canvas"), g = cv.getContext("2d"); let tt = 0, alive = true;
+    const eye = (cx, col) => { g.fillStyle = col; for (const [x, y] of [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]]) g.fillRect(cx + x * 6, 12 + y * 6, 6, 6); };
+    (function frame() { if (!alive) return; tt += 0.02; g.clearRect(0, 0, 160, 40);
+      const col = Math.sin(tt * 2) > 0 ? "#ff2a3a" : "#2a6aff"; g.shadowColor = col; g.shadowBlur = 12; eye(40, col); eye(102, col);
+      if (Math.floor(tt * 1.7) % 9 === 0) g.clearRect(0, 18, 160, 5); requestAnimationFrame(frame); })();
+    sfx("zap"); const closeAt = Date.now() + 1400;
+    ov.onclick = () => {
+      if (Date.now() < closeAt) return; alive = false; ov.remove();
+      if (n >= FIND404.taps && !have) {
+        save.merchKinds = save.merchKinds || []; save.merchKinds.push(FIND404.kind);
+        const p = addPet(FIND404.kind, { quiet: true }); sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);
+        if (p) { say(p, "x_x ...hi.", 4); setFace(p, "happy", 2); burst(p, "heart", 10); }
+        toast("🕳️ You found Error 404!", 6);
+      }
+      persist(true);
+    };
+    persist(true);
+  }
+  doc().addEventListener("pointerdown", (ev) => {
+    const W = view.innerWidth, H = view.innerHeight;
+    if (ev.clientX < W - 44 || ev.clientY < H - 44 || ev.target.closest && ev.target.closest(".sheet")) return;
+    if ([...doc().querySelectorAll(".sheet")].some((s) => !s.hidden)) return;
+    show404();
+  });
   // 🎂 Cake Day: on one day, gift boxes pop up in town. No chance involved (our motto: no gambling): every box gives hearts, and some
   // boxes are a guaranteed prize (box number -> the figure whose "Cursed Figure" color you get). The numbers come from blip.pyw.
   const CAKE = D.cakeDay || null;

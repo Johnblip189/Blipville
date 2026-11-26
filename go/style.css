@@ -446,3 +446,10 @@ button { touch-action: manipulation; }
 .cakeBox { position: fixed; z-index: 30; font-size: 52px; line-height: 1; background: none; border: 0; cursor: pointer; padding: 4px;
   animation: cakeBob 0.7s ease-in-out infinite alternate; filter: drop-shadow(0 4px 0 rgba(0,0,0,.25)); }
 @keyframes cakeBob { from { transform: translateY(0) rotate(-6deg); } to { transform: translateY(-14px) rotate(6deg); } }
+
+#glitch404 { position: fixed; inset: 0; z-index: 200; background: #000; color: #f4f6fa; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 14px; font-family: ui-monospace, "Courier New", monospace; text-align: center; padding: 24px; cursor: pointer; }
+#glitch404 canvas { width: 320px; height: 80px; image-rendering: pixelated; }
+#glitch404 .g4t { font-size: 34px; letter-spacing: 6px; color: #ff4a5a; }
+#glitch404 .g4s { font-size: 18px; max-width: 520px; }
+#glitch404 .g4h { position: absolute; bottom: 18px; font-size: 12px; opacity: .35; }

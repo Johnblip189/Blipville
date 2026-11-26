@@ -3537,6 +3537,9 @@ GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest on
 GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
 GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
+# 🕳️ Secret Blips: locked for everyone until found (found = added to merch_kinds, which saves and save codes already carry).
+SECRET_KINDS = {"Error 404"}      # found by tapping a screen corner on the website (see go/app.js)
+
 # 🎂 Cake Day (Dec 8): gift boxes pop up in town all day, so staying active pays. No chance involved (our motto: no
 # gambling): every box gives `hearts`, and some boxes are a guaranteed prize: box number -> the Series 1 figure whose
 # "Cursed Figure" color you get. `max` = boxes per player, `every` = seconds between boxes.
@@ -11449,6 +11452,8 @@ class App:
     def is_unlocked(self, kind):
         if kind in self.save.get("merch_kinds", []):     # 🎟️ came with a merch code
             return True
+        if kind in SECRET_KINDS:                         # 🕳️ a hidden Blip: only once it's been found
+            return False
         owners = [h for h, ks in MOD_CODE_KINDS.items() if kind in ks]
         if owners:
             return self.save.get("mod_code") in owners

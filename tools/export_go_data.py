@@ -74,6 +74,7 @@ data = {
                        if t[0] not in getattr(bl, "DESKTOP_TROPHIES", ())],
     "trophyCup": bl.TROPHY_CUP,
     "cakeDay": bl.CAKE_DAY,
+    "secretKinds": sorted(bl.SECRET_KINDS),
     "month1": bl.MONTH_ONE,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,

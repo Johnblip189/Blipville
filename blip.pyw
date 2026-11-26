@@ -3849,7 +3849,7 @@ PROWL = {
              dict(name='Storm', o='#10182a', b='#7a8aa8', l='#e8eef8', i='#ff9ab0', n='#080c14', e='#080c14', c='#3a4a68')]},
 }
 NEW_ANIMALS.update({
- "Error 404": {"eyes": 5, "move": "walk", "speed": 1.0, "mouth": True, "xeyes": True, "shifty": True,
+ "Error 404": {"eyes": 5, "move": "walk", "speed": 1.0, "mouth": True, "xeyes": True, "shifty": True, "fade": True,
   "lines": ["x_x", "error 404: friend not found", "have you tried turning me off and on?", "404: motivation not found", "*glitches politely*", "i'm fine. everything is fine. x_x"],
   "body": [".oo..........oo.", ".o1o........o1o.", ".o2po.oooo.op0o.", ".o331oW331o331o.", "o44444W44444442o", "o55555555555553o", "o66666666666664o", "o7p7777777777p5o", "o688888CC888886o", ".o9999CCCC9997o.", ".o88ACCCCCCA88o.", "..oo99999999oo.."],
   "colors": [{"name": "Blue Screen", "o": "#06103a", "p": "#ff9ac0", "e": "#ff2a3a", "W": "#e6f0ff", "b": "#3c68c7", "0": "#0a2a9a", "1": "#1436a3", "2": "#1e43ac", "3": "#284fb5", "4": "#325cbe", "5": "#3c68c7", "6": "#4775d1", "7": "#5181da", "8": "#5b8ee3", "9": "#659aec", "A": "#6fa7f5", "C": "#7ab4ff"},
@@ -3863,7 +3863,7 @@ for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIF
                        "feet": (_a["feet"] if isinstance(_a.get("feet"), dict) else FEET_STD if _a.get("feet", True) else None), "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
                        "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False),
-                       **{k: _a[k] for k in VOICE_KEYS + ("portrait", "xeyes") if k in _a}}
+                       **{k: _a[k] for k in VOICE_KEYS + ("portrait", "xeyes", "fade") if k in _a}}
 
 
 def voice(kind, key, default):
@@ -6410,6 +6410,7 @@ class Blip:
 
         if VARIANTS[self.kind].get("shifty") and now > self.next_shift and self.state not in ("sleep", "held"):
             self.next_shift = now + random.uniform(8, 15)
+            self.fade_from, self.fade_t0 = self.palette, now
             self.palette = (self.palette + 1) % len(kind_colors(self.kind))
             if random.random() < 0.4:
                 self.say("*changes color*", 1.8)
@@ -6567,6 +6568,13 @@ class Blip:
         v = VARIANTS[self.kind]
         colors = kind_colors(self.kind)
         pal = {**colors[self.palette % len(colors)], **v.get("extra", {})}
+        fade_from = getattr(self, "fade_from", None)
+        if v.get("fade") and fade_from is not None and now - self.fade_t0 < SHIFT_FADE:      # a smooth color change, not a snap
+            f = (now - self.fade_t0) / SHIFT_FADE
+            f = f * f * (3 - 2 * f)
+            old = {**colors[fade_from % len(colors)], **v.get("extra", {})}
+            pal = {k: (_mix(old[k], c, f) if isinstance(c, str) and c.startswith("#") and len(c) == 7 and str(old.get(k, "")).startswith("#") and len(old[k]) == 7 else c)
+                   for k, c in pal.items()}
         v, pal = plush_view(self.kind, pal)          # 🧸 a Bad Dream is a plushie until midnight
         if pal.get("glitch") is not None and glitching(now + id(self) % 50 / 10):
             pal = {**colors[pal["glitch"]], **v.get("extra", {})}   # ⚡ a split-second flicker back to an old look
@@ -7562,6 +7570,7 @@ def _mix(c1, c2, f):
 
 
 _PX = {}
+SHIFT_FADE = 2.0            # seconds a Blip with a smooth color change ("fade") takes to switch colors
 
 
 def px_color(pal, ch):

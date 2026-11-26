@@ -355,7 +355,7 @@
     p.hunger = Math.min(100, p.hunger + dt * 0.08);
     if (p.playing) return;                           // a game of catch / tag is moving it
     if (k.shifty && t > p.nextShift && p.state !== "sleep" && p.state !== "held") {
-      p.nextShift = t + rnd(8, 15); p.color = (p.color + 1) % k.colors.length;
+      p.nextShift = t + rnd(8, 15); if (k.fade) { p.fadeFrom = p.color; p.fadeT0 = t; } p.color = (p.color + 1) % k.colors.length;
       if (Math.random() < 0.4) say(p, "*changes color*", 1.8);
     }
     const speed = 64 * (S / 4) * (k.speed || 1);
@@ -517,6 +517,12 @@
     if (k.plush && !badDreamHour()) { k = { ...k, body: k.plush.body, eyes: k.plush.eyes, xeye: false }; cols = k.plush.colors; }   // 🧸 plushie by day
     const t = opt.t ?? now(), st = opt.state || "idle";
     let pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
+    if (k.fade && opt.fade && t - opt.fade[1] < 2) {            // a smooth color change (not a snap)
+      let f = (t - opt.fade[1]) / 2; f = f * f * (3 - 2 * f);
+      const old = Object.assign({}, cols[opt.fade[0] % cols.length], k.extra || {}), hex = (c) => typeof c === "string" && /^#[0-9a-f]{6}$/i.test(c), m = {};
+      for (const key of Object.keys(pal)) m[key] = hex(pal[key]) && hex(old[key]) ? mixHex(old[key], pal[key], f) : pal[key];
+      pal = m;
+    }
     if (opt.live && pal.glitch != null && glitching(t + (opt.phase || 0))) pal = Object.assign({}, cols[pal.glitch], k.extra || {});   // ⚡ flicker to an old look
     let body = pal.art || k.body;
     if (opt.live && pal.glitch_art && glitching(t)) body = pal.glitch_art;      // 📼 Classic: flicker back to the old drawing
@@ -989,7 +995,7 @@
     const face = t < p.faceUntil ? p.face : "normal";
     if (KINDS[p.kind].ghost && !KINDS[p.kind].colors[p.color % KINDS[p.kind].colors.length].solid) ctx.globalAlpha = 0.8;   // ghosts stay a little see-through (unless the color is solid)
     const K = KINDS[p.kind], soul = K.soul ? new Set([...K.soul].map((ch) => K.colors[p.color % K.colors.length][ch]).filter(Boolean)) : null;
-    drawGrid(ctx, grid(p.kind, p.color, { t, live: true, blush: t < (p.blushUntil || 0), state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
+    drawGrid(ctx, grid(p.kind, p.color, { t, live: true, fade: p.fadeFrom != null ? [p.fadeFrom, p.fadeT0] : null, blush: t < (p.blushUntil || 0), state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
              soul, soul ? ghostAlpha(t, p.x * 0.01) * 0.75 : 1);
     ctx.globalAlpha = 1;
     const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;

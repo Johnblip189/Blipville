@@ -1,5 +1,7 @@
 ## 💜 Blipville 1.0
 
+> **1.0.17:** ✨ Two new faces. One of them is hiding. 👀
+>
 > **1.0.16:** ✨ Presents for everyone. 🎁
 >
 > **1.0.15:** ✨ A little something for a special day. 🎂

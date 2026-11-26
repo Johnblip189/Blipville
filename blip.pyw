@@ -3537,6 +3537,9 @@ GIFT_NOW = GIFT_DROPS[-1]["kind"] if GIFT_DROPS else None        # the newest on
 GIFT_UNTIL = GIFT_DROPS[-1]["until"] if GIFT_DROPS else ""
 GIFT_UNTIL_TEXT = GIFT_DROPS[-1]["until_text"] if GIFT_DROPS else ""
 
+# 🕳️ Secret Blips: locked for everyone until found (found = added to merch_kinds, which saves and save codes already carry).
+SECRET_KINDS = {"Error 404"}      # found by tapping a screen corner on the website (see go/app.js)
+
 # 🎂 Cake Day (Dec 8): gift boxes pop up in town all day, so staying active pays. No chance involved (our motto: no
 # gambling): every box gives `hearts`, and some boxes are a guaranteed prize: box number -> the Series 1 figure whose
 # "Cursed Figure" color you get. `max` = boxes per player, `every` = seconds between boxes.
@@ -3856,6 +3859,11 @@ NEW_ANIMALS.update({
   "colors": [{"name": "Roly-Poly", "o": "#1a1e28", "b": "#7a8296", "B": "#5a6276", "l": "#b8c0d4", "a": "#4a5266", "p": "#ff9ab0", "e": "#10121a"},
              {"name": "Orange", "o": "#3a1a08", "b": "#f09a3a", "B": "#c8701a", "l": "#ffd89a", "a": "#8a4a14", "p": "#ff8a7a", "e": "#2a1004"},
              {"name": "Magic Potion", "o": "#140a2a", "b": "#6a5ad8", "B": "#4a3aa8", "l": "#b8a8ff", "a": "#3a2a88", "p": "#ff8ad0", "e": "#0a0618"}]},
+ "Error 404": {"eyes": 5, "move": "walk", "speed": 1.0, "mouth": True, "xeyes": True, "shifty": True, "fade": True,
+  "lines": ["x_x", "error 404: friend not found", "have you tried turning me off and on?", "404: motivation not found", "*glitches politely*", "i'm fine. everything is fine. x_x"],
+  "body": [".oo..........oo.", ".o1o........o1o.", ".o2po.oooo.op0o.", ".o331oW331o331o.", "o44444W44444442o", "o55555555555553o", "o66666666666664o", "o7p7777777777p5o", "o688888CC888886o", ".o9999CCCC9997o.", ".o88ACCCCCCA88o.", "..oo99999999oo.."],
+  "colors": [{"name": "Blue Screen", "o": "#06103a", "p": "#ff9ac0", "e": "#ff2a3a", "W": "#e6f0ff", "b": "#3c68c7", "0": "#0a2a9a", "1": "#1436a3", "2": "#1e43ac", "3": "#284fb5", "4": "#325cbe", "5": "#3c68c7", "6": "#4775d1", "7": "#5181da", "8": "#5b8ee3", "9": "#659aec", "A": "#6fa7f5", "C": "#7ab4ff"},
+             {"name": "Red Screen", "o": "#3a0610", "p": "#ffd0a0", "e": "#2a6aff", "W": "#fff0e6", "b": "#c74445", "0": "#9a0a1a", "1": "#a31522", "2": "#ac212b", "3": "#b52c34", "4": "#be383c", "5": "#c74445", "6": "#d14f4e", "7": "#da5b57", "8": "#e3675f", "9": "#ec7268", "A": "#f57e71", "C": "#ff8a7a"}]},
 })
 PROWL_KINDS = list(PROWL)
 
@@ -3865,7 +3873,7 @@ for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIF
                        "feet": (_a["feet"] if isinstance(_a.get("feet"), dict) else FEET_STD if _a.get("feet", True) else None), "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
                        "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False),
-                       **{k: _a[k] for k in VOICE_KEYS + ("portrait",) if k in _a}}
+                       **{k: _a[k] for k in VOICE_KEYS + ("portrait", "xeyes", "fade") if k in _a}}
 
 
 def voice(kind, key, default):
@@ -6412,6 +6420,7 @@ class Blip:
 
         if VARIANTS[self.kind].get("shifty") and now > self.next_shift and self.state not in ("sleep", "held"):
             self.next_shift = now + random.uniform(8, 15)
+            self.fade_from, self.fade_t0 = self.palette, now
             self.palette = (self.palette + 1) % len(kind_colors(self.kind))
             if random.random() < 0.4:
                 self.say("*changes color*", 1.8)
@@ -6569,6 +6578,13 @@ class Blip:
         v = VARIANTS[self.kind]
         colors = kind_colors(self.kind)
         pal = {**colors[self.palette % len(colors)], **v.get("extra", {})}
+        fade_from = getattr(self, "fade_from", None)
+        if v.get("fade") and fade_from is not None and now - self.fade_t0 < SHIFT_FADE:      # a smooth color change, not a snap
+            f = (now - self.fade_t0) / SHIFT_FADE
+            f = f * f * (3 - 2 * f)
+            old = {**colors[fade_from % len(colors)], **v.get("extra", {})}
+            pal = {k: (_mix(old[k], c, f) if isinstance(c, str) and c.startswith("#") and len(c) == 7 and str(old.get(k, "")).startswith("#") and len(old[k]) == 7 else c)
+                   for k, c in pal.items()}
         v, pal = plush_view(self.kind, pal)          # 🧸 a Bad Dream is a plushie until midnight
         if pal.get("glitch") is not None and glitching(now + id(self) % 50 / 10):
             pal = {**colors[pal["glitch"]], **v.get("extra", {})}   # ⚡ a split-second flicker back to an old look
@@ -6630,12 +6646,17 @@ class Blip:
                 px(ex, 6, e); px(ex + 1, 6, e)
         else:
             ox, oy = (0, 0) if face == "surprised" else self.eye_offset()
-            for ex in (4, 10):
-                size = 2
-                for yy in range(size):
-                    for xx in range(size):
-                        px(ex + ox + xx, 5 + oy + yy, e)
-                px(ex + ox, 5 + oy, white)
+            if v.get("xeyes"):                                # x_x: a 3x3 X for each eye
+                for ex in (4, 9):
+                    for xx, yy in ((0, 0), (2, 0), (1, 1), (0, 2), (2, 2)):
+                        px(ex + ox + xx, 4 + oy + yy, e)
+            else:
+                for ex in (4, 10):
+                    size = 2
+                    for yy in range(size):
+                        for xx in range(size):
+                            px(ex + ox + xx, 5 + oy + yy, e)
+                    px(ex + ox, 5 + oy, white)
             if v.get("xeye"):
                 draw_xeye(px, pal)
         # mouth (beaks and snouts are part of the art instead)
@@ -7215,6 +7236,10 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
             g[er + 1][ex] = g[er][ex + 1] = e
             if ex + 2 < ART_W:
                 g[er + 1][ex + 2] = e
+        elif v.get("xeyes"):                                  # x_x
+            xx0 = ex if ex < 8 else ex - 1
+            for ax, ay in ((0, 0), (2, 0), (1, 1), (0, 2), (2, 2)):
+                g[er - 1 + ay][xx0 + ax] = e
         else:
             for a in range(2):
                 for b in range(2):
@@ -7555,6 +7580,7 @@ def _mix(c1, c2, f):
 
 
 _PX = {}
+SHIFT_FADE = 2.0            # seconds a Blip with a smooth color change ("fade") takes to switch colors
 
 
 def px_color(pal, ch):
@@ -8550,7 +8576,7 @@ _SPROUT = {"Ocelot", "Sprout", "Caterpillar", "Ladybug", "Butterfly", "Mantis", 
 
 # The 6 newer types. These lists come first, so a Blip listed here keeps that type even if an older list names it too.
 _NEW_TYPES = {
- "volt": {"Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox", "Gigabot", "Volthorn", "Thunderwing", "Stormcrab", "Clockwork Rex", "Eel", "Thunderbird",
+ "volt": {"Error 404", "Robo Bear", "Robo Bunny", "Robo Hen", "Robo Fox", "Gigabot", "Volthorn", "Thunderwing", "Stormcrab", "Clockwork Rex", "Eel", "Thunderbird",
           "Byte", "Zorp", "UFO", "Flatwoods Monster", "Dover Demon", "Van Meter Visitor", "Bug Hunter", "Patch", "Jellyfish", "Anglerfish"},
  "stone": {"Isopod", "Rock Golem", "Boulderback", "Tremorpede", "Sandsnapper", "Armadillo", "Pangolin", "Rhino", "Ankylosaurus",
            "Triceratops", "Stegosaurus", "Brachiosaurus", "Crystal Stego", "Fossilbones", "Mole", "Death Worm", "Mokele-mbembe",
@@ -11433,6 +11459,8 @@ class App:
     def is_unlocked(self, kind):
         if kind in self.save.get("merch_kinds", []):     # 🎟️ came with a merch code
             return True
+        if kind in SECRET_KINDS:                         # 🕳️ a hidden Blip: only once it's been found
+            return False
         owners = [h for h, ks in MOD_CODE_KINDS.items() if kind in ks]
         if owners:
             return self.save.get("mod_code") in owners

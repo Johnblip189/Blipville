@@ -29,6 +29,10 @@ for k in list(bl.KINDS) + list(bl.PROWL_KINDS) + list(bl.AWAKEN_BASE) + list(get
     kinds[k]["voice"] = list(bl.voice_of(k)) if hasattr(bl, "voice_of") else None
     if v.get("portrait"):
         kinds[k]["portrait"] = v["portrait"]
+    if v.get("xeyes"):
+        kinds[k]["xeyes"] = True
+    if v.get("fade"):
+        kinds[k]["fade"] = True
     if v.get("plush"):
         kinds[k].update(plush=v["plush"], xeye=bool(v.get("xeye")))
 data = {
@@ -70,6 +74,7 @@ data = {
                        if t[0] not in getattr(bl, "DESKTOP_TROPHIES", ())],
     "trophyCup": bl.TROPHY_CUP,
     "cakeDay": bl.CAKE_DAY,
+    "secretKinds": sorted(bl.SECRET_KINDS),
     "month1": bl.MONTH_ONE,
     "kaijuHits": bl.KAIJU_HITS,
     "giftNow": bl.GIFT_NOW,

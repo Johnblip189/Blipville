@@ -213,7 +213,8 @@
   const MODK = new Set(D.modKinds || []);
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
-  const isUnlocked = (k) => NEXUS_ID[k] ? (save.apexNexusCores || []).includes(NEXUS_ID[k]) : (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const SECRET = new Set(D.secretKinds || []);
+  const isUnlocked = (k) => SECRET.has(k) ? (save.merchKinds || []).includes(k) : NEXUS_ID[k] ? (save.apexNexusCores || []).includes(NEXUS_ID[k]) : (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -355,7 +356,7 @@
     p.hunger = Math.min(100, p.hunger + dt * 0.08);
     if (p.playing) return;                           // a game of catch / tag is moving it
     if (k.shifty && t > p.nextShift && p.state !== "sleep" && p.state !== "held") {
-      p.nextShift = t + rnd(8, 15); p.color = (p.color + 1) % k.colors.length;
+      p.nextShift = t + rnd(8, 15); if (k.fade) { p.fadeFrom = p.color; p.fadeT0 = t; } p.color = (p.color + 1) % k.colors.length;
       if (Math.random() < 0.4) say(p, "*changes color*", 1.8);
     }
     const speed = 64 * (S / 4) * (k.speed || 1);
@@ -517,6 +518,12 @@
     if (k.plush && !badDreamHour()) { k = { ...k, body: k.plush.body, eyes: k.plush.eyes, xeye: false }; cols = k.plush.colors; }   // 🧸 plushie by day
     const t = opt.t ?? now(), st = opt.state || "idle";
     let pal = Object.assign({}, cols[colorIdx % cols.length], k.extra || {});
+    if (k.fade && opt.fade && t - opt.fade[1] < 2) {            // a smooth color change (not a snap)
+      let f = (t - opt.fade[1]) / 2; f = f * f * (3 - 2 * f);
+      const old = Object.assign({}, cols[opt.fade[0] % cols.length], k.extra || {}), hex = (c) => typeof c === "string" && /^#[0-9a-f]{6}$/i.test(c), m = {};
+      for (const key of Object.keys(pal)) m[key] = hex(pal[key]) && hex(old[key]) ? mixHex(old[key], pal[key], f) : pal[key];
+      pal = m;
+    }
     if (opt.live && pal.glitch != null && glitching(t + (opt.phase || 0))) pal = Object.assign({}, cols[pal.glitch], k.extra || {});   // ⚡ flicker to an old look
     let body = pal.art || k.body;
     if (opt.live && pal.glitch_art && glitching(t)) body = pal.glitch_art;      // 📼 Classic: flicker back to the old drawing
@@ -547,7 +554,8 @@
     else if (face === "munch") { for (const ex of [4, 10]) { px(ex, 6, e); px(ex + 1, 6, e); } }
     else {
       const [ox, oy] = face === "surprised" ? [0, 0] : (opt.look || [0, 0]);
-      for (const ex of [4, 10]) { for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) px(ex + ox + a, 5 + oy + b, e); px(ex + ox, 5 + oy, shine); }
+      if (k.xeyes) { for (const ex of [4, 9]) for (const [xx, yy] of [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]]) px(ex + ox + xx, 4 + oy + yy, e); }   // x_x
+      else for (const ex of [4, 10]) { for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) px(ex + ox + a, 5 + oy + b, e); px(ex + ox, 5 + oy, shine); }
       if (k.xeye) for (let i = 0; i < 4; i++) { px(3 + i, 4 + i, pal.x || pal.o); px(6 - i, 4 + i, pal.x || pal.o); }   // a stitched X where a button came off
     }
     if (k.mouth) {
@@ -988,7 +996,7 @@
     const face = t < p.faceUntil ? p.face : "normal";
     if (KINDS[p.kind].ghost && !KINDS[p.kind].colors[p.color % KINDS[p.kind].colors.length].solid) ctx.globalAlpha = 0.8;   // ghosts stay a little see-through (unless the color is solid)
     const K = KINDS[p.kind], soul = K.soul ? new Set([...K.soul].map((ch) => K.colors[p.color % K.colors.length][ch]).filter(Boolean)) : null;
-    drawGrid(ctx, grid(p.kind, p.color, { t, live: true, blush: t < (p.blushUntil || 0), state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
+    drawGrid(ctx, grid(p.kind, p.color, { t, live: true, fade: p.fadeFrom != null ? [p.fadeFrom, p.fadeT0] : null, blush: t < (p.blushUntil || 0), state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
              soul, soul ? ghostAlpha(t, p.x * 0.01) * 0.75 : 1);
     ctx.globalAlpha = 1;
     const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;
@@ -1277,9 +1285,20 @@
     if (bump) { const h = $("hearts"); h.classList.remove("bump"); void h.offsetWidth; h.classList.add("bump"); }
   }
   let toastTimer = null;
-  function toast(text, secs = 3) {
-    const el = $("toast"); el.textContent = text; el.classList.add("show");
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), secs * 1000);
+  // 🕳️ once Error 404 has been found, every pop-up is glitched morse code (it spells out when the next update is coming)
+  const MORSE_MSG = "UPDATE JAN 1";
+  const MORSE = { A: ".-", B: "-...", C: "-.-.", D: "-..", E: ".", F: "..-.", G: "--.", H: "....", I: "..", J: ".---", K: "-.-", L: ".-..", M: "--", N: "-.", O: "---", P: ".--.", Q: "--.-", R: ".-.", S: "...", T: "-", U: "..-", V: "...-", W: ".--", X: "-..-", Y: "-.--", Z: "--..", 1: ".----", 2: "..---", 3: "...--", 4: "....-", 5: ".....", 6: "-....", 7: "--...", 8: "---..", 9: "----.", 0: "-----" };
+  const morseText = [...MORSE_MSG].map((c) => (c === " " ? "/" : MORSE[c])).join(" ");
+  let glitchTimer = 0;
+  function toast(text, secs = 3, plain = false) {
+    const el = $("toast"); clearInterval(glitchTimer);
+    if (!plain && (save.merchKinds || []).includes("Error 404")) {
+      el.classList.add("morse"); secs = Math.max(secs, 4.5);
+      const junk = "▒░▓█/\\|#", paint = () => { el.textContent = [...morseText].map((c) => (c !== " " && Math.random() < 0.09 ? junk[Math.floor(Math.random() * junk.length)] : c)).join(""); };
+      paint(); glitchTimer = setInterval(paint, 90);
+    } else { el.classList.remove("morse"); el.textContent = text; }
+    el.classList.add("show");
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.classList.remove("show"); clearInterval(glitchTimer); }, secs * 1000);
   }
   const vibrate = (ms) => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { /* not supported */ } };
   // ------------------------------------------------------------------ trophies 🏆 (the list comes from blip.pyw)
@@ -3058,6 +3077,64 @@
       persist(true);
   };
   drops.forEach((d, i) => setTimeout(() => deliverGift(d), 2600 + i * 7500));
+  // 🕳️ a hidden Blip: tap the bottom-right corner of the screen. Every time it's a black screen with some text and his eyes, and the
+  // background slowly turns into an ice-covered cavern. The 3rd time he's found. (Nothing random: every tap counts.)
+  const FIND404 = { kind: "Error 404", taps: 3, lines: ["page not found.", "it's getting cold in here...", "found."], ice: [0, 0.34, 0.67, 1] };
+  function drawIce(g, w, h, level, t) {                        // pixel-art ice cavern; `level` 0 = black ... 1 = fully iced over
+    let seed = 404; const rnd = () => { seed = (seed + 0x6D2B79F5) | 0; let x = Math.imul(seed ^ (seed >>> 15), 1 | seed); x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x; return ((x ^ (x >>> 14)) >>> 0) / 4294967296; };
+    const grow = (th) => Math.max(0, Math.min(1, (level - th) / 0.35));
+    const grad = g.createLinearGradient(0, 0, 0, h); grad.addColorStop(0, `rgb(${2 + 6 * level},${6 + 18 * level},${15 + 34 * level})`); grad.addColorStop(1, `rgb(${3 + 10 * level},${10 + 34 * level},${24 + 58 * level})`);
+    g.fillStyle = grad; g.fillRect(0, 0, w, h);
+    const spike = (x, base, dir, wd, ht) => {                   // a stalactite (dir 1, from the top) or stalagmite (dir -1)
+      for (let r = 0; r < ht; r++) { const f = 1 - r / ht, half = Math.max(0, Math.round(wd * f)), y = dir > 0 ? base + r : base - r;
+        g.fillStyle = r > ht * 0.8 ? "#d8f4ff" : r > ht * 0.45 ? "#8cc8f0" : "#4a86b8"; g.fillRect(x - half, y, half * 2 + 1, 1);
+        g.fillStyle = "#1e4a78"; g.fillRect(x - half, y, 1, 1); g.fillRect(x + half, y, 1, 1); }
+    };
+    for (let i = 0; i < 26; i++) { const x = Math.floor(rnd() * w), wd = 2 + Math.floor(rnd() * 4), ht = 8 + Math.floor(rnd() * h * 0.26), th = rnd() * 0.75, top = rnd() < 0.55, gr = grow(th);
+      if (gr > 0) spike(x, top ? 0 : h, top ? 1 : -1, Math.max(1, Math.round(wd * gr)), Math.round(ht * gr)); }
+    for (let i = 0; i < 6; i++) { const side = i % 2 ? 1 : 0, x = side ? w - 2 - Math.floor(rnd() * w * 0.16) : 2 + Math.floor(rnd() * w * 0.16), th = 0.35 + rnd() * 0.4, gr = grow(th);
+      const ht = Math.round((14 + rnd() * h * 0.22) * gr), wd = 2 + Math.floor(rnd() * 3); if (gr > 0) { spike(x, h, -1, wd, ht); spike(x + (side ? -4 : 4), h, -1, Math.max(1, wd - 1), Math.round(ht * 0.7)); } }
+    for (let i = 0; i < 70; i++) { const x = Math.floor(rnd() * w), y = Math.floor(rnd() * h), th = rnd(), tw = (Math.sin(t * 2 + i) + 1) / 2;
+      if (level > th * 0.8 && tw > 0.5) { g.fillStyle = tw > 0.9 ? "#ffffff" : "#9fdcff"; g.fillRect(x, y, 1, 1); } }
+    const v = g.createRadialGradient(w / 2, h / 2, h * 0.12, w / 2, h / 2, h * 0.75); v.addColorStop(0, "rgba(0,0,0,0.7)"); v.addColorStop(1, "rgba(0,0,0,0)");
+    g.fillStyle = v; g.fillRect(0, 0, w, h);                  // keeps the middle dark so the eyes and text stay readable
+  }
+  function show404() {
+    if (doc().getElementById("glitch404")) return;
+    save.find404 = (save.find404 || 0) + 1;
+    const n = save.find404, have = (save.merchKinds || []).includes(FIND404.kind), last = n >= FIND404.taps;
+    const text = have ? "404: friend found. you already have him." : FIND404.lines[Math.min(n, FIND404.taps) - 1];
+    const from = have ? 1 : FIND404.ice[Math.min(n, FIND404.taps) - 1], to = have ? 1 : FIND404.ice[Math.min(n, FIND404.taps)];
+    const ov = doc().createElement("div"); ov.id = "glitch404";
+    ov.innerHTML = `<canvas class="g4bg"></canvas><canvas class="g4eyes" width="160" height="40"></canvas><div class="g4t">ERROR 404</div><div class="g4s"></div><div class="g4h">tap anywhere to close</div>`;
+    ov.querySelector(".g4s").textContent = text; doc().body.appendChild(ov);
+    const bg = ov.querySelector(".g4bg"), PX = 6; bg.width = Math.ceil(view.innerWidth / PX); bg.height = Math.ceil(view.innerHeight / PX);
+    const bgc = bg.getContext("2d"), cv = ov.querySelector(".g4eyes"), g = cv.getContext("2d"); let tt = 0, alive = true; const t0 = Date.now();
+    const eye = (cx, col) => { g.fillStyle = col; for (const [x, y] of [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]]) g.fillRect(cx + x * 6, 12 + y * 6, 6, 6); };
+    (function frame() { if (!alive) return; tt += 0.02;
+      const k = Math.min(1, (Date.now() - t0) / 3500), e = 1 - Math.pow(1 - k, 3);          // the ice grows in slowly
+      drawIce(bgc, bg.width, bg.height, from + (to - from) * e, tt);
+      g.clearRect(0, 0, 160, 40); const col = Math.sin(tt * 2) > 0 ? "#ff2a3a" : "#2a6aff"; g.shadowColor = col; g.shadowBlur = 12; eye(40, col); eye(102, col);
+      if (Math.floor(tt * 1.7) % 9 === 0) g.clearRect(0, 18, 160, 5); requestAnimationFrame(frame); })();
+    sfx("zap"); const closeAt = Date.now() + 1400;
+    ov.onclick = () => {
+      if (Date.now() < closeAt) return; alive = false; ov.remove();
+      if (last && !have) {
+        save.merchKinds = save.merchKinds || []; save.merchKinds.push(FIND404.kind);
+        const p = addPet(FIND404.kind, { quiet: true }); sfx("fanfare"); vibrate([20, 30, 20, 30, 40]);
+        if (p) { burst(p, "heart", 12); setFace(p, "happy", 4); }
+        toast("finally after being frozen in the lines of code im free", 7, true);
+      }
+      persist(true);
+    };
+    persist(true);
+  }
+  doc().addEventListener("pointerdown", (ev) => {
+    const W = view.innerWidth, H = view.innerHeight;
+    if (ev.clientX < W - 44 || ev.clientY < H - 44 || ev.target.closest && ev.target.closest(".sheet")) return;
+    if ([...doc().querySelectorAll(".sheet")].some((s) => !s.hidden)) return;
+    show404();
+  });
   // 🎂 Cake Day: on one day, gift boxes pop up in town. No chance involved (our motto: no gambling): every box gives hearts, and some
   // boxes are a guaranteed prize (box number -> the figure whose "Cursed Figure" color you get). The numbers come from blip.pyw.
   const CAKE = D.cakeDay || null;

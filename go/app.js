@@ -25,7 +25,7 @@
   const CRYPT = new Set(D.groups.cryptids);
   const KAIJU = new Set([...(D.groups.kaiju || []), ...(D.parkedKinds || [])]), HITS = D.kaijuHits || 3;
   const GIFTS = new Set(D.groups.gifts || []);
-  const GIZMOS = new Set(D.groups.gizmos || []);
+  const GIZMOS = new Set(D.groups.gizmos || []), SHOPKEEPER = new Set(D.groups.shopkeeper || []);
   const LEG = new Set(D.groups.legends || []), LEGEND_WORLD = D.legendWorld || {};   // world legends
   const GHOST = new Set(D.groups.ghosts || []);
   const DREAMS = new Set(Object.keys(D.badDreams || {}));          // 🧸 Bad Dreams (plushies until midnight)
@@ -215,7 +215,7 @@
   const modCode = () => { try { return localStorage.getItem("blipville-mod"); } catch (e) { return null; } };
   const codeOwners = (k) => Object.keys(D.modCodeKinds || {}).filter((h) => D.modCodeKinds[h].includes(k));   // 💎 one moderator code's own Blips
   const SECRET = new Set(D.secretKinds || []);
-  const isUnlocked = (k) => SECRET.has(k) ? (save.merchKinds || []).includes(k) : NEXUS_ID[k] ? (save.apexNexusCores || []).includes(NEXUS_ID[k]) : (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIZMOS.has(k) ? (save.gizmos || []).includes(k) : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
+  const isUnlocked = (k) => SECRET.has(k) ? (save.merchKinds || []).includes(k) : NEXUS_ID[k] ? (save.apexNexusCores || []).includes(NEXUS_ID[k]) : (save.merchKinds || []).includes(k) || (save.eventKinds || []).includes(k) ? true : (D.groups.eventKinds || []).includes(k) ? false : DREAMS.has(k) ? save.badDreams.includes(k) : EGYPT.has(k) ? save.gods.includes(k) : codeOwners(k).length ? codeOwners(k).includes(modCode()) : MODK.has(k) ? isCreator() || isMod() : CREATOR.has(k) ? isCreator() : AWAKEN_BASE[k] ? awLevel(AWAKEN_BASE[k]) >= awStage(k) && isUnlocked(AWAKEN_BASE[k]) : GHOST.has(k) ? save.ghosts.includes(k) : LEG.has(k) ? save.legends.includes(k) : WORLD_OF[k] ? save.worlds.includes(WORLD_OF[k]) : GIZMOS.has(k) ? (save.gizmos || []).includes(k) : SHOPKEEPER.has(k) ? (save.gizmos || []).length > 0 : GIFTS.has(k) ? save.gifts.includes(k) : KAIJU.has(k) ? save.kaiju.includes(k) : CRYPT.has(k) ? save.cryptids.includes(k) : (RARE.has(k) ? save.hatched.includes(k) : NIGHT.has(k) ? D.unlocks[k] <= save.nightsWon || (save.robosFound || []).includes(k) : true);
 
   // ------------------------------------------------------------------ canvas & layout
   const cv = $("world"), ctx = cv.getContext("2d");
@@ -2060,6 +2060,7 @@
                     ["Ghosts 👻 (they drift by at night: tap one while it glows!)", D.groups.ghosts || []],
                     ["Gifts 🎁 (limited-time thank-you Blips)", D.groups.gifts || []],
                     ["Gizmos ⚙️ (buy a quest in the Workshop)", D.groups.gizmos || []],
+                    ["Workshop 🛠️ (finish your first Gizmo quest)", D.groups.shopkeeper || []],
                     [`Event 🎖️ (earn them in ${EVENT.name})`, D.groups.eventKinds || []],
                     ...(isCreator() || isMod() || (save.apexNexusCores || []).length ? [["Nexus ⚡ (wake the Cores)", D.groups.nexus || []]] : []),
                     ["Bad Dreams 🧸 (tap a Puppet Master 5 times… then fend them off)", [...DREAMS]]];
@@ -3111,7 +3112,8 @@
     gizmoState();
     for (const k of Object.keys(save.gizmoQuests)) {
       if (save.gizmos.includes(k) || !GQ[k] || gizmoProgress(k) < GQ[k].goal) continue;
-      save.gizmos.push(k);
+      const first = !save.gizmos.length; save.gizmos.push(k);
+      if (first) for (const sk of D.groups.shopkeeper || []) if (!pets.some((q) => q.kind === sk)) { const t = addPet(sk, { quiet: true }); if (t) { say(t, "first one done! i'm moving in!", 5); burst(t, "heart", 8); } }
       const p = addPet(k, { quiet: true }); sfx("fanfare"); vibrate([20, 30, 20]);
       if (p) { say(p, "quest complete! i'm built!", 4); setFace(p, "happy", 2); burst(p, "heart", 8); }
       toast(`⚙️ Quest complete! ${k} joined your town.${p ? "" : " (Your town is full: find it in the 📖 Zoo.)"}`, 5);
@@ -3123,6 +3125,9 @@
     gizmoState(); const list = $("workshopList"); list.innerHTML = "";
     const own = (D.groups.gizmos || []).filter((k) => save.gizmos.includes(k)).length;
     $("workshopCount").textContent = `${own}/${(D.groups.gizmos || []).length}`;
+    const keeper = (D.groups.shopkeeper || [])[0], hello = $("workshopHello"); hello.innerHTML = "";
+    if (keeper) { hello.appendChild(thumb(keeper, 0, false, 4)); const t = doc().createElement("div"); t.className = "gzSay";
+      const ls = KINDS[keeper].lines; t.textContent = `"${ls[Math.floor(Math.random() * ls.length)]}"`; hello.appendChild(t); }
     for (const k of D.groups.gizmos || []) {
       const q = GQ[k], done = save.gizmos.includes(k), started = !!save.gizmoQuests[k], prog = gizmoProgress(k);
       const row = doc().createElement("div"); row.className = "gzRow" + (done ? " done" : started ? " going" : "");

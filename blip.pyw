@@ -4022,10 +4022,18 @@ GIZMO_QUESTS = {
  "Cuckoo Clock": {"stat": "cookies", "goal": 63, "cost": 141, "text": "Feed your Blips 63 cookies"},
 }
 GIZMO_KINDS = list(GIZMOS)
+# 🛠️ The Workshop's shopkeeper. He moves into your town when you finish your first Gizmo quest.
+SHOPKEEPERS = {
+ "Tinker": {"eyes": 5, "move": "walk", "speed": 1.0, "feet": True, "mouth": True,
+  "lines": ["welcome to the workshop!", "buy a quest, build a friend", "i fix things. mostly with hugs", "got a gadget that needs love?", "*tightens a tiny bolt*"],
+  "body": [".oo..........oo.", ".obo........obo.", ".obpmmoooommpBo.", ".obmccmkkmccmBo.", "obbbbb*bbbbbbbBo", "obbbbbbbbbbbbbBo", "obbbbbbbbbbbbbBo", "obpbbbbbbbbbmpmo", "oBbbayaaaayabmBo", ".obbaaakkaaabmo.", ".oBBaaaaaaaaBBo.", "..ooBBBBBBBBoo.."],
+  "colors": [{"name": "Workshop", "o": "#2a1408", "b": "#f0a43a", "B": "#b8701a", "l": "#ffe0a0", "p": "#ff8a7a", "e": "#1a0e04", "k": "#5a3a1a", "m": "#b8c0cc", "c": "#8ae8ff", "a": "#8a5a2a", "y": "#ffd23a"}]},
+}
+SHOPKEEPER_KINDS = list(SHOPKEEPERS)
 PROWL_KINDS = list(PROWL)
 
 
-for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR, **PROWL, **GIZMOS}.items():
+for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIFTS, **LEGENDS, **GHOSTS, **CREATOR, **PROWL, **GIZMOS, **SHOPKEEPERS}.items():
     VARIANTS[_name] = {"body": _a["body"], "eyes": _a["eyes"], "mouth": _a.get("mouth", True),
                        "feet": (_a["feet"] if isinstance(_a.get("feet"), dict) else FEET_STD if _a.get("feet", True) else None), "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
@@ -4655,7 +4663,7 @@ WORLD_BY_NAME = {w["name"]: w for w in WORLDS}
 
 ANIMAL_KINDS = sorted([k for k in ANIMALS if k not in ROBOTS] + list(NEW_ANIMALS))
 TAB_KINDS_ALL = [k for _, ks in TAB_GROUPS for k in ks]
-KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS + PROWL_KINDS + GIZMO_KINDS + BAD_DREAM_KINDS
+KINDS = CRITTERS + ANIMAL_KINDS + TAB_KINDS_ALL + NIGHT_SHIFT + RARE_KINDS + CRYPTID_KINDS + KAIJU_KINDS + LEGEND_KINDS + GHOST_KINDS + GIFT_KINDS + PROWL_KINDS + GIZMO_KINDS + SHOPKEEPER_KINDS + BAD_DREAM_KINDS
 EGG_COST = 30                     # hearts per Mystery Egg
 LURE_COST = 20                    # hearts per Cryptid Lure
 CANDLE_COST = 40                  # hearts per Spirit Candle (ghosts come out, even in the daytime)
@@ -5837,6 +5845,7 @@ class Blip:
         self.menu.add_command(label="📖 Collection (peek at locked Blips)…", command=lambda: Collection(app))
         if FEATURES["arena"]:
             self.menu.add_command(label="⚔️ Arena…", command=lambda: Arena(app))
+        self.menu.add_command(label="⚙️ Workshop (gizmo quests)…", command=lambda: WorkshopWindow(app))
         self.menu.add_command(label="🏆 Trophies…", command=lambda: TrophyShelf(app))
         self.trophy_entry = self.menu.index("end")
         self.world_menu = tk.Menu(self.menu, tearoff=0)
@@ -5968,6 +5977,7 @@ class Blip:
         self.bond += BOND_GAIN.get(how, 1)
         now = bond_level(self.bond)
         if now > before:
+            self.app.bump("bond_ups")
             self.app.add_hearts(5 * now, self)
             self.app.sound.play("fanfare")
             self.say(f"💞 we're {BOND_TITLES[now - 1]}s now!" if now < 5 else "💞 SOULMATES! i'll never leave your side!", 4)
@@ -8712,7 +8722,7 @@ ARENA_BEATS = {"spark": ["sprout", "frost", "phantom"],   # burns leaves, melts 
 COSMIC_CRIT = 0.25
 # 👻 Phantom (the Phantom Knight's very own type): never super effective, but 1 in 5 hits passes right through it
 PHANTOM_DODGE = 0.2
-TYPE_OF = {"Phantom Knight": "phantom", "Mythkeeper": "cosmic", **{k: "volt" for k in GIZMOS}}      # machines are Volt
+TYPE_OF = {"Phantom Knight": "phantom", "Mythkeeper": "cosmic", **{k: "volt" for k in list(GIZMOS) + list(SHOPKEEPERS)}}      # machines are Volt
 FORM_MOVES = {"Lead Javelin": "Javelin Strike", "Diamond Ladybug": "Diamond Dazzle", "Puppet Box": "Pull the Strings", "Puppet Master": "Final Curtain", "Blipmaker": "Creator's Spark", "Byte": "Bug Fix", "Phantom Knight": "Phantom Slash", "Spectral Knight": "Spectral Oath", "Phantom Champion": "Champion's Charge",
               "Phantom Sovereign": "Sovereign's Judgment"}
 ARENA_MOVES = {"spark": ["Ember Pounce", "Sizzle Swipe", "Flare Boop"], "splash": ["Bubble Burst", "Splash Slam", "Tidal Hug"],
@@ -9535,6 +9545,83 @@ class TrophyShelf:
             c.create_text(mid, y0 + 99, text=how + ("" if have else f"  (+{bonus} 💖)"), fill="#9ad8a8" if have else "#c8c0e0",
                           font=("Segoe UI", 8), width=self.CELL_W - 18, justify="center")
 
+
+
+class WorkshopWindow:
+    """⚙️ The Workshop: the shopkeeper greets you, and every Gizmo shows its quest, its price and your progress."""
+    W, H, ROWS, ROW_H = 640, 640, 5, 84
+
+    def __init__(self, app):
+        self.app, self.page, self.buttons = app, 0, []
+        self.win = tk.Toplevel(app.root)
+        self.win.title("Blipville Workshop")
+        self.win.configure(bg="#1d1a2e")
+        self.win.resizable(False, False)
+        self.win.attributes("-topmost", True)
+        self.c = tk.Canvas(self.win, width=self.W, height=self.H, bg="#1d1a2e", highlightthickness=0)
+        self.c.pack(padx=6, pady=6)
+        self.c.bind("<Button-1>", self.click)
+        self.say = random.choice(VARIANTS[SHOPKEEPER_KINDS[0]]["lines"])
+        self.draw()
+
+    def click(self, e):
+        for x0, y0, x1, y1, fn in self.buttons:
+            if x0 <= e.x <= x1 and y0 <= e.y <= y1:
+                fn()
+                return
+
+    def go(self, d):
+        pages = -(-len(GIZMO_KINDS) // self.ROWS)
+        self.page = (self.page + d) % pages
+        self.draw()
+
+    def start(self, kind):
+        q = GIZMO_QUESTS[kind]
+        if not self.app.start_gizmo(kind):
+            if self.app.hearts() < q["cost"]:
+                self.say = f"that quest costs {q['cost']} hearts. you have {self.app.hearts()}!"
+        else:
+            self.say = f"quest started: {q['text'].lower()}!"
+        self.draw()
+
+    def draw(self):
+        c, app = self.c, self.app
+        c.delete("all")
+        self.buttons = []
+        own = [k for k in GIZMO_KINDS if k in app.save.get("gizmos", [])]
+        c.create_text(16, 26, anchor="w", text=f"⚙️ Workshop  {len(own)}/{len(GIZMO_KINDS)}", fill="#ffffff", font=("Segoe UI", 15, "bold"))
+        c.create_text(self.W - 16, 26, anchor="e", text=f"💖 {app.hearts()}", fill="#ff9fc0", font=("Segoe UI", 12, "bold"))
+        draw_sprite(c, SHOPKEEPER_KINDS[0], 0, 16, 46, 4)
+        c.create_rectangle(96, 52, self.W - 16, 90, fill="#2b2547", outline="#3a3360")
+        c.create_text(108, 71, anchor="w", text=f"\"{self.say}\"", fill="#ffe8b0", font=("Segoe UI", 10, "italic"), width=self.W - 140)
+        c.create_text(16, 108, anchor="w", text="Pay a quest's price in hearts, finish it, and the Gizmo joins your town.", fill="#b8b0d8", font=("Segoe UI", 9))
+        kinds = GIZMO_KINDS[self.page * self.ROWS:(self.page + 1) * self.ROWS]
+        for n, k in enumerate(kinds):
+            q, done = GIZMO_QUESTS[k], k in own
+            started = k in app.save.get("gizmo_quests", {})
+            y0 = 124 + n * self.ROW_H
+            c.create_rectangle(12, y0, self.W - 12, y0 + self.ROW_H - 8, fill="#2b2547", outline="#c8a830" if done else "#3a3360" if not started else "#3a8a6a", width=2)
+            draw_sprite(c, k, 0, 22, y0 + 8, 4, silhouette=None if (done or started) else "#5c528c")
+            c.create_text(104, y0 + 22, anchor="w", text=k if (done or started) else "???", fill="#ffd23a" if done else "#ffffff", font=("Segoe UI", 12, "bold"))
+            if done:
+                c.create_text(104, y0 + 46, anchor="w", text="✓ in your town", fill="#9ad8a8", font=("Segoe UI", 10))
+            elif started:
+                c.create_text(104, y0 + 46, anchor="w", text=f"{q['text']}: {app.gizmo_progress(k)}/{q['goal']}", fill="#9ad8a8", font=("Segoe UI", 10))
+                c.create_text(self.W - 28, y0 + 34, anchor="e", text="in progress", fill="#7a8a9a", font=("Segoe UI", 10, "bold"))
+            else:
+                c.create_text(104, y0 + 46, anchor="w", text=q["text"], fill="#c8c0e0", font=("Segoe UI", 10))
+                bx0, by0, bx1, by1 = self.W - 150, y0 + 18, self.W - 24, y0 + 50
+                can = app.hearts() >= q["cost"]
+                c.create_rectangle(bx0, by0, bx1, by1, fill="#7a5aff" if can else "#4a4468", outline="")
+                c.create_text((bx0 + bx1) / 2, (by0 + by1) / 2, text=f"Start · {q['cost']} 💖", fill="#ffffff", font=("Segoe UI", 10, "bold"))
+                self.buttons.append((bx0, by0, bx1, by1, lambda k=k: self.start(k)))
+        ny = 124 + self.ROWS * self.ROW_H + 6
+        pages = -(-len(GIZMO_KINDS) // self.ROWS)
+        for label, x0, d in (("◀ Back", 12, -1), ("Next ▶", self.W - 112, 1)):
+            c.create_rectangle(x0, ny, x0 + 100, ny + 30, fill="#3a3360", outline="")
+            c.create_text(x0 + 50, ny + 15, text=label, fill="#ffffff", font=("Segoe UI", 10, "bold"))
+            self.buttons.append((x0, ny, x0 + 100, ny + 30, lambda d=d: self.go(d)))
+        c.create_text(self.W / 2, ny + 15, text=f"page {self.page + 1} of {pages}", fill="#b8b0d8", font=("Segoe UI", 9))
 
 
 class EventWindow:
@@ -11369,6 +11456,44 @@ class App:
             if pet:
                 pet.say(f"{EVENT['name'].lower()}, let's go!", 3)
 
+    # ----- ⚙️ The Workshop: pay a Gizmo's quest price in hearts, finish the quest, and the Gizmo joins your town (no luck involved)
+    def gizmo_progress(self, kind):
+        q, st = GIZMO_QUESTS[kind], self.save.get("gizmo_quests", {}).get(kind)
+        return 0 if not st else max(0, min(q["goal"], self.stat(q["stat"]) - int(st.get("base", 0))))
+
+    def start_gizmo(self, kind):
+        q = GIZMO_QUESTS[kind]
+        if kind in self.save.get("gizmos", []) or kind in self.save.get("gizmo_quests", {}) or self.hearts() < q["cost"]:
+            return False
+        self.save["hearts"] = self.hearts() - q["cost"]
+        self.save.setdefault("gizmo_quests", {})[kind] = {"base": self.stat(q["stat"])}
+        write_save(self.save)
+        self.sound.play("coin")
+        return True
+
+    def check_gizmos(self):
+        done = [k for k in self.save.get("gizmo_quests", {}) if k in GIZMO_QUESTS and k not in self.save.get("gizmos", [])
+                and self.gizmo_progress(k) >= GIZMO_QUESTS[k]["goal"]]
+        for k in done:
+            first = not self.save.get("gizmos")
+            self.save.setdefault("gizmos", []).append(k)
+            write_save(self.save)
+            self.sound.play("fanfare")
+            if first:
+                for sk in SHOPKEEPER_KINDS:
+                    if not any(p.kind == sk for p in self.pets):
+                        keeper = self.add_pet(sk, greet=False)
+                        if keeper:
+                            keeper.say("first one done! i'm moving in!", 5)
+                            keeper.burst("heart", 8)
+            pet = self.add_pet(k, greet=False)
+            if pet:
+                pet.say("quest complete! i'm built!", 4)
+                pet.set_face("happy", 2)
+                pet.burst("heart", 8)
+            elif self.pets:
+                self.pets[0].say(f"⚙️ {k} is done! (town is full: find it under Change kind)", 5)
+
     # ----- 🎂 Cake Day (CAKE_DAY): gift boxes pop up all day; every box is a roll
     def cake_state(self):
         cd = self.save.get("cake_day")
@@ -11427,6 +11552,10 @@ class App:
     def cryptid_step(self, now):
         self.event_visitor(now)
         self.cake_day_step(now)
+        if now >= getattr(self, "next_gizmo_check", 0):
+            self.next_gizmo_check = now + 3
+            if self.save.get("gizmo_quests"):
+                self.check_gizmos()
         for s in list(self.sightings):
             s.step(now)
         if self.sightings:
@@ -11642,6 +11771,8 @@ class App:
             return kind in self.save.get("event_kinds", [])    # 🎖️ earned in the Prowl Week event
         if kind in GIZMOS:
             return kind in self.save.get("gizmos", [])         # ⚙️ finished its quest in the Workshop
+        if kind in SHOPKEEPERS:
+            return bool(self.save.get("gizmos"))                # 🛠️ moves in once your first Gizmo quest is done
         if kind in KAIJU:
             return kind in self.save.get("kaiju", [])
         if kind in CRYPTIDS:

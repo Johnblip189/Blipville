@@ -3864,6 +3864,11 @@ NEW_ANIMALS.update({
   "body": [".oo..........oo.", ".o1o........o1o.", ".o2po.oooo.op0o.", ".o331oW331o331o.", "o44444W44444442o", "o55555555555553o", "o66666666666664o", "o7p7777777777p5o", "o688888CC888886o", ".o9999CCCC9997o.", ".o88ACCCCCCA88o.", "..oo99999999oo.."],
   "colors": [{"name": "Blue Screen", "o": "#06103a", "p": "#ff9ac0", "e": "#ff2a3a", "W": "#e6f0ff", "b": "#3c68c7", "0": "#0a2a9a", "1": "#1436a3", "2": "#1e43ac", "3": "#284fb5", "4": "#325cbe", "5": "#3c68c7", "6": "#4775d1", "7": "#5181da", "8": "#5b8ee3", "9": "#659aec", "A": "#6fa7f5", "C": "#7ab4ff"},
              {"name": "Red Screen", "o": "#3a0610", "p": "#ffd0a0", "e": "#2a6aff", "W": "#fff0e6", "b": "#c74445", "0": "#9a0a1a", "1": "#a31522", "2": "#ac212b", "3": "#b52c34", "4": "#be383c", "5": "#c74445", "6": "#d14f4e", "7": "#da5b57", "8": "#e3675f", "9": "#ec7268", "A": "#f57e71", "C": "#ff8a7a"}]},
+ "Starblip": {"eyes": 5, "move": "float", "speed": 1.0, "feet": False, "mouth": True,
+  "lines": ["up, up and... blip!", "*strikes a heroic pose*", "i can see the whole town from up here", "sunrise looks good on me", "have no fear! i brought snacks", "*cape flutters dramatically*"],
+  "body": [".oo.y..YY..y.oo.", ".obo..yYYy..obo.", ".obpoyooooyopBo.", ".RbbBo*bbBobbBR.", "Rrbbbb*bbbbbbbBR", "RrbbbbbbbbbbbbBR", "RrbbbbbbbbbbbbBR", "RrpbbbbYYbbbbpBR", "RBbbbyyYYyybbbBR", ".RbbbbyYYybbbBR.", ".RBBbyyllyybBBR.", "..ooBBBBBBBBoo.."],
+  "colors": [{"name": "Hero", "o": "#0c1a3a", "b": "#2f6fe0", "B": "#1c448f", "l": "#9fd0ff", "r": "#e03a3a", "R": "#8a1a2a", "y": "#ffc93a", "Y": "#fff1a0", "p": "#ff9a8a", "e": "#10142a"},
+             {"name": "Sunrise", "o": "#2a0a3a", "b": "#8a5ad8", "B": "#5a3a98", "l": "#ffd0f0", "r": "#ff8a3a", "R": "#a83a1a", "y": "#ffd23a", "Y": "#ffffff", "p": "#ff9ac0", "e": "#1a0a2a"}]},
 })
 PROWL_KINDS = list(PROWL)
 
@@ -8589,7 +8594,7 @@ _NEW_TYPES = {
  "sweet": {"Donut", "Cupcake", "Ice Cream", "Macaron", "Pudding", "Gummy Bear", "Dumpling", "Marshmallow", "Gumdrop Golem",
            "Cotton Candy Cloud", "Candy Dragon", "Sprinkle Unicorn", "Licorice Serpent", "Bee", "Confetti", "Cakeling", "Beta Buddy", "Bun",
            "Rainbow Blip", "Haunted Teacup", "Lucky Cat"},
- "cosmic": {"Star", "Moon", "Comet", "Ringed Planet", "Rocket", "Black Hole", "Space Jelly", "Astronaut", "Space Slug", "Nebulon",
+ "cosmic": {"Starblip", "Star", "Moon", "Comet", "Ringed Planet", "Rocket", "Black Hole", "Space Jelly", "Astronaut", "Space Slug", "Nebulon",
             "Nebula Cat", "Cosmo Pup", "Star Whale", "Comet Fox", "Moon Bunny", "Moon Moth", "Qilin", "Liftoff", "Blipmaker",
             "Golden Blip", "Unicorn", "Mirror Spirit"},
 }

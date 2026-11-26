@@ -1012,16 +1012,29 @@
     });
     ctx.restore();
   }
+  // 😬 the Mimic's smile: a Blip in disguise looks normal, except for the too-wide grin of the Mimic
+  function addGrin(g) {
+    const K = "#0a0a14", N = "#e2e2e6";
+    for (let x = 3; x <= 12; x++) { g[8][x] = K; g[9][x] = x % 2 === 0 ? N : K; }
+    for (let x = 4; x <= 11; x++) g[10][x] = K;
+    return g;
+  }
+  function slipGrid(slip, p, opt) {
+    if (!slip) return grid(p.kind, p.color, opt);
+    const full = Math.floor(opt.t * 9) % 7 === 0;               // a glitch frame: the full Mimic shows for a moment
+    const g = grid(full ? "Mimic" : p.kind, full ? 0 : p.color, opt);
+    return full ? g : addGrin(g);
+  }
   function drawPet(p, t) {
     const l = lift(p, t);
-    const slip = t < (p.mimicUntil || 0) && Math.floor(t * 9) % 3 !== 0;      // 🕳️ the Mimic's disguise slips
+    const slip = t < (p.mimicUntil || 0);      // 🕳️ the disguise: a Blip wearing the Mimic's smile (it flickers into the Mimic now and then)
     const left = Math.round(p.x - 8 * S) + (slip ? Math.round((Math.random() - 0.5) * 5) : 0), top = Math.round(GROUND - 13 * S - p.y - l);
     const dx = pointer.x - p.x, dy = pointer.y - (top + 6 * S);
     const look = Math.hypot(dx, dy) < 30 ? [0, 0] : [dx < -40 ? -1 : dx > 40 ? 1 : 0, dy < -80 ? -1 : dy > 40 ? 1 : 0];
     const face = t < p.faceUntil ? p.face : "normal";
     if (KINDS[p.kind].ghost && !KINDS[p.kind].colors[p.color % KINDS[p.kind].colors.length].solid) ctx.globalAlpha = 0.8;   // ghosts stay a little see-through (unless the color is solid)
     const K = KINDS[p.kind], soul = K.soul ? new Set([...K.soul].map((ch) => K.colors[p.color % K.colors.length][ch]).filter(Boolean)) : null;
-    drawGrid(ctx, grid(slip ? "Mimic" : p.kind, slip ? 0 : p.color, { t, live: true, fade: p.fadeFrom != null ? [p.fadeFrom, p.fadeT0] : null, blush: t < (p.blushUntil || 0), state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
+    drawGrid(ctx, slipGrid(slip, p, { t, live: true, fade: p.fadeFrom != null ? [p.fadeFrom, p.fadeT0] : null, blush: t < (p.blushUntil || 0), state: p.state, face, blink: t < p.blinkUntil, look, lift: l / (S / 4), squash: t < p.squashUntil }), left, top, S,
              soul, soul ? ghostAlpha(t, p.x * 0.01) * 0.75 : 1);
     ctx.globalAlpha = 1;
     const shiftH = (p.state === "sleep" || t < p.squashUntil) ? 1 : 0;
@@ -1245,7 +1258,7 @@
       const glitch = Math.max(0, Math.min(1, (ph - 0.18) / 0.4)), full = ph > 0.58;       // the glitch builds, then it is the Mimic for good
       if (full && !rev) { rev = true; sfx("thud"); vibrate([40, 30, 60]); }
       const showM = full || (Math.random() < glitch * 0.55);
-      const gr = grid(showM ? "Mimic" : kind, showM ? 0 : color, { t: tt, state: "idle" });
+      const gr = grid(showM ? "Mimic" : kind, showM ? 0 : color, { t: tt, state: "idle" }); if (!showM) addGrin(gr);
       const sx = Math.round(W2 / 2 - 8 * SC), sy = Math.round(H2 * 0.42 - 6 * SC), shake = glitch * SC * 0.12;
       gr.forEach((row, r) => { const off = Math.random() < glitch * 0.25 ? Math.round((Math.random() - 0.5) * SC * 3) : 0;
         row.forEach((c, i) => { if (c) { g.fillStyle = c; g.fillRect(sx + i * SC + off + Math.round((Math.random() - 0.5) * shake), sy + r * SC, SC + 1, SC + 1); } }); });

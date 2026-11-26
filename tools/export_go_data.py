@@ -29,6 +29,8 @@ for k in list(bl.KINDS) + list(bl.PROWL_KINDS) + list(bl.AWAKEN_BASE) + list(get
     kinds[k]["voice"] = list(bl.voice_of(k)) if hasattr(bl, "voice_of") else None
     if v.get("portrait"):
         kinds[k]["portrait"] = v["portrait"]
+    if v.get("xeyes"):
+        kinds[k]["xeyes"] = True
     if v.get("plush"):
         kinds[k].update(plush=v["plush"], xeye=bool(v.get("xeye")))
 data = {

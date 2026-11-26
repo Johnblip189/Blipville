@@ -547,7 +547,8 @@
     else if (face === "munch") { for (const ex of [4, 10]) { px(ex, 6, e); px(ex + 1, 6, e); } }
     else {
       const [ox, oy] = face === "surprised" ? [0, 0] : (opt.look || [0, 0]);
-      for (const ex of [4, 10]) { for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) px(ex + ox + a, 5 + oy + b, e); px(ex + ox, 5 + oy, shine); }
+      if (k.xeyes) { for (const ex of [4, 9]) for (const [xx, yy] of [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]]) px(ex + ox + xx, 4 + oy + yy, e); }   // x_x
+      else for (const ex of [4, 10]) { for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) px(ex + ox + a, 5 + oy + b, e); px(ex + ox, 5 + oy, shine); }
       if (k.xeye) for (let i = 0; i < 4; i++) { px(3 + i, 4 + i, pal.x || pal.o); px(6 - i, 4 + i, pal.x || pal.o); }   // a stitched X where a button came off
     }
     if (k.mouth) {

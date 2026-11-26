@@ -3849,12 +3849,10 @@ PROWL = {
              dict(name='Storm', o='#10182a', b='#7a8aa8', l='#e8eef8', i='#ff9ab0', n='#080c14', e='#080c14', c='#3a4a68')]},
 }
 NEW_ANIMALS.update({
- "Error 404": {"eyes": 3, "move": "float", "speed": 1.0, "feet": False, "mouth": False, "shifty": True,
-  "lines": ["page not found.", "have you tried turning me off and on?", "404: motivation not found", "*buffering...*", "i'm not lost. i'm just... not here.", "*glitches politely*"],
-  "body": ["................", ".oooooooooooooo.", ".oryghhhhhhhhho.", ".owwwwwwwwwwwwo.", "cowwwwwwwwwwwwo.", ".opwwwwwwwwwwpo.", ".owxwxwxxxwxwxo.", ".owxwxwxwxwxwxom", ".owxxxwxwxwxxxo.", "mowwwxwxwxwwwxo.", ".owwwxwxxxwwwxo.", ".oooooooooooooo."],
-  "colors": [{"name": "Not Found", "o": "#1a1030", "b": "#f4f6fa", "h": "#3a5ad8", "r": "#ff5a5a", "y": "#ffd23a", "g": "#5ae07a", "w": "#f4f6fa", "x": "#e8304a", "c": "#3ae8ff", "m": "#ff3ad8", "p": "#ffb0c8", "e": "#10121a"},
-             {"name": "Blue Screen", "o": "#06103a", "b": "#1a4ad8", "h": "#0a2a90", "r": "#ff5a5a", "y": "#ffd23a", "g": "#5ae07a", "w": "#1a4ad8", "x": "#ffffff", "c": "#3ae8ff", "m": "#ff3ad8", "p": "#7aa8ff", "e": "#ffffff"},
-             {"name": "Dark Mode", "o": "#04040a", "b": "#14161e", "h": "#2a2e3e", "r": "#ff5a5a", "y": "#ffd23a", "g": "#5ae07a", "w": "#14161e", "x": "#4aff7a", "c": "#3ae8ff", "m": "#ff3ad8", "p": "#3a8a5a", "e": "#4aff7a"}]},
+ "Error 404": {"eyes": 5, "move": "walk", "speed": 1.0, "mouth": True, "xeyes": True,
+  "lines": ["x_x", "error 404: friend not found", "have you tried turning me off and on?", "404: motivation not found", "*glitches politely*", "i'm fine. everything is fine. x_x"],
+  "body": [".oo..........oo.", ".o1o........o1o.", ".o2po.oooo.op0o.", ".o331oW331o331o.", "o44444W44444442o", "o55555555555553o", "o66666666666664o", "o7p7777777777p5o", "o688888CC888886o", ".o9999CCCC9997o.", ".o88ACCCCCCA88o.", "..oo99999999oo.."],
+  "colors": [{"name": "Glitch Purple", "o": "#12062a", "p": "#ff5ad8", "e": "#0a0418", "W": "#f4e6ff", "b": "#7950b5", "0": "#2c0a78", "1": "#3b1884", "2": "#4a2690", "3": "#5a349c", "4": "#6942a9", "5": "#7950b5", "6": "#885ec1", "7": "#986ccd", "8": "#a77ada", "9": "#b788e6", "A": "#c696f2", "C": "#d6a4ff"}]},
 })
 PROWL_KINDS = list(PROWL)
 
@@ -3864,7 +3862,7 @@ for _name, _a in {**NEW_ANIMALS, **RARE, **CRYPTIDS, **KAIJU, **TAB_KINDS, **GIF
                        "feet": (_a["feet"] if isinstance(_a.get("feet"), dict) else FEET_STD if _a.get("feet", True) else None), "dx": 0, "move": _a["move"],
                        "colors": _a["colors"], "lines": _a["lines"], "speed": _a.get("speed", 1.0),
                        "shifty": _a.get("shifty", False), "ghost": _a.get("ghost", False),
-                       **{k: _a[k] for k in VOICE_KEYS + ("portrait",) if k in _a}}
+                       **{k: _a[k] for k in VOICE_KEYS + ("portrait", "xeyes") if k in _a}}
 
 
 def voice(kind, key, default):
@@ -6629,12 +6627,17 @@ class Blip:
                 px(ex, 6, e); px(ex + 1, 6, e)
         else:
             ox, oy = (0, 0) if face == "surprised" else self.eye_offset()
-            for ex in (4, 10):
-                size = 2
-                for yy in range(size):
-                    for xx in range(size):
-                        px(ex + ox + xx, 5 + oy + yy, e)
-                px(ex + ox, 5 + oy, white)
+            if v.get("xeyes"):                                # x_x: a 3x3 X for each eye
+                for ex in (4, 9):
+                    for xx, yy in ((0, 0), (2, 0), (1, 1), (0, 2), (2, 2)):
+                        px(ex + ox + xx, 4 + oy + yy, e)
+            else:
+                for ex in (4, 10):
+                    size = 2
+                    for yy in range(size):
+                        for xx in range(size):
+                            px(ex + ox + xx, 5 + oy + yy, e)
+                    px(ex + ox, 5 + oy, white)
             if v.get("xeye"):
                 draw_xeye(px, pal)
         # mouth (beaks and snouts are part of the art instead)
@@ -7214,6 +7217,10 @@ def draw_sprite(canvas, kind, color_idx, x, y, scale, face="normal", glow=False,
             g[er + 1][ex] = g[er][ex + 1] = e
             if ex + 2 < ART_W:
                 g[er + 1][ex + 2] = e
+        elif v.get("xeyes"):                                  # x_x
+            xx0 = ex if ex < 8 else ex - 1
+            for ax, ay in ((0, 0), (2, 0), (1, 1), (0, 2), (2, 2)):
+                g[er - 1 + ay][xx0 + ax] = e
         else:
             for a in range(2):
                 for b in range(2):
